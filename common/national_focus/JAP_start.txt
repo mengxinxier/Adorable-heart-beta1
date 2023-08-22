@@ -1,0 +1,272 @@
+focus_tree = {
+	id = japan_wtt_focus
+	country = {
+		factor = 0
+		modifier = {
+			add = 20
+			tag = JAP
+		}
+	}
+	default = no
+	focus = {
+		id = JAP_Kanto_Defense
+		icon = GFX_focus_TRB_91
+		x = 10
+		y = 0
+		cost = 2
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 2
+				date > 1936.6.1
+			}
+		}
+		available = {
+			has_full_control_of_state = 535
+			has_full_control_of_state = 282
+		}
+		bypass = {
+		}
+		completion_reward = {
+			535 = {
+				add_building_construction = {
+					type = bunker
+					level = 5
+					province = 10032
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					level = 5
+					province = 10015
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					level = 5
+					province = 7217
+					instant_build = yes
+				}
+			}
+			282 = {
+				add_building_construction = {
+					type = bunker
+					level = 5
+					province = 11908
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					level = 5
+					province = 4000
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					level = 5
+					province = 1113
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					level = 5
+					province = 7016
+					instant_build = yes
+				}
+			}
+		}
+	}
+	focus = {
+		id = JAP_keep_forntline
+		icon = GFX_goal_generic_barricades
+		prerequisite = {
+			focus = JAP_Kanto_Defense
+		}
+		relative_position_id = JAP_Kanto_Defense
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 2
+		}
+		available = {
+			has_war_with = RJE
+		}
+		bypass = {
+		}
+		completion_reward = {
+			add_ideas = SWI_hold_the_line_idea
+		}
+	}
+	focus = {
+		id = JAP_decide_army_leader
+		icon = GFX_goal_generic_barricades
+		prerequisite = {
+			focus = JAP_keep_forntline
+		}
+		relative_position_id = JAP_Kanto_Defense
+		x = 0
+		y = 2
+		cost = 2
+		ai_will_do = {
+			factor = 2
+		}
+		available = {
+			has_war_with = RJE
+		}
+		bypass = {
+		}
+		completion_reward = {
+			country_event = {
+				id = jap.11
+			}
+		}
+	}
+	focus = {
+		id = JAP_decide_shipgirl
+		icon = GFX_goal_generic_barricades
+		prerequisite = {
+			focus = JAP_decide_army_leader
+		}
+		mutually_exclusive = {
+			focus = JAP_decide_fate
+		}
+		relative_position_id = JAP_decide_army_leader
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 2
+		}
+		available = {
+			always = no
+		}
+		bypass = {
+		}
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = JAP_decide_fate
+		icon = GFX_goal_generic_barricades
+		prerequisite = {
+			focus = JAP_decide_army_leader
+		}
+		mutually_exclusive = {
+			focus = JAP_decide_shipgirl
+		}
+		relative_position_id = JAP_decide_army_leader
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 2
+		}
+		available = {
+			always = no
+		}
+		bypass = {
+		}
+		completion_reward = {
+		}
+	}
+	focus = {
+		id = JAP_time_for_attack
+		icon = GFX_goal_generic_barricades
+		cancel_if_invalid = no
+		prerequisite = {
+			focus = JAP_decide_fate
+			focus = JAP_decide_shipgirl
+		}
+		relative_position_id = JAP_decide_army_leader
+		x = 0
+		y = 2
+		cost = 15
+		ai_will_do = {
+			factor = 2
+		}
+		available = {
+			has_war_with = RJE
+		}
+		bypass = {
+			RJE = {
+				exists = no
+			}
+		}
+		select_effect = {
+			add_ideas = jap_qixi
+			remove_ideas = SWI_hold_the_line_idea
+		}
+		completion_reward = {
+			custom_effect_tooltip = JAP_attack_RJE_plan
+			hidden_effect = {
+				remove_ideas = jap_qixi
+			}
+		}
+	}
+	focus = {
+		id = JAP_back_old_age
+		icon = GFX_goal_generic_barricades
+		cancel_if_invalid = no
+		prerequisite = {
+			focus = JAP_time_for_attack
+		}
+		relative_position_id = JAP_time_for_attack
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 2
+		}
+		available = {
+			RJE = {
+				exists = no
+			}
+		}
+		bypass = {
+		}
+		completion_reward = {
+			load_focus_tree = JAP_win
+			if = {
+				limit = {
+					has_country_flag = JAP_Nagato_lend_army
+				}
+				country_event = {
+					id = jap.12
+				}
+			}
+			if = {
+				limit = {
+					has_idea = SWI_hold_the_line_idea
+				}
+				remove_ideas = SWI_hold_the_line_idea
+			}
+			remove_ideas = RJE_Japan_division
+		}
+	}
+	focus = {
+		id = JAP_test_new_focus_tree
+		icon = GFX_focus_TRB_91
+		x = 8
+		y = 0
+		cost = 2
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 2
+				date > 1936.6.1
+			}
+		}
+		allow_branch = {
+			is_debug = yes
+		}
+		available = {
+			is_debug = yes
+		}
+		bypass = {
+		}
+		completion_reward = {
+			load_focus_tree = JAP_win
+		}
+	}
+}

@@ -1,0 +1,407 @@
+POL_posthumous_front_movement_category = {
+
+	POL_posthumous_front_guerrilla_activity = {
+		icon = GFX_decision_revolt
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		fire_only_once = no
+		days_mission_timeout = 45
+		cancel_trigger = {
+			NOT = { has_country_flag = POL_posthumous_front_movement_flag }
+		}
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = POL_posthumous_front_guerrilla_activity
+			}
+			random_list = {
+				40 = {
+					random_owned_controlled_state = {
+						limit = { infrastructure > 1 }
+						damage_building = {
+							type = infrastructure
+							damage = 1
+						}
+					}
+				}
+				30 = {
+					custom_effect_tooltip = POL_lost_20_yuan
+					hidden_effect = {
+						if = {
+							limit = { check_variable = { ubs_save > 20 } }
+							add_to_variable = { ubs_save = -20 }
+						}
+						else = {
+							set_variable = { ubs_save = 0 }
+						}
+					}
+				}
+				20 = {
+					random_owned_controlled_state = {
+						limit = { industrial_complex > 1 }
+						damage_building = {
+							type = industrial_complex
+							damage = 1
+						}
+					}
+					random_owned_controlled_state = {
+						limit = { arms_factory > 1 }
+						damage_building = {
+							type = arms_factory
+							damage = 1
+						}
+					}
+				}
+				10 = {
+					custom_effect_tooltip = POL_repelled_the_attack
+					add_equipment_to_stockpile = {
+						type = infantry_equipment
+						amount = 100
+						producer = POL
+					}
+				}
+			}
+		}
+	}
+
+	POL_stop_sabotage = {
+		icon = GFX_decision_generic_police_action
+		visible = {
+			has_completed_focus = POL_encircle_front_after_death
+			has_active_mission = POL_posthumous_front_guerrilla_activity
+		}
+		fire_only_once = no
+		days_remove = 60
+		cost = 50
+		complete_effect = {
+			hidden_effect = {
+				remove_mission = POL_posthumous_front_guerrilla_activity
+				if = {
+					limit = { has_country_flag = POL_posthumous_front_movement_flag }
+					activate_mission = POL_posthumous_front_guerrilla_activity
+				}
+			}
+			custom_effect_tooltip = POL_stop_sabotage_tt
+		}
+	}
+}
+
+POL_industrial_rehabilitation_category = {
+
+	POL_duild_dec_lhydropower_station = {
+		allowed = {
+			always = no
+		}
+		icon = GFX_decision_generic_factory
+		fire_only_once = yes
+		priority = 99
+		on_map_mode = map_and_decisions_view
+		ai_will_do = {
+			factor = 10000
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+			custom_trigger_tooltip = {
+				tooltip = SOV_dec_build_civil_factories_tt
+				check_variable = { SOV_building < 3 }
+			}
+		}
+		state_target = yes
+		days_remove = 90
+		custom_cost_text = RUS_100_ubs_save_cost
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 99 }
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		complete_effect = {
+			add_to_variable = { ubs_save = -100 }
+			add_to_variable = { SOV_building = 1 }
+		}
+		remove_effect = {
+			if = {
+				limit = { check_variable = { SOV_building < 1 } }
+				set_variable = { SOV_building = 0 }
+			}
+			else = { add_to_variable = { SOV_building = -1 } }
+			FROM = {
+				if = {
+					limit = { 
+						free_building_slots = {
+							building = arms_factory
+							size > 0
+							include_locked = no
+						}
+					}
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				else = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+			}
+		}
+	}
+
+	POL_build_new_town_in_A = {
+		priority = 98
+		icon = GFX_decision_POL_looming_peasants_strike
+		visible = {
+			has_completed_focus = POL_new_town_plan
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		cost = 100
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1000
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		days_remove = 180
+		remove_effect = {
+			1088 = {
+				SOV_promote_regional_development = yes
+			}
+			997 = {
+				SOV_promote_regional_development = yes
+			}
+			93 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			95 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+		}
+	}
+	
+	POL_build_new_town_in_B = {
+		priority = 97
+		icon = GFX_decision_POL_looming_peasants_strike
+		visible = {
+			has_completed_focus = POL_new_town_plan
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		cost = 100
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1000
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		days_remove = 180
+		remove_effect = {
+			96 = {
+				SOV_promote_regional_development = yes
+			}
+			655 = {
+				SOV_promote_regional_development = yes
+			}
+			97 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			94 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+		}
+	}
+	
+	POL_build_new_town_in_C = {
+		priority = 96
+		icon = GFX_decision_POL_looming_peasants_strike
+		visible = {
+			has_completed_focus = POL_new_town_plan
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		cost = 100
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1000
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		days_remove = 180
+		remove_effect = {
+			194 = {
+				SOV_promote_regional_development = yes
+			}
+			204 = {
+				SOV_promote_regional_development = yes
+			}
+			1087 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			206 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+		}
+	}
+	
+}
+
+POL_intermaritime_federation = {
+
+	POL_form_intermaritime_federation = {
+		priority = 99
+		icon = GFX_decision_eng_propaganda_campaigns
+		allowed = { always = no }
+		activation = {
+			always = no
+		}
+		available = {
+			is_faction_leader = yes
+			any_other_country = {
+				is_in_faction_with = ROOT
+			}
+		}
+		days_mission_timeout = 180
+		fire_only_once = yes
+		complete_effect = {
+			add_political_power = 100
+			add_stability = 0.05
+			hidden_effect = {
+				add_to_variable = { ubs_save = 100 }
+			}
+			custom_effect_tooltip = SOV_get_100_add_to_reserve
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_stability = -0.10
+			add_war_support = -0.15
+			leave_faction = yes
+			set_country_flag = POL_intermaritime_federation_fail
+			complete_national_focus = POL_identify_with_earth_defense
+		}
+	}
+
+	POL_invite_dec_members = {
+		icon = GFX_decision_generic_nationalism
+		allowed = { always = no }
+		visible = {
+			is_faction_leader = yes
+			is_subject = no
+			FROM = { 
+				is_in_faction = no
+				has_government = democratic 
+			}
+		}
+		available = {
+			is_subject = no
+		}
+		cost = 50
+		fire_only_once = yes
+		days_remove = 14
+		remove_effect = {
+			FROM = {
+				country_event = polish.28
+			}
+		}
+	}
+}
+
+POL_territorial_affairs = {
+	POL_integrate_dec_state = {
+		icon = GFX_GFX_decision_infiltrate_state
+		allowed = {
+			original_tag = POL
+		}
+		visible = {
+			has_completed_focus = POL_seek_roots
+			FROM = {
+				is_owned_by = ROOT
+			}
+		}
+		available = {
+			FROM = {
+				is_fully_controlled_by = ROOT
+				is_owned_by = ROOT
+				resistance < 10
+				compliance > 50
+			}
+		}
+
+		on_map_mode = map_only
+		state_target = yes
+		target_trigger = {
+			FROM = {
+				OR = {
+					state = 209
+					state = 210
+					state = 755
+					state = 192
+					state = 198
+					state = 199
+					state = 201
+					state = 202
+					state = 203
+					state = 197
+					state = 226
+					state = 777
+					state = 5
+					state = 11
+					state = 12
+					state = 13
+					state = 188
+					state = 189
+					state = 190
+					state = 191
+					state = 842
+					state = 880
+				}
+			}
+		}
+		fire_only_once = yes
+		cost = 50
+
+		complete_effect = {
+			FROM = {
+				hidden_effect = {
+					remove_claim_by = ROOT
+				}
+				add_core_of = ROOT
+			}
+		}
+	}
+}

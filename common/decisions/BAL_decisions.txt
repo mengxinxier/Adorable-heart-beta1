@@ -1,0 +1,122 @@
+BAL_wedding_to_gods_category = {
+
+	BAL_wedding_to_god_mission = {
+		icon = GFX_decision_revolt
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		cancel_trigger = {
+			has_country_flag = BAL_wedding_to_god_start
+		}
+		fire_only_once = yes
+		days_mission_timeout = 120
+		timeout_effect = {
+			complete_national_focus = BAL_bite_ground
+			set_country_flag = BAL_bite_ground_flag
+			hidden_effect = {
+				country_event = BAL_pol.13
+			}
+		}
+	}
+
+	BAL_evicted_from_outside_walls = {
+		icon = GFX_decision_eng_blackshirt_march
+		visible = {
+			has_completed_focus = BAL_organize_army
+			has_active_mission = BAL_wedding_to_god_mission
+		}
+		available = {
+			has_active_mission = BAL_wedding_to_god_mission
+			any_army_leader = {
+				OR = {
+					is_character = BAL_Mebuki
+					is_character = BAL_Suzume
+					is_character = BAL_Yumiko
+					is_character = BAL_Shizuku
+				}
+				NOT = { has_trait = wounded }
+			}
+		}
+		cancel_trigger = {
+			NOT = { has_active_mission = BAL_wedding_to_god_mission }
+		}
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 2.5
+				check_variable = {
+					var:SOV.days_mission_timeout@BAL_wedding_to_god_mission < 30
+				}
+			}
+		}
+		fire_only_once = no
+		days_remove = 7
+		days_re_enable = 14
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = BAL_wedding_to_god_mission
+				days = 30
+			}
+			random_army_leader = {
+				limit = {
+					OR = {
+						is_character = BAL_Mebuki
+						is_character = BAL_Suzume
+						is_character = BAL_Yumiko
+						is_character = BAL_Shizuku
+					}
+					NOT = { has_trait = wounded }
+				}
+				add_timed_unit_leader_trait = {
+					trait = wounded
+					days = 365
+				}
+				gain_xp = 200
+			}
+			army_experience = 10
+		}
+	}
+}
+
+SOV_territorial_affairs = {
+	BAL_attack_HSF = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			original_tag = BAL
+		}
+		visible = {
+			country_exists = HSF
+			NOT = { has_completed_focus = BAL_integrate_old_land }
+		}
+		available = {
+			HSF = {
+				is_subject = no
+				is_in_faction = no
+				is_neighbor_of = ROOT
+			}
+		}
+		fire_only_once = yes
+		days_remove = 7
+		cancel_trigger = {
+			HSF = {
+				OR = {
+					is_subject = yes
+					is_in_faction = yes
+					exists = no
+				}
+			}
+		}
+		complete_effect = {
+			HSF = { country_event = generic.2010 }
+		}
+		remove_effect = {
+			declare_war_on = {
+				target = HSF
+				type = annex_everything
+			}
+		}
+	}
+}

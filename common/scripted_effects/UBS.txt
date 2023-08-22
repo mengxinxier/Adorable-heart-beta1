@@ -1,0 +1,883 @@
+#图标变化
+UBS_bank_icon_frames = {
+	set_temp_variable = {
+		cunkuan_temp = ubs_save
+	}
+	divide_temp_variable = {
+		cunkuan_temp = 4200
+	}
+	multiply_temp_variable = {
+		cunkuan_temp = 6
+	}
+	if = {
+		limit = {
+			check_variable = {
+				cunkuan_temp > 0
+			}
+		}
+		clamp_temp_variable = {
+			var = cunkuan_temp
+			min = 1
+			max = 6
+		}
+	}
+	else = {
+		set_temp_variable = {
+			cunkuan_temp = 1
+		}
+	}
+	set_variable = {
+		current_cunkuan_icon_frame = cunkuan_temp
+	}
+	set_temp_variable = {
+		daikuan_temp = ubs_load
+	}
+	divide_temp_variable = {
+		daikuan_temp = 4200
+	}
+	multiply_temp_variable = {
+		daikuan_temp = 6
+	}
+	if = {
+		limit = {
+			check_variable = {
+				daikuan_temp > 0
+			}
+		}
+		clamp_temp_variable = {
+			var = daikuan_temp
+			min = 1
+			max = 6
+		}
+	}
+	else = {
+		set_temp_variable = {
+			daikuan_temp = 1
+		}
+	}
+	set_variable = {
+		current_daikuan_icon_frame = daikuan_temp
+	}
+	set_temp_variable = {
+		jinglirun_temp = ziyuan_lirun
+	}
+	add_to_temp_variable = {
+		jinglirun_temp = shui_shouru
+	}
+	subtract_from_temp_variable = {
+		jinglirun_temp = heji_meiyue
+	}
+	multiply_temp_variable = {
+		jinglirun_temp = 2
+	}
+	if = {
+		limit = {
+			check_variable = {
+				jinglirun_temp > 0
+			}
+		}
+		clamp_temp_variable = {
+			var = jinglirun_temp
+			min = 1
+			max = 2
+		}
+	}
+	else = {
+		set_temp_variable = {
+			jinglirun_temp = 1
+		}
+	}
+	set_variable = {
+		current_jinglirun_icon_frame = jinglirun_temp
+	}
+	clamp_variable = {
+		var = ubs_load
+		min = 0
+	}
+	clamp_variable = {
+		var = ubs_save
+		min = 0
+	}
+	round_variable = ubs_load
+	round_variable = ubs_save
+}
+
+####总体出口数量/出口收入####
+chukou_zongliang_jisuan = {
+	if = {
+		limit = {
+			steel > 0
+		}
+		set_variable = {
+			chukou_1 = resource_exported@steel
+		}
+	}
+	if = {
+		limit = {
+			aluminium > 0
+		}
+		set_variable = {
+			chukou_2 = resource_exported@aluminium
+		}
+	}
+	if = {
+		limit = {
+			tungsten > 0
+		}
+		set_variable = {
+			chukou_3 = resource_exported@tungsten
+		}
+	}
+	if = {
+		limit = {
+			oil > 0
+		}
+		set_variable = {
+			chukou_4 = resource_exported@oil
+		}
+	}
+	if = {
+		limit = {
+			rubber > 0
+		}
+		set_variable = {
+			chukou_5 = resource_exported@rubber
+		}
+	}
+	if = {
+		limit = {
+			chromium > 0
+		}
+		set_variable = {
+			chukou_6 = resource_exported@chromium
+		}
+	}
+	if = {
+		limit = {
+			originium > 0
+		}
+		set_variable = {
+			chukou_7 = resource_exported@originium
+		}
+	}
+	set_variable = {
+		var = chukou_zongliang
+		value = resource_exported@steel
+	}
+	add_to_variable = {
+		var = chukou_zongliang
+		value = resource_exported@aluminium
+	}
+	add_to_variable = {
+		var = chukou_zongliang
+		value = resource_exported@oil
+	}
+	add_to_variable = {
+		var = chukou_zongliang
+		value = resource_exported@rubber
+	}
+	add_to_variable = {
+		var = chukou_zongliang
+		value = resource_exported@chromium
+	}
+	add_to_variable = {
+		var = chukou_zongliang
+		value = resource_exported@tungsten
+	}
+	add_to_variable = {
+		var = chukou_zongliang
+		value = resource_exported@originium
+	}
+	set_variable = {
+		var = ziyuan_lirun
+		value = chukou_zongliang
+	}
+	divide_variable = {
+		var = ziyuan_lirun
+		value = 50		#20
+	}
+}
+
+####民用工厂计算税收####
+mingong_jisuan_shuishou = {
+	set_variable = {
+		shui_shouru = num_of_civilian_factories_available_for_projects
+	}
+	multiply_variable = {
+		var = shui_shouru
+		value = 1.5
+	}
+	#消费税
+	set_variable = {
+		xiaofeipin = num_of_civilian_factories
+	}
+	subtract_from_variable = {
+		var = xiaofeipin
+		value = num_of_civilian_factories_available_for_projects
+	}
+	set_variable = {
+		num_of_xiaofeipin = xiaofeipin
+	}
+	multiply_variable = {
+		var = xiaofeipin
+		value = 2.5
+	}
+	add_to_variable = {
+		var = shui_shouru
+		value = xiaofeipin
+	}
+	#工业税
+	set_variable = {
+		gongyeshui = num_of_civilian_factories_available_for_projects
+	}
+	multiply_variable = {
+		var = gongyeshui
+		value = 1.5
+	}
+}
+
+####计算海军军费####
+haijun_meiyue_jisuan = {
+	set_variable = {
+		var = zhulijian
+		value = num_ships_with_type@battle_cruiser
+	}
+	add_to_variable = {
+		var = zhulijian
+		value = num_ships_with_type@battleship
+	}
+	add_to_variable = {
+		var = zhulijian
+		value = num_ships_with_type@heavy_cruiser
+	}
+	add_to_variable = {
+		var = zhulijian
+		value = num_ships_with_type@heavy_cruiser
+	}
+	set_variable = {
+		var = hangmu
+		value = num_ships_with_type@carrier
+	}
+	set_variable = {
+		var = pingweijian_num
+		value = num_ships_with_type@destroyer
+	}
+	add_to_variable = {
+		var = pingweijian_num
+		value = num_ships_with_type@light_cruiser
+	}
+	add_to_variable = {
+		var = pingweijian_num
+		value = num_ships_with_type@light_cruiser
+	}
+	set_variable = {
+		var = pingweijian_money
+		value = pingweijian_num
+	}
+	divide_variable = {
+		var = pingweijian_money
+		value = 100
+	}
+	set_variable = {
+		var = qianting_num
+		value = num_ships_with_type@submarine
+	}
+	divide_variable = {
+		var = qianting_num
+		value = 500
+	}
+	set_variable = {
+		var = haijun_meiyue_navy
+		value = zhulijian
+	}
+	add_to_variable = {
+		var = haijun_meiyue_navy
+		value = hangmu
+	}
+	add_to_variable = {
+		var = haijun_meiyue_navy
+		value = pingweijian_money
+	}
+	add_to_variable = {
+		var = haijun_meiyue_navy
+		value = qianting_num
+	}
+	# set_variable = {
+	# 	var = air_money
+	# 	value = num_deployed_planes
+	# }
+	# divide_variable = {
+	# 	var = air_money
+	# 	value = 200
+	# }
+	set_variable = {
+		var = haijun_meiyue
+		value = haijun_meiyue_navy
+	}
+	set_variable = {
+		var = navy_fee_modifier_total
+		value = 1
+	}
+	add_to_variable = {
+		var = navy_fee_modifier_total
+		value = navy_fee_modifier
+	}
+	multiply_variable = {
+		var = haijun_meiyue
+		value = navy_fee_modifier_total
+	}
+	# add_to_variable = {
+	# 	var = haijun_meiyue
+	# 	value = air_money
+	# }
+}
+
+####计算陆军军费####
+lujun_meiyue_jisuan = {
+	set_variable = {
+		var = lujun_meiyue
+		value = num_battalions
+	}
+	divide_variable = {
+		lujun_meiyue = 50
+	}
+	set_variable = {
+		var = army_fee_modifier_total
+		value = 1
+	}
+	add_to_variable = {
+		var = army_fee_modifier_total
+		value = army_fee_modifier
+	}
+	multiply_variable = {
+		var = lujun_meiyue
+		value = army_fee_modifier_total
+	}
+	#################################
+	#############行政开支############
+	#################################
+	set_variable = {
+		var = xingzengkaizhi_var
+		value = 0
+	}
+	set_variable = {
+		var = zhujunkaizhi
+		value = garrison_manpower_need
+	}
+	divide_variable = {
+		zhujunkaizhi = 5000000
+	}
+	set_variable = {
+		var = hexinkaizhi
+		value = num_controlled_states
+	}
+	divide_variable = {
+		hexinkaizhi = 4
+	}
+	add_to_variable = {
+		var = xingzengkaizhi_var
+		value = zhujunkaizhi
+	}
+	add_to_variable = {
+		var = xingzengkaizhi_var
+		value = hexinkaizhi
+	}
+}
+
+###计算debuff####
+econmic_debuff_jisuan = {
+	if = {
+		limit = {
+			check_variable = {
+				total_shouru > 0
+			}
+		}
+		set_variable = {
+			this_country_GDP = total_shouru
+		}
+	}
+	else = {
+		set_variable = {
+			this_country_GDP = 1
+		}
+	}
+	multiply_variable = {
+		var = this_country_GDP
+		value = 12
+	}
+	set_variable = {
+		Debt_ratio = ubs_load
+	}
+	divide_variable = {
+		var = Debt_ratio
+		value = this_country_GDP
+	}
+	if = {
+		limit = {
+			check_variable = {
+				Debt_ratio > 1
+			}
+		}
+		set_variable = {
+			Debt_ratio_2 = Debt_ratio
+		}
+		add_to_variable = {
+			Debt_ratio_2 = -1
+		}
+		set_variable = {
+			UBS_debuff_stability_factor = Debt_ratio_2
+		}
+		divide_variable = {
+			var = UBS_debuff_stability_factor
+			value = -4
+		}
+		set_variable = {
+			UBS_debuff_production_speed_buildings_factor = UBS_debuff_stability_factor
+		}
+		set_variable = {
+			UBS_debuff_industrial_capacity_factory = Debt_ratio_2
+		}
+		divide_variable = {
+			var = UBS_debuff_industrial_capacity_factory
+			value = -10
+		}
+		clamp_variable = {
+			var = UBS_debuff_stability_factor
+			min = -0.8
+			max = 0
+		}
+		clamp_variable = {
+			var = UBS_debuff_production_speed_buildings_factor
+			min = -0.8
+			max = 0
+		}
+		clamp_variable = {
+			var = UBS_debuff_industrial_capacity_factory
+			min = -0.8
+			max = 0
+		}
+	}
+	#force_update_dynamic_modifier = yes
+}
+
+econmic_debuff_jisuan_II = {
+	if = {
+		limit = {
+			NOT = {
+				has_country_flag = UBS_not
+			}
+		}
+		###debuff计算##
+		econmic_debuff_jisuan = yes
+		if = {
+			limit = {
+				check_variable = {
+					Debt_ratio > 1
+				}
+				not = {
+					has_dynamic_modifier = {
+						modifier = econmic_debuff_modifer
+					}
+				}
+			}
+			if = {
+				limit = {
+					is_ai = yes
+				}
+				add_ideas = AI_Arms_imitation
+			}
+			add_dynamic_modifier = {
+				modifier = econmic_debuff_modifer
+			}
+		}
+		if = {
+			limit = {
+				check_variable = {
+					Debt_ratio = 1
+				}
+				has_dynamic_modifier = {
+					modifier = econmic_debuff_modifer
+				}
+			}
+			if = {
+				limit = {
+					has_idea = AI_Arms_imitation
+				}
+				remove_ideas = AI_Arms_imitation
+			}
+			remove_dynamic_modifier = {
+				modifier = econmic_debuff_modifer
+			}
+		}
+		else_if = {
+			limit = {
+				check_variable = {
+					Debt_ratio < 1
+				}
+				has_dynamic_modifier = {
+					modifier = econmic_debuff_modifer
+				}
+			}
+			if = {
+				limit = {
+					has_idea = AI_Arms_imitation
+				}
+				remove_ideas = AI_Arms_imitation
+			}
+			remove_dynamic_modifier = {
+				modifier = econmic_debuff_modifer
+			}
+		}
+	}
+}
+
+jiesuanjingji = {
+	every_country = {
+		#计算维护费
+		lujun_meiyue_jisuan = yes
+		haijun_meiyue_jisuan = yes
+		#合计维护费
+		set_variable = {
+			heji_meiyue = haijun_meiyue
+		}
+		add_to_variable = {
+			var = heji_meiyue
+			value = lujun_meiyue
+		}
+		###计算维护费修正
+		if = {
+			limit = {
+				has_idea = low_economic_mobilisation
+			}
+			set_variable = {
+				weihufei_modifer = -0.1
+			}
+		}
+		else_if = {
+			limit = {
+				or = {
+					has_idea = partial_economic_mobilisation
+				}
+			}
+			set_variable = {
+				weihufei_modifer = -0.15
+			}
+		}
+		else_if = {
+			limit = {
+				or = {
+					has_idea = war_economy
+				}
+			}
+			set_variable = {
+				weihufei_modifer = -0.2
+			}
+		}
+		else_if = {
+			limit = {
+				or = {
+					has_idea = tot_economic_mobilisation
+				}
+			}
+			set_variable = {
+				weihufei_modifer = -0.25
+			}
+		}
+		else_if = {
+			set_variable = {
+				weihufei_modifer = 0
+			}
+		}
+		set_variable = {
+			weihufei_modifer_II = 1
+		}
+		add_to_variable = {
+			var = weihufei_modifer_II
+			value = weihufei_modifer
+		}
+		multiply_variable = {
+			var = heji_meiyue
+			value = weihufei_modifer_II
+		}
+		###行政开支与额外开支
+		add_to_variable = {
+			var = heji_meiyue
+			value = exoutcome
+		}
+		add_to_variable = {
+			var = heji_meiyue
+			value = xingzengkaizhi_var
+		}
+		###支出修正###
+		set_variable = {
+			kaizhi_modifer_jisuan = 1
+		}
+		add_to_variable = {
+			var = kaizhi_modifer_jisuan
+			value = kaizhi_modifer
+		}
+		multiply_variable = {
+			var = heji_meiyue
+			value = kaizhi_modifer_jisuan
+		}
+		#######计算收入########
+		#出口税
+		chukou_zongliang_jisuan = yes
+		#消费税及工业税
+		if = {
+			limit = {
+				NOT = {
+					has_idea = undisturbed_isolation
+					has_idea = isolation
+				}
+			}
+			mingong_jisuan_shuishou = yes
+		}
+		##把收入加起来
+		set_variable = {
+			lirun_meiyue = ziyuan_lirun
+		}
+		add_to_variable = {
+			lirun_meiyue = shui_shouru
+		}
+		##额外收入-固定值
+		add_to_variable = {
+			lirun_meiyue = exincome
+		}
+		##收入修正-百分比
+		set_variable = {
+			exincome_multiply_modifier = 1
+		}
+		add_to_variable = {
+			exincome_multiply_modifier = exincome_modifier
+		}
+		multiply_variable = {
+			var = lirun_meiyue
+			value = exincome_multiply_modifier
+		}
+		##结算净收入
+		set_variable = {
+			total_shouru = lirun_meiyue
+		}
+		subtract_from_variable = {
+			lirun_meiyue = heji_meiyue
+		}
+		###图标变化
+		if = {
+			limit = {
+				check_variable = {
+					lirun_meiyue > -1
+				}
+				check_variable = {
+					current_jinglirun_icon_frame = 1
+				}
+			}
+			set_variable = {
+				current_jinglirun_icon_frame = 2
+			}
+		}
+		if = {
+			limit = {
+				check_variable = {
+					lirun_meiyue < 0
+				}
+				check_variable = {
+					current_jinglirun_icon_frame = 2
+				}
+			}
+			set_variable = {
+				current_jinglirun_icon_frame = 1
+			}
+		}
+		UBS_bank_icon_frames = yes
+	}
+}
+
+save_and_load_jisuan = {
+	##结算存款与债务
+	if = {
+		limit = {
+			#收入为正
+			check_variable = {
+				lirun_meiyue > 0
+			}
+		}
+		add_to_variable = {
+			var = ubs_save
+			value = lirun_meiyue
+		}
+	}
+	else = {
+		#收入为0或负
+		subtract_from_variable = {
+			var = ubs_load
+			value = lirun_meiyue
+		}
+	}
+	#####利息结算####
+	set_variable = {
+		ubs_load_lixi = 1.005
+	}
+	multiply_variable = {
+		var = ubs_load
+		value = ubs_load_lixi
+	}
+	###图标变化
+	if = {
+		limit = {
+			check_variable = {
+				lirun_meiyue > -1
+			}
+			check_variable = {
+				current_jinglirun_icon_frame = 1
+			}
+		}
+		set_variable = {
+			current_jinglirun_icon_frame = 2
+		}
+	}
+	if = {
+		limit = {
+			check_variable = {
+				lirun_meiyue < 0
+			}
+			check_variable = {
+				current_jinglirun_icon_frame = 2
+			}
+		}
+		set_variable = {
+			current_jinglirun_icon_frame = 1
+		}
+	}
+	UBS_bank_icon_frames = yes
+	set_country_flag = {
+		flag = shouru_zhichu_CD_30
+		value = 1
+		days = 27
+	}
+}
+
+#GDP排行
+generate_econ_rankings = {
+	clear_array = global.econ_countries
+	every_country = {
+		add_to_array = {
+			global.econ_countries = THIS
+		}
+	}
+	get_sorted_scored_countries = {
+		scorer = GDP_rank_scorer
+		array = global.econ_countries
+	}
+	# Set up ranking positions
+	for_each_scope_loop = {
+		array = global.econ_countries
+		add_to_variable = {
+			global.econ_countries_index = 1
+		}
+		set_variable = {
+			econ_ranking = global.econ_countries_index
+		}
+	}
+	clear_variable = global.econ_countries_index
+	#####
+	clear_array = global.indu_countries
+	every_country = {
+		add_to_array = {
+			global.indu_countries = THIS
+		}
+	}
+	get_sorted_scored_countries = {
+		scorer = industy_rank_scorer
+		array = global.indu_countries
+	}
+	# Set up ranking positions
+	for_each_scope_loop = {
+		array = global.indu_countries
+		add_to_variable = {
+			global.indu_countries_index = 1
+		}
+		set_variable = {
+			indu_ranking = global.indu_countries_index
+		}
+	}
+	clear_variable = global.indu_countries_index
+}
+
+#教育经费
+education_fund_up_effet = {
+	if = {
+		limit = {
+			has_idea = education_fund_1
+		}
+		swap_ideas = {
+			remove_idea = education_fund_1
+			add_idea = education_fund_2
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = education_fund_2
+		}
+		swap_ideas = {
+			remove_idea = education_fund_2
+			add_idea = education_fund_3
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = education_fund_3
+		}
+		swap_ideas = {
+			remove_idea = education_fund_3
+			add_idea = education_fund_4
+		}
+	}
+	else_if = {
+		limit = {
+			not = {
+				has_idea = education_fund_4
+			}
+		}
+		add_ideas = education_fund_1
+	}
+}
+
+education_fund_down_effet = {
+	if = {
+		limit = {
+			has_idea = education_fund_4
+		}
+		swap_ideas = {
+			remove_idea = education_fund_4
+			add_idea = education_fund_3
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = education_fund_3
+		}
+		swap_ideas = {
+			remove_idea = education_fund_3
+			add_idea = education_fund_2
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = education_fund_2
+		}
+		swap_ideas = {
+			remove_idea = education_fund_2
+			add_idea = education_fund_1
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = education_fund_1
+		}
+		remove_ideas = education_fund_1
+		set_variable = {
+			level_of_education_fund = 0
+		}
+	}
+}

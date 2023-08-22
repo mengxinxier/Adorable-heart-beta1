@@ -1,0 +1,273 @@
+on_actions = {
+	on_start = {
+		effect = {
+			if = {
+				limit = {
+					Kivotos_is_kivotos_country = yes
+				}
+				Kivotos_check_manpower_limit_effect = yes
+				Kivotos_factory_additional = yes
+				
+			}
+		}
+	}
+	on_daily = {
+		effect = {
+			IF = {
+				limit = {
+					has_global_flag = Kivotos_union_leader_vote_start
+					NOT = {
+						has_global_flag = Kivotos_union_leader_vote_end_flag
+					} 
+				}
+				random_country = {
+					limit = {
+						has_country_flag = Kivotos_vote_main
+					}
+					set_variable = { global.leader_vote_time = days_mission_timeout@Kivotos_union_leader_vote_end }
+				}
+			}
+		}
+	}
+	on_new_term_election = {
+		random_events = {
+			100 = TRY_election.1
+		}
+	}
+	on_startup = {
+		effect = {
+			every_country = {
+				IF = {
+					limit = { Kivotos_is_kivotos_country = yes }
+					set_variable = { another_country_leader_group = 8 }
+				}
+			}
+		}
+	}
+	on_war_relation_added = {
+		effect = { 
+			IF = {
+				limit = {
+					ROOT = {
+						OR = {
+							tag = TRY
+							tag = GEH
+						}
+					}
+					FROM = {
+						OR = {
+							tag = TRY
+							tag = GEH
+						}
+					}
+					NOT = { has_global_flag = FLAG_TRY_GEH_WAR_END }
+				}
+				ROOT = {
+					add_civil_war_target = FROM
+					add_ideas = TRY_GEH_WAR_idea
+					drop_cosmetic_tag = yes
+				}
+				FROM = {
+					add_civil_war_target = ROOT
+					add_ideas = TRY_GEH_WAR_idea
+					drop_cosmetic_tag = yes
+				}
+				every_state = {
+					limit = {
+						OR = {
+							is_core_of = GEH
+							is_core_of = TRY
+						}
+					}
+					add_dynamic_modifier = {
+						modifier = TRY_GEH_WAR_modifier
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					ROOT = {
+						tag = TRY
+						has_completed_focus = TRY_Mika_diplomacy_focus_12
+					}
+					FROM = {
+						tag = ABY
+					}
+					NOT = { has_global_flag = TRY_ABY_WAR_END }
+				}
+				ROOT = {
+					add_civil_war_target = FROM
+					drop_cosmetic_tag = yes
+				}
+				FROM = {
+					add_civil_war_target = ROOT
+					drop_cosmetic_tag = yes
+				}
+				KVO = {
+					country_event = TRY_from.5
+				}
+			}
+		}
+	}
+	on_civil_war_end = {
+		effect = {
+			IF = {
+				limit = {
+					ROOT = {
+						tag = TRY
+						has_focus_tree = Kivotos_TRY_focus_PartII_mika
+					}
+					FROM = {
+						tag = GEH
+					}
+				}
+				ROOT = { 
+					country_event = TRY.21
+					remove_ideas = TRY_last_war
+					remove_ideas = TRY_last_war_1
+					remove_ideas = TRY_fast_production
+					remove_ideas = TRY_GEH_WAR_idea
+					remove_ideas = TRY_GEH_WAR_idea
+					remove_ideas = TRY_fading_enthusiasm
+					set_country_flag = TRY_GEH_war_win
+					complete_national_focus = TRY_PartII_focus_Mika_5
+				}
+				FROM = {
+					remove_ideas = TRY_GEH_WAR_idea
+					set_global_flag = FLAG_TRY_GEH_WAR_END
+				}
+				every_state = {
+					limit = {
+						OR = {
+							is_core_of = GEH
+							is_core_of = TRY
+						}
+					}
+					remove_dynamic_modifier = {
+						modifier = TRY_GEH_WAR_modifier
+					}
+				}
+				every_state = {
+					limit = {
+						is_core_of = GEH
+					}
+					add_dynamic_modifier = {
+						modifier = Kivotos_resistance_3
+					}
+					add_resistance = 50
+				}
+			}
+			IF = {
+				limit = {
+					ROOT = {
+						tag = TRY
+						has_completed_focus = TRY_Mika_diplomacy_focus_12
+						NOT = { has_global_flag = TRY_ABY_WAR_END }
+					}
+					FROM = {
+						tag = ABY
+					}
+				}
+				set_global_flag = TRY_ABY_WAR_END
+			}
+			IF = {
+				limit = { 
+					ROOT = { 
+						original_tag = ABY
+						has_government = democratic
+					}
+					FROM = {
+						original_tag = ABY
+						has_government = neutrality
+					}
+					has_global_flag = ABY_KaiserPMC_war_start
+					NOT = { has_global_flag = ABY_KaiserPMC_war_end }
+				}
+				set_global_flag = ABY_KaiserPMC_war_end
+				delete_unit_template_and_units = {
+					division_template = "正义实现委员会编制"
+				}
+				delete_unit_template_and_units = {
+					division_template = "风纪委员会编制"
+				}
+				delete_unit_template_and_units = {
+					division_template = "对策委员会"
+				}
+				delete_unit_template_and_units = {
+					division_template = "德国志愿军"
+				}
+				else_if = {
+					limit = { 
+						ROOT = { 
+							original_tag = ABY
+							has_government = neutrality
+						}
+						FROM = {
+							original_tag = ABY
+							has_government = democratic
+						}
+						has_global_flag = ABY_KaiserPMC_war_start
+						NOT = { has_global_flag = ABY_KaiserPMC_war_end }
+					}
+					FROM = {
+						delete_unit_template_and_units = {
+							division_template = "正义实现委员会编制"
+						}
+						delete_unit_template_and_units = {
+							division_template = "风纪委员会编制"
+						}
+						delete_unit_template_and_units = {
+							division_template = "对策委员会"
+						}
+						delete_unit_template_and_units = {
+							division_template = "德国志愿军"
+						}
+						retire_character = ABY_hoshino
+						retire_character = ABY_ayane
+						retire_character = ABY_shiroko
+						retire_character = ABY_serika
+						retire_character = ABY_nonomi
+						set_politics = {
+							ruling_party = neutrality
+							elections_allowed = no
+						}
+						set_popularities = {
+							democratic = 20
+							neutrality = 75
+							fascism = 5
+							communism = 0
+						}
+						add_ideas = Kivotos_robot_leader
+						drop_cosmetic_tag = yes
+						set_cosmetic_tag = ger_emper_grey
+						annex_country = {
+							target = ROOT
+							transfer_troops = yes
+						}
+					}
+					ROOT = {
+						FROM = {
+							country_event = ABY_hidden.1
+						}
+					}
+					set_global_flag = ABY_KaiserPMC_war_end
+				}
+			}
+		}
+	}
+	on_peaceconference_ended = { 
+		effect = {
+			if = {
+				limit = { has_global_flag = ABY_color_erosion_timeout_token }
+				every_state = {
+					limit = { 
+						is_owned_by = FROM 
+						NOT = { is_core_of = FROM }
+					}
+					set_state_flag = ABY_color_erosion_non_has
+				}
+				clr_global_flag = ABY_color_erosion_timeout_token
+			}
+		} 
+	}
+}

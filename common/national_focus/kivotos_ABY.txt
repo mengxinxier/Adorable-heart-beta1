@@ -1,0 +1,969 @@
+#!gfx:interface\Kivotos_goals.gfx
+
+shared_focus = {
+	id = ABY_base_focus
+	icon = GFX_ABY_base_focus_icon
+	bypass = {
+		OR = {
+			has_government = neutrality
+			has_government = fascism
+		}
+	}
+	cost = 1
+	x = 3
+	y = 0
+	cancelable = no
+	completion_reward = {
+		country_event = ABY.1 #介绍事件/永无尽头
+		hidden_effect = {
+			country_event = {
+				id = ABY.2 #财政危机权力平衡触发事件
+				days = 5
+			}
+			country_event = {
+				id = ABY.3 #佣兵袭击触发事件
+				days = 11
+			}
+		}
+	}
+}
+shared_focus = {
+	id = ABY_fighting_the_debt_crisis
+	icon = GFX_ABY_fighting_the_debt_crisis_icon
+	prerequisite = { focus = ABY_base_focus }
+	relative_position_id = ABY_base_focus
+	available = { has_government = democratic }
+	cost = 3
+	x = -2
+	y = 1
+	completion_reward = {
+		add_stability = 0.1
+		add_war_support = 0.1
+	}
+}
+shared_focus = {
+	id = ABY_mercenary_problem
+	icon = GFX_ABY_mercenary_problem_icon
+	prerequisite = { focus = ABY_base_focus }
+	relative_position_id = ABY_base_focus
+	available = {
+		has_government = democratic
+		has_idea = ABY_mercenary_attack
+	}
+	cost = 1
+	x = 0
+	y = 1
+	completion_reward = {
+		add_political_power = 10
+		unlock_decision_category_tooltip = Kivotos_ABY_mercenary_problem_decision
+	}
+	ai_will_do = {
+		factor = 5
+	}
+}
+shared_focus = {
+	id = ABY_enhance_troop_morale
+	icon = GFX_ABY_enhance_troop_morale_icon
+	prerequisite = { focus = ABY_fighting_the_debt_crisis }
+	relative_position_id = ABY_fighting_the_debt_crisis
+	available = {
+		has_government = democratic
+		has_idea = ABY_never_end
+		custom_trigger_tooltip = {
+			tooltip = ABY_enhance_troop_morale_flag_trigger_tooltip
+			has_country_flag = ABY_morale_event
+		}
+		custom_trigger_tooltip = {
+			tooltip = ABY_enhance_troop_morale_time_trigger_tooltip
+			always = yes
+		}
+	}
+	continue_if_invalid = yes
+	cost = 1
+	x = -2
+	y = 1
+	completion_reward = {
+		add_political_power = 10
+		add_war_support = 0.07
+		custom_effect_tooltip = ABY_enhance_troop_morale_effect_tooltip
+		clr_country_flag = ABY_morale_event
+		hidden_effect = {
+			if = { 
+				limit = { has_war_support > 0.75 }
+				remove_ideas = ABY_never_end
+			}
+			else = {
+				uncomplete_national_focus = { focus = ABY_enhance_troop_morale }
+			}
+		}
+	}
+	ai_will_do = {
+		factor = 5
+	}
+}
+shared_focus = {
+	id = ABY_emergency_means
+	icon = GFX_ABY_emergency_means_icon
+	prerequisite = { focus = ABY_fighting_the_debt_crisis }
+	relative_position_id = ABY_fighting_the_debt_crisis
+	available = {
+		has_government = democratic
+		has_power_balance = {
+			id = ABY_debt_crisis_balance
+		}
+	}
+	cost = 1
+	x = 2
+	y = 1
+	completion_reward = {
+		add_political_power = 10
+		unlock_decision_category_tooltip = Kivotos_ABY_emergency_means_decision
+	}
+}
+shared_focus = {
+	id = ABY_ask_for_help
+	icon = GFX_ABY_ask_for_help_icon
+	prerequisite = { focus = ABY_fighting_the_debt_crisis }
+	relative_position_id = ABY_fighting_the_debt_crisis
+	available = {
+		has_government = democratic
+	}
+	cost = 3
+	x = 0
+	y = 1
+	completion_reward = {
+		add_war_support = 0.1
+		add_political_power = 30
+	}
+}
+shared_focus = {
+	id = ABY_ask_help_from_schale
+	icon = GFX_ABY_ask_help_from_schale_icon
+	prerequisite = { focus = ABY_ask_for_help }
+	relative_position_id = ABY_ask_for_help
+	available = {
+		has_government = democratic
+		SCH = { exists = yes }
+		NOT = { 
+			has_completed_focus = ABY_ask_help_from_germany
+			has_completed_focus = ABY_help_from_federation
+		}
+	}
+	cost = 3
+	x = -2
+	y = 1
+	completion_reward = {
+		SCH = { country_event = ABY_from.1 }
+	}
+	ai_will_do = {
+		factor = 5
+	}
+}
+shared_focus = {
+	id = ABY_help_from_schale
+	icon = GFX_ABY_help_from_schale_icon
+	prerequisite = { focus = ABY_ask_help_from_schale }
+	relative_position_id = ABY_ask_help_from_schale
+	available = {
+		always = no
+	}
+	cost = 0
+	x = 0
+	y = 1
+	completion_reward = {
+		add_political_power = 30
+		add_war_support = 0.05
+		set_country_flag = ABY_morale_event
+		custom_effect_tooltip = ABY_morale_event_tt
+		custom_effect_tooltip = ABY_unlock_more_mercenary_problem_decision
+	}
+}
+shared_focus = {
+	id = ABY_ask_help_from_federation
+	icon = GFX_ABY_ask_help_from_federation_icon
+	prerequisite = { focus = ABY_ask_for_help }
+	relative_position_id = ABY_ask_for_help
+	available = {
+		has_government = democratic
+		NOT = { 
+			has_completed_focus = ABY_ask_help_from_germany
+			has_completed_focus = ABY_help_from_schale
+		}
+	}
+	cost = 3
+	x = 0
+	y = 1
+	completion_reward = {
+		KVO = { country_event = ABY_from.2 }
+	}
+	ai_will_do = {
+		factor = 2
+	}
+}
+shared_focus = {
+	id = ABY_help_from_federation
+	icon = GFX_ABY_help_from_federation_icon
+	prerequisite = { focus = ABY_ask_help_from_federation }
+	relative_position_id = ABY_ask_help_from_federation
+	available = {
+		always = no
+	}
+	cost = 0
+	x = 0
+	y = 1
+	completion_reward = {
+		add_political_power = 50
+		add_war_support = 0.1
+		set_country_flag = ABY_morale_event
+		custom_effect_tooltip = ABY_morale_event_tt
+		custom_effect_tooltip = ABY_unlock_more_mercenary_problem_decision
+	}
+}
+shared_focus = {
+	id = ABY_ask_help_from_germany
+	icon = GFX_ABY_ask_help_from_germany_icon
+	prerequisite = { focus = ABY_ask_for_help }
+	relative_position_id = ABY_ask_for_help
+	available = {
+		has_government = democratic
+		NOT = { 
+			has_completed_focus = ABY_help_from_federation
+			has_completed_focus = ABY_help_from_schale
+		}
+	}
+	cost = 3
+	x = 2
+	y = 1
+	completion_reward = {
+		custom_effect_tooltip = ABY_ask_help_from_germany_tt
+		drop_cosmetic_tag = yes
+		leave_faction = yes
+		GER = { country_event = ABY_from.3 }
+	}
+	ai_will_do = {
+		factor = 1
+	}
+}
+shared_focus = {
+	id = ABY_help_from_germany
+	icon = GFX_ABY_help_from_germany_icon
+	prerequisite = { focus = ABY_ask_help_from_germany }
+	relative_position_id = ABY_ask_help_from_germany
+	available = {
+		always = no
+	}
+	bypass = {
+		has_country_flag = ABY_nobody_help_me
+	}
+	cost = 0
+	x = 0
+	y = 1
+	completion_reward = {
+		if = {
+			limit = { NOT = { has_country_flag = ABY_nobody_help_me } }
+			add_political_power = 30
+			add_stability = -0.1
+			add_war_support = 0.1
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.1
+			}
+			set_country_flag = ABY_morale_event
+			custom_effect_tooltip = ABY_morale_event_tt
+			custom_effect_tooltip = ABY_unlock_more_mercenary_problem_decision
+		}
+	}
+}
+shared_focus = {
+	id = ABY_deal_with_mercenaries
+	icon = GFX_ABY_deal_with_mercenaries_icon
+	prerequisite = { 
+		focus = ABY_help_from_schale 
+		focus = ABY_help_from_federation 
+		focus = ABY_help_from_germany 
+	}
+	relative_position_id = ABY_help_from_federation
+	available = {
+		has_government = democratic
+		custom_trigger_tooltip = {
+			tooltip = ABY_deal_with_mercenaries_trigger_tooltip
+			NOT = { check_variable = { ABY_mercenaries_power > 3 } }
+		}
+	}
+	cost = 5
+	x = 1
+	y = 1
+	completion_reward = {
+		add_war_support = 0.1
+		add_political_power = 50
+		set_country_flag = ABY_morale_event
+		custom_effect_tooltip = ABY_morale_event_tt
+		remove_ideas = ABY_mercenary_attack
+	}
+}
+shared_focus = {
+	id = ABY_investigate_kaiser
+	icon = GFX_ABY_investigate_kaiser_icon
+	prerequisite = { 
+		focus = ABY_help_from_schale 
+		focus = ABY_help_from_federation 
+		focus = ABY_help_from_germany 
+	}
+	relative_position_id = ABY_help_from_federation
+	available = {
+		has_government = democratic
+	}
+	cost = 3
+	x = -1
+	y = 1
+	completion_reward = {
+		add_political_power = 30
+		add_war_support = 0.1
+	}
+}
+shared_focus = {
+	id = ABY_adult_means
+	icon = GFX_ABY_adult_means_icon
+	prerequisite = { focus = ABY_investigate_kaiser }
+	prerequisite = { focus = ABY_help_from_schale }
+	relative_position_id = ABY_investigate_kaiser
+	mutually_exclusive = { focus = ABY_reveal_everything }
+	available = {
+		has_government = democratic
+	}
+	cost = 1
+	x = -1
+	y = 1
+	completion_reward = {
+		remove_ideas = ABY_debt_crisis
+		remove_ideas = ABY_mercenary_attack
+		remove_power_balance = {
+			id = ABY_debt_crisis_balance
+		}
+		delete_unit_template_and_units = {
+			division_template = "凯撒PMC"
+		}
+		add_political_power = 100
+		add_stability = 0.15
+		add_war_support = 0.15
+	}
+}
+shared_focus = {
+	id = ABY_reveal_everything
+	icon = GFX_ABY_reveal_everything_icon
+	prerequisite = { focus = ABY_investigate_kaiser }
+	prerequisite = { focus = ABY_deal_with_mercenaries }
+	relative_position_id = ABY_investigate_kaiser
+	mutually_exclusive = { focus = ABY_adult_means }
+	available = {
+		has_government = democratic
+	}
+	cost = 3
+	x = 1
+	y = 1
+	completion_reward = {
+		remove_power_balance = {
+			id = ABY_debt_crisis_balance
+		}
+		IF = {
+			limit = {
+				has_completed_focus = ABY_help_from_germany
+				NOT = { has_country_flag = ABY_nobody_help_me }
+			}
+			GER = { country_event = ABY_from.5 }
+		}
+		else_if = {
+			limit = { NOT = { has_country_flag = ABY_nobody_help_me } }
+			KVO = { country_event = ABY_from.4 }
+		}
+		else = {
+			delete_unit_template_and_units = {
+				division_template = "凯撒PMC"
+			}
+			start_civil_war = {
+				ideology = neutrality
+				capital = 1093
+				states = { 1093 }
+				keep_all_characters = yes
+				hidden_effect = {
+					PREV = {
+						PMC_director = {
+							set_nationality = PREV.PREV
+						}
+					}
+					promote_character = PMC_director
+					load_oob = Kaiser_PMC
+				}
+			}
+			load_oob = ABY_VS_Kaiser
+			set_global_flag = ABY_KaiserPMC_war_start
+			hidden_effect = {
+				every_country = {
+					limit = { Kivotos_is_kivotos_country = yes }
+					news_event = {
+						id = ABY_NEWS.1
+						days = 1
+					}
+				}
+			}
+		}
+	}
+}
+shared_focus = {
+	id = ABY_nationalization_of_PMC_heritage
+	icon = GFX_ABY_reveal_everything_icon
+	prerequisite = { focus = ABY_reveal_everything }
+	relative_position_id = ABY_reveal_everything
+	available = {
+		OR = {
+			has_government = democratic
+			has_government = fascism
+		}
+		NOT = { 
+			has_idea = ABY_debt_crisis 
+			has_civil_war = yes
+			has_country_flag = ABY_peace_resolve_debt
+		}
+	}
+	cost = 10
+	x = 1
+	y = 1
+	completion_reward = {
+		add_political_power = 100
+		add_stability = 0.1
+		add_equipment_to_stockpile = {
+			type = Kivotos_inf_equipment_0
+			amount = 5000
+			producer = ABY
+		}
+		add_equipment_to_stockpile = {
+			type = Kivotos_art_equipment_0
+			amount = 300
+			producer = ABY
+		}
+		add_equipment_to_stockpile = {
+			type = support_equipment_1
+			amount = 500
+			producer = ABY
+		}
+		add_equipment_to_stockpile = {
+			type = Kivotos_robot_0
+			amount = 10000
+			producer = ABY
+		}
+		109 = { 
+			add_extra_state_shared_building_slots = 4 
+			add_building_construction = {
+				type = arms_factory
+				level = 4
+				instant_build = yes
+			}
+		}
+		1093 = { 
+			add_extra_state_shared_building_slots = 2 
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+	ai_will_do = {
+		factor = 5
+	}
+}
+shared_focus = {
+	id = ABY_abydos_rebirth
+	icon = GFX_ABY_abydos_rebirth_icon
+	prerequisite = { 
+		focus = ABY_reveal_everything 
+		focus = ABY_adult_means 
+	}
+	relative_position_id = ABY_reveal_everything
+	available = {
+		has_government = democratic
+		NOT = { 
+			has_idea = ABY_debt_crisis 
+			has_civil_war = yes
+		}
+	}
+	cost = 5
+	x = -1
+	y = 1
+	completion_reward = {
+		add_stability = 0.3
+		remove_ideas = ABY_never_end
+		set_party_name = {
+			ideology = democratic
+			long_name = ABY_committee_A_long
+			name = ABY_committee_A
+		}
+		set_party_name = {
+			ideology = fascism
+			long_name = ABY_committee_A_long
+			name = ABY_committee_A
+		}
+		add_country_leader_role = {
+			character = ABY_hoshino
+			promote_leader = yes
+			country_leader = {
+				ideology = Strasserism
+				traits = { ABY_hoshino_leader_trait }
+			}
+		}
+		if = {
+			limit = { has_completed_focus = ABY_help_from_germany }
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.5
+			}
+			set_politics = {
+				ruling_party = fascism
+				elections_allowed = no
+			}
+			add_ideas = ABY_abydos_revenge_idea
+			if = {
+				limit = { NOT = { has_country_flag = ABY_nobody_help_me } }
+				set_country_flag = Kivotos_GER_support_enable
+			}
+		}
+		else = {
+			add_ideas = ABY_abydos_rebirth_idea
+		}
+		custom_effect_tooltip = ABY_get_new_students_tt
+	}
+}
+shared_focus = {
+	id = ABY_true_rebirth
+	icon = GFX_ABY_true_rebirth_icon
+	prerequisite = { 
+		focus = ABY_abydos_rebirth 
+		focus = ABY_legalize_kaiser_school
+	}
+	prerequisite = { 
+		focus = ABY_help_from_germany 
+		focus = ABY_legalize_kaiser_school
+	}
+	mutually_exclusive = { focus = ABY_unify_tickets }
+	relative_position_id = ABY_abydos_rebirth
+	available = {
+		IF = {
+			limit = {
+				has_government = neutrality
+			}
+			any_other_country = {
+				Kivotos_is_kivotos_country = yes
+				is_faction_leader = yes
+				NOT = { is_in_faction_with = ROOT }
+			}
+		}
+	}
+	cost = 10
+	x = 3
+	y = 1
+	completion_reward = {
+		every_other_country = {
+			limit = { Kivotos_is_kivotos_country = yes }
+			every_state = {
+				limit = { 
+					is_core_of = PREV
+				}
+				add_claim_by = ROOT
+			}
+		}
+		unlock_decision_category_tooltip = Kivotos_ABY_true_rebirth_decision
+	}
+	ai_will_do = {
+		factor = 5
+	}
+}
+
+shared_focus = {
+	id = ABY_the_end
+	icon = GFX_ABY_the_end_icon
+	prerequisite = { focus = ABY_base_focus }
+	relative_position_id = ABY_base_focus
+	bypass = {
+		NOT = { has_completed_focus = ABY_abydos_rebirth }
+		has_government = fascism
+	}
+	available = {
+		has_government = neutrality
+		NOT = { has_civil_war = yes }
+	}
+	cost = 3
+	x = 2
+	y = 1
+	completion_reward = {
+		add_political_power = 100
+		set_stability = 0.5
+		set_war_support = 0.5
+		mark_focus_tree_layout_dirty = yes
+		set_division_template_lock = {
+			division_template = "凯撒PMC"
+			is_locked = no
+		}
+	}
+}
+shared_focus = {
+	id = ABY_replanning_autonomous_region
+	icon = GFX_ABY_replanning_autonomous_region_icon
+	prerequisite = { focus = ABY_the_end }
+	relative_position_id = ABY_the_end
+	bypass = {
+		has_government = fascism
+	}
+	cost = 10
+	x = 0
+	y = 1
+	completion_reward = {
+		add_political_power = -50
+		add_stability = -0.2
+		109 = { 
+			add_extra_state_shared_building_slots = 6 
+			add_building_construction = {
+				type = arms_factory
+				level = 4
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		1093 = { 
+			add_extra_state_shared_building_slots = 4 
+			add_building_construction = {
+				type = industrial_complex
+				level = 2
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+shared_focus = {
+	id = ABY_kaiser_school
+	icon = GFX_ABY_kaiser_school_icon
+	prerequisite = { focus = ABY_replanning_autonomous_region }
+	relative_position_id = ABY_replanning_autonomous_region
+	bypass = {
+		has_government = fascism
+	}
+	cost = 5
+	x = 0
+	y = 1
+	completion_reward = {
+		add_ideas = ABY_kaiser_school_idea
+	}
+}
+shared_focus = {
+	id = ABY_get_new_students
+	icon = GFX_ABY_get_new_students_icon
+	prerequisite = { focus = ABY_kaiser_school }
+	relative_position_id = ABY_kaiser_school
+	bypass = {
+		has_government = fascism
+	}
+	cost = 5
+	x = 0
+	y = 1
+	completion_reward = {
+		add_to_variable = { Kivotos_student_army_limit = 50 }
+		custom_effect_tooltip = Kivotos_ABY_get_new_students_action_2_tt
+		custom_effect_tooltip = ABY_get_new_students_tt
+	}
+}
+shared_focus = {
+	id = ABY_plan_b
+	icon = GFX_ABY_plan_b_icon
+	prerequisite = { focus = ABY_get_new_students }
+	mutually_exclusive = { focus = ABY_desert_project }
+	relative_position_id = ABY_get_new_students
+	available = {
+		any_other_country = {
+			Kivotos_is_kivotos_country = yes
+			is_faction_leader = yes
+			exists = yes
+		}
+		NOT = { has_government = fascism }
+	}
+	cost = 3
+	x = -1
+	y = 1
+	completion_reward = {
+		add_stability = 0.1
+		add_war_support = 0.1
+		add_political_power = 50
+		custom_effect_tooltip = ABY_plan_b_tt
+	}
+}
+shared_focus = {
+	id = ABY_focus_kaiser_school
+	icon = GFX_ABY_focus_kaiser_school_icon
+	prerequisite = { focus = ABY_plan_b }
+	relative_position_id = ABY_plan_b
+	available = {
+		
+	}
+	cost = 3
+	x = 0
+	y = 1
+	completion_reward = {
+		set_cosmetic_tag = Kaiser_School
+		add_stability = 0.25
+		add_political_power = 100
+		add_to_variable = {
+			var = research_point_weekly
+			value = 200
+			tooltip = research_point_weekly_get_200
+		}
+		swap_ideas = {
+			remove_idea = ABY_kaiser_school_idea
+			add_idea = ABY_kaiser_school_a_idea
+		}
+		custom_effect_tooltip = Kivotos_mobilization_20_tt
+	}
+}
+shared_focus = {
+	id = ABY_legalize_kaiser_school
+	icon = GFX_ABY_legalize_kaiser_school_icon
+	prerequisite = { focus = ABY_focus_kaiser_school }
+	relative_position_id = ABY_focus_kaiser_school
+	available = {
+		KVO = { exists = yes }
+	}
+	cost = 1
+	x = 0
+	y = 1
+	completion_reward = {
+		country_event = ABY.4
+	}
+}
+shared_focus = {
+	id = ABY_unify_tickets
+	icon = GFX_ABY_unify_tickets_icon
+	prerequisite = { focus = ABY_legalize_kaiser_school }
+	relative_position_id = ABY_legalize_kaiser_school
+	mutually_exclusive = { focus = ABY_true_rebirth }
+	available = {
+		threat > 0.2
+		any_other_country = {
+			is_faction_leader = yes
+			Kivotos_is_kivotos_country = yes
+			is_in_faction_with = ROOT
+			any_other_country = {
+				is_in_faction_with = PREV
+				Kivotos_is_kivotos_country = yes
+			}
+		}
+	}
+	bypass = {
+		has_country_flag = Kivotos_vote_yes
+		NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
+	}
+	cost = 5
+	x = 1
+	y = 1
+	completion_reward = {
+		set_country_flag = Kivotos_vote_yes
+		custom_effect_tooltip = kivotos_general_diplomacy_KVO_6_tt
+		IF = {
+			limit = {
+				any_other_country = {
+					NOT = {
+						has_country_flag = Kivotos_vote_yes
+					}
+				}
+			}
+			set_country_flag = Kivotos_vote_main
+			add_to_variable = {
+				Influence = 5
+			}
+			every_other_country = {
+				limit = {
+					Kivotos_is_kivotos_country = yes
+					is_in_faction_with = KVO
+					exists = yes
+					NOT = {
+						original_tag = KVO
+						original_tag = ARI
+						original_tag = SRT
+						original_tag = VAL
+					}
+				}
+				country_event = Kivotos_union_leader_vote.2
+			}
+			hidden_effect = {
+				KVO = {
+					country_event = {
+						id = Kivotos_general.5
+						days = 90
+						random_days = 30 
+					}
+				}
+			}
+		}
+	}
+}
+shared_focus = {
+	id = ABY_desert_project
+	icon = GFX_ABY_desert_project_icon
+	prerequisite = { focus = ABY_get_new_students }
+	mutually_exclusive = { focus = ABY_plan_b }
+	relative_position_id = ABY_get_new_students
+	bypass = {
+		has_government = fascism
+	}
+	cost = 5
+	x = 1
+	y = 1
+	select_effect = {
+		country_event = {
+			id = ABY.6
+			days = 7
+		}
+		country_event = {
+			id = ABY.7
+			days = 14
+		}
+		country_event = {
+			id = ABY.8
+			days = 21
+		}
+		country_event = {
+			id = ABY.2000
+			days = 35
+		}
+	}
+	completion_reward = {
+		if = {
+			limit = { has_completed_focus = ABY_desert_project }
+			effect_tooltip = { country_event = ABY.2000 }
+		}
+		else = {
+			custom_effect_tooltip = ABY_desert_project_tt
+		}
+		mark_focus_tree_layout_dirty = yes
+	}
+	ai_will_do = {
+		base = 0
+	}
+}
+shared_focus = {
+	id = ABY_the_unexpected
+	icon = GFX_ABY_the_unexpected_icon
+	prerequisite = { focus = ABY_desert_project }
+	relative_position_id = ABY_desert_project
+	bypass = {
+		has_government = fascism
+	}
+	available = {
+		if = { 
+			limit = { has_completed_focus = ABY_desert_project }
+			always = no
+		}
+	}
+	cost = 5
+	x = 0
+	y = 1
+	cancelable = no
+	completion_reward = {
+		if = {
+			limit = { has_completed_focus = ABY_the_unexpected }
+			effect_tooltip = { 
+				add_popularity = {
+					ideology = fascism
+					popularity = 1
+				}
+				set_politics = {
+					ruling_party = fascism
+					elections_allowed = no
+				}
+				set_party_name = {
+					ideology = fascism
+					long_name = ABY_color_subideology
+					name = ABY_color_subideology
+				}
+				set_party_name = {
+					ideology = democratic
+					long_name = ABY_null
+					name = ABY_null
+				}
+				set_party_name = {
+					ideology = neutrality
+					long_name = ABY_null
+					name = ABY_null
+				}
+				set_party_name = {
+					ideology = communism
+					long_name = ABY_null
+					name = ABY_null
+				}
+				add_country_leader_role = {
+					character = ABY_kuroko
+					promote_leader = yes
+					country_leader = {
+						ideology = ABY_color_subideology
+						expire = "2000.1.1.1"
+						traits = { }
+					}
+				}
+				swap_ideas = {
+					remove_idea = ABY_kaiser_school_idea
+					add_idea = ABY_color_idea
+				}
+				retire_character = PMC_director
+				add_ideas = Kivotos_student
+				add_ideas = Kivotos_mobilization_0
+				add_ideas = closed_economy
+				add_ideas = tot_economic_mobilisation
+				add_ideas = KEI_Research_Restricted
+				add_ideas = xingtai_xifen_not
+				country_lock_all_division_template = yes
+				set_cosmetic_tag = ABY_color
+			}
+		}
+		else_if = {
+			limit = { has_completed_focus = ABY_desert_project }
+		}
+		else = {
+			custom_effect_tooltip = ABY_the_unexpected_tt
+		}
+	}
+}
+shared_focus = {
+	id = ABY_color_land
+	icon = GFX_ABY_color_land_icon
+	prerequisite = { focus = ABY_the_unexpected }
+	relative_position_id = ABY_the_unexpected
+	available = {
+		if = {
+			limit = { has_completed_focus = ABY_the_unexpected }
+			has_country_leader_ideology = ABY_color_subideology
+		}
+		else_if = { 
+			limit = { has_completed_focus = ABY_desert_project }
+			always = no
+		}
+	}
+	cost = 5
+	x = 0
+	y = 1
+	cancelable = no
+	completion_reward = {
+		mark_focus_tree_layout_dirty = yes
+		if = {
+			limit = { has_completed_focus = ABY_the_unexpected }
+			unlock_decision_category_tooltip = Kivotos_ABY_color_decision
+		}
+		else = {
+			custom_effect_tooltip = ABY_color_land_tt
+		}
+	}
+}

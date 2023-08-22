@@ -1,0 +1,398 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			every_country = {
+				limit = {
+					or = {
+						tag = LAN
+						tag = TUR
+						tag = BUL
+						tag = GRE
+						tag = RIS
+						tag = PAL
+						tag = PER
+						tag = KUR
+						tag = OTT
+					}
+				}
+				set_variable = {
+					another_country_leader_group = 2
+				}
+			}
+			every_country = {
+				limit = {
+					has_idea = LAN_oil_treaty
+				}
+				every_owned_state = {
+					limit = {
+						has_resources_amount = {
+							resource = oil
+							amount > 9
+							delivered = yes
+						}
+						has_resources_amount = {
+							resource = oil
+							amount < 31
+							delivered = yes
+						}
+					}
+					owner = { give_resource_rights = { receiver = YEM state = PREV resources = { oil } } }
+				}
+			}
+			RIS = { country_event = { id = ris.1 days = 2 } }
+			292 = { set_state_flag = LAN_desert_state_flag }
+			675 = { set_state_flag = LAN_desert_state_flag }
+			991 = { set_state_flag = LAN_desert_state_flag }
+			678 = { set_state_flag = LAN_desert_state_flag }
+			981 = { set_state_flag = LAN_desert_state_flag }
+			915 = { set_state_flag = LAN_desert_state_flag }
+			994 = { set_state_flag = LAN_desert_state_flag }
+			1035 = { set_state_flag = LAN_desert_state_flag }
+			656 = { set_state_flag = LAN_desert_state_flag }
+			658 = { set_state_flag = LAN_desert_state_flag }
+			993 = { set_state_flag = LAN_desert_state_flag }
+			every_state = {
+				limit = {
+					is_controlled_by = GRE
+					is_on_continent = middle_east
+				}
+				controller = { give_resource_rights = { receiver = ENG state = PREV } }
+				if = {
+					limit = { NOT = { is_core_of = GRE } }
+					#start_resistance = yes
+					set_compliance = 20
+					set_resistance = 50
+					set_garrison_strength = 1.5
+				}
+			}
+			if = {
+				limit = { has_start_date < 1936.1.2 }
+				every_state = {
+					limit = {
+						is_core_of = TUR
+						is_controlled_by = GRE
+					}
+					set_state_flag = TUR_GRE_disputed_state_flag
+				}
+				GRE = {
+					country_lock_all_division_template = yes
+					country_event = { id = gre_ah.10 hours = 6 }
+					TUR = { set_occupation_law_where_available = no_garrison }
+					country_event = { id = gre_ah.8 days = 54 }
+					country_event = { id = gre_ah.1 days = 5 hours = 4 }
+					set_country_flag = GRE_factions_unlocked
+					set_variable = { var = GRE_monarchist_loyalty value = 1 }
+					set_variable = { var = GRE_republican_loyalty value = 2 }
+					set_variable = { var = GRE_communist_loyalty value = -1 }
+					set_variable = { var = GRE_fascist_loyalty value = 0 }
+					GRE_AH_political_instability_update_effect = yes
+				}
+			}
+			every_country = {
+				limit = {
+					has_opinion_modifier = BFTB_balkan_pact_ally
+					NOT = { has_idea = GRE_Balkan_Treaty }
+				}
+				add_ideas = GRE_Balkan_Treaty
+			}
+			KUR = { add_ideas = vampire_2 }
+			PER = {
+				capital_scope = {
+					add_dynamic_modifier = { modifier = PER_suspended_island_modifier }
+				}
+				every_owned_state = {
+					limit = {
+						is_coastal = yes
+						has_resources_amount = {
+							resource = oil
+							amount > 0
+							delivered = yes
+						}
+					}
+					owner = { give_resource_rights = { receiver = YEM state = PREV resources = { oil } } }
+				}
+				add_ideas = {
+					PER_Jiada_Kukokan_theorist
+					PER_Aiswordgur_Yajiz_high_command
+					PER_Dimitrier_Vatola
+					PER_Zii_Juranbalada_army_chief
+				}
+				set_power_balance = {
+					id = PER_power_struggle_bop
+					left_side = PER_centralization_bop_state
+					right_side = PER_centralization_bop_country
+					value = -0.10
+				}
+			}
+			998 = { set_state_flag = PER_north_state_flag }
+			419 = { set_state_flag = PER_north_state_flag }
+			266 = { set_state_flag = PER_north_state_flag }
+			420 = { set_state_flag = PER_north_state_flag }
+			418 = { set_state_flag = PER_north_state_flag }
+			416 = { set_state_flag = PER_north_state_flag }
+			416 = { set_state_flag = PER_east_state_flag }
+			410 = { set_state_flag = PER_east_state_flag }
+			414 = { set_state_flag = PER_east_state_flag }
+			410 = { set_state_flag = PER_south_state_flag }
+			411 = { set_state_flag = PER_south_state_flag }
+			412 = { set_state_flag = PER_south_state_flag }
+			413 = { set_state_flag = PER_south_state_flag }
+			413 = { set_state_flag = PER_west_state_flag }
+			421 = { set_state_flag = PER_west_state_flag }
+			417 = { set_state_flag = PER_west_state_flag }
+			998 = { set_state_flag = PER_west_state_flag }
+			TAM = { set_technology = { TAM_umamusume_technology = 1 popup = no } }
+			RIS = {
+				add_ideas = RIS_dusk_of_ottoman_empire
+			}
+		}
+	}
+	
+	on_declare_war = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							ROOT = {
+								TAG = LAN
+								has_country_flag = TUR_LAN_Middle_East_War_flag
+							}
+							FROM = {
+								TAG = TUR
+								has_country_flag = TUR_LAN_Middle_East_War_flag
+							}
+						}
+						AND = {
+							ROOT = {
+								TAG = TUR
+								has_country_flag = TUR_LAN_Middle_East_War_flag
+							}
+							FROM = {
+								TAG = LAN
+								has_country_flag = TUR_LAN_Middle_East_War_flag
+							}
+						}
+					}
+				}
+				if = {
+					limit = {
+						ROOT = { TAG = LAN }
+						FROM = { TAG = TUR }
+					}
+					hidden_effect = {
+						if = {
+							limit = { LAN = { NOT = { has_completed_focus = LAN_MEW_revange } } }
+							LAN = { country_event = { id = saudi_arabia.59 days = 2 } }
+						}
+					}
+				}
+				if = {
+					limit = {
+						ROOT = { TAG = TUR }
+						FROM = { TAG = LAN }
+						PER = { is_in_faction_with = ROOT }
+					}
+					PER = {
+						add_to_war = {
+							targeted_alliance = ROOT
+							enemy = LAN
+							hostility_reason = asked_to_join
+						}
+					}
+				}
+				hidden_effect = {
+					every_country = {
+						limit = { is_ai = no }
+						news_event =  { id = ME_news.2 hours = 2 }
+					}
+				}
+			}
+			if = {
+				limit = {
+					ROOT = {
+						TAG = LAN
+						has_completed_focus = MEOIL_expel_oil_company
+					}
+					FROM = {
+						TAG = YEM
+						any_controlled_state = { is_on_continent = middle_east }
+					}
+				}
+				YEM = { add_timed_idea = { idea = LAN_household_matters days = 70 } }
+			}
+			if = {
+				limit = {
+					ROOT = {
+						TAG = OTT
+						has_dynamic_modifier = {
+							modifier = OTT_attack_turkey
+						}
+					}
+					FROM = { TAG = TUR }
+				}
+				hidden_effect = {
+					ROOT = {
+						add_ideas = OTT_last_chance
+						OTT_invade_turkey = yes
+					}
+					every_country = {
+						limit = { is_ai = no }
+						news_event = { id = ME_news.3 hours = 3 }
+					}
+				}
+			}
+		}
+	}
+	
+	on_war = {
+		effect = {
+			if = {
+				limit = {
+					original_tag = GRE
+					has_idea = GRE_armed_forces_system_1
+				}
+				swap_ideas = {
+					remove_idea = GRE_armed_forces_system_1
+					add_idea = GRE_armed_forces_system_2
+				}
+			}
+		}
+	}
+	
+	on_peace = {
+		effect = {
+			if = {
+				limit = {
+					original_tag = GRE
+					has_idea = GRE_armed_forces_system_2
+				}
+				swap_ideas = {
+					remove_idea = GRE_armed_forces_system_2
+					add_idea = GRE_armed_forces_system_1
+				}
+			}
+		}
+	}
+	
+	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = {
+					FROM.FROM = { state = 266 }
+					FROM = {
+						has_war_with = ROOT
+						has_country_flag = TUR_LAN_Middle_East_War_flag
+					}
+					ROOT = {
+						has_war_with = FROM
+						has_country_flag = TUR_LAN_Middle_East_War_flag
+					}
+				}
+				FROM = {
+					every_other_country = {
+						limit = { has_war_with = PREV }
+						FROM = {
+							white_peace = {
+								tag = PREV
+								message = LAN_PER_MEW_war_message
+							}
+						}
+					}
+					leave_faction = yes
+					every_core_state = {
+						limit = { is_core_of = KUR }
+						KUR = { transfer_state = PREV }
+					}
+				}
+				if = {
+					limit = {
+						LAN = { is_faction_leader = yes }
+						KUR = { NOT = { is_in_faction_with = LAN } }
+						any_state = { is_controlled_by = KUR }
+					}
+					LAN = { add_to_faction = KUR }
+				}
+				if = {
+					limit = {
+						KUR = { NOT = { is_subject_of = LAN } }
+						any_state = { is_controlled_by = KUR }
+					}
+					LAN = {
+						set_autonomy = {
+							target = KUR
+							autonomous_state = autonomy_integrated_puppet
+						}
+					}
+				}
+				ROOT = {
+					faction_leader = {
+						country_event = { id = saudi_arabia.61 days = 1 }
+					}
+				}
+			}
+		}
+	}
+	
+	on_offer_join_faction = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						TAG = TUR
+						OR = {
+							has_completed_focus = TUR_join_eng
+							has_completed_focus = TUR_union_across_sea
+							has_completed_focus = TUR_trustworthy_alliance
+							has_completed_focus = TUR_embryonic_form_of_strategic_resource_alliance
+							has_completed_focus = TUR_associate_member_state
+							has_war = yes
+						}
+						NOT = { is_in_faction_with = PER }
+						faction_leader = { NOT = { has_war_with = PER } }
+					}
+				}
+				FROM = {
+					faction_leader = { PER = { country_event = generic.5 } }
+				}
+			}
+		}
+	}
+	
+	on_daily = {
+		effect = {
+			GRE = {
+				if = {
+					limit = {
+						OR = {
+							has_idea = GRE_armed_forces_system_1
+							has_idea = GRE_armed_forces_system_2
+						}
+					}
+					unit_limit_common_battalions_calculation_effect = yes
+				}
+			}
+		}
+	}
+
+	on_civil_war_end = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = { original_tag = TUR }
+					FROM = { NOT = { original_tag = OTT } }
+					all_enemy_country = { NOT = { has_country_flag = TUR_anatolian_civil_war_flag } }
+				}
+				clr_country_flag = TUR_anatolian_civil_war_flag
+				country_lock_all_division_template = no
+			}
+			if = {
+				limit = {
+					ROOT = { original_tag = TUR }
+					FROM = { original_tag = OTT }
+				}
+				TUR = { every_core_state = { remove_core_of = OTT } }
+			}
+		}
+	}
+}
