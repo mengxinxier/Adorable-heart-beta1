@@ -1,0 +1,764 @@
+add_namespace = MGU_event
+
+####MAGIUS事件链
+
+country_event = { #选择临时盟主
+	id = MGU_event.1000
+	title = MGU_event.1000.t
+	desc = MGU_event.1000.d
+	picture = GFX_event_MGU_envoy
+	
+	is_triggered_only = yes
+	fire_only_once = no
+
+	immediate = {
+	}
+
+	option = { #红晴结菜
+		name = MGU_event.1000.a
+		add_country_leader_role = {
+			character = "MGU_Kureha_Yuna"
+			country_leader={
+				ideology = interim_government_subtype
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+	}
+	option = { #七海八千代
+		name = MGU_event.1000.b
+		add_country_leader_role = {
+			character = "MGU_Nanami_Yachiyo"
+			country_leader={
+				ideology = interim_government_subtype
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+		add_popularity = { ideology = democratic popularity = 0.05 }
+	}
+	option = { #和泉十七夜
+		name = MGU_event.1000.c
+		add_country_leader_role = {
+			character = "MGU_Izumi_Kanagi"
+			country_leader={
+				ideology = interim_government_subtype
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+		add_popularity = { ideology = communism popularity = 0.05 }
+	}
+}
+
+####MAGIUS事件链
+
+
+country_event = { #来自魔联的使节
+	id = MGU_event.1
+	title = MGU_event.1.t
+	desc = MGU_event.1.d
+	picture = GFX_event_MGU_envoy
+	
+	is_triggered_only = yes
+	fire_only_once = no
+
+	immediate = {
+		hidden_effect = {
+		}
+	}
+				
+	option = { #劝说她们加入。
+		name = MGU_event.1.a
+		#news_event = { id = news.1022 days = 3}
+		MGS = {
+			country_event = { id = MGU_event.2 days = 2}
+		}
+	}
+}
+
+country_event = { #劝诱
+	id = MGU_event.2
+	title = MGU_event.2.t
+	desc = MGU_event.2.d
+	picture = GFX_event_MGU_envoy_miss
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = { #开弓没有回头箭。
+		name = MGU_event.2.a
+		MGU = {
+			country_event = { id = MGU_event.3 days = 3 }
+		}
+	}
+}
+
+country_event = { #大使返回
+	id = MGU_event.3
+	title = MGU_event.3.t
+	desc = MGU_event.3.d
+	picture = GFX_event_MGU_envoy_back
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = {
+		name = MGU_event.3.a
+		MGU = {
+			country_event = { id = MGU_event.4 days = 10 }
+		}
+		MGS = {
+			set_country_flag = MGU_ENVOY_BACK
+		}
+		
+	}
+	
+}
+
+country_event = { #环伊吕波的消息
+	id = MGU_event.4
+	title = MGU_event.4.t
+	desc = MGU_event.4.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = {
+		name = MGU_event.4.a
+		set_country_flag = MGU_IROHA_NEWS		
+		random_list = { 
+			60 = { #内战
+				MGS = {
+					country_event = { id = MGU_event.5 days = 3}
+				}
+			}
+			30 = { #大成功
+				country_event = { id = MGU_event.6 days = 3}
+			}  
+			10 = { #失败
+				country_event = { id = MGU_event.7 days = 3}
+			} 
+		}
+	}
+}
+
+
+country_event = { #环彩羽在玛吉斯之翼掀起了内战！
+	id = MGU_event.5
+	title = MGU_event.5.t
+	desc = MGU_event.5.d
+	picture = GFX_event_MGS_revolution
+	
+	is_triggered_only = yes
+	fire_only_once = no
+
+	immediate = {
+		hidden_effect = {
+			MGR = {
+				transfer_state = 896
+			}
+			896 = {
+					remove_core_of = MGS
+					add_core_of = MGR
+			}
+			MGS = {
+				transfer_units_fraction = {
+					target = MGR
+					size = 0.6
+					stockpile_ratio = 0.5
+					army_ratio = 0.6
+					navy_ratio = 0.6
+					air_ratio = 0.6
+					keep_unit_leaders = {		
+					}
+					keep_unit_leaders_trigger = {
+					always = yes
+					}
+				}
+			}
+			####开战MGS
+			MGR = {
+				declare_war_on = { target = MGS type = annex_everything } 
+			}
+			MGR = {
+				add_manpower = 200000
+				add_equipment_to_stockpile = {type = infantry_equipment_1 amount = 10000 }
+			}
+			####AI调整
+			MGU = {
+				add_ai_strategy = {
+					type = send_volunteers_desire
+					id = MGR
+					value = 400
+				}
+			}
+		}
+	}
+				
+	option = {
+		name = MGU_event.5.a	
+	}
+	option = {
+		name = MGU_event.5.b
+		MGR = {
+			change_tag_from = ROOT
+		}
+	}
+	
+}
+
+country_event = { #环伊吕波归来（好结局）
+	id = MGU_event.6
+	title = MGU_event.6.t
+	desc = MGU_event.6.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = {
+		name = MGU_event.6.a
+		MGU = {
+			puppet = MGS
+		}
+		MGS = {
+			add_country_leader_role = {
+				character = "MGU_Eternal_Sakura"
+				country_leader={
+					ideology = interim_government_subtype
+					#traits = { }
+					expire = "1999.1.1.1"
+					id = -1
+				}
+				promote_leader = yes
+			}
+		}
+	}
+}
+
+country_event = { #玛吉斯之翼的抗议（坏结局）
+	id = MGU_event.7
+	title = MGU_event.7.t
+	desc = MGU_event.7.d
+	picture = GFX_event_MGS_revolution
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = {
+		name = MGU_event.7.a
+		####开战MGS
+		MGS = {
+			declare_war_on = { target = MGU type = annex_everything } 
+		}
+		MGU = {
+			transfer_units_fraction = {
+				target = MGS
+				size = 0.6
+				stockpile_ratio = 0.5
+				army_ratio = 0.6
+				navy_ratio = 0.5
+				air_ratio = 0.4
+				keep_unit_leaders = {		
+				}
+				keep_unit_leaders_trigger = {
+				always = yes
+				}
+			}
+		}
+		MST = {
+			drop_cosmetic_tag = yes 
+		}
+	}
+}
+
+
+##后续
+
+country_event = { #环彩羽回归
+	id = MGU_event.8
+	title = MGU_event.8.t
+	desc = MGU_event.8.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = {
+		name = MGU_event.8.a
+		MGR = {
+			MGU_Tamaki_Iroha = {
+				set_nationality = MGU
+			}
+			MGU_Mitsuki_Felicia = {
+				set_nationality = MGU
+			}
+			MGU_Futaba_Sana = {
+				set_nationality = MGU
+			}
+		}
+		add_political_power = 100
+		army_experience = 100
+	}	
+}
+
+country_event = { #玛吉斯之翼解散
+	id = MGU_event.9
+	title = MGU_event.9.t
+	desc = MGU_event.9.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = {
+		name = MGU_event.9.a
+		MGS = {	
+			MGU_Satomi_Toka = {
+				set_nationality = MGU
+			}
+			MGU_Hiiragi_Nemu = {
+				set_nationality = MGU
+			}
+			MGU_Tomoe_Mami = {
+				set_nationality = MGU
+			}
+			MGU_Azusa_Mifuyu = {
+				set_nationality = MGU
+			}
+			MGU_Amane_Tsukuyo = {
+				set_nationality = MGU
+			}
+			MGU_Amane_Tsukasa = {
+				set_nationality = MGU
+			}
+			MGU_Midori_Ryou = {
+				set_nationality = MGU
+			}
+			MGU_Makino_Ikumi = {
+				set_nationality = MGU
+			}
+			MGU_Kuroe = {
+				set_nationality = MGU
+			}	
+			if = {
+				limit = {
+					MGR = { exists = no }
+				}
+				MGU_Tamaki_Ui = {
+					set_nationality = MGU
+				}
+			}
+		}
+		MGU = {
+			add_manpower = 5439
+			country_event = { id = MGU_event.10 days = 4 }
+		}
+	}	
+}
+
+
+###1936大选事件链 - 
+
+country_event = { #红晴结菜的san值是否正常
+	id = MGU_event.10
+	title = MGU_event.10.t
+	desc = MGU_event.10.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = { #正常
+		name = MGU_event.10.a
+		MGU = {
+			remove_country_leader_role = {
+				character = MGU_Kureha_Yuna
+				ideology = interim_government_subtype
+			}
+			clr_country_flag = MGU_SL_Nanami_Yachiyo
+		}
+		country_event = { id = MGU_event.15 days = 3 }
+	}
+	option = { #临时盟主的精神状态有些不对劲......
+		name = MGU_event.10.b
+		country_event = { id = MGU_event.11 days = 3 }
+	}	
+}
+
+
+
+country_event = { #红晴结菜黑化if
+	id = MGU_event.11
+	title = MGU_event.11.t
+	desc = MGU_event.11.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = {
+		name = MGU_event.11.a
+		PRB = {
+			transfer_state = 496
+			transfer_state = 500
+			transfer_state = 501
+			transfer_state = 895
+		}
+		496 = { remove_core_of = MGU add_core_of = PRB }
+		500 = { remove_core_of = MGU add_core_of = PRB }
+		501 = { remove_core_of = MGU add_core_of = PRB }
+		895 = { remove_core_of = MGU add_core_of = PRB }
+		MGU = {
+			transfer_units_fraction = {
+				target = PRB
+				size = 0.4
+				stockpile_ratio = 0.4
+				army_ratio = 0.4
+				navy_ratio = 0.4
+				air_ratio = 0.4
+				keep_unit_leaders = {		
+				}
+				keep_unit_leaders_trigger = {
+				always = yes
+				}
+			}
+			set_cosmetic_tag = MGU_civilwar
+			clr_country_flag = MGU_SL_Nanami_Yachiyo
+			MGU_Kureha_Yuna = {
+				set_nationality = PRB
+			}
+			MGU_Kirari_Hikaru = {
+				set_nationality = PRB
+			}
+			add_country_leader_role = {
+				character = "MGU_Nanami_Yachiyo"
+				country_leader={
+					ideology = interim_government_subtype
+					#traits = { }
+					expire = "1999.1.1.1"
+					id = -1
+				}
+				promote_leader = yes
+			}
+		}
+	 ####开战MGU
+		PRB = {
+			remove_country_leader_role = {
+				character = MGU_Kureha_Yuna
+				ideology = interim_government_subtype
+			}
+			add_country_leader_role = {
+				character = "MGU_Kureha_Yuna"
+				country_leader={
+					ideology = militarism_subtype
+					#traits = { }
+					expire = "1999.1.1.1"
+					id = -1
+				}
+				promote_leader = yes
+			}
+			add_country_leader_role = {
+				character = "MGU_Kureha_Yuna"
+				country_leader={
+					ideology = autocracy_subideology
+					#traits = { }
+					expire = "1999.1.1.1"
+					id = -1
+				}
+				promote_leader = yes
+			}
+			set_country_flag = PRB_SL_Kirari_Hikaru
+			declare_war_on = { target = MGU type = civil_war } 
+			country_event = { id = MGU_event.12 days = 3 }
+		}
+		MGU = {
+			set_country_flag = MGU_country_flag_civilwar_PRB
+			set_country_flag = MGU_country_flag_yuna_heartbrokened
+		}
+	}
+}
+
+country_event = { #癫狂！
+	id = MGU_event.12
+	title = MGU_event.12.t
+	desc = MGU_event.12.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = { #正常
+		name = MGU_event.12.a
+		set_politics = {
+			ruling_party = fascism
+		}
+		set_portraits = {
+			character = MGU_Kureha_Yuna
+			civilian = {
+				large = "gfx/leaders/MGU/MGU_Kureha_Yuna_Evil.dds"
+			}
+			army = {
+				large = "gfx/leaders/MGU/MGU_Kureha_Yuna_Evil.dds"
+			}
+		}
+	}	
+}
+
+country_event = { #誓约之血内战--PRB胜利结算
+	id = MGU_event.13
+	title = MGU_event.13.t
+	desc = MGU_event.13.d
+	picture = GFX_event_MGU_iroha_news
+	
+
+	trigger = {
+		TAG = PRB
+		MGU = {
+			has_country_flag = MGU_country_flag_civilwar_PRB
+		}	
+		MGU = {
+			or = { 
+				exists = no
+				is_subject_of = MGU
+			}
+		}
+	}
+
+	fire_only_once = Yes
+				
+	option = { 
+		name = MGU_event.13.a
+		every_state = {
+			limit = {
+				is_core_of = MGU
+			}
+			remove_core_of = MGU
+			add_core_of = PRB
+		}
+		MGU = {
+			clr_country_flag = MGU_country_flag_civilwar_PRB
+			set_cosmetic_tag = MGU
+		}
+	}
+
+}
+
+country_event = { #誓约之血内战--MGU胜利结算
+	id = MGU_event.14
+	title = MGU_event.14.t
+	desc = MGU_event.14.d
+	picture = GFX_event_MGU_iroha_news
+	
+
+	trigger = {
+		TAG = MGU
+		has_country_flag = MGU_country_flag_civilwar_PRB	
+		PRB = {
+			or = { 
+				exists = no
+				is_subject_of = MGU
+			}
+		}
+	}
+
+	fire_only_once = Yes
+				
+	option = { 
+		name = MGU_event.14.a
+		every_state = {
+			limit = {
+				is_core_of = PRB
+			}
+			remove_core_of = PRB
+			add_core_of = MGU
+		}
+		MGU = {
+			clr_country_flag = MGU_country_flag_civilwar_PRB
+			set_cosmetic_tag = MGU
+		}
+	}
+}
+
+country_event = { #1936大选-过程
+	id = MGU_event.15
+	title = MGU_event.15.t
+	desc = MGU_event.15.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = { #顺利
+		name = MGU_event.15.a
+		country_event = { id = MGU_event.18 days = 1 }
+	}
+	option = { #陷入僵局
+		name = MGU_event.15.b
+		country_event = { id = MGU_event.16 days = 3 }
+	}	
+}
+
+
+country_event = { #1936大选-晓美焰是否应巴麻美的请求发动政变
+	id = MGU_event.16
+	title = MGU_event.16.t
+	desc = MGU_event.16.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = { #是
+		name = MGU_event.16.a
+		MST = {
+			MGU_Akemi_Homura = { set_nationality = MGU }
+			MGU_Kaname_Madoka = { set_nationality = MGU }
+			clr_country_flag = MST_SL_Kaname_Madoka
+		}
+		MGU = {
+			promote_character = {
+				character = MGU_Akemi_Homura
+				ideology = military_politicism
+			}
+		}
+	}
+	option = { #否-魔联解体
+		name = MGU_event.16.b
+		3country_event = { id = MGU_event.17 days = 3 }
+	}	
+}
+
+country_event = { #魔联解体（目前未完成）
+	id = MGU_event.17
+	title = MGU_event.17.t
+	desc = MGU_event.17.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = { #是
+		name = MGU_event.17.a
+		#country_event = { id = MGU_event.114514 days = 1 }
+	}
+
+}
+
+country_event = { #大选的结果
+	id = MGU_event.18
+	title = MGU_event.18.t
+	desc = MGU_event.18.d
+	picture = GFX_event_MGU_iroha_news
+	
+	is_triggered_only = yes
+	fire_only_once = no
+				
+	option = { #红晴结菜
+		name = MGU_event.18.a
+		trigger = {
+			NOT = {
+				has_country_flag = MGU_country_flag_yuna_heartbrokened
+			}
+		}
+		add_country_leader_role = {
+			character = "MGU_Kureha_Yuna"
+			country_leader={
+				ideology = centrism
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+	}
+
+	option = { #七海八千代
+		name = MGU_event.18.b
+		set_politics = { 
+			ruling_party = democratic
+		 }
+		#country_event = { id = MGU_event.114514 days = 1 }
+	}
+
+	option = { #和泉十七夜
+		name = MGU_event.18.c
+		set_politics = { 
+			ruling_party = communism
+		 }
+		#country_event = { id = MGU_event.114514 days = 1 }
+	}
+
+	option = { #环彩羽
+		name = MGU_event.18.d
+		set_politics = { 
+			ruling_party = communism
+		 }
+		promote_character = {
+			character = "MGU_Tamaki_Iroha"
+			ideology = Utopian_Socialism
+		}
+		#country_event = { id = MGU_event.114514 days = 1 }
+	}
+
+	option = { #梓美冬
+		name = MGU_event.18.e
+		set_politics = { 
+			ruling_party = democratic
+		 }
+		add_country_leader_role = {
+			character = "MGU_Azusa_Mifuyu"
+			country_leader={
+				ideology = socialism
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+		#country_event = { id = MGU_event.114514 days = 1 }
+	}
+
+	option = { #巴麻美
+		name = MGU_event.18.f
+		add_country_leader_role = {
+			character = "MGU_Tomoe_Mami"
+			country_leader={
+				ideology = moderatism
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+		#country_event = { id = MGU_event.114514 days = 1 }
+	}
+
+	option = { #美树沙耶香
+		name = MGU_event.18.g
+		set_politics = { 
+			ruling_party = democratic
+		 }
+		add_country_leader_role = {
+			character = "MGU_Miki_Sayaka"
+			country_leader={
+				ideology = liberalism
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+		#country_event = { id = MGU_event.114514 days = 1 }
+	}
+
+}

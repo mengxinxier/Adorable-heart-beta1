@@ -1,0 +1,181 @@
+focus_tree = {
+	id = MGU_focus
+	
+	country = {
+		factor = 0
+		
+		modifier = {
+			add = 10
+			tag = MGU
+		}
+	}
+	
+	default = no
+
+	focus = { #北方的传闻
+		id = MGU_Start
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 5
+		y = 0
+		cost = 1
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+
+		bypass = {
+			MGS = {
+				OR = {
+					exists = no
+					is_subject_of = MGU
+				}
+			}
+		}
+
+		cancelable = no
+		completion_reward = {
+			505 = {
+					add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+					}
+				}
+			499 = {
+					add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+					}
+				}
+			add_ai_strategy = {
+				type = prepare_for_war
+				id = MGS
+				value = 100
+			}
+
+			hidden_effect = {
+				country_event = magicunion.1000
+			}
+
+		}
+	}
+
+	focus = { #派往magius的使节
+		id = MGU_Send
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 5
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 15
+		}
+		prerequisite = {
+			focus = MGU_Start
+		}
+		cancelable = no
+		available = {
+			MGS = {
+				exists = yes
+				has_capitulated = no
+				NOT = {
+					has_war_with = ROOT
+				}			
+			}
+		}
+		bypass = {
+			MGS = {
+				OR = {
+					exists = no
+					is_subject_of = MGU
+				}
+			}
+		}
+		completion_reward = {
+			MGS = {
+				country_event = { id = magicunion.1 days = 3 }
+			}
+		}
+	}
+
+	focus = { #尘埃落定
+		id = MGU_Next
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 5
+		y = 2
+		cost = 1
+		ai_will_do = {
+			factor = 15
+		}
+		prerequisite = {
+			focus = MGU_Send
+		}
+		cancelable = no
+		available = {
+			MGS = {
+				OR = {
+					exists = no
+					is_subject_of = MGU
+				}
+			}
+		}
+
+		completion_reward = {
+			IF = { #环彩羽内战成功
+				limit = {
+					MGR = { exists = yes }
+				}
+				MGS = {
+					MGU_Tamaki_Ui = {
+						set_nationality = MGR
+					}
+				}	
+				MGR = {
+					add_country_leader_role = {
+						character = "MGU_Tamaki_Ui"
+						country_leader={
+							ideology = interim_government_subtype
+							#traits = { }
+							expire = "1999.1.1.1"
+							id = -1
+						}
+						promote_leader = yes
+					}
+					set_cosmetic_tag = MGR_MGU 
+					set_politics = { ruling_party = neutrality }
+					add_popularity = { ideology = neutrality popularity = 0.75 }
+				}				
+				MGU = {
+					puppet = MGR
+				}
+			}
+			IF = { #环彩羽嘴炮成功
+				limit = {
+					MGS = { exists = yes }
+				}
+				MGS = {
+					transfer_units_fraction = {
+						target = MGU
+						size = 0.5
+						stockpile_ratio = 0.5
+						army_ratio = 0.5
+						navy_ratio = 0.5
+						air_ratio = 0.4
+						keep_unit_leaders = {		
+						}
+						keep_unit_leaders_trigger = {	
+						always = yes
+						}
+					}
+					set_cosmetic_tag = MGS_MGU
+				}
+				
+			}
+			country_event = MGU_event.8
+			country_event = { id = MGU_event.9 days = 3 }
+			load_focus_tree = generic_focus
+		}
+	}
+
+}
