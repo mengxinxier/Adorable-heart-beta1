@@ -1,0 +1,235 @@
+add_namespace = NA_generic
+
+##
+news_event = {
+	#北美战争
+	id = NA_generic.0001
+	title = NA_generic.0001.t
+	desc = NA_generic.0001.desc
+	picture = GFX_NA_WAR_news_pic
+	trigger = {
+		wants_world_news = yes
+	}
+	is_triggered_only = yes
+	major = yes
+	fire_only_once = no
+	immediate = {
+		hidden_effect = {
+			set_global_flag = NA_war_has_began
+			every_country = {
+				limit = {
+					or = {
+						tag = NFA
+						tag = USA
+						tag = FRG
+						tag = NGD
+					}
+				}
+				set_major = yes
+				every_state = {
+					limit = {
+						not = {
+							is_core_of = PREV
+						}
+						or = {
+							has_state_flag = NA_USA_AREA
+							has_state_flag = NA_NFA_AREA
+							has_state_flag = NA_FRG_AREA
+							has_state_flag = NA_NGD_AREA
+						}
+					}
+					add_claim_by = PREV
+				}
+			}
+			USA = {
+				declare_war_on = {
+					target = NFA
+					type = annex_everything
+				}
+				declare_war_on = {
+					target = FRG
+					type = annex_everything
+				}
+				declare_war_on = {
+					target = NGD
+					type = annex_everything
+				}
+			}
+			NFA = {
+				country_event = {
+					id = NA_generic.0003
+				}
+			}
+			FRG = {
+				declare_war_on = {
+					target = NFA
+					type = annex_everything
+				}
+				declare_war_on = {
+					target = NGD
+					type = annex_everything
+				}
+				country_event = {
+					id = NA_generic.0003
+				}
+			}
+			NGD = {
+				declare_war_on = {
+					target = NFA
+					type = annex_everything
+				}
+				country_event = {
+					id = NA_generic.0003
+				}
+			}
+		}
+	}
+	option = {
+		name = NA_generic.0001.a
+		trigger = {
+			or = {
+				tag = NFA
+				tag = USA
+				tag = FRG
+				tag = CAN
+				tag = NGD
+			}
+		}
+	}
+	option = {
+		name = NA_generic.0001.b
+		trigger = {
+			not = {
+				or = {
+					tag = NFA
+					tag = USA
+					tag = FRG
+					tag = CAN
+					tag = NGD
+				}
+			}
+		}
+	}
+}
+
+news_event = {
+	#北美统一
+	id = NA_generic.0002
+	title = NA_generic.0002.t
+	desc = NA_generic.0002.desc
+	picture = GFX_NA_WAR_news_pic
+	trigger = {
+		wants_world_news = yes
+	}
+	is_triggered_only = yes
+	major = yes
+	fire_only_once = no
+	immediate = {
+		set_global_flag = NA_has_been_united
+	}
+	option = {
+		name = NA_generic.0002.a
+		if = {
+			limit = {
+				FROM = {
+					tag = USA
+				}
+			}
+			set_country_flag = super_event_USA_unit
+			set_country_flag = adorable_heart_Super_Event_Visible
+			adorable_heart_fire_super_event = yes
+		}
+		else_if = {
+			limit = {
+				FROM = {
+					tag = NFA
+				}
+			}
+			set_country_flag = super_event_NFA_unit_NA
+			set_country_flag = adorable_heart_Super_Event_Visible
+			adorable_heart_fire_super_event = yes
+		}
+	}
+}
+
+#召唤民兵
+country_event = {
+	id = NA_generic.0003
+	title = NA_generic.0003.t
+	desc = NA_generic.0003.desc
+	is_triggered_only = yes
+	immediate = {
+		hidden_effect = {
+			set_technology = {
+				tech_irregulars = 1
+			}
+			set_variable = {
+				ROOT.num_of_irregular_infantry = 0
+			}
+		}
+	}
+	option = {
+		name = NA_generic.0003.a
+		custom_effect_tooltip = GET_40_irregular_infantry
+		hidden_effect = {
+			while_loop_effect = {
+				limit = {
+					check_variable = {
+						ROOT.num_of_irregular_infantry<40
+					}
+				}
+				random_owned_controlled_state = {
+					create_unit = {
+						division = "name = \"民兵团\" division_template = \"民兵团\" start_experience_factor = 0"
+						owner = ROOT
+					}
+				}
+				add_to_variable = {
+					ROOT.num_of_irregular_infantry = 1
+				}
+			}
+		}
+	}
+}
+
+#北美战争结束
+news_event = {
+	id = NA_generic.0004
+	title = NA_generic.0004.t
+	desc = NA_generic.0004.desc
+	picture = GFX_NA_WAR_news_pic
+	trigger = {
+		wants_world_news = yes
+	}
+	is_triggered_only = yes
+	major = yes
+	fire_only_once = no
+	immediate = {
+		set_global_flag = NA_has_been_united
+	}
+	option = {
+		name = NA_generic.0004.a
+		if = {
+			limit = {
+				FROM = {
+					tag = USA
+				}
+			}
+			set_country_flag = super_event_USA_unit
+			set_country_flag = adorable_heart_Super_Event_Visible
+			adorable_heart_fire_super_event = yes
+		}
+		else_if = {
+			limit = {
+				FROM = {
+					tag = NFA
+				}
+			}
+			set_country_flag = super_event_NFA_end_NA_war
+			set_country_flag = adorable_heart_Super_Event_Visible
+			adorable_heart_fire_super_event = yes
+		}
+	}
+}
+
+#GFX_FRA_BACK
