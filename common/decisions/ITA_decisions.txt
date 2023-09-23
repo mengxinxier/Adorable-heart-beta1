@@ -1,72 +1,3 @@
-ITA_trade_eng = {
-	money_to_eng = {
-		icon = decision_ger_mefo_bills
-		cost = 100
-		fire_only_once = no
-		days_re_enable = 30
-		allowed = {
-			AND = {
-				original_tag = ITA
-			}
-		}
-		visible = {
-			AND = {
-				has_opinion = {
-					target = ENG
-					value > 9
-				}
-				has_idea = ita_paomo
-				country_exists = ENG
-			}
-			NOT = {
-				ENG = {
-					has_opinion_modifier = ITA_fake_cash
-				}
-			}
-		}
-		complete_effect = {
-			add_to_variable = {
-				var = ubs_save
-				value = 200
-			}
-			ENG = {
-				add_opinion_modifier = {
-					target = ITA
-					modifier = ITA_fake_cash
-				}
-			}
-			custom_effect_tooltip = ITA_money_200
-		}
-	}
-	opinion_to_eng = {
-		icon = decision_ger_mefo_bills
-		cost = 50
-		days_remove = 30
-		fire_only_once = no
-		days_re_enable = 30
-		allowed = {
-			original_tag = ITA
-		}
-		visible = {
-			AND = {
-				ENG = {
-					exists = yes
-				}
-				has_idea = ita_paomo
-				has_opinion_modifier = ITA_fake_cash
-			}
-		}
-		remove_effect = {
-			ENG = {
-				remove_opinion_modifier = {
-					target = ITA
-					modifier = ITA_fake_cash
-				}
-			}
-		}
-	}
-}
-
 ITALIA = {
 	annex_fra1 = {
 		icon = generic_form_nation
@@ -459,38 +390,96 @@ ITALIA = {
 	}
 }
 
-nanahira_festival = {
-	sweet1 = {
-		icon = generic_form_nation
-		cost = 50
-		fire_only_once = yes
-		days_remove = 7
-		allowed = {
-			always = yes
-		}
-		remove_effect = {
-			country_event = nanahira_festival.1
-		}
-	}
-	sweet2 = {
-		icon = generic_form_nation
-		cost = 50
-		fire_only_once = yes
-		days_remove = 7
-		allowed = {
-			always = yes
-		}
-		remove_effect = {
-			country_event = nanahira_festival.2
-		}
-	}
-}
-
 ITA_reunnit_decison = {
+	ITA_jinjunnabulesi_time = {
+		icon = ger_reichskommissariats
+		allowed = {
+		tag = ITA
+		}
+		activation	= {
+			always = no
+		}
+		available = { 
+			or = {
+			has_completed_focus = ITA_14
+			has_war_with = ALS
+			}
+		}
+		days_mission_timeout = 480
+		is_good = no
+		complete_effect = {
+			add_war_support = 0.05
+		}
+		timeout_effect = {
+			country_event = ita.6
+		}
+		cancel_trigger = {
+			not= { country_exists = ALS }
+		}
+	}
+	ITA_attack_nabulesi_time = {
+		icon = generic_intelligence_operation
+		allowed = {
+		tag = ITA
+		}
+		activation	= {
+			always = no
+		}
+		available = { controls_state = 117 }
+		days_mission_timeout = 30
+		is_good = no
+		complete_effect = {
+			add_political_power = 15
+			add_war_support = 0.05
+			add_power_balance_value = {
+			id = ITA_balance
+			value = -0.05
+			}
+		}
+		timeout_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = 0.1
+			}
+		}
+		cancel_trigger = {
+			not= { has_war_with = ALS }
+		}
+	}
+	ITA_attack_xixili_time = {
+		icon = generic_intelligence_operation
+		allowed = {
+		tag = ITA
+		}
+		activation	= {
+			always = no
+		}
+		available = { controls_state = 115 }
+		days_mission_timeout = 90
+		is_good = no
+		complete_effect = {
+			add_political_power = 15
+			add_war_support = 0.05
+			add_power_balance_value = {
+			id = ITA_balance
+			value = -0.05
+			}
+		}
+		timeout_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = 0.1
+			}
+		}
+		cancel_trigger = {
+			not= { has_war_with = ALS }
+		}
+	}
 	ITA_declare_ITA_reunit = {
 		allowed = {
 		}
 		visible = {
+			tag = ALS
 		}
 		available = {
 			is_subject = no
@@ -591,17 +580,18 @@ ITA_reunnit_decison = {
 		}
 		fire_only_once = yes
 		cost = 100
-		days_remove = 100
+		days_remove = 30
 		ai_will_do = {
-			factor = 100
+			factor = 10000
 		}
 		remove_effect = {
+			clr_country_flag = cannot_call_ally
 			every_state = {
 				limit = {
 					not = {
 						is_core_of = ROOT
 					}
-					has_state_flag = is_ALS_state_area
+					is_core_of = ALS
 				}
 				add_core_of = ROOT
 			}
@@ -609,6 +599,7 @@ ITA_reunnit_decison = {
 	}
 	ITA_core_RMC_state = {
 		allowed = {
+			always = no
 		}
 		visible = {
 			not = {
@@ -641,7 +632,7 @@ ITA_reunnit_decison = {
 					not = {
 						is_core_of = ROOT
 					}
-					has_state_flag = is_RMC_state_area
+					is_core_of = RMC
 				}
 				add_core_of = ROOT
 			}
@@ -649,6 +640,7 @@ ITA_reunnit_decison = {
 	}
 	ITA_core_MOW_state = {
 		allowed = {
+			always = no
 		}
 		visible = {
 			not = {
@@ -681,7 +673,7 @@ ITA_reunnit_decison = {
 					not = {
 						is_core_of = ROOT
 					}
-					has_state_flag = is_MOW_state_area
+					is_core_of = MOW
 				}
 				add_core_of = ROOT
 			}
@@ -717,4 +709,156 @@ ITA_reunnit_decison = {
 			}
 		}
 	}
+}
+
+
+ITA_quanlipingheng = {
+	ITA_fanzhixuanchuan = {
+		icon = eng_propaganda_campaigns
+		cost = 50
+		available = {
+			has_country_leader = {
+						name = "阿库娅"
+						ruling_only = yes
+					}
+		}
+		
+		remove_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = -0.05
+			}
+		}
+		modifier = {
+			power_balance_weekly = -0.01
+		}
+		days_re_enable = 120
+		fire_only_once = no
+		days_remove = 90
+		complete_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = -0.05
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	ITA_mosuoliniyanjiang = {
+		icon = eng_blackshirt_speech
+		cost = 50
+		available = {
+			
+		}
+		
+		remove_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = 0.05
+			}
+		}
+		modifier = {
+			power_balance_weekly = 0.01
+		}
+		days_re_enable = 120
+		fire_only_once = no
+		days_remove = 90
+		complete_effect = {
+			add_war_support = 0.05
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+	}
+	ITA_zhichinilubixia = {
+		icon = eng_propaganda_campaigns
+		cost = 100
+		available = {
+			or = {
+			has_idea = ITA_cz_jsddw
+			has_country_leader = {
+						name = "尼禄·克劳狄乌斯 "
+						ruling_only = yes
+					}
+			}
+		}
+		
+		remove_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = -0.05
+			}
+		}
+		modifier = {
+			power_balance_weekly = -0.03
+		}
+		days_re_enable = 120
+		fire_only_once = no
+		days_remove = 90
+		complete_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = -0.05
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	ITA_zansongjundui = {
+		icon = generic_military
+		cost = 50
+		available = {
+		
+		}
+		modifier = {
+			
+		}
+		days_re_enable = 180
+		fire_only_once = no
+		complete_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = 0.1
+			}
+			army_experience = 15
+			navy_experience = 15
+			air_experience = 15
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+	}
+	ITA_pipingzhengke = {
+		icon = hol_radio_oranje
+		cost = 50
+		available = {
+		
+		}
+		modifier = {
+			
+		}
+		days_re_enable = 180
+		fire_only_once = no
+		complete_effect = {
+			add_power_balance_value = {
+			id = ITA_balance
+			value = -0.1
+			}
+			add_stability = 0.05
+			add_war_support = 0.05
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+
+
 }
