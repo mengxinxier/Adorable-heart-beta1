@@ -641,3 +641,348 @@ PRC_Diplomatic_matters = {
 		}
 	}
 }
+#游击战
+PRC_Guerrilla_warfare = {
+	PRC_Partisan_infiltration_button = {
+		icon = GFX_decision_category_infiltration
+		allowed = {
+			tag = PRC
+		}
+		target_trigger = {
+			FROM = {
+				not = {
+					has_state_flag = Partisan_zone_of_PRC
+				}
+				NOT = {
+					is_owned_and_controlled_by = PRC
+				}
+				has_state_flag = is_CHI_state_area
+				any_neighbor_state = {
+					or = {
+						ROOT_or_ally_control_this_state = yes
+						has_state_flag = Partisan_zone_of_PRC
+					}
+				}
+			}
+		}
+		state_target = yes
+		on_map_mode = map_only
+		target_array = global.ah_formables_states_array
+		days_remove = 30
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				FROM = {
+					controller = {
+						has_war_with = ROOT
+					}
+				}
+				factor = 1000
+			}
+		}
+		custom_cost_trigger = {
+			command_power > 14
+		}
+		available = {
+			NOT = {
+				has_country_flag = PRC_Partisan_infiltration_button_is_on
+			}
+			custom_trigger_tooltip = {
+				tooltip = There_are_adjacent_guerrilla_zones
+				FROM = {
+					any_neighbor_state = {
+						or = {
+							ROOT_or_ally_control_this_state = yes
+							has_state_flag = Partisan_zone_of_PRC
+						}
+					}
+				}
+			}
+		}
+		custom_cost_text = decision_cost_CP_15
+		remove_effect = {
+			clr_country_flag = PRC_Partisan_infiltration_button_is_on
+			FROM = {
+				set_state_flag = Partisan_zone_of_PRC
+			}
+			custom_effect_tooltip = PRC_Partisan_infiltration_button_desc_2
+		}
+		complete_effect = {
+			set_country_flag = PRC_Partisan_infiltration_button_is_on
+			hidden_effect = { add_command_power = -15 }
+		}
+	}
+	PRC_People_uprising_button = {
+		icon = GFX_decision_category_SOV_permanent_revolution
+		allowed = {
+			tag = PRC
+		}
+		target_trigger = {
+			FROM = {
+				has_state_flag = Partisan_zone_of_PRC
+				NOT = {
+					or = {
+						is_owned_and_controlled_by = PRC
+						#is_core_of = PRC
+					}
+				}
+				NOT = {
+					or = {
+						is_core_of = ROOT
+						owner = {
+							tag = ROOT
+						}
+					}
+				}
+				has_state_flag = is_CHI_state_area
+			}
+		}
+		state_target = yes
+		on_map_mode = map_only
+		target_array = global.ah_formables_states_array
+		days_remove = 60
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				FROM = {
+					controller = {
+						has_war_with = ROOT
+					}
+				}
+				factor = 1000
+			}
+		}
+		cost = 30
+		available = {
+		}
+		remove_effect = {
+			FROM = {
+				add_core_of_ROOT = yes
+			}
+			custom_effect_tooltip = PRC_People_uprising_button_desc_2
+			FROM = {
+				if = {
+					limit = {
+						owner = {
+							or = {
+								not = {
+									has_country_flag = Participate_in_the_competition_for_China_reunification
+								}
+								is_subject = yes
+							}
+						}
+					}
+					if = {
+						limit = {
+							is_fully_controlled_by = owner
+							owner = {
+								NOT = {
+									has_war_with = ROOT
+								}
+							}
+						}
+						transfer_state_to = ROOT
+					}
+					else = {
+						set_state_owner_to = ROOT
+						set_state_province_controller = {
+							controller = ROOT
+							limit = {
+								NOT = {
+									has_war_with = ROOT
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		complete_effect = {
+			#hidden_effect = { add_command_power = -15 }
+		}
+	}
+	PRC_Sabotage_logistics_button = {
+		icon = GFX_decision_category_border_conflicts
+		allowed = {
+			tag = PRC
+		}
+		target_trigger = {
+			FROM = {
+				has_state_flag = Partisan_zone_of_PRC
+				NOT = {
+					is_owned_and_controlled_by = PRC
+				}
+				has_state_flag = is_CHI_state_area
+				controller = {
+					has_war_with = ROOT
+				}
+				not = {
+					has_state_flag = PRC_Sabotage_logistics_button
+				}
+			}
+		}
+		state_target = yes
+		on_map_mode = map_only
+		target_array = global.ah_formables_states_array
+		days_remove = 7
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				FROM = {
+					controller = {
+						has_war_with = ROOT
+					}
+				}
+				factor = 1000
+			}
+			modifier = {
+				FROM = {
+					NOT = {
+						any_neighbor_state = {
+							ROOT_or_ally_control_this_state = yes
+						}
+					}
+				}
+				factor = 0
+			}
+		}
+		custom_cost_trigger = {
+			command_power > 14
+		}
+		available = {
+		}
+		custom_cost_text = decision_cost_CP_15
+		remove_effect = {
+			FROM = {
+				set_state_flag = {
+					flag = PRC_Sabotage_logistics_button
+					value = 1
+					days = 30
+				}
+				if = {
+					limit = {
+						check_variable = {
+							building_level@infrastructure > 0
+						}
+					}
+					damage_building = {
+						type = infrastructure
+						damage = 1
+					}
+				}
+				if = {
+					limit = {
+						check_variable = {
+							building_level@arms_factory > 0
+						}
+					}
+					damage_building = {
+						type = arms_factory
+						damage = 1
+					}
+				}
+				if = {
+					limit = {
+						check_variable = {
+							building_level@industrial_complex > 0
+						}
+					}
+					damage_building = {
+						type = industrial_complex
+						damage = 1
+					}
+				}
+				if = {
+					limit = {
+						check_variable = {
+							building_level@air_base > 0
+						}
+					}
+					damage_building = {
+						type = air_base
+						damage = 1
+					}
+				}
+				if = {
+					limit = {
+						check_variable = {
+							building_level@supply_node > 0
+						}
+					}
+					damage_building = {
+						type = supply_node
+						damage = 1
+					}
+				}
+				if = {
+					limit = {
+						check_variable = {
+							building_level@rail_way > 0
+						}
+					}
+					damage_building = {
+						type = rail_way
+						damage = 1
+					}
+				}
+			}
+		}
+		complete_effect = {
+			hidden_effect = { add_command_power = -15 }
+		}
+	}
+	PRC_Eliminate_the_bandits = {
+		icon = GFX_decision_generic_assassination
+		allowed = {
+			is_chinese_country = yes
+			not = {
+				tag = PRC
+			}
+		}
+		target_trigger = {
+			FROM = {
+				has_state_flag = Partisan_zone_of_PRC
+				is_controlled_by = ROOT
+				has_state_flag = is_CHI_state_area
+			}
+		}
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_array = controlled_states
+		#cost = 20
+		days_remove = 15
+		custom_cost_trigger = {
+			command_power > 9
+			has_equipment = { infantry_equipment > 99  }
+		}
+		available = {
+		}
+		custom_cost_text = decision_cost_CP_10_and_100_gun
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				has_war = yes
+				factor = 0.0001
+			}
+			modifier = {
+				has_equipment = { infantry_equipment > 2000  }
+				factor = 100
+			}
+		}
+		remove_effect = {
+			FROM = {
+				clr_state_flag = Partisan_zone_of_PRC
+			}
+			custom_effect_tooltip = PRC_Eliminate_the_bandits_TT
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -10
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -100
+				}
+			}
+		}
+	}
+}
