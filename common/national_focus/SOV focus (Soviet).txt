@@ -41,9 +41,31 @@ focus_tree = {
 				if = {
 					limit = { is_ai = yes }
 					division_template = {
-						name = "New Barracks" 			
+						name = "Sakura Seaman Diviziya"			
 						regiments = {
-							infantry = { x = 0 y = 0 }	
+							magic_assault = { x = 0 y = 0 }
+							magic_assault = { x = 0 y = 1 }
+							magic_assault = { x = 0 y = 2 }
+							magic_assault = { x = 0 y = 3 }
+							magic_assault = { x = 0 y = 4 }
+							medium_armor = { x = 1 y = 0 }
+							medium_armor = { x = 1 y = 1 }
+							medium_armor = { x = 1 y = 2 }
+							medium_armor = { x = 2 y = 0 }
+							medium_armor = { x = 2 y = 1 }
+							medium_armor = { x = 2 y = 2 }
+						}
+						support = {
+							engineer = { x = 0 y = 1 } 	
+							artillery = { x = 0 y = 0 } 
+						}
+						override_model = BAL_infantry_entity
+						priority = 2
+					}
+					capital_scope = {
+						create_unit = {
+							division = "name = \"木之本魔导近卫师\" division_template = \"Sakura Seaman Diviziya\" start_experience_factor = 1.0"
+							owner = ROOT
 						}
 					}
 				}
@@ -1383,6 +1405,7 @@ focus_tree = {
 			}
 			custom_effect_tooltip = available_political_advisor
 			show_ideas_tooltip = SOV_Ashu
+
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY FOCUS_FILTER_SWI_MILITARY_READINESS }
 	}
@@ -1553,6 +1576,44 @@ focus_tree = {
 			army_experience = 25
 			add_ideas = SOV_Veritas_university
 			custom_effect_tooltip = SOV_50_cheaper_staff_office_plan
+			hidden_effect = {
+				if = {
+					limit = { is_ai = yes }
+					division_template = {
+						name = "Armored Battle Group"			
+						regiments = {
+							infantry = { x = 0 y = 0 }
+							infantry = { x = 0 y = 1 }
+							infantry = { x = 0 y = 2 }
+							infantry = { x = 0 y = 3 }
+							infantry = { x = 0 y = 4 }
+							infantry = { x = 1 y = 0 }
+							infantry = { x = 1 y = 1 }
+							infantry = { x = 1 y = 2 }
+							infantry = { x = 1 y = 3 }
+							infantry = { x = 1 y = 4 }
+							medium_armor = { x = 2 y = 0 }
+							medium_armor = { x = 2 y = 1 }
+							medium_armor = { x = 2 y = 2 }
+							medium_armor = { x = 3 y = 0 }
+							medium_armor = { x = 3 y = 1 }
+							medium_armor = { x = 3 y = 2 }
+							medium_tank_destroyer_brigade = { x = 4 y = 0 }
+						}
+						support = {
+							engineer = { x = 0 y = 1 } 	
+							artillery = { x = 0 y = 0 } 
+						}
+						override_model = SOV_heavy_tank_destroyer_brigade_2_entity
+					}
+					capital_scope = {
+						create_unit = {
+							division = "name = \"实验性装甲作战兵团\" division_template = \"Armored Battle Group\" start_experience_factor = 1.0"
+							owner = ROOT
+						}
+					}
+				}
+			}
 		}
 		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
 	}
@@ -1621,6 +1682,25 @@ focus_tree = {
 				upgrades = {
 					tank_nsb_engine_upgrade = 6
 					tank_nsb_armor_upgrade = 14
+				}
+			}
+			create_equipment_variant = {
+				name = "T34"
+				type = medium_tank_chassis_2
+				modules = {
+					main_armament_slot = tank_medium_howitzer_2
+					turret_type_slot = tank_medium_three_man_tank_turret
+					suspension_type_slot = tank_bogie_suspension
+					armor_type_slot = tank_riveted_armor
+					engine_type_slot = tank_gasoline_engine
+					special_type_slot_1 = tank_radio_2
+					special_type_slot_2 = sloped_armor
+					special_type_slot_3 = easy_maintenance
+					special_type_slot_4 = empty
+				}
+				upgrades = {
+					tank_nsb_engine_upgrade = 6
+					tank_nsb_armor_upgrade = 12
 				}
 			}
 		}
@@ -1921,12 +2001,11 @@ focus_tree = {
 				category = logistics_tech
 			}
 			hidden_effect = {
-				set_technology = { 
-					SOV_tech_integrated_logistics_force = 1 
-					popup = no 
-				}	
+				add_to_variable = {
+					SOV_red_army_supply_consumption_factor = -0.15
+				}
 			}
-			custom_effect_tooltip = SOV_tech_integrated_logistics_force_effect
+			custom_effect_tooltip = SOV_support_force_tt
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 	}
@@ -2111,7 +2190,7 @@ focus_tree = {
 		completion_reward = {
 			hidden_effect = {
 				add_to_variable = { SOV_red_army_TERRAIN_PENALTY_REDUCTION = 0.15 }
-				add_to_variable = { SOV_red_army_army_org_factor = 0.05 }
+				add_to_variable = { SOV_red_army_army_org_factor = 0.10 }
 			}
 			hidden_effect = {
 				set_technology = { masterful_blitz = 1 popup = no }
@@ -2189,7 +2268,8 @@ focus_tree = {
 
 		completion_reward = {
 			hidden_effect = {
-				add_to_variable = { SOV_red_army_army_artillery_attack_factor = 0.10 }
+				add_to_variable = { SOV_red_army_army_attack_factor = 0.10 }
+				add_to_variable = { SOV_red_army_army_defence_factor = 0.10 }
 			}
 			custom_effect_tooltip = SOV_artillery_bombardment_tt
 		}
@@ -2211,6 +2291,10 @@ focus_tree = {
 
 		ai_will_do = {
 			factor = 25
+			modifier = {
+				factor = 10
+				has_tech = improved_small_airframe
+			}
 		}
 
 		available = {
@@ -2246,6 +2330,10 @@ focus_tree = {
 
 		ai_will_do = {
 			factor = 25
+			modifier = {
+				factor = 10
+				has_tech = improved_small_airframe
+			}
 		}
 		available = {
 			any_owned_state = {
@@ -2314,6 +2402,10 @@ focus_tree = {
 		cost = 4
 		ai_will_do = {
 			factor = 10
+			modifier = {
+				factor = 50
+				has_tech = improved_small_airframe
+			}
 		}
 		available = {
 
@@ -2327,6 +2419,59 @@ focus_tree = {
 				bonus = 0.75
 				uses = 2
 				category = air_equipment
+			}
+			create_equipment_variant = {
+				name = "Yakovle-7"
+				type = small_plane_airframe_2
+				modules = {
+					fixed_main_weapon_slot = heavy_mg_4x
+					fixed_auxiliary_weapon_slot_1 = heavy_mg_4x
+					fixed_auxiliary_weapon_slot_2 = heavy_mg_4x
+					engine_type_slot = engine_2_1x
+					special_type_slot_1 = self_sealing_fuel_tanks_small
+					special_type_slot_2 = armor_plate_small
+					special_type_slot_3 = empty
+				}
+			}
+			create_equipment_variant = {
+				name = "Yakovle-9"
+				type = small_plane_airframe_3
+				modules = {
+					fixed_main_weapon_slot = heavy_mg_4x
+					fixed_auxiliary_weapon_slot_1 = heavy_mg_4x
+					fixed_auxiliary_weapon_slot_2 = aircraft_cannon_2_2x
+					engine_type_slot = engine_3_1x
+					special_type_slot_1 = self_sealing_fuel_tanks_small
+					special_type_slot_2 = armor_plate_small
+					special_type_slot_3 = empty
+				}
+			}
+			create_equipment_variant = {
+				name = "MiG-3"
+				type = small_plane_cas_airframe_3
+				modules = {
+					fixed_main_weapon_slot = tank_buster_2
+					fixed_auxiliary_weapon_slot_1 = rocket_rails
+					fixed_auxiliary_weapon_slot_2 = rocket_rails
+					engine_type_slot = engine_3_1x
+					special_type_slot_1 = self_sealing_fuel_tanks_small
+					special_type_slot_2 = dive_brakes_small
+					special_type_slot_3 = armor_plate_small
+				}
+			}
+			create_equipment_variant = {
+				name = "MiG-9"
+				type = small_plane_cas_airframe_4
+				modules = {
+					fixed_main_weapon_slot = tank_buster_2
+					fixed_auxiliary_weapon_slot_1 = rocket_rails
+					fixed_auxiliary_weapon_slot_2 = rocket_rails
+					fixed_auxiliary_weapon_slot_3 = rocket_rails
+					engine_type_slot = jet_engine_1x
+					special_type_slot_1 = self_sealing_fuel_tanks_small
+					special_type_slot_2 = dive_brakes_small
+					special_type_slot_3 = armor_plate_small
+				}
 			}
 		}
 	}
