@@ -46,7 +46,7 @@
 		ai_strategy = { #海军陆战队
 			type = role_ratio
 			id = marines
-			value = 100
+			value = 60
 		}
 		ai_strategy = { #魔装
 			type = role_ratio
@@ -58,6 +58,7 @@
 			id = ENG_infantry
 			value = 0
 		}
+		
 	}
 
 	ENG_unit_production_2 = { #装甲单位生产倾向
@@ -77,7 +78,7 @@
 		}
 		ai_strategy = { #装甲2
 			type = role_ratio
-			id = ENG_jb_armor
+			id = ENG_jb
 			value = 0
 		}
 	}
@@ -96,7 +97,7 @@
 		}
 		ai_strategy = { #装甲2
 			type = role_ratio
-			id = ENG_jb_armor
+			id = ENG_jb
 			value = 600
 		}
 	}
@@ -849,12 +850,23 @@
 		}
 		enable = {
 			has_war_with = DVL
-			date < 1942.9.1
-			DVL = {
-				NOT = {
-					has_war_with = SOV
+			or = {
+				AND = {
+					DVL = {
+						NOT = {
+							has_war_with = SOV
+						}
+						surrender_progress < 0.1
+					}
+					date < 1943.6.1
 				}
-				surrender_progress < 0.1
+				AND = {
+					DVL = {
+						has_war_with = SOV
+						surrender_progress < 0.1
+					}
+					date < 1942.9.1
+				}								
 			}
 		}
 		abort_when_not_enabled = yes
@@ -874,41 +886,42 @@
 			value = -900
 		}
 	}
-	careful_with_late_invasions = { #戴比与苏联开打时海上入侵
-		allowed = {
-			original_tag = ENG
-		}
-		enable = {
-			has_war_with = DVL		
-			date > 1942.9.1
-			DVL = {
-				has_war_with = SOV
-			}
-		}
-		abort_when_not_enabled = yes
-		ai_strategy = {
-			type = invade
-			id = "DVL"
-			value = 200
-		}
-	}
-	careful_with_late_invasions2 = { #戴比快寄的时候登陆
-		allowed = {
-			original_tag = ENG
-		}
-		enable = {
-			has_war_with = DVL
-			DVL = {
-				surrender_progress > 0.15
-			}
-		}
-		abort_when_not_enabled = yes
-		ai_strategy = {
-			type = invade
-			id = "DVL"
-			value = 400
-		}
-	}
+	#
+		#careful_with_late_invasions = { #戴比与苏联开打时海上入侵
+		#	allowed = {
+		#		original_tag = ENG
+		#	}
+		#	enable = {
+		#		has_war_with = DVL		
+		#		date > 1942.9.1
+		#		DVL = {
+		#			has_war_with = SOV
+		#		}
+		#	}
+		#	abort_when_not_enabled = yes
+		#	ai_strategy = {
+		#		type = invade
+		#		id = "DVL"
+		#	}
+		#}
+		#careful_with_late_invasions2 = { #戴比快寄的时候登陆
+		#	allowed = {
+		#		original_tag = ENG
+		#	}
+		#	enable = {
+		#		has_war_with = DVL
+		#		DVL = {
+		#			surrender_progress > 0.15
+		#		}
+		#	}
+		#	abort_when_not_enabled = yes
+		#	ai_strategy = {
+		#		type = invade
+		#		id = "DVL"
+		#		value = 400
+		#	}
+		#}
+		
 	careful_with_ita_invasions = { #海上入侵意大利
 		allowed = {
 			original_tag = ENG
@@ -1048,12 +1061,23 @@
 		}
 		enable = {
 			has_war_with = DVL
-			date < 1942.9.1
-			DVL = {
-				NOT = {
-					has_war_with = SOV
+			or = {
+				AND = {
+					DVL = {
+						NOT = {
+							has_war_with = SOV
+						}
+						surrender_progress < 0.1
+					}
+					date < 1943.6.1
 				}
-				surrender_progress < 0.1
+				AND = {
+					DVL = {
+						has_war_with = SOV
+						surrender_progress < 0.1
+					}
+					date < 1942.9.1
+				}								
 			}
 		}
 		abort_when_not_enabled = yes
@@ -1257,7 +1281,7 @@
 		ai_strategy = {
 			type = invasion_unit_request
 			tag = DVL
-			value = 20
+			value = 10
 		}
 		ai_strategy = {
 			type = front_unit_request		#前线部队
@@ -1633,8 +1657,7 @@
 
 
 #志愿军
-	#志愿军支援非左翼KMT
-	ENG_send_volunteers_desire_ROC = {
+	ENG_send_volunteers_desire_ROC = { #志愿军支援非左翼KMT
 		allowed = {
 			original_tag = ENG
 		}
@@ -1664,6 +1687,28 @@
 		ai_strategy = {
 			type = send_volunteers_desire
 			id = "ROC"
+			value = 100
+		}
+	}
+	ENG_send_volunteers_desire_PRU = {	#志愿军支援玻璃瓦尔
+		allowed = {
+			original_tag = ENG
+		}
+		enable = {
+			country_exists = PRU
+			PRU = {
+				has_government = democratic
+			}
+		}
+		abort_when_not_enabled = yes
+		ai_strategy = {
+			type = befriend
+			id = "PRU"
+			value = 30
+		}
+		ai_strategy = {
+			type = send_volunteers_desire
+			id = "PRU"
 			value = 100
 		}
 	}
@@ -1914,5 +1959,53 @@
 		ai_strategy = {
 			type = garrison_reinforcement_priority
 			value = 50
+		}
+	}
+
+
+#南美志愿军
+	CHL_send_volunteers_desire_BOL = {	#智利志愿军支援BOL
+		allowed = {
+			original_tag = CHL
+		}
+		enable = {
+			country_exists = BOL
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = send_volunteers_desire
+			id = "BOL"
+			value = 100
+		}
+	}
+	ARG_send_volunteers_desire_BOL = {	#阿根廷志愿军支援BOL
+		allowed = {
+			original_tag = ARG
+		}
+		enable = {
+			country_exists = BOL
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = send_volunteers_desire
+			id = "BOL"
+			value = 100
+		}
+	}
+	PAR_send_volunteers_desire_BOL = {	#巴拉圭志愿军支援BOL
+		allowed = {
+			original_tag = PAR
+		}
+		enable = {
+			country_exists = BOL
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = send_volunteers_desire
+			id = "BOL"
+			value = 100
 		}
 	}
