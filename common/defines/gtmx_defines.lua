@@ -66,3 +66,14 @@ NDefines.NAITheatre.AI_THEATRE_SUPPLY_CRISIS_LIMIT = 0.25					-- Vanilla is 0.1 
 NDefines.NAI.STR_BOMB_SUPPLY_HUB_IMPORTANCE = 100	                        -- Vanilla is 1.0 补给中心的重要性 敌方
 NDefines.NAI.LAND_DEFENSE_SUPPLY_HUB_IMPORTANCE = 100	                    -- Vanilla is 4.0 补给中心的重要性 我方
 NDefines.NAI.UPDATE_SUPPLY_BOTTLENECKS_FREQUENCY_HOURS = 24                 -- Vanilla is 168 多久检查一次补给不足
+
+-- 市场
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_OPINION = 0.1                               -- Acceptance factor for opinion
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_SAME_IDEOLOGY = 15                         -- Acceptance value added if same ideology
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_SCRIPTED_IDEOLOGY_ACCEPTANCE = 1.0         -- Acceptance factor for scripted ideology acceptance modifier
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_TRADE_INFLUENCE = 0.70                     -- Acceptance factor for trade influence (adjusted from base value)
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_COMPETING_FACTIONS = 0                     -- Acceptance value added if both countries are in factions  and factions are different
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_EMBARGO = -200                             -- Acceptance value added if either side has embargoed the other
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_NO_TRADE_ROUTE = -100                      -- Acceptance value added if there is no valid trade route between the countries
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_NON_AGGRESSION_PACT = 25                   -- Acceptance value added if there is a non-aggression pact between the countries
+
