@@ -68,7 +68,7 @@ NDefines.NAI.LAND_DEFENSE_SUPPLY_HUB_IMPORTANCE = 100	                    -- Van
 NDefines.NAI.UPDATE_SUPPLY_BOTTLENECKS_FREQUENCY_HOURS = 24                 -- Vanilla is 168 多久检查一次补给不足
 
 -- 市场
-NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_OPINION = 0.1                               -- Acceptance factor for opinion
+NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_OPINION = 1.1                              -- Acceptance factor for opinion
 NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_SAME_IDEOLOGY = 15                         -- Acceptance value added if same ideology
 NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_SCRIPTED_IDEOLOGY_ACCEPTANCE = 1.0         -- Acceptance factor for scripted ideology acceptance modifier
 NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_TRADE_INFLUENCE = 0.70                     -- Acceptance factor for trade influence (adjusted from base value)
