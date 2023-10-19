@@ -6744,7 +6744,7 @@ focus_tree = {
 	focus = {
 		id = ITA_foreign_affairs
 		icon = GFX_goal_generic_dangerous_deal
-		x = 24
+		x = 26
 		y = 0
 		
 		relative_position_id = ITA_naval_power_projection
@@ -6782,16 +6782,13 @@ focus_tree = {
 		search_filters = {}
 
 		completion_reward = {
-			add_state_claim = 163 #NORTH SLOVENIA
+			add_state_claim = 106 #NORTH SLOVENIA
 			add_state_claim = 736 #LJUBLJANA
 			add_state_claim = 683 #DALMATIA
 			add_state_claim = 102 #MONTENEGRO
-			add_state_claim = 1093
-			add_state_claim = 841
 			add_state_claim = 44
 			add_state_claim = 488
-			add_state_claim = 1094
-			add_state_claim = 105
+			
 		}
 	}
 
@@ -7491,6 +7488,12 @@ focus_tree = {
 					type = puppet_wargoal_focus
 					target = SCH
 				}
+			}
+			every_state = {
+			limit = {
+			is_core_of = KVO
+			}
+			add_claim_by = ITA
 			}
 		}
 	}
@@ -8909,6 +8912,137 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = ita_langou_1
+		}
+	}
+	
+	focus = {
+		id = ITA_albanian_occupation
+		icon = GFX_focus_ITA_albanian_fascist_militia
+		prerequisite = { focus = ITA_potential_allies_in_the_balkans focus = ITA_balkan_ambition }
+
+		x = -7
+		y = 1
+		relative_position_id = ITA_balkan_ambition
+		cost = 3
+		available = {
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		bypass = {
+			44 = { state_is_fully_controlled_by_ROOT_or_subject = yes }
+		}
+
+		search_filters = {FOCUS_FILTER_ANNEXATION FOCUS_FILTER_STABILITY FOCUS_FILTER_MANPOWER}
+
+		completion_reward = {
+			if = {
+				limit = {
+					ALB = { has_war = no }
+				}
+				ALB = { country_event = { id = italy.3 hours = 1 } }
+			}
+			else = {
+				create_wargoal = {
+					type = take_state_focus
+					target = ALB
+					generator = { 44 }
+				}
+			}
+			create_wargoal = {
+					type = take_state_focus
+					target = MAC
+					generator = { 106 }
+			}
+			effect_tooltip = {
+				custom_effect_tooltip = if_they_accept_tt
+				annex_country = { target = ALB }
+				add_named_threat = { threat = 2 name = ITA_albania_war_goal }
+				# The king is an idea
+				if = {
+					limit = {
+						has_idea = vittorio_emanuele
+					}
+					swap_ideas = {
+						remove_idea = vittorio_emanuele
+						add_idea = vittorio_emanuele_king_of_albania
+					}
+				}
+				else_if = {
+					limit = {
+						has_idea = vittorio_emanuele_emperor_of_ethiopia
+					}
+					swap_ideas = {
+						remove_idea = vittorio_emanuele_emperor_of_ethiopia
+						add_idea = vittorio_emanuele_albania_ethiopia
+					}
+				}
+				if = {
+					limit = {
+				 		has_character = ITA_vittorio_emanuele_iii
+					}
+					ITA_vittorio_emanuele_iii = { add_country_leader_trait = king_of_albania }
+				}
+			}
+		}
+	}
+	
+	focus = {
+		id = ITA_albanian_oil
+		icon = GFX_focus_ITA_albanian_irredentism
+		prerequisite = { focus = ITA_albanian_occupation }
+
+		x = 0
+		y = 1
+		relative_position_id = ITA_albanian_occupation
+		cost = 5
+		available = {
+			44 = {
+				state_is_fully_controlled_by_ROOT_or_subject = yes
+			}
+			has_tech = synth_oil_experiments
+		}
+
+		search_filters = {FOCUS_FILTER_INDUSTRY}
+		ai_will_do = {
+			factor = 2
+		}
+		completion_reward = {
+			44 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 1
+					instant_build = yes
+				}
+				add_resource = {
+					type = oil
+					amount = 2
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_completed_focus = ITA_regional_development }
+				}
+				custom_effect_tooltip = ITA_albanian_fascist_militia_occupation_law_full_tt
+				show_ideas_tooltip = ITA_fake_colonial_police_law
+			}
+			else = {
+				custom_effect_tooltip = ITA_albanian_fascist_militia_occupation_law_tt
+			}
+
+			every_controlled_state = {
+				limit = {
+					is_core_of = ALB
+					is_fully_controlled_by = ROOT
+				}
+				#set_occupation_law = colonial_police #MM: Not working
+				add_compliance = 10
+			}
 		}
 	}
 	
