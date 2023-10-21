@@ -8,6 +8,7 @@ USA_support_to_ENG = {
 		has_government = democratic
 		ENG = { 
 			has_war_with = DVL
+			is_ai = no
 		}
 	}
 	abort_when_not_enabled = yes
@@ -76,6 +77,10 @@ USA_unit_production = {
 		id = garrison
 		value = 0
 	}
+	ai_strategy = { #added to railway gun define (set to 0 by default, increased in default strategies)
+		type = railway_gun_divisions_ratio
+		value = 2
+	}
 	ai_strategy = {
 		type = role_ratio
 		id = paratroopers
@@ -89,7 +94,7 @@ USA_unit_production = {
 	ai_strategy = {
 		type = role_ratio
 		id = marines
-		value = 2
+		value = 1
 	}
 	ai_strategy = {
 		type = role_ratio
@@ -114,81 +119,95 @@ USA_unit_production = {
 	ai_strategy = {
 		type = role_ratio
 		id = infantry
-		value = 150
-	}
-	#陆军装备生产
-	ai_strategy = {
-		type = equipment_production_min_factories
-		id = infantry_weapons
-		value = 15
-	}
-	ai_strategy = {
-		type = equipment_production_factor
-		id = infantry
-		value = 35
-	}
-	ai_strategy = {
-		type = equipment_production_factor
-		id = artillery
-		value = 35
-	}
-	ai_strategy = {
-		type = equipment_production_min_factories
-		id = artillery
-		value = 1
+		value = 60
 	}
 }
-#I WANT YOU
-USA_raise_national_defense_army = {
-	allowed = {
-		original_tag = USA
-	}
-	enable = { 
-		date < 1939.1.1
-	}
-	abort_when_not_enabled = yes
 
-	ai_strategy = {
-		type = build_army
-		id = infantry
-		value = 75
-	}
-}
-#帝国征募
-USA_more_infantry_divisions = {
-	allowed = {
-		original_tag = USA
-	}
-
-	enable = { 
-		has_equipment = { infantry_equipment > 8000 } 
-	}
-
-	abort = {
-		has_equipment = { infantry_equipment < 3000 }
-	}
-
-	ai_strategy = {
-		type = build_army
-		id = infantry
-		value = 400
-	}
-}
-#军工饥渴
-USA_arms_factory_hungry = {
+USA_infantry_production = {
 	allowed = {
 		original_tag = USA
 	}
 	enable = {
-		arms_factory < 100
+		always = yes
 	}
 	abort = {
-		arms_factory > 100
+		always = no
+	}
+
+	ai_strategy = {
+		type = equipment_production_factor
+		id = infantry
+		value = 45
+	}
+	ai_strategy = { 
+		type = equipment_production_min_factories 
+		id = infantry
+		value = 5
+	}
+}
+USA_improve_infantry_production = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = { 
+		has_equipment = { infantry_equipment < 5000 }
+	}
+	abort = { 
+		has_equipment = { infantry_equipment > 50000 } 
+	}
+	ai_strategy = { 
+		type = equipment_variant_production_factor 
+		id = infantry_equipment 
+		value = 100
 	}
 	ai_strategy = {
-		type = building_target
-		id = arms_factory
-		value = 999
+		type = equipment_production_factor
+		id = infantry
+		value = 30
+	}
+}
+USA_redusce_infantry_production = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = { 
+		has_equipment = { infantry_equipment > 50000 } 
+	}
+	abort = { 
+		has_equipment = { infantry_equipment < 5000 }
+	}
+	ai_strategy = { 
+		type = equipment_variant_production_factor 
+		id = infantry_equipment 
+		value = -50 
+	}
+	ai_strategy = {
+		type = equipment_production_factor
+		id = infantry
+		value = -20
+	}
+}
+USA_artillery_production = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		always = yes
+	}
+	abort = {
+		always = no
+	}
+
+	ai_strategy = {
+		type = equipment_production_factor
+		id = artillery
+		value = 35
+	}
+
+	ai_strategy = {
+		type = equipment_production_min_factories
+		id = artillery
+		value = 5
 	}
 }
 #火炮告急
@@ -208,54 +227,68 @@ USA_artillery_emergency_request = {
 		value = 8
 	}
 }
-#步枪告急
-USA_infantry_production = {
+USA_support_equipment = {
 	allowed = {
 		original_tag = USA
 	}
 	enable = {
-		has_equipment = {
-			infantry_equipment < 0
-		}
+		always = yes
 	}
-	abort_when_not_enabled = yes
-	ai_strategy = {
-		type = equipment_production_min_factories
-		id = infantry_weapons
-		#id = infantry
-		value = 15
+	abort = {
+		always = no
 	}
-}
-#火炮生产
-USA_artillery_production = {
-	allowed = {
-		original_tag = USA
-	}
-	enable = {
-		date > 1937.8.1
-	}
-	abort_when_not_enabled = yes
-	ai_strategy = {
-		type = equipment_production_min_factories
-		id = artillery
+
+	ai_strategy = { 
+		type = equipment_production_factor
+		id = support
 		value = 5
 	}
+	ai_strategy = { 
+		type = equipment_production_min_factories 
+		id = support 
+		value = 1 
+	}
 }
-#反坦克炮生产
 USA_anti_tank_production = {
 	allowed = {
 		original_tag = USA
 	}
 	enable = {
-		date > 1939.1.1
+		always = yes
 	}
-	abort_when_not_enabled = yes
+	abort = {
+		always = no
+	}
+	
 	ai_strategy = {
-		type = equipment_production_min_factories
+		type = equipment_production_factor
 		id = anti_tank
-		value = 5
+		value = 35
+	}
+	ai_strategy = { 
+		type = equipment_production_min_factories 
+		id = anti_tank 
+		value = 1 
 	}
 }
+USA_reduce_anti_tank_production = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = { 
+		has_equipment = { anti_tank_equipment > 5000 } 
+	}
+	abort = { 
+		has_equipment = { anti_tank_equipment < 500 } 
+	}
+	
+	ai_strategy = { 
+		type = equipment_variant_production_factor 
+		id = anti_tank_equipment 
+		value = -25 
+	}
+}
+
 #装甲生产
 USA_medium_tank_production = {
 	allowed = {
@@ -271,12 +304,88 @@ USA_medium_tank_production = {
 	ai_strategy = { 
 		type = equipment_production_factor
 		id = armor
-		value = 100
+		value = 200
+	}
+	ai_strategy = { 
+		type = equipment_production_min_factories
+		id = armor
+		value = 1
 	}
 	ai_strategy = { 
 		type = equipment_variant_production_factor 
 		id = medium_tank_chassis 
-		value = 30
+		value = 200
+	}
+}
+
+#帝国征募
+USA_more_infantry_divisions = {
+	allowed = {
+		original_tag = USA
+	}
+
+	enable = { 
+		has_equipment = { 
+			infantry_equipment > 8000
+			artillery_equipment > 0
+		} 
+	}
+
+	abort = {
+		has_equipment = { 
+			infantry_equipment < 3000
+			artillery_equipment < 0
+		}
+	}
+
+	ai_strategy = {
+		type = build_army
+		id = infantry
+		value = 200
+	}
+}
+#军工饥渴
+USA_wants_armsfactory = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		or = {
+			date < 1939.10.4
+			any_enemy_country = { is_major = yes }
+		}
+	}
+	abort = {
+		or = {
+			date > 1939.10.4
+			num_of_military_factories > 299
+		}
+	}
+
+	#ai_strategy = {
+		#type = building_target
+		#id = arms_factory
+		#value = 500
+	#}
+	ai_strategy = {
+		type = building_target
+		id = dockyard
+		value = -300
+	}
+	ai_strategy = {
+		type = building_target
+		id = synthetic_refinery
+		value = -300
+	}
+	ai_strategy = {
+		type = building_target
+		id = fuel_silo
+		value = -300
+	}
+	ai_strategy = {
+		type = building_target
+		id = naval_base
+		value = -300
 	}
 }
 #帝国征募2
@@ -293,39 +402,95 @@ USA_more_armor_divisions = {
 	ai_strategy = {
 		type = build_army
 		id = armor
-		value = 300
+		value = 500
 	}
 }
+
+USA_mechanised_infantry = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = { 
+		has_tech = mechanised_infantry
+	}
+	abort = {
+		or = {
+			and = {
+				has_war = no
+				has_equipment = { mechanized_equipment > 5000 } 
+			}
+			and = {
+				has_war = yes
+				has_equipment = { mechanized_equipment > 1000 } 
+			}
+		}
+	}
+	
+	ai_strategy = { 
+		type = equipment_variant_production_factor
+		id = mechanized_equipment
+		value = 30
+	}
+	ai_strategy = { 
+		type = equipment_production_factor
+		id = mechanized
+		value = 5
+	}
+}
+
+USA_boost_div_upgrades = { #lets make sure USA upgrades divs when at war
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date < 1941.1.1
+	}
+
+	abort = {
+		or = {
+			date > 1941.1.1
+			has_war = yes
+		}
+	}
+
+	# lets do changes more often during this period too
+	ai_strategy = {
+		type = land_xp_spend_priority
+		id = division_template
+		value = 50
+	}
+}
+
 #部队设计
 USA_template_design_1 = {
 	allowed = {
 		original_tag = USA
 	}
 	enable = {
-		date < 1939.1.1
+		date < 1940.1.1
 	}
 	abort = {
-		date > 1939.1.1
+		date > 1940.1.1
 	}
 	ai_strategy = {
 		type = template_prio
 		id = motorized
-		value = 10
+		value = -10
 	}
 	ai_strategy = {
 		type = template_prio
 		id = cavalry
-		value = -50
+		value = -100
 	}
 	ai_strategy = {
 		type = template_prio
 		id = light_armor
-		value = -10
+		value = 50
 	}
 	ai_strategy = {
 		type = template_prio
 		id = medium_armor
-		value = -10
+		value = 50
 	}
 	ai_strategy = {
 		type = template_prio
@@ -340,7 +505,7 @@ USA_template_design_1 = {
 	ai_strategy = {
 		type = template_prio
 		id = infantry
-		value = 30
+		value = 50
 	}
 }
 USA_template_design_2 = {
@@ -353,7 +518,7 @@ USA_template_design_2 = {
 	ai_strategy = {
 		type = template_prio
 		id = mechanized
-		value = -20
+		value = 20
 	}
 	ai_strategy = {
 		type = template_prio
@@ -363,17 +528,17 @@ USA_template_design_2 = {
 	ai_strategy = {
 		type = template_prio
 		id = light_armor
-		value = -10
+		value = 10
 	}
 	ai_strategy = {
 		type = template_prio
-		id = armor
-		value = 999
+		id = medium_armor
+		value = 50
 	}
 	ai_strategy = {
 		type = template_prio
 		id = modern_armor
-		value = 20
+		value = 60
 	}
 	ai_strategy = {
 		type = template_prio
@@ -388,7 +553,7 @@ USA_template_design_2 = {
 	ai_strategy = {
 		type = template_prio
 		id = infantry
-		value = 50
+		value = 100
 	}
 	ai_strategy = {
 		type = template_prio
@@ -976,79 +1141,39 @@ USA_go_time = {
 
 }
 
-USA_southern_threat = {
-	allowed = {
-		tag = USA
-	}
-	enable = {
-		PAN = {
-			exists = yes
-			has_government = communism
-		}
-		NGD = {
-			exists = no
-		}
-		FRG = {
-			exists = no
-		}
-	}
-	abort_when_not_enabled = yes
-	ai_strategy = {
-		type = prepare_for_war
-		id = PAN
-		value = 100
-	}
-	ai_strategy = {
-		type = conquer
-		id = PAN
-		value = 100
-	}
-	ai_strategy = {
-		type = front_unit_request
-		tag = PAN
-		value = 100
-	}
-}
-USA_southern_threat_2 = {
-	allowed = {
-		tag = USA
-	}
-	enable = {
-		PAN = {
-			exists = yes
-			has_government = communism
-		}
-		NGD = {
-			exists = no
-		}
-		FRG = {
-			exists = no
-		}
-	}
-	abort_when_not_enabled = yes
-	ai_strategy = {
-		type = prepare_for_war
-		id = PAJ
-		value = 100
-	}
-	ai_strategy = {
-		type = conquer
-		id = PAJ
-		value = 100
-	}
-}
-USA_we_dont_believe_in_mountain_tanks = {
-	allowed = {
-		original_tag = USA
-	}
-	enable = { always = yes }
-
-	ai_strategy = {
-		type = front_armor_score
-		id = "NGD"
-		value = -100
-	}
-}
+#USA_southern_threat = {
+	#allowed = {
+		#tag = USA
+	#}
+	#enable = {
+		#PAN = {
+			#exists = yes
+			#has_government = communism
+		#}
+	#	NGD = {
+		#	exists = no
+		#}
+	#	FRG = {
+	#		exists = no
+	#	}
+	#}
+	#abort_when_not_enabled = yes
+	#ai_strategy = {
+	#	type = prepare_for_war
+	#	id = PAN
+	#	value = 100
+	#}
+	#ai_strategy = {
+	#	type = conquer
+	#	id = PAN
+	#	value = 100
+	##}
+	#ai_strategy = {
+	#	type = front_unit_request
+	#	tag = PAN
+	#	value = 100
+	#}
+#}
 USA_time_to_war = {
 	allowed = {
 		tag = USA
@@ -1081,11 +1206,11 @@ USA_there_no_forgiveness = {
 		tag = "NFA"
 		value = 300
 	}
-	ai_strategy = {
-		type = conquer
-		id = "NFA"
-		value = 300
-	}
+	#ai_strategy = {
+		#type = conquer
+		#id = "NFA"
+		#value = 300
+	#}
 }
 USA_crush_FRG = {
 	allowed = {
@@ -1226,32 +1351,177 @@ USA_ENG_is_friend = {
 		value = 100
 	}
 }
-#科技
-USA_start = {
+
+USA_tank_tech1 = {
 	allowed = {
-		tag = USA
+		original_tag = USA
 	}
 	enable = {
-		always = yes
+		date > 1939.10.1
+		has_dlc = "No Step Back"
+		not = { has_tech = improved_medium_tank_chassis }
 	}
+
+	abort = {
+		has_tech = improved_medium_tank_chassis
+	}
+
 	ai_strategy = {
 		type = research_tech
-		id = artillery
-		value = 150
+		id = 95
+		value = 999
 	}
+}
+USA_tank_tech2 = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1942.10.1
+		has_dlc = "No Step Back"
+		not = { has_tech = advanced_medium_tank_chassis }
+	}
+
+	abort = {
+		has_tech = advanced_medium_tank_chassis
+	}
+
 	ai_strategy = {
 		type = research_tech
-		id = armor
-		value = 250
+		id = 96
+		value = 999
 	}
+}
+USA_antitank_tech1 = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1938.10.1
+		not = { has_tech = antitank1 }
+	}
+
+	abort = {
+		has_tech = antitank1
+	}
+
 	ai_strategy = {
 		type = research_tech
-		id = construction_tech
-		value = 200
+		id = 254
+		value = 9999
 	}
+}
+USA_antitank_tech2 = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1939.10.1
+		not = { has_tech = antitank2 }
+	}
+
+	abort = {
+		has_tech = antitank2
+	}
+
 	ai_strategy = {
 		type = research_tech
-		id = electronics
-		value = 200
+		id = 255
+		value = 9999
+	}
+}
+USA_antitank_tech3 = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1940.10.1
+		not = { has_tech = antitank3 }
+	}
+
+	abort = {
+		has_tech = antitank3
+	}
+
+	ai_strategy = {
+		type = research_tech
+		id = 256
+		value = 9999
+	}
+}
+USA_artillery_tech1 = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1938.10.1
+		not = { has_tech = artillery1 }
+	}
+
+	abort = {
+		has_tech = artillery1
+	}
+
+	ai_strategy = {
+		type = research_tech
+		id = 237
+		value = 9999
+	}
+}
+USA_artillery_tech2 = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1939.10.1
+		not = { has_tech = artillery2 }
+	}
+
+	abort = {
+		has_tech = artillery2
+	}
+
+	ai_strategy = {
+		type = research_tech
+		id = 238
+		value = 9999
+	}
+}
+USA_artillery_tech3 = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1940.10.1
+		not = { has_tech = artillery3 }
+	}
+
+	abort = {
+		has_tech = artillery3
+	}
+
+	ai_strategy = {
+		type = research_tech
+		id = 239
+		value = 9999
+	}
+}
+USA_artillery_tech4 = {
+	allowed = {
+		original_tag = USA
+	}
+	enable = {
+		date > 1942.10.1
+		not = { has_tech = artillery5 }
+	}
+
+	abort = {
+		has_tech = artillery5
+	}
+
+	ai_strategy = {
+		type = research_tech
+		id = 241
+		value = 9999
 	}
 }

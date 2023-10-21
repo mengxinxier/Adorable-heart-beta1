@@ -30,7 +30,7 @@ UBS_bank_icon_frames = {
 		current_cunkuan_icon_frame = cunkuan_temp
 	}
 	set_temp_variable = {
-		daikuan_temp = ubs_load
+		daikuan_temp = THIS.ubs_load
 	}
 	divide_temp_variable = {
 		daikuan_temp = 4200
@@ -91,14 +91,14 @@ UBS_bank_icon_frames = {
 		current_jinglirun_icon_frame = jinglirun_temp
 	}
 	clamp_variable = {
-		var = ubs_load
+		var = THIS.ubs_load
 		min = 0
 	}
 	clamp_variable = {
 		var = ubs_save
 		min = 0
 	}
-	round_variable = ubs_load
+	round_variable = THIS.ubs_load
 	round_variable = ubs_save
 }
 
@@ -690,6 +690,36 @@ jiesuanjingji = {
 			}
 		}
 		UBS_bank_icon_frames = yes
+		##市场
+		if = {
+			limit = {
+				not = {
+					has_government = neutrality
+				}
+			}
+			every_other_country = {
+				limit = {
+					not = {	
+						or = {
+							has_government = neutrality
+							has_government = PREV
+						}
+					}
+					has_country_flag = can_be_in_market_of_@PREV
+					not = {
+						or = {
+							is_in_faction_with = PREV
+							is_subject_of = PREV
+						}
+					}
+				}
+				remove_country_flag = can_be_in_market_of_@PREV
+				remove_opinion_modifier = {
+					target = PREV
+					modifier = Trading_partners
+				}
+			}
+		}
 	}
 }
 

@@ -2522,7 +2522,11 @@ add_namespace = SOV_cmea
 		picture = GFX_report_event_SOV_corn_harvest
 
 		is_triggered_only = yes
-
+		immediate = {
+			hidden_effect = {
+				set_variable = { SOV_debt = 100 }
+			}
+		}
 		option = {
 			name = SOV_flavor.33.a
 			ai_chance = {
@@ -2531,7 +2535,6 @@ add_namespace = SOV_cmea
 			hidden_effect = {
 				country_event = { id = SOV_flavor.35 days = 3 }
 			}
-			set_variable = { SOV_debt = 100 }
 			SOV_pay_a_debt = yes
 		}
 		
@@ -4021,6 +4024,74 @@ add_namespace = SOV_cmea
 		}
 	}
 
+	country_event = {
+		id = SOV_dip.36
+		title = SOV_dip.36.t
+		desc = SOV_dip.36.d
+		is_triggered_only = yes
+		option = {
+			name = SOV_dip.36.1
+			add_opinion_modifier = {
+				target = FROM
+				modifier = DEN_partners
+			}
+			give_market_access = FROM
+			hidden_effect = {
+				add_to_variable = {
+					ubs_save = 200
+				}
+				FROM = { 
+					set_country_flag = SOV_elves_agree_to_cooperate
+					country_event = SOV_dip.37
+				}
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+		}
+		option = {
+			name = SOV_dip.36.2
+			ai_chance = { base = 0 }
+			add_political_power = -15
+			hidden_effect = {
+				FROM = { country_event = { id = SOV_dip.37 days = 1 } }
+			}
+		}
+	}
+	
+	country_event = {
+		id = SOV_dip.37
+		title = SOV_dip.37.t
+		desc = {
+			text = SOV_dip.37.d1
+			trigger = {
+				has_country_flag = SOV_elves_agree_to_cooperate
+			}
+		}
+		desc = {
+			text = SOV_dip.37.d2
+			trigger = {
+				NOT = { has_country_flag = SOV_elves_agree_to_cooperate }
+			}
+		}
+		is_triggered_only = yes
+		option = {
+			name = SOV_dip.37.1
+			trigger = {
+				has_country_flag = SOV_elves_agree_to_cooperate
+			}
+			add_opinion_modifier = {
+				target = FROM
+				modifier = DEN_partners
+			}
+		}
+		option = {
+			name = SOV_dip.37.2
+			trigger = {
+				NOT = { has_country_flag = SOV_elves_agree_to_cooperate }
+			}
+			add_political_power = -5
+		}
+	}
+
 
 #####  新闻事件  #####
 	news_event = {
@@ -4619,6 +4690,14 @@ add_namespace = SOV_cmea
 					flag = can_be_in_market_of_@ROOT
 					value = 1
 				}
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = Trading_partners
+				}
+			}
+			add_opinion_modifier = {
+				target = FROM
+				modifier = Trading_partners
 			}
 			FROM = {
 				country_event = SOV_cmea.2
