@@ -1,8 +1,9 @@
 #!gfx:interface\SOV.gfx
-#!gfx:interface\UKR.gfx
+#!gfx:interface\UKR.gfxr
 #!gfx:interface\PAN_focu.gfx
 #!gfx:interface\PAN_focu_shine.gfx
 #!gfx:interface\GEU_goals.gfx
+#!gfx:interface\GER_goals.gfx
 #!gfx:interface\generic_goals.gfx
 ###################################
 #######   苏维埃联盟国策树   #######
@@ -32,7 +33,7 @@ focus_tree = {
 	focus = {
 		id = SOV_support_Sakura_path
 		icon = GFX_goal_SOV_survey_Sakura
-		x = 31
+		x = 40
 		y = 0
 		cost = 4
 		ai_will_do = {
@@ -2163,9 +2164,9 @@ focus_tree = {
 		id = SOV_defense_mobilization_commission
 		icon = GFX_goal_national_mobilization
 		relative_position_id = SOV_concentrate_on_heavy_industry
-		x = 7
+		x = 12
 		y = 0
-		cost = 6
+		cost = 4
 		ai_will_do = {
 			factor = 50
 			modifier = {
@@ -2180,9 +2181,9 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			army_experience = 35
+			army_experience = 15
 			hidden_effect = {
-				add_to_variable = { SOV_red_army_training_time_factor = -0.15 }
+				add_to_variable = { SOV_red_army_mobilization_speed = 0.15 }
 				add_to_variable = { SOV_red_army_conscription = 0.01 }
 			}
 			custom_effect_tooltip = SOV_defense_mobilization_commission_tt
@@ -2192,14 +2193,14 @@ focus_tree = {
 
 	focus = {
 		id = SOV_political_committee_member
-		icon = GFX_goal_army_guy_2
+		icon = GFX_goal_SOV_Militant_Proletkult
 		relative_position_id = SOV_defense_mobilization_commission
 		prerequisite = {
 			focus = SOV_defense_mobilization_commission
 		}
-		x = -1
+		x = -5
 		y = 1
-		cost = 6
+		cost = 4
 		ai_will_do = {
 			factor = 50
 			modifier = {
@@ -2209,24 +2210,24 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			army_experience = 35
+			add_political_power = 25
 			hidden_effect = {
 				add_to_variable = { SOV_red_army_experience_loss_factor = -0.15 }
 				add_to_variable = { SOV_red_army_army_org_factor = 0.05 }
 			}
 			custom_effect_tooltip = SOV_political_committee_member_tt
 		}
-		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_SWI_MILITARY_READINESS }
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ARMY_XP }
 	}
-
+	
 	focus = {
-		id = SOV_democracy_in_military
-		icon = GFX_goal_SOV_Militant_Proletkult
+		id = SOV_balance_armament_production
+		icon = GFX_focus_generic_combined_arms
 		relative_position_id = SOV_defense_mobilization_commission
 		prerequisite = {
 			focus = SOV_defense_mobilization_commission
 		}
-		x = 1
+		x = 4
 		y = 1
 		cost = 6
 		ai_will_do = {
@@ -2238,7 +2239,43 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			army_experience = 35
+			mio:SOV_grabin_design_bureau_organization = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.15
+			}
+			mio:SOV_tula_arms_plant_organization = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.15
+			}
+			mio:SOV_gaz_organization = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.15
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ARMY_XP }
+	}
+
+	focus = {
+		id = SOV_democracy_in_military
+		icon = GFX_PAN_focu_444
+		relative_position_id = SOV_political_committee_member
+		prerequisite = {
+			focus = SOV_political_committee_member
+		}
+		x = 1
+		y = 1
+		cost = 4
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 10
+				has_war = yes
+			}
+		}
+
+		completion_reward = {
+			add_political_power = 15
+			add_war_support = 0.05
 			hidden_effect = {
 				add_to_variable = { SOV_red_army_experience_loss_factor = -0.10 }
 				add_to_variable = { SOV_red_army_army_morale_factor = 0.05 }
@@ -2247,21 +2284,17 @@ focus_tree = {
 			}
 			custom_effect_tooltip = SOV_democracy_in_military_tt
 		}
-		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_WAR_SUPPORT }
 	}
 
-
 	focus = {
-		id = SOV_reorganization_of_military
-		icon = GFX_PAN_focu_444
+		id = SOV_renovate_old_army
+		icon = GFX_focus_SOV_mobilization_plan
 		relative_position_id = SOV_political_committee_member
-		prerequisite = {
-			focus = SOV_democracy_in_military
-		}
 		prerequisite = {
 			focus = SOV_political_committee_member
 		}
-		x = 1
+		x = -1
 		y = 1
 		cost = 4
 		ai_will_do = {
@@ -2273,12 +2306,50 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			army_experience = 45
+			army_experience = 25
+			hidden_effect = {
+				add_to_variable = { SOV_red_army_army_org_factor = 0.05 }
+				add_to_variable = { SOV_red_army_recon_factor = 0.15 }
+			}
+			custom_effect_tooltip = SOV_renovate_old_army_tt
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+
+	focus = {
+		id = SOV_reorganization_of_military
+		icon = GFX_goal_army_guy_2
+		relative_position_id = SOV_renovate_old_army
+		prerequisite = {
+			focus = SOV_renovate_old_army
+		}
+		prerequisite = {
+			focus = SOV_democracy_in_military
+		}
+		x = 1
+		y = 1
+		cost = 6
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
+
+		completion_reward = {
+			army_experience = 20
 			add_timed_idea = {
 				idea = SOV_military_integrating
 				days = 120
 			}
 			custom_effect_tooltip = SOV_reorganization_of_military_tt
+			add_doctrine_cost_reduction = {
+				name = SOV_reorganization_of_military
+				cost_reduction = 0.50
+				uses = 1
+				category = land_doctrine
+			}
 		}
 		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
 	}
@@ -2286,9 +2357,92 @@ focus_tree = {
 	focus = {
 		id = SOV_new_rifle
 		icon = GFX_goal_generic_small_arms
-		relative_position_id = SOV_reorganization_of_military
+		relative_position_id = SOV_balance_armament_production
 		prerequisite = {
-			focus = SOV_reorganization_of_military
+			focus = SOV_balance_armament_production
+		}
+		x = 0
+		y = 1
+		cost = 4
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
+
+		completion_reward = {
+			mio:SOV_tula_arms_plant_organization = {
+				add_mio_research_bonus = 0.10
+			}
+			add_tech_bonus = {
+				name = SOV_new_rifle
+				bonus = 0.5
+				uses = 3
+				category = infantry_weapons
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+
+	focus = {
+		id = SOV_lightweight_communication
+		icon = GFX_goal_radio
+		relative_position_id = SOV_new_rifle
+		prerequisite = {
+			focus = SOV_new_rifle
+		}
+		x = -1
+		y = 1
+		cost = 6
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
+
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_tech = radio
+					}
+				}
+				set_technology = {
+					radio = 1
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = SOV_lightweight_communication
+					bonus = 0.5
+					uses = 1
+					category = electronics
+				}
+			}
+			add_tech_bonus = {
+				name = SOV_lightweight_communication
+				bonus = 0.5
+				uses = 3
+				category = support_tech
+			}
+			hidden_effect = {
+				add_to_variable = { SOV_red_army_initiative_factor = 0.05 }
+			}
+			custom_effect_tooltip = SOV_lightweight_communication_tt
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+	
+	focus = {
+		id = SOV_value_corps_of_engineers
+		icon = GFX_focus_FIN_weapon_caches
+		relative_position_id = SOV_new_rifle
+		prerequisite = {
+			focus = SOV_new_rifle
 		}
 		x = 1
 		y = 1
@@ -2302,29 +2456,60 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			if = {
-				limit = { is_ai = yes }
-				set_technology = {
-					tech_field_hospital = 1
-				}
-			}
 			add_tech_bonus = {
-				name = SOV_new_rifle
+				name = SOV_engineer_training
 				bonus = 0.5
-				uses = 3
-				category = infantry_weapons
-				category = support_tech
+				uses = 2
+				category = mountaineers_tech
 			}
+			hidden_effect = {
+				set_technology = { 
+					SOV_engineer_training_tech = 1 
+					popup = no 
+				}	
+			}
+			custom_effect_tooltip = SOV_engineer_training_tech_effect
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+		
+	focus = {
+		id = SOV_youjun_girl
+		icon = GFX_focus_POL_belarus_army
+		relative_position_id = SOV_lightweight_communication
+		prerequisite = {
+			focus = SOV_lightweight_communication
+		}
+		prerequisite = {
+			focus = SOV_value_corps_of_engineers
+		}
+		x = 1
+		y = 1
+		cost = 6
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				has_war = yes
+			}
+		}
+
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { SOV_red_army_cavalry_attack_factor = 0.10 }
+				add_to_variable = { SOV_red_army_cavalry_defence_factor = 0.10 }
+			}
+			custom_effect_tooltip = SOV_youjun_girl_tt
 		}
 		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
 	}
 
 	focus = {
-		id = SOV_engineer_training
+		id = SOV_adaptable_army
 		icon = GFX_goal_generic_special_forces
-		relative_position_id = SOV_new_rifle
+		relative_position_id = SOV_reorganization_of_military
 		prerequisite = {
-			focus = SOV_new_rifle
+			focus = SOV_reorganization_of_military
 		}
 		x = -1
 		y = 1
@@ -2338,19 +2523,11 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			add_tech_bonus = {
-				name = SOV_engineer_training
-				bonus = 0.5
-				uses = 1
-				category = mountaineers_tech
-			}
-			hidden_effect = {
-				set_technology = { 
-					SOV_engineer_training_tech = 1 
-					popup = no 
-				}	
-			}
-			custom_effect_tooltip = SOV_engineer_training_tech_effect
+			add_to_variable = { SOV_the_red_army_heat_attrition_factor = -0.1 }
+			add_to_variable = { SOV_the_red_army_winter_attrition_factor = -0.1 }
+			add_to_variable = { SOV_the_red_army_acclimatization_cold_climate_gain_factor = 0.15 }
+			add_to_variable = { SOV_the_red_army_acclimatization_hot_climate_gain_factor = 0.15 }
+			custom_effect_tooltip = SOV_adaptable_army_tt
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 	}
@@ -2358,12 +2535,15 @@ focus_tree = {
 	focus = {
 		id = SOV_support_force
 		icon = GFX_goal_SOV_logistics
-		relative_position_id = SOV_engineer_training
+		relative_position_id = SOV_reorganization_of_military
 		prerequisite = {
-			focus = SOV_engineer_training
+			focus = SOV_reorganization_of_military
 		}
-		x = 0
-		y = 1
+		prerequisite = {
+			focus = SOV_way_of_life
+		}
+		x = 1
+		y = 2
 		cost = 4
 		ai_will_do = {
 			factor = 10
@@ -2371,6 +2551,10 @@ focus_tree = {
 				factor = 10
 				has_war = yes
 			}
+		}
+
+		available = {
+			NOT = { has_idea = SOV_the_road_of_life }
 		}
 
 		completion_reward = {
@@ -2391,153 +2575,13 @@ focus_tree = {
 	}
 
 	focus = {
-		id = SOV_guerrilla_forces
+		id = SOV_great_patriotic_war
 		icon = GFX_goal_Bolshevik_boys
-		relative_position_id = SOV_support_force
+		relative_position_id = SOV_defense_mobilization_commission
 		prerequisite = {
-			focus = SOV_support_force
-		}
-		x = -1
-		y = 1
-		cost = 6
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 10
-				has_war = yes
-			}
-		}
-
-		completion_reward = {
-			hidden_effect = {
-				add_to_variable = { SOV_red_army_SOV_red_army_drift_defence_factor = 0.25 }
-				add_to_variable = { SOV_red_army_conscription = 0.005 }
-			}
-			custom_effect_tooltip = SOV_guerrilla_forces_tt
-		}
-		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
-	}
-
-	focus = {
-		id = SOV_extraordinary_measures
-		icon = GFX_goal_generic_more_territorial_claims
-		relative_position_id = SOV_reorganization_of_military
-		prerequisite = {
-			focus = SOV_reorganization_of_military
-		}
-		x = -1
-		y = 1
-		cost = 2
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 50
-				any_enemy_country = {
-					is_major = yes
-				}
-			}
-		}
-		available = {
-			any_enemy_country = {
-				is_major = yes
-			}
-		}
-		completion_reward = {
-			add_war_support = 0.05
-			add_ideas = SOV_extraordinary_measures_buff
-			unlock_decision_tooltip = SOV_extraordinary_measures_decision
-		}
-		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_SWI_MILITARY_READINESS }
-	}
-
-	focus = {
-		id = SOV_emergency_arms_production
-		icon = GFX_focus_generic_military_equipment
-		relative_position_id = SOV_extraordinary_measures
-		prerequisite = {
-			focus = SOV_extraordinary_measures
-		}
-		x = -1
-		y = 1
-		cost = 4
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 50
-				any_enemy_country = {
-					is_major = yes
-				}
-			}
-		}
-		on_uncomplete = {
-			add_offsite_building = { type = arms_factory level = -4 }
-		}
-		completion_reward = {
-			add_offsite_building = { type = arms_factory level = 4 }
-			add_equipment_to_stockpile = {
-				type = infantry_equipment
-				amount = 7500
-			}
-			add_equipment_to_stockpile = {
-				type = artillery_equipment
-				amount = 1500
-			}
-			add_equipment_to_stockpile = {
-				type = support_equipment
-				amount = 1000
-			}
-			mio:SOV_tula_arms_plant_organization = {
-				add_mio_size = 2
-				add_mio_funds_gain_factor = 0.35
-				add_mio_research_bonus = 0.05
-			}
-			mio:SOV_mytishchy_machine_building_plant_organization = {
-				add_mio_size = 2
-				add_mio_funds_gain_factor = 0.35
-				add_mio_research_bonus = 0.05
-			}
-			custom_effect_tooltip = available_political_advisor
-			show_ideas_tooltip = SOV_Totoyama
-			add_stability = -0.05
-			add_political_power = -150
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_SWI_MILITARY_READINESS }
-	}
-
-	focus = {
-		id = SOV_superintendant_of_war
-		icon = GFX_goal_skull_fortification
-		relative_position_id = SOV_emergency_arms_production
-		prerequisite = {
-			focus = SOV_emergency_arms_production
+			focus = SOV_defense_mobilization_commission
 		}
 		x = 0
-		y = 1
-		cost = 4
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 50
-				any_enemy_country = {
-					is_major = yes
-				}
-			}
-		}
-		completion_reward = {
-			add_ideas = SOV_superintendant_of_war_buff
-			custom_effect_tooltip = SOV_50_cheaper_force_attack
-		}
-		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_SWI_MILITARY_READINESS }
-	}
-
-	focus = {
-		id = SOV_lessons_of_war
-		icon = GFX_focus_ETH_freedom_at_gunpoint
-		relative_position_id = SOV_new_rifle
-		prerequisite = {
-			focus = SOV_new_rifle
-		}
-		x = 1
 		y = 1
 		cost = 1
 		ai_will_do = {
@@ -2557,7 +2601,7 @@ focus_tree = {
 		completion_reward = {
 			army_experience = 15
 			add_doctrine_cost_reduction = {
-			    name = SOV_lessons_of_war
+			    name = SOV_great_patriotic_war
 				cost_reduction = 0.5
 				uses = 1
 				category = land_doctrine
@@ -2567,38 +2611,288 @@ focus_tree = {
 	}
 
 	focus = {
-		id = SOV_fight_in_great_depth
-		icon = GFX_goal_reform_socialist_army
-		relative_position_id = SOV_lessons_of_war
+		id = SOV_industrial_mobilization
+		icon = GFX_focus_generic_reorient_production
+		relative_position_id = SOV_great_patriotic_war
 		prerequisite = {
-			focus = SOV_lessons_of_war
+			focus = SOV_great_patriotic_war
+		}
+		x = -2
+		y = 1
+		cost = 6
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 10
+				has_war = yes
+			}
+		}
+
+		completion_reward = {
+			mio:SOV_tula_arms_plant_organization = {
+				add_mio_size = 2
+			}
+			mio:SOV_mytishchy_machine_building_plant_organization = {
+				add_mio_size = 2
+			}
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = SOV_Totoyama
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+	
+	focus = {
+		id = SOV_guerrilla_forces
+		icon = GFX_goal_SOV_reunion_flag
+		relative_position_id = SOV_great_patriotic_war
+		prerequisite = {
+			focus = SOV_great_patriotic_war
 		}
 		x = 0
 		y = 1
-		cost = 8
+		cost = 6
 		ai_will_do = {
-			factor = 50
+			factor = 10
+			modifier = {
+				factor = 10
+				has_war = yes
+			}
+		}
+
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { SOV_red_army_SOV_red_army_drift_defence_factor = 0.50 }
+				add_to_variable = { SOV_red_army_mobilization_speed = 0.05 }
+			}
+			custom_effect_tooltip = SOV_guerrilla_forces_tt
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+	
+	focus = {
+		id = SOV_superintendant_of_war
+		icon = GFX_focus_SOV_penal_battalions
+		relative_position_id = SOV_great_patriotic_war
+		prerequisite = {
+			focus = SOV_great_patriotic_war
+		}
+		x = 2
+		y = 1
+		cost = 4
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 50
+				any_enemy_country = {
+					is_major = yes
+				}
+			}
+		}
+		completion_reward = {
+			add_timed_idea = {
+				days = 180
+				idea = SOV_superintendant_of_war_buff
+			}
+			custom_effect_tooltip = SOV_superintendant_of_war_tt
+			hidden_effect = {
+				#set_technology = { penal_infantry = 1 popup = no } #Note: Granting tech will make the penal battalion available for any template
+
+				division_template = {
+					name = "惩戒师"
+					division_cap = 50
+					is_locked = yes
+					regiments = {
+						penal_battalion = { x = 0 y = 0 }
+						penal_battalion = { x = 0 y = 1 }
+						penal_battalion = { x = 0 y = 2 }
+						penal_battalion = { x = 1 y = 0 }
+						penal_battalion = { x = 1 y = 1 }
+						penal_battalion = { x = 1 y = 2 }
+						penal_battalion = { x = 2 y = 0 }
+						penal_battalion = { x = 2 y = 1 }
+						penal_battalion = { x = 2 y = 2 }
+						artillery_brigade = { x = 3 y = 0 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+						field_hospital = { x = 0 y = 1 }
+					}
+				}
+
+				set_division_force_allow_recruiting = {
+					division_template = "惩戒师"
+					force_allow_recruiting = yes
+				}
+
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"惩戒师\" start_experience_factor = 0.5 start_equipment_factor = 1.0"
+						owner = ROOT
+						count = 4
+					}
+				}
+			}
+			custom_effect_tooltip = SOV_50_cheaper_force_attack
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+	
+	focus = {
+		id = SOV_extraordinary_measures
+		icon = GFX_focus_generic_limited_social_mobilization
+		relative_position_id = SOV_guerrilla_forces
+		prerequisite = {
+			focus = SOV_guerrilla_forces
+		}
+		prerequisite = {
+			focus = SOV_superintendant_of_war
+		}
+		x = 1
+		y = 1
+		cost = 2
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 50
+				any_enemy_country = {
+					is_major = yes
+				}
+			}
+		}
+		available = {
+			
 		}
 		completion_reward = {
 			hidden_effect = {
-				add_to_variable = { SOV_red_army_TERRAIN_PENALTY_REDUCTION = 0.15 }
-				add_to_variable = { SOV_red_army_army_org_factor = 0.10 }
+				add_to_variable = { SOV_red_army_training_time_factor = -0.15 }
+				add_to_variable = { SOV_red_army_no_supply_grace = 48 }
 			}
-			hidden_effect = {
-				set_technology = { masterful_blitz = 1 popup = no }
-			}
-			custom_effect_tooltip = SOV_the_glory_of_the_red_army_masterful_blitz_tactic_tt
-			custom_effect_tooltip = SOV_fight_in_great_depth_tt
+			custom_effect_tooltip = SOV_extraordinary_measures_tt
 		}
-		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_WAR_SUPPORT }
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+
+	focus = {
+		id = SOV_emergency_arms_production
+		icon = GFX_focus_generic_military_equipment
+		relative_position_id = SOV_industrial_mobilization
+		prerequisite = {
+			focus = SOV_industrial_mobilization
+		}
+		x = 0
+		y = 1
+		cost = 6
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 50
+				any_enemy_country = {
+					is_major = yes
+				}
+			}
+		}
+		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 7500
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 3500
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 3000
+			}
+			add_stability = -0.05
+			add_political_power = -150
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+
+	focus = {
+		id = SOV_plan_for_great_rear_area
+		icon = GFX_goal_SOV_generic_soviet_assistance
+		relative_position_id = SOV_emergency_arms_production
+		prerequisite = {
+			focus = SOV_emergency_arms_production
+		}
+		x = 1
+		y = 1
+		cost = 4
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 50
+				any_enemy_country = {
+					is_major = yes
+				}
+			}
+		}
+		completion_reward = {
+			
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+
+	focus = {
+		id = SOV_way_of_life
+		icon = GFX_focus_SOV_the_road_of_life
+		relative_position_id = SOV_emergency_arms_production
+		prerequisite = {
+			focus = SOV_emergency_arms_production
+		}
+		x = -1
+		y = 1
+		cost = 4
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 50
+				any_enemy_country = {
+					is_major = yes
+				}
+			}
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = SOV_the_road_of_life
+				days = 180
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_SWI_MILITARY_READINESS }
+	}
+	
+	focus = {
+		id = SOV_centralized_command
+		icon = GFX_focus_NOR_empower_sivorg
+		relative_position_id = SOV_extraordinary_measures
+		prerequisite = {
+			focus = SOV_extraordinary_measures
+		}
+		x = 0
+		y = 1
+		cost = 6
+		ai_will_do = {
+			factor = 50
+		}
+
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { SOV_red_army_max_planning = 0.15 }
+				add_to_variable = { SOV_red_army_planning_speed = 0.20 }
+			}
+			custom_effect_tooltip = SOV_centralized_command_tt
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP }
 	}
 
 	focus = {
 		id = SOV_Keep_assault
 		icon = GFX_focus_prc_infiltration
-		relative_position_id = SOV_fight_in_great_depth
+		relative_position_id = SOV_centralized_command
 		prerequisite = {
-			focus = SOV_fight_in_great_depth
+			focus = SOV_centralized_command
 		}
 		x = -1
 		y = 1
@@ -2618,11 +2912,11 @@ focus_tree = {
 	}
 
 	focus = {
-		id = SOV_centralized_command
-		icon = GFX_focus_generic_combined_arms
-		relative_position_id = SOV_fight_in_great_depth
+		id = SOV_artillery_bombardment
+		icon = GFX_goal_generic_army_superior_firepower
+		relative_position_id = SOV_centralized_command
 		prerequisite = {
-			focus = SOV_fight_in_great_depth
+			focus = SOV_centralized_command
 		}
 		x = 1
 		y = 1
@@ -2633,39 +2927,42 @@ focus_tree = {
 
 		completion_reward = {
 			hidden_effect = {
-				add_to_variable = { SOV_red_army_max_planning = 0.15 }
-				add_to_variable = { SOV_red_army_planning_speed = 0.20 }
+				add_to_variable = { SOV_red_army_army_artillery_attack_factor = 0.10 }
+				add_to_variable = { SOV_red_army_army_artillery_defence_factor = 0.10 }
 			}
-			custom_effect_tooltip = SOV_centralized_command_tt
+			custom_effect_tooltip = SOV_artillery_bombardment_tt
 		}
 		search_filters = { FOCUS_FILTER_ARMY_XP }
 	}
-
+	
 	focus = {
-		id = SOV_artillery_bombardment
-		icon = GFX_goal_generic_army_superior_firepower
-		relative_position_id = SOV_centralized_command
+		id = SOV_fight_in_great_depth
+		icon = GFX_focus_SOV_builder_of_the_red_army
+		relative_position_id = SOV_artillery_bombardment
 		prerequisite = {
-			focus = SOV_centralized_command
+			focus = SOV_artillery_bombardment
 		}
 		prerequisite = {
 			focus = SOV_Keep_assault
 		}
 		x = -1
 		y = 1
-		cost = 6
+		cost = 8
 		ai_will_do = {
 			factor = 50
 		}
-
 		completion_reward = {
 			hidden_effect = {
-				add_to_variable = { SOV_red_army_army_attack_factor = 0.10 }
-				add_to_variable = { SOV_red_army_army_defence_factor = 0.10 }
+				add_to_variable = { SOV_red_army_terrain_penalty_reduction = 0.15 }
+				add_to_variable = { SOV_red_army_army_org_factor = 0.10 }
 			}
-			custom_effect_tooltip = SOV_artillery_bombardment_tt
+			hidden_effect = {
+				set_technology = { masterful_blitz = 1 popup = no }
+			}
+			custom_effect_tooltip = SOV_the_glory_of_the_red_army_masterful_blitz_tactic_tt
+			custom_effect_tooltip = SOV_fight_in_great_depth_tt
 		}
-		search_filters = { FOCUS_FILTER_ARMY_XP }
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_WAR_SUPPORT }
 	}
 
 	########################
@@ -2676,7 +2973,7 @@ focus_tree = {
 		id = SOV_transpolar_flights
 
 		icon = GFX_goal_generic_air_fighter2
-		x = 6
+		x = 10
 		y = 0
 		relative_position_id = SOV_defense_mobilization_commission
 		cost = 6
@@ -4240,7 +4537,7 @@ focus_tree = {
 	focus = {
 		id = SOV_the_eighteenth_central_Conference
 		icon = GFX_goal_generic_communist_revolt
-		x = 38
+		x = 46
 		y = 0
 		cost = 4
 		relative_position_id = SOV_concentrate_on_heavy_industry
@@ -4582,7 +4879,7 @@ focus_tree = {
 				
 	focus = {
 		id = SOV_tractor_station_plan
-		icon = GFX_goal_SOV_generic_socialist_action
+		icon = GFX_goal_generic_mechanisation
 		relative_position_id = SOV_eliminate_redundant_departments
 		prerequisite = {
 			focus = SOV_eliminate_redundant_departments
