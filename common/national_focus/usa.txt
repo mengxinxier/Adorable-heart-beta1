@@ -18,7 +18,7 @@ focus_tree = {
 	y = 0
 	cost = 5
 	prerequisite = {  }
-	available = { 
+	available = {
 		
 	}
 	ai_will_do = {
@@ -3077,8 +3077,12 @@ focus = {
 			}
 		}
 		allow_branch = {
-			NOT = { has_completed_focus = USA_unity_of_spirits }
-			NOT = { has_completed_focus = USA_silver_rising }
+			NOT = {
+				or = {
+					has_completed_focus = USA_silver_rising
+					has_completed_focus = USA_unity_of_spirits
+				}
+			}
 		}
 		cost = 10
 		prerequisite = { focus = USA_Yesterday_blood }
@@ -3355,8 +3359,12 @@ focus = {
 		}
 	}
 	allow_branch = {
-		NOT = { has_completed_focus = USA_silver_rising }
-		NOT = { has_completed_focus = USA_Promise_kept }
+		NOT = {
+			or = {
+				has_completed_focus = USA_silver_rising
+				has_completed_focus = USA_Promise_kept
+			}
+		}
 	}
 	cost = 3
 	prerequisite = { focus = USA_Yesterday_blood }
@@ -5256,8 +5264,12 @@ focus = {
 	x = 0
 	y = 1
 	allow_branch = {
-		NOT = { has_completed_focus = USA_Promise_kept }
-		NOT = { has_completed_focus = USA_unity_of_spirits }
+		NOT = {
+			or = {
+				has_completed_focus = USA_unity_of_spirits
+				has_completed_focus = USA_Promise_kept
+			}
+		}
 	}
 	cost = 5
 	prerequisite = { focus = USA_Yesterday_blood }
@@ -5538,6 +5550,13 @@ focus = {
 		factor = 10
 	}
 	completion_reward = {
+		custom_effect_tooltip = USA_custom_promised_revival
+		if = {
+			limit = {
+				has_country_flag = USA_flag_Rebuild_home
+			}
+			USA_Rebuild_home_level_down = yes
+		}
 		random_owned_controlled_state = {
 			limit = {
 				free_building_slots = {
@@ -5555,9 +5574,9 @@ focus = {
 		}
 		if = {
 			limit = {
-				NOT = { has_idea = war_economy }
+				has_idea = USA_Rremaining_threat
 			}
-			add_ideas = war_economy
+			remove_ideas = USA_Rremaining_threat
 		}
 	}
 }
@@ -5599,7 +5618,12 @@ focus = {
 			remove = USA_human_observation
 			add = USA_human_observation_2
 		}
-		remove_ideas = USA_Rremaining_threat
+		if = {
+			limit = {
+				has_idea = USA_Rremaining_threat
+			}
+			remove_ideas = USA_Rremaining_threat
+		}
 	}
 }
 
@@ -5696,7 +5720,7 @@ focus = {
 	}
 	completion_reward = {
 		unlock_decision_tooltip = USA_aid_GER_gold
-		unlock_decision_tooltip = USA_support_Axis_army_factory
+		#unlock_decision_tooltip = USA_support_Axis_army_factory
 		GER = {
 			country_event = { id = usa.167 days = 1 }
 		}
@@ -5723,7 +5747,14 @@ focus = {
 			}
 	}
 	bypass = {
-		is_in_faction_with = GER
+		or = {
+			is_in_faction_with = GER
+			GER = {
+				NOT = {
+					has_government = fascism
+				}
+			}
+		}
 	}
 	ai_will_do = {
 		factor = 10
@@ -5757,14 +5788,22 @@ focus = {
 		
 	}
 	bypass = {
+		GER = {
+			not = { is_in_faction_with = USA }
+		}
 	}
 	ai_will_do = {
 		factor = 5
 	}
 	completion_reward = {
-		GER = {
-			country_event = {
-				id = usa.158 days = 1
+		if = {
+			limit = {
+				is_in_faction_with = GER
+			}
+			GER = {
+				country_event = {
+					id = usa.158 days = 1
+				}
 			}
 		}
 	}
@@ -5912,11 +5951,29 @@ focus = {
 				uses = 1
 				category = land_doctrine
 			}
-		ITA = {
-			country_event = { id = usa.173 days = 1 }
+		if = {
+			limit = {
+				is_in_faction_with = GER
+			}
+			ITA = {
+				country_event = { id = usa.173 days = 1 }
+			}
 		}
-		GER = {
-			country_event = { id = usa.173 days = 1 }
+		if = {
+			limit = {
+				is_in_faction_with = ITA
+			}
+			ITA = {
+				country_event = { id = usa.173 days = 1 }
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction_with = GER
+			}
+			GER = {
+				country_event = { id = usa.173 days = 1 }
+			}
 		}
 	}
 }
@@ -6384,21 +6441,8 @@ focus = {
 				USA = { transfer_state = 935 }
 			}
 		}
-		if = {
-			limit = {
-				ENG = { has_full_control_of_state = 930 }
-			}
-			ENG = {
-				country_event = { id = usa.181 }
-			}
-		}
-		if = {
-			limit = {
-				CAN = { has_full_control_of_state = 930 }
-			}
-			CAN = {
-				country_event = { id = usa.181 }
-			}
+		ENG = {
+			country_event = { id = usa.181 }
 		}
 	}
 }
@@ -6415,6 +6459,7 @@ focus = {
 	available = { 
 		not = {
 			has_war_with = CAN
+			has_war_with = ENG
 		}
 		is_puppet = no
 		has_government = fascism
@@ -6448,7 +6493,16 @@ focus = {
 	cost = 5
 	prerequisite = { focus = USA_Her_blood }
 	available = { 
-		
+		not = {
+			has_war_with = CAN
+			has_war_with = ENG
+		}
+		CAN = {
+			OR = {
+				is_subject_of = ROOT
+				exists = no
+			}
+		}
 	}
 	bypass = {
 	}
