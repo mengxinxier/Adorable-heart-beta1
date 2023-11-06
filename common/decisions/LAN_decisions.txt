@@ -2030,380 +2030,50 @@ LAN_Middle_East_War_decision_category = {
 		
 		visible = { ROOT = { TAG = LAN } }
 
-		available = {
-			OR = {
-				date > 1937.1.1
-				has_global_flag = Middle_East_War_flag
-			}
-		}
+		available = { always = no }
 		
-		activation = {
-			ROOT = { TAG = LAN }
-			date < 1937.1.1
-			NOT = { has_global_flag = Middle_East_War_flag }
-			has_country_flag = TUR_LAN_Middle_East_War_flag
-			has_completed_focus = LAN_MEW_speech_in_damascus
-		}
+		activation = { always = no }
 		
-		days_mission_timeout = 115
+		days_mission_timeout = 80
 		is_good = no
 		war_with_on_timeout = TUR
-		war_with_on_complete = TUR
 		war_with_on_timeout = PER
-		war_with_on_complete = PER
-		
-		complete_effect = {
-			if = {
-				limit = {
-					LAN = { has_completed_focus = LAN_MEW_revange }
-				}
-				hidden_effect = {
-					LAN = {
-						set_country_flag = { flag = MEW_days_60 days = 60 value = 1 }
-						set_country_flag = LAN_major_events_flag
-					}
-					TUR = { set_country_flag = { flag = MEW_days_60 days = 60 value = 1 } }
-				}
-				custom_effect_tooltip = LAN_start_Middle_East_War_decision_tt
-				add_war_support = 0.10
-			}
-			else = {
-				hidden_effect = {
-					if = {
-						limit = {
-							NOT = { has_global_flag = Middle_East_War_flag }
-						}
-						set_global_flag = Middle_East_War_flag
-					}
-					LAN = {
-						set_country_flag = { flag = MEW_days_60 days = 60 value = 1 }
-						set_country_flag = LAN_major_events_flag
-					}
-					TUR = { set_country_flag = { flag = MEW_days_60 days = 60 value = 1 } }
-					activate_mission = LAN_Middle_East_War_time_counting
-					every_other_country = {
-						limit = {
-							any_owned_state = {
-								is_capital = yes
-								is_on_continent = middle_east
-							}
-							is_in_faction_with = LAN
-						}
-						country_event = saudi_arabia.14a
-					}
-				}
-				custom_effect_tooltip = LAN_start_Middle_East_War_decision_tt
-				declare_war_on = {
-					target = TUR
-					type = take_state_focus
-					generator = { 350 352 }
-				}
-				declare_war_on = {
-					target = PER
-					type = take_state_focus
-					generator = { 417 421 }
-				}
-			}
-		}
 
 		timeout_effect = {
+			add_stability = -0.20
+			add_war_support = 0.10
+			add_popularity = {
+				ideology = ROOT
+				popularity = -0.20
+			}
 			hidden_effect = {
+				set_global_flag = { flag = OTT_will_invade_turkey_flag value = 1 days = 35 }
 				set_global_flag = Middle_East_War_flag
-				set_global_flag = { flag = MEW_days_60 days = 60 value = 1 }
-				declare_war_on = {
-					target = TUR
-					type = take_state_focus
-					generator = { 350 352 }
-				}
+			}
+			declare_war_on = {
+				target = TUR
+				type = take_state_focus
+			}
+			if = {
+				limit = { PER = { is_in_faction_with = TUR } }
 				declare_war_on = {
 					target = PER
 					type = take_state_focus
-					generator = { 417 421 }
-				}
-				every_other_country = {
-					limit = {
-						any_owned_state = {
-							is_capital = yes
-							is_on_continent = middle_east
-						}
-						is_in_faction_with = LAN
-					}
-					country_event = saudi_arabia.14
-				}
-				activate_mission = LAN_Middle_East_War_time_counting
-			}
-		}
-	}
-	
-	LAN_start_Middle_East_War_decision_fake = {
-		icon = generic_nationalism
-		
-		visible = { ROOT = { TAG = TUR } }
-
-		available = {
-			has_global_flag = Middle_East_War_flag
-		}
-		
-		activation = {
-			ROOT = { TAG = TUR }
-			date < 1937.1.1
-			NOT = { has_global_flag = Middle_East_War_flag }
-			has_country_flag = TUR_LAN_Middle_East_War_flag
-			LAN = { has_completed_focus = LAN_MEW_speech_in_damascus }
-		}
-		
-		days_mission_timeout = 115
-		is_good = no
-		
-		complete_effect = {
-			if = {
-				limit = {
-					LAN = { has_completed_focus = LAN_MEW_revange }
-				}
-				custom_effect_tooltip = LAN_start_Middle_East_War_decision_tt
-				effect_tooltip = { LAN = { add_war_support = 0.10 } }
-			}
-			else = {
-				hidden_effect = {
-					if = {
-						limit = {
-							NOT = { has_global_flag = Middle_East_War_flag }
-						}
-						set_global_flag = Middle_East_War_flag
-					}
-				}
-				custom_effect_tooltip = LAN_start_Middle_East_War_decision_tt
-			}
-		}
-
-		timeout_effect = {
-		}
-	}
-	
-	LAN_Middle_East_War_time_counting = {
-		icon = generic_nationalism
-		
-		visible = { TAG = LAN }
-
-		available = {
-			hidden_trigger = {
-				OR = {
-					NOT = { has_country_flag = TUR_LAN_Middle_East_War_flag }
-					TUR = { surrender_progress > 0.2 }
-					LAN = { surrender_progress > 0.1 }
-					AND = {
-						SYR = {
-							is_in_faction_with = LAN
-							has_country_flag = TUR_LAN_Middle_East_War_flag
-							has_capitulated = yes
-							all_core_state = { NOT = { is_controlled_by = SYR } }
-						}
-						IRQ = {
-							is_in_faction_with = LAN
-							has_country_flag = TUR_LAN_Middle_East_War_flag
-							has_capitulated = yes
-							all_core_state = { NOT = { is_controlled_by = IRQ } }
-						}
-					}
 				}
 			}
-		}
-		
-		activation = {
-			ROOT = { TAG = LAN }
-			has_war_with = TUR
-			has_global_flag = Middle_East_War_flag
-			has_country_flag = TUR_LAN_Middle_East_War_flag
-		}
-		
-		days_mission_timeout = 365
-		is_good = yes
-		
-		complete_effect = {
-			hidden_effect = {
-				if = {
-					limit = {
-						SYR = {
-							has_capitulated = yes
-							all_core_state = { is_controlled_by = TUR }
-						}
-					}
-					every_state = {
-						limit = { is_core_of = SYR }
-						set_state_flag = TUR_MEW_result_flag
-					}
+			every_other_country = {
+				limit = { is_in_faction_with = ROOT }
+				declare_war_on = {
+					target = TUR
+					type = take_state_focus
 				}
 				if = {
-					limit = {
-						IRQ = {
-							has_capitulated = yes
-							all_core_state = { is_controlled_by = TUR }
-						}
-					}
-					every_state = {
-						limit = { is_core_of = IRQ }
-						set_state_flag = TUR_MEW_result_flag
+					limit = { PER = { is_in_faction_with = TUR } }
+					declare_war_on = {
+						target = PER
+						type = take_state_focus
 					}
 				}
-				if = {
-					limit = {
-						LEB = {
-							has_capitulated = yes
-							all_core_state = { is_controlled_by = TUR }
-						}
-					}
-					every_state = {
-						limit = { is_core_of = LEB }
-						set_state_flag = TUR_MEW_result_flag
-					}
-				}
-				if = {
-					limit = { TUR = { surrender_progress > 0.2 } }
-					every_state = {
-						limit = { is_core_of = KUR }
-						set_state_flag = LAN_MEW_result_flag
-					}
-				}
-				LAN = {
-					white_peace = TUR
-					white_peace = PER
-					clr_country_flag = LAN_major_events_flag
-					activate_decision = LAN_identity_is_disappearing_mission
-					every_other_country = {
-						limit = {
-							is_in_faction_with = LAN
-							any_owned_state = {
-								is_capital = yes
-								is_on_continent = middle_east
-							}
-						}
-						white_peace = TUR
-						white_peace = PER
-					}
-				}
-				every_state = {
-					limit = { has_state_flag = LAN_MEW_result_flag }
-					add_core_of = KUR
-					KUR = { transfer_state = 819 }
-				}
-				every_country = { 819 = { remove_core_of = PREV } }
-				819 = { add_core_of = KUR }
-				KUR = { transfer_state = 819 }
-				every_state = {
-					limit = { has_state_flag = TUR_MEW_result_flag }
-					TUR = { transfer_state = PREV }
-					start_resistance = yes
-					set_compliance = 20
-					set_resistance = 0
-					set_garrison_strength = 1.0
-					hidden_effect = {
-						clr_state_flag = TUR_MEW_result_flag
-					}
-				}
-				every_country = {
-					limit = {
-						has_country_flag = TUR_LAN_Middle_East_War_flag
-					}
-					clr_country_flag = TUR_LAN_Middle_East_War_flag
-				}
-				if = {
-					limit = { LAN = { is_faction_leader = yes } }
-					LAN = {
-						add_to_faction = KUR
-						set_autonomy = {
-							target = KUR
-							autonomous_state = autonomy_integrated_puppet
-						}
-					}
-				}
-				if = {
-					limit = { TUR = { has_country_flag = TUR_MEW_test_mechs_flag } }
-					TUR = { country_event = { id = saudi_arabia.39 days = 6 } }
-				}
-				if = {
-					limit = { LAN = { has_template = "阿拉伯军队" } }
-					LAN = { country_event = { id = saudi_arabia.62 days = 6 } }
-				}
-				TUR = { country_event = { id = saudi_arabia.63 days = 3 } }
-			}
-		}
-
-		timeout_effect = {
-			LAN = { country_event = saudi_arabia.16 }
-			TUR = { country_event = saudi_arabia.16 }
-			LAN = {
-				white_peace = TUR
-				white_peace = PER
-				hidden_effect = {
-					clr_country_flag = LAN_major_events_flag
-					activate_decision = LAN_identity_is_disappearing_mission
-					every_other_country = {
-						limit = {
-							is_in_faction_with = LAN
-							any_owned_state = {
-								is_capital = yes
-								is_on_continent = middle_east
-							}
-						}
-						white_peace = TUR
-						white_peace = PER
-					}
-				}
-			}
-			hidden_effect = {
-				every_country = {
-					limit = {
-						has_country_flag = TUR_LAN_Middle_East_War_flag
-					}
-					clr_country_flag = TUR_LAN_Middle_East_War_flag
-				}
-				#clr_global_flag = Middle_East_War_flag
-			}
-		}
-	}
-	
-	LAN_MEW_peace_con = {
-		
-		icon = GFX_decision_generic_civil_support
-
-		ai_will_do = {
-			base = 0
-		}
-		
-		visible = {
-			OR = {
-				AND	= {
-					TAG = LAN
-					has_war_with = TUR
-				}	
-				AND	= {
-					TAG = TUR
-					has_war_with = LAN
-				}	
-			}
-			has_country_flag = TUR_LAN_Middle_East_War_flag
-		}
-
-		available = {
-			hidden_trigger = {
-				has_country_flag = TUR_LAN_Middle_East_War_flag
-				NOT = { has_country_flag = MEW_days_60 }
-			}
-		}
-
-		cost = 30
-		days_remove = 19
-		
-		fire_only_once = no
-		
-		remove_effect = {
-			if = {
-				limit = { ROOT = { TAG = LAN } }
-				TUR = { country_event = { id = saudi_arabia.17 days = 1 } }
-			}
-			else_if = {
-				limit = { ROOT = { TAG = TUR } }
-				LAN = { country_event = { id = saudi_arabia.17 days = 1 } }
 			}
 		}
 	}
