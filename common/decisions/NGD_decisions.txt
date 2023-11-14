@@ -132,7 +132,7 @@ NGD_The_North_American_Revolution_decision = {
 					type = infrastructure
 					level = 1
 					instant_build = yes
-				}
+				}                           
 				add_building_construction = {
 					type = arms_factory
 					level = 2
@@ -249,6 +249,182 @@ NGD_The_North_American_Revolution_decision = {
 				}
 				factor = 0
 			}
+		}
+	}
+}
+
+NGD_Anti_government_Rebels = {
+	NGD_The_rebels_are_in_action = {
+		icon = GFX_decision_category_border_conflicts
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		#priority = 10
+		days_mission_timeout = 30
+		fire_only_once = yes
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_trigger = {
+			custom_trigger_tooltip = {
+				tooltip = NGD_Anti_government_Rebels_var_0
+				check_variable = {
+					NGD_Anti_government_Rebels_var = 0
+				}
+			}
+		}
+		is_good = no
+		cancel_if_not_visible = yes
+		timeout_effect = {
+			random_list = {
+				20 = {
+					add_stability = -0.05
+				}
+				20 = {
+					random_owned_controlled_state = {
+						limit = {
+							has_state_flag = NGD_Anti_government_Rebels
+							check_variable = {
+								building_level@infrastructure > 0
+							}
+						}
+						damage_building = {
+							type = infrastructure
+							damage = 1
+						}
+					}
+				}
+				20 = {
+					random_owned_controlled_state = {
+						limit = {
+							has_state_flag = NGD_Anti_government_Rebels
+							check_variable = {
+								building_level@arms_factory > 0
+							}
+						}
+						damage_building = {
+							type = arms_factory
+							damage = 1
+						}
+					}
+				}
+				20 = {
+					random_owned_controlled_state = {
+						limit = {
+							has_state_flag = NGD_Anti_government_Rebels
+							check_variable = {
+								building_level@industrial_complex > 0
+							}
+						}
+						damage_building = {
+							type = industrial_complex
+							damage = 1
+						}
+					}
+				}
+				20 = {
+					random_owned_controlled_state = {
+						limit = {
+							has_state_flag = NGD_Anti_government_Rebels
+							check_variable = {
+								building_level@air_base > 0
+							}
+						}
+						damage_building = {
+							type = air_base
+							damage = 1
+						}
+					}
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						check_variable = {
+							NGD_Anti_government_Rebels_var > 0
+						}
+					}
+					activate_mission = NGD_The_rebels_are_in_action
+				}
+			}
+		}
+	}
+	NGD_Encirclement_and_suppression_of_rebels = {
+		icon = generic_brainwash
+		target_trigger = {
+			FROM = {
+				has_state_flag = NGD_Anti_government_Rebels
+			}
+		}
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_array = controlled_states
+		custom_cost_trigger = {
+			command_power > 24
+			has_political_power > 49
+		}
+		custom_cost_text = decision_cost_CP_25_pp_50
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+				add_political_power = -50
+			}
+		}
+		days_remove = 15
+		ai_will_do = {
+			factor = 10
+		}
+		remove_effect = {
+			FROM = {
+				clr_state_flag = NGD_Anti_government_Rebels
+			}
+			custom_effect_tooltip = NGD_Anti_government_Rebels_var_low_10
+			add_to_variable = {
+				NGD_Anti_government_Rebels_var = -10
+			}
+		}
+	}
+	NGD_Execution_of_reactionary_leaders = {
+		icon = GFX_decision_generic_assassination
+		visible = {
+			TAG = NGD
+		}
+		available = {
+		}
+		custom_cost_trigger = {
+			has_equipment = { infantry_equipment > 9  }
+		}
+		custom_cost_text = decision_cost_10_gun
+		cost = 50
+		days_remove = 10
+		remove_effect = {
+			retire_character = NGD_Business_Federation
+			retire_character = NGD_kristen
+			retire_character = NGD_Tse_ven_Soong
+			retire_character = NGD_hu_shih
+			retire_character = NGD_du_yuesheng
+			retire_character = NGD_wei_lihuang
+			retire_character = NGD_Xingqiu
+			retire_character = NGD_Jingyuan
+			retire_character = NGD_fuxuan
+			retire_character = NGD_Sushang
+			retire_character = NGD_Tingyun
+			retire_character = NGD_Kamisato_Ayato
+			retire_character = NGD_Kamisato_Ayaka
+			retire_character = NGD_Thoma
+			retire_character = NGD_Kaedehara_Kazuha
+			retire_character = NDG_king_of_yunayang
+			custom_effect_tooltip = NGD_Anti_government_Rebels_var_low_30
+			add_to_variable = {
+				NGD_Anti_government_Rebels_var = -30
+			}
+		}
+		ai_will_do = {
+			base = 1000
 		}
 	}
 }
