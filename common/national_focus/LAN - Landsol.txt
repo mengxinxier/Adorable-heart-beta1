@@ -711,7 +711,7 @@ focus_tree = {
 			}
 		}
 		ai_will_do = {
-				factor = 10
+				factor = 647
 			}
 		bypass = {
 			}
@@ -2199,10 +2199,8 @@ focus_tree = {
 			
 		}
 		ai_will_do = {
-				factor = 8
-			}
-		bypass = {
-			}
+			factor = 1000
+		}
 		select_effect = {
 			country_event = { id = lan.11 days = 11 }
 		}
@@ -2238,104 +2236,181 @@ focus_tree = {
 					add_idea = low_economic_mobilisation
 				}
 			}
+			hidden_effect = {
+				country_event = { id = syria.3 days = 8 }
+			}
 		}
 	}
 	
 	focus = {
-		id = LAN_MEW_speech_in_damascus
+		id = LAN_the_eighth_arab_congress
 		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 0
+		x = -1
 		y = 1
-		cost = 1
+		cost = 2
 		relative_position_id = LAN_if_the_last_battle
 		prerequisite = { focus = LAN_if_the_last_battle }
 		available = { 
 			is_subject = no
-			has_global_flag = Telaviv_Shooting_case_flag
-			NOT = { has_global_flag = Middle_East_War_flag }
-			hidden_trigger = { always = no }
+			date < 1936.2.25
 		}
-		allow_branch = {
-			OR = {
-				is_debug = yes
-				has_country_flag = TUR_LAN_Middle_East_War_flag
-				has_global_flag = Middle_East_War_flag
-				has_country_flag = LAN_MEW_focus_show_flag
+		bypass = { date > 1936.2.24 }
+		ai_will_do = {
+			factor = 990
+		}
+		select_effect = { country_event = { id = syria.3 days = 3 } }
+		completion_reward = {
+			custom_effect_tooltip = LAN_the_eighth_arab_congress_tt
+			add_political_power = 120
+			add_war_support = 0.05
+			country_event = { id = syria.6 days = 1 }
+			hidden_effect = {
+				every_other_country = {
+					limit = {
+						OR = {
+							TAG = PAL
+							has_idea = SYR_arabic_cooperation_member
+						}
+					}
+					country_event = { id = syria.4 days = 1 }
+				}
 			}
+		}
+	}
+	
+	focus = {
+		id = LAN_demand_north
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 1
+		y = 1
+		cost = 4
+		relative_position_id = LAN_if_the_last_battle
+		prerequisite = { focus = LAN_if_the_last_battle }
+		available = { 
+			is_subject = no
+			date > 1936.2.24
 		}
 		ai_will_do = {
-			factor = 8
+			factor = 980
 		}
 		completion_reward = {
-			every_state = {
-				limit = {
-					NOT = { is_controlled_by = ROOT }
-					is_core_of = KUR
+			HCP_subtract_banknote_200 = yes
+			TUR = { country_event = { id = desert_conflict.1 hours = 6 } }
+		}
+	}
+	
+	focus = {
+		id = LAN_push_front
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = { focus = LAN_the_eighth_arab_congress }
+		prerequisite = { focus = LAN_demand_north }
+		relative_position_id = LAN_the_eighth_arab_congress
+		available = { 
+			is_subject = no
+			NOT = { has_war_with = TUR }
+		}
+		ai_will_do = {
+			factor = 970
+		}
+		completion_reward = {
+			TUR = {
+				every_controlled_state = {
+					limit = {
+						has_dynamic_modifier = { modifier = TUR_influence_of_Treaty_of_Lausanne_modifier }
+					}
+					set_demilitarized_zone = no
 				}
-				ROOT = { add_claim_by = PREV }
+				country_event = { id = desert_conflict.3 hours = 5 }
 			}
-			activate_mission = LAN_start_Middle_East_War_decision
+		}
+	}
+	
+	focus = {
+		id = LAN_peace_there
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = LAN_push_front
+		prerequisite = { focus = LAN_push_front }
+		available = { 
+			is_subject = no
+			NOT = { has_war_with = TUR }
+		}
+		ai_will_do = {
+			factor = 646
+		}
+		completion_reward = {
+			TUR = {
+				every_controlled_state = {
+					limit = { has_state_flag = TUR_ME_VP_flag }
+					ROOT = { transfer_state = PREV }
+				}
+				country_event = { id = desert_conflict.4 hours = 5 }
+			}
+			hidden_effect = {
+				every_country = {
+					limit = {
+						capital_scope = { is_on_continent = middle_east }
+					}
+					news_event = { id = ME_news.11 days = 1 }
+				}
+				country_event = { id = desert_conflict.5 days = 2 }
+			}
 		}
 	}
 	
 	focus = {
 		id = LAN_MEW_mobilizing_arab_countries
 		icon = GFX_focus_ETH_freedom_at_gunpoint
-		x = 0
+		x = -1
 		y = 1
-		cost = 3
-		relative_position_id = LAN_MEW_speech_in_damascus
-		prerequisite = { focus = LAN_MEW_speech_in_damascus }
-		available = { 
-			is_subject = no
-			has_global_flag = Telaviv_Shooting_case_flag
-			NOT = { has_global_flag = Middle_East_War_flag }
+		cost = 5
+		prerequisite = { focus = LAN_the_eighth_arab_congress }
+		prerequisite = { focus = LAN_MEW_demand_north }
+		relative_position_id = LAN_MEW_demand_north
+		available = { NOT = { has_global_flag = desert_conflict } }
+		allow_branch = {
+			OR = {
+				has_country_flag = desert_conflict_member_flag
+				has_global_flag = desert_conflict
+			}
 		}
-		bypass = { has_global_flag = Middle_East_War_flag }
 		ai_will_do = {
 			factor = 8
 		}
 		completion_reward = {
-			custom_effect_tooltip = TUR_MEW_ready_tt
-			hidden_effect = {
-				if = {
-					limit = { TUR = { has_completed_focus = TUR_MEW_state_emergency } }
-					add_named_threat = {
-						threat = 8
-						name = LAN_MEW_mobilizing_arab_countries
-					}
-				}
-			}
 			add_war_support = 0.05
 			every_other_country = {
 				limit = {
 					is_in_faction_with = ROOT
-					any_owned_state = {
-						is_capital = yes
-						is_on_continent = middle_east
-					}
+					capital_scope = { is_on_continent = middle_east }
 				}
 				add_war_support = 0.05
-				set_country_flag = TUR_LAN_Middle_East_War_flag
+				set_country_flag = desert_conflict_member_flag
 			}
 			set_country_flag = LAN_major_events_flag
 			remove_mission = LAN_identity_is_disappearing_mission
 			add_ideas = LAN_MEW_mobilizing_arab_countries
+			add_named_threat = {
+				threat = 1
+				name = TUR_MEW_state_emergency
+			}
 		}
 	}
 	
 	focus = {
 		id = LAN_MEW_expand_supply
 		icon = GFX_focus_generic_camel_corps
-		x = -2
+		x = -1
 		y = 1
-		cost = 3
-		relative_position_id = LAN_MEW_speech_in_damascus
-		prerequisite = { focus = LAN_MEW_speech_in_damascus }
-		available = { 
-			NOT = { has_global_flag = Middle_East_War_flag }
-		}
-		bypass = { has_global_flag = Middle_East_War_flag }
+		cost = 5
+		relative_position_id = LAN_MEW_mobilizing_arab_countries
+		prerequisite = { focus = LAN_MEW_mobilizing_arab_countries }
+		available = { NOT = { has_global_flag = desert_conflict } }
 		ai_will_do = {
 			factor = 8
 		}
@@ -2366,157 +2441,75 @@ focus_tree = {
 	}
 	
 	focus = {
-		id = LAN_MEW_learn_great_war_lesson
-		icon = GFX_focus_generic_national_security
-		x = 2
-		y = 1
-		cost = 3
-		relative_position_id = LAN_MEW_speech_in_damascus
-		prerequisite = { focus = LAN_MEW_speech_in_damascus }
-		available = { 
-			NOT = { has_global_flag = Middle_East_War_flag }
-		}
-		bypass = { has_global_flag = Middle_East_War_flag }
-		ai_will_do = {
-			factor = 8
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = LAN_MEW_learn_great_war_lesson
-				bonus = 0.5
-				uses = 2
-				category = infantry_weapons
-			}
-			add_tech_bonus = {
-				name = LAN_MEW_learn_great_war_lesson
-				bonus = 1.0
-				uses = 1
-				category = artillery
-			}
-		}
-	}
-	
-	focus = {
-		id = LAN_MEW_solve_iran
-		icon = GFX_focus_generic_annex_country
-		x = 0
-		y = 1
-		cost = 2
-		relative_position_id = LAN_MEW_mobilizing_arab_countries
-		prerequisite = {
-			focus = LAN_MEW_expand_supply
-			focus = LAN_MEW_mobilizing_arab_countries
-			focus = LAN_MEW_learn_great_war_lesson
-		}
-		available = { 
-			NOT = { has_global_flag = Middle_East_War_flag }
-		}
-		bypass = { has_global_flag = Middle_East_War_flag }
-		ai_will_do = {
-			factor = 8
-		}
-		completion_reward = {
-			412 = { add_claim_by = ROOT }
-			413 = { add_claim_by = ROOT }
-			413 = {
-				controller = {
-					country_event = saudi_arabia.9
-				}
-			}
-		}
-	}
-	
-	focus = {
 		id = LAN_MEW_contact_kurds
 		icon = GFX_focus_generic_military_dictatorship
-		x = -1
-		y = 1
-		cost = 2
-		relative_position_id = LAN_MEW_solve_iran
-		prerequisite = { focus = LAN_MEW_solve_iran }
-		available = { 
-			NOT = { has_global_flag = Middle_East_War_flag }
-			OR = {
-				TUR = {
-					any_state = {
-						is_core_of = KUR
-					}
-				}
-				PER = {
-					any_state = {
-						is_core_of = KUR
-					}
-				}
-			}
-		}
-		bypass = { has_global_flag = Middle_East_War_flag }
-		ai_will_do = {
-			factor = 8
-		}
-		completion_reward = {
-			custom_effect_tooltip = LAN_MEW_contact_kurds_tt
-			hidden_effect = {
-				country_event = { id = saudi_arabia.12 days = 1 }
-			}
-		}
-	}
-	
-	focus = {
-		id = LAN_MEW_contact_greece
-		icon = GFX_focus_generic_befriend_greece
 		x = 1
 		y = 1
-		cost = 2
-		relative_position_id = LAN_MEW_solve_iran
-		prerequisite = { focus = LAN_MEW_solve_iran }
+		cost = 5
+		relative_position_id = LAN_MEW_mobilizing_arab_countries
+		prerequisite = { focus = LAN_MEW_mobilizing_arab_countries }
 		available = { 
-			NOT = { has_global_flag = Middle_East_War_flag }
+			NOT = { has_global_flag = desert_conflict }
+			OR = {
+				TUR = { any_owned_state = { is_core_of = KUR } }
+				PER = { any_owned_state = { is_core_of = KUR } }
+			}
 		}
-		bypass = { has_global_flag = Middle_East_War_flag }
 		ai_will_do = {
 			factor = 8
 		}
 		completion_reward = {
-			custom_effect_tooltip = LAN_MEW_contact_greece_tt
-			hidden_effect = {
-				country_event = { id = saudi_arabia.13 days = 3 }
-			}
+			country_event = { id = desert_conflict.7 days = 1 }
+			custom_effect_tooltip = LAN_MEW_contact_kurds_tt
 		}
 	}
 	
 	focus = {
 		id = LAN_MEW_revange
 		icon = GFX_focus_generic_conspiracy
-		x = 0
-		y = 2
-		cost = 1
-		relative_position_id = LAN_MEW_solve_iran
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = LAN_MEW_expand_supply
 		prerequisite = {
 			focus = LAN_MEW_contact_kurds
-			focus = LAN_MEW_contact_greece
+			focus = LAN_MEW_expand_supply
 		}
-		bypass = { has_global_flag = Middle_East_War_flag }
 		will_lead_to_war_with = TUR
-		will_lead_to_war_with = PER
 		ai_will_do = {
 			factor = 8
 		}
+		available = { NOT = { has_global_flag = desert_conflict } }
+		select_effect = { random_owned_state = { add_manpower = 1 } }
 		completion_reward = {
 			hidden_effect = {
-				set_global_flag = Middle_East_War_flag
-				set_global_flag = { flag = MEW_days_60 days = 60 value = 1 }
-				activate_mission = LAN_Middle_East_War_time_counting
-				country_event = { id = saudi_arabia.59 days = 2 }
+				set_global_flag = { flag = OTT_will_invade_turkey_flag value = 1 days = 35 }
+				set_global_flag = desert_conflict
 			}
 			declare_war_on = {
 				target = TUR
 				type = take_state_focus
-				generator = { 350 352 }
 			}
-			declare_war_on = {
-				target = PER
-				type = take_state_focus
-				generator = { 417 421 }
+			if = {
+				limit = { PER = { is_in_faction_with = TUR } }
+				declare_war_on = {
+					target = PER
+					type = take_state_focus
+				}
+			}
+			every_other_country = {
+				limit = { is_in_faction_with = ROOT }
+				declare_war_on = {
+					target = TUR
+					type = take_state_focus
+				}
+				if = {
+					limit = { PER = { is_in_faction_with = TUR } }
+					declare_war_on = {
+						target = PER
+						type = take_state_focus
+					}
+				}
 			}
 		}
 	}

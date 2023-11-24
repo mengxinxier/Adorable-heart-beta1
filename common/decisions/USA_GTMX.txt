@@ -79,8 +79,8 @@ war_measures = {
 			}
 		}
 		visible = {
-			#has_completed_focus = USA_recruit_the_free_corps
-			#not = { has_country_flag = USA_free_corps_raised }
+			has_completed_focus = USA_recruit_the_free_corps
+			not = { has_country_flag = USA_free_corps_raised }
 			not = { has_government = democratic }
 		}
 		cost = 0
@@ -1371,7 +1371,7 @@ war_measures = {
 	}
 	#援助德国黄金
 	USA_aid_GER_gold = {
-		icon = generic_prepare_civil_war
+		icon = generic_decision
 		allowed = {
 			original_tag = USA
 		}
@@ -1413,7 +1413,7 @@ war_measures = {
 	}
 	#结晶换取科研知识
 	USA_emergency_arms_deliveries_to_GER = {
-		icon = generic_prepare_civil_war
+		icon = GFX_decision_generic_industry
 		allowed = {
 			original_tag = USA
 		}
@@ -1435,6 +1435,27 @@ war_measures = {
 				}
 				country_event = { id = usa.178 days = 1  }
 			}
+		}
+	}
+	#邀请德意志军官团
+	USA_invite_German_officer_corps = {
+		icon = GFX_decision_generic_military
+		allowed = {
+			original_tag = USA
+		}
+		available = {
+			has_completed_focus = USA_devil_my_old_friend
+		}
+		visible = {
+			#has_completed_focus = USA_devil_my_old_friend
+		}
+		cost = 150
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		remove_effect = {
+			add_ideas = USA_German_officer_corps
 		}
 	}
 	
@@ -1847,8 +1868,8 @@ USA_prospect_for_resources = {
 			set_country_flag = USA_flag_give_spirit_power_crop_experiment_mandate
 			add_tech_bonus = {
 				name = USA_give_spirit_power_crop_experiment_mandate
-				bonus = 1.0
-				uses = 2
+				bonus = 1
+				uses = 1
 				category = synth_resources
 			}
 			#加合成橡胶产出
@@ -2651,6 +2672,89 @@ USA_support_CHI = {
 }
 #往日的家园 
 USA_former_day_homeland = {
+	#创建帝国盟约
+	USA_create_imperial_covenant = {
+		icon = GFX_decision_generic_military
+		allowed = {
+			original_tag = USA
+		}
+		available = {
+			has_completed_focus = USA_coordinate_tilt
+			is_in_faction = no
+			is_puppet = no
+		}
+		visible = {
+			#has_completed_focus = USA_coordinate_tilt
+			#is_in_faction = no
+			#is_puppet = no
+		}
+		cost = 50
+		fire_only_once = no
+		ai_will_do = {
+			factor = 0
+		}
+		remove_effect = {
+			create_faction = USA_imperial_covenant
+		}
+	}
+	#承诺的繁荣
+	USA_promised_revival = {
+		icon = generic_prepare_civil_war
+		allowed = {
+			original_tag = USA
+		}
+		available = {
+			has_completed_focus = USA_promise_revival
+		}
+		visible = {
+			has_completed_focus = USA_silver_rising
+			or = {
+			has_idea = USA_Rebuild_home
+			has_idea = USA_Rebuild_home_2
+			has_idea = USA_Rebuild_home_3
+			has_idea = USA_Rebuild_home_4
+			has_idea = USA_Rebuild_home_5
+			has_idea = USA_Rebuild_home_6
+			has_idea = USA_Rebuild_home_7
+			has_idea = USA_Rebuild_home_8
+			has_idea = USA_Rebuild_home_9
+			has_idea = USA_Rebuild_home_10
+			}
+		}
+		cost = 75
+		days_remove = 90
+		ai_will_do = {
+			factor = 500
+		}
+		remove_effect = {
+			custom_effect_tooltip = USA_custom_promised_revival
+			#swap_ideas = {
+				#remove_idea = USA_Rebuild_home
+				#add_idea = USA_Rebuild_home_4
+			#}
+			hidden_effect = {
+				
+				if = {
+					limit = {
+						has_country_flag = USA_flag_Rebuild_home
+					}
+					USA_Rebuild_home_level_down = yes
+				}
+				if = {
+					limit = {
+						has_country_flag = USA_flag_Rebuild_home
+					}
+					USA_Rebuild_home_level_down = yes
+				}
+				if = {
+					limit = {
+						has_country_flag = USA_flag_Rebuild_home
+					}
+					USA_Rebuild_home_level_down = yes
+				}
+			}
+		}			
+	}
 	#强迫圣杯和谈
 	USA_force_peace_talks_eng = {
 		icon = eng_trade_unions_demand
@@ -2658,16 +2762,23 @@ USA_former_day_homeland = {
 			original_tag = USA
 		}
 		available = {
-			controls_state = 357
+			has_war_with = ENG
+			controls_state = 935
+			controls_state = 932
+			controls_state = 464
+			controls_state = 466
+
 			controls_state = 276
 			controls_state = 739
 			controls_state = 832
+
+			controls_state = 740
+			controls_state = 473
 		}
 		visible = {
-			or = {
-				has_war_with = ENG
-				has_war_with = CAN
-			}
+			has_country_flag = USA_flag_eng_want_war
+			NOT = { has_country_flag = USA_flag_eng_want_war_2 }
+			has_war_with = ENG
 		}
 		cost = 0
 		fire_only_once = no
@@ -2675,17 +2786,10 @@ USA_former_day_homeland = {
 			factor = 500
 		}
 		complete_effect = {
-			if = {
-				limit = {
-					has_war_with = ENG
-				}
-				white_peace = { tag = ENG message = USA_message_eng }
-			}
-			if = {
-				limit = {
-					has_war_with = CAN
-				}
-				white_peace = { tag = CAN message = USA_message_can }
+			custom_effect_tooltip = USA_custom_force_peace_talks_eng
+			clr_country_flag = USA_flag_eng_want_war
+			ENG = {
+				country_event = { id = usa.222 }
 			}
 			hidden_effect = {
 				930 = {
@@ -2735,6 +2839,90 @@ USA_former_day_homeland = {
 			}
 		}			
 	}
+	#强迫圣杯和谈2
+	USA_force_peace_talks_eng_2 = {
+		icon = eng_trade_unions_demand
+		allowed = {
+			original_tag = USA
+		}
+		available = {
+			has_war_with = ENG
+			controls_state = 935
+			controls_state = 932
+			controls_state = 464
+			controls_state = 466
+
+			controls_state = 276
+			controls_state = 739
+			controls_state = 832
+
+			controls_state = 740
+			controls_state = 473
+		}
+		visible = {
+			has_country_flag = USA_flag_eng_want_war_2
+			NOT = { has_country_flag = USA_flag_eng_want_war }
+			has_war_with = ENG
+		}
+		cost = 0
+		fire_only_once = no
+		ai_will_do = {
+			factor = 500
+		}
+		complete_effect = {
+			custom_effect_tooltip = USA_custom_force_peace_talks_eng_2
+			clr_country_flag = USA_flag_eng_want_war_2
+			ENG = {
+				country_event = { id = usa.223 }
+			}
+			hidden_effect = {
+				930 = {
+					add_core_of = USA
+					USA = { transfer_state = 930 }
+				}
+				796 = {
+					add_core_of = USA
+					USA = { transfer_state = 796 }
+				}
+				931 = {
+					add_core_of = USA
+					USA = { transfer_state = 931 }
+				}
+				932 = {
+					add_core_of = USA
+					USA = { transfer_state = 932 }
+				}
+				933 = {
+					add_core_of = USA
+					USA = { transfer_state = 933 }
+				}
+				934 = {
+					add_core_of = USA
+					USA = { transfer_state = 934 }
+				}
+				468 = {
+					add_core_of = USA
+					USA = { transfer_state = 468 }
+				}
+				357 = {
+					add_core_of = USA
+					USA = { transfer_state = 357 }
+				}
+				465 = {
+					add_core_of = USA
+					USA = { transfer_state = 465 }
+				}
+				464 = {
+					add_core_of = USA
+					USA = { transfer_state = 464 }
+				}
+				935 = {
+					add_core_of = USA
+					USA = { transfer_state = 935 }
+				}
+			}
+		}	
+	}
 	#银衫军崛起
 	USA_raise_sliver_shirts = {
 		icon = GFX_decision_generic_military		
@@ -2742,19 +2930,20 @@ USA_former_day_homeland = {
 			original_tag = USA
 		}
 		available = {	
+			has_global_flag = NA_war_has_began
 		}
 		visible = {
-			has_war = yes
+			has_global_flag = NA_war_has_began
 		}
 		cost = 15
 		days_remove = 30
 		fire_only_once = yes
 		ai_will_do = {
 			base = 500
-				modifier = {
-					factor = 0
-					NFA = { has_government = democratic }
-				}
+			modifier = {
+				factor = 0
+				NFA = { has_government = democratic }
+			}
 		}
 		complete_effect = {
 			set_country_flag = USA_flag_raise_sliver_shirts
@@ -2774,7 +2963,6 @@ USA_former_day_homeland = {
 					name = "银色军团"
 					priority = 1
 					division_names_group = USA_INF_01
-					is_locked = yes
 					regiments = {
 						infantry = { x = 0 y = 0 }
 						infantry = { x = 0 y = 1 }
@@ -2783,8 +2971,8 @@ USA_former_day_homeland = {
 						infantry = { x = 1 y = 1 }
 						infantry = { x = 1 y = 2 }
 						infantry = { x = 2 y = 0 }
-						artillery_brigade = { x = 2 y = 1 }
-						artillery_brigade = { x = 2 y = 2 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
 					}
 					support = {
 						artillery = { x = 0 y = 0 }	
@@ -2792,31 +2980,15 @@ USA_former_day_homeland = {
 					}
 				}
 			}
-			custom_effect_tooltip = USA_get_6_sliver_army
+			custom_effect_tooltip = USA_get_2_sliver_army
 			hidden_effect = {
 				capital_scope = {
 					create_unit = {
-						division = "name = \"第1银衫旅\" division_template = \"银色军团\" start_experience_factor = 0.3" 
+						division = "name = \"'憎恶'第1银色师\" division_template = \"银色军团\" start_experience_factor = 0.3" 
 						owner = ROOT
 					}
 					create_unit = {
-						division = "name = \"第2银衫旅\" division_template = \"银色军团\" start_experience_factor = 0.3" 
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"第3银衫旅\" division_template = \"银色军团\" start_experience_factor = 0.3" 
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"第4银衫旅\" division_template = \"银色军团\" start_experience_factor = 0.3"  
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"第5银衫旅\" division_template = \"银色军团\" start_experience_factor = 0.3"  
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"第6银衫旅\" division_template = \"银色军团\" start_experience_factor = 0.3" 
+						division = "name = \"'贪婪'第2银色师\" division_template = \"银色军团\" start_experience_factor = 0.3" 
 						owner = ROOT
 					}
 				}
@@ -2835,7 +3007,7 @@ USA_former_day_homeland = {
 		visible = {
 			has_country_flag = USA_flag_raise_sliver_shirts
 			has_country_flag = USA_flag_USA_silver_rising
-			has_war = yes
+			has_global_flag = NA_war_has_began
 		}
 		cost = 25
 		days_remove = 7
@@ -2866,45 +3038,44 @@ USA_former_day_homeland = {
 			unlock_decision_tooltip = USA_let_silver_army_into_the_army
 			unlock_decision_tooltip = USA_reorganize_the_spirit_holy_army
 			unlock_decision_tooltip = USA_reorganize_the_outcast_nightmare
-			if = {
-				limit = {
-					not = { has_template = "银色军团" }
-				}
-				division_template = {
-					name = "银色军团"
-					priority = 1
-					division_names_group = USA_INF_01
-					is_locked = yes
-					regiments = {
-						infantry = { x = 0 y = 0 }
-						infantry = { x = 0 y = 1 }
-						infantry = { x = 0 y = 2 }
-						infantry = { x = 1 y = 0 }
-						infantry = { x = 1 y = 1 }
-						infantry = { x = 1 y = 2 }
-						infantry = { x = 2 y = 0 }
-						artillery_brigade = { x = 2 y = 1 }
-						artillery_brigade = { x = 2 y = 2 }
-					}
-					support = {
-						artillery = { x = 0 y = 0 }	
-						recon = { x = 0 y = 1 }	
-					}
-				}
-			}
-			custom_effect_tooltip = USA_get_2_sliver_army
-			hidden_effect = {
-				capital_scope = {
-					create_unit = {
-						division = "name = \"'憎恶'第1银色师\" division_template = \"银色军团\" start_experience_factor = 0.7" 
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"'贪婪'第2银色师\" division_template = \"银色军团\" start_experience_factor = 0.7" 
-						owner = ROOT
-					}
-				}
-			}	
+			# if = {
+			# 	limit = {
+			# 		not = { has_template = "银色军团" }
+			# 	}
+			# 	division_template = {
+			# 		name = "银色军团"
+			# 		priority = 1
+			# 		division_names_group = USA_INF_01
+			# 		regiments = {
+			# 			infantry = { x = 0 y = 0 }
+			# 			infantry = { x = 0 y = 1 }
+			# 			infantry = { x = 0 y = 2 }
+			# 			infantry = { x = 1 y = 0 }
+			# 			infantry = { x = 1 y = 1 }
+			# 			infantry = { x = 1 y = 2 }
+			# 			infantry = { x = 2 y = 0 }
+			# 			infantry = { x = 2 y = 1 }
+			# 			infantry = { x = 2 y = 2 }
+			# 		}
+			# 		support = {
+			# 			artillery = { x = 0 y = 0 }	
+			# 			recon = { x = 0 y = 1 }	
+			# 		}
+			# 	}
+			# }
+			# custom_effect_tooltip = USA_get_2_sliver_army
+			# hidden_effect = {
+			# 	capital_scope = {
+			# 		create_unit = {
+			# 			division = "name = \"'憎恶'第1银色师\" division_template = \"银色军团\" start_experience_factor = 0.7" 
+			# 			owner = ROOT
+			# 		}
+			# 		create_unit = {
+			# 			division = "name = \"'贪婪'第2银色师\" division_template = \"银色军团\" start_experience_factor = 0.7" 
+			# 			owner = ROOT
+			# 		}
+			# 	}
+			# }	
 		}
 	}
 	#让银色军团进军队
@@ -2918,7 +3089,7 @@ USA_former_day_homeland = {
 		visible = {
 			has_country_flag = USA_flag_delegate_to_Nia
 			has_country_flag = USA_flag_USA_silver_rising
-			has_war = yes
+			has_global_flag = NA_war_has_began
 		}
 		cost = 50
 		days_remove = 30
@@ -2939,7 +3110,6 @@ USA_former_day_homeland = {
 					name = "银色军团"
 					priority = 1
 					division_names_group = USA_INF_01
-					is_locked = yes
 					regiments = {
 						infantry = { x = 0 y = 0 }
 						infantry = { x = 0 y = 1 }
@@ -2948,8 +3118,8 @@ USA_former_day_homeland = {
 						infantry = { x = 1 y = 1 }
 						infantry = { x = 1 y = 2 }
 						infantry = { x = 2 y = 0 }
-						artillery_brigade = { x = 2 y = 1 }
-						artillery_brigade = { x = 2 y = 2 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
 					}
 					support = {
 						artillery = { x = 0 y = 0 }	
@@ -2957,7 +3127,7 @@ USA_former_day_homeland = {
 					}
 				}
 			}
-			custom_effect_tooltip = USA_get_5_sliver_army
+			custom_effect_tooltip = USA_get_2_sliver_army
 			hidden_effect = {
 				capital_scope = {
 					create_unit = {
@@ -2968,18 +3138,18 @@ USA_former_day_homeland = {
 						division = "name = \"'魔术师'第2银色师\" division_template = \"银色军团\" start_experience_factor = 0.3" 
 						owner = ROOT
 					}
-					create_unit = {
-						division = "name = \"'圣杯术士'第3银色师\" division_template = \"银色军团\" start_experience_factor = 0.3" 
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"'银发术士'第4银色师\" division_template = \"银色军团\" start_experience_factor = 0.3"  
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"'红日'第5银色师\" division_template = \"银色军团\" start_experience_factor = 0.3"  
-						owner = ROOT
-					}
+					# create_unit = {
+					# 	division = "name = \"'圣杯术士'第3银色师\" division_template = \"银色军团\" start_experience_factor = 0.3" 
+					# 	owner = ROOT
+					# }
+					# create_unit = {
+					# 	division = "name = \"'银发术士'第4银色师\" division_template = \"银色军团\" start_experience_factor = 0.3"  
+					# 	owner = ROOT
+					# }
+					# create_unit = {
+					# 	division = "name = \"'红日'第5银色师\" division_template = \"银色军团\" start_experience_factor = 0.3"  
+					# 	owner = ROOT
+					# }
 				}
 			}
 		}
@@ -2995,7 +3165,7 @@ USA_former_day_homeland = {
 		visible = {
 			has_country_flag = USA_flag_delegate_to_Nia
 			has_country_flag = USA_flag_USA_silver_rising
-			has_war = yes
+			has_global_flag = NA_war_has_began
 		}
 		cost = 50
 		days_remove = 60
@@ -3016,7 +3186,6 @@ USA_former_day_homeland = {
 					name = "银色军团"
 					priority = 1
 					division_names_group = USA_INF_01
-					is_locked = yes
 					regiments = {
 						infantry = { x = 0 y = 0 }
 						infantry = { x = 0 y = 1 }
@@ -3025,8 +3194,8 @@ USA_former_day_homeland = {
 						infantry = { x = 1 y = 1 }
 						infantry = { x = 1 y = 2 }
 						infantry = { x = 2 y = 0 }
-						artillery_brigade = { x = 2 y = 1 }
-						artillery_brigade = { x = 2 y = 2 }
+						infantry = { x = 2 y = 1 }
+						infantry = { x = 2 y = 2 }
 					}
 					support = {
 						artillery = { x = 0 y = 0 }	
@@ -3034,29 +3203,29 @@ USA_former_day_homeland = {
 					}
 				}
 			}
-			custom_effect_tooltip = USA_get_5_sliver_army
+			custom_effect_tooltip = USA_get_2_sliver_army
 			hidden_effect = {
 				capital_scope = {
 					create_unit = {
-						division = "name = \"'古老帝国'第3银色师\" division_template = \"银色军团\" start_experience_factor = 0.7" 
+						division = "name = \"'古老帝国'第3银色师\" division_template = \"银色军团\" start_experience_factor = 0.5" 
 						owner = ROOT
 					}
 					create_unit = {
-						division = "name = \"'帝国边境'第4银色师\" division_template = \"银色军团\" start_experience_factor = 0.7" 
+						division = "name = \"'帝国边境'第4银色师\" division_template = \"银色军团\" start_experience_factor = 0.5" 
 						owner = ROOT
 					}
-					create_unit = {
-						division = "name = \"'突破重围'第5银色师\" division_template = \"银色军团\" start_experience_factor = 0.7" 
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"'惨胜'第6银色师\" division_template = \"银色军团\" start_experience_factor = 0.7"  
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"'回忆'第7银色师\" division_template = \"银色军团\" start_experience_factor = 0.7"  
-						owner = ROOT
-					}
+					# create_unit = {
+					# 	division = "name = \"'突破重围'第5银色师\" division_template = \"银色军团\" start_experience_factor = 0.5" 
+					# 	owner = ROOT
+					# }
+					# create_unit = {
+					# 	division = "name = \"'惨胜'第6银色师\" division_template = \"银色军团\" start_experience_factor = 0.5"  
+					# 	owner = ROOT
+					# }
+					# create_unit = {
+					# 	division = "name = \"'回忆'第7银色师\" division_template = \"银色军团\" start_experience_factor = 0.5"  
+					# 	owner = ROOT
+					# }
 				}
 			}
 			
@@ -3073,10 +3242,10 @@ USA_former_day_homeland = {
 		visible = {
 			has_country_flag = USA_flag_delegate_to_Nia
 			has_country_flag = USA_flag_USA_silver_rising
-			has_war = yes
+			has_global_flag = NA_war_has_began
 		}
-		cost = 25
-		days_remove = 30
+		cost = 33
+		days_remove = 66
 		fire_only_once = yes
 		ai_will_do = {
 			factor = 500
@@ -3088,23 +3257,23 @@ USA_former_day_homeland = {
 			}
 			if = {
 				limit = {
-					not = { has_template = "银色军团" }
+					not = { has_template = "离群梦魇" }
 				}
 				division_template = {
-					name = "银色军团"
+					name = "离群梦魇"
 					priority = 1
 					division_names_group = USA_INF_01
-					is_locked = yes
 					regiments = {
 						infantry = { x = 0 y = 0 }
 						infantry = { x = 0 y = 1 }
 						infantry = { x = 0 y = 2 }
+						infantry = { x = 0 y = 3 }
 						infantry = { x = 1 y = 0 }
 						infantry = { x = 1 y = 1 }
 						infantry = { x = 1 y = 2 }
-						infantry = { x = 2 y = 0 }
+						infantry = { x = 1 y = 3 }
+						artillery_brigade = { x = 2 y = 0 }
 						artillery_brigade = { x = 2 y = 1 }
-						artillery_brigade = { x = 2 y = 2 }
 					}
 					support = {
 						artillery = { x = 0 y = 0 }	
@@ -3112,29 +3281,34 @@ USA_former_day_homeland = {
 					}
 				}
 			}
-			custom_effect_tooltip = USA_get_5_sliver_army
+			custom_effect_tooltip = USA_get_2_sliver_army
+			country_event = { id = usa.221 }
 			hidden_effect = {
 				capital_scope = {
 					create_unit = {
-						division = "name = \"'离群梦魇'第1旅\" division_template = \"银色军团\" start_experience_factor = 0.7" 
+						division = "name = \"'离群梦魇'第1旅\" division_template = \"离群梦魇\" start_experience_factor = 0.7" 
 						owner = ROOT
 					}
 					create_unit = {
-						division = "name = \"'王位篡夺'第2旅\" division_template = \"银色军团\" start_experience_factor = 0.7" 
+						division = "name = \"'王位篡夺'第2旅\" division_template = \"离群梦魇\" start_experience_factor = 0.7" 
 						owner = ROOT
 					}
-					create_unit = {
-						division = "name = \"'遗忘誓言'第3旅\" division_template = \"银色军团\" start_experience_factor = 0.7" 
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"'岩蔷薇'第4旅\" division_template = \"银色军团\" start_experience_factor = 0.7"  
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"'黄蔷薇'第5旅\" division_template = \"银色军团\" start_experience_factor = 0.7"  
-						owner = ROOT
-					}
+					# create_unit = {
+					# 	division = "name = \"'遗忘誓言'第3旅\" division_template = \"离群梦魇\" start_experience_factor = 0.7" 
+					# 	owner = ROOT
+					# }
+					# create_unit = {
+					# 	division = "name = \"'岩蔷薇'第4旅\" division_template = \"离群梦魇\" start_experience_factor = 0.7"  
+					# 	owner = ROOT
+					# }
+					# create_unit = {
+					# 	division = "name = \"'黄蔷薇'第5旅\" division_template = \"离群梦魇\" start_experience_factor = 0.7"  
+					# 	owner = ROOT
+					# }
+					# create_unit = {
+					# 	division = "name = \"'背叛预兆'第6旅\" division_template = \"离群梦魇\" start_experience_factor = 0.7"  
+					# 	owner = ROOT
+					# }
 				}
 			}
 		}
@@ -3275,11 +3449,7 @@ USA_former_day_homeland = {
 		cost = 0
 		fire_only_once = yes
 		ai_will_do = {
-			base = 200
-			modifier = {
-				factor = 0
-				NFA = { surrender_progress < 0.75 }
-			}
+			factor = 200
 		}
 		remove_effect = {
 			USA = {
@@ -3312,13 +3482,10 @@ USA_former_day_homeland = {
 		cost = 0
 		fire_only_once = yes
 		ai_will_do = {
-			base = 200
+			factor = 200
 			modifier = {
 				factor = 0
-				or = {
-					date < 1938.10.4
-					FRG = { surrender_progress < 0.75 }
-				}
+				date < 1938.10.4
 			}
 		}
 		complete_effect = {
@@ -3530,64 +3697,6 @@ USA_former_day_homeland = {
 				type = artillery_equipment
 				amount = 300
 				producer = NGD
-			}
-		}			
-	}
-	#承诺的繁荣
-	USA_promised_revival = {
-		icon = generic_prepare_civil_war
-		allowed = {
-			original_tag = USA
-		}
-		available = {
-			has_completed_focus = USA_promise_revival
-		}
-		visible = {
-			or = {
-			has_idea = USA_Rebuild_home
-			has_idea = USA_Rebuild_home_2
-			has_idea = USA_Rebuild_home_3
-			has_idea = USA_Rebuild_home_4
-			has_idea = USA_Rebuild_home_5
-			has_idea = USA_Rebuild_home_6
-			has_idea = USA_Rebuild_home_7
-			has_idea = USA_Rebuild_home_8
-			has_idea = USA_Rebuild_home_9
-			has_idea = USA_Rebuild_home_10
-			}
-		}
-		cost = 75
-		days_remove = 90
-		fire_only_once = no
-		ai_will_do = {
-			factor = 500
-		}
-		remove_effect = {
-			custom_effect_tooltip = USA_custom_promised_revival
-			#swap_ideas = {
-				#remove_idea = USA_Rebuild_home
-				#add_idea = USA_Rebuild_home_4
-			#}
-			hidden_effect = {
-				
-				if = {
-					limit = {
-						has_country_flag = USA_flag_Rebuild_home
-					}
-					USA_Rebuild_home_level_down = yes
-				}
-				if = {
-					limit = {
-						has_country_flag = USA_flag_Rebuild_home
-					}
-					USA_Rebuild_home_level_down = yes
-				}
-				if = {
-					limit = {
-						has_country_flag = USA_flag_Rebuild_home
-					}
-					USA_Rebuild_home_level_down = yes
-				}
 			}
 		}			
 	}
