@@ -1,0 +1,275 @@
+is_ally_of_ROOT = {
+	custom_trigger_tooltip = {
+		tooltip = AH_is_an_ally
+		exists = yes
+		is_ally_with = ROOT
+		NOT = {
+			tag = ROOT
+		}
+	}
+}
+
+# in state scope
+is_claim_or_core_of_ROOT = {
+	OR = {
+		is_claimed_by = ROOT
+		is_core_of = ROOT
+	}
+}
+
+# Useful triggers for the annexation codebase
+is_valid_annexation_state = {
+	is_owned_by = ROOT
+	is_claim_or_core_of_ROOT = no
+	hidden_trigger = {
+		NOT = {
+			has_state_flag = occupied_by_@ROOT
+		}
+		NOT = {
+			has_variable = occupied_by_@THIS
+		}
+	}
+}
+
+##德国
+can_release_germany = {
+	OR = {
+		state = 64		#Brandenburg
+		state = 781		#Western Rhineland
+	}
+	NOT = {
+		is_claimed_by = ROOT
+	}
+	count_triggers = {
+		amount = 2
+		52 = {
+			is_valid_annexation_state = yes
+		}
+		#Upper Bavaria
+		59 = {
+			is_valid_annexation_state = yes
+		}
+		#Hanover
+		AND = {
+			state = 64			#Brandenburg
+			781 = {
+				is_valid_annexation_state = yes
+			}
+			#Western Rhineland
+		}
+		AND = {
+			state = 781			#Western Rhineland
+			64 = {
+				is_valid_annexation_state = yes
+			}
+			#Brandenburg
+		}
+	}
+	ROOT = {
+		NOT = {
+			is_germany_tag = yes
+			has_country_flag = GER_CONQ
+		}
+	}
+}
+
+should_release_germany_first = {
+	OR = {
+		is_germany_tag = yes
+		country_exists = GER
+		country_exists = GEU
+		has_country_flag = GER_CONQ
+		AND = {
+			64 = {
+				is_valid_annexation_state = no
+			}
+			#Brandenburg
+			781 = {
+				is_valid_annexation_state = no
+			}
+			#Western Rhineland
+		}
+		NOT = {
+			count_triggers = {
+				amount = 2
+				52 = {
+					is_valid_annexation_state = yes
+				}
+				#Upper Bavaria
+				59 = {
+					is_valid_annexation_state = yes
+				}
+				#Hanover
+				AND = {
+					PREV = {
+						state = 64
+					}
+					#Brandenburg
+					781 = {
+						is_valid_annexation_state = yes
+					}
+					#Western Rhineland
+				}
+				AND = {
+					PREV = {
+						state = 781
+					}
+					#Western Rhineland
+					64 = {
+						is_valid_annexation_state = yes
+					}
+					#Brandenburg
+				}
+			}
+		}
+	}
+}
+
+can_release_Prussia = {
+	is_Prussia = yes
+	NOT = {
+		is_claimed_by = ROOT
+	}
+	count_triggers = {
+		amount = 2
+		5 = {
+			is_valid_annexation_state = yes
+		}
+		777 = {
+			is_valid_annexation_state = yes
+		}
+		776 = {
+			is_valid_annexation_state = yes
+		}
+		86 = {
+			is_valid_annexation_state = yes
+		}
+	}
+	ROOT = {
+		should_release_germany_first = yes
+		NOT = {
+			is_germany_tag = yes
+			has_country_flag = PRE_CONQ
+		}
+	}
+}
+
+can_release_rhineland = {
+	state = 781	#Western Rhineland
+	NOT = {
+		is_claimed_by = ROOT
+	}
+	ROOT = {
+		should_release_germany_first = yes
+		should_release_north_germany_first = yes
+		NOT = {
+			is_germany_tag = yes
+			has_country_flag = RHI_CONQ
+		}
+	}
+}
+
+##西欧
+can_release_NPT = {
+	or = {
+		state = 41
+		state = 112
+	}
+	NOT = {
+		is_claimed_by = ROOT
+	}
+	41 = {
+		is_valid_annexation_state = yes
+	}
+	112 = {
+		is_valid_annexation_state = yes
+	}
+	ROOT = {
+		NOT = {
+			tag = NPT
+			has_country_flag = NPT_CONQ
+		}
+	}
+}
+
+##中欧
+can_release_TRB = {
+	or = {
+		state = 3
+	}
+	NOT = {
+		is_claimed_by = ROOT
+	}
+	count_triggers = {
+		amount = 2
+		3 = {
+			is_valid_annexation_state = yes
+		}
+		1091 = {
+			is_valid_annexation_state = yes
+		}
+		943 = {
+			is_valid_annexation_state = yes
+		}
+		151 = {
+			is_valid_annexation_state = yes
+		}
+	}
+	ROOT = {
+		NOT = {
+			tag = TRB
+			has_country_flag = TRB_CONQ
+		}
+	}
+}
+
+can_release_HUN = {
+	or = {
+		state = 43
+	}
+	NOT = {
+		is_claimed_by = ROOT
+	}
+	count_triggers = {
+		amount = 2
+		43 = {
+			is_valid_annexation_state = yes
+		}
+		155 = {
+			is_valid_annexation_state = yes
+		}
+		154 = {
+			is_valid_annexation_state = yes
+		}
+		664 = {
+			is_valid_annexation_state = yes
+		}
+	}
+	ROOT = {
+		NOT = {
+			tag = HUN
+			has_country_flag = HUN_CONQ
+		}
+	}
+}
+
+can_release_BUL = {
+	or = {
+		state = 48
+	}
+	NOT = {
+		is_claimed_by = ROOT
+	}
+	48 = {
+		is_valid_annexation_state = yes
+	}
+	771 = {
+		is_valid_annexation_state = yes
+	}
+	ROOT = {
+		NOT = {
+			tag = BUL
+			has_country_flag = BUL_CONQ
+		}
+	}
+}

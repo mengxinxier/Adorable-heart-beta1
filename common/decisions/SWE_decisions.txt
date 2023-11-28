@@ -1,16 +1,86 @@
 SWE_war_to_DEN_decision_cate = {
+	SWE_attck_DEN = {
+		icon = GFX_decision_generic_ignite_civil_war
+		target_trigger = {
+			FROM = {
+				tag = DEN
+				not = {
+					has_country_flag = SWE_attck_DEN
+				}
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			ROOT = {
+				has_completed_focus = SWE_Revenge_for_1910
+				is_subject = no
+			}
+		}
+		available = {
+			not = {
+				is_in_faction_with = FROM
+			}
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			FROM = {
+				country_event = {
+					id = generic.2010
+				}
+			}
+		}
+		remove_effect = {
+			custom_effect_tooltip = SWE_attck_DEN_tt
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			activate_mission = SWE_Countdown_to_war
+			DEN = {
+				set_country_flag = SWE_attck_DEN
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
 	SWE_Countdown_to_war = {
 		icon = GFX_decision_hol_draw_up_staff_plans
 		available = {
-			# hidden_trigger = {
-			# 	always = no
-			# }
-			controls_state = 960
-			controls_state = 1096
-			controls_state = 1095
-			controls_state = 1104
-			controls_state = 138
-			controls_state = 1103
+			or = {
+				DEN = {
+					surrender_progress > 0.5
+				}
+				AND = {
+					controls_state = 960
+					controls_state = 1096
+					controls_state = 1095
+					controls_state = 1104
+					controls_state = 138
+					controls_state = 1103
+				}
+			}
 		}
 		priority = 20
 		days_mission_timeout = 100
@@ -39,6 +109,9 @@ SWE_war_to_DEN_decision_cate = {
 						tag = DEN
 						message = DEN_WIN_SWE
 					}
+					country_event = {
+						id = SWE.015
+					}
 				}
 				140 = {
 					if = {
@@ -52,15 +125,21 @@ SWE_war_to_DEN_decision_cate = {
 						transfer_state_to = DEN
 					}
 				}
-				swap_ideas = {
-					remove_idea = SWE_Karma_shame
-					add_idea = SWE_Despair
-				}
 			}
 			else_if = {
 				limit = {
-					DEN = {
-						surrender_progress > 0.5
+					or = {
+						DEN = {
+							surrender_progress > 0.5
+						}
+						AND = {
+							controls_state = 960
+							controls_state = 1096
+							controls_state = 1095
+							controls_state = 1104
+							controls_state = 138
+							controls_state = 1103
+						}
 					}
 				}
 				effect_tooltip = { white_peace = DEN }
@@ -68,6 +147,9 @@ SWE_war_to_DEN_decision_cate = {
 					white_peace = {
 						tag = DEN
 						message = SWE_WIN_DEN
+					}
+					country_event = {
+						id = SWE.014
 					}
 				}
 				960 = {
@@ -171,28 +253,98 @@ SWE_war_to_DEN_decision_cate = {
 			}
 		}
 		timeout_effect = {
-			effect_tooltip = { white_peace = DEN }
-			hidden_effect = {
-				white_peace = {
-					tag = DEN
-					message = DEN_WIN_SWE
+			if = {
+				limit = {
+					or = {
+						DEN = {
+							surrender_progress > 0.5
+						}
+						AND = {
+							controls_state = 960
+							controls_state = 1096
+							controls_state = 1095
+							controls_state = 1104
+							controls_state = 138
+							controls_state = 1103
+						}
+					}
+				}
+				effect_tooltip = { white_peace = DEN }
+				hidden_effect = {
+					white_peace = {
+						tag = DEN
+						message = SWE_WIN_DEN
+					}
+					country_event = {
+						id = SWE.014
+					}
+				}
+				960 = {
+					if = {
+						limit = { is_owned_by = DEN }
+						transfer_state_to = ROOT
+						add_core_of_ROOT = yes
+					}
+				}
+				1096 = {
+					if = {
+						limit = { is_owned_by = DEN }
+						transfer_state_to = ROOT
+						add_core_of_ROOT = yes
+					}
+				}
+				1095 = {
+					if = {
+						limit = { is_owned_by = DEN }
+						transfer_state_to = ROOT
+						add_core_of_ROOT = yes
+					}
+				}
+				1104 = {
+					if = {
+						limit = { is_owned_by = DEN }
+						transfer_state_to = ROOT
+						add_core_of_ROOT = yes
+					}
+				}
+				138 = {
+					if = {
+						limit = { is_owned_by = DEN }
+						transfer_state_to = ROOT
+						add_core_of_ROOT = yes
+					}
+				}
+				1103 = {
+					if = {
+						limit = { is_owned_by = DEN }
+						transfer_state_to = ROOT
+						add_core_of_ROOT = yes
+					}
 				}
 			}
-			140 = {
-				if = {
-					limit = { is_owned_by = ROOT }
-					transfer_state_to = DEN
+			else = {
+				effect_tooltip = { white_peace = DEN }
+				hidden_effect = {
+					white_peace = {
+						tag = DEN
+						message = DEN_WIN_SWE
+					}
+					country_event = {
+						id = SWE.015
+					}
 				}
-			}
-			139 = {
-				if = {
-					limit = { is_owned_by = ROOT }
-					transfer_state_to = DEN
+				140 = {
+					if = {
+						limit = { is_owned_by = ROOT }
+						transfer_state_to = DEN
+					}
 				}
-			}
-			swap_ideas = {
-				remove_idea = SWE_Karma_shame
-				add_idea = SWE_Despair
+				139 = {
+					if = {
+						limit = { is_owned_by = ROOT }
+						transfer_state_to = DEN
+					}
+				}
 			}
 		}
 		complete_effect = {
@@ -201,6 +353,9 @@ SWE_war_to_DEN_decision_cate = {
 				white_peace = {
 					tag = DEN
 					message = SWE_WIN_DEN
+				}
+				country_event = {
+					id = SWE.014
 				}
 			}
 			960 = {
@@ -316,6 +471,7 @@ SWE_vinterkriget_decision_cate = {
 				has_defensive_war_with = SOV
 			}
 		}
+		fire_only_once = yes
 		complete_effect = {
 			declare_war_on = {
 				target = SOV
@@ -359,16 +515,18 @@ SWE_Political_struggle = {
 			hidden_effect = {
 				activate_mission = SWE_Communist_Union_action
 			}
-			33 = {
-				custom_effect_tooltip = SWE_Political_struggle_LEFT_var_up_5_left
-				add_to_variable = {
-					SWE_Political_struggle_LEFT_var = 5
+			random_list = {
+				33 = {
+					custom_effect_tooltip = SWE_Political_struggle_LEFT_var_up_5_left
+					add_to_variable = {
+						SWE_Political_struggle_LEFT_var = 5
+					}
 				}
-			}
-			67 = {
-				custom_effect_tooltip = SWE_Political_struggle_LEFT_var_up_10_left
-				add_to_variable = {
-					SWE_Political_struggle_LEFT_var = 10
+				67 = {
+					custom_effect_tooltip = SWE_Political_struggle_LEFT_var_up_10_left
+					add_to_variable = {
+						SWE_Political_struggle_LEFT_var = 10
+					}
 				}
 			}
 		}
@@ -399,16 +557,18 @@ SWE_Political_struggle = {
 			hidden_effect = {
 				activate_mission = SWE_Christian_Democrats_action
 			}
-			33 = {
-				custom_effect_tooltip = SWE_Political_struggle_MIDDLE_var_up_5_left
-				add_to_variable = {
-					SWE_Political_struggle_MIDDLE_var = 5
+			random_list = {
+				33 = {
+					custom_effect_tooltip = SWE_Political_struggle_MIDDLE_var_up_5_left
+					add_to_variable = {
+						SWE_Political_struggle_MIDDLE_var = 5
+					}
 				}
-			}
-			67 = {
-				custom_effect_tooltip = SWE_Political_struggle_MIDDLE_var_up_10_left
-				add_to_variable = {
-					SWE_Political_struggle_MIDDLE_var = 10
+				67 = {
+					custom_effect_tooltip = SWE_Political_struggle_MIDDLE_var_up_10_left
+					add_to_variable = {
+						SWE_Political_struggle_MIDDLE_var = 10
+					}
 				}
 			}
 		}
@@ -439,16 +599,18 @@ SWE_Political_struggle = {
 			hidden_effect = {
 				activate_mission = SWE_National_Alliance_action
 			}
-			33 = {
-				custom_effect_tooltip = SWE_Political_struggle_RIGHT_var_up_5_left
-				add_to_variable = {
-					SWE_Political_struggle_RIGHT_var = 5
+			random_list = {
+				33 = {
+					custom_effect_tooltip = SWE_Political_struggle_RIGHT_var_up_5_left
+					add_to_variable = {
+						SWE_Political_struggle_RIGHT_var = 5
+					}
 				}
-			}
-			67 = {
-				custom_effect_tooltip = SWE_Political_struggle_RIGHT_var_up_10_left
-				add_to_variable = {
-					SWE_Political_struggle_RIGHT_var = 10
+				67 = {
+					custom_effect_tooltip = SWE_Political_struggle_RIGHT_var_up_10_left
+					add_to_variable = {
+						SWE_Political_struggle_RIGHT_var = 10
+					}
 				}
 			}
 		}
@@ -547,7 +709,7 @@ SWE_Political_struggle = {
 		}
 		available = {
 		}
-		complete_effect = {
+		remove_effect = {
 			if = {
 				limit = {
 					check_variable = {
@@ -602,7 +764,7 @@ SWE_Political_struggle = {
 		}
 		available = {
 		}
-		complete_effect = {
+		remove_effect = {
 			if = {
 				limit = {
 					check_variable = {
@@ -657,7 +819,7 @@ SWE_Political_struggle = {
 		}
 		available = {
 		}
-		complete_effect = {
+		remove_effect = {
 			if = {
 				limit = {
 					check_variable = {
@@ -710,7 +872,7 @@ SWE_Political_struggle = {
 		}
 		available = {
 		}
-		complete_effect = {
+		remove_effect = {
 			add_political_power = 50
 			custom_effect_tooltip = SWE_Political_struggle_LEFT_var_up_5_left
 			add_to_variable = {
@@ -735,7 +897,7 @@ SWE_Political_struggle = {
 		}
 		available = {
 		}
-		complete_effect = {
+		remove_effect = {
 			add_political_power = 50
 			custom_effect_tooltip = SWE_Political_struggle_MIDDLE_var_up_5_left
 			add_to_variable = {
@@ -760,7 +922,7 @@ SWE_Political_struggle = {
 		}
 		available = {
 		}
-		complete_effect = {
+		remove_effect = {
 			add_political_power = 50
 			custom_effect_tooltip = SWE_Political_struggle_RIGHT_var_up_5_left
 			add_to_variable = {
