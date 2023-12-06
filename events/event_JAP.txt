@@ -910,7 +910,7 @@ country_event = {
 	option = {
 		name = jap.18.a
 		ai_chance = {
-			factor = 10
+			base = 10
 		}
 		if = {
 			limit = {
@@ -1142,14 +1142,10 @@ country_event = {
 	option = {
 		name = jap.18.b
 		ai_chance = {
-			factor = 50
+			base = 50
 		}
 		JAP = {
 			country_event = jap.31
-			create_wargoal = {
-				target = RYU
-				type = puppet_wargoal_focus
-			}
 		}
 	}
 }
@@ -1173,7 +1169,64 @@ country_event = {
 			target = ROOT
 			modifier = eng_jap_bad
 		}
-		remove_ideas = dongyatiaoyue
+		if = {
+				limit = {
+					MAL = {
+						not = {
+							is_in_faction_with = JAP
+						}
+					}
+				}
+				add_state_claim = 336
+				declare_war_on = {
+					target = MAL
+					type = puppet_wargoal_focus
+				}
+			}
+			if = {
+				limit = {
+					RYU = {
+						not = {
+							has_completed_focus = RYU_76
+						}
+					}
+				}
+				declare_war_on = {
+					target = RYU
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = {
+					RYU = {
+					has_completed_focus = RYU_76
+					}
+				}
+				RYU = {
+				clr_country_flag = RYU_beiJAPkongzhi
+				set_cosmetic_tag = JAP_diguohaijunling
+				set_party_name = { ideology = fascism long_name = "樱花特高科" name = "樱花特高科" }
+				add_popularity = { ideology = fascism popularity = 0.3 }
+				remove_ideas = RYU_japjd
+				}
+				set_autonomy = {
+				target = RYU
+				autonomy_state = autonomy_wtt_imperial_protectorate
+				}
+			}
+			if = {
+				limit = {
+					RAJ = {
+						not = {
+							is_in_faction_with = JAP
+						}
+					}
+				}
+				declare_war_on = {
+					target = RAJ
+					type = puppet_wargoal_focus
+				}
+			}
 	}
 }
 
@@ -2968,7 +3021,7 @@ country_event = {
 		add_ai_strategy = {
 		type = befriend	
 		id = "NGD"			
-		value = 100
+		value = 50
 		}
 		add_ai_strategy = {
 		type = send_volunteers_desire
@@ -2994,7 +3047,7 @@ country_event = {
 		add_ai_strategy = {
 		type = befriend	
 		id = "NFA"			
-		value = 100
+		value = 50
 		}
 		add_ai_strategy = {
 		type = send_volunteers_desire
@@ -3023,7 +3076,7 @@ country_event = {
 		add_ai_strategy = {
 		type = befriend	
 		id = "FRG"			
-		value = 100
+		value = 50
 		}
 		add_ai_strategy = {
 		type = send_volunteers_desire
@@ -3193,6 +3246,7 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = jap.72.a
+		set_country_flag = xiandaihuadadushi_flag_jap
 		add_timed_idea = {
 			idea = jap_jianshekaizhi
 			days = 90
@@ -3235,6 +3289,7 @@ country_event = {
 	}
 	option = {
 		name = jap.72.b
+		set_country_flag = xiandaihuadadushi_flag_jap
 		282 = {
 		add_dynamic_modifier = {
 			modifier = JAP_dadushi_state
@@ -3355,6 +3410,232 @@ country_event = {
 			has_government = communism
 			factor = 100
 			}
+		}
+	}
+}
+
+#土地改革
+country_event = {
+	id = jap.75
+	title = jap.75.t
+	desc = jap.75.d
+	is_triggered_only = yes
+	option = {
+		name = jap.75.a
+		add_timed_idea = {
+			idea = jap_tugai_idea_1
+			days = 90
+		}
+		hidden_effect = {
+			country_event = { id = jap.76 days = 92 }
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = jap.75.b
+		add_timed_idea = {
+			idea = jap_tugai_idea_2
+			days = 180
+		}
+		hidden_effect = {
+			country_event = { id = jap.76 days = 182 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+	option = {
+		name = jap.75.c
+		add_timed_idea = {
+			idea = jap_tugai_idea_3
+			days = 400
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+country_event = {
+	id = jap.76
+	title = jap.76.t
+	desc = jap.76.d
+	is_triggered_only = yes
+	option = {
+		name = jap.76.a
+		set_country_flag = tugaiwancheng_jap
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+country_event = {
+	id = jap.77
+	title = jap.77.t
+	desc = jap.77.d
+	is_triggered_only = yes
+	option = {
+		name = jap.77.a
+		add_political_power = -100
+		add_stability = -0.05
+		add_war_support = -0.15
+		add_power_balance_value = {
+			id = JAP_balance
+			value = -0.2
+		}
+		remove_ideas = jap_tugai_idea_3
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+#军队要求侵华
+country_event = {
+	id = jap.78
+	title = jap.78.t
+	desc = jap.78.d
+	#picture = 
+	fire_only_once = yes
+	trigger = {
+		tag = JAP
+		has_government = fascism
+		has_completed_focus = JAP_60
+		date > 1938.1.1
+		is_subject = no
+		power_balance_value = {
+			id = JAP_balance
+			value > 0.4
+		}
+		MAN = { is_subject_of = JAP }
+	}
+	mean_time_to_happen = {
+		days = 1
+	}
+	option = {
+		name = jap.78.a
+		activate_mission = JAP_rw_qinhua
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+#军队要求南下
+country_event = {
+	id = jap.79
+	title = jap.79.t
+	desc = jap.79.d
+	#picture = 
+	fire_only_once = yes
+	trigger = {
+		tag = JAP
+		has_completed_focus = JAP_60
+		date > 1938.1.1
+		is_subject = no
+		power_balance_value = {
+			id = JAP_balance
+			value > 0.4
+		}
+	}
+	mean_time_to_happen = {
+		days = 1
+	}
+	option = {
+		name = jap.79.a
+		activate_mission = JAP_rw_nanxia
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+#樱花国强迫对方议和
+country_event = {
+	id = jap.80
+	title = jap.80.t
+	desc = jap.80.d
+	is_triggered_only = yes
+	option = {
+		name = jap.80.a
+		if = {
+		limit = {
+		or = {
+		tag = USA
+		tag = NGD
+		tag = NFA
+		tag = FRG
+		}
+		}
+		JAP = {
+			transfer_state = 629
+			transfer_state = 631
+			transfer_state = 630
+			transfer_state = 632
+			transfer_state = 648
+			transfer_state = 645
+			transfer_state = 725
+		}
+		hidden_effect = {
+			white_peace = { 
+			tag = JAP
+			message = JAP_taipingyangzhanzhengshengli
+			}
+		}
+		}
+		if = {
+		limit = {
+		tag = ENG
+		}
+		JAP = {
+		transfer_state = 336
+		transfer_state = 1020
+		}
+		set_autonomy = {
+			target = RAJ
+			autonomy_state = autonomy_free
+		}
+		set_autonomy = {
+			target = MAL
+			autonomy_state = autonomy_free
+		}
+		RAJ = {
+			leave_faction = yes
+		}
+		MAL = {
+			leave_faction = yes
+		}
+		if = {
+		limit = {
+		RYU = { is_subject_of = ENG }
+		}
+		JAP = {
+			annex_country = {
+				target = RYU
+			}
+		}
+		}
+		hidden_effect = {
+			white_peace = { 
+			tag = JAP
+			message = JAP_dongnanyashengli
+			}
+		}
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+	option = {
+		name = jap.80.b
+		add_political_power = -500
+		add_war_support = -0.3
+		add_stability = -0.3
+		ai_chance = {
+			factor = 0
 		}
 	}
 }
