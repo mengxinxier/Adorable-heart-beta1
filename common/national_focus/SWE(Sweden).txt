@@ -1493,13 +1493,14 @@ focus_tree = {
 		completion_reward = {
 			add_power_balance_value = {
 				id = SWE_Amu_bop
-				value = 0.1
+				value = 0.25
 			}
 			set_country_flag = SWE_Nordic_Spark
 			create_faction = Nordic_Workers_Council
 			hidden_effect = {
 				news_event = { id = generic.2007 }
 			}
+			unlock_decision_category_tooltip = SWE_Nordic_integration
 		}
 	}
 	#与杜伦布和解
@@ -1732,7 +1733,16 @@ focus_tree = {
 		y = 1
 		cost = 6
 		ai_will_do = {
-			base = 20
+			base = 0
+			modifier  = {
+				add = 20
+				FIN = {
+					or = {
+						is_subject = no
+						is_subject_of = SOV
+					}
+				}
+			}
 		}
 		available = {
 		}
@@ -1784,6 +1794,25 @@ focus_tree = {
 							remove_claim_by = FIN
 						}
 					}
+				}
+			}
+			else_if = {
+				limit = {
+					FIN = { is_subject_of = SOV }
+				}
+				SOV = {
+					country_event = {
+						id = SWE.039
+					}
+				}
+			}
+			else = {
+				FIN = {
+					set_country_flag = can_be_attack_by_SWE
+				}
+				activate_targeted_decision = {
+					target = FIN
+					decision = SWE_Nordic_integration_attck_FROM
 				}
 			}
 		}
@@ -1845,9 +1874,14 @@ focus_tree = {
 		completion_reward = {
 			add_power_balance_value = {
 				id = SWE_Amu_bop
-				value = -0.1
+				value = -0.25
 			}
 			set_country_flag = SWE_Pro_Third_International_Diplomacy
+			SOV = {
+				country_event = {
+					id = generic.2002
+				}
+			}
 		}
 	}
 	#与莫斯科经济交流
@@ -1903,6 +1937,12 @@ focus_tree = {
 			base = 20
 		}
 		available = {
+			FIN = {
+				or = {
+					is_subject = no
+					is_subject_of = SOV
+				}
+			}
 		}
 		bypass = {
 		}
@@ -1910,6 +1950,38 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			if = {
+				limit = {
+					FIN = { is_subject_of = SOV }
+				}
+				SOV = {
+					country_event = {
+						id = SWE.041
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					FIN = { is_in_faction_with = ROOT }
+				}
+				FIN = {
+					country_event = {
+						id = SWE.043
+					}
+				}
+			}
+			else = {
+				FIN = {
+					every_core_state = {
+						add_core_of_ROOT = yes
+					}
+					set_country_flag = can_be_attack_by_SWE
+				}
+				activate_targeted_decision = {
+					target = FIN
+					decision = SWE_Nordic_integration_attck_FROM
+				}
+			}
 		}
 	}
 	#北方堡垒计划
@@ -1960,6 +2032,7 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			unlock_decision_category_tooltip = SWE_Nordic_integration
 		}
 	}
 ##战争
