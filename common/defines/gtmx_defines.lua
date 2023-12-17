@@ -82,5 +82,5 @@ NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_NO_TRADE_ROUTE = -100              
 NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_NON_AGGRESSION_PACT = 25                   -- Acceptance value added if there is a non-aggression pact between the countries
 
 -- 消费品
-NDefines.NProduction.MINIMUM_NUMBER_OF_FACTORIES_TAKEN_BY_CONSUMER_GOODS_PERCENT = 0.05,	-- The minimum number of factories we have to put on consumer goods, in percent.
+NDefines.NProduction.MINIMUM_NUMBER_OF_FACTORIES_TAKEN_BY_CONSUMER_GOODS_PERCENT = 0.05	-- The minimum number of factories we have to put on consumer goods, in percent.
 
