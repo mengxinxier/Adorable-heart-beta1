@@ -402,7 +402,7 @@ SWE_vinterkriget_decision_cate = {
 		}
 		cost = 0
 		visible = {
-			#has_completed_focus = SWE_finlands_cause_is_ours
+			is_subject = no
 			NOT = { has_war_with = SOV }
 			NOT = { has_war_with = FIN }
 		}
@@ -419,10 +419,7 @@ SWE_vinterkriget_decision_cate = {
 				not = {
 					or = {
 						has_idea = SWE_Hinamori_Amu_idea
-						has_country_leader = {
-							ruling_only = yes
-							character = SWE_Hinamori_Amu
-						}
+						has_country_leader_with_trait = SWE_Muscovites
 					}
 				}
 			}
@@ -439,6 +436,234 @@ SWE_vinterkriget_decision_cate = {
 			}
 			give_military_access = FIN
 			FIN = { give_military_access = ROOT }
+			if = {
+				limit = { is_in_faction = no }
+				create_faction = Anti_Bolshevik_League
+				FIN = {
+					if = {
+						limit = { is_in_faction = no }
+						country_event = {
+							id = generic.2008
+						}
+					}
+				}
+				UKR = {
+					if = {
+						limit = {
+							is_subject = no
+							is_in_faction = no
+							not = {
+								has_government = communism
+							}
+						}
+						country_event = {
+							id = generic.2008
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { is_faction_leader = yes }
+				set_faction_name = Anti_Bolshevik_League
+				FIN = {
+					if = {
+						limit = { is_in_faction = no }
+						country_event = {
+							id = generic.2008
+						}
+					}
+				}
+				UKR = {
+					if = {
+						limit = {
+							is_subject = no
+							is_in_faction = no
+							not = {
+								has_government = communism
+							}
+						}
+						country_event = {
+							id = generic.2008
+						}
+					}
+				}
+			}
+			set_country_flag = SWE_Defend_Finland_decision
+		}
+		ai_will_do = {
+			base = 0
+		}
+	}
+	#与苏联和谈
+	SWE_Peace_talks_with_the_USSR = {
+		icon = GFX_decision_hol_war_on_pacifism
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 0
+		visible = {
+			is_subject = no
+			has_country_flag = SWE_Defend_Finland_decision
+		}
+		available = {
+			or = {
+				controls_state = 195
+				any_allied_country = {
+					controls_state = 195
+				}
+			}
+			195 = {
+				owner = SOV
+			}
+			is_subject = no
+			is_faction_leader = yes
+			has_war_with = SOV
+			SOV = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			if = {
+				limit = {
+					UKR = {
+						is_subject = no
+						has_war_with = SOV
+					}
+				}
+				UKR = {
+					not = {
+						is_in_faction_with = ROOT
+					}
+				}
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			effect_tooltip = {
+				white_peace = SOV
+			}
+			hidden_effect = {
+				white_peace = {
+					tag = SOV
+					message = SWE_win_vinterkriget
+				}
+			}
+			set_global_flag = talvisota_is_over
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	#从战争中脱身
+	SWE_Get_out_of_the_war = {
+		icon = GFX_decision_hol_war_on_pacifism
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 0
+		visible = {
+			is_subject = no
+			has_country_flag = SWE_Defend_Finland_decision
+		}
+		available = {
+			custom_trigger_tooltip = {
+				has_country_flag = {
+					flag = FIN_has_capitulated
+					days > 100
+				}
+				FIN = {
+					is_in_faction_with = ROOT
+					has_capitulated = yes
+				}
+				tooltip = FIN_has_capitulated_TT
+			}
+			is_subject = no
+			is_faction_leader = yes
+			has_war_with = SOV
+			SOV = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			if = {
+				limit = {
+					UKR = {
+						is_subject = no
+						has_war_with = SOV
+						is_in_faction_with = ROOT
+					}
+				}
+				custom_trigger_tooltip = {
+					has_country_flag = {
+						flag = UKR_has_capitulated
+						days > 100
+					}
+					UKR = {
+						is_in_faction_with = ROOT
+						has_capitulated = yes
+					}
+					tooltip = UKR_has_capitulated_TT
+				}
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = {
+					UKR = {
+						is_subject = no
+						has_war_with = SOV
+						is_in_faction_with = ROOT
+					}
+				}
+				UKR = {
+					leave_faction = yes
+				}
+				SOV = {
+					annex_country = { target = UKR transfer_troops = no }
+				}
+			}
+			if = {
+				limit = {
+					FIN = {
+						is_subject = no
+						has_war_with = SOV
+						is_in_faction_with = ROOT
+					}
+				}
+				FIN = {
+					leave_faction = yes
+				}
+				SOV = {
+					puppet = FIN
+				}
+				146 = {
+					if = {
+						limit = { owner = FIN }
+						transfer_state_to = SOV
+						add_core_of = SOV
+					}
+				}
+				722 = {
+					if = {
+						limit = { owner = FIN }
+						transfer_state_to = SOV
+						add_core_of = SOV
+					}
+				}
+			}
+			dismantle_faction = yes
+			effect_tooltip = {
+				white_peace = SOV
+			}
+			hidden_effect = {
+				white_peace = {
+					tag = SOV
+					message = SWE_fall_vinterkriget
+				}
+			}
+			set_global_flag = talvisota_is_over
+		}
+		ai_will_do = {
+			base = 1
 		}
 	}
 }
@@ -2811,6 +3036,18 @@ SWE_Debug = {
 			custom_effect_tooltip = SWE_Valhalla_faith_var_100_up
 			add_to_variable = {
 				SWE_Valhalla_faith_var = 100
+			}
+		}
+	}
+	##冬季战争！
+	SWE_vinterkriget_debug = {
+		complete_effect = {
+			FIN = {
+				end_puppet_this = yes
+				leave_faction = yes
+			}
+			SOV = {
+				declare_war_on = { target = FIN type = puppet_wargoal_focus }
 			}
 		}
 	}
