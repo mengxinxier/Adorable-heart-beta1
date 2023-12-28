@@ -1,3 +1,4 @@
+###第四次杜瑞战争
 SWE_war_to_DEN_decision_cate = {
 	SWE_Countdown_to_war = {
 		icon = GFX_decision_hol_draw_up_staff_plans
@@ -47,16 +48,19 @@ SWE_war_to_DEN_decision_cate = {
 						id = SWE.015
 					}
 				}
-				140 = {
-					if = {
-						limit = { is_owned_by = ROOT }
-						transfer_state_to = DEN
+				if = {
+					limit = { surrender_progress > 0.1 }
+					140 = {
+						if = {
+							limit = { is_owned_by = ROOT }
+							transfer_state_to = DEN
+						}
 					}
-				}
-				139 = {
-					if = {
-						limit = { is_owned_by = ROOT }
-						transfer_state_to = DEN
+					139 = {
+						if = {
+							limit = { is_owned_by = ROOT }
+							transfer_state_to = DEN
+						}
 					}
 				}
 			}
@@ -133,6 +137,7 @@ SWE_war_to_DEN_decision_cate = {
 				effect_tooltip = {
 					custom_effect_tooltip = DEN_WIN_SWE_tt
 					white_peace = DEN
+					custom_effect_tooltip = surrender_progress_10
 					140 = {
 						if = {
 							limit = { is_owned_by = ROOT }
@@ -267,16 +272,19 @@ SWE_war_to_DEN_decision_cate = {
 						id = SWE.015
 					}
 				}
-				140 = {
-					if = {
-						limit = { is_owned_by = ROOT }
-						transfer_state_to = DEN
+				if = {
+					limit = { surrender_progress > 0.1 }
+					140 = {
+						if = {
+							limit = { is_owned_by = ROOT }
+							transfer_state_to = DEN
+						}
 					}
-				}
-				139 = {
-					if = {
-						limit = { is_owned_by = ROOT }
-						transfer_state_to = DEN
+					139 = {
+						if = {
+							limit = { is_owned_by = ROOT }
+							transfer_state_to = DEN
+						}
 					}
 				}
 			}
@@ -338,6 +346,7 @@ SWE_war_to_DEN_decision_cate = {
 	}
 }
 
+###城市化
 SWE_urbanization_decision_cate = {
 	#城市化
 	SWE_urbanization_decision_AH = {
@@ -369,7 +378,7 @@ SWE_urbanization_decision_cate = {
 				}
 			}
 		}
-		on_map_mode = map_onlymap_and_decisions_view
+		on_map_mode = map_only
 		cost = 120
 		days_remove = 80
 		remove_effect = {
@@ -383,6 +392,7 @@ SWE_urbanization_decision_cate = {
 	}
 }
 
+###冬季战争
 SWE_vinterkriget_decision_cate = {
 	#保卫芬兰
 	SWE_Defend_Finland_decision = {
@@ -392,7 +402,7 @@ SWE_vinterkriget_decision_cate = {
 		}
 		cost = 0
 		visible = {
-			#has_completed_focus = SWE_finlands_cause_is_ours
+			is_subject = no
 			NOT = { has_war_with = SOV }
 			NOT = { has_war_with = FIN }
 		}
@@ -403,6 +413,15 @@ SWE_vinterkriget_decision_cate = {
 			}
 			FIN = {
 				has_defensive_war_with = SOV
+			}
+			custom_trigger_tooltip = {
+				tooltip = SWE_Not_Muscovites_government
+				not = {
+					or = {
+						has_idea = SWE_Hinamori_Amu_idea
+						has_country_leader_with_trait = SWE_Muscovites
+					}
+				}
 			}
 		}
 		fire_only_once = yes
@@ -417,11 +436,415 @@ SWE_vinterkriget_decision_cate = {
 			}
 			give_military_access = FIN
 			FIN = { give_military_access = ROOT }
+			if = {
+				limit = { is_in_faction = no }
+				create_faction = Anti_Bolshevik_League
+				FIN = {
+					if = {
+						limit = { is_in_faction = no }
+						country_event = {
+							id = generic.2008
+						}
+					}
+				}
+				UKR = {
+					if = {
+						limit = {
+							is_subject = no
+							is_in_faction = no
+							not = {
+								has_government = communism
+							}
+						}
+						country_event = {
+							id = generic.2008
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { is_faction_leader = yes }
+				set_faction_name = Anti_Bolshevik_League
+				FIN = {
+					if = {
+						limit = { is_in_faction = no }
+						country_event = {
+							id = generic.2008
+						}
+					}
+				}
+				UKR = {
+					if = {
+						limit = {
+							is_subject = no
+							is_in_faction = no
+							not = {
+								has_government = communism
+							}
+						}
+						country_event = {
+							id = generic.2008
+						}
+					}
+				}
+			}
+			set_country_flag = SWE_Defend_Finland_decision
+		}
+		ai_will_do = {
+			base = 0
+		}
+	}
+	#与苏联和谈
+	SWE_Peace_talks_with_the_USSR = {
+		icon = GFX_decision_hol_war_on_pacifism
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 0
+		visible = {
+			is_subject = no
+			has_country_flag = SWE_Defend_Finland_decision
+		}
+		available = {
+			or = {
+				controls_state = 195
+				any_allied_country = {
+					controls_state = 195
+				}
+			}
+			195 = {
+				owner = SOV
+			}
+			is_subject = no
+			is_faction_leader = yes
+			has_war_with = SOV
+			SOV = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			if = {
+				limit = {
+					UKR = {
+						is_subject = no
+						has_war_with = SOV
+					}
+				}
+				UKR = {
+					not = {
+						is_in_faction_with = ROOT
+					}
+				}
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			effect_tooltip = {
+				white_peace = SOV
+			}
+			hidden_effect = {
+				white_peace = {
+					tag = SOV
+					message = SWE_win_vinterkriget
+				}
+			}
+			set_global_flag = talvisota_is_over
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	#从战争中脱身
+	SWE_Get_out_of_the_war = {
+		icon = GFX_decision_hol_war_on_pacifism
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 0
+		visible = {
+			is_subject = no
+			has_country_flag = SWE_Defend_Finland_decision
+		}
+		available = {
+			custom_trigger_tooltip = {
+				has_country_flag = {
+					flag = FIN_has_capitulated
+					days > 100
+				}
+				FIN = {
+					is_in_faction_with = ROOT
+					has_capitulated = yes
+				}
+				tooltip = FIN_has_capitulated_TT
+			}
+			is_subject = no
+			is_faction_leader = yes
+			has_war_with = SOV
+			SOV = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			if = {
+				limit = {
+					UKR = {
+						is_subject = no
+						has_war_with = SOV
+						is_in_faction_with = ROOT
+					}
+				}
+				custom_trigger_tooltip = {
+					has_country_flag = {
+						flag = UKR_has_capitulated
+						days > 100
+					}
+					UKR = {
+						is_in_faction_with = ROOT
+						has_capitulated = yes
+					}
+					tooltip = UKR_has_capitulated_TT
+				}
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			if = {
+				limit = {
+					UKR = {
+						is_subject = no
+						has_war_with = SOV
+						is_in_faction_with = ROOT
+					}
+				}
+				UKR = {
+					leave_faction = yes
+				}
+				SOV = {
+					annex_country = { target = UKR transfer_troops = no }
+				}
+			}
+			if = {
+				limit = {
+					FIN = {
+						is_subject = no
+						has_war_with = SOV
+						is_in_faction_with = ROOT
+					}
+				}
+				FIN = {
+					leave_faction = yes
+				}
+				SOV = {
+					puppet = FIN
+				}
+				146 = {
+					if = {
+						limit = { owner = FIN }
+						transfer_state_to = SOV
+						add_core_of = SOV
+					}
+				}
+				722 = {
+					if = {
+						limit = { owner = FIN }
+						transfer_state_to = SOV
+						add_core_of = SOV
+					}
+				}
+			}
+			dismantle_faction = yes
+			effect_tooltip = {
+				white_peace = SOV
+			}
+			hidden_effect = {
+				white_peace = {
+					tag = SOV
+					message = SWE_fall_vinterkriget
+				}
+			}
+			set_global_flag = talvisota_is_over
+		}
+		ai_will_do = {
+			base = 1
 		}
 	}
 }
 
-#政治斗争
+###英灵殿
+SWE_Valhalla_decision_cate = {
+	#共祝圣事
+	SWE_Consecration_of_sacraments = {
+		icon = GFX_decision_generic_political_discourse
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 50
+		days_remove = 50
+		visible = {
+		}
+		available = {
+		}
+		remove_effect = {
+			custom_effect_tooltip = SWE_Valhalla_faith_var_10_up
+			add_to_variable = {
+				SWE_Valhalla_faith_var = 10
+			}
+		}
+		ai_will_do = {
+			base = 100
+			modifier = {
+				has_political_power < 100
+				factor = 0
+			}
+		}
+	}
+	#丰穰之仪
+	SWE_The_Rite_of_Abundance = {
+		icon = GFX_decision_generic_merge_plant_materiel
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 0
+		days_remove = 50
+		visible = {
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		remove_effect = {
+			custom_effect_tooltip = SWE_Valhalla_faith_var_10_up
+			add_to_variable = {
+				SWE_Valhalla_faith_var = 10
+			}
+		}
+		ai_will_do = {
+			base = 100
+		}
+	}
+	#奥丁
+	SWE_Odin_leave = {
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		timeout_effect = {
+			SWE_Odin = { clr_character_flag = SWE_recruit_this_god }
+		}
+	}
+	#托尔
+	SWE_Thor_leave = {
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 19
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		timeout_effect = {
+			SWE_Thor = { clr_character_flag = SWE_recruit_this_god }
+		}
+	}
+	#布伦希尔德
+	SWE_Brynhild_leave = {
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 18
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		timeout_effect = {
+			SWE_Brynhild = { clr_character_flag = SWE_recruit_this_god }
+		}
+	}
+	#海拉
+	SWE_Hela_leave = {
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 17
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		timeout_effect = {
+			SWE_Hela = { clr_character_flag = SWE_recruit_this_god }
+		}
+	}
+	#吉尔达
+	SWE_Gilda_leave = {
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 16
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		timeout_effect = {
+			SWE_Gilda = { clr_character_flag = SWE_recruit_this_god }
+		}
+	}
+	#瓦尔基里
+	SWE_Valkyrie_leave = {
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 15
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		timeout_effect = {
+			SWE_Valkyrie = { clr_character_flag = SWE_recruit_this_god }
+		}
+	}
+}
+
+###政治斗争
 SWE_Political_struggle = {
 	SWE_Communist_Union_action = {
 		icon = GFX_SWE_communism_group
@@ -432,7 +855,6 @@ SWE_Political_struggle = {
 		}
 		priority = 20
 		days_mission_timeout = 60
-		fire_only_once = yes
 		activation = {
 			always = no
 		}
@@ -474,7 +896,6 @@ SWE_Political_struggle = {
 		}
 		priority = 19
 		days_mission_timeout = 60
-		fire_only_once = yes
 		activation = {
 			always = no
 		}
@@ -516,7 +937,6 @@ SWE_Political_struggle = {
 		}
 		priority = 18
 		days_mission_timeout = 60
-		fire_only_once = yes
 		activation = {
 			always = no
 		}
@@ -869,7 +1289,624 @@ SWE_Political_struggle = {
 	}
 }
 
-#一五计划
+###北欧统合
+SWE_Nordic_integration = {
+	SWE_Proclamation_Nordic_unity = {
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_SWE
+				NOT = {
+					any_state = {
+						has_state_flag = SWE_state_area
+						NOT = {
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_DEN
+				NOT = {
+					any_state = {
+						has_state_flag = DEN_state_area
+						NOT = {
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_NOR
+				NOT = {
+					any_state = {
+						has_state_flag = NOR_state_area
+						NOT = {
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_FIN
+				NOT = {
+					any_state = {
+						has_state_flag = FIN_state_area
+						NOT = {
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_cosmetic_tag = Kalma
+			hidden_effect = {
+				news_event = {
+					id = SWE_news.003
+				}
+			}
+			add_research_slot = 1
+		}
+	}
+	SWE_Nordic_integration_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		target_trigger = {
+			FROM = {
+				has_country_flag = can_be_attack_by_SWE
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		available = {
+			not = {
+				has_country_flag = SWE_war_plan_going_on
+			}
+			not = {
+				is_in_faction_with = FROM
+			}
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = SWE_war_plan_going_on
+			FROM = {
+				country_event = {
+					id = generic.2010
+				}
+			}
+		}
+		remove_effect = {
+			clr_country_flag = SWE_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	SWE_Nordic_integration_Integrate_vassals = {
+		icon = GFX_decision_generic_ignite_civil_war
+		target_trigger = {
+			FROM = {
+				is_subject_of = ROOT
+				or = {
+					tag = FIN
+					tag = DEN
+					tag = NOR
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		available = {
+		}
+		cost = 100
+		days_remove = 200
+		remove_effect = {
+			FROM = {
+				every_owned_state = {
+					limit = {
+						or = {
+							has_state_flag = DEN_state_area
+							has_state_flag = SWE_state_area
+							has_state_flag = NOR_state_area
+							has_state_flag = FIN_state_area
+							has_state_flag = KMS_state_area
+						}
+					}
+					add_core_of_ROOT = yes
+				}
+				every_character = {
+					set_nationality = ROOT
+				}
+			}
+			annex_country = { target = FROM transfer_troops = yes }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	SWE_Nordic_integration_CORE = {
+		#icon = GFX_decision_generic_ignite_civil_war
+		icon = generic_nationalism
+		target_trigger = {
+			FROM = {
+				NOT = {
+					is_core_of = ROOT
+				}
+				or = {
+					has_state_flag = DEN_state_area
+					has_state_flag = SWE_state_area
+					has_state_flag = NOR_state_area
+					has_state_flag = FIN_state_area
+					has_state_flag = KMS_state_area
+				}
+			}
+		}
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_array = controlled_states
+		cost = 20
+		days_remove = 30
+		ai_will_do = {
+			factor = 10
+		}
+		remove_effect = {
+			FROM = {
+				add_core_of_ROOT = yes
+			}
+		}
+	}
+}
+
+###北欧一体化议程
+SWE_Nordic_integration_agenda = {
+	##宣告联邦成立
+	SWE_Proclamation_of_the_Confederation = {
+		icon = GFX_decision_category_usa_congress
+		visible = {
+			not = {
+				has_global_flag = Nordic_integration_has_built
+			}
+		}
+		fire_only_once = yes
+		cost = 0
+		days_remove = 0
+		available = {
+			has_war = no
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = Nordic_integration_the_highest_Influence
+				check_variable = {
+					ROOT.Nordic_integration_ranking = 1
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = Nordic_integration_var_is_100
+				check_variable = {
+					global.Nordic_integration_var = 100
+				}
+			}
+		}
+		complete_effect = {
+			set_global_flag = Nordic_integration_has_built
+			set_country_flag = balkan_federation_leader_country
+			every_other_country = {
+				limit = {
+					has_country_flag = jion_in_the_Nordic_integration
+					is_subject = no
+					NORDIC_is_nordic = yes
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = PREV
+						PREV = {
+							is_faction_leader = yes
+						}
+					}
+					every_character = {
+						set_nationality = ROOT
+					}
+					ROOT = {
+						annex_country = {
+							target = PREV
+							transfer_troops = yes
+						}
+					}
+				}
+				every_character = {
+					set_nationality = ROOT
+				}
+				ROOT = {
+					annex_country = {
+						target = PREV
+						transfer_troops = yes
+					}
+				}
+			}
+			every_state = {
+				limit = {
+					or = {
+						has_state_flag = SWE_state_area
+						has_state_flag = DEN_state_area
+						has_state_flag = NOR_state_area
+						has_state_flag = FIN_state_area
+						has_state_flag = KMS_state_area
+					}
+					NOT = {
+						or = {
+							is_core_of = ROOT
+						}
+					}
+				}
+				add_core_of_ROOT = yes
+			}
+			set_cosmetic_tag = Kalma
+			hidden_effect = { news_event = { id = SWE_news.003 } }
+			add_research_slot = 1
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	#投资工业
+	SWE_Invest_in_industry = {
+		icon = GFX_decision_generic_factory
+		visible = {
+			not = {
+				has_global_flag = Nordic_integration_has_built
+			}
+		}
+		cost = 100
+		days_remove = 50
+		available = {
+			NOT = {
+				has_country_flag = SWE_Nordic_integration_sth_on
+			}
+			num_of_civilian_factories_available_for_projects > 9
+			custom_trigger_tooltip = {
+				tooltip = Nordic_integration_var_samller_100
+				check_variable = {
+					global.Nordic_integration_var < 100
+				}
+			}
+		}
+		modifier = {
+			civilian_factory_use = 10
+		}
+		complete_effect = {
+			set_country_flag = SWE_Nordic_integration_sth_on
+		}
+		remove_effect = {
+			clr_country_flag = SWE_Nordic_integration_sth_on
+			random_state = {
+				limit = {
+					or = {
+						has_state_flag = SWE_state_area
+						has_state_flag = DEN_state_area
+						has_state_flag = NOR_state_area
+						has_state_flag = FIN_state_area
+						has_state_flag = KMS_state_area
+					}
+					not = {
+						is_controlled_by = ROOT
+					}
+					any_country = {
+						controls_state = PREV
+						is_in_array = {
+							array = global.Nordic_integration_members
+							value = THIS
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				controller = { country_event = { id = SWE.048 } }
+			}
+			custom_effect_tooltip = Nordic_integration_var_add_5_tt
+			custom_effect_tooltip = Nordic_integration_Influence_var_add_2_tt
+			add_to_variable = { global.Nordic_integration_var = 5 }
+			clamp_variable = {
+				var = global.Nordic_integration_var
+				min = 0
+				max = 100
+			}
+			add_to_variable = { ROOT.Nordic_integration_Influence_var = 2 }
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	#经济援助
+	SWE_Financial_aid = {
+		icon = GFX_decision_duihuan_pp_1
+		visible = {
+			not = {
+				has_global_flag = Nordic_integration_has_built
+			}
+		}
+		custom_cost_trigger = {
+			check_variable = {
+				var = ubs_save
+				value = 50
+				compare = greater_than_or_equals
+			}
+		}
+		custom_cost_text = HCP_50
+		days_remove = 50
+		available = {
+			NOT = {
+				has_country_flag = SWE_Nordic_integration_sth_on
+			}
+			custom_trigger_tooltip = {
+				tooltip = Nordic_integration_var_samller_100
+				check_variable = {
+					global.Nordic_integration_var < 100
+				}
+			}
+		}
+		complete_effect = {
+			set_country_flag = SWE_Nordic_integration_sth_on
+			add_to_variable = {
+				var = ubs_save
+				value = -50
+				tooltip = UBS_SAVE_down_50
+			}
+			UBS_bank_icon_frames = yes
+		}
+		remove_effect = {
+			clr_country_flag = SWE_Nordic_integration_sth_on
+			random_other_country = {
+				limit = {
+					is_in_array = {
+						array = global.Nordic_integration_members
+						value = THIS
+					}
+				}
+				add_to_variable = {
+					var = ubs_save
+					value = 50
+					tooltip = UBS_SAVE_UP_50
+				}
+				country_event = {
+					id = SWE.049
+				}
+			}
+			custom_effect_tooltip = Nordic_integration_var_add_5_tt
+			custom_effect_tooltip = Nordic_integration_Influence_var_add_2_tt
+			add_to_variable = {
+				global.Nordic_integration_var = 5
+			}
+			clamp_variable = {
+				var = global.Nordic_integration_var
+				min = 0
+				max = 100
+			}
+			add_to_variable = {
+				ROOT.Nordic_integration_Influence_var = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	#军事交流
+	SWE_Military_exchanges = {
+		icon = GFX_decision_generic_prepare_civil_war
+		visible = {
+			not = {
+				has_global_flag = Nordic_integration_has_built
+			}
+		}
+		custom_cost_trigger = {
+			command_power > 49
+		}
+		custom_cost_text = decision_cost_CP_50
+		days_remove = 50
+		available = {
+			NOT = {
+				has_country_flag = SWE_Nordic_integration_sth_on
+			}
+			custom_trigger_tooltip = {
+				tooltip = Nordic_integration_var_samller_100
+				check_variable = {
+					global.Nordic_integration_var < 100
+				}
+			}
+		}
+		complete_effect = {
+			set_country_flag = SWE_Nordic_integration_sth_on
+			add_command_power = -50
+		}
+		remove_effect = {
+			clr_country_flag = SWE_Nordic_integration_sth_on
+			army_experience = 25
+			random_other_country = {
+				limit = {
+					is_in_array = {
+						array = global.Nordic_integration_members
+						value = THIS
+					}
+				}
+				army_experience = 25
+				country_event = {
+					id = SWE.050
+				}
+			}
+			custom_effect_tooltip = Nordic_integration_var_add_5_tt
+			custom_effect_tooltip = Nordic_integration_Influence_var_add_2_tt
+			add_to_variable = {
+				global.Nordic_integration_var = 5
+			}
+			clamp_variable = {
+				var = global.Nordic_integration_var
+				min = 0
+				max = 100
+			}
+			add_to_variable = {
+				ROOT.Nordic_integration_Influence_var = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	#政治对话
+	SWE_Political_dialogue = {
+		icon = GFX_decision_category_generic_propaganda
+		visible = {
+			not = {
+				has_global_flag = Nordic_integration_has_built
+			}
+		}
+		cost = 100
+		days_remove = 50
+		available = {
+			NOT = {
+				has_country_flag = SWE_Nordic_integration_sth_on
+			}
+			custom_trigger_tooltip = {
+				tooltip = Nordic_integration_var_samller_100
+				check_variable = {
+					global.Nordic_integration_var < 100
+				}
+			}
+		}
+		complete_effect = {
+			set_country_flag = SWE_Nordic_integration_sth_on
+		}
+		remove_effect = {
+			clr_country_flag = SWE_Nordic_integration_sth_on
+			random_other_country = {
+				limit = {
+					is_in_array = {
+						array = global.Nordic_integration_members
+						value = THIS
+					}
+				}
+				add_political_power = 75
+				country_event = {
+					id = SWE.051
+				}
+			}
+			custom_effect_tooltip = Nordic_integration_var_add_5_tt
+			custom_effect_tooltip = Nordic_integration_Influence_var_add_2_tt
+			add_to_variable = {
+				global.Nordic_integration_var = 5
+			}
+			clamp_variable = {
+				var = global.Nordic_integration_var
+				min = 0
+				max = 100
+			}
+			add_to_variable = {
+				ROOT.Nordic_integration_Influence_var = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	#文化交流
+	SWE_Cultural_exchange = {
+		icon = GFX_decision_hol_exchange_intelligence_data
+		visible = {
+			not = {
+				has_global_flag = Nordic_integration_has_built
+			}
+		}
+		cost = 100
+		days_remove = 50
+		available = {
+			NOT = {
+				has_country_flag = SWE_Nordic_integration_sth_on
+			}
+			custom_trigger_tooltip = {
+				tooltip = Nordic_integration_var_samller_100
+				check_variable = {
+					global.Nordic_integration_var < 100
+				}
+			}
+		}
+		complete_effect = {
+			set_country_flag = SWE_Nordic_integration_sth_on
+		}
+		remove_effect = {
+			clr_country_flag = SWE_Nordic_integration_sth_on
+			add_stability = 0.05
+			random_other_country = {
+				limit = {
+					is_in_array = {
+						array = global.Nordic_integration_members
+						value = THIS
+					}
+				}
+				add_stability = 0.05
+				country_event = {
+					id = SWE.052
+				}
+			}
+			custom_effect_tooltip = Nordic_integration_var_add_5_tt
+			custom_effect_tooltip = Nordic_integration_Influence_var_add_2_tt
+			add_to_variable = {
+				global.Nordic_integration_var = 5
+			}
+			clamp_variable = {
+				var = global.Nordic_integration_var
+				min = 0
+				max = 100
+			}
+			add_to_variable = {
+				ROOT.Nordic_integration_Influence_var = 2
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}
+
+###一五计划
 SWE_Five_year_plan = {
 	SWE_Civil_industrial_construction = {
 		icon = GFX_decision_generic_factory
@@ -901,14 +1938,71 @@ SWE_Five_year_plan = {
 		}
 		complete_effect = {
 			add_to_variable = {
-				num_of_Completed_tasks = -1
+				num_of_Completed_tasks = 1
 			}
 			if = {
 				limit = {
 					check_variable = { SWE_Five_year_plan_task_01 = 2 }
 				}
+				add_ideas = SWE_Civilian_industry_is_booming
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
 			}
 			else = {
+				add_ideas = SWE_Civilian_industry_is_booming_1
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
 			}
 		}
 		timeout_effect = {
@@ -918,6 +2012,10 @@ SWE_Five_year_plan = {
 				}
 				add_stability = -0.1
 				add_political_power = -100
+				add_timed_idea = {
+					idea = SWE_civilian_industry_development_suffered_setback
+					days = 200
+				}
 			}
 			else = {
 				add_stability = -0.05
@@ -973,14 +2071,73 @@ SWE_Five_year_plan = {
 		}
 		complete_effect = {
 			add_to_variable = {
-				num_of_Completed_tasks = -1
+				num_of_Completed_tasks = 1
 			}
 			if = {
 				limit = {
 					check_variable = { SWE_Five_year_plan_task_02 = 2 }
 				}
+				add_ideas = SWE_Public_facilities_well_equipped
+				custom_effect_tooltip = SWE_every_core_state
+				every_core_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						check_variable = {
+							infrastructure_level < 5
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
 			}
 			else = {
+				add_ideas = SWE_Public_facilities_well_equipped_1
+				random_core_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						check_variable = {
+							infrastructure_level < 5
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						check_variable = {
+							infrastructure_level < 5
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						check_variable = {
+							infrastructure_level < 5
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
 			}
 		}
 		timeout_effect = {
@@ -990,6 +2147,10 @@ SWE_Five_year_plan = {
 				}
 				add_stability = -0.1
 				add_political_power = -100
+				add_timed_idea = {
+					idea = SWE_Public_facilities_development_suffered_setback
+					days = 200
+				}
 			}
 			else = {
 				add_stability = -0.05
@@ -1027,14 +2188,104 @@ SWE_Five_year_plan = {
 		}
 		complete_effect = {
 			add_to_variable = {
-				num_of_Completed_tasks = -1
+				num_of_Completed_tasks = 1
 			}
 			if = {
 				limit = {
 					check_variable = { SWE_Five_year_plan_task_03 = 2 }
 				}
+				add_ideas = SWE_Arms_industry_is_booming
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
 			}
 			else = {
+				add_ideas = SWE_Arms_industry_is_booming_1
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_core_state = {
+					limit =	{
+						is_fully_controlled_by = ROOT
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
 			}
 		}
 		timeout_effect = {
@@ -1044,6 +2295,10 @@ SWE_Five_year_plan = {
 				}
 				add_stability = -0.1
 				add_political_power = -100
+				add_timed_idea = {
+					idea = SWE_Arms_industry_development_suffered_setback
+					days = 200
+				}
 			}
 			else = {
 				add_stability = -0.05
@@ -1063,13 +2318,13 @@ SWE_Five_year_plan = {
 				custom_trigger_tooltip = {
 					tooltip = num_medium_armor_100
 					not = {
-						check_variable = { num_units_with_type@medium_armor < 100 }
+						check_variable = { num_battalions_with_type@medium_armor < 100 }
 					}
 				}
 				custom_trigger_tooltip = {
 					tooltip = num_mechanized_100
 					not = {
-						check_variable = { num_mechanized < 100 }
+						check_variable = { num_battalions_with_type@mechanized < 100 }
 					}
 				}
 			}
@@ -1078,7 +2333,7 @@ SWE_Five_year_plan = {
 				custom_trigger_tooltip = {
 					tooltip = num_medium_armor_50
 					not = {
-						check_variable = { num_units_with_type@medium_armor < 50 }
+						check_variable = { num_battalions_with_type@medium_armor < 50 }
 					}
 				}
 			}
@@ -1100,14 +2355,23 @@ SWE_Five_year_plan = {
 		}
 		complete_effect = {
 			add_to_variable = {
-				num_of_Completed_tasks = -1
+				num_of_Completed_tasks = 1
 			}
 			if = {
 				limit = {
 					check_variable = { SWE_Five_year_plan_task_04 = 2 }
 				}
+				add_ideas = SWE_Army_modernization_idea
+				army_experience = 100
+				add_tech_bonus = {
+					bonus = 1.0
+					uses = 1
+					category = armor
+				}
 			}
 			else = {
+				add_ideas = SWE_Army_modernization_idea_1
+				army_experience = 50
 			}
 		}
 		timeout_effect = {
@@ -1117,6 +2381,10 @@ SWE_Five_year_plan = {
 				}
 				add_stability = -0.1
 				add_political_power = -100
+				add_timed_idea = {
+					idea = SWE_Army_modernization_development_suffered_setback
+					days = 200
+				}
 			}
 			else = {
 				add_stability = -0.05
@@ -1177,14 +2445,23 @@ SWE_Five_year_plan = {
 		}
 		complete_effect = {
 			add_to_variable = {
-				num_of_Completed_tasks = -1
+				num_of_Completed_tasks = 1
 			}
 			if = {
 				limit = {
 					check_variable = { SWE_Five_year_plan_task_05 = 2 }
 				}
+				add_ideas = SWE_Modernization_of_Navy_idea
+				navy_experience = 100
+				add_tech_bonus = {
+					bonus = 1.0
+					uses = 1
+					category = naval_equipment
+				}
 			}
 			else = {
+				add_ideas = SWE_Modernization_of_Navy_idea_1
+				navy_experience = 50
 			}
 		}
 		timeout_effect = {
@@ -1194,6 +2471,10 @@ SWE_Five_year_plan = {
 				}
 				add_stability = -0.1
 				add_political_power = -100
+				add_timed_idea = {
+					idea = SWE_Navy_modernization_development_suffered_setback
+					days = 200
+				}
 			}
 			else = {
 				add_stability = -0.05
@@ -1249,14 +2530,23 @@ SWE_Five_year_plan = {
 		}
 		complete_effect = {
 			add_to_variable = {
-				num_of_Completed_tasks = -1
+				num_of_Completed_tasks = 1
 			}
 			if = {
 				limit = {
 					check_variable = { SWE_Five_year_plan_task_06 = 2 }
 				}
+				add_ideas = SWE_Modernization_of_Air_Force_idea
+				air_experience = 100
+				add_tech_bonus = {
+					bonus = 1.0
+					uses = 1
+					category = air_equipment
+				}
 			}
 			else = {
+				add_ideas = SWE_Modernization_of_Air_Force_idea_1
+				air_experience = 50
 			}
 		}
 		timeout_effect = {
@@ -1266,6 +2556,10 @@ SWE_Five_year_plan = {
 				}
 				add_stability = -0.1
 				add_political_power = -100
+				add_timed_idea = {
+					idea = SWE_Air_Force_modernization_development_suffered_setback
+					days = 200
+				}
 			}
 			else = {
 				add_stability = -0.05
@@ -1298,8 +2592,9 @@ SWE_Five_year_plan = {
 		}
 		complete_effect = {
 			add_to_variable = {
-				num_of_Completed_tasks = -1
+				num_of_Completed_tasks = 1
 			}
+			add_ideas = SWE_Across_Northern_Europe
 		}
 		timeout_effect = {
 			add_stability = -0.05
@@ -1307,3 +2602,516 @@ SWE_Five_year_plan = {
 		}
 	}
 }
+
+###深入五年计划
+SWE_In_depth_five_year_plan_d_c = {
+	SWE_The_Second_Five_Year_Plan = {
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			not = {
+				has_idea = SWE_five_year_plan_idea
+			}
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = SWE_The_Second_Five_Year_Plan
+			add_timed_idea = {
+				idea = SWE_The_Second_Five_Year_Plan_idea
+				days = 1825
+			}
+		}
+	}
+	SWE_The_Third_Five_Year_Plan = {
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			has_country_flag = SWE_The_Second_Five_Year_Plan
+			not = {
+				has_idea = SWE_The_Second_Five_Year_Plan_idea
+			}
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = SWE_The_Third_Five_Year_Plan
+			add_timed_idea = {
+				idea = SWE_The_Third_Five_Year_Plan_idea
+				days = 1825
+			}
+		}
+	}
+}
+
+###龙骑士
+SWE_Dragoon_regiment = {
+	SWE_Start_investing_in_train_dragon = {
+		visible = {
+			not = {
+				has_country_flag = SWE_Start_investing_in_train_dragon
+			}
+		}
+		complete_effect = {
+			set_country_flag = SWE_Start_investing_in_train_dragon
+			hidden_effect = {
+				activate_mission = SWE_dragon_training
+				add_ideas = SWE_dragon_training_idea
+			}
+			custom_effect_tooltip = SWE_Start_investing_in_train_dragon_TT
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	SWE_End_investing_in_train_dragon = {
+		visible = {
+			has_country_flag = SWE_Start_investing_in_train_dragon
+		}
+		complete_effect = {
+			clr_country_flag = SWE_Start_investing_in_train_dragon
+			hidden_effect = {
+				remove_ideas = SWE_dragon_training_idea
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	SWE_dragon_training = {
+		is_good = yes
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 30
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				not = {
+					has_country_flag = SWE_Start_investing_in_train_dragon
+				}
+			}
+		}
+		# modifier = {
+		# 	political_power_cost = 0.5
+		# }
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = SWE_dragon_training
+			}
+			add_equipment_to_stockpile = {
+				type = dragon_rider_equipment_0
+				amount = 10
+				producer = SWE
+			}
+			custom_effect_tooltip = SWE_dragon_training_TT
+		}
+	}
+}
+
+###日奈森亚梦的心绪
+SWE_Amu_bop_category = {
+	#请求苏联援助
+	SWE_bop_Request_for_assistance_from_SOV = {
+		icon = GFX_decision_category_SOV_civil_puppet_interaction
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 50
+		days_remove = 50
+		visible = {
+			NOT = {
+				is_power_balance_in_range = {
+					id = SWE_Amu_bop
+					range = SWE_Amu_bop_right_side
+				}
+			}
+		}
+		available = {
+			not = {
+				has_country_flag = SWE_bop_Negotiate_with_the_union
+			}
+			SOV = {
+				is_subject = no
+				has_government = communism
+				is_faction_leader = yes
+			}
+		}
+		complete_effect = {
+			set_country_flag = SWE_bop_Request_for_assistance_from_SOV
+		}
+		remove_effect = {
+			clr_country_flag = SWE_bop_Request_for_assistance_from_SOV
+			SOV = {
+				country_event = {
+					id = SWE.032
+				}
+			}
+			custom_effect_tooltip = SWE_bop_Request_for_assistance_from_SOV_tt
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+	#与工会洽谈
+	SWE_bop_Negotiate_with_the_union = {
+		icon = GFX_decision_category_SOV_permanent_revolution
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 50
+		days_remove = 50
+		visible = {
+			NOT = {
+				is_power_balance_in_range = {
+					id = SWE_Amu_bop
+					range = SWE_Amu_bop_left_side
+				}
+			}
+		}
+		available = {
+			not = {
+				has_country_flag = SWE_bop_Request_for_assistance_from_SOV
+			}
+		}
+		complete_effect = {
+			set_country_flag = SWE_bop_Negotiate_with_the_union
+		}
+		modifier = {
+			industrial_capacity_factory = 0.05
+			production_factory_efficiency_gain_factor = 0.05
+		}
+		remove_effect = {
+			clr_country_flag = SWE_bop_Negotiate_with_the_union
+			add_power_balance_value = {
+				id = SWE_Amu_bop
+				value = 0.05
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+	SWE_bop_debug_left_10 = {
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 0
+		days_remove = 0
+		visible = {
+			is_debug = yes
+		}
+		available = {
+		}
+		complete_effect = {
+			add_power_balance_value = {
+				id = SWE_Amu_bop
+				value = -0.1
+			}
+		}
+		ai_will_do = {
+			base = 0
+		}
+	}
+	SWE_bop_debug_right_10 = {
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 0
+		days_remove = 0
+		visible = {
+			is_debug = yes
+		}
+		available = {
+		}
+		complete_effect = {
+			add_power_balance_value = {
+				id = SWE_Amu_bop
+				value = 0.1
+			}
+		}
+		ai_will_do = {
+			base = 0
+		}
+	}
+}
+
+###星灵感应
+SWE_Starry_sky_sensing_d_c = {
+	#发射人造卫星
+	SWE_Launch_of_Sputnik = {
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 0
+		days_remove = 200
+		visible = {
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 49
+			has_tech = modern_rocket_engines
+			not = {
+				has_country_flag = arrive_the_space
+			}
+		}
+		modifier = {
+			civilian_factory_use = 50
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					DVL = {
+						exists = yes
+						is_subject = no
+					}
+				}
+				custom_modifier_tooltip = SWE_Launch_of_Sputnik_tt
+				hidden_effect = {
+					news_event = {
+						id = SWE_news.007
+					}
+					every_country = {
+						country_event = {
+							id = SWE.047
+							days = 1
+						}
+					}
+				}
+			}
+			else = {
+				set_country_flag = arrive_the_space
+				hidden_effect = {
+					news_event = {
+						id = SWE_news.008
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+	#投资火箭研究
+	SWE_Invest_in_rocket_research = {
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 200
+		days_remove = 100
+		visible = {
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 9
+		}
+		modifier = {
+			civilian_factory_use = 10
+		}
+		remove_effect = {
+			add_tech_bonus = {
+				bonus = 1.0
+				ahead_reduction = 4
+				uses = 1
+				category = rocketry
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+}
+
+###DEBUG
+SWE_Debug = {
+	SWE_Communist_Party_Cabinet_tt = {
+		complete_effect = {
+			set_country_flag = SWE_Political_struggle_is_over
+			set_country_leader_ideology = interim_government_subtype
+			complete_national_focus = SWE_Communist_Party_Cabinet
+			remove_ideas = {
+				SWE_Hinamori_Amu_idea
+				SWE_Karene_Eluvitias_idea
+				SWE_Cecilia_idea
+			}
+			add_ideas = SWE_Hinamori_Amu_idea
+			SOV = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = SWE_Ideologically_friendly
+				}
+			}
+			add_opinion_modifier = {
+				target = SOV
+				modifier = SWE_Ideologically_friendly
+			}
+		}
+	}
+	SWE_Democratic_Cabinet_tt = {
+		complete_effect = {
+			set_country_flag = SWE_Political_struggle_is_over
+			set_country_leader_ideology = interim_government_subtype
+			complete_national_focus = SWE_Democratic_Cabinet
+			remove_ideas = {
+				SWE_Hinamori_Amu_idea
+				SWE_Karene_Eluvitias_idea
+				SWE_Cecilia_idea
+			}
+			add_ideas = SWE_Cecilia_idea
+			ENG = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = SWE_Ideologically_friendly
+				}
+			}
+			add_opinion_modifier = {
+				target = ENG
+				modifier = SWE_Ideologically_friendly
+			}
+		}
+	}
+	SWE_Nationalist_Cabinet_tt = {
+		complete_effect = {
+			set_country_flag = SWE_Political_struggle_is_over
+			set_country_leader_ideology = interim_government_subtype
+			complete_national_focus = SWE_Nationalist_Cabinet
+			remove_ideas = {
+				SWE_Hinamori_Amu_idea
+				SWE_Karene_Eluvitias_idea
+				SWE_Cecilia_idea
+			}
+			add_ideas = SWE_Karene_Eluvitias_idea
+			GER = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = SWE_Ideologically_friendly
+				}
+			}
+			add_opinion_modifier = {
+				target = GER
+				modifier = SWE_Ideologically_friendly
+			}
+			DVL = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = SWE_Ideologically_friendly
+				}
+			}
+			add_opinion_modifier = {
+				target = DVL
+				modifier = SWE_Ideologically_friendly
+			}
+		}
+	}
+	SWE_Form_a_new_government = {
+		complete_effect = {
+			SWE_Form_a_new_government = yes
+		}
+	}
+	SWE_Form_a_new_government_Fail = {
+		complete_effect = {
+			swap_ideas = {
+				remove_idea = SWE_Karma_shame
+				add_idea = SWE_Despair
+			}
+			country_event = { 
+				id = SWE.021
+			}
+		}
+	}
+	SWE_Valhalla_faith_var_100_up = {
+		complete_effect = {
+			custom_effect_tooltip = SWE_Valhalla_faith_var_100_up
+			add_to_variable = {
+				SWE_Valhalla_faith_var = 100
+			}
+		}
+	}
+	##冬季战争！
+	SWE_vinterkriget_debug = {
+		complete_effect = {
+			FIN = {
+				end_puppet_this = yes
+				leave_faction = yes
+			}
+			SOV = {
+				declare_war_on = { target = FIN type = puppet_wargoal_focus }
+			}
+		}
+	}
+}
+
+SWE_Bloodline_fiefdoms_d_c = {
+	SWE_Bloodline_fiefdoms_d = {
+		target_trigger = {
+			FROM = {
+				is_subject_of = ROOT
+				not = {
+					and = {
+						has_government = fascism
+						has_autonomy_state = autonomy_SWE_reichskommissariat
+					}
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		cost = 100
+		days_remove = 30
+		remove_effect = {
+			if = {
+				limit = {
+					FROM = {
+						not = {
+							or = {
+								has_government = fascism
+							}
+						}
+					}
+				}
+				FROM = {
+					set_politics = {
+						ruling_party = fascism
+					}
+				}
+			}
+			if = {
+				limit = {
+					FROM = {
+						not = {
+							or = {
+								has_autonomy_state = autonomy_SWE_reichskommissariat
+							}
+						}
+					}
+				}
+				set_autonomy = {
+					target = FROM
+					autonomy_state = autonomy_SWE_reichskommissariat
+				}
+			}
+		}
+	}
+}
+
+
+
+
