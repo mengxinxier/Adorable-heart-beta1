@@ -229,7 +229,7 @@
 
 		ai_strategy = { #船厂比例，效果未知
 			type = dockyard_to_military_factory_ratio
-			value = 20		#aim for a 2-1 ratio on naval factories
+			value = 30		#aim for a 2-1 ratio on naval factories
 		}
 
 		ai_strategy = {
@@ -256,22 +256,22 @@
 		ai_strategy = { #轻巡
 			type = role_ratio
 			id = ENG_naval_cruiser_light
-			value = 30
+			value = 40
 		}
 		ai_strategy = { #驱逐
 			type = role_ratio
 			id = ENG_naval_screen
-			value = 60
+			value = 80
 		}
 		ai_strategy = { #潜艇
 			type = role_ratio
 			id = ENG_naval_submarine
-			value = 20
+			value = 30
 		}
 		ai_strategy = { #运输船
 			type = equipment_production_min_factories 
 			id = convoy 
-			value = 2
+			value = 20
 		}
 
 
@@ -713,6 +713,29 @@
 		}
 	}
 
+	ENG_buqu_to_jap = { #43年前不前往南海和东海
+		allowed = { 
+			original_tag = ENG 
+		}
+		enable = {
+			has_war_with = JAP
+			date < 1943.1.1
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = strike_force_home_base
+			id = 75 #南海
+			value = -100
+		}
+		ai_strategy = {
+			type = strike_force_home_base
+			id = 76 #东海
+			value = -100
+		}
+
+	}
+
 
 #空军任务
 	ENG_fly_bwbt = { #保卫本土空域
@@ -852,9 +875,10 @@
 		}
 	}
 	
-	careful_with_early_invasions = { #不提前海上入侵
+	careful_with_early_invasions = { #不提前海上入侵戴比
 		allowed = {
 			original_tag = ENG
+			is_subject_of = ENG
 		}
 		enable = {
 			has_war_with = DVL
@@ -873,7 +897,7 @@
 						has_war_with = SOV
 						surrender_progress < 0.1
 					}
-					date < 1942.9.1
+					date < 1942.6.1
 				}								
 			}
 		}
@@ -1062,7 +1086,6 @@
 		}
 	}
 
-
 	ENG_area_priority = { #戴比没与苏联开打时，不管部分欧洲地区
 		allowed = {
 			original_tag = ENG
@@ -1140,6 +1163,94 @@
 	}
 
 
+	ENG_war_with_JAP_fs = { #43年前对日放水
+		allowed = {
+			original_tag = ENG
+		}
+		enable = {
+			has_war_with = JAP
+			country_exists = DVL
+			date < 1943.1.1
+		}
+		abort_when_not_enabled = yes
+		ai_strategy = {
+			type = invade		#入侵
+			id = "JAP"
+			value = 0
+		}
+		ai_strategy = {
+			type = conquer		#征服
+			id = "JAP"
+			value = 100
+		}
+		ai_strategy = {
+			type = invasion_unit_request     #用于登陆的部队比例
+			tag = JAP
+			value = 0
+		}
+		ai_strategy = {
+			type = front_unit_request		#前线部队
+			tag = JAP
+			value = 80		# lets put more units, should be safe
+		}
+		ai_strategy = { #防守前线
+			type = front_control
+			priority = 10
+			tag = JAP
+			ratio > 0.1
+			execution_type = careful
+			execute_order = yes
+		}
+	}
+
+	ENG_war_with_JAP = { #43年后或戴比死后对日正常
+		allowed = {
+			original_tag = ENG
+		}
+		enable = {
+			or = {
+				and = {
+					has_war_with = JAP
+					not = {
+						country_exists = DVL
+					}					
+				}
+				and = {
+					has_war_with = JAP
+					date > 1943.1.1					
+				}			
+			}
+		}
+		abort_when_not_enabled = yes
+		ai_strategy = {
+			type = invade		#入侵
+			id = "JAP"
+			value = 200
+		}
+		ai_strategy = {
+			type = conquer		#征服
+			id = "JAP"
+			value = 200
+		}
+		ai_strategy = {
+			type = invasion_unit_request     #用于登陆的部队比例     #用于登陆的部队比例
+			tag = JAP
+			value = 20
+		}
+		ai_strategy = {
+			type = front_unit_request		#前线部队
+			tag = JAP
+			value = 80		# lets put more units, should be safe
+		}
+		ai_strategy = { #进攻前线
+			type = front_control
+			priority = 10
+			tag = JAP
+			ratio > 0.4
+			execution_type = rush
+			execute_order = yes
+		}
+	}
 
 	#戴比存在时专注欧洲
 	ENG_area_priority = {
@@ -1256,7 +1367,7 @@
 		}
 	}
 
-	ENG_war_with_DVL = {
+	ENG_war_with_DVL = { #到时间后对戴比战略
 		allowed = {
 			original_tag = ENG
 		}
@@ -1264,12 +1375,12 @@
 			has_war_with = DVL
 			or = {
 				AND = {
-					date > 1942.9.1
+					date > 1943.6.1
 					DVL = {
 						has_war_with = SOV
 					}
 				}
-				date > 1943.6.1
+				date > 1942.6.1
 				DVL = {
 					surrender_progress > 0.1
 				}
@@ -1296,38 +1407,14 @@
 			tag = DVL
 			value = 120		# lets put more units, should be safe
 		}
-	}
 
-	ENG_war_with_JAP = {
-		allowed = {
-			original_tag = ENG
-		}
-		enable = {
-			has_war_with = JAP
-			not = {
-				has_war_with = DVL
-			}
-		}
-		abort_when_not_enabled = yes
-		ai_strategy = {
-			type = invade		#入侵
-			id = "JAP"
-			value = 200
-		}
-		ai_strategy = {
-			type = conquer		#征服
-			id = "JAP"
-			value = 200
-		}
-		ai_strategy = {
-			type = invasion_unit_request
-			tag = JAP
-			value = 20
-		}
-		ai_strategy = {
-			type = front_unit_request		#前线部队
-			tag = JAP
-			value = 80		# lets put more units, should be safe
+		ai_strategy = { #进攻前线
+			type = front_control
+			priority = 10
+			tag = DVL
+			ratio > 0.3
+			execution_type = rush
+			execute_order = yes
 		}
 	}
 
