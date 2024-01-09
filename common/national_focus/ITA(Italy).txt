@@ -3093,8 +3093,11 @@ focus_tree = {
 		relative_position_id = ITA_preserve_army_traditions
 		cost = 5
 		available = {
+			or = {
+			date > 1940.6.1
 			any_enemy_country = {
 				is_major_not_original_tag_root = yes
+			}
 			}
 			or = {
 			has_completed_focus = ITA_moschettieri_del_duce1
@@ -3780,8 +3783,11 @@ focus_tree = {
 		relative_position_id = ITA_citta_dell_aria
 		cost = 5
 		available = {
+			or = {
+			date > 1940.6.1
 			any_enemy_country = {
 				is_major_not_original_tag_root = yes
+			}
 			}
 		}
 
@@ -4797,8 +4803,11 @@ focus_tree = {
 		relative_position_id = ITA_expand_naval_facilities
 		cost = 5
 		available = {
+			or = {
+			date > 1940.6.1
 			any_enemy_country = {
 				is_major_not_original_tag_root = yes
+			}
 			}
 		}
 
@@ -7144,8 +7153,41 @@ focus_tree = {
 
 		completion_reward = {
 			add_ideas = ita_lisha
+			if = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+				add_equipment_subsidy = {
+					cic = 500
+					equipment_type = light_tank_chassis
+					seller_tags = { GER }
+				}
+				add_equipment_subsidy = {
+					cic = 500
+					equipment_type = medium_tank_chassis
+					seller_tags = { GER }
+				}
+			}
 			GER = {
-			add_timed_idea ={ idea =  ita_lishaed days = 365 }
+				country_event = { id = italy.5 days = 1 }
+				custom_effect_tooltip = needs_approval
+				add_timed_idea ={ idea =  ita_lishaed days = 365 }
+			}
+			# Actual reward effects added in event if Soviets approve
+			effect_tooltip = {
+				add_tech_bonus = {
+					name = synth_bonus
+					bonus = 1.0
+					uses = 1
+					category = synth_resources
+				}
+				# Balance research bonus to 2 techs in armor, also in event
+				add_tech_bonus = {
+					name = armor_bonus
+					bonus = 1.0
+					uses = 2
+					category = armor
+				}
 			}
 		}
 	}
@@ -7192,15 +7234,24 @@ focus_tree = {
 			country_exists = JAP
 			JAP = { 
 				has_government = fascism
+				is_faction_leader = yes
 			}
 		}
 
 		search_filters = {FOCUS_FILTER_INDUSTRY}
 
 		completion_reward = {
+			add_relation_modifier = {
+				target = JAP
+				modifier = ITA_military_agreements
+			}
 			JAP = {
 				country_event = jap.64
 				add_opinion_modifier = { target = ITA modifier = ita_diplomacy_focus }
+				add_relation_modifier = {
+					target = ROOT
+					modifier = ITA_military_agreements
+				}
 			}
 		}
 	}
@@ -7244,22 +7295,15 @@ focus_tree = {
 				}
 				add_state_claim = 103 #DALMATIA
 			}
-			if = {
-				limit = {
-					105 = {
-						NOT = { is_claimed_by = ROOT }
-					}
-				}
-				add_state_claim = 105 #MONTENEGRO
-			}
 			add_state_claim = 268 #DJIBUTI
 			add_state_claim = 269 #BRITISH SOMALILAND
 			add_state_claim = 735 #SAVOY
-			add_state_claim = 856 #VAR
-			add_state_claim = 185 #CORFU
+			add_state_claim = 182 #CORFU
 			add_state_claim = 1 #CORSICA
 			add_state_claim = 116 #MALTA
-			add_state_claim = 846 #TICINO
+			add_state_claim = 761 #TICINO
+			add_state_claim = 1138
+			add_state_claim = 163
 			if = {
 				limit = {
 					has_dlc = "La Resistance"
@@ -7876,7 +7920,7 @@ focus_tree = {
 			}
 		}
 		ai_will_do = {
-			factor = 0
+			factor = 100
 		}
 		completion_reward = {
 			add_political_power = -15
@@ -8100,6 +8144,7 @@ focus_tree = {
 					remove_idea = ITA_servizio_informazione_militare_ns
 					add_idea = ITA_servizio_informazione_militare_banda_carita
 				}
+			add_timed_idea = { idea = ITA_expanded_intelligence_service_basic_lion_version days = 365 }
 		}
 	}
 	
@@ -8151,7 +8196,7 @@ focus_tree = {
 			factor = 100
 		}
 		completion_reward = {
-			add_timed_idea = { idea = ITA_strengthened_heavy_industry days = 1095 }
+			add_timed_idea = { idea = ITA_strengthened_heavy_industry days = 180 }
 		}
 	}
 	
@@ -8234,6 +8279,9 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = ITA_quanlidouzhengluoxiaweimu
 			clr_country_flag = SOV_paranoia_do_not_cancel_focus_flag
+			hidden_effect = {
+			country_event = { id = ita.20 days = 5 }
+			}
 		}
 	}
 	
@@ -8313,7 +8361,10 @@ focus_tree = {
 			factor = 100
 		}
 		completion_reward = {
-			custom_effect_tooltip = ita_langou_1
+			add_political_power = 30
+			add_stability = 0.1
+			add_war_support = 0.1
+			add_ideas = ITA_shouhuanyingdebixia
 		}
 	}
 	
@@ -8496,12 +8547,12 @@ focus_tree = {
 			factor = 0
 		}
 		completion_reward = {
-			add_stability = -0.05
+			country_event = ita.16
+			add_political_power = 120
 			add_popularity = {
 				ideology = fascism
 				popularity = -0.15
 			}
-			remove_power_balance = { id = ITA_balance }
 		}
 	}
 	
@@ -8540,10 +8591,12 @@ focus_tree = {
 		relative_position_id = ITA_24
 		cost = 5
 		available = {
+			is_puppet = no
 			has_country_leader = {
 			character = ITA_akeya
 			ruling_only = yes
 			}
+			not = { has_country_flag = ITA_kuileinvshen }
 		}
 		ai_will_do = {
 			factor = 10
@@ -8767,6 +8820,10 @@ focus_tree = {
 			factor = 10
 		}
 		completion_reward = {
+			swap_ruler_traits = {
+				remove = political_reformer_1
+				add = political_reformer_2
+			}
 			add_country_leader_trait = capo_supremo
 			add_ideas = ITA_divino_duce_2
 			ITA_mosuolini = {
@@ -8780,7 +8837,7 @@ focus_tree = {
 	focus = {
 		id = ITA_35
 		icon = GFX_focus_ITA_ferrea_mole_ferreo_cuore
-		x = 8
+		x = 12
 		y = 0
 		relative_position_id = ITA_18
 		cost = 2
@@ -8825,7 +8882,7 @@ focus_tree = {
 		prerequisite = { focus = ITA_35 }
 		relative_position_id = ITA_35
 		mutually_exclusive = { focus = ITA_37 focus = ITA_38 }
-		cost = 1
+		cost = 5
 		available = {
 			is_puppet = no
 			DVL = {
@@ -8839,12 +8896,17 @@ focus_tree = {
 			character = ITA_akeya
 			ruling_only = yes
 			}
+			not = { has_country_flag = ITA_kuileinvshen }
 		}
 		ai_will_do = {
 			factor = 100
 		}
 		completion_reward = {
 			unlock_decision_category_tooltip = ITALIA
+			add_ideas = ITA_italys_destiny_idea
+			hidden_effect = {
+			country_event = { id = ita.18 days = 3 }
+			}
 		}
 	}
 	
@@ -8856,7 +8918,7 @@ focus_tree = {
 		prerequisite = { focus = ITA_35 }
 		relative_position_id = ITA_35
 		mutually_exclusive = { focus = ITA_36 focus = ITA_38 }
-		cost = 1
+		cost = 5
 		available = {
 			is_puppet = no
 			DVL = {
@@ -8866,16 +8928,37 @@ focus_tree = {
 			}
 			}
 			not = { is_in_faction_with = ENG }
+			or = {
 			has_country_leader = {
 			character = ITA_mosuolini
 			ruling_only = yes
+			}
+			has_country_flag = ITA_kuileihuangdi
+			if = {
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+			has_completed_focus = ITA_40
+			}
+			if = {
+			has_country_leader = {
+			character = ITA_akeya
+			ruling_only = yes
+			}
+			has_country_flag = ITA_kuileinvshen
+			}
 			}
 		}
 		ai_will_do = {
 			factor = 100
 		}
 		completion_reward = {
-			custom_effect_tooltip = ita_langou_1
+			unlock_decision_category_tooltip = greater_italy_category
+			add_ideas = ITA_italian_hegemony_master_3
+			hidden_effect = {
+			country_event = { id = ita.18 days = 3 }
+			}
 		}
 	}
 	
@@ -8887,7 +8970,7 @@ focus_tree = {
 		prerequisite = { focus = ITA_35 }
 		relative_position_id = ITA_35
 		mutually_exclusive = { focus = ITA_37 focus = ITA_36 }
-		cost = 1
+		cost = 5
 		available = {
 			is_puppet = no
 			DVL = {
@@ -8898,21 +8981,42 @@ focus_tree = {
 			}
 			not = { is_in_faction_with = ENG }
 			or = {
+			if = {
 			has_country_leader = {
 			character = ITA_nilu
 			ruling_only = yes
+			}
+			has_completed_focus = ITA_41
 			}
 			has_country_leader = {
 			character = ITA_mosuolini
 			ruling_only = yes
 			}
 			}
+			not = { has_country_flag = ITA_kuileihuangdi }
 		}
 		ai_will_do = {
 			factor = 0
 		}
 		completion_reward = {
-			custom_effect_tooltip = ita_langou_1
+			unlock_decision_category_tooltip = form_roman_empire_category
+			set_rule = {
+			can_create_factions = yes
+			}
+			leave_faction = yes
+			create_faction = "italy_empire_faction"
+			custom_effect_tooltip = jinggao_ita_roma
+			every_country = {
+			limit = {
+			is_major = yes
+			not = { tag = ROOT }
+			capital_scope = { is_on_continent = europe }
+			}
+			country_event = ita.15
+			}
+			hidden_effect = {
+			country_event = { id = ita.18 days = 3 }
+			}
 		}
 	}
 	
@@ -9043,6 +9147,565 @@ focus_tree = {
 				}
 				#set_occupation_law = colonial_police #MM: Not working
 				add_compliance = 10
+			}
+		}
+	}
+	
+	focus = {
+		id = ITA_39
+		icon = GFX_focus_ITA_banda_carita
+		x = -2
+		y = 1
+		prerequisite = { focus = ITA_18 }
+		relative_position_id = ITA_18
+		cost = 5
+		available = {
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			add_political_power = 30
+			add_stability = 0.1
+			add_popularity = { ideology = communism popularity = -0.1 }
+			add_popularity = { ideology = democratic popularity = -0.1 }
+			remove_ideas = victor_emmanuel_2
+			swap_ruler_traits = {
+				remove = trait_ita_jsddw
+				add =  trait_ita_wyddw
+			}
+		}
+	}
+	
+	focus = {
+		id = ITA_40
+		icon = GFX_focus_generic_italy_first
+		x = 1
+		y = 1
+		prerequisite = { focus = ITA_18 }
+		relative_position_id = ITA_18
+		mutually_exclusive = { focus = ITA_41 }
+		cost = 5
+		available = {
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			set_cosmetic_tag = ITA_diguo
+			add_political_power = 50
+			add_stability = 0.15
+			custom_effect_tooltip = ITA_suosiitaluxian
+		}
+	}
+	
+	focus = {
+		id = ITA_41
+		icon = GFX_focus_ITA_subdue_the_sentinels
+		x = 4
+		y = 1
+		prerequisite = { focus = ITA_18 }
+		relative_position_id = ITA_18
+		mutually_exclusive = { focus = ITA_40 }
+		cost = 5
+		available = {
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			set_cosmetic_tag = ITA_diguo
+			add_political_power = -100
+			add_stability = -0.25
+			add_war_support = 0.25
+			custom_effect_tooltip = ITA_yushijieweidi
+		}
+	}
+	
+	focus = {
+		id = ITA_42
+		icon = GFX_focus_generic_full_social_mobilization
+		x = -1
+		y = 2
+		prerequisite = { focus = ITA_39 }
+		relative_position_id = ITA_39
+		cost = 10
+		available = {
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			add_war_support = 0.1
+			add_ideas = ITA_weihuangdierzhan
+			swap_ideas = {
+			remove_idea = ITA_shouhuanyingdebixia
+			add_idea = ITA_shouhuanyingdebixia_2
+			}
+		}
+	}
+	
+	focus = {
+		id = ITA_43
+		icon = GFX_focus_ITA_the_social_republic_prevails
+		x = 2
+		y = 2
+		prerequisite = { focus = ITA_39 }
+		prerequisite = { focus = ITA_40 focus = ITA_41 }
+		relative_position_id = ITA_39
+		cost = 5
+		available = {
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			country_event = ita.13
+		}
+	}
+	
+	focus = {
+		id = ITA_44
+		icon = GFX_focus_ITA_southern_industry
+		x = 5
+		y = 2
+		prerequisite = { focus = ITA_39 }
+		prerequisite = { focus = ITA_40 focus = ITA_41 }
+		relative_position_id = ITA_39
+		cost = 10
+		available = {
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+				117 = { #CAMPAGNA (Napoli)
+					if = {
+						limit = {
+							infrastructure < 5
+						}
+						add_building_construction = {
+							type = infrastructure
+							level = 2
+							instant_build = yes						
+						}
+					}
+					add_extra_state_shared_building_slots = 3
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = naval_base
+						level = 3
+						instant_build = yes
+						province = 819					
+					}
+				}
+				115 = { 
+					if = {
+						limit = {
+							infrastructure < 5
+						}
+						add_building_construction = {
+							type = infrastructure
+							level = 2
+							instant_build = yes						
+						}
+					}
+					add_extra_state_shared_building_slots = 3
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = naval_base
+						level = 3
+						instant_build = yes
+						province = 819					
+					}
+				}
+		}
+	}
+	
+	focus = {
+		id = ITA_45
+		icon = GFX_focus_ETH_the_patriots
+		x = 0
+		y = 2
+		prerequisite = { focus = ITA_42 }
+		prerequisite = { focus = ITA_43 }
+		prerequisite = { focus = ITA_44 }
+		relative_position_id = ITA_43
+		cost = 5
+		available = {
+			is_puppet = no
+			date > 1940.8.1
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+			not = { has_country_flag = ITA_kuileihuangdi }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			swap_ideas = {
+			remove_idea = ITA_shouhuanyingdebixia_2
+			add_idea = ITA_shouhuanyingdebixia_3
+			}
+			swap_ruler_traits = {
+				remove = trait_ita_wyddw
+				add =  trait_ita_wyddw_2
+			}
+		}
+	}
+	
+	focus = {
+		id = ITA_46
+		icon = GFX_focus_ITA_italian_hegemony
+		x = 0
+		y = 2
+		prerequisite = { focus = ITA_45 }
+		relative_position_id = ITA_45
+		cost = 10
+		available = {
+			is_puppet = no
+			DVL = {
+			or = {
+			exists = no
+			is_subject = yes
+			}
+			}
+			has_country_leader = {
+			character = ITA_nilu
+			ruling_only = yes
+			}
+			not = { has_country_flag = ITA_kuileihuangdi }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			swap_ideas = {
+			remove_idea = ITA_shouhuanyingdebixia_3
+			add_idea = ITA_shouhuanyingdebixia_4
+			}
+			swap_ruler_traits = {
+				remove = trait_ita_wyddw_2
+				add =  trait_ita_wyddw_3
+			}
+			add_country_leader_trait = trait_ita_xcccdzmqw
+		}
+	}
+	
+	focus = {
+		id = ITA_47
+		icon = GFX_goal_attack_FRA
+		x = -5
+		y = 1
+		prerequisite = { focus = ITA_36 focus = ITA_37 focus = ITA_38 }
+		relative_position_id = ITA_37
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			if = {
+			not = { country_exists = FRA }
+			not = { country_exists = KMK }
+			}
+			is_in_faction_with = FRA
+			if = {
+			is_in_faction_with = NFA
+			NFA = { controls_state = 16 }
+			}
+			is_in_faction_with = KMK
+			}
+		}
+		ai_will_do = {
+			factor = 0.1
+		}
+		completion_reward = {
+			if = {
+			limit = {
+			country_exists = FRA
+			}
+			create_wargoal = { target = FRA type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = KMK
+			}
+			create_wargoal = { target = KMK type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = NFA
+			NFA = { controls_state = 16 }
+			}
+			create_wargoal = { target = NFA type = take_state_focus }
+			}
+			custom_effect_tooltip = ITA_war_with_france_claims_tt
+			every_state = {
+				limit = {
+					is_owned_by = FRA
+					OR = {
+						region = 182 #WESTERN MAGHREB
+						region = 126 #EASTERN MAGHREB
+						#region = 17 #EAST AFRICA #MM: TUrned into Ethiopian Highlands and no longer including Djibouti or British Somalia
+						region = 273 #DANAKIL (new region including Djibouti)
+						region = 274 #OGADEN (new region including British Somalia)
+						region = 128 #EGYPT (just in case)
+						region = 28 #MIDDLE EAST (Syria) #MM:No longer all of Syria, just Eastern part now
+						region = 232 #LEVANT (including Western part of Syria now)
+						region = 216 #UPPER NILE (Just in case)
+						AND = {
+							is_island_state = yes
+							state_is_in_the_mediterranean_sea = yes
+						}
+					}
+					NOT = { is_core_of = FRA }
+					NOT = { is_claimed_by = ROOT }
+				}
+				hidden_effect ={
+					ROOT = { add_state_claim = PREV }
+				}
+				custom_effect_tooltip = generic_ROOT_gains_claim_tt
+			}
+		}
+	}
+	
+	focus = {
+		id = ITA_48
+		icon = GFX_goal_attack_ENG
+		x = -2
+		y = 1
+		prerequisite = { focus = ITA_36 focus = ITA_37 focus = ITA_38 }
+		relative_position_id = ITA_37
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			not = { country_exists = ENG }
+			is_in_faction_with = ENG
+			ENG = { is_subject = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 0.1
+		}
+		completion_reward = {
+			create_wargoal = { target = ENG type = take_state_focus }
+			custom_effect_tooltip = ITA_war_with_the_uk_claims_tt
+			every_state = {
+				limit = {
+					or = {
+					is_owned_by = ENG
+					is_owned_by = EGY
+					}
+					OR = {
+						region = 182 #WESTERN MAGHREB
+						region = 126 #EASTERN MAGHREB
+						region = 753 #EAST AFRICA #MM: TUrned into Ethiopian Highlands and no longer including Djibouti or British Somalia
+						region = 273 #DANAKIL (new region including Djibouti)
+						region = 274 #OGADEN (new region including British Somalia)
+						region = 128 #EGYPT (just in case)
+						region = 28 #MIDDLE EAST (Syria) #MM:No longer all of Syria, just Eastern part now
+						region = 232 #LEVANT (including Western part of Syria now)
+						region = 216 #UPPER NILE (Just in case)
+						AND = {
+							is_island_state = yes
+							state_is_in_the_mediterranean_sea = yes
+						}
+					}
+					NOT = { is_core_of = ENG }
+					NOT = { is_claimed_by = ROOT }
+				}
+				hidden_effect ={
+					ROOT = { add_state_claim = PREV }
+				}
+				custom_effect_tooltip = generic_ROOT_gains_claim_tt
+			}
+		}
+	}
+	
+	focus = {
+		id = ITA_49
+		icon = GFX_goal_attack_GER
+		x = 2
+		y = 1
+		prerequisite = { focus = ITA_36 focus = ITA_37 focus = ITA_38 }
+		relative_position_id = ITA_37
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			not = { country_exists = GER }
+			is_in_faction_with = GER
+			GER = { is_subject = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 0.1
+		}
+		completion_reward = {
+			create_wargoal = { target = GER type = take_state_focus }
+		}
+	}
+	
+	focus = {
+		id = ITA_50
+		icon = GFX_focus_generic_attack_romania
+		x = 5
+		y = 1
+		prerequisite = { focus = ITA_36 focus = ITA_37 focus = ITA_38 }
+		relative_position_id = ITA_37
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			not = { country_exists = ROM }
+			is_in_faction_with = ROM
+			ROM = { is_subject = yes }
+			}
+			or = {
+			not = { country_exists = BUL }
+			is_in_faction_with = BUL
+			BUL = { is_subject = yes }
+			}
+			or = {
+			not = { country_exists = HUN }
+			is_in_faction_with = HUN
+			HUN = { is_subject = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 0.1
+		}
+		completion_reward = {
+			if = {
+			limit = {
+			country_exists = ROM
+			}
+			create_wargoal = { target = ROM type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = BUL
+			}
+			create_wargoal = { target = BUL type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = HUN
+			}
+			create_wargoal = { target = HUN type = take_state_focus }
+			}
+		}
+	}
+	
+	focus = {
+		id = ITA_51
+		icon = GFX_focus_ITA_by_blood_alone
+		x = 0
+		y = 2
+		prerequisite = { focus = ITA_47 focus = ITA_48 focus = ITA_49 focus = ITA_50 }
+		relative_position_id = ITA_37
+		cost = 10
+		available = {
+			is_puppet = no
+			or = {
+			has_global_flag = greater_italy_flag
+			has_global_flag = form_roman_empire_flag
+			has_global_flag = IT1_JIANLI
+			}
+		}
+		bypass = {
+			or = {
+			not = { country_exists = ROM }
+			is_in_faction_with = ROM
+			ROM = { is_subject = yes }
+			}
+			or = {
+			not = { country_exists = BUL }
+			is_in_faction_with = BUL
+			BUL = { is_subject = yes }
+			}
+			or = {
+			not = { country_exists = HUN }
+			is_in_faction_with = HUN
+			HUN = { is_subject = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			add_country_leader_trait = trait_ita_wyyx
+			add_to_tech_sharing_group = ITA_italian_hegemony_program
+			custom_effect_tooltip = ITA_italian_hegemony_subjects_tt
+			if = {
+				limit = {
+						num_subjects > 0
+				}
+				every_other_country = {
+					limit = {
+						is_subject_of = ROOT
+					}
+					add_ideas = ITA_italian_hegemony_subjects
+					add_to_tech_sharing_group = ITA_italian_hegemony_program
+				}
+			}
+			else = { 
+				effect_tooltip = {
+					add_ideas = ITA_italian_hegemony_subjects
+					add_to_tech_sharing_group = ITA_italian_hegemony_program
+				}
 			}
 		}
 	}
