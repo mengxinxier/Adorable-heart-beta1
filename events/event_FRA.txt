@@ -73,7 +73,7 @@ country_event = {
 			}
 		}
 		ai_chance = {
-			base = 10
+			base = 0
 		}
 	}
 	option = {
@@ -91,7 +91,7 @@ country_event = {
 			}
 		}
 		ai_chance = {
-			base = 10
+			base = 0
 		}
 	}
 	option = {
@@ -114,7 +114,7 @@ country_event = {
 			}
 		}
 		ai_chance = {
-			base = 10
+			base = 0
 		}
 	}
 }
@@ -235,8 +235,19 @@ country_event = {
 			activate_mission = FRA_IDU_is_action
 		}
 		ai_chance = {
+			base = 0
+		}
+	}
+	option = {
+		name = FRA_Gensokyo.007.a
+		country_event = {
+			id = FRA_Gensokyo.800
+			days = 60
+		}
+		ai_chance = {
 			base = 10
 		}
+		trigger = { is_ai = yes }
 	}
 }
 
@@ -249,14 +260,18 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = FRA_Gensokyo.008.a
-		swap_ideas = {
-			remove_idea = FRA_Financial_spree
-			add_idea = FRA_financial_system_collapsed
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = FRA_Financial_spree
+				add_idea = FRA_financial_system_collapsed
+			}
+			swap_ideas = {
+				remove_idea = FRA_developed_industry
+				add_idea = FRA_The_Great_Depression
+			}
 		}
-		swap_ideas = {
-			remove_idea = FRA_developed_industry
-			add_idea = FRA_The_Great_Depression
-		}
+		unlock_decision_category_tooltip = FRA_Black_Tuesday_decision_categories
+		set_country_flag = FRA_Black_Tuesday_decision_categories
 		every_state = {
 			limit = {
 				or = {
@@ -295,7 +310,20 @@ country_event = {
 					id = FRA_Gensokyo.011
 				}
 			}
+			remove_ideas = FRA_Financial_spree
+			remove_ideas = FRA_developed_industry
+			add_dynamic_modifier = {
+				modifier = FRA_Financial_crisis
+			}
+			add_dynamic_modifier = {
+				modifier = FRA_Financial_crisis_HCP
+			}
 		}
+		set_variable = { FRA_financial_crisis_var = 100 }
+		set_variable = { FRA_credit_crunch_var = 100 }
+		set_variable = { FRA_Overcapacity_var = 100 }
+		set_variable = { FRA_degree_of_economic_crisis_var = 100 }
+		FRA_Calculate_Great_Depression_debuff = yes
 		ai_chance = {
 			base = 10
 		}
@@ -463,10 +491,17 @@ country_event = {
 		hidden_effect = {
 			if = {
 				limit = { check_variable = { ROOT.num_of_support_people_font > 8 } }
+				country_event = {
+					id = FRA_Gensokyo.016
+					days = 7
+				}
 			}
-			country_event = {
-				id = FRA_Gensokyo.016
-				days = 7
+			else_if = {
+				limit = { is_ai = yes }
+				country_event = {
+					id = FRA_Gensokyo.016
+					days = 7
+				}
 			}
 		}
 		ai_chance = {
@@ -490,6 +525,16 @@ country_event = {
 				id = FRA_Gensokyo.1007
 				days = 14
 			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = FRA_Gensokyo.016.b
+		trigger = { is_ai = yes }
+		ai_chance = {
+			base = 10
 		}
 	}
 }
@@ -659,6 +704,154 @@ country_event = {
 	}
 }
 
+#######  AI专用     #######
+country_event = {
+	id = FRA_Gensokyo.800
+	title = FRA_Gensokyo.800.t
+	desc = FRA_Gensokyo.800.desc
+	#picture = GFX_event_MGU_PRISONER_1
+	is_triggered_only = yes
+	immediate = { set_country_flag = FRA_The_election_results_in }
+	option = {
+		name = FRA_Gensokyo.800.a
+		if = {
+			limit = { check_variable = { ROOT.FRA_be_as_party = 1 } }
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Reimu_idea
+			promote_character = FRA_Kasen
+			set_politics = { ruling_party = democratic }
+			add_to_variable = { support_of_PSG = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 3 }
+			FRA_set_rule_party_name = yes
+			complete_national_focus = FRA_first_term_of_Ibaraki_Kasen
+		}
+		else_if = {
+			limit = { check_variable = { ROOT.FRA_be_as_party = 2 } }
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Alice_Margatroid_idea
+			promote_character = FRA_Marisa
+			set_politics = { ruling_party = democratic }
+			add_to_variable = { support_of_PFG = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 4 }
+			FRA_set_rule_party_name = yes
+		}
+		else_if = {
+			limit = { check_variable = { ROOT.FRA_be_as_party = 3 } }
+			FRA_remove_all_ideas = yes
+			#add_ideas = FRA_Reimu_idea
+			promote_character = FRA_Kamishirasawa_Keine
+			set_politics = { ruling_party = democratic }
+			add_to_variable = { support_of_IDU = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 5 }
+			FRA_set_rule_party_name = yes
+		}
+		else_if = {
+			limit = { check_variable = { ROOT.FRA_be_as_party = 4 } }
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Houraisan_Kaguya_idea
+			promote_character = FRA_Reisen_Udongein_Inaba
+			set_politics = { ruling_party = fascism }
+			add_to_variable = { support_of_GFN = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 6 }
+			FRA_set_rule_party_name = yes
+		}
+		mark_focus_tree_layout_dirty = yes
+		ai_chance = {
+			base = 90
+		}
+	}
+	option = {
+		name = FRA_Gensokyo.800.b
+		if = {
+			limit = { check_variable = { ROOT.FRA_be_as_party = 1 } }
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Reimu_idea
+			promote_character = FRA_Kasen
+			set_politics = { ruling_party = democratic }
+			add_to_variable = { support_of_PSG = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 3 }
+			FRA_set_rule_party_name = yes
+		}
+		else_if = {
+			limit = { check_variable = { ROOT.FRA_be_as_party = 2 } }
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Alice_Margatroid_idea
+			promote_character = FRA_Marisa
+			set_politics = { ruling_party = democratic }
+			add_to_variable = { support_of_PFG = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 4 }
+			FRA_set_rule_party_name = yes
+		}
+		else_if = {
+			limit = { check_variable = { ROOT.FRA_be_as_party = 3 } }
+			FRA_remove_all_ideas = yes
+			#add_ideas = FRA_Reimu_idea
+			promote_character = FRA_Kamishirasawa_Keine
+			set_politics = { ruling_party = democratic }
+			add_to_variable = { support_of_IDU = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 5 }
+			FRA_set_rule_party_name = yes
+		}
+		else_if = {
+			limit = { check_variable = { ROOT.FRA_be_as_party = 4 } }
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Houraisan_Kaguya_idea
+			promote_character = FRA_Reisen_Udongein_Inaba
+			set_politics = { ruling_party = fascism }
+			add_to_variable = { support_of_GFN = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 6 }
+			FRA_set_rule_party_name = yes
+		}
+		country_event = {
+			id = FRA_Gensokyo.012
+			days = 7
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+country_event = {
+	id = FRA_Gensokyo.801
+	title = FRA_Gensokyo.801.t
+	desc = FRA_Gensokyo.801.desc
+	#picture = GFX_event_MGU_PRISONER_1
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo.801.a
+		if = {
+			limit = { FRA_Motions_voted_on_var = 1 }
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -10
+				tooltip = FRA_financial_crisis_var_subtract10_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -10
+				tooltip = FRA_credit_crunch_var_subtract10_tt
+			}
+			add_to_variable = {
+				var = FRA_Overcapacity_var
+				value = -20
+				tooltip = FRA_Overcapacity_var_subtract20_tt
+			}
+			add_ideas = FRA_New_Labour_Code
+		}
+		set_variable = { FRA_Motions_voted_on_var = 0 }
+		set_variable = { LCR_can_be_fought_for_or_not_var = 0 }
+		set_variable = { FRANA_LCR_support_us = 0 }
+		set_variable = { PCG_can_be_fought_for_or_not_var = 0 }
+		set_variable = { FRANA_PCG_support_us = 0 }
+		set_variable = { PSG_can_be_fought_for_or_not_var = 0 }
+		set_variable = { FRANA_PSG_support_us = 0 }
+		FRA_Calculate_Great_Depression_debuff = yes
+		ai_chance = {
+			base = 90
+		}
+	}
+}
+
 #######  隐   藏     #######
 #开局政治
 country_event = {
@@ -789,6 +982,48 @@ country_event = {
 	}
 	option = {
 		name = FRA_Gensokyo.1007.a
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+#交代后事
+country_event = {
+	id = FRA_Gensokyo.1008
+	title = FRA_Gensokyo.1008.t
+	desc = FRA_Debug_only
+	picture = GFX_FRA_debug_only_event
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo.1008.a
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+#柏林危机
+country_event = {
+	id = FRA_Gensokyo.1009
+	title = FRA_Gensokyo.1009.t
+	desc = FRA_Debug_only
+	picture = GFX_FRA_debug_only_event
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo.1009.a
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+#斯特拉斯堡会谈
+country_event = {
+	id = FRA_Gensokyo.1010
+	title = FRA_Gensokyo.1010.t
+	desc = FRA_Debug_only
+	picture = GFX_FRA_debug_only_event
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo.1010.a
 		ai_chance = {
 			base = 10
 		}
@@ -1250,7 +1485,11 @@ country_event = {
 	}
 	option = {
 		name = FRA_Gensokyo.2000.a
-		FRA_Calculate_support_of_political_parties = yes
+		FRA_Initialization_of_seats_in_National_Assembly = yes
+	}
+	option = {
+		name = FRA_Gensokyo.2000.a
+		FRA_Calculate_Great_Depression_debuff = yes
 	}
 }
 country_event = {
@@ -1388,6 +1627,26 @@ country_event = {
 	option = {
 		name = Gensokyo_Lunar_fascism
 		set_cosmetic_tag = Gensokyo_Lunar
+	}
+}
+country_event = {
+	id = FRA_Gensokyo.2003
+	title = FRA_Gensokyo.2000.t
+	desc = FRA_Gensokyo.2000.desc
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo.2000.a
+		add_to_variable = {
+			var = FRA_financial_crisis_var
+			value = -20
+			tooltip = FRA_financial_crisis_var_subtract20_tt
+		}
+		add_to_variable = {
+			var = FRA_credit_crunch_var
+			value = -20
+			tooltip = FRA_credit_crunch_var_subtract20_tt
+		}
+		FRA_Calculate_Great_Depression_debuff = yes
 	}
 }
 

@@ -180,6 +180,243 @@ FRA_third_international_westline = {
 	}
 }
 
+FRA_Black_Tuesday_decision_categories = {
+	#告别大萧条
+	FRA_Say_goodbye_to_the_Great_Depression = {
+		icon = GFX_decision_hol_war_on_pacifism
+		fire_only_once = yes
+		modifier = {
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 1000
+		}
+		visible = {
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_degree_of_economic_crisis_var_come_to_10
+				NOT = {
+					check_variable = { FRA_degree_of_economic_crisis_var > 10 }
+				}
+			}
+		}
+		complete_effect = {
+			remove_dynamic_modifier = { modifier = FRA_Financial_crisis }
+			remove_dynamic_modifier = { modifier = FRA_Financial_crisis_HCP }
+			set_variable = { FRA_financial_crisis_var = 0 }
+			set_variable = { FRA_credit_crunch_var = 0 }
+			set_variable = { FRA_Overcapacity_var = 0 }
+			FRA_Calculate_Great_Depression_debuff = yes
+			clr_country_flag = FRA_Black_Tuesday_decision_categories
+		}
+	}
+	#货币贬值
+	FRA_Currency_depreciation = {
+		icon = ger_mefo_bills
+		fire_only_once = yes
+		modifier = {
+			consumer_goods_factor = 0.1
+			industrial_capacity_factory = -0.1
+		}
+		days_remove = 120
+		days_re_enable = 0
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		visible = {
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -20
+				tooltip = FRA_financial_crisis_var_subtract20_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -20
+				tooltip = FRA_credit_crunch_var_subtract20_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+}
+
+FRA_foreign_ministry = {
+	FRA_core_natural_boundaries = {
+		icon = GFX_decision_generic_nationalism
+		visible = {
+			has_completed_focus = FRA_Pursue_natural_boundaries
+		}
+		available = {
+			has_full_control_of_state = 42
+			has_full_control_of_state = 781
+		}
+		cost = 50
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			add_state_core = 42
+			add_state_core = 781
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+	FRA_invite_democratic_country = {
+		icon = GFX_decision_generic_political_discourse
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = NPT
+					tag = TRB
+					tag = KVO
+					tag = ROM
+					tag = BUL
+					tag = GRE
+					tag = TUR
+					tag = DEN
+					tag = SWE
+					tag = NOR
+				}
+				is_in_faction = no
+				is_subject = no
+				has_government = democratic
+				not = { has_country_flag = FRA_invite_democratic_country }
+			}
+			ROOT = {
+				has_completed_focus = FRA_Expand_Gensokyo_sphere_of_influence
+				is_subject = no
+				has_government = democratic
+				is_faction_leader = yes
+				or = {
+					any_allied_country = {
+						any_home_area_neighbor_country = {
+							tag = FROM
+						}
+					}
+					any_home_area_neighbor_country = {
+						tag = FROM
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 30
+		remove_effect = {
+			FROM = {
+				country_event = {
+					id = generic.2008
+				}
+				set_country_flag = FRA_invite_democratic_country
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+	FRA_Expand_collaboration_with_ENG_research = {
+		icon = GFX_decision_generic_political_discourse
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = ENG
+				}
+				is_faction_leader = yes
+				is_subject = no
+				has_government = democratic
+			}
+			ROOT = {
+				has_completed_focus = FRA_Expand_Gensokyo_sphere_of_influence
+				is_subject = no
+				has_government = democratic
+				is_in_faction_with = FROM
+				NOT = { has_idea = FRA_Agreements_on_mutual_assistance_in_scientific_research_idea }
+			}
+		}
+		fire_only_once = yes
+		cost = 35
+		days_remove = 30
+		remove_effect = {
+			add_ideas = FRA_Agreements_on_mutual_assistance_in_scientific_research_idea
+			ENG = { add_ideas = FRA_Agreements_on_mutual_assistance_in_scientific_research_idea }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+	FRA_Expand_collaboration_with_ENG_Trade = {
+		icon = GFX_decision_generic_political_discourse
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = ENG
+				}
+				is_faction_leader = yes
+				is_subject = no
+				has_government = democratic
+			}
+			ROOT = {
+				has_completed_focus = FRA_Expand_Gensokyo_sphere_of_influence
+				is_subject = no
+				has_government = democratic
+				is_in_faction_with = FROM
+				NOT = { has_idea = FRA_Mutual_Trade_Assistance_Agreement_idea }
+			}
+		}
+		fire_only_once = yes
+		cost = 35
+		days_remove = 30
+		remove_effect = {
+			add_ideas = FRA_Mutual_Trade_Assistance_Agreement_idea
+			ENG = { add_ideas = FRA_Mutual_Trade_Assistance_Agreement_idea }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+}
+
+FRA_National_Assemblyy = {
+	FRA_submit_amendments_to_Labour_Code = {
+		icon = ger_mefo_bills
+		fire_only_once = yes
+		cost = 10
+		visible = {
+			has_completed_focus = FRA_Drafting_of_amendments_to_Labour_Code
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var = 0 }
+			}
+		}
+		complete_effect = {
+			custom_effect_tooltip = FRA_submit_amendments_to_Labour_Code_TT
+			set_variable = { FRA_Motions_voted_on_var = 1 }
+			hidden_effect = {
+				set_variable = { LCR_can_be_fought_for_or_not_var = 1 }
+				set_variable = { FRANA_LCR_support_us = FRANA_seat_of_LCR }
+				set_variable = { PCG_can_be_fought_for_or_not_var = 1 }
+				set_variable = { FRANA_PCG_support_us = FRANA_seat_of_PCG }
+				set_variable = { PSG_can_be_fought_for_or_not_var = 1 }
+				set_variable = { FRANA_PSG_support_us = FRANA_seat_of_PSG }
+				FRA_Bills_of_National_Assembly_calculate = yes
+				country_event = {
+					id = FRA_Gensokyo.801
+					days = 1
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+}
+
 FRA_election_decision_categories = {
 	FRA_election_results_in_mission = {
 		icon = GFX_decision_eng_trade_unions_support
@@ -734,6 +971,7 @@ FRA_election_decision_categories = {
 FRA_Debug = {
 	FRA_Ibaraki_Kasen_win_debug = {
 		complete_effect = {
+			set_country_flag = FRA_The_election_results_in
 			FRA_remove_all_ideas = yes
 			add_ideas = FRA_Reimu_idea
 			promote_character = FRA_Kasen
@@ -742,10 +980,12 @@ FRA_Debug = {
 			set_variable = { FRA_Ruling_Party_VAR = 3 }
 			FRA_set_rule_party_name = yes
 			mark_focus_tree_layout_dirty = yes
+			complete_national_focus = FRA_first_term_of_Ibaraki_Kasen
 		}
 	}
 	FRA_Marisa_win_debug = {
 		complete_effect = {
+			set_country_flag = FRA_The_election_results_in
 			FRA_remove_all_ideas = yes
 			add_ideas = FRA_Alice_Margatroid_idea
 			promote_character = FRA_Marisa
@@ -758,6 +998,7 @@ FRA_Debug = {
 	}
 	FRA_Kamishirasawa_Keine_win_debug = {
 		complete_effect = {
+			set_country_flag = FRA_The_election_results_in
 			FRA_remove_all_ideas = yes
 			#add_ideas = FRA_Reimu_idea
 			promote_character = FRA_Kamishirasawa_Keine
@@ -770,6 +1011,7 @@ FRA_Debug = {
 	}
 	FRA_Reisen_Udongein_Inaba_win_debug = {
 		complete_effect = {
+			set_country_flag = FRA_The_election_results_in
 			FRA_remove_all_ideas = yes
 			add_ideas = FRA_Houraisan_Kaguya_idea
 			promote_character = FRA_Reisen_Udongein_Inaba
