@@ -360,7 +360,7 @@ NPT_mother_gods_plan_decision_category = {
 		}
 		icon = GFX_decision_generic_merge_plant_materiel
 		fire_only_once = yes
-		priority = 95
+		priority = 94
 		on_map_mode = map_and_decisions_view
 		ai_will_do = {
 			factor = 1000
@@ -422,7 +422,7 @@ NPT_mother_gods_plan_decision_category = {
 		}
 		icon = GFX_decision_generic_fortification
 		fire_only_once = yes
-		priority = 95
+		priority = 93
 		on_map_mode = map_and_decisions_view
 		ai_will_do = {
 			factor = 1000
@@ -459,6 +459,135 @@ NPT_mother_gods_plan_decision_category = {
 					level = 3
 				}
 			}
+		}
+	}
+
+	NPT_dec_investment_puppet_state = {
+		icon = GFX_decision_hol_attract_foreign_investors
+		priority = 92
+		visible = {
+			tag = ARF
+			has_completed_focus = NPT_arfoire_grace_of_mother
+		}
+		target_trigger = {
+			FROM = {
+				is_subject_of = ROOT
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		days_remove = 14
+		days_re_enable = 365
+		fire_only_once = no
+		custom_cost_text = RUS_100_ubs_save_cost
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 100 }
+		}
+		complete_effect = {
+			add_to_variable = { ubs_save = -100 }
+		}
+		remove_effect = {
+			FROM = {
+				random_owned_controlled_state = {
+					limit = { is_core_of = PREV }  
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				add_timed_idea = {
+					idea = NPT_theory_of_arfoire_investment
+					days = 120
+				}
+			}
+		}
+	}
+	
+	NPT_dec_call_up_puppet_state_industry = {
+		icon = GFX_decision_generic_fundraising
+		priority = 92
+		allowed = {
+			tag = ARF
+		}
+		visible = {
+			has_completed_focus = NPT_arfoire_worship_of_mother
+		}
+		target_trigger = {
+			FROM = {
+				is_subject_of = ROOT
+				NOT = { has_idea = NPT_call_up_puppet_state_industry }
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		days_remove = 14
+		fire_only_once = no
+		cost = 10
+		remove_effect = {
+			FROM = {
+				add_ideas = NPT_call_up_puppet_state_industry
+			}
+		}
+	}
+		
+	NPT_dec_stop_call_up_puppet_state_industry = {
+		icon = GFX_decision_generic_fundraising
+		priority = 91
+		allowed = {
+			tag = ARF
+		}
+		visible = {
+			NOT = { has_country_flag = NPT_stop_call_up_puppet_state_industry_flag }
+			has_completed_focus = NPT_arfoire_worship_of_mother
+		}
+		target_trigger = {
+			FROM = {
+				is_subject_of = ROOT
+				has_idea = NPT_call_up_puppet_state_industry
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = 14
+		fire_only_once = no
+		cost = 10
+		remove_effect = {
+			FROM = {
+				remove_ideas = NPT_call_up_puppet_state_industry
+			}
+		}
+	}
+
+	NPT_dont_visible_stop_call_up_puppet_state_industry = {
+		priority = 90
+		visible = {
+			has_completed_focus = NPT_arfoire_worship_of_mother
+			any_subject_country = {
+				has_idea = NPT_call_up_puppet_state_industry
+			}
+			NOT = { has_country_flag = NPT_stop_call_up_puppet_state_industry_flag }
+		}
+		cost = 0
+		fire_only_once = no
+		complete_effect = {
+			set_country_flag = NPT_stop_call_up_puppet_state_industry_flag
+		}
+	}
+	
+	NPT_please_visible_stop_call_up_puppet_state_industry = {
+		priority = 90
+		visible = {
+			has_completed_focus = NPT_arfoire_worship_of_mother
+			has_country_flag = NPT_stop_call_up_puppet_state_industry_flag
+		}
+		cost = 0
+		fire_only_once = no
+		complete_effect = {
+			clr_country_flag = NPT_stop_call_up_puppet_state_industry_flag
 		}
 	}
 }
