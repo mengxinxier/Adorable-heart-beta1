@@ -2632,3 +2632,1013 @@ add_namespace = neptune
 			add_war_support = 0.05
 		}
 	}
+	
+#外交博弈
+	country_event = {
+		id = neptune.106
+		title = neptune.106.t
+		desc = neptune.106.d
+		is_triggered_only = yes
+		option = {
+			name = neptune.106.a
+			add_political_power = 10
+			hidden_effect = {
+				NPT = {
+					country_event = { id = neptune.107 days = 1 }
+				}
+				set_global_flag = diplomatic_game_NPT_and_DVL
+			}
+		}
+	}
+		
+	country_event = {
+		id = neptune.107
+		title = neptune.107.t
+		desc = neptune.107.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.107.a
+			add_political_power = 10
+			hidden_effect = {
+				FROM = {
+					country_event = { id = neptune.108 days = 1 }
+				}
+				country_event = { id = neptune.108 days = 1 }
+			}
+		}
+	}
+			
+	country_event = {
+		id = neptune.108
+		title = neptune.108.t
+		desc = neptune.108.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.108.a
+			hidden_effect = {
+				set_variable = { NPT.game_num_var = 1 }
+				set_variable = { NPT.game_win_var = 0 }
+				set_variable = { DVL.game_win_var = 0 }
+				set_variable = { NPT.game_DN_var = 0 }
+				set_variable = { DVL.game_DN_var = 0 }
+				set_variable = { NPT.game_round_num_var = 1 }
+
+				set_variable_to_random = {
+					var = NPT.game_DN_var
+					min = 1
+					max = 13
+					integer = yes
+				}
+				set_variable_to_random = {
+					var = DVL.game_DN_var
+					min = 1
+					max = 13
+					integer = yes
+				}
+				if = {
+					limit = { tag = DVL }
+					country_event = { id = neptune.109 days = 1 }
+				}
+			}
+		}
+	}
+				
+	country_event = {
+		id = neptune.109
+		title = neptune.109.t
+		desc = neptune.109.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.109.a
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 7
+					max = 10
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.109.b
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 7
+					max = 4
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.109.c
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 4
+					max = 1
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.109.e
+			hidden_effect = {
+				
+				if = {
+					limit = { tag = NPT }
+					DVL = { country_event = { id = neptune.112 days = 1 } }
+				}
+				else_if = {
+					limit = { tag = DVL }
+					NPT = { country_event = { id = neptune.112 days = 1 } }
+				}
+			}
+		}
+	}
+
+	country_event = {
+		id = neptune.110
+		title = neptune.110.t
+		desc = neptune.110.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.110.a
+			add_political_power = -10
+			if = {
+				limit = { tag = DVL }
+				add_to_variable = { NPT.game_win_var = 1 }
+			}
+			else = {
+				add_to_variable = { DVL.game_win_var = 1 }
+			}
+			hidden_effect = {
+				clear_variable = NPT.game_DN_var
+				clear_variable = DVL.game_DN_var
+				set_variable = { NPT.game_round_num_var = 1 }
+				if = {
+					limit = {
+						check_variable = {
+							NPT.game_num_var = 1
+						}
+					}
+					add_to_variable = { NPT.game_num_var = 1 }
+					DVL = { country_event = { id = neptune.114 days = 1 } }
+					NPT = { country_event = { id = neptune.114 days = 1 } }
+				}
+				else_if = {
+					limit = {
+						check_variable = {
+							NPT.game_num_var = 2
+						}
+					}
+					add_to_variable = { NPT.game_num_var = 1 }
+					DVL = { country_event = { id = neptune.117 days = 1 } }
+					NPT = { country_event = { id = neptune.117 days = 1 } }
+				}
+				else_if = {
+					limit = {
+						check_variable = {
+							NPT.game_num_var = 3
+						}
+					}
+					set_country_flag = NPT_boom_in_game_with_DVL
+					DVL = { country_event = { id = neptune.119 days = 1 } }
+					NPT = { country_event = { id = neptune.119 days = 1 } }
+				}
+				add_to_variable = { NPT.game_num_var = 1 }
+			}
+		}
+	}
+
+	country_event = {
+		id = neptune.111
+		title = neptune.111.t
+		desc = neptune.111.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.111.a
+			add_political_power = 15
+		}
+	}
+					
+	country_event = {
+		id = neptune.112
+		title = neptune.112.t
+		desc = neptune.112.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.112.a
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 7
+					max = 10
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						check_variable = {
+							game_DN_var > 21
+						}
+					}
+					country_event = { id = neptune.110 days = 1 }
+					if = {
+						limit = {
+							tag = NPT
+						}
+						DVL = { country_event = { id = neptune.111 days = 1 } }
+					}
+					else = {
+						NPT = { country_event = { id = neptune.111 days = 1 } }
+					}
+				}
+			}
+		}
+		option = {
+			name = neptune.112.b
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 7
+					max = 4
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						check_variable = {
+							game_DN_var > 21
+						}
+					}
+					country_event = { id = neptune.110 days = 1 }
+					if = {
+						limit = {
+							tag = NPT
+						}
+						DVL = { country_event = { id = neptune.111 days = 1 } }
+					}
+					else = {
+						NPT = { country_event = { id = neptune.111 days = 1 } }
+					}
+				}
+			}
+		}
+		option = {
+			name = neptune.112.c
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 4
+					max = 1
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						check_variable = {
+							game_DN_var > 21
+						}
+					}
+					country_event = { id = neptune.110 days = 1 }
+					if = {
+						limit = {
+							tag = NPT
+						}
+						DVL = { country_event = { id = neptune.111 days = 1 } }
+					}
+					else = {
+						NPT = { country_event = { id = neptune.111 days = 1 } }
+					}
+				}
+			}
+		}
+		option = {
+			name = neptune.112.e
+			hidden_effect = {
+				
+				if = {
+					limit = {
+						check_variable = {
+							NPT.game_num_var = 1
+						}
+					}
+					DVL = { country_event = { id = neptune.113 days = 1 } }
+					NPT = { country_event = { id = neptune.113 days = 1 } }
+				}
+				else_if = {
+					limit = {
+						check_variable = {
+							NPT.game_num_var = 2
+						}
+					}
+					DVL = { country_event = { id = neptune.116 days = 1 } }
+					NPT = { country_event = { id = neptune.116 days = 1 } }
+				}
+				else_if = {
+					limit = {
+						check_variable = {
+							NPT.game_num_var = 3
+						}
+					}
+					DVL = { country_event = { id = neptune.119 days = 1 } }
+					NPT = { country_event = { id = neptune.119 days = 1 } }
+				}
+			}
+		}
+	}
+
+	country_event = {
+		id = neptune.113
+		title = neptune.113.t
+		desc = {
+			text = neptune.113.d1
+			trigger = { has_global_flag = NPT_win_in_DVL }
+		}
+		desc = {
+			text = neptune.113.d2
+			trigger = { NOT = { has_global_flag = NPT_win_in_DVL } }
+		}
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		immediate = {
+			hidden_effect = {
+				if = {
+					limit = {
+						tag = NPT
+						check_variable = {
+							NPT.game_DN_var > DVL.game_DN_var
+						}
+					}
+					add_to_variable = { NPT.game_win_var = 1 }
+					set_global_flag = NPT_win_in_DVL
+				}
+				else_if = {
+					limit = {
+						tag = NPT
+						NOT = {
+							check_variable = {
+								NPT.game_DN_var > DVL.game_DN_var
+							}
+						}
+					}
+					add_to_variable = { DVL.game_win_var = 1 }
+				}
+				clear_variable = NPT.game_DN_var
+				clear_variable = DVL.game_DN_var
+				set_variable = { NPT.game_round_num_var = 1 }
+				add_to_variable = { NPT.game_num_var = 1 }
+			}
+		}
+		option = {
+			name = neptune.113.a
+			country_event = { id = neptune.114 days = 1 }
+			clr_global_flag = NPT_win_in_DVL
+		}
+	}
+		
+	country_event = {
+		id = neptune.114
+		title = neptune.114.t
+		desc = neptune.114.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.114.a
+			hidden_effect = {
+				set_variable = { NPT.game_num_var = 2 }
+				set_variable = { NPT.game_DN_var = 0 }
+				set_variable = { DVL.game_DN_var = 0 }
+				set_variable = { NPT.game_round_num_var = 1 }
+
+				set_variable_to_random = {
+					var = NPT.game_DN_var
+					min = 1
+					max = 13
+					integer = yes
+				}
+				set_variable_to_random = {
+					var = DVL.game_DN_var
+					min = 1
+					max = 13
+					integer = yes
+				}
+				if = {
+					limit = { tag = DVL }
+					country_event = { id = neptune.115 days = 1 }
+				}
+			}
+		}
+	}
+
+	country_event = {
+		id = neptune.115
+		title = neptune.115.t
+		desc = neptune.115.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.115.a
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 7
+					max = 10
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.115.b
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 7
+					max = 4
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.115.c
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 4
+					max = 1
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.115.e
+			hidden_effect = {
+				
+				if = {
+					limit = { tag = NPT }
+					DVL = { country_event = { id = neptune.112 days = 1 } }
+				}
+				else_if = {
+					limit = { tag = DVL }
+					NPT = { country_event = { id = neptune.112 days = 1 } }
+				}
+			}
+		}
+	}
+	
+	country_event = {
+		id = neptune.116
+		title = neptune.116.t
+		desc = {
+			text = neptune.116.d1
+			trigger = { has_global_flag = NPT_win_in_DVL }
+		}
+		desc = {
+			text = neptune.116.d2
+			trigger = { NOT = { has_global_flag = NPT_win_in_DVL } }
+		}
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		immediate = {
+			hidden_effect = {
+				if = {
+					limit = {
+						tag = NPT
+						check_variable = {
+							NPT.game_DN_var > DVL.game_DN_var
+						}
+					}
+					set_global_flag = NPT_win_in_DVL
+					add_to_variable = { NPT.game_win_var = 1 }
+				}
+				else_if = {
+					limit = {
+						tag = NPT
+						NOT = {
+							check_variable = {
+								NPT.game_DN_var > DVL.game_DN_var
+							}
+						}
+					}
+					add_to_variable = { DVL.game_win_var = 1 }
+				}
+				clear_variable = NPT.game_DN_var
+				clear_variable = DVL.game_DN_var
+				set_variable = { NPT.game_round_num_var = 1 }
+				add_to_variable = { NPT.game_num_var = 1 }
+				clr_global_flag = diplomatic_game_NPT_and_DVL
+			}
+		}
+		option = {
+			name = neptune.116.a
+			trigger = {
+				NOT = {
+					check_variable = { DVL.game_win_var = 2 }
+					check_variable = { NPT.game_win_var = 2 }
+				}
+			}
+			clr_global_flag = NPT_win_in_DVL
+			country_event = { id = neptune.117 days = 1 }
+		}
+		option = {
+			name = neptune.116.b
+			trigger = {
+				OR = {
+					AND = {
+						check_variable = { DVL.game_win_var = 2 }
+						tag = DVL
+					}
+					AND = {
+						check_variable = { NPT.game_win_var = 2 }
+						tag = NPT
+					}
+				}
+			}
+			clr_global_flag = NPT_win_in_DVL
+			if = {
+				limit = { tag = NPT }
+				complete_national_focus = NPT_neptune_uisually_passing_by_neighbors
+			}
+			else = {
+				hidden_effect = {
+					country_event = { id = neptune.120 days = 3 }
+				}
+			}
+		}
+		option = {
+			name = neptune.116.c
+			trigger = {
+				OR = {
+					AND = {
+						check_variable = { DVL.game_win_var = 2 }
+						tag = NPT
+					}
+					AND = {
+						check_variable = { NPT.game_win_var = 2 }
+						tag = DVL
+					}
+				}
+			}
+			clr_global_flag = NPT_win_in_DVL
+			if = {
+				limit = { tag = NPT }
+				complete_national_focus = NPT_neptune_associate_member_state
+			}
+			else = {
+				diplomatic_relation = {
+					country = NPT
+					relation = non_aggression_pact
+				}
+			}
+			add_political_power = -50
+		}
+	}
+		
+	country_event = {
+		id = neptune.117
+		title = neptune.117.t
+		desc = neptune.117.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.117.a
+			hidden_effect = {
+				set_variable = { NPT.game_num_var = 3 }
+				set_variable = { NPT.game_DN_var = 0 }
+				set_variable = { DVL.game_DN_var = 0 }
+				set_variable = { NPT.game_round_num_var = 1 }
+
+				set_variable_to_random = {
+					var = NPT.game_DN_var
+					min = 1
+					max = 13
+					integer = yes
+				}
+				set_variable_to_random = {
+					var = DVL.game_DN_var
+					min = 1
+					max = 13
+					integer = yes
+				}
+				if = {
+					limit = { tag = DVL }
+					country_event = { id = neptune.118 days = 1 }
+				}
+			}
+		}
+	}
+	
+	country_event = {
+		id = neptune.118
+		title = neptune.118.t
+		desc = neptune.118.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.118.a
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 7
+					max = 10
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.118.b
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 7
+					max = 4
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.118.c
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 4
+					max = 1
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						tag = NPT
+					}
+					add_to_variable = {
+						NPT.game_round_num_var = 1 
+					}
+				}
+				NPT_check_if_it_is_too_large = yes
+			}
+		}
+		option = {
+			name = neptune.118.e
+			hidden_effect = {
+				
+				if = {
+					limit = { tag = NPT }
+					DVL = { country_event = { id = neptune.112 days = 1 } }
+				}
+				else_if = {
+					limit = { tag = DVL }
+					NPT = { country_event = { id = neptune.112 days = 1 } }
+				}
+			}
+		}
+	}
+	
+	country_event = {
+		id = neptune.119
+		title = neptune.119.t
+		desc = {
+			text = neptune.119.d1
+			trigger = { has_global_flag = NPT_win_in_DVL }
+		}
+		desc = {
+			text = neptune.119.d2
+			trigger = { NOT = { has_global_flag = NPT_win_in_DVL } }
+		}
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		immediate = {
+			hidden_effect = {
+				if = {
+					limit = {
+						NOT = { has_country_flag = NPT_boom_in_game_with_DVL }
+						tag = NPT
+						check_variable = {
+							NPT.game_DN_var > DVL.game_DN_var
+						}
+					}
+					set_global_flag = NPT_win_in_DVL
+					add_to_variable = { NPT.game_win_var = 1 }
+				}
+				else_if = {
+					limit = {
+						NOT = { has_country_flag = NPT_boom_in_game_with_DVL }
+						tag = NPT
+						NOT = {
+							check_variable = {
+								NPT.game_DN_var > DVL.game_DN_var
+							}
+						}
+					}
+					add_to_variable = { DVL.game_win_var = 1 }
+				}
+				clr_global_flag = diplomatic_game_NPT_and_DVL
+			}
+		}
+		option = {
+			name = neptune.119.a
+			trigger = {
+				OR = {
+					AND = {
+						check_variable = { DVL.game_win_var = 2 }
+						tag = DVL
+					}
+					AND = {
+						check_variable = { NPT.game_win_var = 2 }
+						tag = NPT
+					}
+				}
+			}
+			clr_global_flag = NPT_win_in_DVL
+			if = {
+				limit = { tag = NPT }
+				complete_national_focus = NPT_neptune_uisually_passing_by_neighbors
+			}
+			else = {
+				hidden_effect = {
+					country_event = { id = neptune.120 days = 3 }
+				}
+			}
+		}
+		option = {
+			name = neptune.119.b
+			trigger = {
+				OR = {
+					AND = {
+						check_variable = { DVL.game_win_var = 2 }
+						tag = NPT
+					}
+					AND = {
+						check_variable = { NPT.game_win_var = 2 }
+						tag = DVL
+					}
+				}
+			}
+			clr_global_flag = NPT_win_in_DVL
+			if = {
+				limit = { tag = NPT }
+				complete_national_focus = NPT_neptune_associate_member_state
+			}
+			else = {
+				diplomatic_relation = {
+					country = NPT
+					relation = non_aggression_pact
+				}
+			}
+			add_political_power = -50
+		}
+	}
+			
+	country_event = {
+		id = neptune.120
+		title = neptune.120.t
+		desc = neptune.120.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.120.a
+			ai_chance = { base = 4 }
+			add_political_power = 50
+		}
+		option = {
+			name = neptune.120.b
+			ai_chance = { base = 6 }
+			add_war_support = 0.05
+			hidden_effect = {
+				NPT = { country_event = { id = neptune.121 days = 3 } }
+			}
+		}
+	}
+				
+	country_event = {
+		id = neptune.121
+		title = neptune.121.t
+		desc = neptune.121.d
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.121.a
+			add_political_power = -50
+			add_stability = -0.10
+			FROM = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_dominion
+				}
+			}
+			hidden_effect = {
+				news_event = neptune.122
+			}
+		}
+		option = {
+			name = neptune.121.b
+			add_war_support = 0.05
+			FROM = {
+				create_wargoal = {
+					target = ROOT
+					type = puppet_wargoal_focus
+				}
+			}
+			hidden_effect = {
+				news_event = neptune.123
+			}
+		}
+	}
+
+	news_event = {
+		id = neptune.122
+		title = neptune.122.t
+		desc = neptune.122.d
+		is_triggered_only = yes
+		major = yes
+		trigger = {
+			NOT = { tag = NPT }
+		}
+		option = {
+			name = neptune.122.a
+			trigger = {
+				NOT = { tag = DVL }
+			}
+		}
+		option = {
+			name = neptune.122.b
+			trigger = {
+				tag = DVL
+			}
+		}
+	}
+	
+	news_event = {
+		id = neptune.123
+		title = neptune.123.t
+		desc = neptune.123.d
+		is_triggered_only = yes
+		major = yes
+		trigger = {
+			NOT = { tag = NPT }
+		}
+		option = {
+			name = neptune.123.a
+			trigger = {
+				tag = DVL
+			}
+		}
+		option = {
+			name = neptune.123.b
+			trigger = {
+				NOT = { tag = DVL }
+			}
+		}
+	}
