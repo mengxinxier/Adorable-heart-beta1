@@ -1,34 +1,34 @@
 
-NPT_third_international_westline = {
-	NPT_PROTCET = {
-		visible = {
-			TAG = NPT
-			is_subject = no
-		}
-		available = {
-			has_global_flag = second_weltkrieg_has_started
-			NOT = {
-				has_war_with = DVL
-			}
-			SOV = {
-				has_war_with = DVL
-			}
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = yes
-		remove_effect = {
-			declare_war_on = {
-				target = DVL
-				type = puppet_wargoal_focus
-			}
-		}
-		war_with_on_remove = DVL
-		ai_will_do = {
-			factor = 100
-		}
-	}
-}
+# NPT_third_international_westline = {
+# 	NPT_PROTCET = {
+# 		visible = {
+# 			TAG = NPT
+# 			is_subject = no
+# 		}
+# 		available = {
+# 			has_global_flag = second_weltkrieg_has_started
+# 			NOT = {
+# 				has_war_with = DVL
+# 			}
+# 			SOV = {
+# 				has_war_with = DVL
+# 			}
+# 		}
+# 		cost = 0
+# 		days_remove = 7
+# 		fire_only_once = yes
+# 		remove_effect = {
+# 			declare_war_on = {
+# 				target = DVL
+# 				type = puppet_wargoal_focus
+# 			}
+# 		}
+# 		war_with_on_remove = DVL
+# 		ai_will_do = {
+# 			factor = 100
+# 		}
+# 	}
+# }
 
 NPT_mother_gods_plan_decision_category = {
 	
@@ -1594,6 +1594,91 @@ NPT_developing_new_terminals_decision_category = {
 			hidden_effect = {
 				add_to_variable = { NPT_completed_projects_num = 1 }
 			}
+		}
+	}
+}
+
+NPT_sword_of_judgment_decision_category = {
+
+	NPT_dec_lock_the_target_decision = {
+		icon = GFX_decision_generic_operation
+		priority = 3
+		allowed = {
+			always = no
+		}
+		visible = {
+			is_subject = no
+			FROM = { exists = yes }
+		}
+		fire_only_once = yes
+		cost = 5
+		days_remove = 7
+		remove_effect = {
+			hidden_effect = {
+				FROM = {
+					capital_scope = {
+						NPT_lock_the_target = yes
+						ROOT = { activate_targeted_decision = { target = PREV decision = NPT_dec_sacrifice_sword_decision } }
+					}
+				}
+			}
+			activate_targeted_decision = { target = FROM decision = NPT_dec_launch_attack_decision }
+			
+		}
+	}
+
+	NPT_dec_launch_attack_decision = {
+		icon = GFX_decision_infiltrate_state
+		priority = 2
+		allowed = {
+			always = no
+		}
+		visible = {
+			is_subject = no
+			FROM = { exists = yes }
+			NOT = { has_war_with = FROM }
+		}
+		available = {
+			has_global_flag = second_weltkrieg_has_started
+			can_declare_war_on = FROM
+		}
+		fire_only_once = yes
+		cost = 10
+		days_remove = 14
+		war_with_on_remove = FROM
+		complete_effect = {
+			hidden_effect = {
+				FROM = { country_event = neptune.124 }
+			}
+		}
+		remove_effect = {
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+	}
+	
+	NPT_dec_sacrifice_sword_decision = {
+		icon = GFX_decision_generic_intelligence_operation
+		priority = 1
+		allowed = {
+			always = no
+		}
+		visible = {
+			is_subject = no
+		}
+		available = {
+			FROM = {
+				is_fully_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		fire_only_once = yes
+		cost = 50
+		days_remove = 90
+		remove_effect = {
+			NPT_sacrifice_sword = yes
 		}
 	}
 }
