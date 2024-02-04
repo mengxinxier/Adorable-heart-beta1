@@ -179,3 +179,1676 @@ FRA_third_international_westline = {
 		}
 	}
 }
+
+FRA_Black_Tuesday_decision_categories = {
+	#告别大萧条
+	FRA_Say_goodbye_to_the_Great_Depression = {
+		icon = GFX_decision_hol_war_on_pacifism
+		#fire_only_once = yes
+		modifier = {
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 1000
+		}
+		visible = {
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_degree_of_economic_crisis_var_come_to_10
+				NOT = {
+					check_variable = { FRA_degree_of_economic_crisis_var > 10 }
+				}
+			}
+		}
+		complete_effect = {
+			remove_dynamic_modifier = { modifier = FRA_Financial_crisis }
+			remove_dynamic_modifier = { modifier = FRA_Financial_crisis_HCP }
+			set_variable = { FRA_financial_crisis_var = 0 }
+			set_variable = { FRA_credit_crunch_var = 0 }
+			set_variable = { FRA_Overcapacity_var = 0 }
+			FRA_Calculate_Great_Depression_debuff = yes
+			clr_country_flag = FRA_Black_Tuesday_decision_categories
+		}
+	}
+	#货币贬值
+	FRA_Currency_depreciation = {
+		icon = ger_mefo_bills
+		fire_only_once = yes
+		modifier = {
+			consumer_goods_factor = 0.1
+			industrial_capacity_factory = -0.1
+		}
+		days_remove = 120
+		days_re_enable = 365
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		visible = {
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -20
+				tooltip = FRA_financial_crisis_var_subtract20_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -20
+				tooltip = FRA_credit_crunch_var_subtract20_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#向市场注资
+	FRA_Inject_capital_into_market_decision = {
+		icon = GFX_decision_duihuan_pp_1
+		fire_only_once = yes
+		days_remove = 30
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		custom_cost_trigger = {
+			has_political_power > 49
+		}
+		custom_cost_text = HCP_200_and_PP_50
+		visible = {
+			has_completed_focus = FRA_End_rationing
+		}
+		complete_effect = {
+			hidden_effect = {
+				COST_200_UBS_LOAD = yes
+				add_political_power = -50
+			}
+		}
+		remove_effect = {
+			add_stability = 0.3
+			set_country_flag = FRA_Inject_capital_into_market_decision
+			unlock_national_focus = FRA_Inject_capital_into_market
+		}
+	}
+}
+
+FRA_govern_of_Kasen = {
+	FRA_An_army_on_move = {
+		icon = GFX_decision_category_spr_the_seeds_of_revolution
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 15
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		#selectable_mission = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		timeout_effect = {
+			hidden_effect = {
+				country_event = {
+					id = FRA_Gensokyo.018
+				}
+			}
+		}
+	}
+}
+
+FRA_foreign_ministry = {
+	FRA_core_natural_boundaries = {
+		icon = GFX_decision_generic_nationalism
+		visible = {
+			has_completed_focus = FRA_Pursue_natural_boundaries
+		}
+		available = {
+			has_full_control_of_state = 42
+			has_full_control_of_state = 781
+		}
+		cost = 50
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			add_state_core = 42
+			add_state_core = 781
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+	FRA_invite_democratic_country = {
+		icon = GFX_decision_generic_political_discourse
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = NPT
+					tag = TRB
+					tag = KVO
+					tag = ROM
+					tag = BUL
+					tag = GRE
+					tag = TUR
+					tag = DEN
+					tag = SWE
+					tag = NOR
+				}
+				is_in_faction = no
+				is_subject = no
+				has_government = democratic
+				not = { has_country_flag = FRA_invite_democratic_country }
+			}
+			ROOT = {
+				has_completed_focus = FRA_Expand_Gensokyo_sphere_of_influence
+				is_subject = no
+				has_government = democratic
+				is_faction_leader = yes
+				or = {
+					any_allied_country = {
+						any_home_area_neighbor_country = {
+							tag = FROM
+						}
+					}
+					any_home_area_neighbor_country = {
+						tag = FROM
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 30
+		remove_effect = {
+			FROM = {
+				country_event = {
+					id = generic.2008
+				}
+				set_country_flag = FRA_invite_democratic_country
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+	FRA_Expand_collaboration_with_ENG_research = {
+		icon = GFX_decision_generic_political_discourse
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = ENG
+				}
+				is_faction_leader = yes
+				is_subject = no
+				has_government = democratic
+			}
+			ROOT = {
+				has_completed_focus = FRA_Expand_collaboration_with_ENG
+				is_subject = no
+				has_government = democratic
+				is_in_faction_with = FROM
+				NOT = { has_idea = FRA_Agreements_on_mutual_assistance_in_scientific_research_idea }
+			}
+		}
+		fire_only_once = yes
+		cost = 35
+		days_remove = 30
+		remove_effect = {
+			add_ideas = FRA_Agreements_on_mutual_assistance_in_scientific_research_idea
+			ENG = { add_ideas = FRA_Agreements_on_mutual_assistance_in_scientific_research_idea }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+	FRA_Expand_collaboration_with_ENG_Trade = {
+		icon = GFX_decision_generic_political_discourse
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = ENG
+				}
+				is_faction_leader = yes
+				is_subject = no
+				has_government = democratic
+			}
+			ROOT = {
+				has_completed_focus = FRA_Expand_collaboration_with_ENG
+				is_subject = no
+				has_government = democratic
+				is_in_faction_with = FROM
+				NOT = { has_idea = FRA_Mutual_Trade_Assistance_Agreement_idea }
+			}
+		}
+		fire_only_once = yes
+		cost = 35
+		days_remove = 30
+		remove_effect = {
+			add_ideas = FRA_Mutual_Trade_Assistance_Agreement_idea
+			ENG = { add_ideas = FRA_Mutual_Trade_Assistance_Agreement_idea }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+}
+
+FRA_National_Assemblyy = {
+	FRA_submit_amendments_to_Labour_Code_Mission = {
+		icon = ger_mefo_bills
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 114514
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				check_variable = { FRA_Motions_voted_on_var = 0 }
+			}
+		}
+		timeout_effect = {
+		}
+	}
+	FRA_Formal_legislation_to_Labour_Code = {
+		icon = ger_mefo_bills
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 19
+		days_mission_timeout = 15
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		timeout_effect = {
+			custom_effect_tooltip = After_the_passage_of_the_bill
+			effect_tooltip = {
+				add_to_variable = {
+					var = FRA_financial_crisis_var
+					value = -10
+					tooltip = FRA_financial_crisis_var_subtract10_tt
+				}
+				add_to_variable = {
+					var = FRA_credit_crunch_var
+					value = -10
+					tooltip = FRA_credit_crunch_var_subtract10_tt
+				}
+				add_to_variable = {
+					var = FRA_Overcapacity_var
+					value = -20
+					tooltip = FRA_Overcapacity_var_subtract20_tt
+				}
+				FRA_Calculate_Great_Depression_debuff = yes
+				add_ideas = FRA_New_Labour_Code
+				custom_effect_tooltip = Processes_effects_of_previous_selection
+				if = {
+					limit = { has_country_flag = FRA_ten_hour_work }
+					custom_effect_tooltip = FRA_ten_hour_work
+					add_to_variable = {
+						var = FRA_bourgeoisie_Influence_progress_var
+						value = -5
+						tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_Influence_progress_var
+						value = 5
+						tooltip = FRA_worker_Influence_rose_slightly_tt
+					}
+				}
+				if = {
+					limit = { has_country_flag = FRA_eight_hour_work }
+					custom_effect_tooltip = FRA_eight_hour_work
+					add_to_variable = {
+						var = FRA_bourgeoisie_Influence_progress_var
+						value = -5
+						tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_Influence_progress_var
+						value = 10
+						tooltip = FRA_worker_Influence_rose_Moderately_tt
+					}
+				}
+				if = {
+					limit = { has_country_flag = FRA_six_hour_work }
+					custom_effect_tooltip = FRA_six_hour_work
+					add_to_variable = {
+						var = FRA_bourgeoisie_Influence_progress_var
+						value = -20
+						tooltip = FRA_bourgeoisie_Influence_decline_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_middle_class_Influence_progress_var
+						value = -10
+						tooltip = FRA_middle_class_Influence_decline_Moderately_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_Influence_progress_var
+						value = 20
+						tooltip = FRA_worker_Influence_rose_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_famer_Influence_progress_var
+						value = 10
+						tooltip = FRA_famer_Influence_rose_Moderately_tt
+					}
+				}
+				if = {
+					limit = { has_country_flag = FRA_low_level_wage }
+					custom_effect_tooltip = FRA_low_level_wage
+					add_to_variable = {
+						var = FRA_bourgeoisie_Influence_progress_var
+						value = -5
+						tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_Influence_progress_var
+						value = 5
+						tooltip = FRA_worker_Influence_rose_slightly_tt
+					}
+				}
+				if = {
+					limit = { has_country_flag = FRA_middle_level_wage }
+					custom_effect_tooltip = FRA_middle_level_wage
+					add_to_variable = {
+						var = FRA_bourgeoisie_Influence_progress_var
+						value = -5
+						tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_Influence_progress_var
+						value = 10
+						tooltip = FRA_worker_Influence_rose_Moderately_tt
+					}
+				}
+				if = {
+					limit = { has_country_flag = FRA_high_level_wage }
+					custom_effect_tooltip = FRA_high_level_wage
+					add_to_variable = {
+						var = FRA_bourgeoisie_Influence_progress_var
+						value = -20
+						tooltip = FRA_bourgeoisie_Influence_decline_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_middle_class_Influence_progress_var
+						value = -10
+						tooltip = FRA_middle_class_Influence_decline_Moderately_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_Influence_progress_var
+						value = 20
+						tooltip = FRA_worker_Influence_rose_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_famer_Influence_progress_var
+						value = 10
+						tooltip = FRA_famer_Influence_rose_Moderately_tt
+					}
+				}
+			}
+			custom_effect_tooltip = After_the_ban_of_the_bill
+			effect_tooltip = {
+				add_stability = -0.15
+				add_political_power = -150
+					add_to_variable = {
+						var = FRA_middle_class_Influence_progress_var
+						value = 20
+						tooltip = FRA_middle_class_Influence_rose_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_bourgeoisie_Influence_progress_var
+						value = 20
+						tooltip = FRA_bourgeoisie_Influence_rose_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_Influence_progress_var
+						value = -20
+						tooltip = FRA_worker_Influence_decline_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_famer_Influence_progress_var
+						value = -20
+						tooltip = FRA_famer_Influence_decline_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_attitude_progress_var
+						value = -40
+						tooltip = FRA_worker_attitude_decline_very_highly_tt
+					}
+					clamp_variable = {
+						var = FRA_worker_attitude_progress_var
+						min = 0
+						max = 100
+					}
+					add_to_variable = {
+						var = FRA_famer_attitude_progress_var
+						value = -40
+						tooltip = FRA_famer_attitude_decline_very_highly_tt
+					}
+					clamp_variable = {
+						var = FRA_famer_attitude_progress_var
+						min = 0
+						max = 100
+					}
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						check_variable =  { FRA_total_support_of_motion > 384 }
+					}
+					add_to_variable = {
+						var = FRA_financial_crisis_var
+						value = -10
+						tooltip = FRA_financial_crisis_var_subtract10_tt
+					}
+					add_to_variable = {
+						var = FRA_credit_crunch_var
+						value = -10
+						tooltip = FRA_credit_crunch_var_subtract10_tt
+					}
+					add_to_variable = {
+						var = FRA_Overcapacity_var
+						value = -20
+						tooltip = FRA_Overcapacity_var_subtract20_tt
+					}
+					FRA_Calculate_Great_Depression_debuff = yes
+					add_ideas = FRA_New_Labour_Code
+					custom_effect_tooltip = Processes_effects_of_previous_selection
+					if = {
+						limit = { has_country_flag = FRA_ten_hour_work }
+						custom_effect_tooltip = FRA_ten_hour_work
+						add_to_variable = {
+							var = FRA_bourgeoisie_Influence_progress_var
+							value = -5
+							tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+						}
+						add_to_variable = {
+							var = FRA_worker_Influence_progress_var
+							value = 5
+							tooltip = FRA_worker_Influence_rose_slightly_tt
+						}
+					}
+					if = {
+						limit = { has_country_flag = FRA_eight_hour_work }
+						custom_effect_tooltip = FRA_eight_hour_work
+						add_to_variable = {
+							var = FRA_bourgeoisie_Influence_progress_var
+							value = -5
+							tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+						}
+						add_to_variable = {
+							var = FRA_worker_Influence_progress_var
+							value = 10
+							tooltip = FRA_worker_Influence_rose_Moderately_tt
+						}
+					}
+					if = {
+						limit = { has_country_flag = FRA_six_hour_work }
+						custom_effect_tooltip = FRA_six_hour_work
+						add_to_variable = {
+							var = FRA_bourgeoisie_Influence_progress_var
+							value = -20
+							tooltip = FRA_bourgeoisie_Influence_decline_highly_tt
+						}
+						add_to_variable = {
+							var = FRA_middle_class_Influence_progress_var
+							value = -10
+							tooltip = FRA_middle_class_Influence_decline_Moderately_tt
+						}
+						add_to_variable = {
+							var = FRA_worker_Influence_progress_var
+							value = 20
+							tooltip = FRA_worker_Influence_rose_highly_tt
+						}
+						add_to_variable = {
+							var = FRA_famer_Influence_progress_var
+							value = 10
+							tooltip = FRA_famer_Influence_rose_Moderately_tt
+						}
+					}
+					if = {
+						limit = { has_country_flag = FRA_low_level_wage }
+						custom_effect_tooltip = FRA_low_level_wage
+						add_to_variable = {
+							var = FRA_bourgeoisie_Influence_progress_var
+							value = -5
+							tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+						}
+						add_to_variable = {
+							var = FRA_worker_Influence_progress_var
+							value = 5
+							tooltip = FRA_worker_Influence_rose_slightly_tt
+						}
+					}
+					if = {
+						limit = { has_country_flag = FRA_middle_level_wage }
+						custom_effect_tooltip = FRA_middle_level_wage
+						add_to_variable = {
+							var = FRA_bourgeoisie_Influence_progress_var
+							value = -5
+							tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+						}
+						add_to_variable = {
+							var = FRA_worker_Influence_progress_var
+							value = 10
+							tooltip = FRA_worker_Influence_rose_Moderately_tt
+						}
+					}
+					if = {
+						limit = { has_country_flag = FRA_high_level_wage }
+						custom_effect_tooltip = FRA_high_level_wage
+						add_to_variable = {
+							var = FRA_bourgeoisie_Influence_progress_var
+							value = -20
+							tooltip = FRA_bourgeoisie_Influence_decline_highly_tt
+						}
+						add_to_variable = {
+							var = FRA_middle_class_Influence_progress_var
+							value = -10
+							tooltip = FRA_middle_class_Influence_decline_Moderately_tt
+						}
+						add_to_variable = {
+							var = FRA_worker_Influence_progress_var
+							value = 20
+							tooltip = FRA_worker_Influence_rose_highly_tt
+						}
+						add_to_variable = {
+							var = FRA_famer_Influence_progress_var
+							value = 10
+							tooltip = FRA_famer_Influence_rose_Moderately_tt
+						}
+					}
+					FRA_Restore_default_status_of_National_Assembly = yes
+				}
+				else = {
+					add_stability = -0.15
+					add_political_power = -150
+					add_to_variable = {
+						var = FRA_middle_class_Influence_progress_var
+						value = 20
+						tooltip = FRA_middle_class_Influence_rose_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_bourgeoisie_Influence_progress_var
+						value = 20
+						tooltip = FRA_bourgeoisie_Influence_rose_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_Influence_progress_var
+						value = -20
+						tooltip = FRA_worker_Influence_decline_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_famer_Influence_progress_var
+						value = -20
+						tooltip = FRA_famer_Influence_decline_highly_tt
+					}
+					add_to_variable = {
+						var = FRA_worker_attitude_progress_var
+						value = -40
+						tooltip = FRA_worker_attitude_decline_very_highly_tt
+					}
+					clamp_variable = {
+						var = FRA_worker_attitude_progress_var
+						min = 0
+						max = 100
+					}
+					add_to_variable = {
+						var = FRA_famer_attitude_progress_var
+						value = -40
+						tooltip = FRA_famer_attitude_decline_very_highly_tt
+					}
+					clamp_variable = {
+						var = FRA_famer_attitude_progress_var
+						min = 0
+						max = 100
+					}
+					country_event = {
+						id = FRA_Gensokyo.024
+					}
+					activate_mission = FRA_An_army_on_move
+				}
+			}
+			FRA_Calculate_government_approval_rating = yes
+			FRA_Restore_default_status_of_National_Assembly = yes
+		}
+	}
+	FRA_submit_amendments_to_Labour_Code = {
+		icon = ger_mefo_bills
+		fire_only_once = yes
+		cost = 10
+		visible = {
+			has_completed_focus = FRA_Drafting_of_amendments_to_Labour_Code
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var = 0 }
+			}
+		}
+		complete_effect = {
+			custom_effect_tooltip = FRA_submit_amendments_to_Labour_Code_TT
+			set_variable = { FRA_Motions_voted_on_var = 1 }
+			hidden_effect = {
+				activate_mission = FRA_submit_amendments_to_Labour_Code_Mission
+				set_variable = { LCR_can_be_fought_for_or_not_var = 1 }
+				set_variable = { FRANA_LCR_support_us = FRANA_seat_of_LCR }
+				multiply_variable = { FRANA_LCR_support_us = Gensokyo_Popular_Front_unity_progress_var }
+				multiply_variable = { FRANA_LCR_support_us = 0.01 }
+				round_variable = FRANA_LCR_support_us
+				#
+				set_variable = { PCG_can_be_fought_for_or_not_var = 1 }
+				set_variable = { FRANA_PCG_support_us = FRANA_seat_of_PCG }
+				multiply_variable = { FRANA_PCG_support_us = Gensokyo_Popular_Front_unity_progress_var }
+				multiply_variable = { FRANA_PCG_support_us = 0.01 }
+				round_variable = FRANA_PCG_support_us
+				#
+				set_variable = { PSG_can_be_fought_for_or_not_var = 1 }
+				set_variable = { FRANA_PSG_support_us = FRANA_seat_of_PSG }
+				multiply_variable = { FRANA_seat_of_PSG = 0.9 }
+				round_variable = FRANA_PSG_support_us
+				#
+				set_variable = { PFG_can_be_fought_for_or_not_var = 0 }
+				set_variable = { FRANA_PFG_support_us = FRANA_seat_of_PFG }
+				multiply_variable = { FRANA_PFG_support_us = 0.6 }
+				round_variable = FRANA_PFG_support_us
+				#
+				set_variable = { IDU_can_be_fought_for_or_not_var = 0 }
+				set_variable = { FRANA_IDU_support_us = FRANA_seat_of_IDU }
+				multiply_variable = { FRANA_IDU_support_us = 0.4 }
+				round_variable = FRANA_IDU_support_us
+				#
+				set_variable = { GFN_can_be_fought_for_or_not_var = 1 }
+				set_variable = { FRANA_GFN_support_us = FRANA_seat_of_GFN }
+				multiply_variable = { FRANA_GFN_support_us = 0.2 }
+				round_variable = FRANA_GFN_support_us
+				#
+				set_variable = { MNR_can_be_fought_for_or_not_var = 1 }
+				set_variable = { FRANA_MNR_support_us = FRANA_seat_of_MNR }
+				multiply_variable = { FRANA_MNR_support_us = 0.1 }
+				round_variable = FRANA_MNR_support_us
+				FRA_Bills_of_National_Assembly_calculate = yes
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+	#巩固联盟声势
+	FRA_Strengthen_momentum_of_alliance = {
+		icon = ger_mefo_bills
+		fire_only_once = yes
+		cost = 50
+		visible = {
+			has_completed_focus = FRA_Expand_socialist_propaganda
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var = 0 }
+			}
+		}
+		complete_effect = {
+			random_list = {
+				20 = {
+					custom_effect_tooltip = FRA_get_sevel_seats_LCR
+					add_to_variable = { FRANA_seat_of_LCR = 4 }
+					add_to_variable = { FRANA_seat_of_PFG = -1 }
+					add_to_variable = { FRANA_seat_of_IDU = -1 }
+					add_to_variable = { FRANA_seat_of_GFN = -1 }
+					add_to_variable = { FRANA_seat_of_MNR = -1 }
+				}
+				20 = {
+					custom_effect_tooltip = FRA_get_sevel_seats_PCG
+					add_to_variable = { FRANA_seat_of_PCG = 4 }
+					add_to_variable = { FRANA_seat_of_PFG = -1 }
+					add_to_variable = { FRANA_seat_of_IDU = -1 }
+					add_to_variable = { FRANA_seat_of_GFN = -1 }
+					add_to_variable = { FRANA_seat_of_MNR = -1 }
+				}
+				20 = {
+					custom_effect_tooltip = FRA_get_sevel_seats_PSG
+					add_to_variable = { FRANA_seat_of_PSG = 4 }
+					add_to_variable = { FRANA_seat_of_PFG = -1 }
+					add_to_variable = { FRANA_seat_of_IDU = -1 }
+					add_to_variable = { FRANA_seat_of_GFN = -1 }
+					add_to_variable = { FRANA_seat_of_MNR = -1 }
+				}
+				40 = {
+					country_event = {
+						id = FRA_Gensokyo.026
+					}
+				}
+			}
+			FRA_Counting_of_seats_in_National_Assembly = yes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	FRA_Woo_LCR_parliamentarians = {
+		icon = GFX_decision_generic_political_discourse
+		fire_only_once = yes
+		cost = 50
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = LCR_can_be_fought
+				check_variable = { LCR_can_be_fought_for_or_not_var = 0 }
+			}
+		}
+		complete_effect = {
+			set_variable = { LCR_can_be_fought_for_or_not_var = 1 }
+			multiply_variable = { FRANA_LCR_support_us = 1.1 }
+			round_variable = FRANA_LCR_support_us
+			clamp_variable = {
+				var = FRANA_LCR_support_us
+				max = FRANA_seat_of_LCR
+			}
+			FRA_Bills_of_National_Assembly_calculate = yes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	FRA_Woo_PCG_parliamentarians = {
+		icon = GFX_decision_generic_political_discourse
+		fire_only_once = yes
+		cost = 50
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = PCG_can_be_fought
+				check_variable = { PCG_can_be_fought_for_or_not_var = 0 }
+			}
+		}
+		complete_effect = {
+			set_variable = { PCG_can_be_fought_for_or_not_var = 1 }
+			multiply_variable = { FRANA_PCG_support_us = 1.1 }
+			round_variable = FRANA_PCG_support_us
+			clamp_variable = {
+				var = FRANA_PCG_support_us
+				max = FRANA_seat_of_PCG
+			}
+			FRA_Bills_of_National_Assembly_calculate = yes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	FRA_Woo_PSG_parliamentarians = {
+		icon = GFX_decision_generic_political_discourse
+		fire_only_once = yes
+		cost = 50
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = PSG_can_be_fought
+				check_variable = { PSG_can_be_fought_for_or_not_var = 0 }
+			}
+		}
+		complete_effect = {
+			set_variable = { PSG_can_be_fought_for_or_not_var = 1 }
+			multiply_variable = { FRANA_PSG_support_us = 1.1 }
+			round_variable = FRANA_PSG_support_us
+			clamp_variable = {
+				var = FRANA_PSG_support_us
+				max = FRANA_seat_of_PSG
+			}
+			FRA_Bills_of_National_Assembly_calculate = yes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	FRA_Woo_PFG_parliamentarians = {
+		icon = GFX_decision_generic_political_discourse
+		fire_only_once = yes
+		cost = 50
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = PFG_can_be_fought
+				check_variable = { PFG_can_be_fought_for_or_not_var = 0 }
+			}
+		}
+		complete_effect = {
+			set_variable = { PFG_can_be_fought_for_or_not_var = 1 }
+			multiply_variable = { FRANA_PFG_support_us = 1.1 }
+			round_variable = FRANA_PFG_support_us
+			clamp_variable = {
+				var = FRANA_PFG_support_us
+				max = FRANA_seat_of_PFG
+			}
+			FRA_Bills_of_National_Assembly_calculate = yes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	FRA_Woo_IDU_parliamentarians = {
+		icon = GFX_decision_generic_political_discourse
+		fire_only_once = yes
+		cost = 50
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = IDU_can_be_fought
+				check_variable = { IDU_can_be_fought_for_or_not_var = 0 }
+			}
+		}
+		complete_effect = {
+			set_variable = { IDU_can_be_fought_for_or_not_var = 1 }
+			multiply_variable = { FRANA_IDU_support_us = 1.1 }
+			round_variable = FRANA_IDU_support_us
+			clamp_variable = {
+				var = FRANA_IDU_support_us
+				max = FRANA_seat_of_IDU
+			}
+			FRA_Bills_of_National_Assembly_calculate = yes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	FRA_Woo_GFN_parliamentarians = {
+		icon = GFX_decision_generic_political_discourse
+		fire_only_once = yes
+		cost = 50
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = GFN_can_be_fought
+				check_variable = { GFN_can_be_fought_for_or_not_var = 0 }
+			}
+		}
+		complete_effect = {
+			set_variable = { GFN_can_be_fought_for_or_not_var = 1 }
+			multiply_variable = { FRANA_GFN_support_us = 1.1 }
+			round_variable = FRANA_GFN_support_us
+			clamp_variable = {
+				var = FRANA_GFN_support_us
+				max = FRANA_seat_of_GFN
+			}
+			FRA_Bills_of_National_Assembly_calculate = yes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	FRA_Woo_MNR_parliamentarians = {
+		icon = GFX_decision_generic_political_discourse
+		fire_only_once = yes
+		cost = 50
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_There_is_no_ongoing_agenda_for_Parliament
+				check_variable = { FRA_Motions_voted_on_var > 0 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = MNR_can_be_fought
+				check_variable = { MNR_can_be_fought_for_or_not_var = 0 }
+			}
+		}
+		complete_effect = {
+			set_variable = { MNR_can_be_fought_for_or_not_var = 1 }
+			multiply_variable = { FRANA_MNR_support_us = 1.1 }
+			round_variable = FRANA_MNR_support_us
+			clamp_variable = {
+				var = FRANA_MNR_support_us
+				max = FRANA_seat_of_MNR
+			}
+			FRA_Bills_of_National_Assembly_calculate = yes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}
+
+FRA_election_decision_categories = {
+	FRA_election_results_in_mission = {
+		icon = GFX_decision_eng_trade_unions_support
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 60
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		timeout_effect = {
+			country_event = {
+				id = FRA_Gensokyo.009
+			}
+		}
+	}
+	FRA_Peolple_Font_is_action = {
+		icon = GFX_decision_eng_propaganda_campaigns
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 20
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			hidden_trigger = { has_country_flag = FRA_The_election_results_in }
+		}
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = FRA_Peolple_Font_is_action
+			}
+			random_list = {
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_PSG_Support_rose_Moderately = yes
+						FRA_PCG_Support_rose_slightly = yes
+					}
+				}
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_PSG_Support_rose_slightly = yes
+					}
+				}
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_PSG_Support_rose_very_slightly = yes
+					}
+				}
+			}
+		}
+	}
+	FRA_PFG_is_action = {
+		icon = GFX_decision_eng_propaganda_campaigns
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 20
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			hidden_trigger = { has_country_flag = FRA_The_election_results_in }
+		}
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = FRA_PFG_is_action
+			}
+			random_list = {
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_PFG_Support_rose_Moderately = yes
+						FRA_IDU_Support_rose_slightly = yes
+					}
+				}
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_PFG_Support_rose_slightly = yes
+					}
+				}
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_PFG_Support_rose_very_slightly = yes
+					}
+				}
+			}
+		}
+	}
+	FRA_IDU_is_action = {
+		icon = GFX_decision_eng_propaganda_campaigns
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 20
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			hidden_trigger = { has_country_flag = FRA_The_election_results_in }
+		}
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = FRA_IDU_is_action
+			}
+			random_list = {
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_IDU_Support_rose_Moderately = yes
+						FRA_PFG_Support_rose_slightly = yes
+					}
+				}
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_IDU_Support_rose_slightly = yes
+					}
+				}
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_IDU_Support_rose_very_slightly = yes
+					}
+				}
+			}
+		}
+	}
+	FRA_National_is_action = {
+		icon = GFX_decision_eng_propaganda_campaigns
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 20
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		#selectable_mission = yes
+		cancel_trigger = {
+			hidden_trigger = { has_country_flag = FRA_The_election_results_in }
+		}
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = FRA_National_is_action
+			}
+			random_list = {
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_GFN_Support_rose_Moderately = yes
+						FRA_MNR_Support_rose_very_slightly = yes
+					}
+				}
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_GFN_Support_rose_slightly = yes
+					}
+				}
+				10 = {
+					random_state = {
+						limit = {
+							is_controlled_by = ROOT
+							or = {
+								state = 983
+								state = 14
+								state = 23
+								state = 19
+								state = 779
+								state = 984
+								state = 817
+								state = 22
+								state = 31
+								state = 25
+								state = 30
+								state = 15
+								state = 33
+								state = 26
+								state = 32
+								state = 763
+								state = 27
+								state = 18
+								state = 16
+								state = 24
+								state = 980
+								state = 785
+								state = 925
+								state = 7
+							}
+						}
+						FRA_GFN_Support_rose_very_slightly = yes
+					}
+				}
+			}
+		}
+	}
+}
+
+
+FRA_Debug = {
+	FRA_Ibaraki_Kasen_win_debug = {
+		complete_effect = {
+			set_country_flag = FRA_The_election_results_in
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Reimu_idea
+			promote_character = FRA_Kasen
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = democratic
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 60
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+			custom_effect_tooltip = election_five_yeas_later
+			add_to_variable = { support_of_PSG = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 3 }
+			FRA_set_rule_party_name = yes
+			mark_focus_tree_layout_dirty = yes
+			FRA_Initialization_of_seats_in_National_Assembly = yes
+			complete_national_focus = FRA_first_term_of_Ibaraki_Kasen
+		}
+	}
+	FRA_Marisa_win_debug = {
+		complete_effect = {
+			set_country_flag = FRA_The_election_results_in
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Alice_Margatroid_idea
+			promote_character = FRA_Marisa
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = democratic
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 60
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+			custom_effect_tooltip = election_five_yeas_later
+			add_to_variable = { support_of_PFG = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 4 }
+			FRA_set_rule_party_name = yes
+			mark_focus_tree_layout_dirty = yes
+			FRA_Initialization_of_seats_in_National_Assembly = yes
+		}
+	}
+	FRA_Kamishirasawa_Keine_win_debug = {
+		complete_effect = {
+			set_country_flag = FRA_The_election_results_in
+			FRA_remove_all_ideas = yes
+			#add_ideas = FRA_Reimu_idea
+			promote_character = FRA_Kamishirasawa_Keine
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = democratic
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 60
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+			custom_effect_tooltip = election_five_yeas_later
+			add_to_variable = { support_of_IDU = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 5 }
+			FRA_set_rule_party_name = yes
+			mark_focus_tree_layout_dirty = yes
+			FRA_Initialization_of_seats_in_National_Assembly = yes
+		}
+	}
+	FRA_Reisen_Udongein_Inaba_win_debug = {
+		complete_effect = {
+			set_country_flag = FRA_The_election_results_in
+			FRA_remove_all_ideas = yes
+			add_ideas = FRA_Houraisan_Kaguya_idea
+			promote_character = FRA_Reisen_Udongein_Inaba
+			meta_effect = {
+				text = {
+					set_politics = {
+						ruling_party = fascism
+						last_election = "[CURRENT_DATE]"
+						election_frequency = 60
+						elections_allowed = yes
+					}
+				}
+				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+			}
+			custom_effect_tooltip = election_five_yeas_later
+			add_to_variable = { support_of_GFN = 25 }
+			set_variable = { FRA_Ruling_Party_VAR = 6 }
+			FRA_set_rule_party_name = yes
+			mark_focus_tree_layout_dirty = yes
+			FRA_Initialization_of_seats_in_National_Assembly = yes
+		}
+	}
+	FRA_Sanae_win_debug = {
+		complete_effect = {
+			FRA_remove_all_ideas = yes
+			promote_character = FRA_Sanae
+			set_politics = { ruling_party = neutrality }
+			set_variable = { FRA_Ruling_Party_VAR = 10 }
+			FRA_set_rule_party_name = yes
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+}
+
+
