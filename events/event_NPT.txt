@@ -597,10 +597,13 @@ add_namespace = neptune
 				ideology = fascism
 				popularity = 0.10
 			}
-			add_dynamic_modifier = {
-				modifier = NPT_devil_sword
+			effect_tooltip = {
+				add_ideas = NPT_devil_sword_idea
 			}
 			hidden_effect = {
+				add_dynamic_modifier = {
+					modifier = NPT_devil_sword
+				}
 				set_variable = { NPT_ds_conscription = 0 }
 				set_variable = { NPT_ds_training_time_factor = 0 }
 				set_variable = { NPT_ds_attack_factor = 0.05 }
@@ -2874,8 +2877,8 @@ add_namespace = neptune
 			hidden_effect = {
 				set_variable_to_random = {
 					var = game_increase_var
-					min = 7
-					max = 4
+					min = 4
+					max = 7
 					integer = yes
 				}
 				add_to_variable = {
@@ -2898,8 +2901,8 @@ add_namespace = neptune
 			hidden_effect = {
 				set_variable_to_random = {
 					var = game_increase_var
-					min = 4
-					max = 1
+					min = 1
+					max = 4
 					integer = yes
 				}
 				add_to_variable = {
@@ -2951,41 +2954,63 @@ add_namespace = neptune
 			else = {
 				add_to_variable = { DVL.game_win_var = 1 }
 			}
-			hidden_effect = {
-				clear_variable = NPT.game_DN_var
-				clear_variable = DVL.game_DN_var
-				set_variable = { NPT.game_round_num_var = 1 }
-				if = {
-					limit = {
-						check_variable = {
-							NPT.game_num_var = 1
-						}
+			if = {
+				limit = {
+					tag = DVL
+					check_variable = {
+						NPT.game_win_var > 1
 					}
-					add_to_variable = { NPT.game_num_var = 1 }
-					DVL = { country_event = { id = neptune.114 days = 1 } }
-					NPT = { country_event = { id = neptune.114 days = 1 } }
 				}
-				else_if = {
-					limit = {
-						check_variable = {
-							NPT.game_num_var = 2
-						}
+				set_global_flag = NPT_win_in_DVL
+				country_event = { id = neptune.000 days = 1 }
+				NPT = { country_event = { id = neptune.000 days = 1 } }
+			}
+			else_if = {
+				limit = {
+					tag = DVL
+					check_variable = {
+						DVL.game_win_var > 1
 					}
-					add_to_variable = { NPT.game_num_var = 1 }
-					DVL = { country_event = { id = neptune.117 days = 1 } }
-					NPT = { country_event = { id = neptune.117 days = 1 } }
 				}
-				else_if = {
-					limit = {
-						check_variable = {
-							NPT.game_num_var = 3
+				country_event = { id = neptune.000 days = 1 }
+				NPT = { country_event = { id = neptune.000 days = 1 } }
+			}
+			else = {
+				hidden_effect = {
+					clear_variable = NPT.game_DN_var
+					clear_variable = DVL.game_DN_var
+					set_variable = { NPT.game_round_num_var = 1 }
+					if = {
+						limit = {
+							check_variable = {
+								NPT.game_num_var = 1
+							}
 						}
+						add_to_variable = { NPT.game_num_var = 1 }
+						DVL = { country_event = { id = neptune.114 days = 1 } }
+						NPT = { country_event = { id = neptune.114 days = 1 } }
 					}
-					set_country_flag = NPT_boom_in_game_with_DVL
-					DVL = { country_event = { id = neptune.119 days = 1 } }
-					NPT = { country_event = { id = neptune.119 days = 1 } }
+					else_if = {
+						limit = {
+							check_variable = {
+								NPT.game_num_var = 2
+							}
+						}
+						add_to_variable = { NPT.game_num_var = 1 }
+						DVL = { country_event = { id = neptune.117 days = 1 } }
+						NPT = { country_event = { id = neptune.117 days = 1 } }
+					}
+					else_if = {
+						limit = {
+							check_variable = {
+								NPT.game_num_var = 3
+							}
+						}
+						set_country_flag = NPT_boom_in_game_with_DVL
+						DVL = { country_event = { id = neptune.119 days = 1 } }
+						NPT = { country_event = { id = neptune.119 days = 1 } }
+					}
 				}
-				add_to_variable = { NPT.game_num_var = 1 }
 			}
 		}
 	}
@@ -3042,6 +3067,9 @@ add_namespace = neptune
 						NPT = { country_event = { id = neptune.111 days = 1 } }
 					}
 				}
+				else = {
+					country_event = { id = neptune.112 days = 1 }
+				}
 			}
 		}
 		option = {
@@ -3049,7 +3077,42 @@ add_namespace = neptune
 			hidden_effect = {
 				set_variable_to_random = {
 					var = game_increase_var
-					min = 7
+					min = 4
+					max = 7
+					integer = yes
+				}
+				add_to_variable = {
+					game_DN_var = game_increase_var
+				}
+				clear_variable = game_increase_var
+				if = {
+					limit = {
+						check_variable = {
+							game_DN_var > 21
+						}
+					}
+					country_event = { id = neptune.110 days = 1 }
+					if = {
+						limit = {
+							tag = NPT
+						}
+						DVL = { country_event = { id = neptune.111 days = 1 } }
+					}
+					else = {
+						NPT = { country_event = { id = neptune.111 days = 1 } }
+					}
+				}
+				else = {
+					country_event = { id = neptune.112 days = 1 }
+				}
+			}
+		}
+		option = {
+			name = neptune.112.c
+			hidden_effect = {
+				set_variable_to_random = {
+					var = game_increase_var
+					min = 1
 					max = 4
 					integer = yes
 				}
@@ -3074,37 +3137,8 @@ add_namespace = neptune
 						NPT = { country_event = { id = neptune.111 days = 1 } }
 					}
 				}
-			}
-		}
-		option = {
-			name = neptune.112.c
-			hidden_effect = {
-				set_variable_to_random = {
-					var = game_increase_var
-					min = 4
-					max = 1
-					integer = yes
-				}
-				add_to_variable = {
-					game_DN_var = game_increase_var
-				}
-				clear_variable = game_increase_var
-				if = {
-					limit = {
-						check_variable = {
-							game_DN_var > 21
-						}
-					}
-					country_event = { id = neptune.110 days = 1 }
-					if = {
-						limit = {
-							tag = NPT
-						}
-						DVL = { country_event = { id = neptune.111 days = 1 } }
-					}
-					else = {
-						NPT = { country_event = { id = neptune.111 days = 1 } }
-					}
+				else = {
+					country_event = { id = neptune.112 days = 1 }
 				}
 			}
 		}
@@ -3267,8 +3301,8 @@ add_namespace = neptune
 			hidden_effect = {
 				set_variable_to_random = {
 					var = game_increase_var
-					min = 7
-					max = 4
+					min = 4
+					max = 7
 					integer = yes
 				}
 				add_to_variable = {
@@ -3291,8 +3325,8 @@ add_namespace = neptune
 			hidden_effect = {
 				set_variable_to_random = {
 					var = game_increase_var
-					min = 4
-					max = 1
+					min = 1
+					max = 4
 					integer = yes
 				}
 				add_to_variable = {
@@ -3401,7 +3435,8 @@ add_namespace = neptune
 				limit = { tag = NPT }
 				complete_national_focus = NPT_neptune_uisually_passing_by_neighbors
 			}
-			else = {
+			else_if = {
+				limit = { tag = DVL }
 				hidden_effect = {
 					country_event = { id = neptune.120 days = 3 }
 				}
@@ -3509,8 +3544,8 @@ add_namespace = neptune
 			hidden_effect = {
 				set_variable_to_random = {
 					var = game_increase_var
-					min = 7
-					max = 4
+					min = 4
+					max = 7
 					integer = yes
 				}
 				add_to_variable = {
@@ -3533,8 +3568,8 @@ add_namespace = neptune
 			hidden_effect = {
 				set_variable_to_random = {
 					var = game_increase_var
-					min = 4
-					max = 1
+					min = 1
+					max = 4
 					integer = yes
 				}
 				add_to_variable = {
@@ -3664,6 +3699,55 @@ add_namespace = neptune
 			add_political_power = -50
 		}
 	}
+
+	country_event = {
+		id = neptune.000
+		title = neptune.119.t
+		desc = {
+			text = neptune.119.d1
+			trigger = { has_global_flag = NPT_win_in_DVL }
+		}
+		desc = {
+			text = neptune.119.d2
+			trigger = { NOT = { has_global_flag = NPT_win_in_DVL } }
+		}
+		is_triggered_only = yes
+		trigger = {
+			NPT = { NOT = { has_war_with = DVL } }
+		}
+		option = {
+			name = neptune.119.a
+			trigger = {
+				has_global_flag = NPT_win_in_DVL
+			}
+			if = {
+				limit = { tag = NPT }
+				complete_national_focus = NPT_neptune_uisually_passing_by_neighbors
+			}
+			else = {
+				hidden_effect = {
+					country_event = { id = neptune.120 days = 3 }
+				}
+			}
+		}
+		option = {
+			name = neptune.119.b
+			trigger = {
+				NOT = { has_global_flag = NPT_win_in_DVL }
+			}
+			if = {
+				limit = { tag = NPT }
+				complete_national_focus = NPT_neptune_associate_member_state
+			}
+			else = {
+				diplomatic_relation = {
+					country = NPT
+					relation = non_aggression_pact
+				}
+			}
+			add_political_power = -50
+		}
+	}
 			
 	country_event = {
 		id = neptune.120
@@ -3707,7 +3791,9 @@ add_namespace = neptune
 				}
 			}
 			hidden_effect = {
-				news_event = neptune.122
+				FROM = {
+					news_event = neptune.122
+				}
 			}
 		}
 		option = {
@@ -3720,7 +3806,9 @@ add_namespace = neptune
 				}
 			}
 			hidden_effect = {
-				news_event = neptune.123
+				FROM = {
+					news_event = neptune.123
+				}
 			}
 		}
 	}
