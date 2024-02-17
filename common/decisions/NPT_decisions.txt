@@ -1597,3 +1597,318 @@ NPT_developing_new_terminals_decision_category = {
 		}
 	}
 }
+
+NPT_sword_of_judgment_decision_category = {
+
+	NPT_dec_lock_the_target_decision = {
+		icon = GFX_decision_generic_operation
+		priority = 3
+		allowed = {
+			always = no
+		}
+		visible = {
+			is_subject = no
+			FROM = { exists = yes }
+		}
+		fire_only_once = yes
+		cost = 5
+		days_remove = 7
+		remove_effect = {
+			hidden_effect = {
+				FROM = {
+					capital_scope = {
+						NPT_lock_the_target = yes
+						ROOT = { activate_targeted_decision = { target = PREV decision = NPT_dec_sacrifice_sword_decision } }
+					}
+				}
+			}
+			activate_targeted_decision = { target = FROM decision = NPT_dec_launch_attack_decision }
+			
+		}
+	}
+
+	NPT_dec_launch_attack_decision = {
+		icon = GFX_decision_infiltrate_state
+		priority = 2
+		allowed = {
+			always = no
+		}
+		visible = {
+			is_subject = no
+			FROM = { exists = yes }
+			NOT = { has_war_with = FROM }
+		}
+		available = {
+			has_global_flag = second_weltkrieg_has_started
+			can_declare_war_on = FROM
+		}
+		fire_only_once = yes
+		cost = 10
+		days_remove = 14
+		war_with_on_remove = FROM
+		complete_effect = {
+			hidden_effect = {
+				FROM = { country_event = neptune.124 }
+			}
+		}
+		remove_effect = {
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+	}
+	
+	NPT_dec_sacrifice_sword_decision = {
+		icon = GFX_decision_generic_intelligence_operation
+		priority = 1
+		allowed = {
+			always = no
+		}
+		visible = {
+			is_subject = no
+		}
+		available = {
+			FROM = {
+				is_fully_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		fire_only_once = yes
+		cost = 50
+		days_remove = 90
+		remove_effect = {
+			NPT_sacrifice_sword = yes
+		}
+	}
+}
+
+SOV_military_assistance_from_NPT_category = {
+	
+	NPT_purchase_infantry_equipment = {
+
+		priority = 6
+
+		icon = generic_industry
+
+		available = {
+			NOT = { has_war_with = NPT }
+			has_war_with = DVL
+		}
+
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 50 }
+		}
+		custom_cost_text = RUS_50_ubs_save_cost
+		cancel_if_not_visible = yes
+
+		days_remove = 90
+		days_re_enable = 30
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					num_of_civilian_factories < 2
+					has_equipment = {
+						infantry_equipment > 500
+					}
+				}
+			}
+		}
+		modifier = {
+			civilian_factory_use = 1
+		}
+		
+		complete_effect = {
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			hidden_effect = {
+				add_to_variable = {
+					ubs_save = -50
+				}
+			}
+		}
+		cancel_effect = {
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = -1
+				}
+			}
+		}
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 2500
+				producer = NPT
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 1500
+				producer = NPT
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 1000
+				producer = NPT
+			}
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = -1
+				}
+			}
+		}
+	}
+
+	NPT_purchase_armor = {
+
+		priority = 3
+
+		icon = generic_tank
+
+		available = {
+			NOT = { has_war_with = NPT }
+			has_war_with = DVL
+		}
+
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 75 }
+		}
+		custom_cost_text = RUS_75_ubs_save_cost
+		cancel_if_not_visible = yes
+
+		days_remove = 90
+		days_re_enable = 30
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					num_of_civilian_factories < 2
+					has_equipment = {
+						medium_tank_chassis > 10
+					}
+				}
+			}
+		}
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+		
+		complete_effect = {
+			add_to_variable = {
+				ubs_save = -75
+			}
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+		}
+		cancel_effect = {
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = -1
+				}
+			}
+		}
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = medium_tank_chassis
+				amount = 100
+				producer = ROOT
+			}
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = -1
+				}
+			}
+		}
+	}
+
+	NPT_purchase_aircraft = {
+
+		priority = 2
+
+		icon = generic_air
+
+		available = {
+			NOT = { has_war_with = NPT }
+			has_war_with = DVL
+		}
+
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 100 }
+		}
+		custom_cost_text = RUS_100_ubs_save_cost
+		cancel_if_not_visible = yes
+
+		days_remove = 90
+		days_re_enable = 30
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				OR = {
+					num_of_civilian_factories < 2
+					has_equipment = {
+						small_plane_airframe  > 25
+					}
+				}
+			}
+		}
+
+		modifier = {
+			civilian_factory_use = 1
+		}
+		
+		complete_effect = {
+			add_to_variable = {
+				ubs_save = -100
+			}
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+		}
+		cancel_effect = {
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = -1
+				}
+			}
+		}
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = small_plane_airframe
+				amount = 100
+				producer = ROOT
+			}
+			NPT = {
+				add_offsite_building = {
+					type = industrial_complex
+					level = -1
+				}
+			}
+		}
+	}
+}
