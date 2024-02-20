@@ -2287,6 +2287,16 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_opinion_modifier = {
+				target = SOV
+				modifier = SWE_Ideologically_friendly
+			}
+			SOV = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = SWE_Ideologically_friendly
+				}
+			}
 		}
 	}
 	#进口苏联电影
@@ -2352,6 +2362,7 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			not = { has_completed_focus = FRA_Europe_for_Europeans }
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -3577,11 +3588,14 @@ focus_tree = {
 					}
 				}
 			}
+			is_subject = no
+			is_major = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
 			add_ideas = FRA_master_of_eu
+			add_research_slot = 1
 		}
 	}
 	#乘胜追击
@@ -3694,7 +3708,15 @@ focus_tree = {
 			base = 10
 		}
 		available = {
-			always = no
+			if = {
+				limit = {
+					has_country_leader = {
+						ruling_only = yes
+						character = FRA_Kasen
+					}
+				}
+				not = { has_completed_focus = FRA_Join_Third_International }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -3844,12 +3866,41 @@ focus_tree = {
 			base = 10
 		}
 		available = {
-			always = no
+			if = {
+				limit = {
+					has_country_leader = {
+						ruling_only = yes
+						character = FRA_Kasen
+					}
+				}
+				not = { has_government = communism }
+			}
+			or = {
+				has_government = neutrality
+				has_government = democratic
+			}
+			SOV = {
+				has_government = communism
+				is_faction_leader = yes
+				is_major = yes
+			}
+			#is_subject = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			custom_effect_tooltip = Come_explore_later
+			add_ideas = FRA_Cold_War_front_idea
+			if = {
+				limit = {
+					NOT = { is_embargoing = SOV }
+					SOV = {
+						has_government = communism
+						is_faction_leader = yes
+						is_major = yes
+					}
+				}
+				send_embargo = SOV
+			}
 		}
 	}
 	#援助德意志建设
@@ -3869,10 +3920,81 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_subject = no
+		}
+		bypass = {
+			custom_trigger_tooltip = {
+				tooltip = ally_not_control_any_germany_land
+				not = {
+					any_state = {
+						has_state_flag = L_GER
+						not = { state = 28 }
+						or = {
+							any_allied_country = {
+								owns_state = PREV
+								has_full_control_of_state = PREV
+							}
+							ROOT = {
+								owns_state = PREV
+								has_full_control_of_state = PREV
+							}
+						}
+					}
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_timed_idea = {
+				idea = FRA_Aid_to_construction_of_Germany_idea
+				days = 50
+			}
+			custom_effect_tooltip = FRA_every_germany_land_get_infrastructure
+			custom_effect_tooltip = FRA_every_germany_ally_get_arms_factory
+			hidden_effect = {
+				every_state = {
+					limit = {
+						has_state_flag = L_GER
+						not = { state = 28 }
+						controller = {
+							or = {
+								tag = ROOT
+								is_in_faction_with = ROOT
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				every_country = {
+					limit = {
+						or = {
+							tag = ROOT
+							is_in_faction_with = ROOT
+						}
+						any_controlled_state = {
+							has_state_flag = L_GER
+							not = { state = 28 }
+						}
+					}
+					random_owned_controlled_state = {
+						limit = {
+							has_state_flag = L_GER
+							not = { state = 28 }
+						}
+						add_building_construction = {
+							type = arms_factory
+							level = 2
+							instant_build = yes
+						}
+					}
+				}
+			}
 		}
 	}
 	#意识形态安全法案
@@ -3892,10 +4014,16 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			or = {
+				has_government = neutrality
+				has_government = democratic
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = communism popularity = -0.2 }
+			add_popularity = { ideology = fascism popularity = -0.2 }
 		}
 	}
 	#和平演变
@@ -3915,10 +4043,29 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			or = {
+				has_government = neutrality
+				has_government = democratic
+			}
+			is_major = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			every_country = {
+				limit = {
+					capital_scope = {
+						is_on_continent = europe
+					}
+					is_in_third_international = yes
+					is_major = no
+					not = { has_government = democratic }
+				}
+				add_timed_idea = {
+					idea = FRA_Peaceful_evolution_idea
+					days = 100
+				}
+			}
 		}
 	}
 	#冷战热斗
@@ -3943,10 +4090,34 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_subject = no
+			is_major = yes
+			not = { has_government = SOV }
+			SOV = {
+				has_government = communism
+				NOT = {
+					or = {
+						is_in_faction_with = ROOT
+						has_war_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		bypass = {
+			SOV = {
+				OR = {
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+					has_war_with = ROOT
+					exists = no
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Cold_War_was_hot_idea
 		}
 	}
 	#克林姆林宫，红旗落地
@@ -3967,8 +4138,10 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
+			is_major = yes
+			not = { has_government = SOV }
 			SOV = {
-				has_government = fascism
+				has_government = communism
 				NOT = {
 					or = {
 						is_in_faction_with = ROOT
@@ -4520,6 +4693,11 @@ focus_tree = {
 		cancel_if_invalid = yes
 		completion_reward = {
 			remove_ideas = FRA_victors_of_Great_War
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.6
+				uses = 2
+				category = land_doctrine
+			}
 		}
 	}
 	#特种作战常态化
@@ -4653,6 +4831,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Gensokyo_features_military_system_idea
 		}
 	}
 	#天狗协同作战
@@ -4676,6 +4855,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_The_tengu_work_together_idea
 		}
 	}
 	#妖怪先锋部队
@@ -4699,6 +4879,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_features_military_system_idea
+				add_idea = FRA_Gensokyo_features_military_system_idea_1
+			}
 		}
 	}
 	#传统焕发新生
@@ -4722,6 +4906,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_features_military_system_idea_1
+				add_idea = FRA_Gensokyo_features_military_system_idea_2
+			}
 		}
 	}
 	#新式生产线
@@ -5468,12 +5656,11 @@ focus_tree = {
 				tooltip = FRA_degree_of_economic_crisis_var_small_50
 				check_variable = { FRA_degree_of_economic_crisis_var < 50 }
 			}
-			always = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			custom_effect_tooltip = Come_explore_later
+			navy_experience = 100
 		}
 	}
 	#大西洋海军
@@ -5497,6 +5684,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Atlantic_Navy_idea
 		}
 	}
 	#重视远洋航行
@@ -5520,6 +5708,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Atlantic_Navy_idea
+				add_idea = FRA_Emphasis_on_ocean_voyages_idea
+			}
 		}
 	}
 	#地中海海军
@@ -5543,6 +5735,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Mediterranean_Navy_idea
 		}
 	}
 	#重视近海作战
@@ -5566,6 +5759,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Mediterranean_Navy_idea
+				add_idea = FRA_Attach_importance_to_offshore_operations_idea
+			}
 		}
 	}
 	#海军军官学院
@@ -5590,6 +5787,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Naval_Officer_Academy_idea
 		}
 	}
 	#新式战术研究
@@ -5619,6 +5817,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.8
+				uses = 2
+				category = naval_doctrine
+			}
 		}
 	}
 	#海军航空兵
@@ -5647,6 +5850,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Naval_aviation_idea
 		}
 	}
 	#航母研究
@@ -5673,6 +5877,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1.0
+				uses = 2
+				category = cv_tech
+			}
 		}
 	}
 	#发挥机动优势
@@ -5701,6 +5910,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Take_advantage_of_maneuverability_idea
 		}
 	}
 	#轻型舰船研究
@@ -5727,6 +5937,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1.0
+				uses = 2
+				category = dd_tech
+			}
 		}
 	}
 	#潜艇集群
@@ -5755,6 +5970,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Submarine_clusters_idea
 		}
 	}
 	#潜艇研究
@@ -5781,6 +5997,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1.0
+				uses = 2
+				category = ss_tech
+			}
 		}
 	}
 	#重型火力优势
@@ -5809,6 +6030,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Heavy_firepower_superiority_idea
 		}
 	}
 	#重型舰船研究
@@ -5835,6 +6057,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1.0
+				uses = 2
+				category = bb_tech
+			}
 		}
 	}
 #空军
@@ -5873,12 +6100,12 @@ focus_tree = {
 				tooltip = FRA_degree_of_economic_crisis_var_small_50
 				check_variable = { FRA_degree_of_economic_crisis_var < 50 }
 			}
-			always = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			custom_effect_tooltip = Come_explore_later
+			air_experience = 50
+			add_ideas = FRA_Gensokyo_Air_idea
 		}
 	}
 	#吸纳天狗作战经验
@@ -5902,6 +6129,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.8
+				uses = 2
+				category = air_doctrine
+			}
 		}
 	}
 	#投资航空俱乐部
@@ -5925,6 +6157,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_Air_idea
+				add_idea = FRA_Gensokyo_Air_idea_1
+			}
 		}
 	}
 	#投资空军研究
@@ -5951,6 +6187,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_Air_idea_1
+				add_idea = FRA_Gensokyo_Air_idea_2
+			}
 		}
 	}
 	#制空权夺取
@@ -5978,6 +6218,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.4
+				uses = 3
+				category = cat_battlefield_support
+			}
 		}
 	}
 	#辅助地面作战
@@ -6001,6 +6246,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_Air_idea_2
+				add_idea = FRA_Gensokyo_Air_idea_3
+			}
 		}
 	}
 	#立体作战
@@ -6024,6 +6273,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_Air_idea_3
+				add_idea = FRA_Gensokyo_Air_idea_4
+			}
 		}
 	}
 	#空中角逐
@@ -6051,6 +6304,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.4
+				uses = 3
+				category = cat_operational_integrity
+			}
 		}
 	}
 	#保卫领空
@@ -6074,6 +6332,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_Air_idea_2
+				add_idea = FRA_Gensokyo_Air_idea_5
+			}
 		}
 	}
 	#消灭有生力量
@@ -6097,6 +6359,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_Air_idea_5
+				add_idea = FRA_Gensokyo_Air_idea_6
+			}
 		}
 	}
 	#工业打击能力
@@ -6124,6 +6390,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.4
+				uses = 3
+				category = cat_strategic_destruction
+			}
 		}
 	}
 	#大规模轰炸
@@ -6147,6 +6418,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_Air_idea_2
+				add_idea = FRA_Gensokyo_Air_idea_7
+			}
 		}
 	}
 	#后勤破坏
@@ -6170,6 +6445,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Gensokyo_Air_idea_7
+				add_idea = FRA_Gensokyo_Air_idea_8
+			}
 		}
 	}
 #大战
@@ -6204,11 +6483,16 @@ focus_tree = {
 			}
 		}
 		available = {
-			has_global_flag = second_weltkrieg_has_started
+			custom_trigger_tooltip = {
+				tooltip = FRA_degree_of_economic_crisis_var_small_50
+				check_variable = { FRA_degree_of_economic_crisis_var < 50 }
+			}
+			threat > 0.2
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_war_support = 0.2
 		}
 	}
 	#起来，战士们！
@@ -6226,10 +6510,449 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			not = {
+				or = {
+					has_idea = tot_economic_mobilisation
+					has_idea = war_economy
+					has_idea = partial_economic_mobilisation
+				}
+			}
+			not = {
+				or = {
+					has_idea = scraping_the_barrel
+					has_idea = all_adults_serve
+					has_idea = service_by_requirement
+					has_idea = extensive_conscription
+				}
+			}
+		}
+		bypass = {
+			or = {
+				has_idea = tot_economic_mobilisation
+				has_idea = war_economy
+				has_idea = partial_economic_mobilisation
+			}
+			or = {
+				has_idea = scraping_the_barrel
+				has_idea = all_adults_serve
+				has_idea = service_by_requirement
+				has_idea = extensive_conscription
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			if = {
+				limit = { has_idea = disarmed_nation }
+				swap_ideas = {
+					remove_idea = disarmed_nation
+					add_idea = limited_conscription
+				}
+			}
+			else_if = {
+				limit = { has_idea = volunteer_only }
+				swap_ideas = {
+					remove_idea = volunteer_only
+					add_idea = limited_conscription
+				}
+			}
+			else_if = {
+				limit = { has_idea = limited_conscription }
+				swap_ideas = {
+					remove_idea = limited_conscription
+					add_idea = extensive_conscription
+				}
+			}
+			if = {
+				limit = { has_war = yes }
+				add_ideas = war_economy
+			}
+			else_if = {
+				limit = { has_idea = civilian_economy }
+				swap_ideas = {
+					remove_idea = civilian_economy
+					add_idea = low_economic_mobilisation
+				}
+			}
+			else_if = {
+				limit = { has_idea = low_economic_mobilisation }
+				swap_ideas = {
+					remove_idea = low_economic_mobilisation
+					add_idea = partial_economic_mobilisation
+				}
+			}
+		}
+	}
+	#为了祖国，购买债券！
+	focus = {
+		id = FRA_For_sake_of_Motherland_buy_bonds
+		icon = GFX_FRA_Recovered_K
+		prerequisite = {
+			focus = FRA_Arise_warriors
+		}
+		relative_position_id = FRA_Arise_warriors
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_For_sake_of_Motherland_buy_bonds_idea
+		}
+	}
+	#英勇的姑娘们，走上战场！
+	focus = {
+		id = FRA_Valiant_girls_go_to_war
+		icon = GFX_FRA_Recovered_K
+		prerequisite = {
+			focus = FRA_Arise_warriors
+		}
+		relative_position_id = FRA_Arise_warriors
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Valiant_girls_go_to_war_idea
+		}
+	}
+	#努力生产就是最好的支援！
+	focus = {
+		id = FRA_Hard_work_is_best_support
+		icon = GFX_FRA_Recovered_K
+		prerequisite = {
+			focus = FRA_Arise_warriors
+		}
+		relative_position_id = FRA_Arise_warriors
+		x = -2
+		y = 2
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			has_war = yes
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_timed_idea = {
+				idea = FRA_Hard_work_is_best_support_idea
+				days = 100
+			}
+		}
+	}
+	#全民团结才能走向胜利！
+	focus = {
+		id = FRA_Only_whole_people_united_we_lead_to_victory
+		icon = GFX_FRA_Recovered_K
+		prerequisite = {
+			focus = FRA_Arise_warriors
+		}
+		relative_position_id = FRA_Arise_warriors
+		x = 0
+		y = 2
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			has_war = yes
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_timed_idea = {
+				idea = FRA_Only_whole_people_united_we_lead_to_victory_idea
+				days = 100
+			}
+		}
+	}
+	#用敌人肮脏的血液来浇灌我们的沃野！
+	focus = {
+		id = FRA_Water_fertile_fields_with_enemy_filthy_blood
+		icon = GFX_FRA_Recovered_K
+		prerequisite = {
+			focus = FRA_Valiant_girls_go_to_war
+		}
+		prerequisite = {
+			focus = FRA_For_sake_of_Motherland_buy_bonds
+		}
+		prerequisite = {
+			focus = FRA_Hard_work_is_best_support
+		}
+		prerequisite = {
+			focus = FRA_Only_whole_people_united_we_lead_to_victory
+		}
+		relative_position_id = FRA_Only_whole_people_united_we_lead_to_victory
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Water_fertile_fields_with_enemy_filthy_blood_idea
+		}
+	}
+	#幻想乡永不投降
+	focus = {
+		id = FRA_Fantasy_Township_never_surrenders
+		icon = GFX_goal_assymetric_doctrine
+		prerequisite = {
+			focus = FRA_The_inevitable_battle
+		}
+		relative_position_id = FRA_The_inevitable_battle
+		x = 2
+		y = 1
+		cost = 2
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		available = {
+			surrender_progress > 0.2
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_timed_idea = {
+				idea = FRA_never_surrenders
+				days = 100
+			}
+		}
+	}
+	#动员游击队
+	focus = {
+		id = FRA_Mobilization_of_partisans
+		icon = GFX_goal_infantry_offensive
+		cost = 3
+		ai_will_do = {
+			base = 100
+		}
+		prerequisite = {
+			focus = FRA_Fantasy_Township_never_surrenders
+		}
+		relative_position_id = FRA_Fantasy_Township_never_surrenders
+		x = -1
+		y = 1
+		available = {
+			surrender_progress > 0.4
+		}
+		completion_reward = {
+			hidden_effect = {
+				set_technology = {
+					tech_irregulars = 1
+				}
+				division_template = {
+					name = "游击队"
+					is_locked = yes
+					regiments = {
+						irregular_infantry = {
+							x = 0
+							y = 0
+						}
+						irregular_infantry = {
+							x = 0
+							y = 1
+						}
+						irregular_infantry = {
+							x = 0
+							y = 2
+						}
+						irregular_infantry = {
+							x = 0
+							y = 3
+						}
+					}
+				}
+			}
+			random_owned_controlled_state = {
+				create_unit = {
+					division = "name = \"游击队\" division_template = \"游击队\" start_experience_factor = 0"
+					owner = PREV
+				}
+			}
+			random_owned_controlled_state = {
+				create_unit = {
+					division = "name = \"游击队\" division_template = \"游击队\" start_experience_factor = 0"
+					owner = PREV
+				}
+			}
+			random_owned_controlled_state = {
+				create_unit = {
+					division = "name = \"游击队\" division_template = \"游击队\" start_experience_factor = 0"
+					owner = PREV
+				}
+			}
+			random_owned_controlled_state = {
+				create_unit = {
+					division = "name = \"游击队\" division_template = \"游击队\" start_experience_factor = 0"
+					owner = PREV
+				}
+			}
+			random_owned_controlled_state = {
+				create_unit = {
+					division = "name = \"游击队\" division_template = \"游击队\" start_experience_factor = 0"
+					owner = PREV
+				}
+			}
+			random_owned_controlled_state = {
+				create_unit = {
+					division = "name = \"游击队\" division_template = \"游击队\" start_experience_factor = 0"
+					owner = PREV
+				}
+			}
+			random_owned_controlled_state = {
+				create_unit = {
+					division = "name = \"游击队\" division_template = \"游击队\" start_experience_factor = 0"
+					owner = PREV
+				}
+			}
+		}
+	}
+	#堡垒计划
+	focus = {
+		id = FRA_Bastion_Plan
+		icon = GFX_goal_generic_fortification
+		cost = 3
+		ai_will_do = {
+			base = 100
+		}
+		prerequisite = {
+			focus = FRA_Fantasy_Township_never_surrenders
+		}
+		relative_position_id = FRA_Fantasy_Township_never_surrenders
+		x = 1
+		y = 1
+		available = {
+			surrender_progress > 0.4
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = FRA_Bastion_Plan_idea
+				days = 100
+			}
+		}
+	}
+	#鼓动反抗者
+	focus = {
+		id = FRA_Agitating_the_rebels
+		icon = GFX_goal_generic_censorship
+		cost = 3
+		ai_will_do = {
+			base = 100
+		}
+		prerequisite = {
+			focus = FRA_Fantasy_Township_never_surrenders
+		}
+		relative_position_id = FRA_Fantasy_Township_never_surrenders
+		x = 0
+		y = 2
+		available = {
+			surrender_progress > 0.4
+		}
+		completion_reward = {
+			add_ideas = FRA_Agitating_the_rebels_idea
+		}
+	}
+	#建设大后方
+	focus = {
+		id = FRA_Build_a_large_rear
+		icon = GFX_goal_generic_strenght_through_industry
+		cost = 3
+		ai_will_do = {
+			base = 100
+		}
+		prerequisite = {
+			focus = FRA_Fantasy_Township_never_surrenders
+		}
+		relative_position_id = FRA_Fantasy_Township_never_surrenders
+		x = 2
+		y = 2
+		available = {
+			surrender_progress > 0.4
+		}
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+	#长路归乡
+	focus = {
+		id = FRA_Long_road_home
+		icon = GFX_focus_spr_the_anti_fascist_workers_revolution
+		cost = 3
+		ai_will_do = {
+			base = 100
+		}
+		prerequisite = {
+			focus = FRA_Mobilization_of_partisans
+			focus = FRA_Bastion_Plan
+			focus = FRA_Agitating_the_rebels
+			focus = FRA_Build_a_large_rear
+		}
+		relative_position_id = FRA_Agitating_the_rebels
+		x = 0
+		y = 1
+		available = {
+			surrender_progress > 0.4
+		}
+		completion_reward = {
+			add_ideas = FRA_Long_road_home_idea
 		}
 	}
 #殖民地
@@ -6301,6 +7024,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_political_power = 50
 			LIB = {
 				add_opinion_modifier = {
 					target = FRA
@@ -6432,6 +7156,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_political_power = 25
 		}
 	}
 	#指导北非独立
@@ -6470,6 +7195,18 @@ focus_tree = {
 						}
 					}
 					set_nationality = ROOT
+				}
+			}
+			custom_effect_tooltip = FRA_neocolonialism_completed
+			effect_tooltip = {
+				LIB = { add_ideas = FRA_Liberation_ransom }
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						has_completed_focus = FRA_neocolonialism
+					}
+					LIB = { add_ideas = FRA_Liberation_ransom }
 				}
 			}
 		}
@@ -6539,6 +7276,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_political_power = -50
 		}
 	}
 	#加大北非投资
@@ -6559,7 +7297,7 @@ focus_tree = {
 			base = 10
 		}
 		available = {
-			LIB = { is_subject_of = ROOT }
+			LIB = { is_in_faction_with = ROOT }
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
