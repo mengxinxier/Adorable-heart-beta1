@@ -1275,4 +1275,98 @@ NGD_undercurrent_surge_category = {
 	}
 }
 
+###- 远洋外交 -###
+NGD_YuanYang_diplomacy_category = {
+	#援助同胞
+	NGD_assist_FROM_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		target_trigger = {
+			FROM = {
+				exists = yes
+				is_chinese_country = yes
+				is_in_China_unit_font = yes
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+			ROOT = {
+				is_subject = no
+				has_completed_focus = NGD_support_our_compatriots
+			}
+		}
+		custom_cost_trigger = {
+			has_equipment = { infantry_equipment > 1999 }
+		}
+		custom_cost_text = 2000_infantry_equipment_1
+		complete_effect = {
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -2000
+				}
+			}
+		}
+		days_re_enable = 30
+		complete_effect = {
+			send_equipment = { target = FROM type = infantry_equipment amount = 2000 }
+			FROM = {
+				country_event = NGD_diplomacy.002
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_equipment = { infantry_equipment < 4000 }
+			}
+		}
+	}
+
+	#确保后花园
+	NGD_ensure_FROM_decision = {
+		icon = eng_trade_unions_demand
+		target_trigger = {
+			FROM = {
+				NOT = {
+					OR = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+					tag = AHM
+				}
+				capital_scope = {
+					is_on_continent = south_america
+				}
+			}
+			ROOT = {
+				is_subject = no
+				has_completed_focus = NGD_ensure_the_backyard
+				NOT = {
+					has_wargoal_against = from
+				}
+			}
+		}
+		complete_effect = {
+			FROM = { country_event = frg.18 }
+		}
+		
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.5
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
 
