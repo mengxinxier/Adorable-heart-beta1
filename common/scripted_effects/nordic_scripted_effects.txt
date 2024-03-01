@@ -280,20 +280,25 @@ DEN_integrate_research_institute = {
 			check_variable = { DEN_iri > 2 }
 		}
 		set_country_flag = DEN_integrate_research_institute_flag
-		custom_effect_tooltip = available_designer
-		show_ideas_tooltip = Breguet2
 		hidden_effect = {
 			if = {
-				limit = { has_idea = Breguet }
+				limit = { has_idea = DEN_Breguet_idea }
 				swap_ideas = {
-					remove_idea = Breguet
-					add_idea = Breguet2
+					remove_idea = DEN_Breguet_idea
+					add_idea = DEN_Breguet_idea2
 				}
 			}
 		}
 	}
 	else = {
 		custom_effect_tooltip = DEN_integrate_research_institute_tt
+	}
+	add_tech_bonus = {
+		name = DEN_integrate_enterprise_institute
+		category = AUTO_META
+		ahead_reduction = 3.0
+		bonus = 0.75
+		uses = 1
 	}
 }
 
@@ -388,4 +393,246 @@ FIN_remove_all_head_of_government = {
 	clr_country_flag = FIN_Chiyo_head_of_government
 	clr_country_flag = FIN_Acadia_head_of_government
 	clr_country_flag = FIN_Atismata_head_of_government
+}
+
+FIN_shimada_family_back = {
+	
+	hidden_effect = {
+		add_field_marshal_role = {
+			character = FIN_Chiyo
+			skill = 4
+			traits = { old_guard war_hero trait_reckless defensive_doctrine }
+			attack_skill = 3
+			defense_skill = 4
+			planning_skill = 3
+			logistics_skill = 5
+		}
+	}
+	SWE = {
+		effect_tooltip = {
+			FIN_Chiyo = { 
+				set_nationality = ROOT 
+				remove_trait = {
+					trait = FIN_exile
+				}
+			}
+		}
+		FIN_Mika = {
+			set_nationality = ROOT
+			remove_trait = {
+				trait = FIN_exile
+			}
+		}
+		FIN_Arisu= {
+			set_nationality = ROOT
+			remove_trait = {
+				trait = FIN_exile
+			}
+		}
+	}
+	set_country_flag = FIN_shimada_family_back
+}
+
+FIN_winter_war_effect = {
+	if = {
+		limit = {
+			tag = SOV
+			FROM = { tag = FIN }
+			not = {
+				has_global_flag = talvisota_has_broken
+			}
+		}
+		hidden_effect = {
+			news_event = fin.54
+		}
+	}
+}
+
+FIN_white_back_from_SWE = {
+	SWE = {
+		every_character = {
+			limit = {
+				OR = {
+					is_character = FIN_Kuria
+					is_character = FIN_Liddy
+					is_character = FIN_Erica
+					is_character = FIN_yoko
+					is_character = FIN_Mikko
+					is_character = FIN_Somi
+				}
+			}
+			set_nationality = ROOT
+			remove_trait = {
+				trait = FIN_exile
+			}
+		}
+	}
+}
+
+FIN_white_go_out = {
+	FIN = {
+		every_character = {
+			limit = {
+				OR = {
+					is_character = FIN_Kuria
+					is_character = FIN_Liddy
+					is_character = FIN_Erica
+					is_character = FIN_yoko
+					is_character = FIN_Mikko
+					is_character = FIN_Somi
+					is_character = FIN_Mika
+					is_character = FIN_Arisu
+				}
+			}
+			add_trait = {
+				trait = FIN_exile
+			}
+			set_nationality = ROOT
+		}
+	}
+}
+###联合国策
+NORDIC_create_nordic_alliance = {
+	set_variable = {global.nordic_faction_creator = ROOT }
+	if = {
+		limit = { # Nordic Council 
+			NORDIC_is_nordic = yes
+			NORDIC_is_democratic = yes 
+		}
+		set_global_flag = NORDIC_democratic_alliance_formed
+		set_country_flag = NORDIC_council_leader 
+		# if = {
+		# 	limit = { NORDIC_rename_faction = yes }
+		# 	set_faction_name = NORDIC_alliance_democratic
+		# }
+		
+		
+		set_variable = { NORDIC_democratic_alliance_leader_dmod_research = 0 }
+		set_variable = { NORDIC_democratic_alliance_leader_dmod_training_time = 0 }
+		set_variable = { NORDIC_democratic_alliance_leader_dmod_prod_eff_start = 0 }
+		set_variable = { NORDIC_democratic_alliance_leader_dmod_war_support = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_research = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_training_time = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_prod_eff_start = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_war_support = 0 }
+
+		add_dynamic_modifier = { modifier = NORDIC_democratic_alliance_leader_dmod }
+		every_other_country = {
+			limit = {
+				NORDIC_is_democratic = yes
+				is_in_faction_with = ROOT 
+				is_subject = no
+			}
+			NORDIC_add_to_nordic_alliance = yes 
+		}
+	}
+	else_if = {
+		limit = {
+			#NORDIC_has_started_communist_focus_tree = yes 
+			NORDIC_is_communist = yes 
+		}
+		set_global_flag = NORDIC_communist_alliance_formed 
+		set_country_flag = NORDIC_union_leader
+		set_faction_name = NORDIC_alliance_communist
+		
+		set_variable = { NORDIC_communist_alliance_leader_dmod_max_eff = 0 }
+		set_variable = { NORDIC_communist_alliance_leader_dmod_max_planning = 0 }
+		set_variable = { NORDIC_communist_alliance_leader_dmod_research = 0 }
+		set_variable = { NORDIC_communist_alliance_leader_dmod_resource_penalty = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_max_eff = 0 }
+		set_variable = { NORDIC_communist_alliance_member_dmod_max_planning = 0 }
+		set_variable = { NORDIC_communist_alliance_member_dmod_research = 0 }
+		set_variable = { NORDIC_communist_alliance_member_dmod_resource_penalty = 0 }
+
+		add_dynamic_modifier = { modifier = NORDIC_communist_alliance_leader_dmod }
+
+		every_other_country = {
+			limit = {
+				NORDIC_is_communist = yes
+				is_in_faction_with = ROOT 
+				is_subject = no 
+			}
+			NORDIC_add_to_nordic_alliance = yes 
+		}
+	}
+	else = {
+		set_global_flag = NORDIC_monarchist_alliance_formed
+		set_country_flag = NORDIC_league_leader  
+		set_faction_name = NORDIC_alliance_monarchist
+
+		add_dynamic_modifier = { modifier = NORDIC_monarchist_alliance_leader_dmod }
+
+		set_variable = { NORDIC_monarchist_alliance_leader_dmod_prod_eff_gain = 0 }
+		set_variable = { NORDIC_monarchist_alliance_leader_dmod_construction = 0 }
+		set_variable = { NORDIC_monarchist_alliance_leader_dmod_max_org = 0 }
+		set_variable = { NORDIC_monarchist_alliance_leader_dmod_drift_defense = 0 }
+		set_variable = { NORDIC_monarchist_alliance_member_dmod_prod_eff_gain = 0 }
+		set_variable = { NORDIC_monarchist_alliance_member_dmod_construction = 0 }
+		set_variable = { NORDIC_monarchist_alliance_member_dmod_max_org = 0 }
+		set_variable = { NORDIC_monarchist_alliance_member_dmod_drift_defense = 0 }
+
+		every_other_country = {
+			limit = {
+				OR = {
+					NORDIC_is_monarchist = yes 
+					NORDIC_is_fascist = yes
+				}
+				is_in_faction_with = ROOT 
+				is_subject = no
+			}
+			NORDIC_add_to_nordic_alliance = yes 
+		}
+	}  
+	set_variable = { global.NORDIC_alliance_leader = ROOT } # Setting the alliance leader regardless of ideology 
+}
+NORDIC_add_to_nordic_alliance = {  
+	if = {
+		limit = {
+			has_global_flag = NORDIC_democratic_alliance_formed
+		}
+
+		set_variable = { NORDIC_democratic_alliance_leader_dmod_research = 0 }
+		set_variable = { NORDIC_democratic_alliance_leader_dmod_training_time = 0 }
+		set_variable = { NORDIC_democratic_alliance_leader_dmod_prod_eff_start = 0 }
+		set_variable = { NORDIC_democratic_alliance_leader_dmod_war_support = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_research = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_training_time = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_prod_eff_start = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_war_support = 0 }
+
+		add_dynamic_modifier = { modifier = NORDIC_democratic_alliance_member_dmod }
+
+	}
+	else_if = {
+		limit = {
+			has_global_flag = NORDIC_communist_alliance_formed
+		}		
+
+		set_variable = { NORDIC_communist_alliance_leader_dmod_max_eff = 0 }
+		set_variable = { NORDIC_communist_alliance_leader_dmod_max_planning = 0 }
+		set_variable = { NORDIC_communist_alliance_leader_dmod_research = 0 }
+		set_variable = { NORDIC_communist_alliance_leader_dmod_resource_penalty = 0 }
+		set_variable = { NORDIC_democratic_alliance_member_dmod_max_eff = 0 }
+		set_variable = { NORDIC_communist_alliance_member_dmod_max_planning = 0 }
+		set_variable = { NORDIC_communist_alliance_member_dmod_research = 0 }
+		set_variable = { NORDIC_communist_alliance_member_dmod_resource_penalty = 0 }
+
+		add_dynamic_modifier = { modifier = NORDIC_communist_alliance_member_dmod }
+	}
+	else_if = {
+		limit = {
+			has_global_flag = NORDIC_monarchist_alliance_formed
+		}		
+
+		set_variable = { NORDIC_monarchist_alliance_leader_dmod_prod_eff_gain = 0 }
+		set_variable = { NORDIC_monarchist_alliance_leader_dmod_construction = 0 }
+		set_variable = { NORDIC_monarchist_alliance_leader_dmod_max_org = 0 }
+		set_variable = { NORDIC_monarchist_alliance_leader_dmod_drift_defense = 0 }
+		set_variable = { NORDIC_monarchist_alliance_member_dmod_prod_eff_gain = 0 }
+		set_variable = { NORDIC_monarchist_alliance_member_dmod_construction = 0 }
+		set_variable = { NORDIC_monarchist_alliance_member_dmod_max_org = 0 }
+		set_variable = { NORDIC_monarchist_alliance_member_dmod_drift_defense = 0 }
+
+		add_dynamic_modifier = { modifier = NORDIC_monarchist_alliance_member_dmod }
+	}
 }

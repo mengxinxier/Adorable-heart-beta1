@@ -1,0 +1,232 @@
+add_country_cores_upon_reaching_compliance_threshold = {
+	every_controlled_state = {
+		limit = {
+			OR = {
+				is_core_of = FROM
+				AND = {
+					has_resistance = yes
+					occupied_country_tag = FROM
+				}
+			}
+			NOT = { is_core_of = ROOT }
+			core_of_FROM_can_be_integrated_by_ROOT = yes
+		}
+		add_core_of = ROOT
+		hidden_effect = { remove_claim_by = ROOT }
+		#flag_specific_integrated_states = yes
+	}
+	hidden_effect = {
+	}
+}
+
+###COUNTRY  SCOPES
+
+enable_coring_at_fifty_compliance = {
+	if = {
+		limit = { NOT = { check_variable = { PREV.can_integrate_@THIS = 50 } } }
+		set_variable = { PREV.can_integrate_@THIS = 50 }
+		hidden_effect = { start_country_integration_resistance = yes }
+	}
+}
+
+enable_coring_at_eighty_compliance = {
+	if = {
+		limit = { NOT = { check_variable = { PREV.can_integrate_@THIS = 80 } } }
+		set_variable = { PREV.can_integrate_@THIS = 80 }
+		hidden_effect = { start_country_integration_resistance = yes }
+	}
+}
+
+enable_coring_at_95_compliance = {
+	if = {
+		limit = { NOT = { check_variable = { PREV.can_integrate_@THIS = 95 } } }
+		set_variable = { PREV.can_integrate_@THIS = 95 }
+		hidden_effect = { start_country_integration_resistance = yes }
+	}
+}
+
+disable_coring = {
+	if = {
+		limit = { has_variable = PREV.can_integrate_@THIS }
+		clear_variable = PREV.can_integrate_@THIS
+		hidden_effect = {
+			if = {
+				limit = { PREV = { any_occupied_country = { tag = PREV.PREV } } }
+				set_occupation_law_where_available = default_law
+			}
+		}
+	}
+}
+
+###STATE  SCOPES  (疑似有bug)
+
+enable_state_integration_50_compliance = {
+	if = {
+		limit = {
+			is_controlled_by = PREV
+			compliance > 50
+		}
+		add_core_of = PREV
+	}
+	else_if = {
+		limit = { NOT = { check_variable = { can_integrate_@PREV = 50 } } }
+		set_variable = { can_integrate_@PREV = 50 }
+		if = {
+			limit = { NOT = { is_core_of = PREV } }
+			enable_state_integration_50_tooltip = yes
+			if = {
+				limit = { NOT = { is_claimed_by = PREV } }
+				add_claim_by = PREV
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					is_controlled_by = PREV
+					NOT = { is_core_of = PREV }
+				}
+				#start_state_integration_resistance = yes
+			}
+		}
+	}
+}
+
+enable_state_integration_50_tooltip = {
+	custom_effect_tooltip = state_integration_at_fifty_compliance
+	custom_effect_tooltip = state_integration_law_unlocked
+}
+
+enable_state_integration_80_compliance = {
+	if = {
+		limit = {
+			is_controlled_by = PREV
+			compliance > 80
+		}
+		add_core_of = PREV
+	}
+	else_if = {
+		limit = { NOT = { check_variable = { can_integrate_@PREV = 80 } } }
+		set_variable = { can_integrate_@PREV = 80 }
+		if = {
+			limit = { NOT = { is_core_of = PREV } }
+			enable_state_integration_80_tooltip = yes
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					is_controlled_by = PREV
+					NOT = { is_core_of = PREV }
+				}
+				#start_state_integration_resistance = yes
+			}
+		}
+	}
+}
+
+enable_state_integration_80_tooltip = {
+	custom_effect_tooltip = state_integration_at_eighty_compliance
+	custom_effect_tooltip = state_integration_law_unlocked
+}
+
+start_country_integration_resistance = {
+	#PREV is the country being integrated
+	#PREV.PREV is the integrator
+	every_core_state = {
+		limit = {
+			is_controlled_by = PREV.PREV
+			NOT = { is_core_of = PREV.PREV }
+			impassable = no
+			NOT = { occupied_country_tag = PREV }
+			NOT = {
+				AND = {
+					has_resistance = yes
+					occupied = { has_variable = PREV.PREV.can_integrate_@THIS }
+				}
+			}
+		}
+		if = {
+			limit = { has_resistance = yes }
+			set_temp_variable = { previous_compliance = compliance }
+			set_temp_variable = { previous_resistance = resistance }
+			cancel_resistance = yes
+		}
+		start_resistance = PREV
+		set_compliance = var:previous_compliance
+		set_resistance = var:previous_resistance
+	}
+	if = {
+		limit = { PREV = { any_occupied_country = { tag = PREV.PREV } } }
+		set_occupation_law_where_available = territorial_integration_95
+		set_occupation_law_where_available = territorial_integration_80
+		set_occupation_law_where_available = territorial_integration
+	}
+}
+##看不懂思密达
+start_state_integration_resistance = {
+	if = {
+		limit = { NOT = { occupied_country_tag = XXA } }
+		if = {
+			limit = { has_resistance = yes }
+			set_temp_variable = { previous_compliance = compliance }
+			set_temp_variable = { previous_resistance = resistance }
+			cancel_resistance = yes
+		}
+		add_core_of = XXA
+		force_enable_resistance = { occupied = XXA }
+		start_resistance = XXA
+		set_compliance = var:previous_compliance?0
+		set_resistance = var:previous_resistance?0
+		remove_core_of = XXA
+	}
+	PREV = { XXA = { set_occupation_law_where_available = territorial_integration } }
+}
+
+##每月检测
+CORE_STATE_check_every_month_effect = {
+	every_country = {
+		every_controlled_state = {
+			if = {
+				limit = {
+					NOT = { is_core_of = PREV }
+					occupation_law = territorial_integration
+					compliance > 50
+				}
+				if = {
+					limit = {
+						is_claimed_by = PREV
+					}
+					remove_claim_by = PREV
+				}
+				add_core_of = PREV
+			}
+			else_if = {
+				limit = {
+					NOT = { is_core_of = PREV }
+					occupation_law = territorial_integration_80
+					compliance > 80
+				}
+				if = {
+					limit = {
+						is_claimed_by = PREV
+					}
+					remove_claim_by = PREV
+				}
+				add_core_of = PREV
+			}
+			else_if = {
+				limit = {
+					NOT = { is_core_of = PREV }
+					occupation_law = territorial_integration_95
+					compliance > 95
+				}
+				if = {
+					limit = {
+						is_claimed_by = PREV
+					}
+					remove_claim_by = PREV
+				}
+				add_core_of = PREV
+			}
+		}
+	}
+}

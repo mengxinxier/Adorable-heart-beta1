@@ -67,7 +67,7 @@
 		ai_strategy = {
 			type = role_ratio
 			id = armor
-			value = 25
+			value = 100
 		}
 
 		ai_strategy = { 
@@ -96,25 +96,25 @@
 		ai_strategy = {
 			type = unit_ratio
 			id = fighter
-			value = 30
+			value = 35
 		}
 
 		ai_strategy = {
 			type = equipment_production_factor
 			id = fighter
-			value = 25
+			value = 50
 		}
 
 		ai_strategy = {
 			type = unit_ratio
 			id = cas
-			value = 45
+			value = 40
 		}
 
 		ai_strategy = {
 			type = equipment_production_factor
 			id = cas
-			value = 15
+			value = 50
 		}
 
 		ai_strategy = {
@@ -144,7 +144,7 @@
 		ai_strategy = {
 			type = equipment_variant_production_factor
 			id = small_plane_airframe
-			value = 100
+			value = 50
 		}
 
 		ai_strategy = {
@@ -156,9 +156,52 @@
 		ai_strategy = {
 			type = equipment_variant_production_factor
 			id = large_plane_airframe
-			value = 100
+			value = 20
 		}
 
+	}
+
+	SOV_AUTO_META_production = {
+		allowed = {
+			original_tag = SOV
+		}
+		enable = {
+			has_tech = KEI_AUTO_META_0
+		}
+		ai_strategy = {
+			type = role_ratio
+			id = motorized
+			value = 15
+		}
+	}
+
+	SOV_more_armor = {
+		allowed = {
+			original_tag = SOV
+		}
+		enable = {
+			arms_factory > 299
+		}
+		
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = role_ratio
+			id = armor
+			value = 25
+		}
+
+		ai_strategy = {
+			type = role_ratio
+			id = infantry
+			value = -20
+		}
+
+		ai_strategy = {
+			type = equipment_production_factor
+			id = armor
+			value = 15
+		}
 	}
 
 	SOV_equipment_production = {
@@ -168,10 +211,6 @@
 		enable = {
 			always = yes
 		}
-		abort = {
-			always = no
-		}
-
 		ai_strategy = {
 			type = equipment_production_factor
 			id = tactical_bomber
@@ -181,25 +220,25 @@
 		ai_strategy = {
 			type = equipment_production_factor
 			id = fighter
-			value = 5 #Accounted for
+			value = 30 #Accounted for
 		}
 
 		ai_strategy = {
 			type = equipment_production_factor
 			id = cas
-			value = 10
+			value = 30
 		}
 
 		ai_strategy = {
 			type = equipment_production_factor
 			id = infantry
-			value = 35
+			value = 25
 		}
 
 		ai_strategy = {
 			type = equipment_production_factor
 			id = artillery
-			value = 65
+			value = 40
 		}
 
 		ai_strategy = {
@@ -217,7 +256,7 @@
 		ai_strategy = {
 			type = equipment_production_factor
 			id = armor
-			value = 15
+			value = 35
 		}
 
 		ai_strategy = {
@@ -369,11 +408,11 @@
 			id = light_tank_chassis
 			value = 50
 		}
-		ai_strategy = {
-			type = equipment_variant_production_factor
-			id = medium_tank_destroyer_chassis
-			value = 50
-		}
+		# ai_strategy = {
+		# 	type = equipment_variant_production_factor
+		# 	id = medium_tank_destroyer_chassis
+		# 	value = 50
+		# }
 		ai_strategy = { 
 			type = equipment_variant_production_factor 
 			id = medium_tank_chassis 
@@ -492,12 +531,12 @@
 		ai_strategy = {
 			type = unit_ratio
 			id = maritime_patrol_plane
-			value = 8
+			value = 1
 		}
 		ai_strategy = {
 			type = equipment_production_factor
 			id = maritime_patrol_plane
-			value = 10
+			value = 1
 		}
 	}
 
@@ -1060,6 +1099,8 @@
 		}
 
 		enable = {
+
+
 			if = {
 				limit = { NOT = { has_completed_focus = SOV_Support_Viet_Minh } }
 				NOT = {
@@ -1067,12 +1108,40 @@
 					tag = VIN
 				}
 			}
-			has_government = communism
-			UKR = {
-				OR = {
-					exists = no
+			OR = {
+				has_country_flag = SWE_Communist_Party_Cabinet
+				has_government = communism
+			}
+			NOT = { 
+				any_enemy_country = {
 					has_government = communism
+					is_subject = no
+					OR = {
+						is_faction_leader = yes
+						is_in_faction = no
+					}
 				}
+			}
+			NOT = {
+				has_country_leader_ideology = anarchist_communism
+			}
+			NOT = {
+				capital_scope = {
+					is_on_continent = africa
+				}
+			}
+			if = {
+				limit = { tag = PAN }
+				always = yes
+			}
+			else_if = {
+				limit = {
+					UKR = {
+						exists = yes
+						NOT = { has_government =  communism }
+					}
+				}
+				always = no
 			}
 		}
 

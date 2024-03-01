@@ -1,3 +1,8 @@
+################################################
+############ - YuanYang Decisions - ############
+################################################
+
+### - 北美战争 - ###
 NGD_The_North_American_Revolution_decision = {
 	NGD_attck_FROM = {
 		icon = GFX_decision_generic_ignite_civil_war
@@ -7,6 +12,9 @@ NGD_The_North_American_Revolution_decision = {
 					tag = FRG
 					tag = NFA
 					tag = USA
+					tag = USM
+					tag = USF
+					tag = USC
 					#tag = CAN
 				}
 				not = {
@@ -19,7 +27,10 @@ NGD_The_North_American_Revolution_decision = {
 			}
 			ROOT = {
 				is_subject = no
-				has_completed_focus = NGD_Diplomatic_Go_east
+				# OR = {
+				# 	has_completed_focus = NGD_Diplomatic_Go_east
+				# }
+					has_completed_focus = NGD_storm_is_approaching
 			}
 		}
 		available = {
@@ -30,6 +41,35 @@ NGD_The_North_American_Revolution_decision = {
 					}
 				}
 				has_global_flag = NA_has_been_united
+			}
+			if = {
+				limit = {
+					FROM = {
+						tag = FRG
+					}
+				}
+				has_completed_focus = NGD_return_to_lost_territory
+			}
+			if = {
+				limit = {
+					FROM = {
+						tag = NFA
+					}
+				}
+				has_completed_focus = NGD_cross_the_Rocky_Mountains
+			}
+			if = {
+				limit = {
+					FROM = {
+						or = {
+							tag = USA
+							tag = USM
+							tag = USF
+							tag = USC
+						}
+					}
+				}
+				has_completed_focus = NGD_direct_to_the_coast
 			}
 			not = {
 				has_country_flag = NGD_war_plan_going_on
@@ -42,7 +82,7 @@ NGD_The_North_American_Revolution_decision = {
 			}
 		}
 		cost = 10
-		days_remove = 15
+		days_remove = 10
 		war_with_target_on_remove = yes
 		complete_effect = {
 			set_country_flag = NGD_war_plan_going_on
@@ -107,7 +147,7 @@ NGD_The_North_American_Revolution_decision = {
 			}
 		}
 		cost = 10
-		days_remove = 15
+		days_remove = 10
 		remove_effect = {
 			FROM = {
 				country_event = {
@@ -122,11 +162,13 @@ NGD_The_North_American_Revolution_decision = {
 	NGD_Military_construction = {
 		icon = GFX_decision_generic_industry
 		visible = {
-			TAG = NGD
+			tag = NGD
+			has_completed_focus = NGD_frontline_preparedness
 		}
 		available = {
 			has_war_support > 0.2
 			num_of_civilian_factories_available_for_projects > 8
+			has_completed_focus = NGD_frontline_preparedness
 		}
 		modifier = {
 			civilian_factory_use = 8
@@ -204,6 +246,8 @@ NGD_The_North_American_Revolution_decision = {
 					tag = FRG
 					tag = NFA
 					tag = USA
+					tag = USM
+					tag = USF
 					tag = CAN
 				}
 				has_war_with = ROOT
@@ -213,6 +257,35 @@ NGD_The_North_American_Revolution_decision = {
 			}
 		}
 		available = {
+			if = {
+				limit = {
+					FROM = {
+						tag = FRG
+					}
+				}
+				has_completed_focus = NGD_return_to_lost_territory
+			}
+			if = {
+				limit = {
+					FROM = {
+						tag = NFA
+					}
+				}
+				has_completed_focus = NGD_cross_the_Rocky_Mountains
+			}
+			if = {
+				limit = {
+					FROM = {
+						or = {
+							tag = USA
+							tag = USM
+							tag = USF
+							tag = USC
+						}
+					}
+				}
+				has_completed_focus = NGD_direct_to_the_coast
+			}
 		}
 		days_re_enable = 200
 		custom_cost_trigger = {
@@ -222,7 +295,7 @@ NGD_The_North_American_Revolution_decision = {
 		complete_effect = {
 			hidden_effect = { add_command_power = -15 }
 		}
-		days_remove = 15
+		days_remove = 10
 		remove_effect = {
 			if = {
 				limit = {
@@ -263,6 +336,7 @@ NGD_The_North_American_Revolution_decision = {
 	}
 }
 
+### - 反政府叛乱 - ###
 NGD_Anti_government_Rebels = {
 	NGD_The_rebels_are_in_action = {
 		icon = GFX_decision_category_border_conflicts
@@ -384,7 +458,7 @@ NGD_Anti_government_Rebels = {
 				add_political_power = -25
 			}
 		}
-		days_remove = 15
+		days_remove = 10
 		ai_will_do = {
 			factor = 10
 		}
@@ -440,3 +514,921 @@ NGD_Anti_government_Rebels = {
 		}
 	}
 }
+
+###- 明争暗斗 -###
+NGD_balance_of_power_category= {
+	#对提案进行投票
+	NGD_vote_on_the_proposal_mission = {
+		activation = {
+			always = no
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		icon = mission_icon
+		priority = 1000
+		is_good = yes
+		selectable_mission = no
+		days_mission_timeout = 30
+		timeout_effect = {
+			country_event = NGD_BlackTuesday.010
+		}
+	}
+
+	#共和党在行动
+	NGD_Republican_takes_action_mission = {
+		activation = {
+			always = no
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		cancel_trigger = {
+			NOT = {
+				has_power_balance = {
+					id = NGD_political_infighting_bop
+				}
+			}
+		}
+		icon = mission_icon
+		priority = 999
+		is_good = no
+		selectable_mission = no
+		days_mission_timeout = 20
+		timeout_effect = {
+			random_list = {
+				20 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = 0.1
+					}
+				}
+				30 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = 0.15
+					}
+				}
+				30 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = 0.2
+					}
+				}
+				20 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = 0.25
+					}
+				}
+			}
+			hidden_effect = {
+				activate_mission = NGD_Republican_takes_action_mission
+			}
+		}
+	}
+	#民主党在行动
+	NGD_Democrat_takes_action_mission = {
+		activation = {
+			always = no
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		cancel_trigger = {
+			NOT = {
+				has_power_balance = {
+					id = NGD_political_infighting_bop
+				}
+			}
+		}
+		icon = mission_icon
+		priority = 999
+		is_good = no
+		selectable_mission = no
+		days_mission_timeout = 20
+		timeout_effect = {
+			random_list = {
+				20 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = -0.1
+					}
+				}
+				30 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = -0.15
+					}
+				}
+				30 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = -0.2
+					}
+				}
+				20 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = -0.25
+					}
+				}
+			}
+			hidden_effect = {
+				activate_mission = NGD_Democrat_takes_action_mission
+			}
+		}
+	}
+
+	#谴责共和党
+	NGD_denounce_Republican_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		ai_will_do = {
+			base = 10
+			#省政治点
+			modifier = {
+				add = -10
+				power_balance_value = {
+					id = NGD_political_infighting_bop
+					value < -0.5
+				}
+			}
+		}
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_Republican_takes_action_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			or = {
+				has_active_mission = NGD_Republican_takes_action_mission
+				is_debug = yes
+			}
+		}
+		cost = 5
+		days_remove = 10
+		remove_effect = {
+			random_list = {
+				25 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = -0.05
+					}
+				}
+				50 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = -0.1
+					}
+				}
+				25 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = -0.15
+					}
+				}
+			}
+		}
+		
+	}
+	#承诺改革
+	NGD_promise_reform_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		ai_will_do = {
+			base = 10
+			#省政治点
+			modifier = {
+				add = -10
+				power_balance_value = {
+					id = NGD_political_infighting_bop
+					value < -0.5
+				}
+			}
+		}
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_Republican_takes_action_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			or = {
+				has_active_mission = NGD_Republican_takes_action_mission
+				is_debug = yes
+			}
+		}
+		cost = 10
+		days_remove = 10
+		remove_effect = {
+			add_power_balance_value = {
+				id = NGD_political_infighting_bop
+				value = -0.15
+			}
+		}
+		
+	}
+
+	#谴责民主党
+	NGD_denounce_Democrat_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		ai_will_do = {
+			base = 10
+			#省政治点
+			modifier = {
+				add = -10
+				power_balance_value = {
+					id = NGD_political_infighting_bop
+					value > 0.5
+				}
+			}
+		}
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_Democrat_takes_action_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			or = {
+				has_active_mission = NGD_Democrat_takes_action_mission
+				is_debug = yes
+			}
+		}
+		cost = 5
+		days_remove = 10
+		remove_effect = {
+			random_list = {
+				25 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = 0.05
+					}
+				}
+				50 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = 0.1
+					}
+				}
+				25 = { 
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = 0.15
+					}
+				}
+			}
+		}
+		
+	}
+	#维持秩序
+	NGD_keep_order_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		ai_will_do = {
+			base = 10
+			#省政治点
+			modifier = {
+				add = -10
+				power_balance_value = {
+					id = NGD_political_infighting_bop
+					value > 0.5
+				}
+			}
+		}
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_Democrat_takes_action_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			or = {
+				has_active_mission = NGD_Democrat_takes_action_mission
+				is_debug = yes
+			}
+		}
+		cost = 10
+		days_remove = 10
+		remove_effect = {
+			add_power_balance_value = {
+				id = NGD_political_infighting_bop
+				value = 0.15
+			}
+		}
+		
+	}
+
+	#debug作弊决议
+	DEBUG_NGD_bop_decision_left = {
+		available = {
+			hidden_trigger = {
+				is_debug = yes
+			}
+		}
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			add_power_balance_value = {
+				id = NGD_political_infighting_bop
+				value = -0.1
+			}
+		}
+	}
+	DEBUG_NGD_bop_decision_right = {
+		available = {
+			hidden_trigger = {
+				is_debug = yes
+			}
+		}
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			add_power_balance_value = {
+				id = NGD_political_infighting_bop
+				value = 0.1
+			}
+		}
+	}
+}
+
+###- 暗流涌动 -###
+NGD_undercurrent_surge_category = {
+	#搞快点!
+	NGD_hurry_up_mission = {
+		icon = mission_icon
+		priority = 999
+		activation = {
+			always = no
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		cancel_trigger = {
+			NOT = {
+				has_idea = NGD_undercurrent_surge_idea
+			}
+		}
+		is_good = no
+		selectable_mission = no
+		days_mission_timeout = 100
+		timeout_effect = {
+			#事件 首都暴乱
+			country_event = NGD_undercurrent.002
+		}
+	}
+
+	#争取时间
+	NGD_buy_Time_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		cost = 15
+		days_remove = 15
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = NGD_hurry_up_mission
+				days = 30
+			}
+		}
+		
+	}
+	#稳住军队
+	NGD_stabilize_army_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		cost = 15
+		days_remove = 15
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = NGD_ally_with_the_Progressive
+					}
+				}
+				NGD_sub_rad_large_effect = yes
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = NGD_ally_with_the_Renaissance
+					}
+				}
+				NGD_sub_ext_large_effect = yes
+			}
+		}
+	}
+	#逮捕极端分子
+	NGD_arrest_extremist_elements_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = NGD_ally_with_the_Progressive
+					}
+				}
+				NGD_sub_rad_medium_effect = yes
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = NGD_ally_with_the_Renaissance
+					}
+				}
+				NGD_sub_ext_medium_effect = yes
+			}
+		}
+	}
+	#安抚工人
+	NGD_pacify_workers_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		cost = 5
+		days_remove = 15
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = NGD_ally_with_the_Progressive
+					}
+				}
+				NGD_sub_rad_small_effect = yes
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = NGD_ally_with_the_Renaissance
+					}
+				}
+				NGD_sub_ext_small_effect = yes
+			}
+		}
+	}
+
+	#加速！
+	NGD_accelerate_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		ai_will_do = {
+			base = -1
+		}
+		available = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					has_active_mission = NGD_hurry_up_mission
+					is_debug = yes
+				}
+			}
+		}
+		cost = 30
+		days_remove = 15
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = NGD_ally_with_the_Progressive
+					}
+				}
+				NGD_add_rad_large_effect = yes
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = NGD_ally_with_the_Renaissance
+					}
+				}
+				NGD_add_ext_large_effect = yes
+			}
+			add_days_mission_timeout = {
+				mission = NGD_hurry_up_mission
+				days = -30
+			}
+		}
+	}
+
+	#接触进步军官
+	NGD_contact_progressive_officers_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Progressive
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Progressive
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		cost = 15
+		days_remove = 15
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+			NGD_add_rad_large_effect = yes
+		}
+	}
+	#唤醒大众
+	NGD_awaken_the_people_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Progressive
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Progressive
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.03
+			}
+			NGD_add_rad_medium_effect = yes
+		}
+	}
+	#组织罢工
+	NGD_organize_strikes_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Progressive
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Progressive
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		cost = 5
+		days_remove = 15
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.01
+			}
+			NGD_add_rad_small_effect = yes
+		}
+	}
+
+	#暗杀政敌
+	NGD_assassinate_political_enemies_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Renaissance
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Renaissance
+						}
+					}
+				}
+					is_debug = yes
+			}
+		}
+		cost = 15
+		days_remove = 15
+		remove_effect = {
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.02
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.03
+			}
+			NGD_add_ext_large_effect = yes
+		}
+	}
+	#宣传君主思想
+	NGD_promote_monarchy_ideology_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Renaissance
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Renaissance
+						}
+					}
+				}
+					is_debug = yes
+			}
+		}
+		cost = 10
+		days_remove = 15
+		remove_effect = {
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.01
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.02
+			}
+			NGD_add_ext_medium_effect = yes
+		}
+	}
+	#扩大阴谋集团
+	NGD_expand_cabal_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Renaissance
+						}
+					}
+					is_debug = yes
+				}
+			}
+		}
+		visible = {
+			hidden_trigger = {
+				or = {
+					AND = {
+						has_active_mission = NGD_hurry_up_mission
+						NOT = {
+							has_country_flag = NGD_ally_with_the_Renaissance
+						}
+					}
+				}
+					is_debug = yes
+			}
+		}
+		cost = 5
+		days_remove = 15
+		remove_effect = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.01
+			}
+			NGD_add_ext_small_effect = yes
+		}
+	}
+}
+
+###- 远洋外交 -###
+NGD_YuanYang_diplomacy_category = {
+	#援助同胞
+	NGD_assist_FROM_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		target_trigger = {
+			FROM = {
+				exists = yes
+				is_chinese_country = yes
+				is_in_China_unit_font = yes
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		custom_cost_trigger = {
+			has_equipment = { infantry_equipment > 1999 }
+		}
+		custom_cost_text = 2000_infantry_equipment_1
+		complete_effect = {
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -2000
+				}
+			}
+		}
+		days_re_enable = 30
+		complete_effect = {
+			send_equipment = { target = FROM type = infantry_equipment amount = 2000 }
+			FROM = {
+				country_event = NGD_diplomacy.002
+			}
+		}
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_equipment = { infantry_equipment < 4000 }
+			}
+		}
+	}
+
+	#确保后花园
+	NGD_ensure_FROM_decision = {
+		icon = eng_trade_unions_demand
+		target_trigger = {
+			FROM = {
+				NOT = {
+					OR = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+					tag = AHM
+				}
+				capital_scope = {
+					is_on_continent = south_america
+				}
+			}
+			ROOT = {
+				is_subject = no
+				has_completed_focus = NGD_ensure_the_backyard
+				NOT = {
+					has_wargoal_against = from
+				}
+			}
+		}
+		complete_effect = {
+			FROM = { country_event = frg.18 }
+		}
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.5
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+

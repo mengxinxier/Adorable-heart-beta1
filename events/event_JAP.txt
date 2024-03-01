@@ -42,6 +42,9 @@ country_event = {
 	option = {
 		# Make more concessions
 		name = jap.100.b
+		add_political_power = -1000
+		add_stability = -0.8
+		add_war_support = -1
 		ai_chance = {
 			factor = 0
 		}
@@ -83,9 +86,9 @@ country_event = {
 					}
 				}
 			}
-			create_wargoal = {
-				type = annex_everything
+			declare_war_on = {
 				target = CHI
+				type = annex_everything
 			}
 		}
 		if = {
@@ -97,9 +100,9 @@ country_event = {
 					}
 				}
 			}
-			create_wargoal = {
-				type = annex_everything
+			declare_war_on = {
 				target = ROC
+				type = annex_everything
 			}
 		}
 		if = {
@@ -111,15 +114,15 @@ country_event = {
 					}
 				}
 			}
-			create_wargoal = {
-				type = annex_everything
+			declare_war_on = {
 				target = PRC
+				type = annex_everything
 			}
 		}
 		hidden_effect = {
 			news_event = {
-				days = 5
-				id = news.1
+				days = 1
+				id = jap.88
 			}
 		}
 	}
@@ -134,12 +137,10 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = jap.300.a
-		effect_tooltip = {
 			set_truce = {
 				target = FROM
 				days = 180
 			}
-		}
 		hidden_effect = {
 			news_event = {
 				days = 5
@@ -910,7 +911,7 @@ country_event = {
 	option = {
 		name = jap.18.a
 		ai_chance = {
-			factor = 10
+			base = 10
 		}
 		if = {
 			limit = {
@@ -1092,15 +1093,15 @@ country_event = {
 		}
 		if = {
 			limit = {
-				RYU = {
+				SHH = {
 					owns_state = 743
 				}
-				CHI = {
+				ROC = {
 					exists = yes
 					has_capitulated = no
 				}
 			}
-			CHI = {
+			ROC = {
 				transfer_state = 743
 			}
 		}
@@ -1109,12 +1110,12 @@ country_event = {
 				RYU = {
 					owns_state = 613
 				}
-				CHI = {
+				ROC = {
 					exists = yes
 					has_capitulated = no
 				}
 			}
-			CHI = {
+			ROC = {
 				transfer_state = 613
 			}
 		}
@@ -1142,14 +1143,10 @@ country_event = {
 	option = {
 		name = jap.18.b
 		ai_chance = {
-			factor = 50
+			base = 50
 		}
 		JAP = {
 			country_event = jap.31
-			create_wargoal = {
-				target = RYU
-				type = puppet_wargoal_focus
-			}
 		}
 	}
 }
@@ -1173,7 +1170,68 @@ country_event = {
 			target = ROOT
 			modifier = eng_jap_bad
 		}
-		remove_ideas = dongyatiaoyue
+		declare_war_on = {
+				target = SHH
+				type = puppet_wargoal_focus
+			}
+		if = {
+				limit = {
+					MAL = {
+						not = {
+							is_in_faction_with = JAP
+						}
+					}
+				}
+				add_state_claim = 336
+				declare_war_on = {
+					target = MAL
+					type = puppet_wargoal_focus
+				}
+			}
+			if = {
+				limit = {
+					RYU = {
+						not = {
+							has_completed_focus = RYU_76
+						}
+					}
+				}
+				declare_war_on = {
+					target = RYU
+					type = annex_everything
+				}
+			}
+			if = {
+				limit = {
+					RYU = {
+					has_completed_focus = RYU_76
+					}
+				}
+				RYU = {
+				clr_country_flag = RYU_beiJAPkongzhi
+				set_cosmetic_tag = JAP_diguohaijunling
+				set_party_name = { ideology = fascism long_name = "樱花特高科" name = "樱花特高科" }
+				add_popularity = { ideology = fascism popularity = 0.3 }
+				remove_ideas = RYU_japjd
+				}
+				set_autonomy = {
+				target = RYU
+				autonomy_state = autonomy_wtt_imperial_protectorate
+				}
+			}
+			if = {
+				limit = {
+					RAJ = {
+						not = {
+							is_in_faction_with = JAP
+						}
+					}
+				}
+				declare_war_on = {
+					target = RAJ
+					type = puppet_wargoal_focus
+				}
+			}
 	}
 }
 
@@ -1234,19 +1292,11 @@ country_event = {
 			}
 			set_cosmetic_tag = JAP_GC
 			set_capital = 532
-			set_stability = 0.7
-			set_war_support = 0.7
+			set_stability = 0.1
+			set_war_support = 0.4
 			add_popularity = {
 				ideology = communism
-				popularity = 0.5
-			}
-			add_popularity = {
-				ideology = democratic
-				popularity = -0.5
-			}
-			add_popularity = {
-				ideology = fascism
-				popularity = -0.1
+				popularity = 0.1
 			}
 			start_civil_war = {
 				ruling_party = communism
@@ -1287,14 +1337,14 @@ country_event = {
 				}
 			}
 			load_oob = "JAP_GC"
+			load_oob = "JAP_shoubei"
 			random_other_country = {
 				limit = {
 					original_tag = JAP
 					has_government = democratic
 				}
-				load_oob = "JAP_shoubei"
-				add_stability = -0.05
-				add_war_support = -0.05
+				add_stability = -0.2
+				add_war_support = -0.2
 			}
 		}
 	}
@@ -1318,23 +1368,19 @@ country_event = {
 		set_global_flag = JAP_neizhan
 		custom_effect_tooltip = JAP_event_neizhan
 		hidden_effect = {
+			add_ideas = JAP_cz_ling_lx
+		}
+		mark_focus_tree_layout_dirty = yes
+		hidden_effect = {
 			news_event = {
 				days = 2
 				id = news.757
 			}
-			set_stability = 0.5
-			set_war_support = 0.4
+			set_stability = 0.2
+			set_war_support = 0.5
 			add_popularity = {
 				ideology = fascism
-				popularity = 0.5
-			}
-			add_popularity = {
-				ideology = democratic
-				popularity = -0.5
-			}
-			add_popularity = {
-				ideology = communism
-				popularity = -0.1
+				popularity = 0.2
 			}
 			start_civil_war = {
 				ruling_party = fascism
@@ -1362,21 +1408,8 @@ country_event = {
 					633
 					638
 				}
-				keep_unit_leaders = {
-					753
-					754
-					755
-					756
-					757
-					758
-					759
-					760
-					761
-					762
-					763
-					764
-					765
-					766
+				keep_unit_leaders_trigger = {
+					has_trait = JAP_samurai_lineage
 				}
 			}
 			load_oob = "JAP_FXS"
@@ -1385,9 +1418,8 @@ country_event = {
 					original_tag = JAP
 					has_government = democratic
 				}
-				load_oob = "JAP_zhenya"
-				add_stability = -0.05
-				add_war_support = -0.05
+				add_stability = -0.2
+				add_war_support = -0.4
 			}
 		}
 	}
@@ -1906,15 +1938,49 @@ country_event = {
 			remove_ideas = JAP_bayuqian_idea_lx
 		}
 		ai_chance = {
-			factor = 100
+			base = 100
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_5
+			}
+			factor = 0
+			}
 		}
 	}
 	option = {
 		name = jap.38.b
-		set_country_flag = JAP_zhengbianshibai_cz
-		add_stability = 0.2
+		country_event = jap.21
+		JAP_bayuqian = {
+			add_country_leader_role = {
+				country_leader = {
+					expire = "1999.1.1"
+					ideology = militarism_subtype
+					traits = {
+						trait_jap_gzzm
+					}
+				}
+				promote_leader = yes
+			}
+		}
+		set_portraits = {
+			character = JAP_bayuqian
+			civilian = {
+				large = "gfx/leaders/JAP/bayuqian.png"
+			}
+		}
+		hidden_effect = {
+			remove_ideas = JAP_bayuqian_idea_lx
+		}
 		ai_chance = {
-			factor = 0
+			base = 0
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_5
+			}
+			add = 100
+			}
 		}
 	}
 }
@@ -1946,10 +2012,14 @@ country_event = {
 		}
 		add_popularity = {
 			ideology = fascism
-			popularity = 0.3
+			popularity = 0.1
 		}
 		hidden_effect = {
 			add_ideas = JAP_cz_ling_lx
+			news_event = {
+				days = 1
+				id = jap.90
+			}
 		}
 		mark_focus_tree_layout_dirty = yes
 		ai_chance = {
@@ -1976,10 +2046,14 @@ country_event = {
 		}
 		add_popularity = {
 			ideology = fascism
-			popularity = 0.3
+			popularity = 0.1
 		}
 		hidden_effect = {
 			add_ideas = JAP_cz_ling_lx
+			news_event = {
+				days = 1
+				id = jap.90
+			}
 		}
 		mark_focus_tree_layout_dirty = yes
 		ai_chance = {
@@ -2000,20 +2074,30 @@ country_event = {
 				promote_leader = yes
 			}
 		}
+		set_portraits = {
+			character = JAP_bayuqian
+			civilian = {
+				large = "gfx/leaders/JAP/bayuqian.png"
+			}
+		}
 		set_politics = {
 			ruling_party = fascism
 			elections_allowed = no
 		}
 		add_popularity = {
 			ideology = fascism
-			popularity = 0.3
+			popularity = 0.1
 		}
 		hidden_effect = {
 			add_ideas = JAP_cz_ling_lx
+			news_event = {
+				days = 1
+				id = jap.90
+			}
 		}
 		mark_focus_tree_layout_dirty = yes
 		ai_chance = {
-			factor = 100
+			base = 100
 		}
 	}
 }
@@ -2089,7 +2173,11 @@ country_event = {
 			country_event = jap.44
 		}
 		ai_chance = {
-			factor = 6
+			base = 6
+			modifier = {
+			is_in_faction_with = JAP
+			factor = 100
+			}
 		}
 	}
 	option = {
@@ -2098,7 +2186,7 @@ country_event = {
 			country_event = jap.45
 		}
 		ai_chance = {
-			factor = 4
+			base = 4
 		}
 	}
 }
@@ -2295,6 +2383,17 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = jap.52.a
+		remove_ideas = SHH_money
+		if = {
+		limit = {
+		country_exists = SHH
+		}
+		diplomatic_relation = {
+   			country = SHH
+   			relation = guarantee
+   			active = no
+  		}
+		}
 		ai_chance = {
 			factor = 100
 		}
@@ -2381,6 +2480,9 @@ country_event = {
 		537 = {
 			set_demilitarized_zone = yes
 		}
+		1156 = {
+			set_demilitarized_zone = yes
+		}
 		hidden_effect = {
 			country_event = {
 				id = jap.56
@@ -2413,14 +2515,19 @@ country_event = {
 			537 = {
 				set_demilitarized_zone = no
 			}
+			1156 = {
+				set_demilitarized_zone = no
+			}
 			RJE = {
 				transfer_state = 533
 				transfer_state = 536
 				transfer_state = 555
 				transfer_state = 537
+				transfer_state = 1156
 				add_state_core = 533
 				add_state_core = 536
 				add_state_core = 535
+				add_state_core = 1156
 			}
 			every_state = {
 				limit = {
@@ -2435,19 +2542,23 @@ country_event = {
 	}
 	option = {
 		name = jap.56.a
+		set_global_flag = RJE_zhenribendiguochuxian_flag
 		add_political_power = -100
 		add_stability = -0.1
+		mark_focus_tree_layout_dirty = yes
 		ai_chance = {
 			factor = 0
 		}
 	}
 	option = {
 		name = jap.56.b
+		set_global_flag = RJE_zhenribendiguochuxian_flag
 		add_ideas = JAP_xiaomiewaixingren
 		declare_war_on = {
 			target = RJE
 			type = annex_everything
 		}
+		mark_focus_tree_layout_dirty = yes
 		hidden_effect = {
 			news_event = {
 				id = news.1062
@@ -2459,11 +2570,13 @@ country_event = {
 	}
 	option = {
 		name = jap.56.c
+		set_global_flag = RJE_zhenribendiguochuxian_flag
 		add_political_power = -100
 		add_stability = -0.1
 		RJE = {
 			change_tag_from = JAP
 		}
+		mark_focus_tree_layout_dirty = yes
 		ai_chance = {
 			factor = 0
 		}
@@ -2629,6 +2742,10 @@ country_event = {
 			}
 		}
 		mark_focus_tree_layout_dirty = yes
+		add_power_balance_value = {
+			id = JAP_balance
+			value = 2
+		}
 		ai_chance = {
 			factor = 100
 		}
@@ -2669,6 +2786,10 @@ country_event = {
 				}
 				promote_leader = yes
 			}
+		}
+		add_power_balance_value = {
+			id = JAP_balance
+			value = 2
 		}
 		mark_focus_tree_layout_dirty = yes
 		ai_chance = {
@@ -2735,6 +2856,1549 @@ country_event = {
 		GER = {
 		country_event = { id = wtt_japan.109 days = 3 }
 		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+#总司内阁即将倒台，开局事件
+country_event = {
+	id = jap.65
+	title = jap.65.t
+	desc = jap.65.d
+	is_triggered_only = yes
+	option = {
+		name = jap.65.a
+		custom_effect_tooltip = daotaibainyuan_zongsi
+		add_ideas = jap_zongsineige_bop
+		hidden_effect = {
+			country_event = { id = jap.67 days = 120 }
+			country_event = { id = jap.74 days = 45 }
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+#总司政府倒台
+country_event = {
+	id = jap.66
+	title = jap.66.t
+	desc = jap.66.d
+	#picture = 
+	fire_only_once = yes
+	trigger = {
+		tag = JAP
+		has_government = democratic
+		has_completed_focus = JAP_new35
+		date > 1937.1.1
+		not = { has_completed_focus = JAP_yazhoudengta }
+		has_country_leader = {
+		ruling_only = yes
+		name = "冲田总司"
+		}
+	}
+	mean_time_to_happen = {
+		days = 1
+	}
+	option = {
+		name = jap.66.a
+		custom_effect_tooltip = JAP_liixanpai_shengli
+		set_party_name = { ideology = democratic long_name = "立宪政友会" name ="立宪政友会" }
+		add_ideas = JAP_cz_ling_lx
+			JAP_bayuqian = {
+				add_country_leader_role = {
+					country_leader = {
+						expire = "1999.1.1"
+						ideology = conservatism
+						traits = {
+							trait_jap_gzzm
+						}
+					}
+					promote_leader = yes
+				}
+			}
+		mark_focus_tree_layout_dirty = yes
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+#国体论之争
+country_event = {
+	id = jap.67
+	title = jap.67.t
+	desc = jap.67.d
+	is_triggered_only = yes
+	option = {
+		name = jap.67.a
+		custom_effect_tooltip = jiesuoheixianzhengbain_jap
+		set_country_flag = thzqs_zc_jap
+		add_power_balance_value = {
+			id = JAP_balance
+			value = 0.1
+		}
+		hidden_effect = {
+			country_event = { id = jap.68 days = 60 }
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+	option = {
+		name = jap.67.b
+		custom_effect_tooltip = jiesuojiangli_jiuganshuo_jap
+		set_country_flag = thjgs_zc_jap
+		add_power_balance_value = {
+			id = JAP_balance
+			value = 0.05
+		}
+		hidden_effect = {
+			country_event = { id = jap.68 days = 60 }
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+#反西方之本因
+country_event = {
+	id = jap.68
+	title = jap.68.t
+	desc = jap.68.d
+	is_triggered_only = yes
+	option = {
+		name = jap.68.a
+		custom_effect_tooltip = jiesuojingjishentou_jap
+		set_country_flag = jap_jingjizhimin_flag
+		add_power_balance_value = {
+			id = JAP_balance
+			value = -0.1
+		}
+		hidden_effect = {
+			country_event = { id = jap.69 days = 90 }
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = jap.68.b
+		custom_effect_tooltip = qiangpoyazhouguojiachengweifuyong_jap
+		set_country_flag = jap_tongheyazhou_flag
+		add_power_balance_value = {
+			id = JAP_balance
+			value = 0.1
+		}
+		hidden_effect = {
+			country_event = { id = jap.69 days = 90 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+#温和还是镇压
+country_event = {
+	id = jap.69
+	title = jap.69.t
+	desc = jap.69.d
+	is_triggered_only = yes
+	option = {
+		name = jap.69.a
+		custom_effect_tooltip = jiesuowenhetongzhi_jap
+		set_country_flag = jap_wenhetongzhi_flag
+		add_power_balance_value = {
+			id = JAP_balance
+			value = -0.05
+		}
+		hidden_effect = {
+			country_event = { id = jap.70 days = 120 }
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = jap.69.b
+		custom_effect_tooltip = jiesuocanbaotongzhi_jap
+		set_country_flag = jap_canbaotongzhi_flag
+		add_power_balance_value = {
+			id = JAP_balance
+			value = 0.05
+		}
+		hidden_effect = {
+			country_event = { id = jap.70 days = 120 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+#对北美四国战略
+country_event = {
+	id = jap.70
+	title = jap.70.t
+	desc = jap.70.d
+	is_triggered_only = yes
+	option = {
+		name = jap.70.a
+		add_ai_strategy = {
+		type = befriend	
+		id = "NGD"			
+		value = 50
+		}
+		add_ai_strategy = {
+		type = send_volunteers_desire
+		id = "NGD"			
+		value = 500
+		}
+		NGD = {
+		country_event = { id = jap.400 days = 3 }
+		}
+		hidden_effect = {
+			country_event = { id = jap.71 days = 90 }
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+			NGD = { has_government = ROOT }
+			factor = 100
+			}
+		}
+	}
+	option = {
+		name = jap.70.b
+		add_ai_strategy = {
+		type = befriend	
+		id = "NFA"			
+		value = 50
+		}
+		add_ai_strategy = {
+		type = send_volunteers_desire
+		id = "NFA"			
+		value = 500
+		}
+		NFA = {
+		country_event = { id = jap.400 days = 3 }
+		}
+		hidden_effect = {
+			country_event = { id = jap.71 days = 90 }
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+			or = {
+			NFA = { has_government = ROOT }
+			NFA = { has_government = democratic }
+			}
+			factor = 30
+			}
+		}
+	}
+	option = {
+		name = jap.70.c
+		add_ai_strategy = {
+		type = befriend	
+		id = "FRG"			
+		value = 50
+		}
+		add_ai_strategy = {
+		type = send_volunteers_desire
+		id = "FRG"			
+		value = 500
+		}
+		FRG = {
+		country_event = { id = jap.400 days = 3 }
+		}
+		hidden_effect = {
+			country_event = { id = jap.71 days = 90 }
+		}
+		ai_chance = {
+			base = 30
+		}
+	}
+	option = {
+		name = jap.70.e
+		add_power_balance_value = {
+			id = JAP_balance
+			value = -0.1
+		}
+		hidden_effect = {
+			country_event = { id = jap.71 days = 90 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+country_event = {
+	id = jap.400
+	title = jap.400.t
+	desc = jap.400.d
+	is_triggered_only = yes
+	option = {
+		name = jap.400.a
+		add_ai_strategy = {
+		type = befriend	
+		id = "JAP"			
+		value = 100
+		}
+		add_ai_strategy = {
+		type = send_volunteers_desire
+		id = "JAP"			
+		value = 500
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#帝国海军发展计划
+country_event = {
+	id = jap.71
+	title = jap.71.t
+	desc = jap.71.d
+	is_triggered_only = yes
+	option = {
+		name = jap.71.a
+		add_political_power = -50
+		add_stability = -0.1
+		add_war_support = -0.15
+		add_ideas = JAP_zaochuanjihua_ex
+		JAP_interservice_rivalry_towards_navy = yes
+		mio:JAP_kure_naval_arsenal_organization = {
+			add_mio_size = 1
+		}
+		mio:JAP_yokosuka_naval_arsenal_organization = {
+			add_mio_size = 1
+		}
+		mio:JAP_maizuru_naval_arsenal_organization = {
+			add_mio_size = 1
+		}
+		mio:JAP_sasebo_naval_arsenal_organization = {
+			add_mio_size = 1
+		}
+		random_owned_controlled_state = {
+				limit = {
+					ROOT = {
+						has_full_control_of_state = PREV
+					}
+					is_core_of = ROOT
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = dockyard
+					level = 3
+					instant_build = yes
+				}
+		}
+		random_owned_controlled_state = {
+				limit = {
+					ROOT = {
+						has_full_control_of_state = PREV
+					}
+					is_core_of = ROOT
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = dockyard
+					level = 3
+					instant_build = yes
+				}
+		}
+		hidden_effect = {
+			country_event = { id = jap.72 days = 150 }
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = jap.71.b
+		add_ideas = JAP_zaochuanjihua
+		mio:JAP_kure_naval_arsenal_organization = {
+			add_mio_size = 1
+		}
+		mio:JAP_yokosuka_naval_arsenal_organization = {
+			add_mio_size = 1
+		}
+		random_owned_controlled_state = {
+				limit = {
+					ROOT = {
+						has_full_control_of_state = PREV
+					}
+					is_core_of = ROOT
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+		}
+		hidden_effect = {
+			country_event = { id = jap.72 days = 150 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+#现代化大都市
+country_event = {
+	id = jap.72
+	title = jap.72.t
+	desc = jap.72.d
+	is_triggered_only = yes
+	option = {
+		name = jap.72.a
+		set_country_flag = xiandaihuadadushi_flag_jap
+		add_timed_idea = {
+			idea = jap_jianshekaizhi
+			days = 90
+		}
+		282 = {
+		add_dynamic_modifier = {
+			modifier = JAP_dadushi_state
+		}
+		}
+		528 = {
+		add_dynamic_modifier = {
+			modifier = JAP_dadushi_state
+		}
+		}
+		529 = {
+		add_dynamic_modifier = {
+			modifier = JAP_dadushi_state
+		}
+		}
+		531 = {
+		add_dynamic_modifier = {
+			modifier = JAP_dadushi_state
+		}
+		}
+		532 = {
+		add_dynamic_modifier = {
+			modifier = JAP_dadushi_state
+		}
+		}
+		1154 = {
+		add_dynamic_modifier = {
+			modifier = JAP_dadushi_state
+		}
+		}
+		add_power_balance_value = {
+			id = JAP_balance
+			value = -0.1
+		}
+		hidden_effect = {
+			country_event = { id = jap.73 days = 90 }
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = jap.72.b
+		set_country_flag = xiandaihuadadushi_flag_jap
+		282 = {
+		add_dynamic_modifier = {
+			modifier = JAP_dadushi_state
+		}
+		}
+		1154 = {
+		add_dynamic_modifier = {
+			modifier = JAP_dadushi_state
+		}
+		}
+		add_power_balance_value = {
+			id = JAP_balance
+			value = -0.05
+		}
+		hidden_effect = {
+			country_event = { id = jap.73 days = 90 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+#对中国的战争策略
+country_event = {
+	id = jap.73
+	title = jap.73.t
+	desc = jap.73.d
+	is_triggered_only = yes
+	option = {
+		name = jap.73.a
+		custom_effect_tooltip = JAP_sywh_jiesuotips
+		add_ideas = JAP_sywh
+		add_power_balance_value = {
+			id = JAP_balance
+			value = 0.05
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+			has_government = fascism
+			factor = 100
+			}
+			modifier = {
+			has_government = democratic
+			factor = 0
+			}
+			modifier = {
+			has_government = communism
+			factor = 0
+			}
+		}
+	}
+	option = {
+		name = jap.73.b
+		custom_effect_tooltip = JAP_cjzl_jiesuotips
+		add_ideas = JAP_cjzl
+		add_power_balance_value = {
+			id = JAP_balance
+			value = 0.05
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+			has_government = fascism
+			factor = 0
+			}
+			modifier = {
+			has_government = democratic
+			factor = 100
+			}
+			modifier = {
+			has_government = communism
+			factor = 100
+			}
+		}
+	}
+}
+
+#国家侧重方针
+country_event = {
+	id = jap.74
+	title = jap.74.t
+	desc = jap.74.d
+	is_triggered_only = yes
+	option = {
+		name = jap.74.a
+		custom_effect_tooltip = RYU_zhongyaoxuanze
+		custom_effect_tooltip = jap_zhanzheng_tips_1111
+		add_ideas = jap_junguoqingxiang_bop
+		ai_chance = {
+			base = 10
+			modifier = {
+			has_government = fascism
+			factor = 100
+			}
+			modifier = {
+			has_government = democratic
+			factor = 100
+			}
+			modifier = {
+			has_government = communism
+			factor = 0
+			}
+		}
+	}
+	option = {
+		name = jap.74.b
+		custom_effect_tooltip = RYU_zhongyaoxuanze
+		custom_effect_tooltip = jap_heping_tips_1111
+		add_ideas = jap_hepingqingxiang_bop
+		ai_chance = {
+			base = 10
+			modifier = {
+			has_government = fascism
+			factor = 0
+			}
+			modifier = {
+			has_government = democratic
+			factor = 0
+			}
+			modifier = {
+			has_government = communism
+			factor = 100
+			}
+		}
+	}
+}
+
+#土地改革
+country_event = {
+	id = jap.75
+	title = jap.75.t
+	desc = jap.75.d
+	is_triggered_only = yes
+	option = {
+		name = jap.75.a
+		add_timed_idea = {
+			idea = jap_tugai_idea_1
+			days = 90
+		}
+		hidden_effect = {
+			country_event = { id = jap.76 days = 92 }
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = jap.75.b
+		add_timed_idea = {
+			idea = jap_tugai_idea_2
+			days = 180
+		}
+		hidden_effect = {
+			country_event = { id = jap.76 days = 182 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+	option = {
+		name = jap.75.c
+		add_timed_idea = {
+			idea = jap_tugai_idea_3
+			days = 400
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+country_event = {
+	id = jap.76
+	title = jap.76.t
+	desc = jap.76.d
+	is_triggered_only = yes
+	option = {
+		name = jap.76.a
+		set_country_flag = tugaiwancheng_jap
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+country_event = {
+	id = jap.77
+	title = jap.77.t
+	desc = jap.77.d
+	is_triggered_only = yes
+	option = {
+		name = jap.77.a
+		add_political_power = -100
+		add_stability = -0.05
+		add_war_support = -0.15
+		add_power_balance_value = {
+			id = JAP_balance
+			value = -0.2
+		}
+		remove_ideas = jap_tugai_idea_3
+		ai_chance = {
+			base = 100
+		}
+	}
+}
+
+#军队要求侵华
+country_event = {
+	id = jap.78
+	title = jap.78.t
+	desc = jap.78.d
+	#picture = 
+	fire_only_once = yes
+	trigger = {
+		tag = JAP
+		has_government = fascism
+		has_completed_focus = JAP_new59
+		not = { has_completed_focus = JAP_new79 }
+		date > 1938.1.1
+		is_subject = no
+		power_balance_value = {
+			id = JAP_balance
+			value > 0.4
+		}
+		MAN = { is_subject_of = JAP }
+	}
+	mean_time_to_happen = {
+		days = 1
+	}
+	option = {
+		name = jap.78.a
+		activate_mission = JAP_rw_qinhua
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+#军队要求南下
+country_event = {
+	id = jap.79
+	title = jap.79.t
+	desc = jap.79.d
+	#picture = 
+	fire_only_once = yes
+	trigger = {
+		tag = JAP
+		has_completed_focus = JAP_new59
+		not = { has_completed_focus = JAP_new81 }
+		date > 1940.1.1
+		is_subject = no
+		power_balance_value = {
+			id = JAP_balance
+			value > 0.4
+		}
+	}
+	mean_time_to_happen = {
+		days = 1
+	}
+	option = {
+		name = jap.79.a
+		activate_mission = JAP_rw_nanxia
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+#樱花国强迫对方议和
+country_event = {
+	id = jap.80
+	title = jap.80.t
+	desc = jap.80.d
+	is_triggered_only = yes
+	option = {
+		name = jap.80.a
+		if = {
+		limit = {
+		or = {
+		tag = USA
+		tag = NGD
+		tag = NFA
+		tag = FRG
+		}
+		}
+		JAP = {
+			transfer_state = 629
+			transfer_state = 631
+			transfer_state = 630
+			transfer_state = 632
+			transfer_state = 648
+			transfer_state = 645
+			transfer_state = 725
+		}
+		hidden_effect = {
+			white_peace = { 
+			tag = JAP
+			message = JAP_taipingyangzhanzhengshengli
+			}
+		}
+		}
+		if = {
+		limit = {
+		tag = ENG
+		}
+		JAP = {
+		transfer_state = 336
+		transfer_state = 1020
+		transfer_state = 733
+		transfer_state = 639
+		transfer_state = 643
+		transfer_state = 636
+		transfer_state = 635
+		transfer_state = 941
+		transfer_state = 726
+		transfer_state = 641
+		transfer_state = 642
+		transfer_state = 727
+		}
+		set_autonomy = {
+			target = RAJ
+			autonomy_state = autonomy_free
+		}
+		set_autonomy = {
+			target = MAL
+			autonomy_state = autonomy_free
+		}
+		RAJ = {
+			leave_faction = yes
+		}
+		MAL = {
+			leave_faction = yes
+		}
+		if = {
+		limit = {
+		RYU = { is_subject_of = ENG }
+		}
+		JAP = {
+			annex_country = {
+				target = RYU
+			}
+		}
+		}
+		if = {
+		limit = {
+		PAW = { is_in_faction_with = JAP }
+		}
+		PAW = {
+		transfer_state = 963
+		transfer_state = 751
+		transfer_state = 1002
+		transfer_state = 846
+		annex_country = {
+			target = VIN
+		}
+		annex_country = {
+			target = BRM
+		}
+		}
+		}
+		if = {
+		limit = {
+		AST = {
+		is_in_faction_with = ENG
+		has_capitulated = yes
+		}
+		}
+		JAP = {
+		set_autonomy = {
+			target = AST
+			autonomy_state = autonomy_wtt_imperial_protectorate
+			}
+		}
+		}
+		if = {
+		limit = {
+		country_exists = INS
+		INS = { is_subject_of  = JAP }
+		}
+		INS = { 
+			annex_country = {
+				target = MAL
+			}
+		}
+		}
+		hidden_effect = {
+			white_peace = { 
+			tag = JAP
+			message = JAP_dongnanyashengli
+			}
+		}
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+	option = {
+		name = jap.80.b
+		add_political_power = -500
+		add_war_support = -0.8
+		add_stability = -0.5
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+#新政治线事件链
+country_event = {
+	id = jap.81
+	title = jap.81.t
+	desc = jap.81.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.81.a
+		hidden_effect = {
+			country_event = { id = jap.82 days = 3 }
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+country_event = {
+	id = jap.82
+	title = jap.82.t
+	desc = jap.82.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.82.a
+		add_political_power = 10
+		hidden_effect = {
+			country_event = { id = jap.83 days = 3 }
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+country_event = {
+	id = jap.83
+	title = jap.83.t
+	desc = jap.83.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.83.a
+		set_country_flag = jap_gcdtian_yes
+		custom_effect_tooltip = jap_lujunbuman_tips
+		add_popularity = { ideology = communism popularity = 0.05 }
+		hidden_effect = {
+			country_event = { id = jap.84 days = 3 }
+		}
+		ai_chance = {
+			base = 80
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_5
+			}
+			factor = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_1
+			}
+			factor = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_2
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_3
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_4
+			}
+			factor = 0
+			}
+		}
+	}
+	option = {
+		name = jap.83.b
+		set_country_flag = jap_gcdtian_no
+		custom_effect_tooltip = jap_gcdbuman_tips
+		add_popularity = { ideology = communism popularity = -0.05 }
+		hidden_effect = {
+			country_event = { id = jap.84 days = 3 }
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_2
+			}
+			add = 100
+			}
+		}
+	}
+	option = {
+		name = jap.83.c
+		add_popularity = { ideology = communism popularity = 0.02 }
+		hidden_effect = {
+			country_event = { id = jap.84 days = 3 }
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_3
+			}
+			add = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_4
+			}
+			add = 100
+			}
+		}
+	}
+}
+
+country_event = {
+	id = jap.84
+	title = jap.84.t
+	desc = jap.84.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.84.a
+		set_country_flag = jap_jinujunbu
+		custom_effect_tooltip = jap_lujunbuman_tips
+		hidden_effect = {
+			country_event = { id = jap.85 days = 5 }
+		}
+		ai_chance = {
+			base = 80
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_5
+			}
+			factor = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_1
+			}
+			factor = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_2
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_3
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_4
+			}
+			factor = 0
+			}
+		}
+	}
+	option = {
+		name = jap.84.b
+		set_country_flag = jap_jinugcd
+		custom_effect_tooltip = jap_gcdbuman_tips
+		hidden_effect = {
+			country_event = { id = jap.85 days = 5 }
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_2
+			}
+			add = 100
+			}
+		}
+	}
+}
+
+country_event = {
+	id = jap.85
+	title = jap.85.t
+	desc = jap.85.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.85.a
+		complete_national_focus = JAP_new4
+		complete_national_focus = JAP_new1
+		trigger = { 
+		has_country_flag = jap_jinujunbu
+		has_country_flag = jap_gcdtian_yes
+		}
+		ai_chance = {
+			base = 90
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_5
+			}
+			factor = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_1
+			}
+			factor = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_2
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_3
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_4
+			}
+			factor = 0
+			}
+		}
+	}
+	option = {
+		name = jap.85.b
+		complete_national_focus = JAP_new2
+		complete_national_focus = JAP_new1
+		trigger = { 
+		has_country_flag = jap_jinugcd
+		has_country_flag = jap_gcdtian_no
+		}
+		ai_chance = {
+			base = 5
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_5
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_1
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_2
+			}
+			factor = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_3
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_4
+			}
+			factor = 0
+			}
+		}
+	}
+	option = {
+		name = jap.85.c
+		complete_national_focus = JAP_new3
+		complete_national_focus = JAP_new1
+		ai_chance = {
+			base = 10
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_5
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_1
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_2
+			}
+			factor = 0
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_3
+			}
+			factor = 100
+			}
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_4
+			}
+			factor = 100
+			}
+		}
+	}
+}
+
+country_event = {
+	id = jap.86
+	title = jap.86.t
+	desc = jap.86.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.86.a
+		add_political_power = 30
+		add_popularity = { ideology = fascism popularity = 0.1 }
+		set_country_flag = jap_yutianhuangtuoxie_tips
+		clr_country_flag = SOV_paranoia_do_not_cancel_focus_flag
+		ai_chance = {
+			base = 100
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_3
+			}
+			factor = 0
+			}
+		}
+	}
+	option = {
+		name = jap.86.b
+		ai_chance = {
+			base = 0
+			modifier = {
+			has_game_rule = {
+			rule = AH_JAP_ai_behavior_SELECTION
+			option = JAP_GAME_RULE_3
+			}
+			add = 100
+			}
+		}
+	}
+}
+
+country_event = {
+	id = jap.87
+	title = jap.87.t
+	desc = jap.87.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.87.a
+		add_ideas = jap_zhanzhengdecuican_idea
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+news_event = {
+	id = jap.88
+	title = jap.88.t
+	desc = jap.88.d
+	picture = GFX_news_event_020
+	is_triggered_only = yes
+	major = yes
+	option = {
+		name = jap.88.a
+		trigger = { 
+		or = {
+			tag = CHI
+			tag = PRC
+			tag = ROC
+			tag = YUN
+			tag = GXC
+			tag = XSM
+			tag = MON
+			tag = SIK
+			tag = TIB
+			}
+		}
+	}
+	option = {
+		name = jap.88.b
+		trigger = { 
+		or = {
+			tag = JAP
+		}
+		}
+	}
+	option = {
+		name =jap.88.c
+		trigger = { 
+			not = { 
+				tag = CHI
+				tag = PRC
+				tag = ROC
+				tag = YUN
+				tag = GXC
+				tag = XSM
+				tag = MON
+				tag = SIK
+				tag = TIB
+				tag = JAP
+			}
+		}
+	}
+}
+
+country_event = {
+	id = jap.89
+	title = jap.89.t
+	desc = jap.89.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.89.a
+		614 = {
+		add_dynamic_modifier = {
+			modifier = JAP_jijingongshi_state
+			scope = JAP
+			days = 80
+		}
+		}
+		611 = {
+		add_dynamic_modifier = {
+			modifier = JAP_jijingongshi_state
+			scope = JAP
+			days = 80
+		}
+		}
+		608 = {
+		add_dynamic_modifier = {
+			modifier = JAP_jijingongshi_state
+			scope = JAP
+			days = 80
+		}
+		}
+		609 = {
+		add_dynamic_modifier = {
+			modifier = JAP_jijingongshi_state
+			scope = JAP
+			days = 80
+		}
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+	option = {
+		name = jap.89.b
+		743 = {
+		add_dynamic_modifier = {
+			modifier = JAP_jijingongshi_state
+			scope = JAP
+			days = 80
+		}
+		}
+		613 = {
+		add_dynamic_modifier = {
+			modifier = JAP_jijingongshi_state
+			scope = JAP
+			days = 80
+		}
+		}
+		596 = {
+		add_dynamic_modifier = {
+			modifier = JAP_jijingongshi_state
+			scope = JAP
+			days = 80
+		}
+		}
+		598 = {
+		add_dynamic_modifier = {
+			modifier = JAP_jijingongshi_state
+			scope = JAP
+			days = 80
+		}
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+news_event = {
+	id = jap.90
+	title = jap.90.t
+	desc = jap.90.d
+	picture = GFX_news_event_king_speech
+	is_triggered_only = yes
+	major = yes
+	option = {
+		name = jap.90.a
+	}
+}
+
+#上海外交博弈结果事件
+country_event = {
+	id = jap.91
+	title = jap.91.t
+	desc = jap.91.d
+	#picture = 
+	is_triggered_only = yes
+	immediate = {
+		JAP_ggl = {
+		set_nationality = SHH
+		}
+	}
+	option = {
+		name = jap.91.a
+		add_political_power = 50
+		SHH = {
+		set_party_name = { ideology = fascism long_name = "樱花国委任政府" name = "樱花国委任政府" }
+		JAP_ggl = {
+			add_country_leader_role = {
+				country_leader = {
+					expire = "1999.1.1"
+					ideology = militarism_subtype
+					traits = {
+						
+					}
+				}
+				promote_leader = yes
+			}
+		}
+		set_politics = {
+			ruling_party = fascism
+			elections_allowed = no
+		}
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.4
+		}
+		}
+		add_to_faction = SHH
+		every_country = {
+			limit = {
+			or = {
+			tag = GER
+			tag = FRA
+			tag = ENG
+			tag = RYU
+			}
+			}
+		country_event = jap.52
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+country_event = {
+	id = jap.92
+	title = jap.92.t
+	desc = jap.92.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.92.a
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+country_event = {
+	id = jap.93
+	title = jap.93.t
+	desc = jap.93.d
+	#picture = 
+	is_triggered_only = yes
+	option = {
+		name = jap.93.a
+		add_political_power = -50
+		add_war_support = -0.1
+		ENG = {
+		add_to_faction = SHH
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+#星野爱事件链
+country_event = {
+	id = jap.94
+	title = jap.94.t
+	desc = jap.94.d
+	picture = GFX_event_HoshinoAi
+	fire_only_once = yes
+	trigger = {
+		tag = JAP
+		date > 1936.12.10
+	}
+	mean_time_to_happen = {
+		days = 1
+	}
+	option = {
+		name = jap.94.a
+		add_stability = -0.01
+		add_war_support = -0.01
+		custom_effect_tooltip = JAP_xya_zxdb_tip
+		hidden_effect = {
+		country_event = { id = jap.95 days = 4380 }
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+country_event = {
+	id = jap.95
+	title = jap.95.t
+	desc = jap.95.d
+	picture = GFX_event_HoshinoAi
+	is_triggered_only = yes
+	option = {
+		name = jap.95.a
+		add_stability = 0.03
 		ai_chance = {
 			factor = 100
 		}

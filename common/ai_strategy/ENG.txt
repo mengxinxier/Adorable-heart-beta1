@@ -51,7 +51,7 @@
 		ai_strategy = { #魔装
 			type = role_ratio
 			id = ENG_magic_assault
-			value = 100
+			value = 0
 		}
 		ai_strategy = { #步兵
 			type = role_ratio
@@ -66,9 +66,10 @@
 			original_tag = ENG
 		}
 		enable = {
-			not = {
-				has_tech = mechanised_infantry
-			}
+			always = yes
+			#not = {
+			#	has_tech = mechanised_infantry
+			#}
 		}
 		abort_when_not_enabled = yes
 		ai_strategy = { #装甲
@@ -82,25 +83,25 @@
 			value = 0
 		}
 	}
-	ENG_unit_production_3 = { #装甲单位生产倾向2
-		allowed = {
-			original_tag = ENG
-		}
-		enable = {
-			has_tech = mechanised_infantry
-		}
-		abort_when_not_enabled = yes
-		ai_strategy = { #装甲
-			type = role_ratio
-			id = ENG_armor
-			value = 0
-		}
-		ai_strategy = { #装甲2
-			type = role_ratio
-			id = ENG_jb
-			value = 600
-		}
-	}
+	#ENG_unit_production_3 = { #装甲单位生产倾向2
+		#	allowed = {
+		#		original_tag = ENG
+		#	}
+		#	enable = {
+		#		has_tech = mechanised_infantry
+		#	}
+		#	abort_when_not_enabled = yes
+		#	ai_strategy = { #装甲
+		#		type = role_ratio
+		#		id = ENG_armor
+		#		value = 0
+		#	}
+		#	ai_strategy = { #装甲2
+		#		type = role_ratio
+		#		id = ENG_jb
+		#		value = 600
+		#	}
+	#}
 
 	ENG_air_production = { #空军生产
 
@@ -137,25 +138,25 @@
 		ai_strategy = {
 			type = unit_ratio
 			id = cv_fighter 
-			value = -100
+			value = 1
 		}
 
 		ai_strategy = {
 			type = unit_ratio
-			id = cv_nav_bomber 
-			value = -100
+			id = cv_naval_bomber 
+			value = 1
 		}
 
 		ai_strategy = { #战略轰炸
 			type = unit_ratio 
 			id = strategic_bomber
-			value = 3
+			value = 0
 		}
 
 		ai_strategy = { #战术轰炸
 			type = unit_ratio
 			id = tactical_bomber
-			value = -200
+			value = 0
 		}
 
 		#######
@@ -181,13 +182,13 @@
 		ai_strategy = { #战略轰炸
 			type = equipment_production_factor 
 			id = strategic_bomber
-			value = 3
+			value = 0
 		}
 
 		ai_strategy = { #战术轰炸
 			type = equipment_production_factor
 			id = tactical_bomber
-			value = -200
+			value = 0
 		}
 		
 	}
@@ -213,10 +214,15 @@
 			id = medium_tank_chassis
 			value = 80
 		}
+		#ai_strategy = { 
+		#	type = equipment_variant_production_factor
+		#	id = mechanized_equipment
+		#	value = 0
+		#}
 		ai_strategy = { 
 			type = equipment_variant_production_factor
-			id = mechanized_equipment
-			value = 20
+			id = motorized_equipment
+			value = 15
 		}
 
 	}
@@ -229,13 +235,13 @@
 
 		ai_strategy = { #船厂比例，效果未知
 			type = dockyard_to_military_factory_ratio
-			value = 20		#aim for a 2-1 ratio on naval factories
+			value = 30		#aim for a 2-1 ratio on naval factories
 		}
 
 		ai_strategy = {
 			type = role_ratio
 			id = ENG_naval_capital_bb
-			value = -100
+			value = -200
 		}
 		ai_strategy = { #航母
 			type = role_ratio
@@ -256,22 +262,28 @@
 		ai_strategy = { #轻巡
 			type = role_ratio
 			id = ENG_naval_cruiser_light
-			value = 30
+			value = 40
 		}
 		ai_strategy = { #驱逐
 			type = role_ratio
 			id = ENG_naval_screen
-			value = 60
+			value = 180
 		}
 		ai_strategy = { #潜艇
 			type = role_ratio
 			id = ENG_naval_submarine
-			value = 20
+			value = 200
 		}
-		ai_strategy = { #运输船
+		ai_strategy = { #最少分配运输船
 			type = equipment_production_min_factories 
 			id = convoy 
-			value = 2
+			value = 3
+		}
+ 
+		ai_strategy = { #最少分配潜艇
+			type = equipment_production_min_factories
+			id = submarine
+			value = 3
 		}
 
 
@@ -361,7 +373,7 @@
 		ai_strategy = {
 			type = equipment_variant_production_factor
 			id = heavy_tank_chassis
-			value = -5000
+			value = 0
 		}
 
 	}
@@ -446,7 +458,7 @@
 		ai_strategy = {
 			type = equipment_variant_production_factor
 			id = heavy_tank_chassis
-			value = -5000
+			value = 0
 		}
 
 	}
@@ -527,7 +539,7 @@
 		ai_strategy = {
 			type = equipment_variant_production_factor
 			id = heavy_tank_chassis
-			value = -5000
+			value = 0
 		}
 
 	}
@@ -539,7 +551,7 @@
 		}
 		enable = {
 			has_equipment = {
-				motorized_equipment < 500
+				motorized_equipment < 1000
 			}
 			num_of_military_factories > 50
 		}
@@ -550,6 +562,11 @@
 			type = equipment_production_min_factories
 			id = motorized
 			value = 10
+		}
+		ai_strategy = { 
+			type = equipment_variant_production_factor
+			id = motorized_equipment
+			value = 50
 		}
 	}
 	ENG_artillery_production = { #缺炮
@@ -632,6 +649,45 @@
 			value = 8
 		}
 	}
+	ENG_train_production = { #缺运输船
+		allowed = {
+			original_tag = ENg
+
+		}
+		enable = {
+			has_equipment = {
+				convoy  < 500
+			}
+		}
+
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = equipment_production_min_factories
+			id = convoy 
+			value = 10
+		}
+	}
+
+	ENG_construct_knight_equipment_production = { #别造骑士装甲
+		allowed = {
+			original_tag = ENg
+
+		}
+		enable = {
+			has_equipment = {
+				construct_knight_equipment  > 50
+			}
+		}
+
+		abort_when_not_enabled = yes
+		
+		ai_strategy = {
+			type = equipment_variant_production_factor
+			id = construct_knight_equipment
+			value = 0
+		}
+	}
 
 
 
@@ -670,21 +726,21 @@
 		#	id = 18		#英吉利海峡
 		#	value = 75
 		#}
-		ai_strategy = {
-			type = naval_avoid_region
-			id = 9 		#北波罗的海
-			value = 500
-		}
-		ai_strategy = {
-			type = naval_avoid_region
-			id = 138 	#南波罗的海
-			value = 500
-		}
-		ai_strategy = {
-			type = naval_avoid_region
-			id = 147 	#丹麦海峡
-			value = 500
-		}
+		#ai_strategy = {
+		#	type = naval_avoid_region
+		#	id = 9 		#北波罗的海
+		#	value = 500
+		#}
+		#ai_strategy = {
+		#	type = naval_avoid_region
+		#	id = 138 	#南波罗的海
+		#	value = 500
+		#}
+		#ai_strategy = {
+		#	type = naval_avoid_region
+		#	id = 147 	#杜伦布海峡
+		#	value = 500
+		#}
 	}
 
 	ENG_dajijiandui_to_dvl = { #处于战争状态时保卫本土海域
@@ -696,21 +752,44 @@
 		}
 		abort_when_not_enabled = yes
 
-		ai_strategy = {
-			type = strike_force_home_base
-			id = 18 #英吉利海峡
-			value = 100
+		#ai_strategy = {
+		#	type = strike_force_home_base
+		#	id = 18 #英吉利海峡
+		#	value = 100
+		#}
+		#ai_strategy = {
+		#	type = strike_force_home_base
+		#	id = 16 #北海
+		#	value = 75
+		#}
+		#ai_strategy = {
+		#	type = strike_force_home_base
+		#	id = 43 #西进口航道
+		#	value = 50
+		#}
+	}
+
+	ENG_buqu_to_jap = { #43年前不前往南海和东海
+		allowed = { 
+			original_tag = ENG 
 		}
-		ai_strategy = {
-			type = strike_force_home_base
-			id = 16 #北海
-			value = 75
+		enable = {
+			has_war_with = JAP
+			date < 1943.1.1
 		}
-		ai_strategy = {
-			type = strike_force_home_base
-			id = 43 #西进口航道
-			value = 50
-		}
+		abort_when_not_enabled = yes
+
+		#ai_strategy = {
+		#	type = strike_force_home_base
+		#	id = 75 #南海
+		#	value = 0
+		#}
+		#ai_strategy = {
+		#	type = strike_force_home_base
+		#	id = 76 #东海
+		#	value = 0
+		#}
+
 	}
 
 
@@ -852,12 +931,17 @@
 		}
 	}
 	
-	careful_with_early_invasions = { #不提前海上入侵
+	careful_with_early_invasions = { #不提前海上入侵戴比
 		allowed = {
 			original_tag = ENG
+			is_subject_of = ENG
 		}
 		enable = {
 			has_war_with = DVL
+			or = {
+				tag = ENG
+				is_subject_of = ENG
+			}
 			or = {
 				AND = {
 					DVL = {
@@ -873,7 +957,7 @@
 						has_war_with = SOV
 						surrender_progress < 0.1
 					}
-					date < 1942.9.1
+					date < 1942.6.1
 				}								
 			}
 		}
@@ -881,17 +965,17 @@
 		ai_strategy = {
 			type = invade
 			id = "POL"
-			value = -900
+			value = 0
 		}
 		ai_strategy = {
 			type = invade
 			id = "DVL"
-			value = -900
+			value = 0
 		}
 		ai_strategy = {
 			type = invade
 			id = "NPT"
-			value = -900
+			value = 0
 		}
 	}
 	#
@@ -1062,7 +1146,6 @@
 		}
 	}
 
-
 	ENG_area_priority = { #戴比没与苏联开打时，不管部分欧洲地区
 		allowed = {
 			original_tag = ENG
@@ -1140,6 +1223,94 @@
 	}
 
 
+	ENG_war_with_JAP_fs = { #43年前对日放水
+		allowed = {
+			original_tag = ENG
+		}
+		enable = {
+			has_war_with = JAP
+			country_exists = DVL
+			date < 1943.1.1
+		}
+		abort_when_not_enabled = yes
+		ai_strategy = {
+			type = invade		#入侵
+			id = "JAP"
+			value = 0
+		}
+		ai_strategy = {
+			type = conquer		#征服
+			id = "JAP"
+			value = 0
+		}
+		ai_strategy = {
+			type = invasion_unit_request     #用于登陆的部队比例
+			tag = JAP
+			value = 0
+		}
+		ai_strategy = {
+			type = front_unit_request		#前线部队
+			tag = JAP
+			value = 0		# lets put more units, should be safe
+		}
+		ai_strategy = { #防守前线
+			type = front_control
+			priority = 10
+			tag = JAP
+			ratio > 0.1
+			execution_type = careful
+			execute_order = yes
+		}
+	}
+
+	ENG_war_with_JAP = { #43年后或戴比死后对日正常
+		allowed = {
+			original_tag = ENG
+		}
+		enable = {
+			or = {
+				and = {
+					has_war_with = JAP
+					not = {
+						country_exists = DVL
+					}					
+				}
+				and = {
+					has_war_with = JAP
+					date > 1943.1.1					
+				}			
+			}
+		}
+		abort_when_not_enabled = yes
+		ai_strategy = {
+			type = invade		#入侵
+			id = "JAP"
+			value = 200
+		}
+		ai_strategy = {
+			type = conquer		#征服
+			id = "JAP"
+			value = 200
+		}
+		ai_strategy = {
+			type = invasion_unit_request     #用于登陆的部队比例     #用于登陆的部队比例
+			tag = JAP
+			value = 20
+		}
+		ai_strategy = {
+			type = front_unit_request		#前线部队
+			tag = JAP
+			value = 80		# lets put more units, should be safe
+		}
+		ai_strategy = { #进攻前线
+			type = front_control
+			priority = 10
+			tag = JAP
+			ratio > 0.3
+			execution_type = rush
+			execute_order = yes
+		}
+	}
 
 	#戴比存在时专注欧洲
 	ENG_area_priority = {
@@ -1256,7 +1427,7 @@
 		}
 	}
 
-	ENG_war_with_DVL = {
+	ENG_war_with_DVL = { #到时间后对戴比战略
 		allowed = {
 			original_tag = ENG
 		}
@@ -1264,12 +1435,12 @@
 			has_war_with = DVL
 			or = {
 				AND = {
-					date > 1942.9.1
+					date > 1943.6.1
 					DVL = {
 						has_war_with = SOV
 					}
 				}
-				date > 1943.6.1
+				date > 1942.6.1
 				DVL = {
 					surrender_progress > 0.1
 				}
@@ -1296,38 +1467,14 @@
 			tag = DVL
 			value = 120		# lets put more units, should be safe
 		}
-	}
 
-	ENG_war_with_JAP = {
-		allowed = {
-			original_tag = ENG
-		}
-		enable = {
-			has_war_with = JAP
-			not = {
-				has_war_with = DVL
-			}
-		}
-		abort_when_not_enabled = yes
-		ai_strategy = {
-			type = invade		#入侵
-			id = "JAP"
-			value = 200
-		}
-		ai_strategy = {
-			type = conquer		#征服
-			id = "JAP"
-			value = 200
-		}
-		ai_strategy = {
-			type = invasion_unit_request
-			tag = JAP
-			value = 20
-		}
-		ai_strategy = {
-			type = front_unit_request		#前线部队
-			tag = JAP
-			value = 80		# lets put more units, should be safe
+		ai_strategy = { #进攻前线
+			type = front_control
+			priority = 10
+			tag = DVL
+			ratio > 0.3
+			execution_type = rush
+			execute_order = yes
 		}
 	}
 
@@ -1626,7 +1773,7 @@
 		ai_strategy = {
 			type = befriend
 			id = "JAP"
-			value = -100
+			value = -200
 		}
 		ai_strategy = {
 			type = alliance
@@ -1636,7 +1783,7 @@
 		ai_strategy = {
 			type = antagonize
 			id = "JAP"
-			value = 50
+			value = 200
 		}
 	}
 
@@ -1755,12 +1902,6 @@
 		}
 
 		ai_strategy = {
-			type = research_tech	#机械化装备
-			id = cat_mechanized_equipment
-			value = 200
-		}
-
-		ai_strategy = {
 			type = research_tech	#工兵营
 			id = engineers_tech
 			value = 200
@@ -1775,151 +1916,197 @@
 			id = logistics_tech
 			value = 250
 		}
-
-        #具体科技
-		ai_strategy = { #步枪及其前置
-			type = research_tech	#步枪及其前置
-			id = 543
-			value = 500
-		}
-		ai_strategy = { #步枪及其前置
-			type = research_tech	#步枪及其前置
-			id = 544
-			value = 500
-		}
-		ai_strategy = { #步枪及其前置
-			type = research_tech	#步枪及其前置
-			id = 545
-			value = 500
-		}
-		ai_strategy = { #步枪及其前置
-			type = research_tech	#步枪及其前置
-			id = 548
-			value = 500
-		}
-
-		
-
-		ai_strategy = { #易维护
-			type = research_tech	
-			id = 1081
-			value = 800
-		}
-
-		ai_strategy = { #推土铲
-			type = research_tech	
-			id = 1068
-			value = 300
-		}
-
-		ai_strategy = { #高速公路
-			type = research_tech	
-			id = 1029
-			value = 200
-		}
-
-		ai_strategy = { #机械化
-			type = research_tech	
-			id = 1031
-			value = 800
-		}
-		ai_strategy = { #机械化
-			type = research_tech	
-			id = 1034
-			value = 500
-		}
-		ai_strategy = { #机械化
-			type = research_tech	
-			id = 1035
-			value = 500
-		}
-
-		ai_strategy = { #火车
-			type = research_tech	
-			id = 1045
-			value = 200
-		}
-
-       #飞机配件
-		
-		ai_strategy = { #额外邮箱
-			type = research_tech	
-			id = 414
-			value = 300
-		}
-		
-
-
-
-		
 	}
+    #不研究科技（没用）
+		ENG_ai_research_no = { #不研究科技究方向
+			enable = {
+				original_tag = ENG
+			}
+			abort = {
+				always = no
+			}
+			#ai_strategy = { #兰彻斯特6×4装甲车
+			#	type = research_tech
+			#	id = gw_armored_car_equipment
+			#	value = -999
+			#}
+			#ai_strategy = { #山地步兵 I
+			#	type = research_tech
+			#	id = tech_mountaineers
+			#	value = -999
+			#}
+			#ai_strategy = { #改进型炮击魔装
+			#	type = research_tech
+			#	id = magic_artillery_equipment_1
+			#	value = -999
+			#}
+			#ai_strategy = { #无线电测向
+			#	type = research_tech
+			#	id = rdf1
+			#	value = -999
+			#}
+			#ai_strategy = { #合成石油实验
+			#	type = research_tech
+			#	id = synth_oil_experiments
+			#	value = -999
+			#}
+		}	
+	#机械化
+		ENG_ai_research_mechanised = { #机械化1
+			enable = {
+				has_completed_focus = ENG_112_jdzz
+			}
+			abort = {
+				always = no
+			}
+			ai_strategy = { #机械化1
+				type = research_tech	
+				id = mechanised_infantry
+				value = 800
+			}
+		}
+		ENG_ai_research_mechanised_2 = { #机械化2
+			enable = {
+				date > 1942.1.1
+			}
+			abort = {
+				always = no
+			}
+			ai_strategy = { #机械化2
+				type = research_tech	
+				id = mechanised_infantry2
+				value = 100
+			}
+		}
+		ENG_ai_research_mechanised_3 = { #机械化3
+			enable = {
+				date > 1944.6.1
+			}
+			abort = {
+				always = no
+			}
+			ai_strategy = { #机械化3
+				type = research_tech	
+				id = mechanised_infantry3
+				value = 100
+			}
+		}
 
-	ENG_ai_research_39_9 = { #40中坦等
-		enable = {
-			date > 1939.9.1
+	#1938
+		ENG_ai_research_38 = { #38年科技
+			enable = {
+				date > 1938.1.1
+			}
+			abort = {
+				always = no
+			}
+			ai_strategy = { #38年弹药
+				type = research_tech	
+				id = infantry_weapons2
+				value = 400
+			}
+			ai_strategy = { #高速公路
+				type = research_tech	
+				id = r56_convoy_highways
+				value = 400
+			}
+			ai_strategy = { #基础计算机
+				type = research_tech	
+				id = computing_machine
+				value = 400
+			}
 		}
-		abort = {
-			always = no
-		}
-		ai_strategy = { #40中坦
-			type = research_tech	
-			id = 130
-			value = 400
-		}
-	}
+	#1938.9
+		ENG_ai_research_39 = { #39年科技
+			enable = {
+				date > 1938.9.1
+			}
+			abort = {
+				always = no
+			}
+			ai_strategy = { #39年步兵装备
+				type = research_tech	
+				id = infantry_equipment_2
+				value = 300
+			}
+			ai_strategy = { #QF 25磅野战炮
+				type = research_tech	
+				id = artillery_equipment_2
+				value = 200
+			}
+			ai_strategy = { #重机枪
+				type = research_tech	
+				id = aa_hmg
+				value = 400
+			}
 
-	ENG_ai_research_39_6 = { #40飞机等
-		enable = {
-			date > 1939.6.1
+			ai_strategy = { #工兵连 II
+				type = research_tech	
+				id = tech_engineers2
+				value = 200
+			}
+			ai_strategy = { #侦查连 II
+				type = research_tech	
+				id = tech_recon2
+				value = 200
+			}
+			ai_strategy = { #维修连 II
+				type = research_tech	
+				id = tech_maintenance_company2
+				value = 400
+			}
+			ai_strategy = { #后勤连 II
+				type = research_tech	
+				id = tech_logistics_company2
+				value = 300
+			}
 		}
-		abort = {
-			always = no
-		}
-		ai_strategy = { #40飞机
-			type = research_tech	
-			id = 390
-			value = 500
-		}
-		ai_strategy = { #引擎3
-			type = research_tech	
-			id = 412
-			value = 500
-		}
-	}
+	#1939.6
+		ENG_ai_research_40 = { #40年科技
+			enable = {
+				date > 1939.6.1
+			}
+			abort = {
+				always = no
+			}
+			ai_strategy = { #改进型中型坦克底盘
+				type = research_tech	
+				id = improved_medium_tank_chassis
+				value = 400
+			}
+			ai_strategy = { #改进型小型机身
+				type = research_tech	
+				id = small_plane_airframe_2
+				value = 500
+			}
+			ai_strategy = { #引擎 III
+				type = research_tech	
+				id = engines_3
+				value = 500
+			}
 
-	ENG_ai_research_40_1 = { #40年
-		enable = {
-			date > 1939.11.1
-		}
-		abort = {
-			always = no
-		}
-		ai_strategy = { #灵装
-			type = research_tech	
-			id = 15
-			value = 400
-		}
-	}
+			ai_strategy = { #引擎 III
+				type = research_tech	
+				id = anti_tank_equipment_2
+				value = 400
+			}
 
-	ENG_ai_research_38_11 = { #39年
-		enable = {
-			date > 1938.11.1
-		}
-		abort = {
-			always = no
-		}
-		ai_strategy = { #重机枪
-			type = research_tech	
-			id = 407
-			value = 300
+			ai_strategy = { #火车
+				type = research_tech	
+				id = train_equipment_2
+				value = 200
+			}
 		}
 
-		ai_strategy = { #机炮
-			type = research_tech	
-			id = 408
-			value = 300
-		}
-	}
+
+
+
+	#
+
+
+
+
+
 
 #其他
 #优先升级编制

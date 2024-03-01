@@ -3,19 +3,23 @@
 NDefines.NGame.END_DATE = "1999.1.1.1"										-- Vanilla is 1949.1.1.1
 NDefines.NCountry.EVENT_PROCESS_OFFSET = 5									-- Vanilla is 20 再苦一苦CPU...
 
+--三军经验最大值
 NDefines.NMilitary.MAX_ARMY_EXPERIENCE = 1000
 NDefines.NMilitary.MAX_NAVY_EXPERIENCE = 1000
 NDefines.NMilitary.MAX_AIR_EXPERIENCE = 1000
+
+--列车炮、船厂最大生产线
+NDefines.NProduction.RAILWAY_GUN_MAX_MIL_FACTORIES_PER_LINE = 50
 NDefines.NProduction.DEFAULT_MAX_NAV_FACTORIES_PER_LINE = 50
 NDefines.NProduction.CONVOY_MAX_NAV_FACTORIES_PER_LINE = 50
 NDefines.NProduction.CAPITAL_SHIP_MAX_NAV_FACTORIES_PER_LINE = 50
 
 -- 更多特种部队
-NDefines.NCountry.SPECIAL_FORCES_CAP_BASE = 0.1								-- Vanilla is 0.05
-NDefines.NCountry.SPECIAL_FORCES_CAP_MIN = 32								-- Vanilla is 24
+-- NDefines.NCountry.SPECIAL_FORCES_CAP_BASE = 0.1								-- Vanilla is 0.05
+-- NDefines.NCountry.SPECIAL_FORCES_CAP_MIN = 32								-- Vanilla is 24
 
 -- 更少装备消耗
-NDefines.NMilitary.EQUIPMENT_COMBAT_LOSS_FACTOR = 0.45						-- Vanilla is 0.7
+-- NDefines.NMilitary.EQUIPMENT_COMBAT_LOSS_FACTOR = 0.45						-- Vanilla is 0.7
 
 -- 战争支持度&稳定度
 NDefines.NCountry.MAX_BOMBING_WAR_SUPPORT_IMPACT = -2.0						-- Vanilla is -0.3 骇人轰炸.jpg
@@ -76,4 +80,7 @@ NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_COMPETING_FACTIONS = 0             
 NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_EMBARGO = -200                             -- Acceptance value added if either side has embargoed the other
 NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_NO_TRADE_ROUTE = -100                      -- Acceptance value added if there is no valid trade route between the countries
 NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_NON_AGGRESSION_PACT = 25                   -- Acceptance value added if there is a non-aggression pact between the countries
+
+-- 消费品
+NDefines.NProduction.MINIMUM_NUMBER_OF_FACTORIES_TAKEN_BY_CONSUMER_GOODS_PERCENT = 0.05	-- The minimum number of factories we have to put on consumer goods, in percent.
 
