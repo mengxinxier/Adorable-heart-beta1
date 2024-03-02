@@ -24,6 +24,7 @@
 	add_namespace = NGD_undercurrent
 	add_namespace = NGD_NA_war
 	add_namespace = NGD_Progressive
+	add_namespace = NGD_Democratic
 	add_namespace = NGD_diplomacy
 	add_namespace = NGD_news
 ### - 第一节：命名空间 - ###
@@ -375,12 +376,19 @@
 			activate_mission = NGD_Republican_takes_action_mission
 
 			ai_chance = {
-				base = 114
+				base = 10
 				modifier = {
 					factor = 10
 					has_game_rule = {
 						rule = AH_NGD_ai_behavior_SELECTION
 						option = NGD_GAME_RULE_1
+					}
+				}
+				modifier = {
+					factor = 10
+					has_game_rule = {
+						rule = AH_NGD_ai_behavior_SELECTION
+						option = NGD_GAME_RULE_2
 					}
 				}
 			}
@@ -402,9 +410,14 @@
 
 			ai_chance = {
 				base = 10
+				modifier = {
+					factor = 10
+					has_game_rule = {
+						rule = AH_NGD_ai_behavior_SELECTION
+						option = NGD_GAME_RULE_3
+					}
+				}
 			}
-			#前面的区域以后再来探索吧
-			custom_effect_tooltip = Come_explore_later
 		}
 	}
 
@@ -438,7 +451,7 @@
 			set_country_flag = NGD_ally_with_the_Progressive
 
 			ai_chance = {
-				base = 514
+				base = 10
 				modifier = {
 					factor = 10
 					has_game_rule = {
@@ -449,32 +462,39 @@
 			}
 		}
 		#与复兴党结盟
-		# option = {
-		# 	name = NGD_BlackTuesday.007.b
-		# 	add_political_power = -10
-		# 	add_popularity = {
-		# 		ideology = neutrality
-		# 		popularity = 0.05
-		# 	}
-		# 	add_power_balance_value = {
-		# 		id = NGD_political_infighting_bop
-		# 		value = -0.1
-		# 	}
-		# 	set_variable = {
-		# 		var = NGD_extremist_var
-		# 		value = 0
-		# 	}
-		# 	#危机处理方案 - 民主党
-		# 	country_event = {
-		# 		id = NGD_BlackTuesday.008
-		# 		days = 1
-		# 	}
-		# 	set_country_flag = NGD_ally_with_the_Renaissance
+		option = {
+			name = NGD_BlackTuesday.007.b
+			add_political_power = -10
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.05
+			}
+			add_power_balance_value = {
+				id = NGD_political_infighting_bop
+				value = -0.1
+			}
+			set_variable = {
+				var = NGD_extremist_var
+				value = 0
+			}
+			#危机处理方案 - 民主党
+			country_event = {
+				id = NGD_BlackTuesday.008
+				days = 1
+			}
+			set_country_flag = NGD_ally_with_the_Renaissance
 
-		# 	ai_chance = {
-		# 		base = 1
-		# 	}
-		# }
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 100
+					has_game_rule = {
+						rule = AH_NGD_aftermath_ai_behavior_SELECTION
+						option = NGD_aftermath_GAME_RULE_8
+					}
+				}
+			}
+		}
 		#靠我们自己就够了
 		option = {
 			name = NGD_BlackTuesday.007.c
@@ -485,11 +505,15 @@
 			}
 
 			ai_chance = {
-				base = 1
+				base = 10
+				modifier = {
+					factor = 10
+					has_game_rule = {
+						rule = AH_NGD_ai_behavior_SELECTION
+						option = NGD_GAME_RULE_2
+					}
+				}
 			}
-
-			#前面的区域以后再来探索吧
-			custom_effect_tooltip = Come_explore_later
 		}
 	}
 
@@ -529,11 +553,15 @@
 			activate_mission = NGD_vote_on_the_proposal_mission
 
 			ai_chance = {
-				base = 1
+				base = 10
+				modifier = {
+					factor = 10
+					has_game_rule = {
+						rule = AH_NGD_ai_behavior_SELECTION
+						option = NGD_GAME_RULE_2
+					}
+				}
 			}
-
-			#前面的区域以后再来探索吧
-			custom_effect_tooltip = Come_explore_later
 		}
 	}
 
@@ -596,7 +624,11 @@
 					}
 					AND = {
 						is_ai = yes
-						has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_1 }
+						or = {
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_1 }
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_2 }
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 }
+						}
 					}
 				}
 			}
@@ -606,7 +638,6 @@
 						has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = DEFAULT } #NOT HAVING THE DEFAULT GAMERULE RIGS THE OUTCOME OF THE GAME FOR THE AI
 						is_ai = no
 					}
-					is_ai = no
 				}
 				if = {
 					limit = {
@@ -660,6 +691,35 @@
 					complete_national_focus = NGD_progressive_new_deal_of_Ganyu
 					clr_country_flag = NGD_progressive_new_deal_of_Ganyu
 				}
+				else_if = {
+					limit = { has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_2 } }
+					complete_national_focus = NGD_emergency_intervention
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = -0.2
+					}
+					complete_national_focus = NGD_protectionism_of_Ningguang
+					clr_country_flag = NGD_protectionism_of_Ningguang
+				}
+				else_if = {
+					limit = { has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 } }
+					complete_national_focus = NGD_maintain_heading
+					add_power_balance_value = {
+						id = NGD_political_infighting_bop
+						value = 0.2
+					}
+					if = {
+						limit = {
+							has_country_flag = NGD_be_in_the_same_boat
+						}
+						complete_national_focus = NGD_be_in_the_same_boat
+						clr_country_flag = NGD_be_in_the_same_boat
+					}
+					else = {
+						complete_national_focus = NGD_boat_cruises_alone
+						clr_country_flag = NGD_boat_cruises_alone
+					}
+				}
 			}
 			add_political_power = 30
 			add_stability = 0.05
@@ -697,11 +757,7 @@
 					}
 					AND = {
 						is_ai = yes
-						OR = {
-							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_2 }
-							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 }
-							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
-						}
+						has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
 					}
 				}
 			}
@@ -821,16 +877,18 @@
 				#Cheaty, cheaty gamerules
 				if = {
 					limit = {
-						OR = {
-							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_2 }
-							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 }
-							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
-						}
+						has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
 					}
 					hidden_effect = { country_event = { id = NGD_undercurrent.004 days = 1 } }
 				}
 				else_if = {
-					limit = { has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_1 } }
+					limit = {
+						OR = {
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_1 }
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_2 }
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 }
+						}
+					}
 					hidden_effect = { country_event = { id = NGD_undercurrent.007 days = 1 } }
 				}
 			}
@@ -984,7 +1042,14 @@
 			name = NGD_undercurrent.009.a
 			if = {
 				limit = {
-					NGD_Republican_winning_trigger = yes
+					or = {
+						NGD_Republican_winning_trigger = yes
+						is_debug = yes
+						AND = {
+							is_ai = yes
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 }
+						}
+					}
 				}
 				promote_character = NGD_Jingyuan
 				swap_ideas = {
@@ -1030,16 +1095,9 @@
 		#民主党主导
 		option = {
 			name = NGD_undercurrent.010.a
-			add_country_leader_role = {
+			promote_character = {
 				character = NGD_Ningguang
-				country_leader = {
-					ideology = conservatism
-					expire = "1993.3.1.1"
-					traits = {
-					
-					}
-				}
-				promote_leader = yes
+				ideology = conservatism
 			}
 			set_party_name = {
 				ideology = democratic
@@ -1065,7 +1123,10 @@
 				}
 			}
 			else = {
-				remove_ideas = NGD_Jingyuan_idea
+				swap_ideas = {
+					remove_idea = NGD_Jingyuan_idea
+					add_idea = NGD_Yanfei_idea
+				}
 			}
 			remove_power_balance = {
 				id = NGD_political_infighting_bop
@@ -1077,11 +1138,15 @@
 			}
 
 			ai_chance = {
-				base = -1
+				base = 10
+				modifier = {
+					factor = 10
+					has_game_rule = {
+						rule = AH_NGD_ai_behavior_SELECTION
+						option = NGD_GAME_RULE_2
+					}
+				}
 			}
-
-			#前面的区域以后再来探索吧
-			custom_effect_tooltip = Come_explore_later
 		}
 		#进步党鱼跃龙门
 		option = {
@@ -1110,7 +1175,7 @@
 			hidden_effect = {
 				news_event = NGD_news.002
 			}
-			
+
 			ai_chance = {
 				base = 10
 				modifier = {
@@ -1186,10 +1251,12 @@
 		is_triggered_only = yes
 		option = {
 			name = NGD_NA_war.002.a
-			remove_ideas = NGD_storm_is_approaching_idea
-			add_ideas = NA_War_political_aftermath_idea
-			add_ideas = NA_War_economic_aftermath_idea
-
+			effect_tooltip = {
+				remove_ideas = NGD_storm_is_approaching_idea
+				# add_ideas = NA_War_political_aftermath_idea
+				add_ideas = NGD_popular_support_idea
+				add_ideas = NA_War_economic_aftermath_idea
+			}
 			complete_national_focus = NGD_Winner_Take_All
 		}
 	}
@@ -1200,9 +1267,9 @@
 		title = NGD_NA_war.003.title
 		desc = NGD_NA_war.003.desc
 		is_triggered_only = yes
+		#进步党执政
 		option = {
 			name = NGD_Progressive_Party_governance
-			add_ideas = NGD_popular_support_idea
 			if = {
 				limit = {
 					NOT = {
@@ -1223,6 +1290,124 @@
 				id = NGD_Progressive.001
 				days = 3
 			}
+
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 10
+					has_country_leader = {
+						character = NGD_Ganyu
+						ruling_only = yes
+					}
+				}
+				modifier = {
+					factor = 100
+					or = {
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_1
+						}
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_2
+						}
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_3
+						}
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_4
+						}
+					}
+				}
+			}
+		}
+		#共和党执政
+		option = {
+			name = NGD_Republican_Party_governance
+			if = {
+				limit = {
+					NOT = {
+						has_country_leader = {
+							character = NGD_Jingyuan
+							ruling_only = yes
+						}
+					}
+				}
+				promote_character = {
+					character = NGD_Jingyuan
+					ideology = Trade_liberalism
+				}
+				add_ideas = NGD_fuxuan_idea
+			}
+			complete_national_focus = NGD_Republican_Party_governance
+
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 10
+					has_country_leader = {
+						character = NGD_Jingyuan
+						ruling_only = yes
+					}
+				}
+				modifier = {
+					factor = 100
+					has_game_rule = {
+						rule = AH_NGD_aftermath_ai_behavior_SELECTION
+						option = NGD_aftermath_GAME_RULE_5
+					}
+				}
+			}
+		}
+		#民主党执政
+		option = {
+			name = NGD_Democratic_Party_governance
+			if = {
+				limit = {
+					NOT = {
+						has_country_leader = {
+							character = NGD_Ningguang
+							ruling_only = yes
+						}
+					}
+				}
+				promote_character = {
+					character = NGD_Ningguang
+					ideology = conservatism
+				}
+				add_ideas = NGD_Yanfei_idea
+			}
+			complete_national_focus = NGD_Democratic_Party_governance
+
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 10
+					has_country_leader = {
+						character = NGD_Ningguang
+						ruling_only = yes
+					}
+				}
+				modifier = {
+					factor = 100
+					or = {
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_6
+						}
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_7
+						}
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_8
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1239,11 +1424,45 @@
 		option = {
 			name = NGD_adopt_a_radical_platform
 			complete_national_focus = NGD_adopt_a_radical_platform
+			
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 10
+					or = {
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_1
+						}
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_2
+						}
+					}
+				}
+			}
 		}
 		option = {
 			name = NGD_dualist_platform
 			complete_national_focus = NGD_dualist_platform
 			country_event = NGD_Progressive.002
+			
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 10
+					or = {
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_3
+						}
+						has_game_rule = {
+							rule = AH_NGD_aftermath_ai_behavior_SELECTION
+							option = NGD_aftermath_GAME_RULE_4
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -1255,37 +1474,49 @@
 		is_triggered_only = yes
 		option = {
 			name = NGD_lean_towards_socialism
-			add_country_leader_role = {
+			promote_character = {
 				character = NGD_Xiangling
-				country_leader = {
-					traits = { }
-					ideology = socialism
-					expire = "1993.3.1.1"
-				}
-				promote_leader = yes
+				ideology = socialism
 			}
 			swap_ideas = {
 				remove_idea = NGD_Xiangling_idea
 				add_idea = NGD_Ganyu_idea
 			}
 			complete_national_focus = NGD_lean_towards_socialism
+			
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 10
+					has_game_rule = {
+						rule = AH_NGD_aftermath_ai_behavior_SELECTION
+						option = NGD_aftermath_GAME_RULE_3
+					}
+				}
+			}
 		}
 		option = {
 			name = NGD_lean_towards_democracy
-			add_country_leader_role = {
+			promote_character = {
 				character = NGD_Yunjin
-				country_leader = {
-					traits = { }
-					ideology = socialism
-					expire = "1993.3.1.1"
-				}
-				promote_leader = yes
+				ideology = liberalism
 			}
 			swap_ideas = {
 				remove_idea = NGD_Xiangling_idea
 				add_idea = NGD_Gaming_idea
 			}
 			complete_national_focus = NGD_lean_towards_democracy
+			
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 10
+					has_game_rule = {
+						rule = AH_NGD_aftermath_ai_behavior_SELECTION
+						option = NGD_aftermath_GAME_RULE_4
+					}
+				}
+			}
 		}
 	}
 
@@ -1325,6 +1556,41 @@
 
 ### - 第六节：进步党 - ###
 
+### - 民主党 - ###
+	#投票的权利
+	country_event = {
+		id = NGD_Democratic.001
+		title = NGD_right_to_vote
+		desc = NGD_Democratic.001.desc
+		is_triggered_only = yes
+		option = {
+			name = NGD_Democratic.001.a
+			add_popularity = {
+				ideology = communism
+				popularity = 0.03
+			}
+			add_stability = -0.02
+		}
+		option = {
+			name = NGD_Democratic.001.b
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.03
+			}
+			add_stability = 0.01
+		}
+		option = {
+			name = NGD_Democratic.001.c
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.03
+			}
+			add_political_power = -20
+		}
+	}
+
+### - 民主党 - ###
+
 ### - 远洋外交 - ###
 
 	#选择我们的外交政策
@@ -1340,7 +1606,7 @@
 			add_war_support = -0.4
 
 			ai_chance = {
-				base = 10
+				base = 1
 			}
 		}
 		option = {
@@ -2017,6 +2283,19 @@ country_event = {
 	desc = NGD.0007.desc
 	is_triggered_only = yes
 	option = {
+		name = NGD.0007.c
+		promote_character = NGD_Keqing
+		mark_focus_tree_layout_dirty = yes
+		custom_effect_tooltip = Come_explore_later
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 10
+				has_game_rule = { rule = AH_NGD_aftermath_ai_behavior_SELECTION option = NGD_aftermath_GAME_RULE_9 }
+			}
+		}
+	}
+	option = {
 		name = NGD.0007.a
 		promote_character = {
 			character = NGD_Ganyu
@@ -2028,7 +2307,7 @@ country_event = {
 			base = 20
 			modifier = {
 				factor = 10
-				has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 }
+				has_game_rule = { rule = AH_NGD_aftermath_ai_behavior_SELECTION option = NGD_aftermath_GAME_RULE_10 }
 			}
 		}
 	}
@@ -2041,20 +2320,7 @@ country_event = {
 			base = 10
 			modifier = {
 				factor = 10
-				has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
-			}
-		}
-	}
-	option = {
-		name = NGD.0007.c
-		promote_character = NGD_Keqing
-		mark_focus_tree_layout_dirty = yes
-		custom_effect_tooltip = Come_explore_later
-		ai_chance = {
-			base = 10
-			modifier = {
-				factor = 10
-				has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_2 }
+				has_game_rule = { rule = AH_NGD_aftermath_ai_behavior_SELECTION option = NGD_aftermath_GAME_RULE_11 }
 			}
 		}
 	}
