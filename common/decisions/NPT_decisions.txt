@@ -1912,3 +1912,456 @@ SOV_military_assistance_from_NPT_category = {
 		}
 	}
 }
+
+BLA_dual_government_balance_category = {}
+
+NPT_Africa_plan_category = {
+	NPT_seize_dec_colony = {
+		icon = GFX_decision_infiltrate_state
+		visible = {
+			is_subject = no
+		}
+		available = {
+			has_global_flag = second_weltkrieg_has_started
+			can_declare_war_on = FROM
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					tag = LIB
+					tag = SAF
+					tag = LBA
+				}
+			}
+		}
+		war_with_target_on_remove = yes
+		fire_only_once = yes
+		days_remove = 14
+		cost = 50
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 1000
+				FROM = {
+					is_in_faction = no
+				}
+			}
+			modifier = {
+				add = 1000
+				FROM = {
+					is_in_faction = no
+				}
+				is_in_faction_with = DVL
+			}
+			modifier = {
+				factor = 0
+				FROM = {
+					faction_leader_is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				NOT = { is_in_faction_with = DVL }
+			}
+			modifier = {
+				factor = 0
+				any_enemy_country = {
+					is_major = yes
+				}
+				NOT = { is_in_faction_with = DVL }
+			}
+		}
+		complete_effect = {
+			hidden_effect = {
+				FROM = { country_event = neptune.124 }
+			}
+		}
+		remove_effect = {
+			create_wargoal = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+	}
+
+	NPT_building_African_colonies = {
+		icon = GFX_decision_generic_nationalism
+		visible = {
+			any_state = {
+				OR = {
+					is_core_of = LIB
+					is_core_of = SAF
+					is_core_of = LBA
+				}
+				is_fully_controlled_by = ROOT
+			}
+		}
+		available = {
+			MOR = { is_subject_of = ROOT }
+		}
+		fire_only_once = no
+		days_re_enable = 7
+		cost = 10
+		complete_effect = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						is_core_of = LIB
+						is_core_of = SAF
+						is_core_of = LBA
+					}
+				}
+				add_claim_by = MOR
+				transfer_state_to = MOR
+			}
+		}
+	}
+}
+
+NPT_European_union_category = {
+	NPT_inviting_member_states = {
+		icon = GFX_decision_generic_speech
+		visible = {
+			is_subject = no
+		}
+		available = {
+			has_global_flag = second_weltkrieg_has_started
+			FROM = {
+				OR = {
+					has_government = democratic
+					has_government = neutrality
+				}
+				is_subject = no
+			}
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					tag = ITA
+					tag = ALS
+					tag = KMK
+					tag = GER
+					tag = AUS
+					tag = TRB
+					tag = CZE
+					tag = HUN
+					tag = KVO
+				}
+				OR = {
+					has_government = democratic
+					has_government = neutrality
+				}
+				is_subject = no
+			}
+		}
+		fire_only_once = yes 
+		days_remove = 14
+		cost = 50
+		ai_will_do = {
+			base = 1000
+		}
+		remove_effect = {
+			FROM = { country_event = neptune.158 }
+		}
+	}
+}
+
+NPT_integrating_three_states_category = {
+
+	NPT_expand_publicity_decision = {
+		icon = GFX_decision_eng_propaganda_campaigns
+		visible = {
+			OR = {
+				has_country_flag = NPT_Noire_integrate_vert_start
+				has_country_flag = NPT_Noire_integrate_blanc_start
+				has_country_flag = NPT_Noire_integrate_neptune_start
+				MOR = { is_subject_of = ROOT }
+			}
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = NPT_expand_publicity_flag }
+				custom_trigger_tooltip = {
+					has_country_flag = {
+						flag = NPT_expand_publicity_flag
+						days > 45
+					}
+					tooltip = NPT_expand_publicity_flag_tt
+				}
+			}
+		}
+		priority = 99
+		ai_will_do = {
+			base = 1000
+		}
+		cost = 50
+		fire_only_once = no
+		complete_effect = {
+			NPT_cohesion_index_rise = yes
+			hidden_effect = {
+				clr_country_flag = NPT_expand_publicity_flag
+				set_country_flag = NPT_expand_publicity_flag
+			}
+		}
+	}
+
+	NPT_organize_administrative_institutions_decision = {
+		icon = GFX_decision_FIN_stop_motti_tactics
+		visible = {
+			OR = {
+				has_country_flag = NPT_Noire_integrate_vert_start
+				has_country_flag = NPT_Noire_integrate_blanc_start
+				has_country_flag = NPT_Noire_integrate_neptune_start
+				MOR = { is_subject_of = ROOT }
+			}
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = NPT_organize_administrative_institutions_flag }
+				custom_trigger_tooltip = {
+					has_country_flag = {
+						flag = NPT_organize_administrative_institutions_flag
+						days > 90
+					}
+					tooltip = NPT_organize_administrative_institutions_flag_tt
+				}
+			}
+		}
+		priority = 98
+		ai_will_do = {
+			base = 1000
+		}
+		cost = 20
+		fire_only_once = no
+		complete_effect = {
+			add_stability = -0.10
+			add_to_variable = { NPT_cohesion_index = 5 }
+			custom_effect_tooltip = NPT_cohesion_index_gain_3
+			hidden_effect = {
+				clr_country_flag = NPT_organize_administrative_institutions_flag
+				set_country_flag = NPT_organize_administrative_institutions_flag
+			}
+		}
+	}
+
+	NPT_central_funding_decision = {
+		icon = GFX_decision_generic_political_rally
+		priority = 97
+		visible = {
+			OR = {
+				has_country_flag = NPT_Noire_integrate_vert_start
+				has_country_flag = NPT_Noire_integrate_blanc_start
+				has_country_flag = NPT_Noire_integrate_neptune_start
+				MOR = { is_subject_of = ROOT }
+			}
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = NPT_central_funding_flag }
+				custom_trigger_tooltip = {
+					has_country_flag = {
+						flag = NPT_central_funding_flag
+						days > 14
+					}
+					tooltip = NPT_central_funding_flag_tt
+				}
+			}
+		}
+		custom_cost_text = RUS_50_ubs_save_cost
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 50 }
+		}
+		fire_only_once = no
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			add_to_variable = { ubs_save = -50 }
+			add_to_variable = { NPT_cohesion_index = 3 }
+			add_stability = 0.02
+			add_political_power = 5
+			custom_effect_tooltip = NPT_cohesion_index_gain_1
+			hidden_effect = {
+				clr_country_flag = NPT_central_funding_flag
+				set_country_flag = NPT_central_funding_flag
+			}
+		}
+	}
+	NPT_army_rotation_decision = {
+		icon = GFX_decision_generic_military
+		priority = 96
+		visible = {
+			OR = {
+				has_country_flag = NPT_Noire_integrate_vert_start
+				has_country_flag = NPT_Noire_integrate_blanc_start
+				has_country_flag = NPT_Noire_integrate_neptune_start
+				MOR = { is_subject_of = ROOT }
+			}
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = NPT_army_rotation_flag }
+				custom_trigger_tooltip = {
+					has_country_flag = {
+						flag = NPT_army_rotation_flag
+						days > 75
+					}
+					tooltip = NPT_army_rotation_flag_tt
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			command_power > 25
+		}
+		fire_only_once = no
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+			}
+			NPT_cohesion_index_rise = yes
+			hidden_effect = {
+				clr_country_flag = NPT_army_rotation_flag
+				set_country_flag = NPT_army_rotation_flag
+			}
+		}
+	}
+
+	NPT_Noire_integrate_neptune_decision = {
+		icon = GFX_decision_infiltrate_state
+		priority = 95
+		custom_cost_text = NPT_25_cohesion_cost
+		custom_cost_trigger = {
+			check_variable = { NPT_cohesion_index > 25 }
+		}
+		fire_only_once = yes
+		days_remove = 42
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_to_variable = { NPT_cohesion_index = -25 }
+			}
+		}
+		remove_effect = {
+			complete_national_focus = NPT_Noire_integrate_neptune
+			clr_country_flag = NPT_Noire_integrate_neptune_start
+			hidden_effect = {
+				add_to_variable = { NPT_core_city = 2 }
+			}
+			custom_effect_tooltip = NPT_add_2_core_cities_tt
+		}
+	}
+	NPT_Noire_integrate_blanc_decision = {
+		icon = GFX_decision_infiltrate_state
+		priority = 94
+		custom_cost_text = NPT_30_cohesion_cost
+		custom_cost_trigger = {
+			check_variable = { NPT_cohesion_index > 30 }
+		}
+		fire_only_once = yes
+		days_remove = 42
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_to_variable = { NPT_cohesion_index = -30 }
+			}
+		}
+		remove_effect = {
+			complete_national_focus = NPT_Noire_integrate_blanc
+			clr_country_flag = NPT_Noire_integrate_blanc_start
+			hidden_effect = {
+				add_to_variable = { NPT_core_city = 4 }
+			}
+			custom_effect_tooltip = NPT_add_4_core_cities_tt
+		}
+	}
+	NPT_Noire_integrate_vert_decision = {
+		icon = GFX_decision_infiltrate_state
+		priority = 93
+		custom_cost_text = NPT_20_cohesion_cost
+		custom_cost_trigger = {
+			check_variable = { NPT_cohesion_index > 20 }
+		}
+		fire_only_once = yes
+		days_remove = 42
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_to_variable = { NPT_cohesion_index = -20 }
+			}
+		}
+		remove_effect = {
+			complete_national_focus = NPT_Noire_integrate_vert
+			clr_country_flag = NPT_Noire_integrate_vert_start
+			hidden_effect = {
+				add_to_variable = { NPT_core_city = 2 }
+			}
+			custom_effect_tooltip = NPT_add_2_core_cities_tt
+		}
+	}
+	NPT_Noire_integrate_Pish_decision = {
+		icon = GFX_decision_infiltrate_state
+		priority = 93
+		visible = {
+			MOR = { is_subject_of = ROOT }
+		}
+		custom_cost_text = NPT_25_cohesion_cost
+		custom_cost_trigger = {
+			check_variable = { NPT_cohesion_index > 25 }
+		}
+		fire_only_once = yes
+		days_remove = 42
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_to_variable = { NPT_cohesion_index = -25 }
+			}
+		}
+		remove_effect = {
+			MOR = {
+				every_character = {
+					set_nationality = ROOT
+				}
+				every_owned_state = {
+					transfer_state_to = ROOT
+					if = {
+						limit = {
+							is_core_of = MOR
+						}
+						add_core_of = ROOT
+					}
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { NPT_core_city = 1 }
+			}
+			custom_effect_tooltip = NPT_add_1_core_cities_tt
+		}
+	}
+}
+
+# ARF_commune_movement_category = {
+# 	ARF_establish_a_general_trade_union = {
+# 		icon = GFX_decision_SOV_place_hq
+# 	}
+# 	ARF_establish_a_co_cultivation_society = {
+# 		icon = GFX_decision_POL_looming_peasants_strike
+# 	}
+# 	ARF_new_art_of_syndicalism = {
+# 		icon = GFX_decision_generic_nationalism
+# 	}
+# 	ARF_establishing_an_ordnance_factory = {
+# 		icon = GFX_decision_generic_prepare_civil_war
+# 	}
+# 	ARF_learn_from_experience_of_soviet = {
+# 		icon = GFX_decision_SOV_socialism_in_one_country
+# 	}
+# }
