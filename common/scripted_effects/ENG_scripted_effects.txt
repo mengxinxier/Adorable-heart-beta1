@@ -1199,6 +1199,7 @@
 	}
 	ENG_jisuan_London_fortress = { #要塞等级计算合集
 		ENG_var_gui_fortress_level_clamp = yes
+		ENG_jisuan_London_fortress_effect = yes
 	}
 	ENG_jisuan_London_defense = { #防卫力量计算合集
 		ENG_var_gui_defense_power_clamp = yes
@@ -1633,8 +1634,9 @@
 		}
 	}
 
-	ENG_jisuan_London_manpower_select_defense_effect = { #计算当前防御力量效果
+	ENG_jisuan_London_manpower_select_defense_effect = { #计算当前防卫力量的增减效果
 		#初始化变量
+		ENG_jisuan_London_fortress_effect = yes #计算要塞效果
 		set_variable = {
 			VAR_ENG_London_gui_manpower_select_defense_effect = 0
 		}
@@ -1654,7 +1656,7 @@
 		set_variable = {
 			VAR_ENG_manpower_select_tank_num = VAR_ENG_London_gui_manpower_select_player_tank
 		}
-		#计算行动力花费
+		#计算行动力花费 
 		add_to_variable = { 
 			VAR_ENG_London_gui_action_point_cost = VAR_ENG_manpower_select_irregular_num 
 		}
@@ -1665,27 +1667,33 @@
 			VAR_ENG_London_gui_action_point_cost = VAR_ENG_manpower_select_tank_num 
 		}
 		#计算防御力
-		multiply_variable = {
-			var = VAR_ENG_manpower_select_irregular_num
-			value = 3
+		if = {
+			limit = {
+				has_country_flag = FLAG_ENG_London_player_select_blue
+			}
+			multiply_variable = {
+				var = VAR_ENG_manpower_select_irregular_num
+				value = VAR_ENG_London_blue_irregular_defense_number
+			}
+			add_to_variable = { 
+				VAR_ENG_London_gui_manpower_select_defense_effect = VAR_ENG_manpower_select_irregular_num 
+			}		
+			multiply_variable = {
+				var = VAR_ENG_manpower_select_infantry_num
+				value = VAR_ENG_London_blue_infantry_defense_number
+			}
+			add_to_variable = { 
+				VAR_ENG_London_gui_manpower_select_defense_effect = VAR_ENG_manpower_select_infantry_num 
+			}
+			multiply_variable = {
+				var = VAR_ENG_manpower_select_tank_num
+				value = VAR_ENG_London_blue_tank_defense_number
+			}
+			add_to_variable = { 
+				VAR_ENG_London_gui_manpower_select_defense_effect = VAR_ENG_manpower_select_tank_num 
+			}
 		}
-		add_to_variable = { 
-			VAR_ENG_London_gui_manpower_select_defense_effect = VAR_ENG_manpower_select_irregular_num 
-		}		
-		multiply_variable = {
-			var = VAR_ENG_manpower_select_infantry_num
-			value = 5
-		}
-		add_to_variable = { 
-			VAR_ENG_London_gui_manpower_select_defense_effect = VAR_ENG_manpower_select_infantry_num 
-		}
-		multiply_variable = {
-			var = VAR_ENG_manpower_select_tank_num
-			value = 8
-		}
-		add_to_variable = { 
-			VAR_ENG_London_gui_manpower_select_defense_effect = VAR_ENG_manpower_select_tank_num 
-		}
+		
 		#重置各兵种数量变量
 		set_variable = {
 			VAR_ENG_manpower_select_irregular_num = VAR_ENG_London_gui_manpower_select_player_irregular
@@ -1697,26 +1705,54 @@
 			VAR_ENG_manpower_select_tank_num = VAR_ENG_London_gui_manpower_select_player_tank
 		}
 		#计算攻击力
+		if = {
+			limit = {
+				has_country_flag = FLAG_ENG_London_player_select_blue
+			}
+			multiply_variable = {
+				var = VAR_ENG_manpower_select_irregular_num
+				value = VAR_ENG_London_blue_irregular_attack_number
+			}
+			add_to_variable = { 
+				VAR_ENG_London_gui_manpower_select_attack_effect = VAR_ENG_manpower_select_irregular_num 
+			}		
+			multiply_variable = {
+				var = VAR_ENG_manpower_select_infantry_num
+				value = VAR_ENG_London_blue_infantry_attack_number
+			}
+			add_to_variable = { 
+				VAR_ENG_London_gui_manpower_select_attack_effect = VAR_ENG_manpower_select_infantry_num 
+			}
+			multiply_variable = {
+				var = VAR_ENG_manpower_select_tank_num 
+				value = VAR_ENG_London_blue_tank_attack_number
+			}
+			add_to_variable = { 
+				VAR_ENG_London_gui_manpower_select_attack_effect = VAR_ENG_manpower_select_tank_num 
+			}
+		}
+		
+		#扣除要塞减伤
+		set_variable = { #减伤变量
+			VAR_ENG_London_jisuan_jianshang__effect = 1
+		}
+		subtract_from_variable = {
+			VAR_ENG_London_jisuan_jianshang__effect = VAR_ENG_London_gui_manpower_select_fortress_effect
+		}
 		multiply_variable = {
-			var = VAR_ENG_manpower_select_irregular_num
-			value = 3
+			var = VAR_ENG_London_gui_manpower_select_attack_effect
+			value = VAR_ENG_London_jisuan_jianshang__effect
 		}
-		add_to_variable = { 
-			VAR_ENG_London_gui_manpower_select_attack_effect = VAR_ENG_manpower_select_irregular_num 
-		}		
-		multiply_variable = {
-			var = VAR_ENG_manpower_select_infantry_num
-			value = 5
-		}
-		add_to_variable = { 
-			VAR_ENG_London_gui_manpower_select_attack_effect = VAR_ENG_manpower_select_infantry_num 
+		#四舍五入
+		round_variable = VAR_ENG_London_gui_manpower_select_attack_effect
+	}
+	ENG_jisuan_London_fortress_effect = { #计算要塞效果 
+		set_variable = {
+			VAR_ENG_London_gui_manpower_select_fortress_effect = 0.1
 		}
 		multiply_variable = {
-			var = VAR_ENG_manpower_select_tank_num
-			value = 12
-		}
-		add_to_variable = { 
-			VAR_ENG_London_gui_manpower_select_attack_effect = VAR_ENG_manpower_select_tank_num 
+			var = VAR_ENG_London_gui_manpower_select_fortress_effect
+			value = ENG_London_map_selected_state:var_gui_fortress_level
 		}
 	}
 
@@ -1748,7 +1784,46 @@
 		}
 	}
 
+	ENG_panding_London_left_mission_where = { #判定联合阵线扩张任务出现在哪个地区
+		if = { #先判定联盟区
+			limit = {
+				check_variable = {
+					07:var_gui_control_degree > 30
+				}
+			}	
+			hidden_effect = {
+				activate_mission = ENG_mission_London_kzsl_lmq07	
+			}
+					
+		}
+		else_if = { #码头区
+			limit = {
+				check_variable = {
+					08:var_gui_control_degree > 40
+				}
+			}	
+			hidden_effect = {
+				activate_mission = ENG_mission_London_kzsl_mtq08	
+			}
+			
+		}
+		else_if = { #索姆区
+			limit = {
+				check_variable = {
+					06:var_gui_control_degree > 40
+				}
+			}	
+			hidden_effect = {
+				activate_mission = ENG_mission_London_kzsl_smq06	
+			}
+		}
+		else = { #磨坊区
+			hidden_effect = {
+				activate_mission = ENG_mission_London_kzsl_mfq05	
+			}
+		}
 
+	}
 
 
 

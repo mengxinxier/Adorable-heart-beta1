@@ -100,7 +100,7 @@ scripted_gui = { #伦敦危机
 		parent_window_token = top_bar #用处是固定在主界面，不会在国策界面显示
 		visible = {
 			tag = ENG
-			is_debug = yes
+			has_country_flag = FLAG_ENG_London_crisis_start
 		}
 		properties = {
 
@@ -153,32 +153,72 @@ scripted_gui = { #伦敦危机
 				ENG_London_close_manpower_defense_window = yes
 			}
 			#操作模块按钮效果
-				ENG_London_state_police_button_click = { #加强区域警备
-					add_political_power = -50
+				ENG_London_state_police_button_click = { #加强区域警备 
+					add_political_power = -30
+					random_list = {
+						20 = {
+							var:ENG_London_map_selected_state = {
+								add_to_variable = { var_gui_control_degree = 8  }
+							}	
+							custom_effect_tooltip = ENG_tooltip_var_control_degree_add_8
+						}
+						60 = {
+							var:ENG_London_map_selected_state = {
+								add_to_variable = { var_gui_control_degree = 10  }
+							}	
+							custom_effect_tooltip = ENG_tooltip_var_control_degree_add_10
+						}
+						20 = {
+							var:ENG_London_map_selected_state = {
+								add_to_variable = { var_gui_control_degree = 12  }
+							}	
+							custom_effect_tooltip = ENG_tooltip_var_control_degree_add_12
+						}
+					}
+					ENG_jisuan_London_control = yes 
+					custom_effect_tooltip = ENG_tooltip_var_control_degree_add_10
+					clr_country_flag = FLAG_london_police_click
+
+					hidden_effect = {
+						country_event = {
+							id = ENG_event.11401
+							days = 20
+						}
+					}
+				}
+				ENG_London_state_seal_up_button_click = { #查封左翼据点 
+					add_political_power = -5
 					var:ENG_London_map_selected_state = {
 						add_to_variable = { var_gui_control_degree = 10  }
 					}	
 					ENG_jisuan_London_control = yes
+					custom_effect_tooltip = ENG_tooltip_var_control_degree_add_10
 
-					add_timed_idea = {
-						idea = ENG_idea_london_police
-						days = 15
+					random_list = {
+						50 = {
+							add_to_variable = { ENG_lianhezhenxian_jijindu = 8  }
+							custom_effect_tooltip = ENG_tooltip_var_lhzx_jijindu_add_8
+ 
+						}
+						40 = {
+							add_to_variable = { ENG_lianhezhenxian_jijindu = 10  }
+							custom_effect_tooltip = ENG_tooltip_var_lhzx_jijindu_add_10
+						}
+						10 = {
+							add_to_variable = { ENG_lianhezhenxian_jijindu = 20  }
+							custom_effect_tooltip = ENG_tooltip_var_lhzx_jijindu_add_20
+						}
 					}
-				}
-				ENG_London_state_seal_up_button_click = { #查封左翼据点
-					add_political_power = -10
-					var:ENG_London_map_selected_state = {
-						add_to_variable = { var_gui_control_degree = 20  }
-					}	
-					ENG_jisuan_London_control = yes
-
-					add_to_variable = { ENG_lianhezhenxian_jijindu = 10  }
 					VAR_ENG_all_jijindu_clamp = yes
 					ENG_jisuan_VAR_ewzc_dqzcl = yes	
+					
+					clr_country_flag = FLAG_london_seal_up_click
 
-					add_timed_idea = {
-						idea = ENG_idea_london_seal_up
-						days = 30
+					hidden_effect = {
+						country_event = {
+							id = ENG_event.11402
+							days = 40
+						}
 					}
 				}
 				ENG_London_state_build_fortress_button_click = { #修建防御工事
@@ -187,10 +227,15 @@ scripted_gui = { #伦敦危机
 						add_to_variable = { var_gui_fortress_level = 1  }
 					}	
 					ENG_jisuan_London_fortress = yes
+					custom_effect_tooltip = ENG_tooltip_var_build_fortress_add_1
 
-					add_timed_idea = {
-						idea = ENG_idea_london_build_fortress
-						days = 30
+					clr_country_flag = FLAG_london_build_fortress_click
+
+					hidden_effect = {
+						country_event = {
+							id = ENG_event.11403
+							days = 40
+						}
 					}
 				}
 
@@ -201,6 +246,7 @@ scripted_gui = { #伦敦危机
 
 				ENG_London_state_attack_button_click = { #进攻
 					ENG_London_close_manpower_defense_window = yes
+					ENG_jisuan_London_fortress_effect = yes
 					set_country_flag = FLAG_ENG_London_attack_gui_visble
 				}
 			#作弊按钮
@@ -524,28 +570,19 @@ scripted_gui = { #伦敦危机
 
 		 #按钮条件限制
 		 	ENG_London_state_police_button_click_enabled = {
-				ROOT = { 
-					has_political_power > 50 
-					not = {
-						has_idea = ENG_idea_london_police
-					}
-				}
+				has_political_power > 30 
+				has_country_flag = FLAG_london_police_click
+				has_completed_focus = ENG_17_ldwj 
 			}
 			ENG_London_state_seal_up_button_click_enabled = {
-				ROOT = { 
-					has_political_power > 10 
-					not = {
-						has_idea = ENG_idea_london_seal_up
-					}
-				}
+				has_political_power > 5 
+				has_country_flag = FLAG_london_seal_up_click
+				has_completed_focus = ENG_18_sglc
 			}
 			ENG_London_state_build_fortress_button_click_enabled = {
-				ROOT = { 
-					has_political_power > 50 
-					not = {
-						has_idea = ENG_idea_london_build_fortress
-					}
-				}
+				has_political_power > 50 
+				has_country_flag = FLAG_london_build_fortress_click
+				has_completed_focus = ENG_17_ldwj
 			}
 
 			ENG_London_state_attack_button_click_enabled = {
@@ -565,6 +602,318 @@ scripted_gui = { #伦敦危机
 						
 					}	
 				}
+				#判定是否有相邻地块可供进攻
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 01
+							}
+						}	
+						or = {
+							check_variable = {
+								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}						
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 02
+							}
+						}	
+						or = {
+							check_variable = {
+								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 03
+							}
+						}	
+						or = {
+							check_variable = {
+								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								04:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 04
+							}
+						}	
+						or = {
+							check_variable = {
+								03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 05
+							}
+						}	
+						or = {
+							check_variable = {
+								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								04:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 06
+							}
+						}	
+						or = {
+							check_variable = {
+								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 07
+							}
+						}	
+						or = {
+							check_variable = {
+								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 08
+							}
+						}	
+						or = {
+							check_variable = {
+								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 09
+							}
+						}	
+						or = {
+							check_variable = {
+								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 10
+							}
+						}	
+						or = {
+							check_variable = {
+								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 11
+							}
+						}	
+						or = {
+							check_variable = {
+								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 12
+							}
+						}	
+						or = {
+							check_variable = {
+								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 13
+							}
+						}	
+						or = {
+							check_variable = {
+								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					if = { #
+						limit = {
+							check_variable = {
+								ENG_London_map_selected_state = 14
+							}
+						}	
+						or = {
+							check_variable = {
+								07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+							check_variable = {
+								13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+							}
+						}			
+					}
+
+					
+
+				#
 			}
 			ENG_London_state_defense_button_click_enabled = {
 				if = {
@@ -581,6 +930,128 @@ scripted_gui = { #伦敦危机
 			ENG_London_state_action_button_click_enabled = {
 
 			}
+		 #驻守部队图标显示
+		 	ENG_London_state_info_army_icon_gh_visible = { #工会
+				has_country_flag = FLAG_ENG_London_second_stage_start
+				check_variable = {
+					ENG_London_map_selected_state:gui_display_frame = 1
+				}	
+			}
+			ENG_London_state_info_army_icon_jdbd_visible = { #快反部队
+				has_country_flag = FLAG_ENG_London_second_stage_start
+				check_variable = {
+					ENG_London_map_selected_state:gui_display_frame = 4
+				}	
+			}
+			ENG_London_state_info_army_icon_sjs_visible = { #首警司
+				or = {
+					and = { #阶段二
+						has_country_flag = FLAG_ENG_London_second_stage_start
+						check_variable = {
+							ENG_London_map_selected_state:gui_display_frame = 2
+						}	
+					}
+					and = { #阶段一
+						not = {
+							has_country_flag = FLAG_ENG_London_second_stage_start
+						}
+						check_variable = {
+							ENG_London_map_selected_state:army_icon = 2
+						}	
+					}
+				}
+
+			}
+			ENG_London_state_info_army_icon_wswd_visible = { #王室卫队
+				or = {
+					and = { #阶段二
+						has_country_flag = FLAG_ENG_London_second_stage_start
+						check_variable = {
+							ENG_London_map_selected_state:gui_display_frame = 3
+						}
+					}
+					and = {
+						not = { #阶段一
+							has_country_flag = FLAG_ENG_London_second_stage_start
+						}
+						check_variable = {
+							ENG_London_map_selected_state:army_icon = 3
+						}	
+					}
+				}
+			}
+			ENG_London_state_info_army_icon_police_visible = { #苏格兰场(阶段一)
+				not = {
+					has_country_flag = FLAG_ENG_London_second_stage_start
+				}
+				check_variable = {
+					ENG_London_map_selected_state:army_icon = 1
+				}	
+			}
+
+		 #指挥官图标显示
+			ENG_London_state_info_commander_Altria_Pendragon_visible = { #呆毛
+				always = no
+			}
+			ENG_London_state_info_commander_Togawa_Sakiko_visible = { #丰川祥子
+				has_country_flag = FLAG_ENG_London_second_stage_start
+				check_variable = {
+					ENG_London_map_selected_state:gui_display_frame = 1
+				}	
+			}
+			ENG_London_state_info_commander_dajiling_visible = { #大吉岭
+				has_country_flag = FLAG_ENG_London_second_stage_start
+				check_variable = {
+					ENG_London_map_selected_state:gui_display_frame = 4
+				}	
+			}
+			ENG_London_state_info_commander_Shiina_Taki_visible = { #椎名立希
+				or = {
+					and = { #阶段二
+						has_country_flag = FLAG_ENG_London_second_stage_start
+						check_variable = {
+							ENG_London_map_selected_state:gui_display_frame = 2
+						}	
+					}
+					and = { #阶段一
+						not = {
+							has_country_flag = FLAG_ENG_London_second_stage_start
+						}
+						check_variable = {
+							ENG_London_map_selected_state:army_icon = 2
+						}	
+					}
+				}
+
+			}
+			ENG_London_state_info_commander_gaowen_visible = { #高文
+				or = {
+					and = { #阶段二
+						has_country_flag = FLAG_ENG_London_second_stage_start
+						check_variable = {
+							ENG_London_map_selected_state:gui_display_frame = 3
+						}
+					}
+					and = {
+						not = { #阶段一
+							has_country_flag = FLAG_ENG_London_second_stage_start
+						}
+						check_variable = {
+							ENG_London_map_selected_state:army_icon = 3
+						}	
+					}
+				}
+			}
+			ENG_London_state_info_commander_Chihaya_Anon_visible = { #千早爱音(阶段一)
+				not = {
+					has_country_flag = FLAG_ENG_London_second_stage_start
+				}
+				check_variable = {
+					ENG_London_map_selected_state:army_icon = 1
+				}	
+			}
+		 #
+		 #
 		}
 		properties = {
 			ENG_London_map_election_state_01 = {
@@ -804,7 +1275,21 @@ scripted_gui = { #伦敦危机
 
 		}
 		triggers = {
-			
+			ENG_London_manpower_select_button_irregular_add_click_enabled = {
+				check_variable = {
+					VAR_ENG_London_gui_action_point_cost < VAR_ENG_London_current_action_point
+				}				
+			}
+			ENG_London_manpower_select_button_infantry_add_click_enabled = {
+				check_variable = {
+					VAR_ENG_London_gui_action_point_cost < VAR_ENG_London_current_action_point
+				}
+			}
+			ENG_London_manpower_select_button_tank_add_click_enabled = {
+				check_variable = {
+					VAR_ENG_London_gui_action_point_cost < VAR_ENG_London_current_action_point
+				}
+			}
 		}
 		effects = {
 			close_button_click = { #关闭按钮
