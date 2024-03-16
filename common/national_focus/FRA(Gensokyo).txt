@@ -2709,10 +2709,10 @@ focus_tree = {
 		}
 	}
 #幻想乡自由党（魔理沙）
-	#上白泽慧音第一任期
+	#雾雨魔理沙第一任期
 	focus = {
 		id = FRA_first_term_of_Marisa
-		icon = GFX_FRA_first_term_of_Ibaraki_Kas
+		icon = GFX_FRA_first_term_of_Marisa
 		x = 45
 		y = 0
 		cost = 5
@@ -6141,7 +6141,6 @@ focus_tree = {
 					character = FRA_Sanae
 				}
 			}
-			always = no
 			is_subject = no
 			is_major = yes
 			if = {
@@ -6152,6 +6151,15 @@ focus_tree = {
 					}
 				}
 				not = { has_completed_focus = FRA_Join_Third_International }
+			}
+		}
+		bypass = {
+			custom_trigger_tooltip = {
+				tooltip = is_in_European_Union
+				is_in_array = {
+					array = global.GER_European_Union_members_array
+					value = THIS
+				}
 			}
 		}
 		available_if_capitulated = no
@@ -6171,20 +6179,23 @@ focus_tree = {
 				leave_faction = yes
 				create_faction = European_Community_faction
 			}
+			custom_effect_tooltip = send_invite_to_all_subject_eu_country_excpt_fascism
 			every_country = {
 				limit = {
-					capital_scope = {
-						is_on_continent = europe
-					}
+					capital_scope = { is_on_continent = europe }
 					is_subject = no
 					not = { is_in_faction_with = ROOT }
 					not = { has_government = fascism }
 					is_faction_leader = no
 					not = { tag = ENG }
+					not = { tag = SOV }
 				}
 				country_event = {
 					id = FRA_Gensokyo.029
 				}
+			}
+			add_to_array = {
+				global.GER_European_Union_members_array = THIS
 			}
 		}
 	}
@@ -6209,6 +6220,8 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			unlock_decision_tooltip = Build_European_Coal_and_Steel_Community
+			set_country_flag = Build_European_Coal_and_Steel_Community_available
 		}
 	}
 	#欧洲经济共同体
@@ -6232,6 +6245,8 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			unlock_decision_tooltip = Build_European_Economic_Community
+			set_country_flag = Build_European_Economic_Community_available
 		}
 	}
 	#欧洲原子能共同体
@@ -6255,6 +6270,8 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			unlock_decision_tooltip = Build_EURATOM
+			set_country_flag = Build_EURATOM_available
 		}
 	}
 	#人间之里会谈
@@ -6280,10 +6297,19 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_idea = FRA_European_Coal_and_Steel_Community_idea
+			has_idea = FRA_European_Economic_Community_idea
+			has_idea = FRA_EURATOM_idea
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			custom_effect_tooltip = FRA_Paris_talks_TT
+			add_to_variable = {
+				var = global.GER_EU_PIE_VAR
+				value = 25
+				tooltip = GER_European_Union_Integration_progress_add_25
+			}
 		}
 	}
 	#开启一体化进程
@@ -6303,10 +6329,72 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_country_flag = FRA_Paris_talks_pass
+			is_subject = no
+			is_major = yes
+			custom_trigger_tooltip = {
+				tooltip = GER_European_Union_Integration_progress_attain_to_100
+				not = {
+					check_variable = { global.GER_EU_PIE_VAR < 100 }
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			custom_effect_tooltip = FRA_Start_integration_process_tt
+			add_research_slot = 1
+			set_cosmetic_tag = EUR_UNIFIED
+			hidden_effect = {
+				every_country = {
+					limit = { is_subject_of = ROOT }
+					every_core_state = {
+						add_core_of = ROOT
+					}
+					every_character = { set_nationality = ROOT }
+					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+				}
+				for_each_scope_loop = {
+					array = global.GER_European_Union_members_array
+					every_country = {
+						limit = { is_subject_of = PREV }
+						every_core_state = {
+							add_core_of = ROOT
+						}
+						every_character = { set_nationality = ROOT }
+						ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+					}
+					if = {
+						limit = {
+							not = { tag = ROOT }
+						}
+						every_core_state = {
+							add_core_of = ROOT
+						}
+						every_character = { set_nationality = ROOT }
+						ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+					}
+				}
+				every_state = {
+					limit = {
+						is_on_continent = europe
+						NOT = {
+							or = {
+								is_core_of = ROOT
+								is_claimed_by = ROOT
+							}
+						}
+					}
+					add_claim_by = ROOT
+				}
+				news_event = {
+					id = FRA_Gensokyo_news.013
+				}
+				country_event = {
+					id = ah_germany.106
+				}
+				clear_array = global.GER_European_Union_members_array
+			}
 		}
 	}
   #冷战前线
@@ -6355,6 +6443,15 @@ focus_tree = {
 				is_major = yes
 			}
 			#is_subject = no
+				custom_trigger_tooltip = {
+					tooltip = not_in_European_Union
+					NOT = {
+						is_in_array = {
+							array = global.GER_European_Union_members_array
+							value = THIS
+						}
+					}
+				}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes

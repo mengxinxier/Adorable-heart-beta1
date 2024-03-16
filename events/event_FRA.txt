@@ -2031,7 +2031,7 @@ country_event = {
 	id = FRA_Gensokyo.029
 	title = FRA_Gensokyo.029.t
 	desc = FRA_Gensokyo.029.desc
-	fire_only_once = yes
+	#fire_only_once = yes
 	is_triggered_only = yes
 	option = {
 		name = FRA_Gensokyo.029.a
@@ -2047,10 +2047,10 @@ country_event = {
 				}
 			}
 		}
-		FRA = {
+		FROM = {
 			country_event = {
 				id = FRA_Gensokyo.030
-				days = 1
+				#days = 1
 			}
 		}
 		ai_chance = {
@@ -2059,13 +2059,17 @@ country_event = {
 	}
 	option = {
 		name = FRA_Gensokyo.029.b
-		FRA = {
+		FROM = {
 			country_event = {
 				id = FRA_Gensokyo.802
 			}
 		}
 		ai_chance = {
-			base = 0
+			base = 40
+			modifier = {
+				factor = 0
+				has_government = FROM
+			}
 		}
 	}
 }
@@ -2075,11 +2079,16 @@ country_event = {
 	id = FRA_Gensokyo.030
 	title = FRA_Gensokyo.030.t
 	desc = FRA_Gensokyo.030.desc
-	fire_only_once = yes
+	#fire_only_once = yes
 	is_triggered_only = yes
 	option = {
 		name = FRA_Gensokyo.030.a
 		add_to_faction = FROM
+		FROM = {
+			add_to_array = {
+				global.GER_European_Union_members_array = THIS
+			}
+		}
 		ai_chance = {
 			base = 10
 		}
@@ -2936,7 +2945,7 @@ country_event = {
 	id = FRA_Gensokyo.802
 	title = FRA_Gensokyo.802.t
 	desc = FRA_Gensokyo.802.desc
-	fire_only_once = yes
+	#fire_only_once = yes
 	is_triggered_only = yes
 	option = {
 		name = FRA_Gensokyo.802.a
@@ -4318,6 +4327,52 @@ news_event = {
 	}
 }
 
+#欧洲统一
+news_event = {
+	id = FRA_Gensokyo_news.013
+	title = FRA_Gensokyo_news.013.t
+	picture = GFX_news_event_unit_of_eu
+	desc = FRA_Gensokyo_news.013.desc
+	trigger = {
+		wants_world_news = yes
+	}
+	is_triggered_only = yes
+	major = yes
+	option = {
+		name = FRA_Gensokyo_news.013.a
+		set_country_flag = super_event_unit_of_Europe
+		set_country_flag = adorable_heart_Super_Event_Visible
+		adorable_heart_fire_super_event = yes
+		trigger = {
+			tag = FROM
+		}
+	}
+	option = {
+		name = FRA_Gensokyo_news.013.b
+		set_country_flag = super_event_unit_of_Europe
+		set_country_flag = adorable_heart_Super_Event_Visible
+		adorable_heart_fire_super_event = yes
+		trigger = {
+			not = { tag = FROM }
+			capital_scope = { is_on_continent = europe }
+		}
+	}
+	option = {
+		name = FRA_Gensokyo_news.013.c
+		set_country_flag = super_event_unit_of_Europe
+		set_country_flag = adorable_heart_Super_Event_Visible
+		adorable_heart_fire_super_event = yes
+		trigger = {
+			not = {
+				or = {
+					tag = FROM
+					capital_scope = { is_on_continent = europe }
+				}
+			}
+		}
+	}
+}
+
 ###################
 country_event = {
 	id = FRA_Gensokyo.2000
@@ -4506,30 +4561,32 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = FRA_Gensokyo.2000.a
-		16 = {
-			add_extra_state_shared_building_slots = 1
-			add_building_construction = {
-				type = industrial_complex
-				level = 1
-				instant_build = yes
+		every_country = {
+			limit = {
+				capital_scope = { is_on_continent = europe }
+				is_subject = no
+				not = { is_in_faction_with = ROOT }
+				not = { has_government = fascism }
+				is_faction_leader = no
+				not = { tag = ENG }
+				not = { tag = SOV }
+			}
+			country_event = {
+				id = FRA_Gensokyo.029
 			}
 		}
 	}
 	option = {
-		name = FRA_Gensokyo.2000.a
-		every_state = {
-			remove_dynamic_modifier = {
-				modifier = FRA_Kappa_Heavy_Industries_modifier
-			}
+		name = GER_Compute_European_Union
+		add_to_variable = {
+			var = global.GER_EU_PIE_VAR
+			value = 25
+			tooltip = GER_European_Union_Integration_progress_add_25
 		}
 	}
 	option = {
 		name = FRA_Gensokyo.2000.a
-		every_state = {
-			add_dynamic_modifier = {
-				modifier = FRA_Kappa_Heavy_Industries_modifier
-			}
-		}
+		create_faction = European_Community_faction
 	}
 	option = {
 		name = FRA_Gensokyo.2000.a
