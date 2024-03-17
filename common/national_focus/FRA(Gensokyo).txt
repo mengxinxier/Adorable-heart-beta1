@@ -2183,6 +2183,24 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_stability = 0.15
+			custom_effect_tooltip = FRA_Government_support_influence_tt
+			add_to_variable = {
+				var = FRA_bourgeoisie_attitude_progress_var
+				value = -10
+				tooltip = FRA_bourgeoisie_attitude_decline_Moderately_tt
+			}
+			clamp_variable = {
+				var = FRA_bourgeoisie_attitude_progress_var
+				min = 0
+				max = 100
+			}
+			add_to_variable = {
+				var = FRA_bourgeoisie_Influence_progress_var
+				value = -5
+				tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+			}
+			FRA_Calculate_government_approval_rating = yes
 		}
 	}
 	#安插政委
@@ -2204,6 +2222,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Install_political_commissar_idea
 		}
 	}
 	#军队政治教育
@@ -2225,6 +2244,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Install_political_commissar_idea
+				add_idea = FRA_Political_education_in_army_idea
+			}
 		}
 	}
 	#强化党纪建设
@@ -2247,6 +2270,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Strengthen_building_of_party_discip_idea
 		}
 	}
 	#会见各派领袖
@@ -2268,6 +2292,9 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			country_event = {
+				id = FRA_Gensokyo.045
+			}
 		}
 	}
 	#改组人民阵线
@@ -2289,6 +2316,9 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.1 }
+			set_party_name = { ideology = communism long_name = FRA_people_font_party_radical name = FRA_people_font_party }
+			set_party_name = { ideology = democratic long_name = FRA_people_font_party_warm name = FRA_people_font_party }
 		}
 	}
 	#扩大对苏贸易
@@ -2308,9 +2338,22 @@ focus_tree = {
 		available = {
 			has_idea = FRA_New_Labour_Code
 		}
+		bypass = {
+			not = {
+				SOV = {
+					has_government = communism
+					is_faction_leader = yes
+					is_major = yes
+				}
+			}
+		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			SOV = {
+				activate_targeted_decision = { target = ROOT decision = SOV_invite_dec_to_join_comecon_outside_allies }
+				activate_targeted_decision = { target = ROOT decision = SOV_aid_dec_western_front }
+			}
 		}
 	}
 	#密会第三国际
@@ -2328,6 +2371,15 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+		}
+		bypass = {
+			not = {
+				SOV = {
+					has_government = communism
+					is_faction_leader = yes
+					is_major = yes
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -2360,9 +2412,19 @@ focus_tree = {
 		}
 		available = {
 		}
+		bypass = {
+			not = {
+				SOV = {
+					has_government = communism
+					is_faction_leader = yes
+					is_major = yes
+				}
+			}
+		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.15 }
 		}
 	}
 	#迈向社会主义
@@ -2390,6 +2452,9 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			country_event = {
+				id = FRA_Gensokyo.046
+			}
 			hidden_effect = {
 				country_event = {
 					id = FRA_Gensokyo.039
@@ -2414,10 +2479,21 @@ focus_tree = {
 		}
 		available = {
 			not = { has_completed_focus = FRA_Europe_for_Europeans }
+			has_government = communism
+			SOV = {
+				has_government = communism
+				is_faction_leader = yes
+				is_major = yes
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			SOV = {
+				country_event = {
+					id = generic.2002
+				}
+			}
 		}
 	}
 	#大西洋堡垒
@@ -2435,6 +2511,7 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_in_faction_with = SOV
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -2483,10 +2560,31 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_subject = no
+			ENG = {
+				NOT = {
+					or = {
+						is_in_faction_with = ROOT
+						has_war_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		bypass = {
+			ENG = {
+				OR = {
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+					has_war_with = ROOT
+					exists = no
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			declare_war_on = { target = ENG type = annex_everything }
 		}
 	}
 	#威慑圣杯
@@ -2510,6 +2608,26 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_subject = no
+			ENG = {
+				NOT = {
+					or = {
+						is_in_faction_with = ROOT
+						has_war_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		bypass = {
+			ENG = {
+				OR = {
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+					has_war_with = ROOT
+					exists = no
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -2531,6 +2649,7 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_government = communism
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -2618,6 +2737,7 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_government = communism
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
