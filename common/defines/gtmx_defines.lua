@@ -57,7 +57,7 @@ NDefines.NAI.DESIRE_USE_XP_TO_UPGRADE_AIR_EQUIPMENT = 1.5					-- Vanilla is 1 �
 NDefines.NAI.UPGRADE_PERCENTAGE_OF_FORCES = 0.25							-- Vanilla is 0.1 升级军队的比例
 NDefines.NAI.UPGRADE_DIVISION_RELUCTANCE = 5					            -- Vanilla is 7.0 升级军队的不情愿度
 NDefines.NAI.RESEARCH_DAYS_BETWEEN_WEIGHT_UPDATE = 5                        -- Vanilla is 7.0 升级军队的频率
-NDefines.NAI.UPGRADES_DEFICIT_LIMIT_DAYS = 180							    -- Vanilla is 50 没有枪不升级（缺乏x天装备产量以上时）
+NDefines.NAI.UPGRADES_DEFICIT_LIMIT_DAYS = 50							    -- Vanilla is 50 没有枪不升级（缺乏x天装备产量以上时）
 NDefines.NAI.XP_RATIO_REQUIRED_TO_RESEARCH_WITH_XP = 1.6					-- Vanilla is 2 加速改进装备
 
 -- 科研
