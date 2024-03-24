@@ -4242,6 +4242,9 @@ FRA_The_election_results_in = {
 				id = FRA_Gensokyo.1011
 				days = 1825
 			}
+			country_event = {
+				id = FRA_Gensokyo.044
+			}
 		}
 	}
 	else_if = {
@@ -4264,11 +4267,16 @@ FRA_The_election_results_in = {
 		add_to_variable = { support_of_PFG = 25 }
 		set_variable = { FRA_Ruling_Party_VAR = 4 }
 		FRA_set_rule_party_name = yes
+		hidden_effect = {
+			news_event = {
+				id = FRA_Gensokyo_news.002
+			}
+		}
 	}
 	else_if = {
 		limit = { check_variable = { ROOT.party_expected_to_win_election = 6 } }
 		FRA_remove_all_ideas = yes
-		#add_ideas = FRA_Reimu_idea
+		add_ideas = FRA_Huziwara_no_Mokou_idea
 		promote_character = FRA_Kamishirasawa_Keine
 		meta_effect = {
 			text = {
@@ -4285,6 +4293,11 @@ FRA_The_election_results_in = {
 		add_to_variable = { support_of_IDU = 25 }
 		set_variable = { FRA_Ruling_Party_VAR = 5 }
 		FRA_set_rule_party_name = yes
+		hidden_effect = {
+			news_event = {
+				id = FRA_Gensokyo_news.004
+			}
+		}
 	}
 	else_if = {
 		limit = { check_variable = { ROOT.party_expected_to_win_election = 7 } }
@@ -4306,6 +4319,11 @@ FRA_The_election_results_in = {
 		add_to_variable = { support_of_GFN = 25 }
 		set_variable = { FRA_Ruling_Party_VAR = 6 }
 		FRA_set_rule_party_name = yes
+		hidden_effect = {
+			news_event = {
+				id = FRA_Gensokyo_news.005
+			}
+		}
 	}
 	if = {
 		limit = { check_variable = { ROOT.FRA_ruling_party_support < 11 } }
@@ -4326,6 +4344,7 @@ FRA_The_election_results_in = {
 		}
 		else_if = {
 			limit = { check_variable = { ROOT.party_expected_to_win_election = 6 } }
+			complete_national_focus = FRA_first_term_of_Kamishirasawa_Keine
 		}
 		else_if = {
 			limit = { check_variable = { ROOT.party_expected_to_win_election = 7 } }
@@ -5817,6 +5836,27 @@ COST_500_UBS_LOAD = {
 		}
 	}
 }
+COST_300_UBS_LOAD = {
+	custom_effect_tooltip = COST_300_UBS_LOAD
+	hidden_effect = {
+		if = {
+			limit = {
+				not = {
+					check_variable = { ubs_save < 300 }
+				}
+			}
+			add_to_variable = { ubs_save = -300 }
+		}
+		else = {
+			add_to_variable = { ubs_save = -300 }
+			subtract_from_variable = { ubs_load = ubs_save }
+			clamp_variable = {
+				var = ubs_save
+				min = 0
+			}
+		}
+	}
+}
 COST_200_UBS_LOAD = {
 	custom_effect_tooltip = COST_200_UBS_LOAD
 	hidden_effect = {
@@ -6087,5 +6127,83 @@ Build_or_add_to_third_international_westline = {
 		create_faction = third_international_westline
 	}
 }
-
-
+FRA_remove_all_oligarchy_state_modifier = {
+	THIS = {
+		remove_dynamic_modifier = { modifier = FRA_Federal_Reserve_System_modifier }
+		remove_dynamic_modifier = { modifier = FRA_ENGIE_Group_modifier }
+		remove_dynamic_modifier = { modifier = FRA_Renault_modifier }
+		remove_dynamic_modifier = { modifier = FRA_TotalEnergies_modifier }
+		remove_dynamic_modifier = { modifier = FRA_Kappa_Heavy_Industries_modifier }
+	}
+}
+FRA_compute_oligarchy_num = {
+	set_variable = { ROOT.num_of_Credit_Agricole = 0 }
+	set_variable = { ROOT.num_of_ENGIE_Group = 0 }
+	set_variable = { ROOT.num_of_Renault = 0 }
+	set_variable = { ROOT.num_of_TotalEnergies = 0 }
+	set_variable = { ROOT.num_of_Kappa_Heavy_Industries = 0 }
+	every_state = {
+		limit = {
+			is_controlled_by = ROOT
+			has_state_flag = FRA_mainland_state
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = FRA_Federal_Reserve_System_modifier } }
+			add_to_variable = { ROOT.num_of_Credit_Agricole = 1 }
+		}
+		else_if = {
+			limit = { has_dynamic_modifier = { modifier = FRA_ENGIE_Group_modifier } }
+			add_to_variable = { ROOT.num_of_ENGIE_Group = 1 }
+		}
+		else_if = {
+			limit = { has_dynamic_modifier = { modifier = FRA_Renault_modifier } }
+			add_to_variable = { ROOT.num_of_Renault = 1 }
+		}
+		else_if = {
+			limit = { has_dynamic_modifier = { modifier = FRA_TotalEnergies_modifier } }
+			add_to_variable = { ROOT.num_of_TotalEnergies = 1 }
+		}
+		else_if = {
+			limit = { has_dynamic_modifier = { modifier = FRA_Kappa_Heavy_Industries_modifier } }
+			add_to_variable = { ROOT.num_of_Kappa_Heavy_Industries = 1 }
+		}
+	}
+	set_variable = { ROOT.FRA_Oligarchy_consumer_goods_factor_var = 0 }
+	set_variable = { ROOT.FRA_Oligarchy_fuel_gain_factor_var = 0 }
+	set_variable = { ROOT.FRA_Oligarchy_army_speed_factor_var = 0 }
+	set_variable = { ROOT.FRA_Oligarchy_research_speed_factor_var = 0 }
+	set_variable = { ROOT.FRA_Oligarchy_industrial_capacity_factory_var = 0 }
+	if = {
+		limit = { ROOT = { has_country_flag = FRA_Oligarchy_Global_effects } }
+		set_variable = { ROOT.FRA_Oligarchy_consumer_goods_factor_var = ROOT.num_of_Credit_Agricole }
+		divide_variable = { ROOT.FRA_Oligarchy_consumer_goods_factor_var = -100 }
+		clamp_variable = {
+			var = ROOT.FRA_Oligarchy_consumer_goods_factor_var
+			max = 0
+			min = -0.2
+		}
+		set_variable = { ROOT.FRA_Oligarchy_fuel_gain_factor_var = ROOT.num_of_ENGIE_Group }
+		divide_variable = { ROOT.FRA_Oligarchy_fuel_gain_factor_var = 50 }
+		set_variable = { ROOT.FRA_Oligarchy_army_speed_factor_var = ROOT.num_of_Renault }
+		divide_variable = { ROOT.FRA_Oligarchy_army_speed_factor_var = 100 }
+		clamp_variable = {
+			var = ROOT.FRA_Oligarchy_army_speed_factor_var
+			max = 0.05
+			min = 0
+		}
+		set_variable = { ROOT.FRA_Oligarchy_research_speed_factor_var = ROOT.num_of_TotalEnergies }
+		divide_variable = { ROOT.FRA_Oligarchy_research_speed_factor_var = 100 }
+		clamp_variable = {
+			var = ROOT.FRA_Oligarchy_research_speed_factor_var
+			max = 0.1
+			min = 0
+		}
+		set_variable = { ROOT.FRA_Oligarchy_industrial_capacity_factory_var = ROOT.num_of_Kappa_Heavy_Industries }
+		divide_variable = { ROOT.FRA_Oligarchy_industrial_capacity_factory_var = 100 }
+		clamp_variable = {
+			var = ROOT.FRA_Oligarchy_industrial_capacity_factory_var
+			max = 0.1
+			min = 0
+		}
+	}
+}
