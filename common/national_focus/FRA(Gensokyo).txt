@@ -875,7 +875,7 @@ focus_tree = {
 			}
 		}
 	}
-#民主线（华扇）
+#幻想乡社会民主党（华扇）
 	#茨木华扇第一任期
 	focus = {
 		id = FRA_first_term_of_Ibaraki_Kasen
@@ -2136,7 +2136,7 @@ focus_tree = {
 	}
 	#茨木华扇第二任期
 	focus = {
-		id = FRA_second__term_of_Ibaraki_Kasen
+		id = FRA_second_term_of_Ibaraki_Kasen
 		icon = GFX_FRA_first_term_of_Ibaraki_Kasen
 		relative_position_id = FRA_People_Homeland
 		x = 0
@@ -2168,9 +2168,9 @@ focus_tree = {
 		id = FRA_Supervise_the_capitalists
 		icon = GFX_FRA_Supervise_the_capitalists
 		prerequisite = {
-			focus = FRA_second__term_of_Ibaraki_Kasen
+			focus = FRA_second_term_of_Ibaraki_Kasen
 		}
-		relative_position_id = FRA_second__term_of_Ibaraki_Kasen
+		relative_position_id = FRA_second_term_of_Ibaraki_Kasen
 		x = -2
 		y = 1
 		cost = 5
@@ -2183,6 +2183,24 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_stability = 0.15
+			custom_effect_tooltip = FRA_Government_support_influence_tt
+			add_to_variable = {
+				var = FRA_bourgeoisie_attitude_progress_var
+				value = -10
+				tooltip = FRA_bourgeoisie_attitude_decline_Moderately_tt
+			}
+			clamp_variable = {
+				var = FRA_bourgeoisie_attitude_progress_var
+				min = 0
+				max = 100
+			}
+			add_to_variable = {
+				var = FRA_bourgeoisie_Influence_progress_var
+				value = -5
+				tooltip = FRA_bourgeoisie_Influence_decline_slightly_tt
+			}
+			FRA_Calculate_government_approval_rating = yes
 		}
 	}
 	#安插政委
@@ -2204,6 +2222,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Install_political_commissar_idea
 		}
 	}
 	#军队政治教育
@@ -2225,6 +2244,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Install_political_commissar_idea
+				add_idea = FRA_Political_education_in_army_idea
+			}
 		}
 	}
 	#强化党纪建设
@@ -2232,9 +2255,9 @@ focus_tree = {
 		id = FRA_Strengthen_building_of_party_discip
 		icon = GFX_goal_generic_communist_government2
 		prerequisite = {
-			focus = FRA_second__term_of_Ibaraki_Kasen
+			focus = FRA_second_term_of_Ibaraki_Kasen
 		}
-		relative_position_id = FRA_second__term_of_Ibaraki_Kasen
+		relative_position_id = FRA_second_term_of_Ibaraki_Kasen
 		x = 0
 		y = 1
 		cost = 5
@@ -2247,6 +2270,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Strengthen_building_of_party_discip_idea
 		}
 	}
 	#会见各派领袖
@@ -2268,6 +2292,9 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			country_event = {
+				id = FRA_Gensokyo.045
+			}
 		}
 	}
 	#改组人民阵线
@@ -2289,6 +2316,9 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.1 }
+			set_party_name = { ideology = communism long_name = FRA_people_font_party_radical name = FRA_people_font_party }
+			set_party_name = { ideology = democratic long_name = FRA_people_font_party_warm name = FRA_people_font_party }
 		}
 	}
 	#扩大对苏贸易
@@ -2296,9 +2326,9 @@ focus_tree = {
 		id = FRA_Expand_trade_with_Soviet
 		icon = GFX_focus_SOV_socialism_in_one_country
 		prerequisite = {
-			focus = FRA_second__term_of_Ibaraki_Kasen
+			focus = FRA_second_term_of_Ibaraki_Kasen
 		}
-		relative_position_id = FRA_second__term_of_Ibaraki_Kasen
+		relative_position_id = FRA_second_term_of_Ibaraki_Kasen
 		x = 2
 		y = 1
 		cost = 5
@@ -2308,9 +2338,22 @@ focus_tree = {
 		available = {
 			has_idea = FRA_New_Labour_Code
 		}
+		bypass = {
+			not = {
+				SOV = {
+					has_government = communism
+					is_faction_leader = yes
+					is_major = yes
+				}
+			}
+		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			SOV = {
+				activate_targeted_decision = { target = ROOT decision = SOV_invite_dec_to_join_comecon_outside_allies }
+				activate_targeted_decision = { target = ROOT decision = SOV_aid_dec_western_front }
+			}
 		}
 	}
 	#密会第三国际
@@ -2328,6 +2371,15 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+		}
+		bypass = {
+			not = {
+				SOV = {
+					has_government = communism
+					is_faction_leader = yes
+					is_major = yes
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -2360,9 +2412,19 @@ focus_tree = {
 		}
 		available = {
 		}
+		bypass = {
+			not = {
+				SOV = {
+					has_government = communism
+					is_faction_leader = yes
+					is_major = yes
+				}
+			}
+		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.15 }
 		}
 	}
 	#迈向社会主义
@@ -2390,6 +2452,9 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			country_event = {
+				id = FRA_Gensokyo.046
+			}
 			hidden_effect = {
 				country_event = {
 					id = FRA_Gensokyo.039
@@ -2414,10 +2479,22 @@ focus_tree = {
 		}
 		available = {
 			not = { has_completed_focus = FRA_Europe_for_Europeans }
+			has_government = communism
+			is_subject = no
+			SOV = {
+				has_government = communism
+				is_faction_leader = yes
+				is_major = yes
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			SOV = {
+				country_event = {
+					id = generic.2002
+				}
+			}
 		}
 	}
 	#大西洋堡垒
@@ -2435,10 +2512,12 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_in_faction_with = SOV
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Atlantic_Fortress_idea
 		}
 	}
 	#增加军备支出
@@ -2460,6 +2539,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Cold_War_front_idea
 		}
 	}
 	#跨过海峡
@@ -2483,10 +2563,31 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_subject = no
+			ENG = {
+				NOT = {
+					or = {
+						is_in_faction_with = ROOT
+						has_war_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		bypass = {
+			ENG = {
+				OR = {
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+					has_war_with = ROOT
+					exists = no
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			declare_war_on = { target = ENG type = annex_everything }
 		}
 	}
 	#威慑圣杯
@@ -2510,10 +2611,168 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_subject = no
+			ENG = {
+				NOT = {
+					or = {
+						is_in_faction_with = ROOT
+						has_war_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			controls_state = 15
+			controls_state = 983
+			controls_state = 17
+			controls_state = 29
+			controls_state = 24
+			controls_state = 14
+		}
+		bypass = {
+			ENG = {
+				OR = {
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+					has_war_with = ROOT
+					exists = no
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			15 = {
+				add_building_construction = {
+					type = radar_station
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = rocket_site
+					level = 1
+					instant_build = yes
+				}
+			}
+			983 = {
+				add_building_construction = {
+					type = radar_station
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = rocket_site
+					level = 1
+					instant_build = yes
+				}
+			}
+			17 = {
+				add_building_construction = {
+					type = radar_station
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = rocket_site
+					level = 1
+					instant_build = yes
+				}
+			}
+			29 = {
+				add_building_construction = {
+					type = radar_station
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = rocket_site
+					level = 1
+					instant_build = yes
+				}
+			}
+			24 = {
+				add_building_construction = {
+					type = radar_station
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = rocket_site
+					level = 1
+					instant_build = yes
+				}
+			}
+			14 = {
+				add_building_construction = {
+					type = radar_station
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = air_base
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = rocket_site
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 	}
 	#议会改革
@@ -2531,10 +2790,14 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_government = communism
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = democratic popularity = 0.05 }
+			add_popularity = { ideology = communism popularity = 0.1 }
+			add_political_power = 50
 		}
 	}
 	#议员政治审查
@@ -2556,6 +2819,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Political_censorship_by_parliamentarians_idea
 		}
 	}
 	#工会代议制
@@ -2577,6 +2841,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Trade_union_representation_idea
 		}
 	}
 	#民主的社会主义
@@ -2601,6 +2866,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Democratic_socialism_idea
 		}
 	}
 	#社会主义大改造
@@ -2618,10 +2884,12 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_government = communism
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Great_Transformation_of_Socialism_idea
 		}
 	}
 	#收购资本
@@ -2643,6 +2911,40 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.1 }
+			COST_200_UBS_LOAD = yes
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 	}
 	#工人自治
@@ -2664,6 +2966,8 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.05 }
+			add_ideas = FRA_Workers_autonomy_idea
 		}
 	}
 	#土地改革
@@ -2685,6 +2989,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_land_reform_idea
 		}
 	}
 	#成立人民公社
@@ -2706,9 +3011,1367 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_land_reform_idea
+				add_idea = FRA_Establishment_of_People_Commune_idea
+			}
 		}
 	}
-
+#幻想乡自由党（魔理沙）
+	#雾雨魔理沙第一任期
+	focus = {
+		id = FRA_first_term_of_Marisa
+		icon = GFX_FRA_first_term_of_Marisa
+		x = 45
+		y = 0
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		allow_branch = {
+			or = {
+				has_country_leader = {
+					ruling_only = yes
+					character = FRA_Marisa
+				}
+			}
+		}
+		available = {
+			always = no
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = will_be_bypass
+		}
+	}
+#独立民主联盟（上白泽慧音）
+	#上白泽慧音第一任期
+	focus = {
+		id = FRA_first_term_of_Kamishirasawa_Keine
+		icon = GFX_FRA_first_term_of_Kamishirasawa_Keine
+		x = 45
+		y = 0
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		allow_branch = {
+			or = {
+				has_country_leader = {
+					ruling_only = yes
+					character = FRA_Kamishirasawa_Keine
+				}
+			}
+		}
+		available = {
+			always = no
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = will_be_bypass
+		}
+	}
+	#资本家的社会责任
+	focus = {
+		id = FRA_social_responsibility_of_capitalists
+		icon = GFX_FRA_social_responsibility_of_capitalists
+		prerequisite = {
+			focus = FRA_first_term_of_Kamishirasawa_Keine
+		}
+		relative_position_id = FRA_first_term_of_Kamishirasawa_Keine
+		x = -2
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -10
+				tooltip = FRA_financial_crisis_var_subtract10_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -10
+				tooltip = FRA_credit_crunch_var_subtract10_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#鼓励资金投入
+	focus = {
+		id = FRA_Encourage_capital_investment
+		icon = GFX_goal_generic_price_controls
+		prerequisite = {
+			focus = FRA_social_responsibility_of_capitalists
+		}
+		relative_position_id = FRA_social_responsibility_of_capitalists
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			COST_300_UBS_LOAD = yes
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -15
+				tooltip = FRA_financial_crisis_var_subtract15_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -15
+				tooltip = FRA_credit_crunch_var_subtract15_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#缩减政府预算
+	focus = {
+		id = FRA_Shrink_government_budgets
+		icon = GFX_goal_generic_economics_reform
+		prerequisite = {
+			focus = FRA_first_term_of_Kamishirasawa_Keine
+		}
+		relative_position_id = FRA_first_term_of_Kamishirasawa_Keine
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Shrink_government_budgets_idea
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -10
+				tooltip = FRA_financial_crisis_var_subtract10_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -10
+				tooltip = FRA_credit_crunch_var_subtract10_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#政企对话
+	focus = {
+		id = FRA_Government_enterprise_dialogue
+		icon = GFX_goal_fire_paper_peoples
+		prerequisite = {
+			focus = FRA_Shrink_government_budgets
+		}
+		relative_position_id = FRA_Shrink_government_budgets
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Government_enterprise_dialogue_idea
+		}
+	}
+	#有限扩大工会权力
+	focus = {
+		id = FRA_Limited_expansion_of_trade_union_powers
+		icon = GFX_focus_generic_public_works_A
+		prerequisite = {
+			focus = FRA_first_term_of_Kamishirasawa_Keine
+		}
+		relative_position_id = FRA_first_term_of_Kamishirasawa_Keine
+		x = 2
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Limited_expanse_trade_union_powers_idea
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -10
+				tooltip = FRA_credit_crunch_var_subtract10_tt
+			}
+			add_to_variable = {
+				var = FRA_Overcapacity_var
+				value = -10
+				tooltip = FRA_Overcapacity_var_subtract10_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#基础社会保障
+	focus = {
+		id = FRA_Basic_social_security
+		icon = GFX_goal_generic_housing
+		prerequisite = {
+			focus = FRA_Limited_expansion_of_trade_union_powers
+		}
+		relative_position_id = FRA_Limited_expansion_of_trade_union_powers
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Basic_social_security_idea
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_Overcapacity_var
+				value = -20
+				tooltip = FRA_Overcapacity_var_subtract20_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#无形的大手
+	focus = {
+		id = FRA_Invisible_big_hands
+		icon = GFX_FRA_Invisible_big_hands
+		prerequisite = {
+			focus = FRA_Encourage_capital_investment
+		}
+		prerequisite = {
+			focus = FRA_Government_enterprise_dialogue
+		}
+		prerequisite = {
+			focus = FRA_Basic_social_security
+		}
+		relative_position_id = FRA_Government_enterprise_dialogue
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_oligarchy_window_visible
+			set_country_flag = FRA_oligarchy_window_visible
+		}
+	}
+	#增强投资
+	focus = {
+		id = FRA_Enhance_your_investment
+		icon = GFX_goal_generic_aristocratic_cooperation
+		prerequisite = {
+			focus = FRA_Invisible_big_hands
+		}
+		relative_position_id = FRA_Invisible_big_hands
+		x = -4
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			COST_500_UBS_LOAD = yes
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	#银行降息
+	focus = {
+		id = FRA_Kamishirasawa_Banks_cut_interest_rates
+		icon = GFX_goal_generic_banking_legislation
+		prerequisite = {
+			focus = FRA_Enhance_your_investment
+		}
+		relative_position_id = FRA_Enhance_your_investment
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -10
+				tooltip = FRA_financial_crisis_var_subtract10_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -10
+				tooltip = FRA_credit_crunch_var_subtract10_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#经济回暖
+	focus = {
+		id = FRA_economy_is_picking_up
+		icon = GFX_goal_generic_gold_money
+		prerequisite = {
+			focus = FRA_Kamishirasawa_Banks_cut_interest_rates
+		}
+		relative_position_id = FRA_Kamishirasawa_Banks_cut_interest_rates
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -10
+				tooltip = FRA_financial_crisis_var_subtract5_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -10
+				tooltip = FRA_credit_crunch_var_subtract5_tt
+			}
+			add_to_variable = {
+				var = FRA_Overcapacity_var
+				value = -10
+				tooltip = FRA_Overcapacity_var_subtract5_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#削减政府干涉
+	focus = {
+		id = FRA_Cut_government_interference
+		icon = GFX_goal_generic_repeal_opressive_law
+		prerequisite = {
+			focus = FRA_Enhance_your_investment
+		}
+		relative_position_id = FRA_Enhance_your_investment
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -10
+				tooltip = FRA_financial_crisis_var_subtract10_tt
+			}
+			add_to_variable = {
+				var = FRA_Overcapacity_var
+				value = -10
+				tooltip = FRA_Overcapacity_var_subtract10_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#市场的奇迹
+	focus = {
+		id = FRA_The_miracle_of_the_market
+		icon = GFX_goal_generic_positive_trade_relations_gold
+		prerequisite = {
+			focus = FRA_Cut_government_interference
+		}
+		relative_position_id = FRA_Cut_government_interference
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_Overcapacity_var
+				value = -20
+				tooltip = FRA_Overcapacity_var_subtract20_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#自由的市场，自由的人民
+	focus = {
+		id = FRA_Free_market_free_people
+		icon = GFX_goal_generic_freedom
+		prerequisite = {
+			focus = FRA_economy_is_picking_up
+		}
+		prerequisite = {
+			focus = FRA_The_miracle_of_the_market
+		}
+		relative_position_id = FRA_economy_is_picking_up
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Free_market_free_people_idea
+		}
+	}
+	#重启政府职能
+	focus = {
+		id = FRA_Restart_government_functions
+		icon = GFX_goal_generic_banking_legislation
+		prerequisite = {
+			focus = FRA_Invisible_big_hands
+		}
+		relative_position_id = FRA_Invisible_big_hands
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			remove_ideas = FRA_Shrink_government_budgets_idea
+			add_political_power = 100
+		}
+	}
+	#提高教育补贴
+	focus = {
+		id = FRA_Increasing_education_subsidies
+		icon = GFX_goal_generic_double_research
+		prerequisite = {
+			focus = FRA_Restart_government_functions
+		}
+		relative_position_id = FRA_Restart_government_functions
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+	#反共宣传
+	focus = {
+		id = FRA_Anti_communist_propaganda
+		icon = GFX_goal_attack_communists
+		prerequisite = {
+			focus = FRA_Increasing_education_subsidies
+		}
+		relative_position_id = FRA_Increasing_education_subsidies
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_popularity = { ideology = communism popularity = -0.1 }
+			add_political_power = 75
+		}
+	}
+	#通向世界的机票
+	focus = {
+		id = FRA_Tickets_to_the_world
+		icon = GFX_goal_flying_tiger_neutral
+		prerequisite = {
+			focus = FRA_Restart_government_functions
+		}
+		relative_position_id = FRA_Restart_government_functions
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Tickets_to_the_world_idea
+		}
+	}
+	#扩大外贸
+	focus = {
+		id = FRA_Expand_foreign_trade
+		icon = GFX_goal_generic_foreign_diplomacy2
+		prerequisite = {
+			focus = FRA_Tickets_to_the_world
+		}
+		relative_position_id = FRA_Tickets_to_the_world
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_Overcapacity_var
+				value = -15
+				tooltip = FRA_Overcapacity_var_subtract15_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#条条大路通人里
+	focus = {
+		id = FRA_All_roads_lead_to_Paris
+		icon = GFX_goal_generic_train_2
+		prerequisite = {
+			focus = FRA_Anti_communist_propaganda
+		}
+		prerequisite = {
+			focus = FRA_Expand_foreign_trade
+		}
+		relative_position_id = FRA_Anti_communist_propaganda
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_All_roads_lead_to_Paris_idea
+		}
+	}
+	#放权公司
+	focus = {
+		id = FRA_Decentralized_companies
+		icon = GFX_goal_generic_bills
+		prerequisite = {
+			focus = FRA_Invisible_big_hands
+		}
+		relative_position_id = FRA_Invisible_big_hands
+		x = 4
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Decentralized_companies_idea
+		}
+	}
+	#扩大合作项目
+	focus = {
+		id = FRA_Expand_collaborative_projects
+		icon = GFX_goal_generic_major_diplo
+		prerequisite = {
+			focus = FRA_Decentralized_companies
+		}
+		relative_position_id = FRA_Decentralized_companies
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_Oligarchy_Global_effects
+			set_country_flag = FRA_Oligarchy_Global_effects
+			hidden_effect = {
+				add_dynamic_modifier = {
+					modifier = FRA_Oligarchy_Global_modifier
+				}
+				FRA_compute_oligarchy_num = yes
+			}
+		}
+	}
+	#收取政治献金
+	focus = {
+		id = FRA_Collect_political_contributions
+		icon = GFX_goal_generic_banking
+		prerequisite = {
+			focus = FRA_Expand_collaborative_projects
+		}
+		relative_position_id = FRA_Expand_collaborative_projects
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = FRA_financial_crisis_influence_tt
+			add_to_variable = {
+				var = FRA_financial_crisis_var
+				value = -15
+				tooltip = FRA_financial_crisis_var_subtract15_tt
+			}
+			add_to_variable = {
+				var = FRA_credit_crunch_var
+				value = -15
+				tooltip = FRA_credit_crunch_var_subtract15_tt
+			}
+			FRA_Calculate_Great_Depression_debuff = yes
+		}
+	}
+	#特别优待政策
+	focus = {
+		id = FRA_Special_preferential_treatment_policy
+		icon = GFX_generic_financial_markets
+		prerequisite = {
+			focus = FRA_Decentralized_companies
+		}
+		relative_position_id = FRA_Decentralized_companies
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			every_military_industrial_organization = {
+				limit = { owner = ROOT }
+				add_mio_funds = 300
+				add_mio_size = 1
+			}
+		}
+	}
+	#废除反垄断法
+	focus = {
+		id = FRA_Repeal_the_Antitrust_Law
+		icon = GFX_goal_generic_ban_aristocrats
+		prerequisite = {
+			focus = FRA_Special_preferential_treatment_policy
+		}
+		relative_position_id = FRA_Special_preferential_treatment_policy
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Decentralized_companies_idea
+				add_idea = FRA_Decentralized_companies_idea_1
+			}
+		}
+	}
+	#企业之国
+	focus = {
+		id = FRA_The_country_of_business
+		icon = GFX_goal_power_plant
+		prerequisite = {
+			focus = FRA_Collect_political_contributions
+		}
+		prerequisite = {
+			focus = FRA_Repeal_the_Antitrust_Law
+		}
+		relative_position_id = FRA_Collect_political_contributions
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Decentralized_companies_idea_1
+				add_idea = FRA_The_country_of_business_idea
+			}
+			custom_effect_tooltip = exincome_20_modifier_gain
+		}
+	}
+	#上白泽慧音第二任期
+	focus = {
+		id = FRA_second_term_of_Kamishirasawa_Keine
+		icon = GFX_FRA_first_term_of_Kamishirasawa_Keine
+		relative_position_id = FRA_All_roads_lead_to_Paris
+		x = 0
+		y = 2
+		cost = 5
+		allow_branch = {
+			has_country_leader = {
+				ruling_only = yes
+				character = FRA_Kamishirasawa_Keine
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			always = no
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = will_be_bypass
+		}
+	}
+	#精锐雇佣军
+	focus = {
+		id = FRA_Elite_mercenaries
+		icon = GFX_goal_generic_gun_purchase
+		prerequisite = {
+			focus = FRA_second_term_of_Kamishirasawa_Keine
+		}
+		relative_position_id = FRA_second_term_of_Kamishirasawa_Keine
+		x = -4
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Elite_mercenaries_idea
+		}
+	}
+	#总统直属特别行动队
+	focus = {
+		id = FRA_President_direct_Einsatzgruppen
+		icon = GFX_goal_generic_army_elite
+		prerequisite = {
+			focus = FRA_Elite_mercenaries
+		}
+		relative_position_id = FRA_Elite_mercenaries
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Einsatzgruppen
+		}
+	}
+	#掣肘寡头
+	focus = {
+		id = FRA_Restraining_oligarchs
+		icon = GFX_goal_generic_revolt
+		prerequisite = {
+			focus = FRA_President_direct_Einsatzgruppen
+		}
+		relative_position_id = FRA_President_direct_Einsatzgruppen
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Restraining_oligarchs_idea
+		}
+	}
+	#增加教育经费
+	focus = {
+		id = FRA_Increase_funding_for_education
+		icon = GFX_goal_generic_growing_economy
+		prerequisite = {
+			focus = FRA_second_term_of_Kamishirasawa_Keine
+		}
+		relative_position_id = FRA_second_term_of_Kamishirasawa_Keine
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Increase_funding_for_education_idea
+		}
+	}
+	#强化历史教育
+	focus = {
+		id = FRA_Strengthen_history_education
+		icon = GFX_GRU_higher_education_grants
+		prerequisite = {
+			focus = FRA_Increase_funding_for_education
+		}
+		relative_position_id = FRA_Increase_funding_for_education
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Increase_funding_for_education_idea
+				add_idea = FRA_Increase_funding_for_education_idea_1
+			}
+		}
+	}
+	#吸取教训
+	focus = {
+		id = FRA_lessons_learned
+		icon = GFX_goal_defensive_position2
+		prerequisite = {
+			focus = FRA_Strengthen_history_education
+		}
+		relative_position_id = FRA_Strengthen_history_education
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Increase_funding_for_education_idea_1
+				add_idea = FRA_Increase_funding_for_education_idea_2
+			}
+		}
+	}
+	#藤原妹红的教育
+	focus = {
+		id = FRA_education_of_Fujiwara_no_Mokou
+		icon = GFX_FRA_education_of_Fujiwara_no_Mokou
+		prerequisite = {
+			focus = FRA_second_term_of_Kamishirasawa_Keine
+		}
+		relative_position_id = FRA_second_term_of_Kamishirasawa_Keine
+		x = 4
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_timed_idea = {
+				idea = FRA_education_of_Fujiwara_no_Mokou_idea
+				days = 50
+			}
+			country_event = {
+				id = FRA_Gensokyo.047
+			}
+		}
+	}
+	#初出茅庐
+	focus = {
+		id = FRA_wet_behind_ears
+		icon = GFX_FRA_wet_behind_ears
+		prerequisite = {
+			focus = FRA_education_of_Fujiwara_no_Mokou
+		}
+		relative_position_id = FRA_education_of_Fujiwara_no_Mokou
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			not = { has_idea = FRA_education_of_Fujiwara_no_Mokou_idea }
+			has_country_flag = Educational_direction_of_Fujiwara_no_Mokou
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			if = {
+				limit = { has_country_flag = Educational_direction_of_Fujiwara_no_Mokou_pol }
+				custom_effect_tooltip = Fujiwara_no_Mokou_pol_tt_1
+				hidden_effect = { add_ideas = FRA_Huziwara_no_Mokou_idea_pol }
+			}
+			if = {
+				limit = { has_country_flag = Educational_direction_of_Fujiwara_no_Mokou_army }
+				FRA_Huziwara_no_Mokou = {
+					add_attack = 1
+					add_defense = 1
+					add_planning = 1
+					add_logistics = 1
+				}
+			}
+		}
+	}
+	#领袖之资
+	focus = {
+		id = FRA_Leaders_Credentials
+		icon = GFX_FRA_Leaders_Credentials
+		prerequisite = {
+			focus = FRA_wet_behind_ears
+		}
+		relative_position_id = FRA_wet_behind_ears
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			has_country_flag = Educational_direction_of_Fujiwara_no_Mokou
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			if = {
+				limit = { has_country_flag = Educational_direction_of_Fujiwara_no_Mokou_pol }
+				custom_effect_tooltip = Fujiwara_no_Mokou_pol_tt_2
+				hidden_effect = { add_ideas = FRA_Huziwara_no_Mokou_idea_pol2 }
+			}
+			if = {
+				limit = { has_country_flag = Educational_direction_of_Fujiwara_no_Mokou_army }
+				custom_effect_tooltip = Fujiwara_no_Mokou_army_tt
+				hidden_effect = { add_ideas = FRA_Huziwara_no_Mokou_idea_army }
+			}
+		}
+	}
+	#完全资本化
+	focus = {
+		id = FRA_Fully_capitalized
+		icon = GFX_goal_generic_deals
+		prerequisite = {
+			focus = FRA_Restraining_oligarchs
+		}
+		prerequisite = {
+			focus = FRA_lessons_learned
+		}
+		prerequisite = {
+			focus = FRA_Leaders_Credentials
+		}
+		relative_position_id = FRA_lessons_learned
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_political_power = 50
+			add_popularity = { ideology = democratic popularity = 0.2 }
+		}
+	}
+	#军工复合体
+	focus = {
+		id = FRA_Military_industrial_complex
+		icon = GFX_goal_generic_expanded_production
+		prerequisite = {
+			focus = FRA_Fully_capitalized
+		}
+		relative_position_id = FRA_Fully_capitalized
+		x = -2
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Military_industrial_complex_idea
+		}
+	}
+	#军号一敲，黄金万两
+	focus = {
+		id = FRA_military_horn_struck_gold_come
+		icon = GFX_FRA_military_horn_struck_gold_come
+		prerequisite = {
+			focus = FRA_Military_industrial_complex
+		}
+		relative_position_id = FRA_Military_industrial_complex
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_war_support = 0.25
+		}
+	}
+	#再殖民运动
+	focus = {
+		id = FRA_The_Recolonization_Movement
+		icon = GFX_focus_generic_annex_country_2
+		prerequisite = {
+			focus = FRA_Fully_capitalized
+		}
+		relative_position_id = FRA_Fully_capitalized
+		x = 2
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			unlock_decision_tooltip = FRA_Keine_puppet_ROV
+			every_state = {
+				limit = {
+					or = {
+						state = 750
+						state = 856
+						state = 826
+						state = 286
+						state = 827
+						state = 670
+						state = 671
+						state = 857
+					}
+				}
+				add_claim_by = ROOT
+			}
+			unlock_decision_tooltip = FRA_Keine_puppet_NFA
+			every_state = {
+				limit = {
+					or = { has_state_flag = NA_NFA_AREA }
+				}
+				add_claim_by = ROOT
+			}
+			unlock_decision_tooltip = FRA_Keine_puppet_FRG
+			every_state = {
+				limit = {
+					or = { has_state_flag = NA_FRG_AREA }
+				}
+				add_claim_by = ROOT
+			}
+			unlock_decision_tooltip = FRA_Keine_puppet_Quebec
+			every_state = {
+				limit = {
+					or = {
+						state = 468
+						state = 466
+						state = 832
+						state = 332
+					}
+				}
+				add_claim_by = ROOT
+			}
+			unlock_decision_tooltip = FRA_Keine_puppet_MA
+			every_state = {
+				limit = {
+					or = {
+						is_core_of = PAN
+						is_core_of = GUA
+						is_core_of = PAJ
+						is_core_of = CUB
+						is_core_of = PAS
+					}
+				}
+				add_claim_by = ROOT
+			}
+			activate_targeted_decision = {
+				target = CAM
+				decision = FRA_attck_FROM
+			}
+			CAM = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = VIN
+				decision = FRA_attck_FROM
+			}
+			VIN = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = USA
+				decision = FRA_attck_FROM
+			}
+			USA = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = NFA
+				decision = FRA_attck_FROM
+			}
+			NFA = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = FRG
+				decision = FRA_attck_FROM
+			}
+			FRG = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = NGD
+				decision = FRA_attck_FROM
+			}
+			NGD = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = CAN
+				decision = FRA_attck_FROM
+			}
+			CAN = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = PAN
+				decision = FRA_attck_FROM
+			}
+			PAN = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = GUA
+				decision = FRA_attck_FROM
+			}
+			GUA = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = PAJ
+				decision = FRA_attck_FROM
+			}
+			PAJ = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = CUB
+				decision = FRA_attck_FROM
+			}
+			CUB = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = PAS
+				decision = FRA_attck_FROM
+			}
+			PAS = { set_country_flag = can_be_attack_by_FRA }
+		}
+	}
+	#慧音的奇思妙想
+	focus = {
+		id = FRA_Keines_whimsy
+		icon = GFX_FRA_Keines_whimsy
+		prerequisite = {
+			focus = FRA_The_Recolonization_Movement
+		}
+		relative_position_id = FRA_The_Recolonization_Movement
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = claim_all_chinese_state
+			every_state = {
+				limit = {
+					has_state_flag = is_whole_chinese_state_area
+				}
+				add_claim_by = ROOT
+			}
+			unlock_decision_tooltip = FRA_Keine_puppet_CHI
+			activate_targeted_decision = {
+				target = CHI
+				decision = FRA_attck_FROM
+			}
+			CHI = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = ROC
+				decision = FRA_attck_FROM
+			}
+			ROC = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = PRC
+				decision = FRA_attck_FROM
+			}
+			PRC = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = XSM
+				decision = FRA_attck_FROM
+			}
+			XSM = { set_country_flag = can_be_attack_by_FRA }
+			activate_targeted_decision = {
+				target = YUN
+				decision = FRA_attck_FROM
+			}
+			YUN = { set_country_flag = can_be_attack_by_FRA }
+		}
+	}
+	#娱乐至死
+	focus = {
+		id = FRA_Entertain_to_death
+		icon = GFX_FRA_Entertain_to_death
+		prerequisite = {
+			focus = FRA_Fully_capitalized
+		}
+		relative_position_id = FRA_Fully_capitalized
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_stability = 0.25
+		}
+	}
+	#金钱滚滚来
+	focus = {
+		id = FRA_Money_rolls_in
+		icon = GFX_FRA_Money_rolls_in
+		prerequisite = {
+			focus = FRA_military_horn_struck_gold_come
+		}
+		prerequisite = {
+			focus = FRA_Entertain_to_death
+		}
+		prerequisite = {
+			focus = FRA_Keines_whimsy
+		}
+		relative_position_id = FRA_Entertain_to_death
+		x = 0
+		y = 2
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = FRA_Financial_spree
+		}
+	}
 #早苗反革命政变
 	#革命到此为止
 	focus = {
@@ -2898,7 +4561,7 @@ focus_tree = {
 	#突击式翻新天狗里
 	focus = {
 		id = FRA_Assault_refurbishment_of_the_Tengu
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_land_seizure
 		prerequisite = {
 			focus = FRA_The_Golden_Age
 		}
@@ -2932,7 +4595,7 @@ focus_tree = {
 	#神社贷款计划
 	focus = {
 		id = FRA_Shrine_Loan_Program
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_new_deal
 		prerequisite = {
 			focus = FRA_Assault_refurbishment_of_the_Tengu
 		}
@@ -2974,7 +4637,7 @@ focus_tree = {
 	#改建常平仓
 	focus = {
 		id = FRA_Restructuring_of_standing_positions
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_excavation_equipment
 		prerequisite = {
 			focus = FRA_Shrine_Loan_Program
 		}
@@ -2996,7 +4659,7 @@ focus_tree = {
 	#“河童制造”
 	focus = {
 		id = FRA_Made_in_Kappa
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_light_industry
 		prerequisite = {
 			focus = FRA_Restructuring_of_standing_positions
 		}
@@ -3018,7 +4681,7 @@ focus_tree = {
 	#养老金再投资
 	focus = {
 		id = FRA_Pension_reinvestment
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_Controlled_Economy
 		prerequisite = {
 			focus = FRA_Assault_refurbishment_of_the_Tengu
 		}
@@ -3040,7 +4703,7 @@ focus_tree = {
 	#直接性物质援助
 	focus = {
 		id = FRA_Direct_material_assistance
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_prohibition
 		prerequisite = {
 			focus = FRA_Pension_reinvestment
 		}
@@ -3062,7 +4725,7 @@ focus_tree = {
 	#最可爱的劳动者
 	focus = {
 		id = FRA_The_loveliest_laborer
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_mining_iron
 		prerequisite = {
 			focus = FRA_Direct_material_assistance
 		}
@@ -3084,7 +4747,7 @@ focus_tree = {
 	#妖怪之山的馈赠
 	focus = {
 		id = FRA_The_gift_of_Yokai_Mountain
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_jungle_diamond
 		prerequisite = {
 			focus = FRA_Assault_refurbishment_of_the_Tengu
 		}
@@ -3120,7 +4783,7 @@ focus_tree = {
 	#大额武装合同
 	focus = {
 		id = FRA_Large_arms_contracts
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_martial_law
 		prerequisite = {
 			focus = FRA_The_gift_of_Yokai_Mountain
 		}
@@ -3158,7 +4821,7 @@ focus_tree = {
 	#现人神有财产
 	focus = {
 		id = FRA_Now_man_and_God_have_property
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_economics_reform_gold
 		prerequisite = {
 			focus = FRA_Large_arms_contracts
 		}
@@ -3203,7 +4866,7 @@ focus_tree = {
 	#奇迹保障性住房
 	focus = {
 		id = FRA_Miracle_Affordable_Housing
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_housing
 		prerequisite = {
 			focus = FRA_Made_in_Kappa
 		}
@@ -3231,7 +4894,7 @@ focus_tree = {
 	#重新规划投票分区
 	focus = {
 		id = FRA_Replan_the_voting_zoning
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_election_rigged
 		prerequisite = {
 			focus = FRA_The_Golden_Age
 		}
@@ -3269,7 +4932,7 @@ focus_tree = {
 	#烧毁债务档案
 	focus = {
 		id = FRA_Burn_the_debt_file
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_crisis
 		prerequisite = {
 			focus = FRA_Replan_the_voting_zoning
 		}
@@ -3292,7 +4955,7 @@ focus_tree = {
 	#利用贪婪
 	focus = {
 		id = FRA_Take_advantage_of_greed
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_aristocratic_cooperation
 		prerequisite = {
 			focus = FRA_Burn_the_debt_file
 		}
@@ -3314,7 +4977,7 @@ focus_tree = {
 	#早苗大学
 	focus = {
 		id = FRA_Sanae_University
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_military_research
 		prerequisite = {
 			focus = FRA_Take_advantage_of_greed
 		}
@@ -3336,7 +4999,7 @@ focus_tree = {
 	#精简官僚系统
 	focus = {
 		id = FRA_Streamlining_bureaucracy
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_business_bills
 		prerequisite = {
 			focus = FRA_Replan_the_voting_zoning
 		}
@@ -3358,7 +5021,7 @@ focus_tree = {
 	#抹零制度
 	focus = {
 		id = FRA_Elimination_system
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_economics_reform
 		prerequisite = {
 			focus = FRA_Streamlining_bureaucracy
 		}
@@ -3403,7 +5066,7 @@ focus_tree = {
 	#工厂膨胀法案
 	focus = {
 		id = FRA_Factory_Expansion_Act
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_industrial_plan
 		prerequisite = {
 			focus = FRA_Replan_the_voting_zoning
 		}
@@ -3425,7 +5088,7 @@ focus_tree = {
 	#民意绑架
 	focus = {
 		id = FRA_Kidnapping_of_public_opinion
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_control_army
 		prerequisite = {
 			focus = FRA_Factory_Expansion_Act
 		}
@@ -3447,7 +5110,7 @@ focus_tree = {
 	#整理理科笔记
 	focus = {
 		id = FRA_Organize_science_notes
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_research_silver
 		prerequisite = {
 			focus = FRA_Kidnapping_of_public_opinion
 		}
@@ -3469,7 +5132,7 @@ focus_tree = {
 	#思想控制
 	focus = {
 		id = FRA_Thought_control
-		icon = GFX_FRA_Like_a_dream_its_like_a_fantas
+		icon = GFX_goal_generic_secret_police_2
 		prerequisite = {
 			focus = FRA_Sanae_University
 		}
@@ -3802,6 +5465,7 @@ focus_tree = {
 				leave_faction = yes
 				create_faction = Continental_system
 			}
+			unlock_decision_tooltip = FRA_Sanae_attck_FOT
 			unlock_decision_tooltip = FRA_Sanae_puppet_GER
 			unlock_decision_tooltip = FRA_Sanae_puppet_GER2
 			unlock_decision_tooltip = FRA_Sanae_puppet_AUS
@@ -4210,11 +5874,454 @@ focus_tree = {
 					type = annex_everything
 				}
 			}
+			unlock_decision_tooltip = FRA_Keine_puppet_NFA
+			every_state = {
+				limit = {
+					or = { has_state_flag = NA_NFA_AREA }
+				}
+				add_claim_by = ROOT
+			}
+			unlock_decision_tooltip = FRA_Keine_puppet_FRG
+			every_state = {
+				limit = {
+					or = { has_state_flag = NA_FRG_AREA }
+				}
+				add_claim_by = ROOT
+			}
+			unlock_decision_tooltip = FRA_Keine_puppet_Quebec
+			every_state = {
+				limit = {
+					or = {
+						state = 468
+						state = 466
+						state = 832
+						state = 332
+					}
+				}
+				add_claim_by = ROOT
+			}
+			unlock_decision_tooltip = FRA_Keine_puppet_MA
+			every_state = {
+				limit = {
+					or = {
+						is_core_of = PAN
+						is_core_of = GUA
+						is_core_of = PAJ
+						is_core_of = CUB
+						is_core_of = PAS
+					}
+				}
+				add_claim_by = ROOT
+			}
 		}
 		will_lead_to_war_with = USA
 		will_lead_to_war_with = NFA
 		will_lead_to_war_with = FRG
 		will_lead_to_war_with = NGD
+	}
+#国民阵线（铃仙·优昙华院·因幡）
+	#铃仙·优昙华院·因幡当选
+	focus = {
+		id = FRA_GFN_Reisen_Udongein_Inaba_Elected
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		x = 45
+		y = 0
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		allow_branch = {
+			or = {
+				has_country_leader = {
+					ruling_only = yes
+					character = FRA_Reisen_Udongein_Inaba
+				}
+				has_country_leader = {
+					ruling_only = yes
+					character = FRA_Houraisan_Kaguya
+				}
+			}
+		}
+		available = {
+			always = no
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			custom_effect_tooltip = will_be_bypass
+		}
+	}
+	#没收外国企业
+	focus = {
+		id = FRA_GFN_Confiscation_of_foreign_businesses
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Reisen_Udongein_Inaba_Elected
+		}
+		relative_position_id = FRA_GFN_Reisen_Udongein_Inaba_Elected
+		x = -4
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#扩大与轴心国贸易
+	focus = {
+		id = FRA_GFN_Expand_trade_with_Axis
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Confiscation_of_foreign_businesses
+		}
+		relative_position_id = FRA_GFN_Confiscation_of_foreign_businesses
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#有限计划经济
+	focus = {
+		id = FRA_GFN_Limited_planned_economy
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Reisen_Udongein_Inaba_Elected
+		}
+		relative_position_id = FRA_GFN_Reisen_Udongein_Inaba_Elected
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#扶持民族工业
+	focus = {
+		id = FRA_GFN_Supporting_national_industries
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Limited_planned_economy
+		}
+		relative_position_id = FRA_GFN_Limited_planned_economy
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#划分等级
+	focus = {
+		id = FRA_GFN_Divide_into_hierarchies
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Reisen_Udongein_Inaba_Elected
+		}
+		relative_position_id = FRA_GFN_Reisen_Udongein_Inaba_Elected
+		x = 4
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#独尊月人
+	focus = {
+		id = FRA_GFN_Exclusive_Moon_Man
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Divide_into_hierarchies
+		}
+		relative_position_id = FRA_GFN_Divide_into_hierarchies
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#安插月人军官
+	focus = {
+		id = FRA_GFN_Install_Luna_officers
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Expand_trade_with_Axis
+		}
+		prerequisite = {
+			focus = FRA_GFN_Supporting_national_industries
+		}
+		prerequisite = {
+			focus = FRA_GFN_Exclusive_Moon_Man
+		}
+		relative_position_id = FRA_GFN_Expand_trade_with_Axis
+		x = 2
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#提高军人待遇
+	focus = {
+		id = FRA_GFN_Improve_treatment_of_military_personnel
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Install_Luna_officers
+		}
+		relative_position_id = FRA_GFN_Install_Luna_officers
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#铃仙青年团
+	focus = {
+		id = FRA_GFN_Reisen_Youth_League
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Expand_trade_with_Axis
+		}
+		prerequisite = {
+			focus = FRA_GFN_Supporting_national_industries
+		}
+		prerequisite = {
+			focus = FRA_GFN_Exclusive_Moon_Man
+		}
+		relative_position_id = FRA_GFN_Exclusive_Moon_Man
+		x = -2
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#民族荣耀宣传
+	focus = {
+		id = FRA_GFN_Propaganda_of_national_glory
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Reisen_Youth_League
+		}
+		relative_position_id = FRA_GFN_Reisen_Youth_League
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#突袭议会
+	focus = {
+		id = FRA_GFN_Raid_the_Council
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Improve_treatment_of_military_personnel
+		}
+		prerequisite = {
+			focus = FRA_GFN_Propaganda_of_national_glory
+		}
+		relative_position_id = FRA_GFN_Improve_treatment_of_military_personnel
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#月人之国
+	focus = {
+		id = FRA_GFN_The_land_of_moon_people
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Raid_the_Council
+		}
+		relative_position_id = FRA_GFN_Raid_the_Council
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#政治改革
+	focus = {
+		id = FRA_GFN_Political_reform
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_The_land_of_moon_people
+		}
+		relative_position_id = FRA_GFN_The_land_of_moon_people
+		x = -2
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#辉夜正统性宣传
+	focus = {
+		id = FRA_GFN_Kaguya_legitimacy_propaganda
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Political_reform
+		}
+		relative_position_id = FRA_GFN_Political_reform
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#个人崇拜
+	focus = {
+		id = FRA_GFN_cult_of_personality
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Kaguya_legitimacy_propaganda
+		}
+		relative_position_id = FRA_GFN_Kaguya_legitimacy_propaganda
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#月人进入政府
+	focus = {
+		id = FRA_GFN_moon_man_enters_government
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_Political_reform
+		}
+		relative_position_id = FRA_GFN_Political_reform
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#民族与荣耀
+	focus = {
+		id = FRA_GFN_Nation_and_glory
+		icon = GFX_FRA_GFN_first_term_of_Ibaraki_Kas
+		prerequisite = {
+			focus = FRA_GFN_moon_man_enters_government
+		}
+		relative_position_id = FRA_GFN_moon_man_enters_government
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
 	}
 #外交
 	#收复红魔馆
@@ -4697,7 +6804,6 @@ focus_tree = {
 					character = FRA_Sanae
 				}
 			}
-			always = no
 			is_subject = no
 			is_major = yes
 			if = {
@@ -4708,6 +6814,15 @@ focus_tree = {
 					}
 				}
 				not = { has_completed_focus = FRA_Join_Third_International }
+			}
+		}
+		bypass = {
+			custom_trigger_tooltip = {
+				tooltip = is_in_European_Union
+				is_in_array = {
+					array = global.GER_European_Union_members_array
+					value = THIS
+				}
 			}
 		}
 		available_if_capitulated = no
@@ -4727,20 +6842,23 @@ focus_tree = {
 				leave_faction = yes
 				create_faction = European_Community_faction
 			}
+			custom_effect_tooltip = send_invite_to_all_subject_eu_country_excpt_fascism
 			every_country = {
 				limit = {
-					capital_scope = {
-						is_on_continent = europe
-					}
+					capital_scope = { is_on_continent = europe }
 					is_subject = no
 					not = { is_in_faction_with = ROOT }
 					not = { has_government = fascism }
 					is_faction_leader = no
 					not = { tag = ENG }
+					not = { tag = SOV }
 				}
 				country_event = {
 					id = FRA_Gensokyo.029
 				}
+			}
+			add_to_array = {
+				global.GER_European_Union_members_array = THIS
 			}
 		}
 	}
@@ -4761,10 +6879,15 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_subject = no
+			is_major = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			unlock_decision_tooltip = Build_European_Coal_and_Steel_Community
+			set_country_flag = Build_European_Coal_and_Steel_Community_available
+			set_country_flag = FRA_European_Coal_and_Steel_Community
 		}
 	}
 	#欧洲经济共同体
@@ -4784,10 +6907,23 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_completed_focus = FRA_European_Coal_and_Steel_Community
+			custom_trigger_tooltip = {
+				has_country_flag = {
+					flag = FRA_European_Coal_and_Steel_Community
+					days > 100
+				}
+				tooltip = FRA_European_Coal_and_Steel_Community_pass_100_days
+			}
+			is_subject = no
+			is_major = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			unlock_decision_tooltip = Build_European_Economic_Community
+			set_country_flag = Build_European_Economic_Community_available
+			set_country_flag = FRA_European_Economic_Community
 		}
 	}
 	#欧洲原子能共同体
@@ -4807,10 +6943,23 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_completed_focus = FRA_European_Economic_Community
+			custom_trigger_tooltip = {
+				has_country_flag = {
+					flag = FRA_European_Economic_Community
+					days > 100
+				}
+				tooltip = FRA_European_Economic_Community_pass_100_days
+			}
+			is_subject = no
+			is_major = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			unlock_decision_tooltip = Build_EURATOM
+			set_country_flag = Build_EURATOM_available
+			set_country_flag = FRA_EURATOM
 		}
 	}
 	#人间之里会谈
@@ -4836,10 +6985,29 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_idea = FRA_European_Coal_and_Steel_Community_idea
+			has_idea = FRA_European_Economic_Community_idea
+			has_idea = FRA_EURATOM_idea
+			custom_trigger_tooltip = {
+				has_country_flag = {
+					flag = FRA_EURATOM
+					days > 100
+				}
+				tooltip = FRA_EURATOM_pass_100_days
+			}
+			is_subject = no
+			is_major = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			custom_effect_tooltip = FRA_Paris_talks_TT
+			add_to_variable = {
+				var = global.GER_EU_PIE_VAR
+				value = 25
+				tooltip = GER_European_Union_Integration_progress_add_25
+			}
+			set_country_flag = FRA_Paris_talks_pass
 		}
 	}
 	#开启一体化进程
@@ -4859,10 +7027,72 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_country_flag = FRA_Paris_talks_pass
+			is_subject = no
+			is_major = yes
+			custom_trigger_tooltip = {
+				tooltip = GER_European_Union_Integration_progress_attain_to_100
+				not = {
+					check_variable = { global.GER_EU_PIE_VAR < 100 }
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			custom_effect_tooltip = FRA_Start_integration_process_tt
+			add_research_slot = 1
+			set_cosmetic_tag = EUR_UNIFIED
+			hidden_effect = {
+				every_country = {
+					limit = { is_subject_of = ROOT }
+					every_core_state = {
+						add_core_of = ROOT
+					}
+					every_character = { set_nationality = ROOT }
+					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+				}
+				for_each_scope_loop = {
+					array = global.GER_European_Union_members_array
+					every_country = {
+						limit = { is_subject_of = PREV }
+						every_core_state = {
+							add_core_of = ROOT
+						}
+						every_character = { set_nationality = ROOT }
+						ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+					}
+					if = {
+						limit = {
+							not = { tag = ROOT }
+						}
+						every_core_state = {
+							add_core_of = ROOT
+						}
+						every_character = { set_nationality = ROOT }
+						ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+					}
+				}
+				every_state = {
+					limit = {
+						is_on_continent = europe
+						NOT = {
+							or = {
+								is_core_of = ROOT
+								is_claimed_by = ROOT
+							}
+						}
+					}
+					add_claim_by = ROOT
+				}
+				news_event = {
+					id = FRA_Gensokyo_news.013
+				}
+				country_event = {
+					id = ah_germany.106
+				}
+				clear_array = global.GER_European_Union_members_array
+			}
 		}
 	}
   #冷战前线
@@ -4911,6 +7141,15 @@ focus_tree = {
 				is_major = yes
 			}
 			#is_subject = no
+				custom_trigger_tooltip = {
+					tooltip = not_in_European_Union
+					NOT = {
+						is_in_array = {
+							array = global.GER_European_Union_members_array
+							value = THIS
+						}
+					}
+				}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -5278,6 +7517,14 @@ focus_tree = {
 					ruling_only = yes
 					character = FRA_Sanae
 				}
+				has_country_leader = {
+					ruling_only = yes
+					character = FRA_Reisen_Udongein_Inaba
+				}
+				has_country_leader = {
+					ruling_only = yes
+					character = FRA_Houraisan_Kaguya
+				}
 				FRA_Social_Democratic_elections_foucs_tree = yes
 			}
 		}
@@ -5315,6 +7562,10 @@ focus_tree = {
 		}
 		available = {
 			LIB = { is_subject_of = ROOT }
+			or = {
+				has_government = communism
+				has_government = democratic
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
