@@ -875,6 +875,9 @@ focus_tree = {
 				MAL = {
 					is_subject_of = JAP
 				}
+				has_completed_focus = JAP_new56
+				has_completed_focus = JAP_new28
+				has_completed_focus = JAP_new85
 			}
 		}
 		cancel_if_invalid = yes
@@ -4590,8 +4593,8 @@ focus_tree = {
 		}
 		completion_reward = {
 			set_cosmetic_tag = JAP_fascism
-			add_political_power = 150
-			add_war_support = 0.15
+			add_war_support = 0.1
+			add_ideas = jap_ziyoudiguo_idea
 			add_power_balance_value = {
 			id = JAP_balance
 			value = 0.1
@@ -4662,10 +4665,10 @@ focus_tree = {
 			
 		}
 		completion_reward = {
-			add_political_power = 50
-			add_war_support = 0.2
+			add_political_power = 25
 			add_popularity = { ideology = democratic popularity = 0.2 }
 			add_popularity = { ideology = fascism popularity = 0.1 }
+			add_ideas = jap_junduidezhichi_idea
 			add_power_balance_value = {
 			id = JAP_balance
 			value = 0.1
@@ -4807,51 +4810,7 @@ focus_tree = {
 			
 		}
 		completion_reward = {
-			random_list = {
-			49 = {
-			JAP = {
-				annex_country = {
-					target = KOR
-					transfer_troops = yes
-				}
-			}
-			hidden_effect = {
-				news_event = news.771
-			}
-			every_state = {
-			limit = {
-			is_core_of = KOR
-			}
-			add_core_of = JAP
-			}
-			}
-			51 = {
-			if = {
-				limit = {
-					KOR = {
-						is_subject_of = JAP
-					}
-				}
-				set_autonomy = {
-					target = KOR
-					autonomy_state = autonomy_free
-				}
-				JAP = {
-					add_to_faction = KOR
-				}
-			}
-			if = {
-				limit = {
-					KOR = {
-						is_subject = no
-					}
-				}
-				JAP = {
-					add_to_faction = KOR
-				}
-			}
-			}
-			}
+			country_event = jap.98
 			if = {
 			limit = {
 			country_exists = DPR
@@ -4934,7 +4893,11 @@ focus_tree = {
 		y = 1
 		cost = 5
 		ai_will_do = {
-			factor = 100
+			factor = 0
+			modifier = {
+			date > 1941.3.1
+			add = 100
+			}
 		}
 		prerequisite = { focus = JAP_new51 }
 		relative_position_id = JAP_new51
@@ -4950,6 +4913,7 @@ focus_tree = {
 		bypass = {
 			or = {
 			if = {
+			MAL = { is_subject = no }
 			RYU = { is_subject = no }
 			not = { country_exists = SHH }
 			}
@@ -4963,6 +4927,7 @@ focus_tree = {
 					id = jap.18
 				}
 			}
+			custom_effect_tooltip = JAP_jinggaojinggao_ttk
 		}
 	}
 	
@@ -5008,7 +4973,7 @@ focus_tree = {
 		id = JAP_new56
 		icon = GFX_goal_generic_liberty
 		x = 0
-		y = 2
+		y = 1
 		cost = 10
 		ai_will_do = {
 			factor = 100
@@ -5019,7 +4984,9 @@ focus_tree = {
 		relative_position_id = JAP_new54
 		available = {
 			is_subject = no
+			is_faction_leader = yes
 			has_government = democratic
+			not = { has_war_with = ENG }
 			OR = {
 			not =  { country_exists = CHI }
 			CHI = { is_subject_of = JAP }
@@ -5027,22 +4994,64 @@ focus_tree = {
 			OR = {
 			not =  { country_exists = SHH }
 			SHH = { is_subject_of = JAP }
+			SHH = { is_in_faction_with = JAP }
 			}
 			OR = {
 			not =  { country_exists = RYU }
 			RYU = { is_subject_of = JAP }
+			RYU = { is_in_faction_with = JAP }
 			}
 			OR = {
 			not =  { country_exists = MAL }
 			MAL = { is_subject_of = JAP }
+			MAL = { is_in_faction_with = JAP }
 			}
 			OR = {
 			not =  { country_exists = RAJ }
 			RAJ = { is_subject_of = JAP }
+			RAJ = { is_in_faction_with = JAP }
 			}
 		}
 		completion_reward = {
 			add_ideas = jap_jibaidiguozhuyi_idea
+			custom_effect_tooltip = JAP_hegemony_mengyou_tt
+			if = {
+				limit = {
+					any_other_country  = {
+						is_in_faction_with = ROOT
+						not = { is_subject_of = ROOT }
+					}
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = ROOT
+						not = { is_subject_of = ROOT }
+					}
+					add_ideas = jap_dongfangminzhudeshengli_idea
+				}
+			}
+			else = { 
+				effect_tooltip = {
+					add_ideas = jap_dongfangminzhudeshengli_idea
+				}
+			}
+			custom_effect_tooltip = JAP_italian_hegemony_subjects_tt
+			if = {
+				limit = {
+						num_subjects > 0
+				}
+				every_other_country = {
+					limit = {
+						is_subject_of = ROOT
+					}
+					add_ideas = jap_yinghuaqixiadexinzhixu_idea
+				}
+			}
+			else = { 
+				effect_tooltip = {
+					add_ideas = jap_yinghuaqixiadexinzhixu_idea
+				}
+			}
 		}
 	}
 	
@@ -6501,6 +6510,189 @@ focus_tree = {
 				effect_tooltip = {
 					add_ideas = jap_yinghuaqixiadexinzhixu_idea
 				}
+			}
+		}
+	}
+	
+	focus = {
+		id = JAP_new87
+		icon = GFX_focus_chi_collaboration_with_the_japanese
+		x = 0
+		y = 1
+		cost = 52.2
+		ai_will_do = {
+			factor = 100
+		}
+		prerequisite = { focus = JAP_new56 }
+		relative_position_id = JAP_new56
+		available = {
+			is_subject = no
+			is_major = yes
+			num_faction_members > 1
+			has_government = democratic
+			any_other_country = {
+			OR = {
+			tag = PHI
+			tag = AST
+			tag = NZL
+			tag = MAL
+			tag = KOR
+			tag = VIN
+			}
+			is_in_faction_with = ROOT
+			}
+		}
+		completion_reward = {
+			set_cosmetic_tag = JAP_taipingyangzhenxian
+			custom_effect_tooltip = JAP_tunbingfuhetiaojian_tag
+			hidden_effect = {
+			if = {
+			limit = {
+				tag = PHI
+				is_in_faction_with = JAP
+				is_ai = yes
+			}
+				JAP = { 
+					annex_country = { target = PHI transfer_troops = yes  }  
+				}
+				every_state = {
+					limit = {
+						is_core_of = PHI
+					}
+					add_core_of = JAP
+				}
+				PHI = {
+					every_character = {
+						set_nationality = ROOT
+					}
+				}
+			}
+			if = {
+			limit = {
+				tag = VIN
+				is_in_faction_with = JAP
+				is_ai = yes
+			}
+				JAP = { 
+					annex_country = { target = VIN transfer_troops = yes  }  
+				}
+				every_state = {
+					limit = {
+						is_core_of = VIN
+					}
+					add_core_of = JAP
+				}
+				VIN = {
+					every_character = {
+						set_nationality = ROOT
+					}
+				}
+			}
+			if = {
+			limit = {
+				tag = CAM
+				is_in_faction_with = JAP
+				is_ai = yes
+			}
+				JAP = { 
+					annex_country = { target = CAM transfer_troops = yes  }  
+				}
+				every_state = {
+					limit = {
+						is_core_of = CAM
+					}
+					add_core_of = JAP
+				}
+				CAM = {
+					every_character = {
+						set_nationality = ROOT
+					}
+				}
+			}
+			if = {
+			limit = {
+				tag = MAL
+				is_in_faction_with = JAP
+				is_ai = yes
+			}
+				JAP = { 
+					annex_country = { target = MAL transfer_troops = yes  }  
+				}
+				every_state = {
+					limit = {
+						is_core_of = MAL
+					}
+					add_core_of = JAP
+				}
+				MAL = {
+					every_character = {
+						set_nationality = ROOT
+					}
+				}
+			}
+			if = {
+			limit = {
+				tag = AST
+				is_in_faction_with = JAP
+				is_ai = yes
+			}
+				JAP = { 
+					annex_country = { target = AST transfer_troops = yes  }  
+				}
+				every_state = {
+					limit = {
+						is_core_of = AST
+					}
+					add_core_of = JAP
+				}
+				AST = {
+					every_character = {
+						set_nationality = ROOT
+					}
+				}
+			}
+			if = {
+			limit = {
+				tag = NZL
+				is_in_faction_with = JAP
+				is_ai = yes
+			}
+				JAP = { 
+					annex_country = { target = NZL transfer_troops = yes  }  
+				}
+				every_state = {
+					limit = {
+						is_core_of = NZL
+					}
+					add_core_of = JAP
+				}
+				NZL = {
+					every_character = {
+						set_nationality = ROOT
+					}
+				}
+			}
+			if = {
+			limit = {
+				tag = KOR
+				is_in_faction_with = JAP
+				is_ai = yes
+			}
+				JAP = { 
+					annex_country = { target = KOR transfer_troops = yes  }  
+				}
+				every_state = {
+					limit = {
+						is_core_of = KOR
+					}
+					add_core_of = JAP
+				}
+				KOR = {
+					every_character = {
+						set_nationality = ROOT
+					}
+				}
+			}
 			}
 		}
 	}
