@@ -619,7 +619,6 @@ add_namespace = ENG_news
 	}
 	
 #第二阶段事件（包含伦敦危机）
- 
  #蓝线国策及剧情事件	
 	country_event = {  #外贸法案破产，各殖民地脱钩
 		id = ENG_event.21
@@ -703,7 +702,7 @@ add_namespace = ENG_news
 		
 		option = {
 			name = ENG_event.22.a		
-			add_political_power = 50	
+			add_political_power = 100	
 		}
 	}
 	country_event = {  #昔日的敌人，今天的盟友
@@ -731,7 +730,7 @@ add_namespace = ENG_news
 		
 		option = {
 			name = ENG_event.351.a
-			add_political_power = 50	
+			add_political_power = 100	
 		}
 	}
 	country_event = {  #工党主导临时内阁成立
@@ -1095,6 +1094,10 @@ add_namespace = ENG_news
 			desc = ENG_event.368.d
 			fire_only_once = yes
 			is_triggered_only = yes
+
+			immediate = {
+				set_country_flag = FLAG_ENG_zzjsbd
+			}
 			
 			option = { 
 				name = ENG_event.368.a
@@ -1103,7 +1106,7 @@ add_namespace = ENG_news
 		}
 		
 	#伦敦危机进行中的事件
-		country_event = {  #伦敦桥！伦敦桥！
+		country_event = {  #大革命
 			id = ENG_event.375
 			title = ENG_event.375.t
 			desc = ENG_event.375.d
@@ -1112,13 +1115,424 @@ add_namespace = ENG_news
 			
 			option = { 
 				name = ENG_event.375.a
-
+				country_event = ENG_event.376
 			}
 		}
 
+		country_event = {  #重任在肩
+			id = ENG_event.376
+			title = ENG_event.376.t
+			desc = ENG_event.376.d
+			fire_only_once = yes
+			is_triggered_only = yes
+
+			immediate = {
+				activate_mission = ENG_mission_London_hhz_zy
+				set_country_flag = FLAG_ENG_fwfhh #非我方回合
+
+				set_country_flag = FLAG_ENG_London_second_stage_start #二阶段开始
+				ENG_jisuan_London_left_revolution_num_of_army = yes #左翼激进度及势力加成兵力计算，还有地区调整
+				country_event = { #通讯断裂事件
+					id = ENG_event.377
+					days = 1		
+				}
+				#判定机场和军火库事件的触发
+					if = { #磨坊区
+						limit = {
+							check_variable = {
+								05:var_gui_control_degree < 70
+							}
+						}	
+						hidden_effect = {
+							country_event = { #弹药库被偷袭成功
+								id = ENG_event.380
+								days = 2		
+							}
+						}
+					}
+					else = {
+						hidden_effect = {
+							country_event = { #弹药库被偷袭失败
+								id = ENG_event.381
+								days = 2		
+							}
+						}
+					}
+
+					if = { #机场区
+						limit = {
+							check_variable = {
+								09:var_gui_control_degree < 70
+							}
+						}	
+						hidden_effect = {
+							country_event = { #机场被突袭成功事件
+								id = ENG_event.378
+								days = 2		
+							}
+						}
+					}
+					else = {
+						hidden_effect = {
+							country_event = { #机场被突袭失败事件
+								id = ENG_event.379
+								days = 2		
+							}
+						}
+					}
+
+				
+			}
+			
+			option = { 
+				name = ENG_event.376.a
+				custom_effect_tooltip = ENG_tooltip_event_376
+				#触发超事件
+			}
+
+		}
+		country_event = {  #通讯断裂事件
+			id = ENG_event.377
+			title = ENG_event.377.t
+			desc = ENG_event.377.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			immediate = {
+				add_to_variable = { 
+					VAR_ENG_London_max_action_point = -5 
+				}
+			}
+
+			option = { 
+				name = ENG_event.377.a
+				custom_effect_tooltip = ENG_tooltip_var_max_action_point_sub_5
+				#custom_effect_tooltip = ENG_tooltip_event_377
+
+				country_event = { #向外围部队求援
+					id = ENG_event.395
+					days = 4		
+				}
+			}
+		}
+		country_event = {  #机场被突袭成功事件
+			id = ENG_event.378
+			title = ENG_event.378.t
+			desc = ENG_event.378.d
+			fire_only_once = yes
+			is_triggered_only = yes
+
+			immediate = {
+				set_variable = {
+					09:gui_display_frame = 1
+				}
+				set_variable = { #空袭可用次数 
+					VAR_ENG_London_air_strike_num = 0
+				}
+				set_country_flag = FLAG_ENG_jcpdbph #机场跑道被破坏
+			}
+			
+			option = { 
+				name = ENG_event.378.a
+				custom_effect_tooltip = ENG_tooltip_event_378
+			}
+		}
+		country_event = {  #机场被突袭失败事件
+			id = ENG_event.379
+			title = ENG_event.379.t
+			desc = ENG_event.379.d
+			fire_only_once = yes
+			is_triggered_only = yes
+
+			immediate = {
+				add_to_variable = { 09:var_gui_fortress_level = -1  }
+				add_to_variable = { 09:var_gui_defense_power = -20  }
+				set_variable = { #空袭可用次数 
+					VAR_ENG_London_air_strike_num = 0
+				}
+				set_country_flag = FLAG_ENG_jcpdbph #机场跑道被破坏
+
+				ENG_jisuan_London_fortress = yes
+				ENG_jisuan_London_defense = yes
+			}
+			
+			option = { 
+				name = ENG_event.379.a
+				custom_effect_tooltip = ENG_tooltip_event_379
+			}
+		}
+		country_event = {  #弹药库被偷袭成功
+			id = ENG_event.380
+			title = ENG_event.380.t
+			desc = ENG_event.380.d
+			fire_only_once = yes
+			is_triggered_only = yes
+
+			immediate = {
+				set_variable = {
+					05:gui_display_frame = 1
+				}
+				add_to_variable = { #左翼民兵
+					VAR_ENG_London_gui_manpower_red_number_irregular = 10
+				}
+				add_to_variable = {  #首警司坦克
+					VAR_ENG_London_gui_manpower_player_number_tank = -2
+				}
+			}
+			
+			option = { 
+				name = ENG_event.380.a
+				custom_effect_tooltip = ENG_tooltip_event_380
+			}
+		}
+		country_event = {  #弹药库被偷袭失败
+			id = ENG_event.381
+			title = ENG_event.381.t
+			desc = ENG_event.381.d
+			fire_only_once = yes
+			is_triggered_only = yes
+
+			immediate = {
+				add_to_variable = { 05:var_gui_fortress_level = -1  }
+				add_to_variable = { 05:var_gui_defense_power = -20  }
+				ENG_jisuan_London_fortress = yes
+				ENG_jisuan_London_defense = yes
+
+				add_to_variable = { #左翼民兵
+					VAR_ENG_London_gui_manpower_red_number_irregular = 5
+				}
+				add_to_variable = {  #首警司坦克
+					VAR_ENG_London_gui_manpower_player_number_tank = -1
+				}
+			}
+			
+			option = { 
+				name = ENG_event.381.a
+				custom_effect_tooltip = ENG_tooltip_event_381
+			}
+		}
+		country_event = {  #快反入场
+			id = ENG_event.382
+			title = ENG_event.382.t
+			desc = ENG_event.382.d
+			fire_only_once = yes
+			is_triggered_only = yes
+
+			immediate = {
+				set_variable = {
+					08:gui_display_frame = 4
+				}
+				set_variable = {
+					08:var_gui_defense_power = 80
+				}
+				set_variable = {
+					12:gui_display_frame = 4
+				}
+				set_variable = {
+					12:var_gui_defense_power = 80
+				}
+				set_variable = {
+					13:gui_display_frame = 4
+				}
+				set_variable = {
+					13:var_gui_defense_power = 100
+				}
+				set_variable = {
+					14:gui_display_frame = 4
+				}
+				set_variable = {
+					14:var_gui_defense_power = 80
+				}
+			}
+			
+			option = { 
+				name = ENG_event.382.a
+				custom_effect_tooltip = ENG_tooltip_event_382 
+			}
+		}
+		country_event = {  #快反政变
+			id = ENG_event.383
+			title = ENG_event.383.t
+			desc = ENG_event.383.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.383.a
+			}
+		}
+
+		country_event = {  #快反政变2
+			id = ENG_event.384
+			title = ENG_event.384.t
+			desc = ENG_event.384.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.384.a
+			}
+		}
+
+		country_event = {  #快反政变3
+			id = ENG_event.385
+			title = ENG_event.385.t
+			desc = ENG_event.385.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.385.a
+			}
+		}
+
+		country_event = {  #向外围部队求援
+			id = ENG_event.395
+			title = ENG_event.395.t
+			desc = ENG_event.395.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.395.a
+				custom_effect_tooltip = ENG_tooltip_event_395
+			}
+		}
+
+		country_event = {  #通讯干扰结束，陆军在路上了
+			id = ENG_event.386
+			title = ENG_event.386.t
+			desc = ENG_event.386.d
+			fire_only_once = yes
+			is_triggered_only = yes
+
+			immediate = {
+				add_to_variable = { 
+					VAR_ENG_London_max_action_point = 5 
+				}
+			}
+			
+			option = { 
+				name = ENG_event.386.a
+				custom_effect_tooltip = ENG_tooltip_var_max_action_point_add_5
+				#custom_effect_tooltip = ENG_tooltip_event_386
+			}
+		}
+
+		country_event = {  #呼叫特种空勤团
+			id = ENG_event.387
+			title = ENG_event.387.t
+			desc = ENG_event.387.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.387.a
+			}
+		}
+
+		country_event = {  #左翼击败首警司结算事件
+			id = ENG_event.388
+			title = ENG_event.388.t
+			desc = ENG_event.388.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.388.a
+			}
+		}
+
+		country_event = {  #右翼击败首警司结算事件
+			id = ENG_event.389
+			title = ENG_event.389.t
+			desc = ENG_event.389.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.389.a
+			}
+		}
+
+		country_event = {  #首警司击败左翼结算事件
+			id = ENG_event.390
+			title = ENG_event.390.t
+			desc = ENG_event.390.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.390.a
+			}
+		}
+
+		country_event = {  #首警司击败右翼结算事件
+			id = ENG_event.391
+			title = ENG_event.391.t
+			desc = ENG_event.391.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.391.a
+			}
+		}
+
+		country_event = {  #首警司武力最终胜利事件
+			id = ENG_event.392
+			title = ENG_event.392.t
+			desc = ENG_event.392.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.392.a
+			}
+		}
+
+		country_event = {  #
+			id = ENG_event.396
+			title = ENG_event.396.t
+			desc = ENG_event.396.d
+			fire_only_once = yes
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.396.a
+			}
+		}
+		  
+
+		
 
 
-	#	
+
+	#回合制各种机制事件
+		country_event = {  #左翼回合报告
+			id = ENG_event.393
+			title = ENG_event.393.t
+			desc = ENG_event.393.d
+			fire_only_once = no
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.393.a
+			}
+		}
+		country_event = {  #右翼回合报告
+			id = ENG_event.394
+			title = ENG_event.394.t
+			desc = ENG_event.394.d
+			fire_only_once = no
+			is_triggered_only = yes
+			
+			option = { 
+				name = ENG_event.394.a
+			}
+		}
+		
+	#
 	#初华事件链	#event ENG_event.369
 		country_event = {  #分道扬镳1
 			id = ENG_event.369

@@ -243,11 +243,16 @@ scripted_gui = { #伦敦危机
 					ENG_London_close_manpower_defense_window = yes
 					set_country_flag = FLAG_ENG_London_defense_gui_visble
 				}
-
+				
 				ENG_London_state_attack_button_click = { #进攻
 					ENG_London_close_manpower_defense_window = yes
 					ENG_jisuan_London_fortress_effect = yes
 					set_country_flag = FLAG_ENG_London_attack_gui_visble
+				}
+				ENG_London_state_action_button_click = { #特殊行动
+					ENG_London_close_manpower_defense_window = yes
+					ENG_jisuan_London_fortress_effect = yes
+					set_country_flag = FLAG_ENG_London_action_gui_visble
 				}
 			#作弊按钮
 				ENG_London_state_info_control_debug_button_add_click = { #
@@ -287,6 +292,27 @@ scripted_gui = { #伦敦危机
 						add_to_variable = { var_gui_fortress_level = -1  }
 					}	
 					ENG_jisuan_London_fortress = yes
+				}
+				#转变地块颜色的按钮
+				ENG_London_state_debug_become_red_button_click = { #
+					var:ENG_London_map_selected_state = {
+						set_variable = { gui_display_frame = 1 }
+					}	
+				}
+				ENG_London_state_debug_become_blue_button_click = { #
+					var:ENG_London_map_selected_state = {
+						set_variable = { gui_display_frame = 2 }
+					}	
+				}
+				ENG_London_state_debug_become_white_button_click = { #
+					var:ENG_London_map_selected_state = {
+						set_variable = { gui_display_frame = 3 }
+					}	
+				}
+				ENG_London_state_debug_become_black_button_click = { #
+					var:ENG_London_map_selected_state = {
+						set_variable = { gui_display_frame = 4 }
+					}	
 				}
 
 			#地块按钮
@@ -493,7 +519,7 @@ scripted_gui = { #伦敦危机
 			ENG_London_info_title_picture_14_visible = {
 				check_variable = { ENG_London_map_selected_state = 14 }
 			}
-
+		 
 		 #按钮框出现限制
 		 	ENG_London_state_police_button_visible = {
 				not = {
@@ -566,7 +592,19 @@ scripted_gui = { #伦敦危机
 				has_country_flag = FLAG_ENG_London_second_stage_start
 				is_debug = yes
 			}
-
+			#转变地块颜色的按钮
+			ENG_London_state_debug_become_red_button_visible = {
+				is_debug = yes
+			}
+			ENG_London_state_debug_become_blue_button_visible = {
+				is_debug = yes
+			}
+			ENG_London_state_debug_become_white_button_visible = {
+				is_debug = yes
+			}
+			ENG_London_state_debug_become_black_button_visible = {
+				is_debug = yes
+			}
 
 		 #按钮条件限制
 		 	ENG_London_state_police_button_click_enabled = {
@@ -582,349 +620,361 @@ scripted_gui = { #伦敦危机
 			ENG_London_state_build_fortress_button_click_enabled = {
 				has_political_power > 50 
 				has_country_flag = FLAG_london_build_fortress_click
-				has_completed_focus = ENG_17_ldwj
+				has_completed_focus = ENG_17_ldwj 
 			}
 
 			ENG_London_state_attack_button_click_enabled = {
-				if = {
-					limit = {
-						has_country_flag = FLAG_ENG_London_player_select_blue
-					}
-					var:ENG_London_map_selected_state = {
-						or = {
-							check_variable = {
-								gui_display_frame = 1
-							}
-							check_variable = {
-								gui_display_frame = 4
-							}
+				has_country_flag = FLAG_ENG_cywjhh #处于己方回合
+
+				custom_trigger_tooltip = {
+					tooltip = ENG_tooltip_cdqydfkz #此地区由敌方控制
+					if = {
+						limit = {
+							has_country_flag = FLAG_ENG_London_player_select_blue
 						}
-						
-					}	
+					
+						var:ENG_London_map_selected_state = {
+							or = {
+								check_variable = {
+									gui_display_frame = 1
+								}
+								check_variable = {
+									gui_display_frame = 4
+								}
+							}
+							
+						}
+					}
 				}
 				#判定是否有相邻地块可供进攻
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 01
-							}
-						}	
-						or = {
-							check_variable = {
-								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}						
-						}			
-					}
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_zskzlj #我方控制至少一个邻近地区
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 01
+								}
+							}	
+							or = {
+								check_variable = {
+									02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}						
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 02
-							}
-						}	
-						or = {
-							check_variable = {
-								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 02
+								}
+							}	
+							or = {
+								check_variable = {
+									01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 03
-							}
-						}	
-						or = {
-							check_variable = {
-								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								04:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 03
+								}
+							}	
+							or = {
+								check_variable = {
+									02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									04:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 04
-							}
-						}	
-						or = {
-							check_variable = {
-								03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 04
+								}
+							}	
+							or = {
+								check_variable = {
+									03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 05
-							}
-						}	
-						or = {
-							check_variable = {
-								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								04:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 05
+								}
+							}	
+							or = {
+								check_variable = {
+									02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									03:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									04:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 06
-							}
-						}	
-						or = {
-							check_variable = {
-								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 06
+								}
+							}	
+							or = {
+								check_variable = {
+									01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									05:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 07
-							}
-						}	
-						or = {
-							check_variable = {
-								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 07
+								}
+							}	
+							or = {
+								check_variable = {
+									01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									06:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 08
-							}
-						}	
-						or = {
-							check_variable = {
-								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 08
+								}
+							}	
+							or = {
+								check_variable = {
+									01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 09
-							}
-						}	
-						or = {
-							check_variable = {
-								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 09
+								}
+							}	
+							or = {
+								check_variable = {
+									01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 10
-							}
-						}	
-						or = {
-							check_variable = {
-								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 10
+								}
+							}	
+							or = {
+								check_variable = {
+									01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									11:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 11
-							}
-						}	
-						or = {
-							check_variable = {
-								01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 11
+								}
+							}	
+							or = {
+								check_variable = {
+									01:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									02:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									10:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 12
-							}
-						}	
-						or = {
-							check_variable = {
-								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 12
+								}
+							}	
+							or = {
+								check_variable = {
+									08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									09:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 13
-							}
-						}	
-						or = {
-							check_variable = {
-								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 13
+								}
+							}	
+							or = {
+								check_variable = {
+									08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									12:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									14:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
 
-					if = { #
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state = 14
-							}
-						}	
-						or = {
-							check_variable = {
-								07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-							check_variable = {
-								13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
-							}
-						}			
-					}
-
-					
+						if = { #
+							limit = {
+								check_variable = {
+									ENG_London_map_selected_state = 14
+								}
+							}	
+							or = {
+								check_variable = {
+									07:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									08:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+								check_variable = {
+									13:gui_display_frame = VAR_ENG_London_player_gui_display_frame
+								}
+							}			
+						}
+					}	
 
 				#
 			}
 			ENG_London_state_defense_button_click_enabled = {
-				if = {
-					limit = {
-						has_country_flag = FLAG_ENG_London_player_select_blue
-					}
-					var:ENG_London_map_selected_state = {
-						check_variable = {
-							gui_display_frame = 2
+				has_country_flag = FLAG_ENG_cywjhh #处于己方回合
+				
+				custom_trigger_tooltip = {
+					tooltip = ENG_tooltip_dqwfkz #此地区由己方控制
+					if = {
+						limit = {
+							has_country_flag = FLAG_ENG_London_player_select_blue
 						}
-					}	
+						var:ENG_London_map_selected_state = {
+							check_variable = {
+								gui_display_frame = 2
+							}
+						}	
+					}
 				}
 			}
 			ENG_London_state_action_button_click_enabled = {
@@ -1124,6 +1174,9 @@ scripted_gui = { #伦敦危机
 					VAR_ENG_London_gui_action_point_cost < VAR_ENG_London_current_action_point
 				}
 			}
+			ENG_London_manpower_select_button_yes_click_enabled = {
+				has_country_flag = FLAG_ENG_cywjhh
+			}
 		}
 		effects = {
 			close_button_click = { #关闭按钮
@@ -1209,7 +1262,7 @@ scripted_gui = { #伦敦危机
 					}
 					ENG_jisuan_London_manpower_select_defense_effect = yes
 				}
-
+			#重置和确定	
 				ENG_London_manpower_select_button_reset_click = { #重置
 					set_variable = {
 						VAR_ENG_London_gui_manpower_select_player_irregular = 0
@@ -1222,6 +1275,7 @@ scripted_gui = { #伦敦危机
 					}
 					ENG_jisuan_London_manpower_select_defense_effect = yes
 				}
+
 				ENG_London_manpower_select_button_yes_click = { #确定
 					#加上防御力
 					var:ENG_London_map_selected_state = {
@@ -1289,6 +1343,9 @@ scripted_gui = { #伦敦危机
 				check_variable = {
 					VAR_ENG_London_gui_action_point_cost < VAR_ENG_London_current_action_point
 				}
+			}
+			ENG_London_manpower_attack_button_yes_click_enabled = {
+				has_country_flag = FLAG_ENG_cywjhh
 			}
 		}
 		effects = {
@@ -1395,17 +1452,21 @@ scripted_gui = { #伦敦危机
 							var_gui_defense_power = ENG:VAR_ENG_London_gui_manpower_select_attack_effect  
 						}
 					}	
+					if = {
+						limit = { #如果伤害够了
+							check_variable = {
+								ENG_London_map_selected_state:var_gui_defense_power < 1
+							}
+						}
+						multiply_variable = { #把溢出伤害转化为防御力
+							var = ENG_London_map_selected_state:var_gui_defense_power
+							value = -1
+						}
+						ENG_panding_London_state_owner_to_player = yes #将当前地块归属划归玩家
+					}
 
 					ENG_jisuan_London_defense = yes
 
-					if = {
-						limit = {
-							check_variable = {
-								ENG_London_map_selected_state:var_gui_defense_power = 0
-							}
-						}
-						ENG_panding_London_state_owner_to_player = yes
-					}
 					#从玩家可用兵力变量中扣除消耗的兵力
 					subtract_from_variable = {
 						VAR_ENG_London_gui_manpower_player_number_irregular = VAR_ENG_London_gui_manpower_select_player_irregular
@@ -1440,9 +1501,333 @@ scripted_gui = { #伦敦危机
 		}
 	}
 
+	ENG_London_action_window = { #特殊行动操作框
+		window_name = "ENG_London_action_window"
+		visible = {
+			tag = ENG
+			has_country_flag = FLAG_ENG_London_action_gui_visble
+		}
+		properties = {
+
+		}
+		triggers = {
+			#火炮支援
+				ENG_London_artillery_support_title_visible = { #标题可见
+					has_country_flag = FLAG_ENG_London_artillery_support_visible
+				}
+				ENG_London_artillery_support_effect_visible = { #详情可见
+					has_country_flag = FLAG_ENG_London_artillery_support_visible
+				}
+				ENG_London_artillery_support_yes_button_visible = { #确定键可见
+					has_country_flag = FLAG_ENG_London_artillery_support_visible
+				}
+			#修筑工事
+				ENG_London_defensive_works_title_visible = { #标题可见
+					has_country_flag = FLAG_ENG_London_defensive_works_visible
+				}
+				ENG_London_defensive_works_effect_visible = { #详情可见
+					has_country_flag = FLAG_ENG_London_defensive_works_visible
+				}
+				ENG_London_defensive_works_yes_button_visible = { #确定键可见
+					has_country_flag = FLAG_ENG_London_defensive_works_visible
+				}
+			#发动空袭
+				ENG_London_air_strike_title_visible = { #标题可见
+					has_country_flag = FLAG_ENG_London_air_strike_visible
+				}
+				ENG_London_air_strike_effect_visible = { #详情可见
+					has_country_flag = FLAG_ENG_London_air_strike_visible
+				}
+				ENG_London_air_strike_yes_button_visible = { #确定键可见
+					has_country_flag = FLAG_ENG_London_air_strike_visible
+				}
+			#垂直进攻
+				ENG_London_vertical_attack_title_visible = { #标题可见
+					has_country_flag = FLAG_ENG_London_vertical_attack_visible
+				}
+				ENG_London_vertical_attack_effect_visible = { #详情可见
+					has_country_flag = FLAG_ENG_London_vertical_attack_visible
+				}
+				ENG_London_vertical_attack_yes_button_visible = { #确定键可见
+					has_country_flag = FLAG_ENG_London_vertical_attack_visible
+				}
+
+			#确定键点击条件	
+				ENG_London_artillery_support_yes_button_click_enabled = { #火炮支援
+					has_country_flag = FLAG_ENG_cywjhh
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_cdqydfkz #此地区由敌方控制
+						if = {
+							limit = {
+								has_country_flag = FLAG_ENG_London_player_select_blue
+							}
+						
+							var:ENG_London_map_selected_state = {
+								or = {
+									check_variable = {
+										gui_display_frame = 1
+									}
+									check_variable = {
+										gui_display_frame = 4
+									}
+								}
+								
+							}
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_xdlcz #行动力充足
+						check_variable = {
+							VAR_ENG_London_current_action_point > 1
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_kycsdy0 #可用次数大于0
+						check_variable = {
+							VAR_ENG_London_artillery_support_num > 0
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_kzczq #我方或盟友控制炮兵阵地
+						or = {
+							check_variable = {
+								04:gui_display_frame = 2
+							}
+							check_variable = {
+								04:gui_display_frame = 3
+							}
+							and = {
+								check_variable = {
+									14:gui_display_frame = 2
+								}
+								has_country_flag = FLAG_ENG_yulysjs #快反部队已经于刘易斯区架设炮兵阵地
+							}
+							and = {
+								check_variable = {
+									14:gui_display_frame = 3
+								}
+								has_country_flag = FLAG_ENG_yulysjs #快反部队已经于刘易斯区架设炮兵阵地
+							}						
+						}
+						
+					}
+				}
+
+				ENG_London_defensive_works_yes_button_click_enabled = { #修筑工事
+					has_country_flag = FLAG_ENG_cywjhh
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_dqwfkz #此地区由我方控制
+						if = {
+							limit = {
+								has_country_flag = FLAG_ENG_London_player_select_blue
+							}
+						
+							var:ENG_London_map_selected_state = {
+								check_variable = {
+									gui_display_frame = 2
+								}
+							}
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_xdlcz #行动力充足
+						check_variable = {
+							VAR_ENG_London_current_action_point > 9
+						}
+					}
+				}
+
+				ENG_London_air_strike_yes_button_click_enabled = { #发动空袭
+					has_country_flag = FLAG_ENG_cywjhh
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_cdqydfkz #此地区由敌方控制
+						if = {
+							limit = {
+								has_country_flag = FLAG_ENG_London_player_select_blue
+							}
+						
+							var:ENG_London_map_selected_state = {
+								or = {
+									check_variable = {
+										gui_display_frame = 1
+									}
+									check_variable = {
+										gui_display_frame = 4
+									}
+								}
+								
+							}
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_xdlcz #行动力充足
+						check_variable = {
+							VAR_ENG_London_current_action_point > 1
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_kycsdy0 #可用次数大于0
+						check_variable = {
+							VAR_ENG_London_air_strike_num > 0
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_kzjcq #我方或盟友控制机场区
+						or = {
+							check_variable = {
+								09:gui_display_frame = 2
+							}
+							check_variable = {
+								09:gui_display_frame = 3
+							}
+						}
+						
+					}
+					not = {
+						has_country_flag = FLAG_ENG_jcpdbph
+					}
+				}
+
+				ENG_London_vertical_attack_yes_button_click_enabled = { #垂直进攻	
+					has_country_flag = FLAG_ENG_cywjhh	
+					custom_trigger_tooltip = {
+						tooltip = ENG_tooltip_kycsdy0 #可用次数大于0
+						check_variable = {
+							VAR_ENG_London_vertical_attack_num > 0
+						}
+					}
+				}
+
+
+			#	
+		}
+
+		effects = {
+			close_button_click = { #关闭按钮
+				clr_country_flag = FLAG_ENG_London_action_gui_visble 
+			}
+			ENG_London_manpower_action_button_cancel_click = { #取消按钮
+				clr_country_flag = FLAG_ENG_London_action_gui_visble 
+			}
+
+			#选择行动按钮效果
+			ENG_London_artillery_support_button_click = { #火炮支援
+				set_country_flag = FLAG_ENG_London_artillery_support_visible 
+
+				clr_country_flag = FLAG_ENG_London_defensive_works_visible
+				clr_country_flag = FLAG_ENG_London_air_strike_visible
+				clr_country_flag = FLAG_ENG_London_vertical_attack_visible
+			}
+			ENG_London_defensive_works_button_click = { #修筑工事
+				set_country_flag = FLAG_ENG_London_defensive_works_visible 
+
+				clr_country_flag = FLAG_ENG_London_artillery_support_visible
+				clr_country_flag = FLAG_ENG_London_air_strike_visible
+				clr_country_flag = FLAG_ENG_London_vertical_attack_visible
+			}
+			ENG_London_air_strike_button_click = { #空中打击
+				set_country_flag = FLAG_ENG_London_air_strike_visible 
+
+				clr_country_flag = FLAG_ENG_London_artillery_support_visible
+				clr_country_flag = FLAG_ENG_London_defensive_works_visible
+				clr_country_flag = FLAG_ENG_London_vertical_attack_visible
+			}
+			ENG_London_vertical_attack_button_click = { #空中打击
+				set_country_flag = FLAG_ENG_London_vertical_attack_visible 
+
+				clr_country_flag = FLAG_ENG_London_artillery_support_visible
+				clr_country_flag = FLAG_ENG_London_defensive_works_visible
+				clr_country_flag = FLAG_ENG_London_air_strike_visible
+			}
+
+			#确认执行效果
+			ENG_London_artillery_support_yes_button_click = { #火炮支援
+				add_to_variable = { #扣掉行动力
+					VAR_ENG_London_current_action_point = -2
+				}
+				add_to_variable = { #扣掉可用次数
+					VAR_ENG_London_artillery_support_num = -1
+				}
+				var:ENG_London_map_selected_state = {
+					add_to_variable = { var_gui_fortress_level = -1  }
+				}	
+				ENG_jisuan_London_fortress = yes
+			}
+
+			ENG_London_defensive_works_yes_button_click = { #修筑工事
+				add_to_variable = { #扣掉行动力
+					VAR_ENG_London_current_action_point = -10
+				}
+				var:ENG_London_map_selected_state = {
+					add_to_variable = { var_gui_fortress_level = 1  }
+				}	
+				ENG_jisuan_London_fortress = yes
+			}
+
+			ENG_London_air_strike_yes_button_click = { #空中打击
+				add_to_variable = { #扣掉行动力
+					VAR_ENG_London_current_action_point = -2
+				}
+				add_to_variable = { #扣掉可用次数
+					VAR_ENG_London_air_strike_num = -1
+				}
+				var:ENG_London_map_selected_state = {
+					add_to_variable = { var_gui_defense_power = -10  }
+				}	
+				ENG_jisuan_London_defense = yes
+			}
+
+			ENG_London_vertical_attack_yes_button_click = { #垂直进攻
+				add_to_variable = { #扣掉可用次数
+				VAR_ENG_London_vertical_attack_num = -1
+				}
+				if = {
+					limit = { #敌方
+						var:ENG_London_map_selected_state = { #
+							or = {
+								check_variable = {
+									gui_display_frame = 1
+								}
+								check_variable = {
+									gui_display_frame = 4
+								}
+							}
+						}
+					}
+					if = {
+						limit = {
+							var:ENG_London_map_selected_state = { 
+								check_variable = {
+									var_gui_defense_power < 30
+								}
+							}
+						}
+						var:ENG_London_map_selected_state = {
+							set_variable = { gui_display_frame = 2 }
+						}	
+						var:ENG_London_map_selected_state = {
+							set_variable = { var_gui_defense_power = 0 }
+						}
+					}
+					else = {
+						var:ENG_London_map_selected_state = {
+							add_to_variable = { var_gui_defense_power = -10  }
+						}	
+					}
+				}
+				else = {
+					var:ENG_London_map_selected_state = {
+						add_to_variable = { var_gui_defense_power = 20  }
+					}
+				}
+				ENG_jisuan_London_defense = yes
+			}
+
+		}
+	}
 	ENG_London_ui_window = { #决议gui
 		context_type = decision_category
-		window_name = "ENG_London_ui_window"
+		window_name = "ENG_London_decision_ui_window"
 
 		effects = {
 			
