@@ -51,6 +51,11 @@ add_namespace = neptune
 		option = {
 			name = neptune.004.a
 			add_political_power = 10
+			hidden_effect = {
+				MOR = {
+					country_event = { id = iberia.003 days = 3 }
+				}
+			}
 		}
 	}
 	
@@ -417,6 +422,10 @@ add_namespace = neptune
 		option = {
 			name = neptune.024.a
 			add_stability = -0.05
+			hidden_effect = {
+				MOR = { country_event = { id = iberia.006 days = 3 } }
+				country_event = { id = iberia.007 days = 3 }
+			}
 		}
 	}
 			
@@ -622,11 +631,10 @@ add_namespace = neptune
 		option = {
 			name = neptune.032.b
 			ai_chance = {
-				base = 1
+				base = 5.0
 			}
 			hidden_effect = {
-				news_event = { id = neptune.038 days = 1 }
-				country_event = { id = neptune.039 hours = 6 }
+				country_event = { id = neptune.160 days = 1 }
 			}
 			add_popularity = {
 				ideology = democratic
@@ -861,17 +869,17 @@ add_namespace = neptune
 			ai_chance = {
 				base = 1
 				modifier = {
-					factor = 0.25
+					factor = 0
 					country_exists = BLA
 				}
 			}
-			hidden_effect = {
-				complete_national_focus = MOR_light_up_lighthouse
-				complete_national_focus = MOR_obey_church_rule	
-			}
+			complete_national_focus = MOR_light_up_lighthouse
 			add_political_power = -15
-			add_ideas = MOR_wait_and_see
+			transfer_state = 968
 			hidden_effect = {
+				968 = {
+					add_core_of = ROOT
+				}
 				every_other_country = {
 					limit = {
 						OR = {
@@ -887,8 +895,15 @@ add_namespace = neptune
 		}
 		option = {
 			name = neptune.040.b
+			trigger = {
+				always = no
+			}
 			ai_chance = {
 				base = 1
+				modifier = {
+					factor = 0
+					NOT = { country_exists = BLA }
+				}
 			}
 			hidden_effect = {
 				complete_national_focus = MOR_light_up_lighthouse
@@ -1121,6 +1136,7 @@ add_namespace = neptune
 				}
 			}
 			hidden_effect = {
+				set_country_flag = NPT_blanc_win
 				country_event = { id = neptune.050 days = 1 }
 			}
 		}
@@ -1137,6 +1153,7 @@ add_namespace = neptune
 				}
 			}
 			hidden_effect = {
+				set_country_flag = NPT_blanc_fail
 				country_event = { id = neptune.053 days = 1 }
 			}
 		}
@@ -1147,13 +1164,15 @@ add_namespace = neptune
 		title = neptune.050.t
 		desc = neptune.050.d
 		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				country_event = { id = neptune.051 days = 1 }
+			}
+		}
 		option = {
 			name = neptune.050.a
 			add_political_power = -50
 			add_ideas = NPT_widespread_chaos
-			hidden_effect = {
-				country_event = { id = neptune.051 days = 7 }
-			}
 		}
 	}
 											
@@ -1162,15 +1181,17 @@ add_namespace = neptune
 		title = neptune.051.t
 		desc = neptune.051.d
 		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				country_event = { id = neptune.052 days = 1 }
+			}
+		}
 		option = {
 			name = neptune.051.a
 			effect_tooltip = {
 				retire_character = NPT_Nepgear
 			}
 			remove_ideas = NPT_widespread_chaos
-			hidden_effect = {
-				country_event = { id = neptune.052 days = 1 }
-			}
 		}
 	}
 											
@@ -1187,6 +1208,23 @@ add_namespace = neptune
 				ideology = neutrality
 				popularity = 0.20
 			}
+			if = {
+				limit = {
+					has_idea = NPT_stable_governance
+					has_country_flag = NPT_federation_win
+					has_country_leader = {
+						character = NPT_blanc
+						ruling_only = yes
+					}
+					NOT = {
+						has_focus_tree = NPT_dual_government
+					}
+				}
+				load_focus_tree = {
+					tree = NPT_dual_government
+					keep_completed = yes
+				}
+			}
 		}
 	}
 												
@@ -1195,16 +1233,21 @@ add_namespace = neptune
 		title = neptune.053.t
 		desc = neptune.053.d
 		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				country_event = { id = neptune.054 days = 1 }
+			}
+		}
 		option = {
 			name = neptune.053.a
 			effect_tooltip = {
 				retire_character = NPT_Nepgear
 			}
+			hidden_effect = {
+				remove_ideas = NPT_widespread_chaos
+			}
 			add_stability = 0.10
 			add_political_power = -15
-			hidden_effect = {
-				country_event = { id = neptune.054 days = 3 }
-			}
 		}
 	}
 												
@@ -1213,14 +1256,16 @@ add_namespace = neptune
 		title = neptune.054.t
 		desc = neptune.054.d
 		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				country_event = { id = neptune.055 days = 1 }
+			}
+		}
 		option = {
-			name = neptune.052.a
+			name = neptune.054.a
 			add_popularity = {
 				ideology = democratic
 				popularity = 0.10
-			}
-			hidden_effect = {
-				country_event = { id = neptune.055 days = 3 }
 			}
 		}
 	}
@@ -1269,6 +1314,7 @@ add_namespace = neptune
 			name = neptune.056.a
 			custom_effect_tooltip = NPT_ds_blanc_tooltip
 			hidden_effect = {
+				set_global_flag = NPT_blanc_death
 				add_to_variable = { NPT_ds_breakthrough_factor = 0.05 }
 				add_to_variable = { NPT_ds_supply_consumption_factor = -0.05 }
 				add_to_variable = { NPT_ds_terrain_penalty_reduction = 0.10 }
@@ -2241,7 +2287,7 @@ add_namespace = neptune
 			trigger = { has_country_flag = SOV_accept_ARF_into_faction }
 			if = {
 				limit = {
-					any_country = {
+					any_other_country = {
 						has_country_flag = Build_third_international_westline
 						is_faction_leader = yes
 					}
@@ -2249,10 +2295,8 @@ add_namespace = neptune
 				hidden_effect = {
 					every_other_country = {
 						limit = {
-							any_country = {
-								has_country_flag = Build_third_international_westline
-								is_faction_leader = yes
-							}
+							has_country_flag = Build_third_international_westline
+							is_faction_leader = yes
 						}
 						country_event = neptune.087
 					}
@@ -3913,6 +3957,29 @@ add_namespace = neptune
 			add_stability = 0.05
 			hidden_effect = {
 				country_event = { id = neptune.126 days = 3 }
+				set_country_flag = NPT_federation_win
+			}
+			if = {
+				limit = {
+					OR = {
+						has_country_flag = NPT_blanc_win
+						AND = {
+							has_idea = NPT_stable_governance
+							has_country_flag = NPT_federation_win
+							has_country_leader = {
+								character = NPT_blanc
+								ruling_only = yes
+							}
+							NOT = {
+								has_focus_tree = NPT_dual_government
+							}
+						}
+					}
+				}
+				load_focus_tree = {
+					tree = NPT_dual_government
+					keep_completed = yes
+				}
 			}
 		}
 	}
@@ -3953,7 +4020,20 @@ add_namespace = neptune
 		option = {
 			name = neptune.127.a
 			add_ideas = NPT_towards_opposing_goddesses
-			complete_national_focus = NPT_reconstruction_of_federal_republic
+			if = {
+				limit = {
+					NOT = {
+						has_focus_tree = NPT_dual_government
+					}
+				}
+				complete_national_focus = NPT_reconstruction_of_federal_republic
+			}
+			if = {
+				limit = {
+					has_focus_tree = NPT_dual_government
+				}
+				complete_national_focus = NPT_Blanc_solidarity_agreement
+			}
 		}
 	}
 						
@@ -4064,9 +4144,17 @@ add_namespace = neptune
 		option = {
 			name = neptune.133.a
 			add_political_power = 50
-			add_popularity = {
-				ideology = democratic
-				popularity = 0.20
+			if = {
+				limit = { has_global_flag = NPT_birth_of_devil_sword }
+				add_popularity = {
+					ideology = democratic
+					popularity = 0.20
+				}
+			}
+			else = {
+				hidden_effect = {
+					country_event = { id = neptune.165 days = 3 }
+				}
 			}
 			set_cosmetic_tag = ARF_gospel
 			complete_national_focus = NPT_participate_in_international_affairs
@@ -4512,14 +4600,506 @@ add_namespace = neptune
 	country_event = {
 		id = neptune.151
 		hidden = yes
-		fire_only_once = yes
+		fire_only_once = no
 		trigger = {
-			is_Iberian_country = yes
+			OR = {
+				tag = ARF
+				tag = NPT
+				tag = BLA
+			}
 			has_government = communism
-			NOT = { has_cosmetic_tag = NPT_socialist }
+			NOT = { has_country_flag = NPT_socialist_flag }
 		}
 		immediate = {
 			set_cosmetic_tag = NPT_socialist
+			set_country_flag = NPT_socialist_flag
+		}
+	}
+															
+	country_event = {
+		id = neptune.152
+		title = neptune.152.t
+		desc = neptune.152.d
+		is_triggered_only = yes
+		option = {
+			name = neptune.152.a
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = FRA_accept_after_great_war
+					country_event = { id = neptune.153 days = 3 } 
+				}
+			}
+			effect_tooltip = {
+				FROM = {
+					create_faction = "欧洲联盟"
+					add_to_faction = ROOT
+				}
+			}
+		}
+		option = {
+			name = neptune.152.b
+			hidden_effect = {
+				FROM = { 
+					country_event = { id = neptune.153 days = 3 } 
+				}
+			}
+		}
+	}
+															
+	country_event = {
+		id = neptune.153
+		title = neptune.153.t
+		desc = {
+			text = neptune.153.d1
+			trigger = { has_country_flag = FRA_accept_after_great_war }
+		}
+		desc = {
+			text = neptune.153.d2
+			trigger = { NOT = { has_country_flag = FRA_accept_after_great_war } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = neptune.153.a
+			trigger = { has_country_flag = FRA_accept_after_great_war }
+			set_country_flag = NPT_European_union
+			create_faction = NPT_European_union
+			add_to_faction = FROM
+		}
+		option = {
+			name = neptune.153.b
+			trigger = { NOT = { has_country_flag = FRA_accept_after_great_war } }
+			add_political_power = -50
+		}
+	}
+															
+	country_event = {
+		id = neptune.154
+		title = neptune.154.t
+		desc = neptune.154.d
+		is_triggered_only = yes
+		option = {
+			name = neptune.154.a
+			ai_chance = {
+				base = 1
+			}
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = DVL_accept_in_great_war
+					country_event = { id = neptune.155 days = 3 } 
+				}
+			}
+			effect_tooltip = {
+				FROM = {
+					if = {
+						limit = { has_idea = SOV_earth_defense_consensus }
+						remove_ideas = SOV_earth_defense_consensus
+					}
+					if = {
+						limit = { is_in_faction = yes }
+						leave_faction = yes
+					}
+					if = {
+						limit = { has_war_with = ROOT }
+						white_peace = ROOT
+					}
+					ROOT = { add_to_faction = PREV }
+				}
+			}
+		}
+		option = {
+			name = neptune.154.b
+			ai_chance = {
+				base = 0.5
+			}
+			hidden_effect = {
+				FROM = { 
+					country_event = { id = neptune.155 days = 3 } 
+				}
+			}
+			add_war_support = 0.05
+		}
+	}
+															
+	country_event = {
+		id = neptune.155
+		title = neptune.155.t
+		desc = {
+			text = neptune.155.d1
+			trigger = { has_country_flag = DVL_accept_in_great_war }
+		}
+		desc = {
+			text = neptune.155.d2
+			trigger = { NOT = { has_country_flag = DVL_accept_in_great_war } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = neptune.155.a
+			trigger = { has_country_flag = DVL_accept_in_great_war }
+			if = {
+				limit = { has_idea = SOV_earth_defense_consensus }
+				remove_ideas = SOV_earth_defense_consensus
+			}
+			if = {
+				limit = { is_in_faction = yes }
+				leave_faction = yes
+			}
+			if = {
+				limit = { has_war_with = FROM }
+				white_peace = FROM
+			}
+			FROM = { add_to_faction = ROOT }
+		}
+		option = {
+			name = neptune.155.b
+			trigger = { NOT = { has_country_flag = DVL_accept_in_great_war } }
+			add_political_power = -50
+			complete_national_focus = NPT_Blanc_join_alliance_of_ENG
+		}
+	}
+																
+	country_event = {
+		id = neptune.156
+		title = neptune.156.t
+		desc = neptune.156.d
+		is_triggered_only = yes
+		option = {
+			name = neptune.156.a
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = BLA_surrender_in_great_war@ROOT
+					country_event = { id = neptune.157 days = 3 } 
+				}
+			}
+			effect_tooltip = {
+				FROM = {
+					if = {
+						limit = { is_in_faction = yes }
+						leave_faction = yes
+					}
+					if = {
+						limit = { has_war_with = ROOT }
+						white_peace = ROOT
+					}
+					if = {
+						limit = { ROOT = { has_government = democratic } }
+						ROOT = { add_to_faction = PREV }
+					}
+				}
+			}
+		}
+		option = {
+			name = neptune.156.b
+			hidden_effect = {
+				FROM = { 
+					country_event = { id = neptune.157 days = 3 } 
+				}
+			}
+			add_war_support = 0.05
+		}
+	}
+															
+	country_event = {
+		id = neptune.157
+		title = neptune.157.t
+		desc = {
+			text = neptune.157.d1
+			trigger = { has_country_flag = BLA_surrender_in_great_war@FROM }
+		}
+		desc = {
+			text = neptune.157.d2
+			trigger = { NOT = { has_country_flag = BLA_surrender_in_great_war@FROM } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = neptune.157.a
+			trigger = { has_country_flag = BLA_surrender_in_great_war@FROM }
+			if = {
+				limit = { 
+					is_in_faction = yes 
+					faction_leader = {
+						NOT = { has_government = democratic }
+					}
+				}
+				leave_faction = yes
+			}
+			if = {
+				limit = { has_war_with = FROM }
+				white_peace = FROM
+			}
+			if = {
+				limit = { 
+					is_in_faction = no 
+					FROM = { 
+						is_faction_leader = yes
+						has_government = democratic 
+					} 
+				}
+				FROM = { add_to_faction = ROOT }
+			}
+		}
+		option = {
+			name = neptune.157.b
+			trigger = { NOT = { has_country_flag = BLA_surrender_in_great_war@FROM } }
+			add_political_power = -50
+		}
+	}
+
+	country_event = {
+		id = neptune.158
+		title = neptune.158.t
+		desc = neptune.158.d
+		is_triggered_only = yes
+		option = {
+			name = neptune.158.a
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = BLA_agree_to_joinr@ROOT
+					country_event = { id = neptune.159 days = 3 } 
+				}
+			}
+			effect_tooltip = {
+				FROM = {
+					add_to_faction = ROOT
+				}
+			}
+		}
+		option = {
+			name = neptune.158.b
+			hidden_effect = {
+				FROM = { 
+					country_event = { id = neptune.159 days = 3 } 
+				}
+			}
+			add_war_support = 0.05
+		}
+	}
+															
+	country_event = {
+		id = neptune.159
+		title = neptune.159.t
+		desc = {
+			text = neptune.159.d1
+			trigger = { has_country_flag = BLA_agree_to_joinr@FROM }
+		}
+		desc = {
+			text = neptune.159.d2
+			trigger = { NOT = { has_country_flag = BLA_agree_to_joinr@FROM } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = neptune.159.a
+			trigger = { has_country_flag = BLA_agree_to_joinr@FROM }
+			add_to_faction = FROM
+		}
+		option = {
+			name = neptune.159.b
+			trigger = { NOT = { has_country_flag = BLA_agree_to_joinr@FROM } }
+			add_political_power = -15
+		}
+	}
+
+	country_event = {
+		id = neptune.160
+		title = neptune.160.t
+		desc = neptune.160.d
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				country_event = { id = neptune.161 days = 3 }
+			}
+		}
+		option = {
+			name = neptune.160.a
+			add_political_power = -15
+		}
+	}
+
+	country_event = {
+		id = neptune.161
+		title = neptune.161.t
+		desc = neptune.161.d
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				country_event = { id = neptune.162 days = 3 }
+			}
+		}
+		option = {
+			name = neptune.161.a
+			add_stability = -0.02
+			add_political_power = 10
+		}
+	}
+
+	country_event = {
+		id = neptune.162
+		title = neptune.162.t
+		desc = neptune.162.d
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				country_event = { id = neptune.163 days = 3 }
+			}
+		}
+		option = {
+			name = neptune.162.a
+			add_war_support = 0.02
+		}
+	}
+	
+	country_event = {
+		id = neptune.163
+		title = neptune.163.t
+		desc = neptune.163.d
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				country_event = { id = neptune.164 days = 3 }
+			}
+		}
+		option = {
+			name = neptune.163.a
+			add_stability = 0.02
+			add_popularity = {
+				ideology = fascism
+				popularity = -0.02
+			}
+		}
+	}
+	
+	country_event = {
+		id = neptune.164
+		title = neptune.164.t
+		desc = neptune.164.d
+		is_triggered_only = yes
+		option = {
+			name = neptune.164.a
+			trigger = {
+				has_completed_focus = NPT_return_to_reality
+			}
+			hidden_effect = {
+				news_event = { id = neptune.038 days = 1 }
+				country_event = { id = neptune.039 hours = 6 }
+			}
+		}
+		option = {
+			name = neptune.164.b
+			trigger = {
+				has_completed_focus = NPT_indulge_in_virtuality
+			}
+			hidden_effect = {
+				news_event = { id = neptune.038 days = 1 }
+				country_event = { id = neptune.039 hours = 6 }
+			}
+		}
+	}
+		
+	country_event = {
+		id = neptune.165
+		title = neptune.165.t
+		desc = neptune.165.d
+		is_triggered_only = yes
+		option = {
+			name = neptune.165.a
+			ai_chance = {
+				base = 1.0
+			}
+			add_political_power = 200
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.40
+			}
+			set_politics = {
+				ruling_party = democratic
+			}
+			add_country_leader_role = {
+				character = NPT_Nepgear
+				country_leader = {
+					ideology = liberalism
+					traits = { NPT_benevolent_mediator }
+				}
+				promote_leader = yes
+			}
+		}
+		option = {
+			name = neptune.165.b
+			ai_chance = {
+				base = 1.0
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.40
+			}
+			set_politics = {
+				ruling_party = fascism
+			}
+			add_country_leader_role = {
+				character = NPT_noire
+				country_leader = {
+					ideology = occultism
+					traits = { NPT_sacred_dark_heart }
+				}
+				promote_leader = yes
+			}
+			hidden_effect = {
+				set_country_flag = NPT_Noire_win
+				mark_focus_tree_layout_dirty = yes
+				set_cosmetic_tag = NPT_NOI
+			}
+		}
+		option = {
+			name = neptune.165.c
+			ai_chance = {
+				base = 1.0
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.40
+			}
+			set_politics = {
+				ruling_party = neutrality
+			}
+			load_focus_tree = {
+				tree = NPT_dual_government
+				keep_completed = yes
+			}
+			complete_national_focus = NPT_Blanc_solidarity_agreement
+			effect_tooltip = {
+				set_power_balance = {
+					id = BLA_dual_government_balance
+					set_value = 0
+				}
+			}
+		}
+		option = {
+			name = neptune.165.e
+			ai_chance = {
+				base = 1.0
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.40
+			}
+			set_politics = {
+				ruling_party = communism
+			}
+			load_focus_tree = {
+				tree = NPT_Arfoire_focus
+				keep_completed = yes
+			}
+			complete_national_focus = NPT_arfoire_the_last_guardian_goddess
+			add_country_leader_role = {
+				character = NPT_UZM
+				country_leader = {
+					ideology = Utopian_Socialism
+					desc = POLITICS_NPT_UZM_DESC
+					traits = { NPT_proven_revolutionary }
+				}
+				promote_leader = yes
+			}
+			hidden_effect = {
+				set_country_flag = NPT_skip_unnecessary_focus_UZM
+			}
 		}
 	}
 

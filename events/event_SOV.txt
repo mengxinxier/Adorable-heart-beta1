@@ -729,6 +729,23 @@ add_namespace = SOV_cmea
 			name = SOV_pol.23.1
 			add_political_power = 15
 			add_war_support = 0.05
+			if = {
+				limit = {
+					is_ai = yes
+				}
+				if = {
+					limit = {
+						NOT = { has_completed_focus = SOV_the_comintern }
+					}
+					complete_national_focus = SOV_the_comintern
+				}
+				if = {
+					limit = {
+						NOT = { has_completed_focus = SOV_the_comintern }
+					}
+					complete_national_focus = SOV_earth_security_policy
+				}
+			}
 			complete_national_focus = SOV_the_eighteenth_central_Conference
 		}
 	}
@@ -2052,10 +2069,26 @@ add_namespace = SOV_cmea
 				if = {
 					limit = {
 						NOT = { has_country_flag = international_workers_day }
+						is_in_faction_with = SOV
+						has_government = communism
 					}
 					set_country_flag = international_workers_day
+					country_event = { id = SOV_flavor.10 days = 365 }
 				}
-				country_event = { id = SOV_flavor.10 days = 365 }
+				else_if = {
+					limit = {
+						has_country_flag = international_workers_day
+						AND = {
+							NOT = { is_in_faction_with = SOV }
+							NOT = { has_government = communism }
+						}
+					}
+					clr_country_flag = international_workers_day
+				}
+				else_if = {
+					limit = { has_country_flag = international_workers_day }
+					country_event = { id = SOV_flavor.10 days = 365 }
+				}
 				if = {
 					limit = {
 						tag = SOV
@@ -2064,6 +2097,7 @@ add_namespace = SOV_cmea
 						limit = {
 							NOT = { has_country_flag = international_workers_day }
 							is_in_faction_with = SOV
+							has_government = communism
 						}
 						country_event = { id = SOV_flavor.10 days = 365 }
 					}
@@ -3035,6 +3069,14 @@ add_namespace = SOV_cmea
 					add_to_faction = ROOT
 				}
 			}
+			if = {
+				limit = { is_subject = yes }
+				hidden_effect = {
+					OVERLORD = {
+						country_event = BAL_pol.45
+					}
+				}
+			}
 		}
 		option = {
 			name = SOV_dip.4.a
@@ -3873,15 +3915,15 @@ add_namespace = SOV_cmea
 				ubs_save = 100
 			}
 			custom_effect_tooltip = SOV_get_100_add_to_reserve
-			hidden_effect = {
-				if = { 
-					limit = { check_variable = { SOV_find_donors < 1 } }
-					set_variable = { SOV_find_donors = 0 }
-				}
-				else = {
-					add_to_variable = {	SOV_find_donors = -1 }
-				}
-			}
+			# hidden_effect = {
+			# 	if = { 
+			# 		limit = { check_variable = { SOV_find_donors < 1 } }
+			# 		set_variable = { SOV_find_donors = 0 }
+			# 	}
+			# 	else = {
+			# 		add_to_variable = {	SOV_find_donors = -1 }
+			# 	}
+			# }
 		}
 	}
 
@@ -4208,6 +4250,64 @@ add_namespace = SOV_cmea
 				NOT = { has_country_flag = SOV_elves_agree_to_cooperate }
 			}
 			add_political_power = -5
+		}
+	}
+
+	country_event = {
+		id = SOV_dip.38
+		title = SOV_dip.38.t
+		desc = SOV_dip.38.d
+		is_triggered_only = yes
+		option = {
+			name = SOV_dip.38.1
+			effect_tooltip = {
+				FROM = { add_to_faction = ROOT }
+			}
+			hidden_effect = {
+				FROM = {
+					set_country_flag = POL_accepted_to_join_SOV
+					country_event = { id = SOV_dip.39 days = 3 }
+				}
+			}
+		}
+		option = {
+			name = SOV_dip.38.2
+			ai_chance = { base = 0 }
+			hidden_effect = {
+				country_event = { id = SOV_dip.39 days = 3 }
+			}
+		}
+	}
+	
+	country_event = {
+		id = SOV_dip.39
+		title = SOV_dip.39.t
+		desc = {
+			text = SOV_dip.39.d1
+			trigger = {
+				has_country_flag = POL_accepted_to_join_SOV
+			}
+		}
+		desc = {
+			text = SOV_dip.39.d2
+			trigger = {
+				NOT = { has_country_flag = POL_accepted_to_join_SOV }
+			}
+		}
+		is_triggered_only = yes
+		option = {
+			name = SOV_dip.39.1
+			trigger = {
+				has_country_flag = POL_accepted_to_join_SOV
+			}
+			add_to_faction = FROM
+		}
+		option = {
+			name = SOV_dip.39.2
+			trigger = {
+				NOT = { has_country_flag = POL_accepted_to_join_SOV }
+			}
+			add_political_power = -15
 		}
 	}
 
