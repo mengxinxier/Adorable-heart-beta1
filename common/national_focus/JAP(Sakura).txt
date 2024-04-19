@@ -4822,7 +4822,7 @@ focus_tree = {
 	
 	focus = {
 		id = JAP_new52
-		icon = GFX_goal_kmt_contest_the_japanese
+		icon = GFX_goal_generic_plan
 		x = 3
 		y = 1
 		cost = 5
@@ -4834,27 +4834,28 @@ focus_tree = {
 		available = {
 			is_subject = no
 			has_government = democratic
+			is_faction_leader = yes
 		}
 		bypass = {
 			or = {
-			has_war_with = ROC
-			ROC = {
+			has_war_with = CHI
+			CHI = {
 			is_subject = yes
 			}
-			not = { country_exists = ROC }
+			not = { country_exists = CHI }
+			}
+			or = {
+			has_war_with = MAN
+			MAN = {
+			is_subject = yes
+			}
+			not = { country_exists =MAN }
 			}
 		}
 		completion_reward = {
-			ROC = {
-				country_event = {
-					days = 1
-					id = jap.34
-				}
-				add_opinion_modifier = {
-					target = JAP
-					modifier = large_increase
-				}
-			}
+			country_event = jap.102
+			custom_effect_tooltip = JAP_MAN_zcjiemeng
+			#custom_effect_tooltip = JAP_ROC_zcjiemeng
 		}
 	}
 	
@@ -4936,16 +4937,16 @@ focus_tree = {
 		icon = GFX_focus_AST_war_japan
 		x = 0
 		y = 1
-		cost = 5
+		cost = 2
 		ai_will_do = {
 			factor = 100
 		}
 		prerequisite = { focus = JAP_new52 }
 		relative_position_id = JAP_new52
 		available = {
-			has_global_flag = second_weltkrieg_has_started
+			#has_global_flag = second_weltkrieg_has_started
 			has_army_manpower = {
-				size > 1499999
+				size > 799999
 			}
 			is_subject = no
 			has_government = democratic
@@ -4953,12 +4954,55 @@ focus_tree = {
 				has_idea = JAP_sywh
 				has_idea = JAP_cjzl
 			}
+			any_other_country = {
+				surrender_progress > 0.1
+				is_in_faction_with = JAP
+				capital_scope= {
+					is_on_continent = asia
+				}
+				or = {
+				has_war_with = CHI
+				has_war_with = ROC
+				has_war_with = MAN
+				has_war_with = PRC
+				}
+			}
 		}
 		will_lead_to_war_with = CHI
 		will_lead_to_war_with = PRC
 		completion_reward = {
+			if = {
+			limit = {
+			country_exists = CHI
+			CHI = { is_subject = no }
+			not = { CHI = { is_in_faction_with = JAP } }
+			}
 			create_wargoal = { target = CHI type = puppet_wargoal_focus }
+			}
+			if = {
+			limit = {
+			country_exists = PRC
+			PRC = { is_subject = no }
+			not = { PRC = { is_in_faction_with = JAP } }
+			}
 			create_wargoal = { target = PRC type = puppet_wargoal_focus }
+			}
+			if = {
+			limit = {
+			country_exists = ROC
+			ROC = { is_subject = no }
+			not = { ROC = { is_in_faction_with = JAP } }
+			}
+			create_wargoal = { target = ROC type = puppet_wargoal_focus }
+			}
+			if = {
+			limit = {
+			country_exists = MAN
+			MAN = { is_subject = no }
+			not = { MAN = { is_in_faction_with = JAP } }
+			}
+			create_wargoal = { target = MAN type = puppet_wargoal_focus }
+			}
 			if = {
 			limit = {
 			has_idea = JAP_sywh
@@ -5531,6 +5575,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = "JAP_haunggutun"
+			unlock_decision_category_tooltip = JAP_yuanzhumanzhou
 		}
 	}
 	
