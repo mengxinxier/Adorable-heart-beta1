@@ -4786,17 +4786,57 @@ focus_tree = {
 		relative_position_id = NFA_121
 		mutually_exclusive = { focus = NFA_124 focus = NFA_126 focus = NFA_127 focus = NFA_125 }
 		available = {
-			is_faction_leader = yes
+			has_government = democratic
+			or = {
 			has_completed_focus = NFA_118
+			has_completed_focus = NFA_119
+			}
 		}
 		bypass = {
-			
+			custom_trigger_tooltip = {
+				tooltip = is_in_European_Union
+				is_in_array = {
+					array = global.GER_European_Union_members_array
+					value = THIS
+				}
+			}
 		}
 		ai_will_do = {
 			factor = 1
 		}
 		completion_reward = {
-			custom_effect_tooltip = "请静待更新~"
+			if = {
+				limit = { is_faction_leader = yes }
+				set_faction_name = European_Community_faction
+			}
+			else = {
+				faction_leader = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = FRA_Betrayal_of_Covenant
+					}
+				}
+				leave_faction = yes
+				create_faction = European_Community_faction
+			}
+			custom_effect_tooltip = send_invite_to_all_subject_eu_country_excpt_fascism
+			every_country = {
+				limit = {
+					capital_scope = { is_on_continent = europe }
+					is_subject = no
+					not = { is_in_faction_with = ROOT }
+					not = { has_government = fascism }
+					is_faction_leader = no
+					not = { tag = ENG }
+					not = { tag = SOV }
+				}
+				country_event = {
+					id = FRA_Gensokyo.029
+				}
+			}
+			add_to_array = {
+				global.GER_European_Union_members_array = THIS
+			}
 		}
 	}
 	
@@ -4956,7 +4996,8 @@ focus_tree = {
 		prerequisite = { focus = NFA_128 }
 		relative_position_id = NFA_128
 		available = {
-			is_faction_leader = yes
+			is_subject = no
+			is_major = yes
 		}
 		bypass = {
 			
@@ -4965,7 +5006,23 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			
+			add_to_variable = {
+				var = global.GER_EU_PIE_VAR
+				value = 25
+				tooltip = GER_European_Union_Integration_progress_add_25
+			}
+			set_country_flag = FRA_Paris_talks_pass
+			every_country = {
+			limit = {
+			or = {
+			tag = NFA
+			is_in_faction_with = NFA
+			}
+			}
+			army_experience = 75
+			air_experience = 75
+			navy_experience = 75
+			}
 		}
 	}
 	
@@ -4978,7 +5035,8 @@ focus_tree = {
 		prerequisite = { focus = NFA_128 }
 		relative_position_id = NFA_128
 		available = {
-			is_faction_leader = yes
+			is_subject = no
+			is_major = yes
 		}
 		bypass = {
 			
@@ -4987,7 +5045,15 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			
+			unlock_decision_tooltip = Build_European_Coal_and_Steel_Community
+			set_country_flag = Build_European_Coal_and_Steel_Community_available
+			set_country_flag = FRA_European_Coal_and_Steel_Community
+			unlock_decision_tooltip = Build_European_Economic_Community
+			set_country_flag = Build_European_Economic_Community_available
+			set_country_flag = FRA_European_Economic_Community
+			unlock_decision_tooltip = Build_EURATOM
+			set_country_flag = Build_EURATOM_available
+			set_country_flag = FRA_EURATOM
 		}
 	}
 	
@@ -5001,7 +5067,17 @@ focus_tree = {
 		prerequisite = { focus = NFA_136 }
 		relative_position_id = NFA_128
 		available = {
-			is_faction_leader = yes
+			has_idea = FRA_European_Coal_and_Steel_Community_idea
+			has_idea = FRA_European_Economic_Community_idea
+			has_idea = FRA_EURATOM_idea
+			is_subject = no
+			is_major = yes
+			custom_trigger_tooltip = {
+				tooltip = GER_European_Union_Integration_progress_attain_to_100
+				not = {
+					check_variable = { global.GER_EU_PIE_VAR < 100 }
+				}
+			}
 		}
 		bypass = {
 			
@@ -5010,7 +5086,66 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			
+			custom_effect_tooltip = FRA_Start_integration_process_tt
+			add_research_slot = 1
+			set_cosmetic_tag = EUR_UNIFIED
+			hidden_effect = {
+				every_country = {
+					limit = {
+						is_subject_of = ROOT
+						capital_scope = { is_on_continent = europe }
+					}
+					every_core_state = {
+						add_core_of = ROOT
+					}
+					every_character = { set_nationality = ROOT }
+					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+				}
+				for_each_scope_loop = {
+					array = global.GER_European_Union_members_array
+					every_country = {
+						limit = {
+							is_subject_of = PREV
+							capital_scope = { is_on_continent = europe }
+						}
+						every_core_state = {
+							add_core_of = ROOT
+						}
+						every_character = { set_nationality = ROOT }
+						ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+					}
+					if = {
+						limit = {
+							not = { tag = ROOT }
+							capital_scope = { is_on_continent = europe }
+						}
+						every_core_state = {
+							add_core_of = ROOT
+						}
+						every_character = { set_nationality = ROOT }
+						ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+					}
+				}
+				every_state = {
+					limit = {
+						is_on_continent = europe
+						NOT = {
+							or = {
+								is_core_of = ROOT
+								is_claimed_by = ROOT
+							}
+						}
+					}
+					add_claim_by = ROOT
+				}
+				news_event = {
+					id = FRA_Gensokyo_news.013
+				}
+				country_event = {
+					id = ah_germany.106
+				}
+				clear_array = global.GER_European_Union_members_array
+			}
 		}
 	}
 	
