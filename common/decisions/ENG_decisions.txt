@@ -337,15 +337,7 @@ ENG_decision_l_0_debug = { #debug决议
 		available = {
 		}
 		complete_effect = {
-			add_to_variable = { #
-				VAR_ENG_London_gui_manpower_black_number_irregular = 100
-			}
-			add_to_variable = { #
-				VAR_ENG_London_gui_manpower_black_number_infantry = 40
-			}
-			add_to_variable = { #
-				VAR_ENG_London_gui_manpower_black_number_tank = 20
-			}
+			set_country_flag = FLAG_ENG_cywjhh
 			
 		}
 		remove_effect = {
@@ -3404,28 +3396,37 @@ ENG_decision_l_4_renwu = { #限时任务
 			always = no
 		}
 		timeout_effect = {			
-			if = { #保底机制
+			if = {
 				limit = {
-					check_variable = { 
-						ENG_gongdang_baoshoudang_support < 0.4
+					is_ai =yes
+				}
+
+				if = { #保底机制
+					limit = {
+						check_variable = { 
+							ENG_gongdang_baoshoudang_support < 0.4
+						}
 					}
+					set_variable = { ENG_lianhezhenxian_influence = 20 }	
+					set_variable = { ENG_gongdang_baoshoudang_influence = 40 }	
+					set_variable = { ENG_sbhs_influence = 20 }	
+					set_variable = { ENG_qjlm_influence = 20 }
+					VAR_ENG_jisuan_influence_jijindu = yes
+					country_event = ENG_event.2005
+					ENG_jisuan_xuanju_jieguo = yes	
+					country_event = {  
+						id = ENG_event.201
+						days = 2
+					}
+				}			
+				else = {
+					ENG_jisuan_xuanju_jieguo = yes		
+					country_event = ENG_event.201
 				}
-				set_variable = { ENG_lianhezhenxian_influence = 20 }	
-				set_variable = { ENG_gongdang_baoshoudang_influence = 40 }	
-				set_variable = { ENG_sbhs_influence = 20 }	
-				set_variable = { ENG_qjlm_influence = 20 }
-				VAR_ENG_jisuan_influence_jijindu = yes
-				country_event = ENG_event.2005
-				ENG_jisuan_xuanju_jieguo = yes	
-				country_event = {  
-					id = ENG_event.201
-					days = 2
-				}
-			}			
-			else = {
-				ENG_jisuan_xuanju_jieguo = yes		
-				country_event = ENG_event.201
+
+				
 			}
+			
 			
 		}
 		complete_effect = {                    
@@ -11103,6 +11104,30 @@ ENG_decision_l_10_London = {  #伦敦危机
 		complete_effect = {                         
 		}
 	}
+	ENG_mission_London_ljda = {   #南英格兰集团军增援抵达
+		priority = 200
+		name = ENG_mission_London_ljda
+		icon = eng_trade_unions_support		
+		days_mission_timeout = 56
+		fire_only_once = no
+		visible = {
+			tag = ENG			
+		}
+		cancel_if_not_visible = yes
+		is_good = yes
+		available = { #完成任务的条件
+			has_country_flag = FLAG_ENG_ldwjjs #伦敦危机结束
+		}
+		activation = { #触发任务的条件（满足这个条件就开始任务）
+			always = no
+		}
+		timeout_effect = {			
+			country_event = ENG_event.396
+			set_country_flag = FLAG_ENG_ldwjjs #伦敦危机结束
+		}
+		complete_effect = {                         
+		}
+	}
  #二阶段回合任务
 	ENG_mission_London_hhz_zy = {   #左翼回合
 		priority = 100
@@ -11122,6 +11147,11 @@ ENG_decision_l_10_London = {  #伦敦危机
 			always = no
 		}
 		timeout_effect = {			
+			set_country_flag = FLAG_ENG_cywjhh #处于己方回合
+			set_variable = { #设定行动力等于上限
+				VAR_ENG_London_current_action_point = VAR_ENG_London_max_action_point 
+			}
+
 			if = { #第一回合ai不行动，其他回合都行动
 				limit = {
 					check_variable = {
@@ -11182,11 +11212,9 @@ ENG_decision_l_10_London = {  #伦敦危机
 			always = no
 		}
 		timeout_effect = {			
-			set_country_flag = FLAG_ENG_cywjhh #处于己方回合
+			clr_country_flag = FLAG_ENG_cywjhh #处于己方回合
 
-			set_variable = { #设定行动力等于上限
-				VAR_ENG_London_current_action_point = VAR_ENG_London_max_action_point 
-			}
+			
 			
 			if = { #如果大于第二回合，进入右翼回合，否则进入王党回合
 				limit = {
@@ -11335,19 +11363,92 @@ ENG_decision_l_10_London = {  #伦敦危机
 				activate_mission = ENG_mission_London_hhz_sjs 
 				ENG_jisuan_London_blue_round_start = yes  #首警司回合开始
 			}
+
+			if = { #第四回合触发陆军抵达倒计时
+				limit = {
+					check_variable = {
+						VAR_ENG_London_round_num = 4
+					}
+				}
+				country_event = ENG_event.386
+			}
 		}
 		complete_effect = {                         
 		}
 	}
 
  #自己点的决议
+	#一阶段
+	ENG_decision_London_jqldzj = { #加强伦敦驻军
+		icon = GFX_decision_ger_military_buildup		
+		cost = 50
+		days_remove = 20	
+		fire_only_once = no
+		visible = {
+			has_country_flag = FLAG_ENG_decision_London_jqldzj_unlocked
+			not = {
+				has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
+			}
+		}	
+		available = {				
+		}					
+		ai_will_do = {
+			factor = 0			
+		}
+		complete_effect = { 	
+			add_to_variable = { #步兵数量
+				VAR_ENG_London_gui_manpower_player_number_infantry = 3
+			}
+			custom_effect_tooltip = ENG_tooltip_var_player_number_infantry_add_3
+		}	
+		modifier = {
+
+	   	}
+		remove_effect = {
+			
+
+		}	
+	}
+	ENG_decision_London_xlwzjc = { #训练武装警察
+		icon = GFX_decision_ger_military_buildup		
+		cost = 30
+		days_remove = 20		
+		fire_only_once = no
+		visible = {
+			has_country_flag = FLAG_ENG_decision_London_xlwzjc_unlocked 
+			not = {
+				has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
+			}
+		}	
+		available = {
+		}					
+		ai_will_do = {
+			factor = 0			
+		}
+		complete_effect = { 	
+			add_to_variable = { #民兵数量
+				VAR_ENG_London_gui_manpower_player_number_irregular = 3
+			}
+			custom_effect_tooltip = ENG_tooltip_var_player_number_irregular_add_3
+		}	
+		modifier = {
+			
+	   	}
+		remove_effect = {
+			
+		}	
+	}
+
+	#二阶段
  	ENG_decision_London_hjzy = { #引导外围军队增援
 		icon = GFX_decision_ger_military_buildup		
 		cost = 0
 		days_remove = 0
+		days_re_enable = 6		
 		fire_only_once = no
 		visible = {
-			#has_country_flag = FLAG_ENG_decision_London_hjzy_unlocked
+			has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
+			has_country_flag = FLAG_ENG_decision_London_hjzy_unlocked #事件解锁
 		}	
 		available = {
 			has_country_flag = FLAG_ENG_cywjhh #处于玩家回合
@@ -11362,12 +11463,6 @@ ENG_decision_l_10_London = {  #伦敦危机
 			factor = 0			
 		}
 		complete_effect = { 	
-
-		}	
-		modifier = {
-
-	   	}
-		remove_effect = {
 			add_to_variable = { #扣掉行动力
 				VAR_ENG_London_current_action_point = -5
 			}
@@ -11377,6 +11472,12 @@ ENG_decision_l_10_London = {  #伦敦危机
 				VAR_ENG_London_gui_manpower_player_number_infantry = 3
 			}
 			custom_effect_tooltip = ENG_tooltip_var_player_number_infantry_add_3
+		}	
+		modifier = {
+
+	   	}
+		remove_effect = {
+			
 
 		}	
 	}
@@ -11384,6 +11485,7 @@ ENG_decision_l_10_London = {  #伦敦危机
 		icon = GFX_decision_ger_military_buildup		
 		cost = 0
 		days_remove = 0
+		days_re_enable = 6		
 		fire_only_once = no
 		visible = {
 			has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
@@ -11395,18 +11497,18 @@ ENG_decision_l_10_London = {  #伦敦危机
 				check_variable = {
 					VAR_ENG_London_current_action_point > 2
 				}
-			}					
+			}		
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_kzasn #我方控制阿森纳区
+				check_variable = {
+					11:gui_display_frame = 2
+				}
+			}			
 		}					
 		ai_will_do = {
 			factor = 0			
 		}
 		complete_effect = { 	
-
-		}	
-		modifier = {
-
-	   	}
-		remove_effect = {
 			add_to_variable = { #扣掉行动力
 				VAR_ENG_London_current_action_point = -3
 			}
@@ -11416,14 +11518,171 @@ ENG_decision_l_10_London = {  #伦敦危机
 				VAR_ENG_London_gui_manpower_player_number_irregular = 3
 			}
 			custom_effect_tooltip = ENG_tooltip_var_player_number_irregular_add_3
+		}	
+		modifier = {
+			
+	   	}
+		remove_effect = {
+			
+		}	
+	}
+	ENG_decision_London_fszy = { #要求时钟塔提供法术支援
+		icon = GFX_decision_ger_military_buildup		
+		cost = 0
+		days_remove = 8
+		fire_only_once = no
+		visible = {
+			has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
+		}	
+		available = {
+			has_country_flag = FLAG_ENG_cywjhh #处于玩家回合
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_xdlcz #行动力充足
+				check_variable = {
+					VAR_ENG_London_current_action_point > 9
+				}
+			}		
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_kzdjq #我方控制阿森纳区
+				check_variable = {
+					10:gui_display_frame = 2
+				}
+			}			
+		}					
+		ai_will_do = {
+			factor = 0			
+		}
+		complete_effect = { 	
+			add_to_variable = { #正规军攻击+1
+				VAR_ENG_London_blue_infantry_attack_number = 1
+			}
+			add_to_variable = { #正规军防御+1
+				VAR_ENG_London_blue_infantry_defense_number = 1
+			}
+			custom_effect_tooltip = ENG_tooltip_zgjgf_add_1 
+
+			add_to_variable = { #扣掉行动力
+				VAR_ENG_London_current_action_point = -10
+			}
+			custom_effect_tooltip = ENG_tooltip_var_action_point_sub_10
+		}	
+		modifier = {
+
+	   	}
+		remove_effect = {
+			add_to_variable = { #正规军攻击-1
+				VAR_ENG_London_blue_infantry_attack_number = -1
+			}
+			add_to_variable = { #正规军防御-1
+				VAR_ENG_London_blue_infantry_defense_number = -1
+			}
+			custom_effect_tooltip = ENG_tooltip_zgjgf_sub_1
 
 		}	
 	}
-	ENG_decision_London_wzjc = { #
+	ENG_decision_London_cmqx = { #派遣参谋人员前往前线指挥
 		icon = GFX_decision_ger_military_buildup		
 		cost = 0
 		days_remove = 0
-		fire_only_once = no
+		fire_only_once = yes
+		visible = {
+			has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
+		}	
+		available = {
+			has_country_flag = FLAG_ENG_cywjhh #处于玩家回合						
+		}					
+		ai_will_do = {
+			factor = 0			
+		}
+		complete_effect = { 	
+			add_to_variable = { #扣除行动力上限
+				VAR_ENG_London_max_action_point = -5
+			}
+			custom_effect_tooltip = ENG_tooltip_var_max_action_point_sub_5
+			add_to_variable = { #加上行动力
+				VAR_ENG_London_current_action_point = 10
+			}
+			custom_effect_tooltip = ENG_tooltip_var_action_point_add_10
+		}	
+		modifier = {
+
+	   	}
+		remove_effect = {
+		}	
+	} 
+	ENG_decision_London_zhzj = { #重点指挥装甲部队
+		icon = GFX_decision_ger_military_buildup		
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		visible = {
+			has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
+		}	
+		available = {
+			has_country_flag = FLAG_ENG_cywjhh #处于玩家回合						
+		}					
+		ai_will_do = {
+			factor = 0			
+		}
+		complete_effect = { 	
+			add_to_variable = { #扣除行动力上限
+				VAR_ENG_London_max_action_point = -5
+			}
+			custom_effect_tooltip = ENG_tooltip_var_max_action_point_sub_5
+
+			add_to_variable = { #坦克攻击+1
+				VAR_ENG_London_blue_tank_attack_number = 3
+			}
+			custom_effect_tooltip = ENG_tooltip_tkgj_add_3 
+
+		}	
+		modifier = {
+
+	   	}
+		remove_effect = {
+		}	
+	}
+	ENG_decision_London_tzkqt = { #呼叫特种空勤团
+		icon = GFX_decision_ger_military_buildup		 
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		visible = {
+			has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
+		}	
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_xdlcz #行动力充足
+				check_variable = {
+					VAR_ENG_London_current_action_point > 4
+				}
+			}					
+		}					
+		ai_will_do = { 
+			factor = 0			
+		}
+		complete_effect = { 	
+			add_to_variable = { #扣掉行动力
+				VAR_ENG_London_current_action_point = -5
+			}
+			custom_effect_tooltip = ENG_tooltip_var_action_point_sub_5
+			country_event = ENG_event.387
+		}	
+		modifier = {
+
+	   	}
+		remove_effect = {
+			add_to_variable = { #伞降可用次数+2
+				VAR_ENG_London_vertical_attack_num = 2
+			}
+			custom_effect_tooltip = ENG_tooltip_sjcs_add_2 
+		}	
+	}
+	ENG_decision_London_xfjc = { #修复机场跑道
+		icon = GFX_decision_ger_military_buildup		 
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
 		visible = {
 			has_country_flag = FLAG_ENG_London_second_stage_start #第二回合开始
 		}	
@@ -11432,30 +11691,40 @@ ENG_decision_l_10_London = {  #伦敦危机
 			custom_trigger_tooltip = {
 				tooltip = ENG_tooltip_xdlcz #行动力充足
 				check_variable = {
-					VAR_ENG_London_current_action_point > 2
+					VAR_ENG_London_current_action_point > 4
 				}
 			}					
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_kzjcq #我方或盟友控制机场区
+				or = {
+					check_variable = {
+						09:gui_display_frame = 2
+					}
+					check_variable = {
+						09:gui_display_frame = 3
+					}
+				}
+				
+			}
 		}					
-		ai_will_do = {
+		ai_will_do = { 
 			factor = 0			
 		}
 		complete_effect = { 	
-
+			add_to_variable = { #扣掉行动力
+				VAR_ENG_London_current_action_point = -5
+			}
+			custom_effect_tooltip = ENG_tooltip_var_action_point_sub_5
 		}	
 		modifier = {
 
 	   	}
 		remove_effect = {
-			add_to_variable = { #扣掉行动力
-				VAR_ENG_London_current_action_point = -3
+			clr_country_flag = FLAG_ENG_jcpdbph
+			add_to_variable = { #空袭次数
+				VAR_ENG_London_air_strike_num = 4
 			}
-			custom_effect_tooltip = ENG_tooltip_var_action_point_sub_3
-
-			add_to_variable = { #民兵数量
-				VAR_ENG_London_gui_manpower_player_number_irregular = 3
-			}
-			custom_effect_tooltip = ENG_tooltip_var_player_number_irregular_add_3
-
+			custom_effect_tooltip = ENG_tooltip_xfjcpd
 		}	
 	}
  #
