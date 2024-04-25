@@ -10,20 +10,14 @@ on_actions = {
 							tag = NPT 
 						}
 					}
+					has_global_flag  = Iberian_civil_war_start
 				}
 				FROM = {
 					every_character = {
 						set_nationality = AHM
 					}
-				}
-				if = {
-					limit = { 
-						has_global_flag  = Iberian_civil_war_start
-					}
-					FROM = {
-						every_core_state = {
-							remove_core_of = PREV
-						}
+					every_core_state = {
+						remove_core_of = PREV
 					}
 				}
 
@@ -38,6 +32,10 @@ on_actions = {
 						OR = {
 							tag = BLA
 							tag = NPT
+							AND = {
+								tag = MOR
+								has_global_flag = MOR_declare_ambition_flag
+							}
 						}
 						exists = yes
 					}
@@ -63,12 +61,18 @@ on_actions = {
 						}
 						exists = yes
 					}
-					country_event = neptune.046
+					if = {
+						limit = { 
+							MOR = { has_global_flag = MOR_declare_ambition_flag } 
+						}
+						country_event = iberia_rec.021
+					}
+					else = { country_event = neptune.046 }
 				}
 				MOR = {
 					if = {
 						limit = { NOT = { is_subject_of = NPT } }
-						country_event = { id = iberia.012 hours = 6 }
+						country_event = { id = iberia_for.016 hours = 6 }
 					}
 				}
 				BLA = {
@@ -99,6 +103,18 @@ on_actions = {
 						remove_core_of = NPT
 					}
 				}
+				if = {
+					limit = { has_war_with = MOR NOT = { has_global_flag = MOR_declare_ambition_flag } }
+					every_country = {
+						limit = {
+							OR = {
+								tag = ARF
+								tag = BLA
+							}
+						}
+						white_peace = MOR
+					}
+				}
 			}
 
 			if = {
@@ -109,6 +125,10 @@ on_actions = {
 							tag = ARF 
 							tag = BLA 
 							tag = NPT 
+							AND = {
+								tag = MOR
+								has_global_flag = MOR_declare_ambition_flag
+							}
 						}
 					}
 					OR = {
@@ -116,16 +136,37 @@ on_actions = {
 							BLA = { exists = no }
 							ARF = { exists = no }
 							has_civil_war = no
+							if = {
+								limit = { has_global_flag = MOR_declare_ambition_flag }
+								NOT = { has_war_with = MOR }
+							}
 						}
 						AND = {
 							NPT = { exists = no }
 							ARF = { exists = no }
 							has_civil_war = no
+							if = {
+								limit = { has_global_flag = MOR_declare_ambition_flag }
+								NOT = { has_war_with = MOR }
+							}
 						}
 						AND = {
 							BLA = { exists = no }
 							NPT = { exists = no }
 							has_civil_war = no
+							if = {
+								limit = { has_global_flag = MOR_declare_ambition_flag }
+								NOT = { has_war_with = MOR }
+							}
+						}
+						if = {
+							limit = { has_global_flag = MOR_declare_ambition_flag }
+							AND = {
+								NPT = { exists = no }
+								ARF = { exists = no }
+								ARF = { exists = no }
+								has_civil_war = no
+							}
 						}
 					}
 				}
@@ -154,6 +195,10 @@ on_actions = {
 					limit = { tag = BLA exists = yes  }
 					country_event = { id = neptune.125 days = 1 }
 				}
+				if = {
+					limit = { tag = MOR has_global_flag = MOR_declare_ambition_flag exists = yes  }
+					country_event = { id = iberia_rec.022 days = 1 }
+				}
 			}
 		}
 	}
@@ -163,6 +208,20 @@ on_actions = {
 				limit = { has_country_flag = NPT_inspiration_from_research_slot }
 				add_to_variable = {
 					NPT_inspiration_index = amount_research_slots
+				}
+			}
+			if = {
+				limit = {
+					has_completed_focus = NPT_Noire_defederalization_initiative
+					OR = {
+						has_country_flag = NPT_Noire_integrate_vert_start
+						has_country_flag = NPT_Noire_integrate_blanc_start
+						has_country_flag = NPT_Noire_integrate_neptune_start
+						MOR = { is_subject_of = ROOT }
+					}
+				}
+				add_to_variable = {
+					NPT_cohesion_index = NPT_core_city
 				}
 			}
 		}

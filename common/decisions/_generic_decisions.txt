@@ -4217,9 +4217,11 @@ gtmx_UBS_bank = {
 				GTMX_jingji_5 = yes
 			}
 			modifier = {
-				factor = 1
+				factor = 10
 				OR = {
 					TAG = DVL
+					TAG = JAP
+					TAG = ITA
 				}
 			}
 			modifier = {
@@ -4243,33 +4245,35 @@ gtmx_UBS_bank = {
 		custom_cost_trigger = {
 			check_variable = {
 				var = ubs_save
-				value = 50
+				value = 100
 				compare = greater_than_or_equals
 			}
 		}
-		custom_cost_text = HCP_50
+		custom_cost_text = HCP_100
 		available = {
 			NOT = {
-				has_country_flag = goumai_CD_30_1
+				#has_country_flag = goumai_CD_30_1
 				has_idea = jingji_xiaotiao
 			}
 		}
-		days_re_enable = 1
+		#days_re_enable = 1
+		days_remove = 60
 		modifier = {
+			political_power_gain = 1
 		}
 		complete_effect = {
-			add_political_power = 70
+			#add_political_power = 70
 			add_to_variable = {
 				var = ubs_save
-				value = -50
-				tooltip = UBS_SAVE_down_50
+				value = -100
+				tooltip = UBS_SAVE_down_100
 			}
 			UBS_bank_icon_frames = yes
-			set_country_flag = {
-				flag = goumai_CD_30_1
-				value = 1
-				days = 30
-			}
+			#set_country_flag = {
+			#	flag = goumai_CD_30_1
+			#	value = 1
+			#	days = 30
+			#}
 		}
 	}
 	#钱换民工
@@ -4329,13 +4333,13 @@ gtmx_UBS_bank = {
 		custom_cost_trigger = {
 			check_variable = {
 				var = ubs_save
-				value = 300
+				value = 500
 				compare = greater_than_or_equals
 			}
 		}
-		custom_cost_text = HCP_300
+		custom_cost_text = HCP_500
 		available = {
-			num_of_civilian_factories_available_for_projects > 4
+			num_of_civilian_factories_available_for_projects > 7
 			NOT = {
 				has_country_flag = goumai_CD_30_2
 				has_idea = jingji_xiaotiao
@@ -4343,7 +4347,7 @@ gtmx_UBS_bank = {
 		}
 		#days_re_enable = 1
 		modifier = {
-			civilian_factory_use = 5
+			civilian_factory_use = 8
 		}
 		days_remove = 60
 		remove_effect = {
@@ -4405,8 +4409,144 @@ gtmx_UBS_bank = {
 		complete_effect = {
 			add_to_variable = {
 				var = ubs_save
+				value = -500
+				tooltip = UBS_SAVE_down_500
+			}
+			UBS_bank_icon_frames = yes
+		}
+	}
+	#钱换建筑槽
+	duihuan_jianzhucao_1 = { 
+		icon = GFX_decision_duihuan_gongchang_1
+		visible = {
+			
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			NOT = {
+				has_idea = jingji_xiaotiao
+			}
+		}
+		custom_cost_trigger = {
+			check_variable = {
+				var = ubs_save
+				value = 300
+				compare = greater_than_or_equals
+			}
+		}
+		custom_cost_text = HCP_300
+		available = {
+			any_owned_state = {
+			NOT = { has_state_flag = infrastructure_building_slot_flag }
+			is_fully_controlled_by = ROOT
+			free_building_slots = {
+				building = infrastructure
+				size < 1
+			}
+			}
+		}
+		days_remove = 30
+		remove_effect = {
+			random_owned_state = {
+				limit = {
+					is_fully_controlled_by = ROOT
+            		free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
+					}
+					free_building_slots = {
+						building = infrastructure
+						size < 1
+					}
+					NOT = { has_state_flag = infrastructure_building_slot_flag }
+				}
+				add_extra_state_shared_building_slots = 1
+				set_state_flag = infrastructure_building_slot_flag
+			}
+		}
+		complete_effect = {
+			add_to_variable = {
+				var = ubs_save
 				value = -300
 				tooltip = UBS_SAVE_down_300
+			}
+			UBS_bank_icon_frames = yes
+		}
+	}
+	#钱换基建
+	duihuan_jijian_1 = { 
+		icon = GFX_decision_duihuan_gongchang_1
+		visible = {
+		}
+		available = {
+			NOT = {
+			has_idea = jingji_xiaotiao
+			}
+			any_state = {
+			is_core_of = ROOT
+			infrastructure < 5
+			not = { has_state_flag = AHM_infrastructure_flag }
+			}
+		}
+		days_remove = 60
+		ai_will_do = {
+			base = 0.5
+			modifier = {
+				factor = 3
+				GTMX_jingji_4 = yes
+			}
+			modifier = {
+				factor = 0.6
+				GTMX_jingji_5 = yes
+			}
+			modifier = {
+				factor = 1
+				OR = {
+					TAG = DVL
+					TAG = USA
+				}
+			}
+			modifier = {
+				factor = 0
+				tag = ENG
+			}
+			modifier = {
+				factor = 0
+				date < 1937.6.1
+				tag = FRA
+			}
+		}
+		custom_cost_trigger = {
+			check_variable = {
+				var = ubs_save
+				value = 200
+				compare = greater_than_or_equals
+			}
+		}
+		custom_cost_text = HCP_200
+		remove_effect = {
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					infrastructure < 5
+					not = { has_state_flag = AHM_infrastructure_flag }
+				}
+				add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+				}
+				set_state_flag = AHM_infrastructure_flag
+			}
+		}
+		complete_effect = {
+			add_to_variable = {
+				var = ubs_save
+				value = -200
+				tooltip = UBS_SAVE_down_200
 			}
 			UBS_bank_icon_frames = yes
 		}
@@ -4414,6 +4554,11 @@ gtmx_UBS_bank = {
 	#钱换建造加成
 	benguo_fazhan = {
 		icon = GFX_decision_duihuan_gongchang_1
+		available = {
+			NOT = {
+			has_idea = jingji_xiaotiao
+			}
+		}
 		visible = {
 		}
 		ai_will_do = {
@@ -4462,7 +4607,7 @@ gtmx_UBS_bank = {
 		custom_cost_text = HCP_300
 		available = {
 			# custom_trigger_tooltip = {
-			# 	tooltip = cunkuan_xuqiu_300
+			# 	tooltip = cunkuan_xuqiu_200
 			# 	check_variable = {
 			# 		var = ubs_save
 			# 		value = 300
@@ -4470,11 +4615,15 @@ gtmx_UBS_bank = {
 			# 	}
 			# }
 		}
-		days_remove = 150
+		days_remove = 120
 		modifier = {
-			production_factory_efficiency_gain_factor = 0.1
-			production_speed_buildings_factor = 0.1
-			consumer_goods_factor = -0.1
+			#production_factory_efficiency_gain_factor = 0.1
+			production_speed_buildings_factor = 0.05
+			consumer_goods_factor = -0.05
+			production_speed_infrastructure_factor = 0.1
+			production_speed_synthetic_refinery_factor = 0.1
+			production_speed_nuclear_reactor_factor = 0.1
+			
 		}
 		complete_effect = {
 			add_to_variable = {
@@ -4567,11 +4716,11 @@ gtmx_UBS_bank = {
 		custom_cost_trigger = {
 			check_variable = {
 				var = ubs_save
-				value = 200
+				value = 300
 				compare = greater_than_or_equals
 			}
 		}
-		custom_cost_text = HCP_200
+		custom_cost_text = HCP_300
 		available = {
 			NOT = {
 				has_idea = jingji_xiaotiao
@@ -4588,13 +4737,13 @@ gtmx_UBS_bank = {
 		days_re_enable = 1
 		days_remove = 90
 		modifier = {
-			research_speed_factor = 0.1
+			research_speed_factor = 0.05
 		}
 		complete_effect = {
 			add_to_variable = {
 				var = ubs_save
-				value = -200
-				tooltip = UBS_SAVE_down_200
+				value = -300
+				tooltip = UBS_SAVE_down_300
 			}
 			UBS_bank_icon_frames = yes
 		}
@@ -4640,11 +4789,11 @@ gtmx_UBS_bank = {
 		custom_cost_trigger = {
 			check_variable = {
 				var = ubs_save
-				value = 200
+				value = 300
 				compare = greater_than_or_equals
 			}
 		}
-		custom_cost_text = HCP_200
+		custom_cost_text = HCP_300
 		days_re_enable = 1
 		days_remove = 10
 		modifier = {
@@ -4655,8 +4804,8 @@ gtmx_UBS_bank = {
 		complete_effect = {
 			add_to_variable = {
 				var = ubs_save
-				value = -200
-				tooltip = UBS_SAVE_down_200
+				value = -300
+				tooltip = UBS_SAVE_down_300
 			}
 			UBS_bank_icon_frames = yes
 		}
@@ -4703,21 +4852,21 @@ gtmx_UBS_bank = {
 		custom_cost_trigger = {
 			check_variable = {
 				var = ubs_save
-				value = 200
+				value = 300
 				compare = greater_than_or_equals
 			}
 		}
-		custom_cost_text = HCP_200
+		custom_cost_text = HCP_300
 		days_re_enable = 1
-		days_remove = 90
+		days_remove = 120
 		modifier = {
-			stability_weekly = 0.01
+			stability_weekly = 0.005
 		}
 		complete_effect = {
 			add_to_variable = {
 				var = ubs_save
-				value = -200
-				tooltip = UBS_SAVE_down_200
+				value = -300
+				tooltip = UBS_SAVE_down_300
 			}
 			UBS_bank_icon_frames = yes
 		}
@@ -4746,9 +4895,20 @@ gtmx_UBS_bank = {
 				date < 1937.6.1
 				tag = FRA
 			}
+			modifier = {
+				factor = 10
+				tag = JAP
+			}
 		}
 		available = {
-			has_war_support < 0.6
+			threat > 0.5
+			or = {
+			has_war_support < 0.5
+			if = {
+			has_war = yes
+			has_war_support < 0.8
+			}
+			}
 			NOT = {
 				has_idea = jingji_xiaotiao
 			}
@@ -4764,22 +4924,22 @@ gtmx_UBS_bank = {
 		custom_cost_trigger = {
 			check_variable = {
 				var = ubs_save
-				value = 150
+				value = 500
 				compare = greater_than_or_equals
 			}
 		}
-		custom_cost_text = HCP_150
+		custom_cost_text = HCP_500
 		days_re_enable = 1
-		days_remove = 60
+		days_remove = 90
 		modifier = {
-			consumer_goods_factor = -0.06
+			consumer_goods_factor = -0.1
 			war_support_weekly = 0.01
 		}
 		complete_effect = {
 			add_to_variable = {
 				var = ubs_save
-				value = -150
-				tooltip = UBS_SAVE_down_150
+				value = -500
+				tooltip = UBS_SAVE_down_500
 			}
 			UBS_bank_icon_frames = yes
 		}
