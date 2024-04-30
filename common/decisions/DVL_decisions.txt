@@ -1420,3 +1420,363 @@ DVL_Heavenly_Soldiers = {
 		}
 	}
 }
+
+DVL_Unit_Germany = {
+	Threat_of_Germany_Unit_Font = {
+		icon = GFX_decision_generic_brainwash
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 35
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			SHL = { exists = no }
+			BAY = { exists = no }
+			RHI = { exists = no }
+			GER = { is_faction_leader = no }
+		}
+		timeout_effect = {
+			if = {
+				limit = { SHL = { is_subject = no } }
+				GER = { add_to_faction = SHL }
+			}
+			if = {
+				limit = { BAY = { is_subject = no } }
+				GER = { add_to_faction = BAY }
+			}
+			if = {
+				limit = { RHI = { is_subject = no } }
+				GER = { add_to_faction = RHI }
+			}
+			GER  = { set_faction_name = Germany_Unit_Font }
+		}
+	}
+	DVL_War_to_Target_Country = {
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			is_subject = no
+			or = {
+				SHL = { exists = yes }
+				BAY = { exists = yes }
+				RHI = { exists = yes }
+			}
+		}
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = SHL
+					tag = BAY
+					tag = RHI
+				}
+			}
+			or = {
+				event_target:DVL_Target_Country = { tag = FROM }
+				FROM = { has_country_flag = DVL_War_to_Target_Country }
+				is_ai = yes
+			}
+			ROOT = { is_subject = no }
+		}
+		available = {
+			not = { has_war_with = FROM }
+			has_war = no
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = DVL_War_is_Ready
+				check_variable = { DVL_Target_Country.DVL_War_Progress_Var = 100 }
+			}
+			FROM = { is_subject = no }
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			hidden_effect = {
+				FROM = {
+					country_event = { id = generic.2010 }
+				}
+				FROM = { set_country_flag = DVL_War_to_Target_Country }
+			}
+		}
+		remove_effect = {
+			FROM = { clr_country_flag = DVL_War_to_Target_Country }
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	DVL_Subversion_to_Target_Country = {
+		icon = GFX_decision_generic_assassination
+		visible = {
+			is_subject = no
+			or = {
+				SHL = { exists = yes }
+				BAY = { exists = yes }
+				RHI = { exists = yes }
+			}
+		}
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = SHL
+					tag = BAY
+					tag = RHI
+				}
+			}
+			or = {
+				event_target:DVL_Target_Country = { tag = FROM }
+				FROM = { has_country_flag = DVL_Subversion_to_Target_Country }
+				is_ai = yes
+			}
+			event_target:DVL_Target_Country = { tag = FROM }
+			ROOT = { is_subject = no }
+		}
+		available = {
+			not = { has_war_with = FROM }
+			has_war = no
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = DVL_Subversion_is_Ready
+				check_variable = { DVL_Target_Country.DVL_Infiltrate_Progress_Var = 100 }
+			}
+			FROM = { is_subject = no }
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			FROM = { set_country_flag = DVL_Subversion_to_Target_Country }
+		}
+		remove_effect = {
+			FROM = { clr_country_flag = DVL_Subversion_to_Target_Country }
+			#annex_country = { target = FROM transfer_troops = yes }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	DVL_Mobilize_intelligence_agents = {
+		icon = GFX_decision_generic_political_discourse
+		visible = {
+			is_subject = no
+			or = {
+				SHL = { exists = yes }
+				BAY = { exists = yes }
+				RHI = { exists = yes }
+			}
+		}
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = SHL
+					tag = BAY
+					tag = RHI
+				}
+			}
+			or = {
+				event_target:DVL_Target_Country = { tag = FROM }
+				FROM = { has_country_flag = DVL_Mobilize_intelligence_agents }
+				is_ai = yes
+			}
+			ROOT = { is_subject = no }
+		}
+		available = {
+			not = { has_war_with = FROM }
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = DVL_War_not_Ready
+				check_variable = { DVL_Target_Country.DVL_War_Progress_Var < 100 }
+			}
+		}
+		custom_cost_trigger = {
+			command_power > 14
+		}
+		custom_cost_text = decision_cost_CP_15
+		complete_effect = {
+			FROM = { set_country_flag = DVL_Mobilize_intelligence_agents }
+			hidden_effect = { add_command_power = -15 }
+		}
+		days_remove = 30
+		days_re_enable = 60
+		#war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = { clr_country_flag = DVL_Mobilize_intelligence_agents }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	DVL_Mobilization_of_armed_forces = {
+		icon = GFX_decision_generic_reorganize_irregulars
+		visible = {
+			is_subject = no
+			or = {
+				SHL = { exists = yes }
+				BAY = { exists = yes }
+				RHI = { exists = yes }
+			}
+		}
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = SHL
+					tag = BAY
+					tag = RHI
+				}
+			}
+			or = {
+				event_target:DVL_Target_Country = { tag = FROM }
+				FROM = { has_country_flag = DVL_Mobilization_of_armed_forces }
+				is_ai = yes
+			}
+			ROOT = { is_subject = no }
+		}
+		available = {
+			not = { has_war_with = FROM }
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = DVL_War_not_Ready
+				check_variable = { DVL_Target_Country.DVL_War_Progress_Var < 100 }
+			}
+		}
+		custom_cost_trigger = {
+			command_power > 14
+		}
+		custom_cost_text = decision_cost_CP_15
+		complete_effect = {
+			FROM = { set_country_flag = DVL_Mobilization_of_armed_forces }
+			hidden_effect = { add_command_power = -15 }
+		}
+		days_remove = 30
+		days_re_enable = 60
+		#war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = { clr_country_flag = DVL_Mobilization_of_armed_forces }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	DVL_Funding_collaborators = {
+		icon = GFX_decision_hol_attract_foreign_investors
+		visible = {
+			is_subject = no
+			or = {
+				SHL = { exists = yes }
+				BAY = { exists = yes }
+				RHI = { exists = yes }
+			}
+		}
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = SHL
+					tag = BAY
+					tag = RHI
+				}
+			}
+			or = {
+				event_target:DVL_Target_Country = { tag = FROM }
+				FROM = { has_country_flag = DVL_Funding_collaborators }
+				is_ai = yes
+			}
+			ROOT = { is_subject = no }
+		}
+		available = {
+			not = { has_war_with = FROM }
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = DVL_Subversion_not_Ready
+				check_variable = { DVL_Target_Country.DVL_Infiltrate_Progress_Var < 100 }
+			}
+		}
+		custom_cost_trigger = {
+			check_variable = {
+				var = ubs_save
+				value = 100
+				compare = greater_than_or_equals
+			}
+		}
+		custom_cost_text = HCP_100
+		complete_effect = {
+			FROM = { set_country_flag = DVL_Funding_collaborators }
+			add_to_variable = {
+				var = ubs_save
+				value = -100
+				tooltip = UBS_SAVE_down_100
+			}
+			UBS_bank_icon_frames = yes
+		}
+		days_remove = 30
+		days_re_enable = 60
+		#war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = { clr_country_flag = DVL_Funding_collaborators }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	DVL_Plotting_riot = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+			is_subject = no
+			or = {
+				SHL = { exists = yes }
+				BAY = { exists = yes }
+				RHI = { exists = yes }
+			}
+		}
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = SHL
+					tag = BAY
+					tag = RHI
+				}
+			}
+			or = {
+				event_target:DVL_Target_Country = { tag = FROM }
+				FROM = { has_country_flag = DVL_Plotting_riot }
+				is_ai = yes
+			}
+			ROOT = { is_subject = no }
+		}
+		available = {
+			not = { has_war_with = FROM }
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = DVL_Subversion_not_Ready
+				check_variable = { DVL_Target_Country.DVL_Infiltrate_Progress_Var < 100 }
+			}
+		}
+		complete_effect = {
+			FROM = { set_country_flag = DVL_Plotting_riot }
+		}
+		cost = 50
+		days_remove = 30
+		days_re_enable = 60
+		#war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = { clr_country_flag = DVL_Plotting_riot }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
+
+
+
