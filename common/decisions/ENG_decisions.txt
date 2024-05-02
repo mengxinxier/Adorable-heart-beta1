@@ -236,97 +236,11 @@ ENG_decision_l_0_debug = { #debug决议
 			factor = 0			 
 		}
 		complete_effect = {
-			set_technology = { mechanised_infantry = 1 }
-			division_template = { #机械化师
-				name = "机械化师"
-				division_names_group = ENG_ARM_01
-				regiments = {
-					mechanized = {
-						x = 0
-						y = 0
-					}
-					mechanized = {
-						x = 0
-						y = 1
-					}
-					mechanized = {
-						x = 0
-						y = 2
-					}
-					mechanized = {
-						x = 0
-						y = 3
-					}
-					mechanized = {
-						x = 1
-						y = 0
-					}
-					mechanized = {
-						x = 1
-						y = 1
-					}
-					mechanized = {
-						x = 1
-						y = 2
-					}
-					mechanized = {
-						x = 1
-						y = 3
-					}
-					mot_artillery_brigade = {
-						x = 2
-						y = 0
-					}
-					mot_artillery_brigade = {
-						x = 2
-						y = 1
-					}
-					mot_artillery_brigade = {
-						x = 2
-						y = 2
-					}
-					mot_anti_tank_brigade = {
-						x = 3
-						y = 0
-					}
-					mot_anti_air_brigade = {
-						x = 3
-						y = 1
-					}
-				}
-				support = {
-					engineer = {
-						x = 0
-						y = 0
-					}
-					light_tank_recon = {
-						x = 0
-						y = 1
-					}
-					artillery = {
-						x = 0
-						y = 2
-					}
-					logistics_company = {
-						x = 0
-						y = 3
-					}
-					field_hospital = {
-						x = 0
-						y = 4
-					}
-				}
-			}
-			add_equipment_to_stockpile = {
-				type = mechanized_equipment
-				amount = 2000
-				producer = ENG
-				#variant_name = "布伦装甲运载车"
-			}
+			ENG_jisuan_wto_gdp = yes
 		}
 		remove_effect = {
 		}
-	}
+	}  
 	ENG_decision_debug_0303 = {	
 		icon = GFX_decision_generic_decision	
 		cost = 0	
@@ -341,9 +255,9 @@ ENG_decision_l_0_debug = { #debug决议
 			
 		}
 		remove_effect = {
-		}
+		}  
 	}
-}	
+}	  
   
 ENG_decision_l_1_sbgpzc = {  #圣杯各派支持
   #debug决议	
@@ -622,7 +536,7 @@ ENG_decision_l_1_sbgpzc = {  #圣杯各派支持
 		remove_effect = {
 		}
 	} 
-	
+	   
  
   #增加影响力	
 	ENG_decision_xymzjs = {		#宣扬民主精神，蓝党影响力+5
@@ -1144,7 +1058,7 @@ ENG_decision_l_1_sbgpzc = {  #圣杯各派支持
 		}
 	}
   #		
-}  
+}   
 
 ENG_decision_l_2_yihui = {  #议会
  #议会
@@ -11884,6 +11798,443 @@ ENG_decision_l_10_London = {  #伦敦危机
 	}
  #
 }
+ 
+ENG_decision_l_11_WTO = {  #WTO  
+ #领导国决议  
+	ENG_decision_wto_ycyq = { #隐藏邀请决议
+		icon = decision_generic_decision	
+		priority = 110	
+		cost = 0 
+		days_remove = 0
+		fire_only_once = no
+		visible = {
+			tag = ENG
+			not = {
+				has_country_flag = FLAG_ENG_wto_invite_lock
+			}
+			
+		}	
+		available = {						
+		}					
+		ai_will_do = {
+			factor = 0			
+		}
+		complete_effect = {  
+			set_country_flag = FLAG_ENG_wto_invite_lock
+		}		
+		modifier = {
+	   	}
+		remove_effect = {
+			
+		}	
+	}
+	ENG_decision_wto_xsyq = { #显示邀请决议
+		icon = decision_generic_decision
+		priority = 110		
+		cost = 0 
+		days_remove = 0
+		fire_only_once = no
+		visible = {
+			tag = ENG
+			has_country_flag = FLAG_ENG_wto_invite_lock
+		}	
+		available = {						
+		}					
+		ai_will_do = {
+			factor = 0			
+		}
+		complete_effect = {  
+			clr_country_flag = FLAG_ENG_wto_invite_lock
+		}		
+		modifier = {
+	   	}
+		remove_effect = {
+			
+		}	
+	}
+	ENG_invite_join_wto = { # 满足条件邀请加入
+		icon = GFX_decision_hol_exchange_intelligence_data
+		priority = 100
+		cost = 10
+		days_remove = 1
+		days_re_enable = 30
+		fire_only_once = no
+		ai_will_do = {
+			base = 100
+		}
+		visible = {
+			tag = ENG
+			FROM = { NOT = { has_country_flag = had_invited_wto } }
+			not = {
+				has_country_flag = FLAG_ENG_wto_invite_lock
+			}
+		}
+		available = {
+			is_subject = no 
+			FROM = { NOT = { has_country_flag = had_invited_wto } }
+		}
+		target_trigger = {
+			FROM = {
+				NOT = { has_country_flag = had_invited_wto } 				
+				NOT = { has_idea = ENG_idea_wto }
+				NOT = { has_war_with = ENG }
+				or = {
+					is_in_faction_with = ROOT
+					has_government = democratic
+				}
+			}
+		}		
+		cancel_trigger = {
+			FROM = { has_idea = ENG_idea_wto }
+		}
+		cancel_effect = {
+			add_political_power = 10
+		}
+		remove_effect = {
+			FROM = {
+				if = {
+					limit = { 
+						NOT = { 
+							has_country_flag = had_invited_wto 
+						} 
+					}
+					set_country_flag = { 
+						flag = had_invited_wto 
+						days = 90 
+					}
+				}
+				country_event = { 
+					id = ENG_event_wto.1  
+					days = 1 
+				}
+			}
+		}
+	} 
+ #通用
+ 		
+	ENG_decision_wto_mydd_1 = { #签署大型生产订单
+		priority = 90
+		icon = GFX_decision_eng_trade_unions_support
+		cost = 10
+		days_remove = 60
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			
+		}
+
+		visible = {
+
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 30	
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_var_wto_gdp_proportion_dayu_40
+				check_variable = {
+					global.var_wto_gdp_proportion > 0.4
+				}
+			}				
+		}
+
+		complete_effect = {  		
+			
+		}
+
+		modifier = {
+			civilian_factory_use = 30
+	   	}
+
+		remove_effect = {
+			add_to_variable = { ubs_save = 600 }
+			custom_effect_tooltip = ENG_tooltip_var_hcp_add_600
+		}
+	}	
+	ENG_decision_wto_mydd_2 = { #签署中型生产订单
+		priority = 90
+		icon = GFX_decision_eng_trade_unions_support
+		cost = 10
+		days_remove = 60
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			
+		}
+
+		visible = {
+
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 15	
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_var_wto_gdp_proportion_dayu_20
+				check_variable = {
+					global.var_wto_gdp_proportion > 0.2
+				}
+			}				
+		}
+
+		complete_effect = {  		
+			
+		}
+
+		modifier = {
+			civilian_factory_use = 15
+	   	}
+
+		remove_effect = {
+			add_to_variable = { ubs_save = 300 }
+			custom_effect_tooltip = ENG_tooltip_var_hcp_add_300
+		}
+	}
+	ENG_decision_wto_mydd_3 = { #签署小型生产订单
+		priority = 90
+		icon = GFX_decision_eng_trade_unions_support
+		cost = 10
+		days_remove = 60
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			
+		}
+
+		visible = {
+
+		}
+
+		available = {
+			num_of_civilian_factories_available_for_projects > 5					
+		}
+
+		complete_effect = {  		
+			
+		}
+
+		modifier = {
+			civilian_factory_use = 5
+	   	}
+
+		remove_effect = {
+			add_to_variable = { ubs_save = 100 }
+			custom_effect_tooltip = ENG_tooltip_var_hcp_add_100
+		}
+	}
+
+	ENG_decision_wto_qmjk = { #全面进口国际贸易品
+		priority = 80
+		icon = GFX_decision_gre_paying_ifc_debt
+		cost = 100
+		days_remove = 180
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			 
+		} 
+
+		visible = {
+
+		}
+
+		available = { 
+					
+		} 
+
+		complete_effect = {  
+			add_to_variable = { ubs_save = global.ENG_VAR_wto_dynamic_5 }
+			custom_effect_tooltip = ENG_var_HCP_jian_wto_qmjk
+			add_dynamic_modifier = {
+				modifier = ENG_dynamic_modifier_wto_desbuff
+			}
+
+			
+		}
+
+		modifier = {
+
+	   	}
+
+		remove_effect = {
+			remove_dynamic_modifier = {
+				modifier = ENG_dynamic_modifier_wto_desbuff
+			}
+		}
+	}
+ 	ENG_decision_wto_yjjs = { #引进高端技术
+		priority = 70
+		icon = GFX_decision_generic_research
+		cost = 10
+		days_remove = 120
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			
+		}
+
+		visible = {
+
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_var_hcp_dayu_200
+				check_variable = {
+					ubs_save > 200
+				}
+			}						
+		}
+
+		complete_effect = {  
+			add_to_variable = { ubs_save = -200 }
+			custom_effect_tooltip = ENG_tooltip_var_hcp_jian_200
+			
+		}
+
+		modifier = {
+
+	   	}
+
+		remove_effect = {
+			add_tech_bonus = {
+				name = electronics
+				bonus = 0.25
+				uses = 1
+				category = electronics
+			}
+			add_tech_bonus = {
+				name = industry
+				bonus = 0.25
+				uses = 1
+				category = industry
+			}
+		}
+	}
+	
+	ENG_decision_wto_jkgyp_1 = { #雇佣小型国际建筑团队
+		priority = 60
+		icon = GFX_decision_generic_merge_plant_materiel
+		cost = 10
+		days_remove = 30
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			
+		}
+
+		visible = {
+
+		}
+ 
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_var_hcp_dayu_200
+				check_variable = {
+					ubs_save > 200
+				}
+			}	
+				
+		}
+
+		complete_effect = {  		
+			add_to_variable = { ubs_save = -200 }
+			custom_effect_tooltip = ENG_tooltip_var_hcp_jian_200
+		}
+
+		modifier = {
+			
+	   	}
+
+		remove_effect = {
+			add_cic = 6000
+		}
+	}
+	ENG_decision_wto_jkgyp_2 = { #雇佣大型国际建筑团队
+		priority = 60
+		icon = GFX_decision_generic_merge_plant_materiel
+		cost = 10
+		days_remove = 30
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			
+		}
+
+		visible = {
+
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_var_hcp_dayu_500
+				check_variable = {
+					ubs_save > 500
+				}
+			}	
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_var_wto_gdp_proportion_dayu_40
+				check_variable = {
+					global.var_wto_gdp_proportion > 0.4
+				}
+			}	
+		}
+
+		complete_effect = {  		
+			add_to_variable = { ubs_save = -500 }
+			custom_effect_tooltip = ENG_tooltip_var_hcp_jian_500
+		}
+
+		modifier = {
+			
+	   	}
+
+		remove_effect = {
+			add_cic = 15000
+		}
+	}
+
+	ENG_decision_wto_tzhw = { #投资海外产业
+		priority = 50
+		icon = GFX_decision_gre_investment_decisions
+		cost = 10
+		days_remove = 60
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			
+		}
+
+		visible = {
+
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_var_hcp_dayu_400
+				check_variable = {
+					ubs_save > 400
+				}
+			}	
+		}
+
+		complete_effect = {  		
+			add_to_variable = { ubs_save = -400 }
+			custom_effect_tooltip = ENG_tooltip_var_hcp_jian_400
+		}
+
+		modifier = {
+			
+	   	}
+
+		remove_effect = {
+			add_offsite_building = { 
+				type = industrial_complex
+				level = 1 
+			}
+		}
+	}
+	
+
+}  
 
 #战役决议组
 	ENG_decision_l_zy_rjzl = {  #人间之里战役

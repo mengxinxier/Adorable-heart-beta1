@@ -3689,7 +3689,147 @@
 				ENG_jisuan_London_fortress = yes
 			}
 		}
-#
+#wto相关
+	ENG_new_members_join_wto = { #新成员加入世贸
+		hidden_effect = { 
+			add_to_variable = { 
+				global.num_wto_member = 1
+			}
+			add_to_array = {
+				array = global.wto_member
+				value = ROOT
+			}
+			if = {
+				limit = {
+					is_in_array = { 
+						array = global.wto_member
+						value = ENG
+					}
+				}
+				remove_from_array = { global.wto_member = ENG }
+			}
+		}
+	}
+
+	ENG_members_remove_wto = { #有成员离开世贸
+		hidden_effect = {
+			add_to_variable = {
+				global.num_wto_member = -1
+			}
+			remove_from_array = { global.wto_member = ROOT }
+		}
+	}
+
+	ENG_jisuan_wto_gdp = { #计算gdp
+		set_variable = { #所有国家gdp
+			global.var_all_gdp = 0 
+		}
+		set_variable = { #wto国家gdp
+			global.var_wto_gdp = 0
+		}
+		set_variable = { #gdp占比
+			global.var_wto_gdp_proportion = 0
+		}
+		set_variable = { #动态修正变量1
+			ENG_VAR_wto_dynamic_1 = 0
+		}
+		set_variable = { #动态修正变量2
+			ENG_VAR_wto_dynamic_2 = 0
+		}
+		set_variable = { #动态修正变量3
+			global.ENG_VAR_wto_dynamic_3 = 0
+		}
+		set_variable = { #动态修正变量4
+			global.ENG_VAR_wto_dynamic_4 = 0
+		}
+		set_variable = { #动态修正变量5
+			global.ENG_VAR_wto_dynamic_5 = 0
+		}
+
+		for_each_scope_loop = { #将消失的国家移除出去 
+			array = global.econ_countries
+			if = {
+				limit = {
+					has_idea = ENG_idea_wto		
+					exists = no		
+				}
+				add_to_variable = {
+					global.num_wto_member = -1
+				}
+				remove_from_array = { global.wto_member = THIS }
+			}
+		}
+		for_each_scope_loop = { #计算所有国家gdp
+			array = global.econ_countries
+			add_to_variable = { 
+				global.var_all_gdp = total_shouru
+			}
+		}
+		for_each_scope_loop = { #计算wto国家gdp
+			array = global.econ_countries
+			if = {
+				limit = {
+					or = {
+						tag = ENG
+						has_idea = ENG_idea_wto
+					}
+
+				}
+				add_to_variable = { 
+					global.var_wto_gdp = total_shouru
+				}
+			}
+			
+		}
+
+		set_variable = {  #gdp占比
+			global.var_wto_gdp_proportion = global.var_wto_gdp
+		}
+		divide_variable = { 
+			global.var_wto_gdp_proportion = global.var_all_gdp 
+		}
+
+		set_variable = { #动态修正变量1
+			ENG_VAR_wto_dynamic_1 = 0.3
+		}
+		multiply_variable = {
+			var = ENG_VAR_wto_dynamic_1
+			value = global.var_wto_gdp_proportion
+		}
+
+		set_variable = { #动态修正变量2
+			ENG_VAR_wto_dynamic_2 = 0.6
+		}
+		multiply_variable = {
+			var = ENG_VAR_wto_dynamic_2
+			value = global.var_wto_gdp_proportion
+		}
+
+		set_variable = { #动态修正变量3
+			global.ENG_VAR_wto_dynamic_3 = 0.2
+		}
+		multiply_variable = {
+			var = global.ENG_VAR_wto_dynamic_3
+			value = global.var_wto_gdp_proportion
+		}
+
+		set_variable = { #动态修正变量4
+			global.ENG_VAR_wto_dynamic_4 = -0.4
+		}
+		multiply_variable = {
+			var = global.ENG_VAR_wto_dynamic_4
+			value = global.var_wto_gdp_proportion
+		}
+
+		set_variable = { #动态修正变量5
+			global.ENG_VAR_wto_dynamic_5 = -1000
+		}
+		multiply_variable = {
+			var = global.ENG_VAR_wto_dynamic_5
+			value = global.var_wto_gdp_proportion
+		}
+		
+	}
 #
 #圣杯解体
 	ENG_JIETI = {
