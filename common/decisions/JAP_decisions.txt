@@ -1265,11 +1265,19 @@ JAP_MGU_zhanzheng = {
 	JAP_MGU_tuxi = {
 		icon = generic_prepare_civil_war
 		available = {
+			is_puppet = no
+			not = { owns_state = 408 }
 		}
 		visible = {
+			country_exists = SOV
+			not = { owns_state = 408 }
 		}
 		ai_will_do = {
 			factor = 0
+			modifier = {
+			SOV = { surrender_progress > 0.6 }
+			add = 100
+			}
 		}
 		modifier = {
 		}
@@ -3673,6 +3681,7 @@ JAP_tonghedongya = {
 					not = { tag = MAL }
 					not = { tag = RAJ }
 					not = { tag = AST }
+					not = { tag = MAN }
 			}
 			JAP = {
 				is_subject = no
@@ -3838,6 +3847,45 @@ JAP_dongyashouhuzhe = {
 				}
 				country_event = jap.8
 			}
+		}
+	}
+	JAP_duoqushanghai = {
+		icon = generic_prepare_civil_war
+		visible = {
+		not = { has_global_flag = JAP_zhongrizhanzhengshibai }
+		country_exists = SHH
+		not = { SHH = { is_in_faction_with = JAP }  }
+		not = { SHH = { is_in_faction_with = ENG }  }
+		}
+		available = {
+			or = {
+			command_power > 29
+			is_ai = yes
+			}
+			is_subject = no
+			not = { controls_state = 743 }
+			has_global_flag = second_weltkrieg_has_started
+			not = { has_global_flag = JAP_zhongrizhanzhengshibai }
+			has_war_with = ENG
+		}
+		cost = 30
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1000
+		}
+		days_remove = 7
+		modifier = {
+			command_power_gain_mult = -0.5
+		}
+		complete_effect = {
+			add_command_power = -30
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -500
+			}
+		}
+		remove_effect = {
+			transfer_state = 743
 		}
 	}
 	JAP_gansheyizhineizhan = {
@@ -4046,6 +4094,95 @@ JAP_dongyashouhuzhe = {
 			is_core_of = MAL
 			}
 			add_core_of = INS
+			}
+		}
+	}
+	JAP_yaoqiuzaihualiyi = {
+		icon = eng_puppet_usa
+		visible = {
+			is_in_faction_with = MAN
+		}
+		available = {
+			is_subject = no
+			surrender_progress < 0.2
+			is_in_faction_with = MAN
+			MAN = { is_subject = no }
+			not = { country_exists = CHI }
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			set_country_flag = JAP_MAN_dapai
+			unlock_decision_category_tooltip = JAP_dapai_2
+		}
+	}
+	JAP_yaoqiuzaihualiyi_2 = {
+		icon = eng_puppet_usa
+		visible = {
+			is_in_faction_with = CHI
+		}
+		available = {
+			is_subject = no
+			surrender_progress < 0.2
+			is_in_faction_with = CHI
+			CHI = { is_subject = no }
+			custom_trigger_tooltip = {
+				tooltip = not_other_competiter_for_China_reunification
+				not = {
+					any_other_country = {
+						has_country_flag = Participate_in_the_competition_for_China_reunification
+						is_subject = no
+						not = { tag = CHI }
+					}
+				}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			CHI = {
+			country_event = { id = jap.109 days = 1 }
+			}
+		}
+	}
+	JAP_qiangpoyihe_eng = {
+		icon = eng_trade_unions_support
+		available = {
+			is_subject = no
+			has_war_with = ENG
+			surrender_progress < 0.2
+			ENG = {
+			surrender_progress  < 0.2
+			}
+			RAJ = {
+			is_in_faction_with = ENG
+			has_war_with = JAP
+			has_capitulated = yes
+			}
+			MAL = {
+			is_in_faction_with = ENG
+			has_war_with = JAP
+			has_capitulated = yes
+			}
+			or = {
+			date > 1944.1.1
+			AST = {
+			has_capitulated = yes
+			}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			custom_effect_tooltip = JAPif_AST_yiqitun
+			ENG = {
+			country_event = jap.80
 			}
 		}
 	}
@@ -4478,13 +4615,12 @@ JAP_quanlipingheng = {
 			always = no
 		}
 		available = {
-			date < 1940.9.1
 			or = {
 			has_completed_focus = JAP_new79
 			has_war_with = CHI
 			}
 		}
-		days_mission_timeout = 1095
+		days_mission_timeout = 740
 		is_good = no
 		complete_effect = {
 			add_war_support = 0.1
@@ -4537,14 +4673,17 @@ JAP_quanlipingheng = {
 			always = no
 		}
 		available = {
-			date < 1942.1.1
 			or = {
 			has_completed_focus = JAP_new81
 			has_war_with = MAL
 			is_in_faction_with = MAL
+			if = {
+			has_government = democratic
+			MAL = { is_puppet = no }
+			}
 			}
 		}
-		days_mission_timeout = 1095
+		days_mission_timeout = 500
 		is_good = no
 		complete_effect = {
 			add_war_support = 0.2
@@ -4596,6 +4735,33 @@ JAP_quanlipingheng = {
 			add_power_balance_value = {
 			id = JAP_balance
 			value = -0.1
+			}
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	
+	JAP_rw_zhangkongcaifa = {
+		icon = generic_assassination
+		activation	= {
+			always = no
+		}
+		available = {
+			not = { has_idea = JAO_caifahezuo }
+		}
+		days_mission_timeout = 100
+		is_good = no
+		timeout_effect = {
+			add_political_power = 100
+			add_stability = -0.15			
+			swap_ideas = {
+			remove_idea = JAO_caifahezuo
+			add_idea = JAO_zhangkongcaifa
+			}
+			add_power_balance_value = {
+			id = JAP_balance
+			value = 0.1
 			}
 		}
 		cancel_trigger = {
@@ -4677,7 +4843,6 @@ JAP_dapai = {
 			clr_country_flag = JAP_bying
 			custom_effect_tooltip = JAP_by_point_one_to_six
 			hidden_effect = {
-			activate_mission = JAP_SHH_xd2
 			random_list = {
 			16 = {
 			add_to_variable = {
@@ -4778,7 +4943,6 @@ JAP_dapai = {
 			clr_country_flag = JAP_bying
 			custom_effect_tooltip = JAP_by_point_two_to_four
 			hidden_effect = {
-			activate_mission = JAP_SHH_xd2
 			random_list = {
 			33 = {
 			add_to_variable = {
@@ -5299,6 +5463,1640 @@ JAP_dapai = {
 			has_war_with = SHH
 			not = { country_exists = SHH }
 			SHH =  { is_subject = yes }
+			}
+		}
+	}
+}
+
+JAP_yuanzhumanzhou = {
+	JAP_touzimanzhougongye = {
+		icon = generic_industry
+		visible = {
+			is_puppet = no
+		}
+		available = {
+			is_in_faction_with = MAN
+			num_of_civilian_factories_available_for_projects > 7
+		}
+		modifier = {
+			civilian_factory_use = 8
+		}
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 200 }
+		}
+		custom_cost_text = RUS_200_ubs_save_cost
+		days_remove = 180
+		ai_will_do = {
+			base = 0
+			modifier = {
+			check_variable = { ubs_save > 700 }
+			add = 10
+			}
+			modifier = {
+			MAN = {
+			is_ai = no
+			}
+			add = 100
+			}
+		}
+		complete_effect = {
+			add_to_variable = {
+				ubs_save = -200
+			}
+		}
+		remove_effect = {
+			MAN = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			}
+		}
+	}
+	JAP_jianshemanzhoujungongye = {
+		icon = generic_factory
+		visible = {
+			is_puppet = no
+		}
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 200 }
+		}
+		custom_cost_text = RUS_200_ubs_save_cost
+		available = {
+			is_in_faction_with = MAN
+			num_of_civilian_factories_available_for_projects > 4
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		days_remove = 180
+		ai_will_do = {
+			base = 0
+			modifier = {
+			check_variable = { ubs_save > 700 }
+			add = 10
+			}
+			modifier = {
+			MAN = {
+			is_ai = no
+			}
+			add = 100
+			}
+		}
+		complete_effect = {
+			add_to_variable = {
+				ubs_save = -200
+			}
+		}
+		remove_effect = {
+			MAN = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			}
+		}
+	}
+	JAP_yumanzhoudelianhejunyan = {
+		icon = generic_prepare_civil_war
+		cost = 50
+		visible = {
+			is_puppet = no
+		}
+		available = {
+			is_in_faction_with = MAN
+		}
+		modifier = {
+			experience_gain_army = 0.1
+		}
+		days_remove = 60
+		days_re_enable = 365
+		ai_will_do = {
+			base = 100
+		}
+		complete_effect = {
+			
+		}
+		remove_effect = {
+			army_experience = 25
+			air_experience = 10
+			MAN = {
+			army_experience = 50
+			navy_experience = 25
+			air_experience = 10
+			}
+		}
+	}
+	JAP_paiqianjunshiguwen = {
+		icon = generic_army_support
+		cost = 50
+		visible = {
+			is_puppet = no
+			has_government = democratic
+		}
+		available = {
+			has_government = democratic
+			is_in_faction_with = MAN
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			base = 100
+		}
+		complete_effect = {
+			MAN = {
+			add_ideas = jap_yinghuaguojunshiguwen_idea
+			}
+		}
+	}
+	JAP_juanzengzhuangbei = {
+		icon = generic_merge_plant_materiel
+		cost = 25
+		visible = {
+			is_puppet = no
+			has_government = democratic
+		}
+		available = {
+			has_government = democratic
+			is_in_faction_with = MAN
+			has_equipment = { infantry_equipment > 1999 }
+			has_equipment = { artillery_equipment > 199 }
+			has_equipment = { support_equipment > 99 }
+		}
+		days_re_enable = 180
+		ai_will_do = {
+			base = 0
+			modifier = {
+			MAN = {
+			is_ai = no
+			}
+			add = 100
+			}
+		}
+		complete_effect = {
+			MAN = {
+			country_event = jap.101
+			}
+		}
+	}
+}
+
+
+JAP_quanlipingheng = {
+	JAP_jinshenxuanze = {
+		icon = ITA_italian_east_africa
+		cost = 0
+		available = {
+			always = no
+		}
+		
+		complete_effect = {
+			custom_effect_tooltip = JAP_zhinnegshijianguocegb
+		}
+	}
+	JAP_yc_tugai = {
+		icon = eng_trade_unions_support
+		cost = 0
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1000
+		}
+		available = {
+			has_completed_focus = JAP_5
+		}
+		
+		complete_effect = {
+			country_event = jap.75
+			activate_mission = JAP_rw_tugai
+		}
+	}
+	JAP_rw_tugai = {
+		icon = generic_form_nation
+		activation	= {
+			always = no
+		}
+		available = {
+			has_country_flag = tugaiwancheng_jap
+		}
+		days_mission_timeout = 365
+		is_good = no
+		complete_effect = {
+			530 = {
+			add_extra_state_shared_building_slots = 6
+			}
+			535 = {
+			add_extra_state_shared_building_slots = 6
+			}
+			533 = {
+			add_extra_state_shared_building_slots = 6
+			}
+			536 = {
+			add_extra_state_shared_building_slots = 6
+			}
+			add_power_balance_value = {
+			id = JAP_balance
+			value = -0.1
+			}
+		}
+		timeout_effect = {
+			country_event = jap.77
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	JAP_yc_guotujianshe = {
+		icon = eng_trade_unions_support
+		cost = 0
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 0
+			modifier = {
+			date > 1941.1.1
+			add = 100
+			}
+		}
+		available = {
+			has_completed_focus = JAP_14
+		}
+		
+		complete_effect = {
+			activate_mission = JAP_rw_guotujianshe
+			add_timed_idea = {
+			idea = jap_guotujianshe_idea
+			days = 365
+			}
+		}
+	}
+	JAP_rw_guotujianshe = {
+		icon = generic_construction
+		activation	= {
+			always = no
+		}
+		available = {
+			if = {
+			limit = { is_ai = yes }
+			tag = JAP
+			}
+			if = {
+			limit = { is_ai = no }
+			282 = {
+			infrastructure > 4
+			}
+			528 = {
+			infrastructure > 4
+			}
+			529 = {
+			infrastructure > 4
+			}
+			531 = {
+			infrastructure > 4
+			}
+			532 = {
+			infrastructure > 4
+			}
+			535 = {
+			infrastructure > 4
+			}
+			}
+		}
+		days_mission_timeout = 365
+		is_good = no
+		complete_effect = {
+			custom_effect_tooltip = buffbianyongjiu_jap_1
+			hidden_effect = {
+			remove_ideas = jap_guotujianshe_idea
+			add_ideas = jap_guotujianshe_idea
+			}
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_power_balance_value = {
+			id = JAP_balance
+			value = -0.1
+			}
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	JAP_yc_wenhuajiaoliu = {
+		icon = eng_trade_unions_support
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 0
+			modifier = {
+			date > 1939.2.1
+			}
+		}
+		available = {
+			or = {
+			has_completed_focus = JAP_new10
+			has_completed_focus = JAP_new36
+			has_completed_focus = JAP_new37
+			has_completed_focus = JAP_new59
+			}
+		}
+		
+		complete_effect = {
+			activate_mission = JAP_rw_wenhuajiaoliu
+			if = {
+			limit = {
+			has_government = fascism
+			GER = {
+			has_government = fascism
+			}
+			}
+			add_ai_strategy = {
+				type = befriend	
+				id = "GER"			
+				value = 200
+			}
+			}
+			if = {
+			limit = {
+			has_government = democratic
+			ENG = {
+			has_government = democratic
+			}
+			}
+			add_ai_strategy = {
+				type = befriend	
+				id = "ENG"			
+				value = 200
+			}
+			}
+			if = {
+			limit = {
+			has_government = communism
+			SOV = {
+			has_government = communism
+			}
+			}
+			add_ai_strategy = {
+				type = befriend	
+				id = "SOV"			
+				value = 200
+			}
+			}
+		}
+	}
+	JAP_rw_wenhuajiaoliu = {
+		icon = eng_propaganda_campaigns
+		activation	= {
+			always = no
+		}
+		available = {
+			any_country = {
+			is_major = yes
+			has_government = ROOT
+			has_opinion = {
+				target = JAP
+				value > 89
+			}
+			}
+		}
+		days_mission_timeout = 365
+		is_good = no
+		complete_effect = {
+			add_political_power = 200
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_power_balance_value = {
+			id = JAP_balance
+			value = 0.1
+			}
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	JAP_yc_lixiangcheng = {
+		icon = eng_trade_unions_support
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 0
+			modifier = {
+			date > 1939.8.1
+			add = 100
+			}
+		}
+		available = {
+			has_country_flag = xiandaihuadadushi_flag_jap
+		}
+		
+		complete_effect = {
+			activate_mission = JAP_rw_lixiangchengjihua
+		}
+	}
+	JAP_rw_lixiangchengjihua = {
+		icon = generic_factory
+		activation	= {
+			always = no
+		}
+		available = {
+			if = {
+			limit = { is_ai = yes }
+			tag = JAP
+			}
+			if = {
+			limit = { is_ai = no }
+			282 = {
+			industrial_complex > 4
+			arms_factory > 9
+			dockyard > 4
+			}
+			}
+		}
+		days_mission_timeout = 365
+		is_good = no
+		complete_effect = {
+			282 = {
+				add_dynamic_modifier = {
+					modifier = JAP_lixiangcheng_state
+				}
+			}
+			add_power_balance_value = {
+			id = JAP_balance
+			value = -0.05
+			}
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_stability = -0.1
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	JAP_yc_kuochonglujun = {
+		icon = eng_trade_unions_support
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			has_completed_focus = JAParmy_expansion_law
+		}
+		
+		complete_effect = {
+			activate_mission = JAP_rw_kuochonglujun
+			add_timed_idea = {
+			idea = jap_kuochonglujun_idea
+			days = 730
+			}
+		}
+	}
+	JAP_yc_kuochonghaijun = {
+		icon = eng_trade_unions_support
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = JAP_diguohaijunfazhannihua_tip
+				or = {
+				has_idea = JAP_zaochuanjihua_ex
+				has_idea = JAP_zaochuanjihua
+				}
+			}
+		}
+		
+		complete_effect = {
+			activate_mission = JAP_rw_kuochonghaijun
+			add_timed_idea = {
+			idea = jap_kuochonghaijun_idea
+			days = 1095
+			}
+		}
+	}
+	JAP_rw_kuochonglujun = {
+		icon = generic_prepare_civil_war
+		activation	= {
+			always = no
+		}
+		available = {
+			if = {
+			limit = { is_ai = yes }
+			tag = JAP
+			}
+			if = {
+			limit = { is_ai = no }
+				has_army_manpower = {
+					size > 1199999
+				}
+			}
+		}
+		days_mission_timeout = 730
+		is_good = no
+		complete_effect = {
+			custom_effect_tooltip = buffbianyongjiu_jap_2
+			hidden_effect = {
+			remove_ideas = jap_kuochonglujun_idea
+			add_ideas = jap_kuochonglujun_idea
+			}
+			JAP_interservice_rivalry_towards_army = yes
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_war_support = -0.2
+			add_power_balance_value = {
+			id = JAP_balance
+			value = -0.1
+			}
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	JAP_rw_kuochonghaijun = {
+		icon = jap_pacific_guardian
+		activation	= {
+			always = no
+		}
+		available = {
+			if = {
+			limit = { is_ai = yes }
+			tag = JAP
+			}
+			if = {
+			limit = { is_ai = no }
+				has_navy_size = {
+				size > 29
+				type = capital_ship
+				archetype = ship_hull_heavy
+				}
+				has_navy_size = {
+				size > 299
+				type = screen_ship
+				archetype = ship_hull_light
+				}
+			}
+		}
+		days_mission_timeout = 1095
+		is_good = no
+		complete_effect = {
+			custom_effect_tooltip = buffbianyongjiu_jap_3
+			hidden_effect = {
+			remove_ideas = jap_kuochonghaijun_idea
+			add_ideas = jap_kuochonghaijun_idea
+			}
+			JAP_interservice_rivalry_towards_navy = yes
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_war_support = -0.2
+			add_power_balance_value = {
+			id = JAP_balance
+			value = -0.1
+			}
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	JAP_rw_qinhua = {
+		icon = jap_conquer_china
+		activation	= {
+			always = no
+		}
+		available = {
+			or = {
+			has_completed_focus = JAP_new79
+			has_war_with = CHI
+			}
+		}
+		days_mission_timeout = 740
+		is_good = no
+		complete_effect = {
+			add_war_support = 0.1
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_stability = -0.15
+			if = {
+				limit = {
+					CHI = {
+						controls_state = 608
+					}
+				}
+				CHI = {
+					country_event = jap.100
+				}
+			}
+			if = {
+				limit = {
+					ROC = {
+						controls_state = 608
+					}
+				}
+				ROC = {
+					country_event = jap.100
+				}
+			}
+			if = {
+				limit = {
+					PRC = {
+						controls_state = 608
+					}
+				}
+				PRC = {
+					country_event = jap.100
+				}
+			}
+		}
+		cancel_trigger = {
+			or = {
+			is_subject = yes
+			MAN = { is_puppet = no }
+			}
+		}
+	}
+	
+	JAP_rw_nanxia = {
+		icon = SWE_set_navy_budget
+		activation	= {
+			always = no
+		}
+		available = {
+			or = {
+			has_completed_focus = JAP_new81
+			has_war_with = MAL
+			is_in_faction_with = MAL
+			if = {
+			has_government = democratic
+			MAL = { is_puppet = no }
+			}
+			}
+		}
+		days_mission_timeout = 500
+		is_good = no
+		complete_effect = {
+			add_war_support = 0.2
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_stability = -0.15
+			add_war_support = -0.15
+			declare_war_on = {
+				target = MAL
+				type = puppet_wargoal_focus
+			}
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	
+	JAP_rw_dalujunjihua = {
+		icon = generic_protection
+		activation	= {
+			always = no
+		}
+		available = {
+			if = {
+			limit = { is_ai = yes }
+			tag = JAP
+			}
+			if = {
+			limit = { is_ai = no }
+				has_army_manpower = {
+					size > 1999999
+				}
+			}
+		}
+		days_mission_timeout = 1500
+		is_good = no
+		complete_effect = {
+			add_political_power = 50
+			add_war_support = 0.1
+			add_power_balance_value = {
+			id = JAP_balance
+			value = 0.1
+			}
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_war_support = -0.15
+			add_power_balance_value = {
+			id = JAP_balance
+			value = -0.1
+			}
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+	
+	JAP_rw_zhangkongcaifa = {
+		icon = generic_assassination
+		activation	= {
+			always = no
+		}
+		available = {
+			not = { has_idea = JAO_caifahezuo }
+		}
+		days_mission_timeout = 100
+		is_good = no
+		timeout_effect = {
+			add_political_power = 100
+			add_stability = -0.15			
+			swap_ideas = {
+			remove_idea = JAO_caifahezuo
+			add_idea = JAO_zhangkongcaifa
+			}
+		}
+		cancel_trigger = {
+			is_subject = yes
+		}
+	}
+}
+
+JAP_dapai_2 = {
+	JAP_start_paiju_2 = {
+		icon = SWI_no_elected_president
+		cost = 0
+		fire_only_once = yes
+		available = {
+			MAN = { 
+			is_puppet = no
+			exists = yes 
+			is_in_faction_with = JAP
+			}
+		}
+		visible = {
+			tag = JAP
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_global_flag = JAP_by2_start_flag
+			activate_mission = JAP_by_MAN
+			MAN = {
+			set_country_flag = JAP_MAN_dapai
+			country_event = jap.103
+			hidden_effect = {
+			activate_mission = JAP_by_MAN
+			}
+			}
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 10
+			}
+			clr_country_flag = JAP_by2ing
+		}
+	}
+	JAP_by2_xd1 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = JAP
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			MAN = {
+			activate_mission = JAP_by2_xd1_show
+			}
+			}
+		}
+		remove_effect = {
+			MAN = {
+			add_stability = -0.05
+			add_popularity = { ideology = fascism popularity = 0.1 }
+			}
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = JAP_by_point_five
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 5
+			}
+		}
+	}
+	JAP_by2_xd1_show = {
+		priority = 0
+		icon = generic_political_address
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = JAP_by_point_five
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = JAP
+			not = { country_exists = JAP }
+			JAP =  { is_subject = yes }
+			}
+		}
+	}
+	JAP_by2_xd2 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = JAP
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			MAN = {
+			activate_mission = JAP_by2_xd2_show
+			}
+			}
+		}
+		remove_effect = {
+			MAN = {
+			add_stability = -0.1
+			add_war_support = -0.1
+			}
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = JAP_by_point_five
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 5
+			}
+		}
+	}
+	JAP_by2_xd2_show = {
+		priority = 0
+		icon = generic_tank
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = JAP_by_point_five
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = JAP
+			not = { country_exists = JAP }
+			JAP =  { is_subject = yes }
+			}
+		}
+	}
+	JAP_by2_xd3 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = JAP
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			MAN = {
+			activate_mission = JAP_by2_xd3_show
+			}
+			}
+		}
+		remove_effect = {
+			MAN = {
+			add_political_power = -25
+			add_popularity = { ideology = fascism popularity = 0.05 }
+			}
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = JAP_by_point_two_to_four
+			hidden_effect = {
+			random_list = {
+			33 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 2
+			}
+			}
+			33 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 3
+			}
+			}
+			33 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 4
+			}
+			}
+			}
+			}
+		}
+	}
+	JAP_by2_xd3_show = {
+		priority = 0
+		icon = generic_assassination
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = JAP_by_point_two_to_four
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = JAP
+			not = { country_exists = JAP }
+			JAP =  { is_subject = yes }
+			}
+		}
+	}
+	JAP_by2_xd4 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = JAP
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			has_government = democratic
+			any_other_country = {
+			is_in_faction_with = MAN
+			is_in_faction_with = JAP
+			not = { tag = MAN }
+			not = { is_subject_of = JAP }
+			}
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			MAN = {
+			activate_mission = JAP_by2_xd4_show
+			}
+			}
+		}
+		remove_effect = {
+			MAN = {
+			add_war_support = -0.15
+			}
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = JAP_by_point_one_to_six
+			hidden_effect = {
+			random_list = {
+			16 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 1
+			}
+			}
+			16 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 2
+			}
+			}
+			17 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 3
+			}
+			}
+			17 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 4
+			}
+			}
+			16 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 5
+			}
+			}
+			16 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 6
+			}
+			}
+			}
+			}
+		}
+	}
+	JAP_by2_xd4_show = {
+		priority = 0
+		icon = generic_political_discourse
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = JAP_by_point_one_to_six
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = JAP
+			not = { country_exists = JAP }
+			JAP =  { is_subject = yes }
+			}
+		}
+	}
+	JAP_by2_xd5 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = JAP
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			MAN = {
+			activate_mission = JAP_by2_xd5_show
+			}
+			}
+		}
+		remove_effect = {
+			MAN = {
+			add_political_power = -50
+			add_popularity = { ideology = fascism popularity = 0.05 }
+			}
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = JAP_by_point_two_to_four
+			hidden_effect = {
+			random_list = {
+			33 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 2
+			}
+			}
+			33 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 3
+			}
+			}
+			33 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 4
+			}
+			}
+			}
+			}
+		}
+	}
+	JAP_by2_xd5_show = {
+		priority = 0
+		icon = eng_propaganda_campaigns
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = JAP_by_point_two_to_four
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = JAP
+			not = { country_exists = JAP }
+			JAP =  { is_subject = yes }
+			}
+		}
+	}
+	JAP_by_MAN = {
+		priority = 0
+		icon = generic_scales
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 180
+		is_good = yes
+		complete_effect = {
+			
+		}
+		timeout_effect = {
+			if = {
+			limit = {
+			check_variable = {
+			var = JAP.jap_dongbeiboyidianshu
+			value = MAN.jap_dongbeiboyidianshu
+			compare = greater_than
+			}
+			check_variable = {
+			var = JAP.jap_dongbeiboyidianshu
+			value = 22
+			compare = less_than
+			}
+			}
+			country_event = jap.108
+			}
+			if = {
+			limit = {
+			check_variable = {
+			var = MAN.jap_dongbeiboyidianshu
+			value = JAP.jap_dongbeiboyidianshu
+			compare = greater_than
+			}
+			check_variable = {
+			var = MAN.jap_dongbeiboyidianshu
+			value = 22
+			compare = less_than
+			}
+			}
+			country_event = jap.104
+			}
+			if = {
+			limit = {
+			OR = {
+			check_variable = {
+			var = MAN.jap_dongbeiboyidianshu
+			value = JAP.jap_dongbeiboyidianshu
+			compare = equals
+			}
+			if = {
+			check_variable = {
+			var = MAN.jap_dongbeiboyidianshu
+			value = 21
+			compare = greater_than
+			}
+			check_variable = {
+			var = JAP.jap_dongbeiboyidianshu
+			value = 21
+			compare = greater_than
+			}
+			}#if
+			}#or
+			}
+			country_event = jap.105
+			}
+			if = {
+			limit = {
+			check_variable = {
+			var = MAN.jap_dongbeiboyidianshu
+			value = 22
+			compare = less_than
+			}
+			check_variable = {
+			var = JAP.jap_dongbeiboyidianshu
+			value = 21
+			compare = greater_than
+			}
+			}
+			country_event = jap.104
+			}
+			if = {
+			limit = {
+			check_variable = {
+			var = JAP.jap_dongbeiboyidianshu
+			value = 22
+			compare = less_than
+			}
+			check_variable = {
+			var = MAN.jap_dongbeiboyidianshu
+			value = 21
+			compare = greater_than
+			}
+			}
+			country_event = jap.108
+			}
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = MAN
+			not = { country_exists = MAN }
+			MAN =  { is_subject = yes }
+			}
+		}
+	}
+	MAN_by2_xd1 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = MAN
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			JAP = {
+			activate_mission = MAN_by2_xd1_show
+			}
+			}
+		}
+		remove_effect = {
+			army_experience = 20
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = MAN_by_point_eight
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 8
+			}
+		}
+	}
+	MAN_by2_xd1_show = {
+		priority = 0
+		icon = FIN_weapon_caches
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = MAN_by_point_eight
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = MAN
+			not = { country_exists = MAN }
+			MAN =  { is_subject = yes }
+			}
+		}
+	}
+	MAN_by2_xd2 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = MAN
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			JAP = {
+			activate_mission = MAN_by2_xd2_show
+			}
+			}
+		}
+		remove_effect = {
+			add_political_power = 15
+			add_stability = 0.1
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = MAN_by_point_four_to_eight
+			hidden_effect = {
+			random_list = {
+			20 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 6
+			}
+			}
+			20 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 7
+			}
+			}
+			20 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 4
+			}
+			}
+			20 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 5
+			}
+			}
+			20 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 8
+			}
+			}
+			}
+			}
+		}
+	}
+	MAN_by2_xd2_show = {
+		priority = 0
+		icon = generic_arrest
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = MAN_by_point_four_to_eight
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = MAN
+			not = { country_exists = MAN }
+			MAN =  { is_subject = yes }
+			}
+		}
+	}
+	MAN_by2_xd3 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = MAN
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			JAP = {
+			activate_mission = MAN_by2_xd3_show
+			}
+			}
+		}
+		remove_effect = {
+			add_political_power = 25
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = MAN_by_point_one_to_four
+			hidden_effect = {
+			random_list = {
+			25 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 4
+			}
+			}
+			25 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 3
+			}
+			}
+			25 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 2
+			}
+			}
+			25 = {
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 1
+			}
+			}
+			}
+			}
+		}
+	}
+	MAN_by2_xd3_show = {
+		priority = 0
+		icon = eng_blackshirt_speech
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = MAN_by_point_one_to_four
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = MAN
+			not = { country_exists = MAN }
+			MAN =  { is_subject = yes }
+			}
+		}
+	}
+	MAN_by2_xd4 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = MAN
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+			not = { has_war_with = SOV }
+			SOV = { is_major = yes }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			JAP = {
+			activate_mission = MAN_by2_xd4_show
+			}
+			}
+		}
+		remove_effect = {
+			add_war_support = 0.15
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = MAN_by_point_six
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 6
+			}
+		}
+	}
+	MAN_by2_xd4_show = {
+		priority = 0
+		icon = generic_civil_support
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = MAN_by_point_six
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = MAN
+			not = { country_exists = MAN }
+			MAN =  { is_subject = yes }
+			}
+		}
+	}
+	MAN_by2_xd5 = {
+		priority = 200
+		icon = duihuan_gongchang_1
+		cost = 20
+		fire_only_once = yes
+		days_remove = 40
+		visible = {
+			tag = MAN
+			has_global_flag = JAP_by2_start_flag
+			not = { has_global_flag = JAP_MAN_byover }
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			not = { has_country_flag = JAP_by2ing }
+		}
+		complete_effect = {
+			set_country_flag = JAP_by2ing
+			hidden_effect = {
+			JAP = {
+			activate_mission = MAN_by2_xd5_show
+			}
+			}
+		}
+		remove_effect = {
+			add_stability = 0.1
+			add_war_support = 0.05
+			clr_country_flag = JAP_by2ing
+			custom_effect_tooltip = MAN_by_point_six
+			add_to_variable = {
+				var = jap_dongbeiboyidianshu
+				value = 6
+			}
+		}
+	}
+	MAN_by2_xd5_show = {
+		priority = 0
+		icon = generic_form_nation
+		activation	= {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 40
+		is_good = no
+		timeout_effect = {
+			custom_effect_tooltip = MAN_by_point_six
+		}
+		cancel_trigger = {
+			OR = {
+			is_subject = yes
+			has_war_with = MAN
+			not = { country_exists = MAN }
+			MAN =  { is_subject = yes }
 			}
 		}
 	}
