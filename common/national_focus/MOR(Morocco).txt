@@ -827,13 +827,19 @@ focus_tree = {
 		}
 		x = -3
 		y = 1
-		cost = 5
+		cost = 10
  
 		ai_will_do = {
 			factor = 25
 		}
 		available = {
 			NOT = { has_government = communism }
+		}
+
+		cancelable = no
+
+		select_effect = {
+			country_event = iberia_rec.040
 		}
 
 		completion_reward = {
@@ -997,6 +1003,10 @@ focus_tree = {
 		x = -1
 		y = 1
 		cost = 5
+
+		available = {
+			always = no
+		}
  
 		ai_will_do = {
 			factor = 25
@@ -1005,6 +1015,10 @@ focus_tree = {
 		completion_reward = {
 			set_politics = {
 				ruling_party = democratic
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.20
 			}
 		}
 	}
@@ -1027,6 +1041,10 @@ focus_tree = {
 			factor = 25
 		}
 
+		available = {
+			always = no
+		}
+
 		completion_reward = {
 			set_politics = {
 				ruling_party = neutrality
@@ -1035,9 +1053,12 @@ focus_tree = {
 				character = NPT_Alfonso_XIII
 				country_leader = {
 					ideology = Absolute_monarchy
+					traits = { NPT_reliable_ship }
 				}
 				promote_leader = yes
 			}
+			NPT_remove_all_head_of_government = yes
+			set_country_flag = NPT_Alfonso_head_of_government
 		}
 	}
 							
@@ -1568,10 +1589,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			every_state = {
-				limit = { has_state_flag = FRAZDQ }
-				add_core_of = ROOT
-			}
+			add_ideas = MOR_god_king_and_country_focus
 		}
 	}
 									
@@ -2041,7 +2059,7 @@ focus_tree = {
 		mutually_exclusive = {
 			focus = MOR_former_dream
 		}
-		x = 1
+		x = 2
 		y = 1
 		cost = 5
 
@@ -2116,7 +2134,6 @@ focus_tree = {
 		x = 1
 		y = 1
 		cost = 5
- 
 		ai_will_do = {
 			factor = 25
 		}
@@ -2124,19 +2141,33 @@ focus_tree = {
 		available = {
 			has_country_flag = MOR_rebuild_SPA
 			is_neighbor_of = FRA
+			has_global_flag = second_weltkrieg_has_started
 		}
 
 		will_lead_to_war_with = FRA
 
 		completion_reward = {
-			FRA = {
-				every_core_state = {
-					add_claim_by = ROOT
-				}
+			ROOT = { 
+				KMK = { enable_coring_at_eighty_compliance = yes }
+				FRA = { enable_coring_at_eighty_compliance = yes }
+				FOT = { enable_coring_at_eighty_compliance = yes }
 			}
-			create_wargoal = {
-				target = FRA
-				type = annex_everything
+			custom_effect_tooltip = MOR_revenge_FRA_TT
+			hidden_effect = {
+				every_country = {
+					limit = {
+						or = {
+							tag = FRA
+							tag = KMK
+							tag = FOT
+						}
+						exists = yes
+					}
+					every_core_state = {
+						add_claim_by = ROOT
+					}
+					ROOT = { create_wargoal = { target = PREV type = annex_everything } }
+				}
 			}
 		}
 	}
@@ -2378,7 +2409,7 @@ focus_tree = {
 		prerequisite = {
 			focus = MOR_comrades_with_one_heart
 		}
-		x = 0
+		x = -1
 		y = 1
 		cost = 5
  
@@ -2402,7 +2433,7 @@ focus_tree = {
 		prerequisite = {
 			focus = MOR_comrades_with_one_heart
 		}
-		x = 2
+		x = 1
 		y = 1
 		cost = 5
  
@@ -2493,6 +2524,7 @@ focus_tree = {
 		}
 
 		available = {
+			has_global_flag = second_weltkrieg_has_started
 			has_government = communism
 			country_exists = FRA
 			FRA = { has_war_with = DVL }
