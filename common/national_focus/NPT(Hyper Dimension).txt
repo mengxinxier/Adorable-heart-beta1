@@ -844,7 +844,10 @@ focus_tree = {
 
 		select_effect = {
 			hidden_effect = {
-				country_event = neptune.133
+				if = {
+					limit = { NOT = { has_country_flag = NPT_Alfonso_XIII_head_of_government } }
+					country_event = neptune.133
+				}
 			}
 		}
 
@@ -3692,6 +3695,15 @@ focus_tree = {
 		completion_reward = {
 			army_experience = 35
 			add_ideas = NPT_all_dimensional_red_army
+			add_manpower = -100000
+			if = {
+				limit = { is_ai = yes }
+				add_equipment_to_stockpile = {
+					type = infantry_equipment_1
+					amount = 7500
+					producer = ROOT
+				}
+			}
 		}
 	}
 	
@@ -3988,13 +4000,20 @@ focus_tree = {
 		}
 		x = 1
 		y = 1
-		cost = 4
+		cost = 10
  
 		ai_will_do = {
 			factor = 15
 		}
 
 		completion_reward = {
+			every_core_state = {
+				limit = { is_fully_controlled_by = ROOT }
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
 			hidden_effect = {
 				add_to_variable = { NPT_AWS_production_factory_max_efficiency_factor = 0.10 }
 				add_to_variable = { NPT_AWS_production_speed_buildings_factor = -0.05 }
@@ -4565,10 +4584,14 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			add_offsite_building = {
+				type = arms_factory
+				level = 4
+			}
 			hidden_effect = {
-				add_to_variable = { NPT_AWS_army_core_attack_factor = 0.10 }
-				add_to_variable = { NPT_AWS_army_core_defence_factor = 0.10 }
-				add_to_variable = { NPT_AWS_enemy_operative_capture_chance_factor = 0.15 }
+				add_to_variable = { NPT_AWS_army_core_attack_factor = 0.20 }
+				add_to_variable = { NPT_AWS_army_core_defence_factor = 0.20 }
+				add_to_variable = { NPT_AWS_enemy_operative_capture_chance_factor = 0.25 }
 			}
 			custom_effect_tooltip = NPT_arfoire_defending_revolution_tt
 		}
@@ -6898,6 +6921,12 @@ focus_tree = {
 						}
 					}
 				}
+				NPT_blanc = {
+					swap_country_leader_traits = {
+						remove = NPT_Lowey
+						add = NPT_white_heart
+					}
+				}
 				add_country_leader_role = {
 					character = NPT_blanc
 					country_leader = {
@@ -8034,7 +8063,7 @@ focus_tree = {
 		cost = 4
  
 		ai_will_do = {
-			factor = 20
+			factor = 200
 		}
 		
 		completion_reward = {
@@ -8070,7 +8099,7 @@ focus_tree = {
 		cost = 4
  
 		ai_will_do = {
-			factor = 20
+			factor = 200
 		}
 		
 		completion_reward = {
@@ -8091,7 +8120,7 @@ focus_tree = {
 		cost = 4
  
 		ai_will_do = {
-			factor = 20
+			factor = 200
 		}
 		
 		completion_reward = {
@@ -8115,7 +8144,7 @@ focus_tree = {
 		cost = 4
  
 		ai_will_do = {
-			factor = 20
+			factor = 200
 		}
 		
 		completion_reward = {
@@ -8151,11 +8180,24 @@ focus_tree = {
 		cost = 4
  
 		ai_will_do = {
-			factor = 20
+			factor = 200
 		}
 		
 		completion_reward = {
+			if = {
+				limit = {
+					NOT = { has_idea = NPT_compact_of_solidarity }
+				}
+				swap_ideas = {
+					remove_idea = NPT_towards_opposing_goddesses
+					add_idea = NPT_compact_of_solidarity
+				}
+			}
+			else = {
+				remove_ideas = NPT_towards_opposing_goddesses
+			}
 			country_event = neptune.132
+			complete_national_focus = NPT_Blanc_ministry_of_foreign_affairs
 		}
 	}
 								
@@ -8449,7 +8491,18 @@ focus_tree = {
 					is_subject = yes
 				}
 			}
-			NOT = { is_in_faction_with = FRA }
+			NOT = { 
+				AND = {
+					is_in_faction_with = FRA 
+					is_faction_leader = yes
+				}
+			}
+			FRA = { 
+				has_government = democratic 
+				is_subject = no
+				is_in_faction_with = ENG
+				is_faction_leader = no
+			}
 		}
 
 		completion_reward = {
@@ -8492,6 +8545,18 @@ focus_tree = {
 			16 = { is_owned_by = NFA }
 			has_global_flag = second_weltkrieg_has_started
 			NOT = { is_in_faction_with = NFA }
+			NOT = { 
+				AND = {
+					is_in_faction_with = NFA 
+					is_faction_leader = yes
+				}
+			}
+			NFA = { 
+				has_government = democratic 
+				is_subject = no
+				is_in_faction_with = ENG
+				is_faction_leader = no
+			}
 		}
 
 		completion_reward = {
