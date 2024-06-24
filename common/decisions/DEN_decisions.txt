@@ -389,44 +389,6 @@ DEN_strike_frenzy_decision_category = {
 			DEN_contradiction_alleviation = yes
 		}
 	}
-	#扩大出口订单：赚钱
-	DEN_increase_export_orders = {
-		icon = GFX_decision_gre_paying_ifc_debt
-		allowed = {
-			always = no
-		}
-		fire_only_once = yes
-		cost = 10
-		days_remove = 3
-		ai_will_do = {
-			base = 100
-		}
-		remove_effect = {
-			FROM = { country_event = den_crisis.033 }
-			custom_effect_tooltip = if_they_accept
-			effect_tooltip = {
-				add_political_power = 60
-				random_list = {
-					50 = {
-						add_to_variable = { ubs_save = 50 }
-						custom_effect_tooltip = SOV_get_50_add_to_reserve
-					}
-					30 = {
-						add_to_variable = { ubs_save = 75 }
-						custom_effect_tooltip = SOV_get_75_add_to_reserve
-					}
-					10 = {
-						add_to_variable = { ubs_save = 100 }
-						custom_effect_tooltip = SOV_get_100_add_to_reserve
-					}
-				}
-			}
-			custom_effect_tooltip = DEN_achieved_trade_volume_tt
-			effect_tooltip = {
-				DEN_alleviate_the_great_depression = yes
-			}
-		}
-	}
 
 #第三阶段：和共产党对决
 	#共产党抢班夺权：倒计时结束，红色占比大于50%则判定红色胜利
@@ -848,104 +810,109 @@ DEN_strike_frenzy_decision_category = {
 		}
 	}
 
+#经济活动
+
+	#扩大出口订单：赚钱
+	DEN_increase_export_orders = {
+		icon = GFX_decision_gre_paying_ifc_debt
+		allowed = {
+			always = no
+		}
+		fire_only_once = yes
+		cost = 10
+		days_remove = 14
+		ai_will_do = {
+			base = 100
+		}
+		remove_effect = {
+			FROM = { country_event = den_crisis.033 }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				add_political_power = 50
+				random_list = {
+					50 = {
+						add_to_variable = { ubs_save = 50 }
+						custom_effect_tooltip = SOV_get_50_add_to_reserve
+					}
+					30 = {
+						add_to_variable = { ubs_save = 75 }
+						custom_effect_tooltip = SOV_get_75_add_to_reserve
+					}
+					10 = {
+						add_to_variable = { ubs_save = 100 }
+						custom_effect_tooltip = SOV_get_100_add_to_reserve
+					}
+				}
+			}
+			custom_effect_tooltip = DEN_achieved_trade_volume_tt
+			effect_tooltip = {
+				DEN_alleviate_the_great_depression = yes
+			}
+		}
+	}
+	DEN_announce_the_passage_of_economic_crisis = {
+		icon = GFX_decision_gre_paying_ifc_debt
+		priority = 1000
+		visible = {
+			OR = {
+				has_idea = DEN_great_depression5
+				has_idea = DEN_great_depression4
+				has_idea = DEN_great_depression3
+				has_idea = DEN_great_depression2
+				has_idea = DEN_great_depression
+			}
+		}
+		available = {
+			custom_trigger_tooltip = {
+				check_variable = {
+					ubs_load < 50
+				}
+				tooltip = national_debt_less_than_50_tt
+			}
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			base = 1000
+		}
+		remove_effect = {
+			hidden_effect = {
+				remove_ideas = DEN_great_depression
+				remove_ideas = DEN_great_depression2
+				remove_ideas = DEN_great_depression3
+				remove_ideas = DEN_great_depression4
+				remove_ideas = DEN_great_depression5
+			}
+			effect_tooltip = {
+				if = {
+					limit = { has_idea = DEN_great_depression }
+					remove_ideas = DEN_great_depression
+				}
+				if = {
+					limit = { has_idea = DEN_great_depression2 }
+					remove_ideas = DEN_great_depression2
+				}
+				if = {
+					limit = { has_idea = DEN_great_depression3 }
+					remove_ideas = DEN_great_depression3
+				}
+				if = {
+					limit = { has_idea = DEN_great_depression4 }
+					remove_ideas = DEN_great_depression4
+				}
+				if = {
+					limit = { has_idea = DEN_great_depression5 }
+					remove_ideas = DEN_great_depression5
+				}
+			}
+			add_political_power = 200
+			add_stability = 0.10
+			add_war_support = 0.10
+		}
+	}
 	
 }
 
-# gtmx_UBS_bank = {
-
-# 	DEN_start_sale_AUTO_META = {
-# 		icon = decision_eng_trade_unions_support
-# 		allowed = {
-# 			original_tag = DEN
-# 		}
-# 		visible = {
-# 			NOT = { has_idea = DEN_sale_AUTO_META }
-# 			has_completed_focus = DEN_open_machinery_field
-# 		}
-# 		available = {
-# 			is_subject = no
-# 		}
-# 		ai_will_do = {
-# 			base = 0
-# 			modifier = {
-# 				add = 100
-# 				check_variable = { ubs_load > 100 }
-# 			}
-# 		}
-# 		cost = 50
-# 		fire_only_once = no
-# 		complete_effect = {
-# 			add_ideas = DEN_sale_AUTO_META
-# 		}
-# 	}
-# 	DEN_cease_sale_AUTO_META = {
-# 		icon = decision_generic_break_treaty
-# 		allowed = {
-# 			original_tag = DEN
-# 		}
-# 		visible = {
-# 			has_idea = DEN_sale_AUTO_META
-# 			has_completed_focus = DEN_open_machinery_field
-# 		}
-# 		available = {
-# 			is_subject = no
-# 		}
-# 		ai_will_do = {
-# 			base = 0
-# 			modifier = {
-# 				add = 100
-# 				OR = {
-# 					AND = {
-# 						check_variable = { ubs_load < 10 }
-# 						check_variable = { ubs_save > 100 }
-# 					}
-# 					date > 1940.1.1
-# 					has_war = yes
-# 				}
-# 			}
-# 		}
-# 		cost = 50
-# 		fire_only_once = no
-# 		complete_effect = {
-# 			remove_ideas = DEN_sale_AUTO_META
-# 		}
-# 	}
-# 	DEN_sale_of_AUTO_META = {
-# 		icon = decision_eng_trade_unions_support
-# 		allowed = {
-# 			original_tag = DEN
-# 		}
-# 		visible = {
-# 			has_idea = DEN_sale_AUTO_META
-# 			has_completed_focus = DEN_open_machinery_field
-# 		}
-# 		available = {
-# 			is_subject = no
-# 			has_equipment = {
-# 				KEI_AUTO_META_equipments > 499
-# 			}
-# 		}
-# 		ai_will_do = {
-# 			base = 0
-# 			modifier = {
-# 				add = 100
-# 				check_variable = { ubs_load > 100 }
-# 				check_variable = { ubs_save < 100 }
-# 			}
-# 		}
-# 		cost = 0
-# 		fire_only_once = no
-# 		days_re_enable = 60
-# 		complete_effect = {
-# 			add_equipment_to_stockpile = {
-# 				type = KEI_AUTO_META_equipments
-# 				amount = -500
-# 			}
-# 			add_to_variable = { ubs_save = 100 }
-# 			custom_effect_tooltip = SOV_get_100_add_to_reserve
-# 		}
-# 	}
-# }
 
 DEN_public_works_construction_category = {
 
@@ -1049,126 +1016,6 @@ DEN_public_works_construction_category = {
 					type = arms_factory
 					level = 1
 				}
-			}
-		}
-	}
-	
-	DEN_integrate_Juliet_research_institute = {
-		icon = GFX_decision_generic_research
-		visible = {
-			has_completed_focus = DEN_integrate_enterprise_institute
-		}
-		available = {
-			if = { 
-				limit = { is_ai = no }
-				has_idea = DEN_Juliet
-			}
-		}
-		custom_cost_text = RUS_100_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 100 }
-		}
-		ai_will_do = {
-			base = 1000
-		}
-		fire_only_once = yes
-		days_remove = 90
-		complete_effect = {
-			hidden_effect = {
-				add_to_variable = { ubs_save = -100 }
-			}
-		}
-		remove_effect = {
-			remove_advisor_role = {
-				slot = political_advisor
-				character = DEN_Juliet
-			}
-			DEN_integrate_research_institute = yes
-			add_tech_bonus = {
-				name = DEN_integrate_Juliet_research_institute
-				category = artillery
-				bonus = 0.5
-				uses = 1
-			}
-		}
-	}
-		
-	DEN_integrate_Naoto_research_institute = {
-		icon = GFX_decision_generic_research
-		visible = {
-			has_completed_focus = DEN_integrate_enterprise_institute
-		}
-		available = {
-			if = { 
-				limit = { is_ai = no }
-				has_idea = DEN_Naoto
-			}
-		}
-		custom_cost_text = RUS_100_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 100 }
-		}
-		ai_will_do = {
-			base = 1000
-		}
-		fire_only_once = yes
-		days_remove = 90
-		complete_effect = {
-			hidden_effect = {
-				add_to_variable = { ubs_save = -100 }
-			}
-		}
-		remove_effect = {
-			remove_advisor_role = {
-				slot = political_advisor
-				character = DEN_Naoto
-			}
-			DEN_integrate_research_institute = yes
-			add_tech_bonus = {
-				name = DEN_integrate_Naoto_research_institute
-				category = AUTO_META
-				bonus = 0.5
-				uses = 1
-			}
-		}
-	}
-		
-	DEN_integrate_Akane_research_institute = {
-		icon = GFX_decision_generic_research
-		visible = {
-			has_completed_focus = DEN_integrate_enterprise_institute
-		}
-		available = {
-			if = { 
-				limit = { is_ai = no }
-				has_idea = DEN_Akane
-			}
-		}
-		ai_will_do = {
-			base = 1000
-		}
-		custom_cost_text = RUS_100_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 100 }
-		}
-		fire_only_once = yes
-		days_remove = 90
-		complete_effect = {
-			hidden_effect = {
-				add_to_variable = { ubs_save = -100 }
-			}
-		}
-		remove_effect = {
-			remove_advisor_role = {
-				slot = political_advisor
-				character = DEN_Akane
-			}
-			DEN_integrate_research_institute = yes
-			add_tech_bonus = {
-				name = DEN_integrate_Akane_research_institute
-				category = armor
-				bonus = 0.5
-				uses = 1
 			}
 		}
 	}
@@ -1383,55 +1230,8 @@ DEN_the_fourth_D_S_war_category = {
 }
 
 DEN_gateway_to_baltic_sea_category = {
-	
-	DEN_situation_is_about_to_escalate = {
-		icon = GFX_decision_faction_tur_unaligned
-		activation = {
-			always = no
-		}
-		available = {
-			always = no
-		}
-		days_mission_timeout = 30
-		timeout_effect = {
-			if = {
-				limit = {
-					check_variable = {
-						DEN.DEN_strait_influence_from_ENG > DEN.DEN_strait_influence_from_DVL
-					}
-				}
-				custom_effect_tooltip = DEN_strait_win_from_ENG_tt
-			}
-			else = {
-				custom_effect_tooltip = DEN_strait_win_from_DVL_tt
-			}
-		}
-	}
 
-	DEN_situation_is_about_to_escalate_fack = {
-		icon = GFX_decision_faction_tur_unaligned
-		activation = {
-			always = no
-		}
-		available = {
-			always = no
-		}
-		days_mission_timeout = 30
-		timeout_effect = {
-			if = {
-				limit = {
-					check_variable = {
-						DEN.DEN_strait_influence_from_ENG > DEN.DEN_strait_influence_from_DVL
-					}
-				}
-				custom_effect_tooltip = DEN_strait_win_from_ENG_tt
-			}
-			else = {
-				custom_effect_tooltip = DEN_strait_win_from_DVL_tt
-			}
-		}
-	}
-
+	#圣杯&德国：施加影响力
 	DEN_apply_pressure_on_strait = {
 		icon = GEX_decision_generic_political_address
 		visible = {
@@ -1460,10 +1260,12 @@ DEN_gateway_to_baltic_sea_category = {
 				if = {
 					limit = { tag = ENG }
 					DEN = { activate_mission = DEN_applying_influence_from_ENG }
+					DVL = { activate_mission = DEN_applying_influence_from_ENG }
 				}
 				if = {
 					limit = { tag = DVL }
 					DEN = { activate_mission = DEN_applying_influence_from_DVL }
+					ENG = { activate_mission = DEN_applying_influence_from_DVL }
 				}
 			}
 		}
@@ -1490,7 +1292,7 @@ DEN_gateway_to_baltic_sea_category = {
 			}
 		}
 	}
-
+	#圣杯正在施加影响力
 	DEN_applying_influence_from_ENG = {
 		icon = GFX_decision_generic_political_discourse
 		activation = {
@@ -1508,7 +1310,7 @@ DEN_gateway_to_baltic_sea_category = {
 			}
 		}
 	}
-	
+	#德国正在施加影响力
 	DEN_applying_influence_from_DVL = {
 		icon = GFX_decision_generic_political_discourse
 		activation = {
@@ -1526,7 +1328,7 @@ DEN_gateway_to_baltic_sea_category = {
 			}
 		}
 	}
-
+	#杜伦布：亲圣杯宣传
 	DEN_pro_ENG_propaganda = {
 		icon = GEX_decision_generic_political_address
 		visible = {
@@ -1570,7 +1372,7 @@ DEN_gateway_to_baltic_sea_category = {
 			}
 		}
 	}
-
+	#杜伦布：亲柏林宣传
 	DEN_pro_DVL_propaganda = {
 		icon = GEX_decision_generic_political_address
 		visible = {
@@ -1614,7 +1416,7 @@ DEN_gateway_to_baltic_sea_category = {
 			}
 		}
 	}
-
+	#杜伦布正在亲圣杯宣传
 	DEN_make_intimate_remarks_in_ENG = {
 		icon = GFX_decision_generic_political_discourse
 		activation = {
@@ -1633,7 +1435,7 @@ DEN_gateway_to_baltic_sea_category = {
 			}
 		}
 	}
-
+	#杜伦布正在亲德国宣传
 	DEN_make_intimate_remarks_in_DVL = {
 		icon = GFX_decision_generic_political_discourse
 		activation = {
@@ -1651,5 +1453,17 @@ DEN_gateway_to_baltic_sea_category = {
 				10 = { custom_effect_tooltip = DEN_increase_5_strait_influence }
 			}
 		}
+	}
+	DEN_autumn_elections_are_about_to_begin = {
+		icon = GFX_decision_generic_political_address
+		priority = 1000
+		is_good = yes
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 1339
 	}
 }
