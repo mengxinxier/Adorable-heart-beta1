@@ -524,6 +524,7 @@ state_event = {
 					region = 6				#Rhineland
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = GER
 				transfer_state_to = GER
 			}
 			ai_chance = {
@@ -542,6 +543,7 @@ state_event = {
 					region = 6				#Rhineland
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = GEU
 				transfer_state_to = GEU
 			}
 			ai_chance = {
@@ -560,6 +562,7 @@ state_event = {
 					region = 6				#Rhineland
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = WGR
 				transfer_state_to = WGR
 			}
 			ai_chance = {
@@ -948,6 +951,7 @@ state_event = {
 					is_Prussia = yes
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = GER
 				transfer_state_to = GER
 			}
 			ai_chance = {
@@ -966,6 +970,7 @@ state_event = {
 					is_Prussia = yes
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = GEU
 				transfer_state_to = GEU
 			}
 			ai_chance = {
@@ -984,6 +989,7 @@ state_event = {
 					is_Prussia = yes
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = WGR
 				transfer_state_to = WGR
 			}
 			ai_chance = {
@@ -1717,20 +1723,23 @@ state_event = {
 			set_temp_variable = {
 				tag_to_release = AUS
 			}
-			if = {
-				limit = { ITA = { is_ally_with = ROOT } }
-				every_state = {
-					limit = {
+			remove_targeted_core = yes
+			every_state = {
+				limit = {
+					or = {
+						region = 21
+					}
+					not = {
 						or = {
 							state = 39
 							state = 783
 						}
-						is_claim_or_core_of_ROOT = no
 					}
-					remove_core_of = var:tag_to_release
 				}
+				add_core_of = AUS
 			}
 			release_targeted_tag = yes
+			recheck_annexations_immediate = yes
 		}
 		option = {
 			name = annex.1000.d
@@ -1750,6 +1759,7 @@ state_event = {
 					}
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = GER
 				transfer_state_to = GER
 			}
 		}
@@ -1771,6 +1781,7 @@ state_event = {
 					}
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = GEU
 				transfer_state_to = GEU
 			}
 		}
@@ -1792,6 +1803,7 @@ state_event = {
 					}
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = WGR
 				transfer_state_to = WGR
 			}
 		}
@@ -3365,6 +3377,7 @@ state_event = {
 					}
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = AUS
 				transfer_state_to = AUS
 			}
 		}
@@ -3384,6 +3397,7 @@ state_event = {
 					}
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = ITA
 				transfer_state_to = ITA
 			}
 		}
@@ -3408,7 +3422,8 @@ state_event = {
 					}
 					is_claim_or_core_of_ROOT = no
 				}
-				transfer_state_to = ITA
+				add_core_of = AUS
+				transfer_state_to = AUS
 			}
 			every_owned_state = {
 				limit = {
@@ -3417,7 +3432,63 @@ state_event = {
 					}
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = ITA
 				transfer_state_to = ITA
+			}
+		}
+		option = {
+			name = annex.1015.d  #给那不勒斯
+			trigger = {
+				ALS = { is_ally_with = ROOT }
+			}
+			ai_chance = {
+				base = 100
+			}
+			every_owned_state = {
+				limit = {
+					or = {
+						state = 39
+						state = 783
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = ALS
+				transfer_state_to = ALS
+			}
+		}
+		option = {
+			name = annex.1015.e  #一人一半
+			trigger = {
+				var:4.owner = {
+					is_germany_tag = yes
+					is_ally_with = ROOT
+				}
+				ALS = { is_ally_with = ROOT }
+				owns_state = 39
+				owns_state = 783
+			}
+			ai_chance = {
+				base = 100
+			}
+			every_owned_state = {
+				limit = {
+					or = {
+						state = 39
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = AUS
+				transfer_state_to = AUS
+			}
+			every_owned_state = {
+				limit = {
+					or = {
+						state = 783
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = ALS
+				transfer_state_to = ALS
 			}
 		}
 	}
@@ -3585,6 +3656,7 @@ state_event = {
 					}
 					is_claim_or_core_of_ROOT = no
 				}
+				add_core_of = FRA
 				transfer_state_to = FRA
 			}
 		}
@@ -3861,242 +3933,546 @@ state_event = {
 	}
 
 #####  伊比利亚   ####
-#伊比利亚的命运
-country_event = {
-	id = annex.1032
-	title = annexation_NPT_CONQ
-	desc = annexation_NPT_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-	option = {
-		name = Unleash_a_loyal_government
-		trigger = {
-			NOT = {
-				country_exists = NPT
+	#伊比利亚的命运
+	country_event = {
+		id = annex.1032
+		title = annexation_NPT_CONQ
+		desc = annexation_NPT_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
 			}
 		}
-		ai_chance = {
-			base = 100
+		option = {
+			name = Unleash_a_loyal_government
+			trigger = {
+				NOT = { country_exists = NPT }
+				NPT = { is_ally_of_ROOT = no }
+			}
+			ai_chance = {
+				base = 100
+			}
+			set_temp_variable = {
+				tag_to_release = NPT
+			}
+			remove_targeted_core = yes
+			every_state = {
+				limit = {
+					or = {
+						region = 237
+						region = 41
+						region = 236
+						region = 255
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = NPT
+			}
+			release_targeted_tag = yes
 		}
-		set_temp_variable = {
-			tag_to_release = NPT
+		option = {
+			name = annex.1032.a
+			trigger = {
+				NPT = { is_ally_of_ROOT = yes }
+			}
+			ai_chance = {
+				base = 100
+			}
+			every_owned_state = {
+				limit = {
+					or = {
+						region = 237
+						region = 41
+						region = 236
+						region = 255
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = NPT
+				transfer_state_to = NPT
+			}
 		}
-		remove_targeted_core = yes
-		every_state = {
-			limit = {
-				or = {
-					region = 237
-					region = 41
-					region = 236
-					region = 255
+		option = {
+			name = annex.Split_Iberia
+			trigger = {
+				NPT = { is_ally_of_ROOT = no }
+			}
+			NPT_state_country_core = yes
+			set_temp_variable = {
+				tag_to_release = PPT
+			}
+			if = {
+				limit = {
+					PPT = { exists = no }
+					can_release_PPT = yes
+				}
+				release_targeted_tag = yes
+			}
+			set_temp_variable = {
+				tag_to_release = LAS
+			}
+			if = {
+				limit = {
+					LAS = { exists = no }
+					can_release_LAS = yes
+				}
+				release_targeted_tag = yes
+			}
+			set_temp_variable = {
+				tag_to_release = LOW
+			}
+			if = {
+				limit = {
+					LOW = { exists = no }
+					can_release_LOW = yes
+				}
+				release_targeted_tag = yes
+			}
+			set_temp_variable = {
+				tag_to_release = LEA
+			}
+			if = {
+				limit = {
+					LEA = { exists = no }
+					can_release_LEA = yes
+				}
+				release_targeted_tag = yes
+			}
+			ai_chance = {
+				base = 0
+			}
+		}
+		option = {
+			#occupy
+			name = annex.occupation
+			trigger = {
+				NPT = {
+					is_ally_of_ROOT = no
 				}
 			}
-			add_core_of = NPT
+			ai_chance = {
+				base = 0
+			}
+			occupy_large_country = yes
+			set_country_flag = NPT_CONQ
 		}
-		release_targeted_tag = yes
 	}
-	option = {
-		#occupy
-		name = annex.occupation
-		trigger = {
-			NPT = {
-				is_ally_of_ROOT = no
+
+	#紫耀之都的命运
+	country_event = {
+		id = annex.1033
+		title = annexation_PPT_CONQ
+		desc = annexation_PPT_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
 			}
 		}
-		ai_chance = {
-			base = 0
-		}
-		occupy_large_country = yes
-		set_country_flag = NPT_CONQ
 	}
-}
 
-#紫耀之都的命运
-country_event = {
-	id = annex.1033
-	title = annexation_PPT_CONQ
-	desc = annexation_PPT_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#黑土边域的命运
-country_event = {
-	id = annex.1034
-	title = annexation_LAS_CONQ
-	desc = annexation_LAS_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#白露之滨的命运
-country_event = {
-	id = annex.1035
-	title = annexation_LOW_CONQ
-	desc = annexation_LOW_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#绿荫箱庭的命运
-country_event = {
-	id = annex.1036
-	title = annexation_LEA_CONQ
-	desc = annexation_LEA_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#不列颠的命运
-country_event = {
-	id = annex.1037
-	title = annexation_ENG_CONQ
-	desc = annexation_ENG_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#爱尔兰的命运
-country_event = {
-	id = annex.1038
-	title = annexation_IRE_CONQ
-	desc = annexation_IRE_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#苏格兰的命运
-country_event = {
-	id = annex.1039
-	title = annexation_SCO_CONQ
-	desc = annexation_SCO_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#威尔士的命运
-country_event = {
-	id = annex.1040
-	title = annexation_WLS_CONQ
-	desc = annexation_WLS_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#英格兰的命运
-country_event = {
-	id = annex.1041
-	title = annexation_SAS_CONQ
-	desc = annexation_SAS_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-}
-
-#火车国的命运
-country_event = {
-	id = annex.1042
-	title = annexation_TRB_CONQ
-	desc = annexation_TRB_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-		}
-	}
-	option = {
-		name = Unleash_a_loyal_government
-		trigger = {
-			NOT = {
-				country_exists = TRB
+	#黑土边域的命运
+	country_event = {
+		id = annex.1034
+		title = annexation_LAS_CONQ
+		desc = annexation_LAS_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
 			}
 		}
-		ai_chance = {
-			base = 100
+	}
+
+	#白露之滨的命运
+	country_event = {
+		id = annex.1035
+		title = annexation_LOW_CONQ
+		desc = annexation_LOW_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
 		}
-		set_temp_variable = {
-			tag_to_release = TRB
+	}
+
+	#绿荫箱庭的命运
+	country_event = {
+		id = annex.1036
+		title = annexation_LEA_CONQ
+		desc = annexation_LEA_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
 		}
-		remove_targeted_core = yes
-		every_state = {
-			limit = {
-				or = {
-					region = 131
-					state = 943
+	}
+
+#####  不列颠   ####
+	#不列颠的命运
+	country_event = {
+		id = annex.1037
+		title = annexation_ENG_CONQ
+		desc = annexation_ENG_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
+		}
+		option = {
+			name = annex.1037.a
+			trigger = {
+				NOT = { country_exists = BRT }
+				BRT = { is_ally_of_ROOT = no }
+				ENG = { is_ally_of_ROOT = no }
+			}
+			ai_chance = {
+				base = 100
+			}
+			set_temp_variable = {
+				tag_to_release = BRT
+			}
+			remove_targeted_core = yes
+			every_state = {
+				limit = {
+					or = {
+						region = 1
+						region = 2
+						region = 3
+						region = 4
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = BRT
+			}
+			release_targeted_tag = yes
+		}
+		option = {
+			name = annex.1037.b
+			trigger = {
+				NOT = { country_exists = ENG }
+				BRT = { is_ally_of_ROOT = no }
+				ENG = { is_ally_of_ROOT = no }
+				not = { has_government = communism }
+			}
+			ai_chance = {
+				base = 100
+			}
+			set_temp_variable = {
+				tag_to_release = ENG
+			}
+			remove_targeted_core = yes
+			every_state = {
+				limit = {
+					or = {
+						region = 1
+						region = 2
+						region = 3
+						region = 4
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = ENG
+			}
+			release_targeted_tag = yes
+		}
+		option = {
+			name = annex.1037.c
+			trigger = {
+				ENG = { is_ally_of_ROOT = yes }
+			}
+			ai_chance = {
+				base = 100
+			}
+			every_owned_state = {
+				limit = {
+					or = {
+						region = 1
+						region = 2
+						region = 3
+						region = 4
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = ENG
+				transfer_state_to = ENG
+			}
+		}
+		option = {
+			name = annex.1037.d
+			trigger = {
+				ENG = { is_ally_of_ROOT = no }
+				BRT = { is_ally_of_ROOT = no }
+			}
+			ENG_state_country_core = yes
+			set_temp_variable = {
+				tag_to_release = ELA
+			}
+			if = {
+				limit = {
+					ELA = { exists = no }
+					can_release_ELA = yes
+				}
+				release_targeted_tag = yes
+			}
+			set_temp_variable = {
+				tag_to_release = SCO
+			}
+			if = {
+				limit = {
+					SCO = { exists = no }
+					can_release_SCO = yes
+				}
+				release_targeted_tag = yes
+			}
+			set_temp_variable = {
+				tag_to_release = WLS
+			}
+			if = {
+				limit = {
+					WLS = { exists = no }
+					can_release_WLS = yes
+				}
+				release_targeted_tag = yes
+			}
+			set_temp_variable = {
+				tag_to_release = IRE
+			}
+			if = {
+				limit = {
+					IRE = { exists = no }
+					can_release_IRE = yes
+				}
+				release_targeted_tag = yes
+			}
+			ai_chance = {
+				base = 0
+			}
+		}
+		option = {
+			#occupy
+			name = annex.occupation
+			trigger = {
+				ENG = { is_ally_of_ROOT = no }
+				BRT = { is_ally_of_ROOT = no }
+			}
+			ai_chance = {
+				base = 0
+			}
+			occupy_large_country = yes
+			set_country_flag = ENG_CONQ
+		}
+	}
+
+	#爱尔兰的命运
+	country_event = {
+		id = annex.1038
+		title = annexation_IRE_CONQ
+		desc = annexation_IRE_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
+		}
+	}
+
+	#苏格兰的命运
+	country_event = {
+		id = annex.1039
+		title = annexation_SCO_CONQ
+		desc = annexation_SCO_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
+		}
+	}
+
+	#威尔士的命运
+	country_event = {
+		id = annex.1040
+		title = annexation_WLS_CONQ
+		desc = annexation_WLS_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
+		}
+	}
+
+	#英格兰的命运
+	country_event = {
+		id = annex.1041
+		title = annexation_SAS_CONQ
+		desc = annexation_SAS_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
+		}
+	}
+
+#####  火车国   ####
+	#火车国的命运
+	country_event = {
+		id = annex.1042
+		title = annexation_TRB_CONQ
+		desc = annexation_TRB_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
+		}
+		option = {
+			name = Unleash_a_loyal_government
+			trigger = {
+				NOT = {
+					country_exists = TRB
 				}
 			}
-			add_core_of = TRB
+			ai_chance = {
+				base = 100
+			}
+			set_temp_variable = {
+				tag_to_release = TRB
+			}
+			remove_targeted_core = yes
+			every_state = {
+				limit = {
+					or = {
+						region = 131
+						state = 943
+					}
+				}
+				add_core_of = TRB
+			}
+			release_targeted_tag = yes
 		}
-		release_targeted_tag = yes
+		option = {
+			#occupy
+			name = annex.occupation
+			trigger = {
+				TRB = {
+					is_ally_of_ROOT = no
+				}
+			}
+			ai_chance = {
+				base = 0
+			}
+			occupy_small_country = yes
+			set_country_flag = TRB_CONQ
+		}
 	}
-	option = {
-		#occupy
-		name = annex.occupation
-		trigger = {
-			TRB = {
-				is_ally_of_ROOT = no
+
+#####  意大利   ####
+	#意大利的命运
+	country_event = {
+		id = annex.1043
+		title = annexation_ITA_CONQ
+		desc = annexation_ITA_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
 			}
 		}
-		ai_chance = {
-			base = 0
+		option = {
+			name = Unleash_a_loyal_government
+			trigger = {
+				NOT = { country_exists = ITA }
+				ITA = { is_ally_of_ROOT = no }
+				ALS = { is_ally_of_ROOT = no }
+			}
+			ai_chance = {
+				base = 100
+			}
+			set_temp_variable = {
+				tag_to_release = ITA
+			}
+			remove_targeted_core = yes
+			every_state = {
+				limit = {
+					or = {
+						region = 181
+						region = 23
+						state = 762
+						state = 114
+					}
+				}
+				add_core_of = ITA
+			}
+			release_targeted_tag = yes
+			recheck_annexations_immediate = yes
 		}
-		occupy_small_country = yes
-		set_country_flag = TRB_CONQ
-	}
-}
-
-#意大利的命运
-country_event = {
-	id = annex.1043
-	title = annexation_ITA_CONQ
-	desc = annexation_ITA_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
+		option = {
+			name = annex.1043.a
+			trigger = {
+				ITA = { is_ally_of_ROOT = yes }
+			}
+			ai_chance = {
+				base = 100
+			}
+			every_owned_state = {
+				limit = {
+					or = {
+						region = 181
+						region = 23
+						state = 762
+						state = 114
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = ITA
+				transfer_state_to = ITA
+			}
+		}
+		option = {
+			name = annex.1043.b
+			trigger = {
+				ALS = { is_ally_of_ROOT = yes }
+			}
+			ai_chance = {
+				base = 100
+			}
+			every_owned_state = {
+				limit = {
+					or = {
+						region = 181
+						region = 23
+						state = 762
+						state = 114
+					}
+					is_claim_or_core_of_ROOT = no
+				}
+				add_core_of = ALS
+				transfer_state_to = ALS
+			}
+		}
+		option = {
+			#occupy
+			name = annex.occupation
+			trigger = {
+				ITA = { is_ally_of_ROOT = no }
+				ALS = { is_ally_of_ROOT = no }
+			}
+			ai_chance = {
+				base = 0
+			}
+			occupy_medium_country = yes
+			set_country_flag = ITA_CONQ
 		}
 	}
-}
 
-#那不勒斯的命运
-country_event = {
-	id = annex.1044
-	title = annexation_ALS_CONQ
-	desc = annexation_ALS_CONQ_desc
-	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
+	#那不勒斯的命运
+	country_event = {
+		id = annex.1044
+		title = annexation_ALS_CONQ
+		desc = annexation_ALS_CONQ_desc
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+			}
 		}
 	}
-}
 
+#####  JK   ####
 #巴哈斯的命运
 country_event = {
 	id = annex.1045

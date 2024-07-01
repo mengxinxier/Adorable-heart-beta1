@@ -22,14 +22,14 @@ is_claim_or_core_of_ROOT = {
 is_valid_annexation_state = {
 	is_owned_by = ROOT
 	is_claim_or_core_of_ROOT = no
-	hidden_trigger = {
-		NOT = {
-			has_state_flag = occupied_by_@ROOT
-		}
-		NOT = {
-			has_variable = occupied_by_@THIS
-		}
-	}
+	# hidden_trigger = {
+	# 	NOT = {
+	# 		has_state_flag = occupied_by_@ROOT
+	# 	}
+	# 	NOT = {
+	# 		has_variable = occupied_by_@THIS
+	# 	}
+	# }
 }
 #####  德国   ####
 	##德国
@@ -259,19 +259,8 @@ is_valid_annexation_state = {
 				50 = { is_valid_annexation_state = yes }
 				has_country_flag = South_GER_CONQ
 			}
-			AND = {
-				4 = { is_valid_annexation_state = yes }
-				775 = { is_valid_annexation_state = yes }
-				not = {
-					4 = { is_valid_annexation_state = yes }
-					52 = { is_valid_annexation_state = yes }
-					50 = { is_valid_annexation_state = yes }
-				}
-			}
-			AND = {
-				53 = { is_valid_annexation_state = yes }
-				52 = { is_valid_annexation_state = yes }
-				not = {
+			not = {
+				and = {
 					4 = { is_valid_annexation_state = yes }
 					52 = { is_valid_annexation_state = yes }
 					50 = { is_valid_annexation_state = yes }
@@ -283,9 +272,7 @@ is_valid_annexation_state = {
 		state = 4
 		4 = { is_valid_annexation_state = yes }
 		775 = { is_valid_annexation_state = yes }
-		NOT = {
-			is_claimed_by = ROOT
-		}
+		NOT = { is_claimed_by = ROOT }
 		ROOT = {
 			should_release_germany_first = yes
 			should_release_south_germany_first = yes
@@ -296,12 +283,16 @@ is_valid_annexation_state = {
 		}
 	}
 	should_release_AUS_first = {
-		if = {
-			limit = {
+		or = {
+			and = {
+				4 = { is_valid_annexation_state = yes }
+				775 = { is_valid_annexation_state = yes }
+				has_country_flag = AUS_CONQ
+			}
+			not = {
 				4 = { is_valid_annexation_state = yes }
 				775 = { is_valid_annexation_state = yes }
 			}
-			has_country_flag = AUS_CONQ
 		}
 	}
 	can_release_BAY = {
@@ -424,16 +415,29 @@ is_valid_annexation_state = {
 			should_release_germany_first = yes
 			should_release_south_germany_first = yes
 			should_release_AUS_first = yes
+			should_release_ITA_first = yes
 			NOT = {
+				or = {
+					tag = ITA
+					tag = ALS
+				}
 				is_germany_tag = yes
 				has_country_flag = AUS_TRENT_CONQ
 			}
 		}
-		var:4.owner = {
-			is_germany_tag = yes
-			is_ally_with = ROOT
+		or = {
+			var:4.owner = {
+				is_germany_tag = yes
+				is_ally_with = ROOT
+			}
+			var:2.owner = {
+				or = {
+					tag = ITA
+					tag = ALS
+				}
+				is_ally_with = ROOT
+			}
 		}
-		ITA = { is_ally_with = ROOT }
 	}
 #####  幻想乡   ####
 	#幻想乡
@@ -477,60 +481,144 @@ is_valid_annexation_state = {
 		}
 	}
 
-
-##超次元
-can_release_NPT = {
-	or = {
-		state = 41
-		state = 112
-	}
-	NOT = {
-		is_claimed_by = ROOT
-	}
-	41 = {
-		is_valid_annexation_state = yes
-	}
-	112 = {
-		is_valid_annexation_state = yes
-	}
-	ROOT = {
+#####  伊比利亚   ####
+	can_release_NPT = {
+		or = {
+			state = 41
+			state = 112
+		}
 		NOT = {
-			tag = NPT
-			has_country_flag = NPT_CONQ
+			is_claimed_by = ROOT
+		}
+		41 = {
+			is_valid_annexation_state = yes
+		}
+		112 = {
+			is_valid_annexation_state = yes
+		}
+		ROOT = {
+			NOT = {
+				tag = NPT
+				has_country_flag = NPT_CONQ
+			}
 		}
 	}
-}
 
-##火车
-can_release_TRB = {
-	or = {
-		state = 3
-	}
-	NOT = {
-		is_claimed_by = ROOT
-	}
-	count_triggers = {
-		amount = 2
-		3 = {
-			is_valid_annexation_state = yes
+#####  不列颠   ####
+	can_release_ENG = {
+		or = {
+			state = 126
+			state = 132
 		}
-		1091 = {
-			is_valid_annexation_state = yes
-		}
-		943 = {
-			is_valid_annexation_state = yes
-		}
-		151 = {
-			is_valid_annexation_state = yes
-		}
-	}
-	ROOT = {
 		NOT = {
-			tag = TRB
-			has_country_flag = TRB_CONQ
+			is_claimed_by = ROOT
+		}
+		126 = { is_valid_annexation_state = yes }
+		132 = { is_valid_annexation_state = yes }
+		128 = { is_valid_annexation_state = yes }
+		133 = { is_valid_annexation_state = yes }
+		ROOT = {
+			NOT = {
+				tag = ENG
+				has_country_flag = ENG_CONQ
+			}
 		}
 	}
-}
+
+#####  火车   ####
+	can_release_TRB = {
+		or = {
+			state = 3
+		}
+		NOT = {
+			is_claimed_by = ROOT
+		}
+		count_triggers = {
+			amount = 2
+			3 = {
+				is_valid_annexation_state = yes
+			}
+			1091 = {
+				is_valid_annexation_state = yes
+			}
+			943 = {
+				is_valid_annexation_state = yes
+			}
+			151 = {
+				is_valid_annexation_state = yes
+			}
+		}
+		ROOT = {
+			NOT = {
+				tag = TRB
+				has_country_flag = TRB_CONQ
+			}
+		}
+	}
+
+#####  意大利   ####
+	can_release_ITA = {
+		or = {
+			state = 2
+			state = 159
+		}
+		NOT = {
+			is_claimed_by = ROOT
+		}
+		count_triggers = {
+			amount = 2
+			2 = { is_valid_annexation_state = yes }
+			159 = { is_valid_annexation_state = yes }
+			160 = { is_valid_annexation_state = yes }
+			838 = { is_valid_annexation_state = yes }
+			117 = { is_valid_annexation_state = yes }
+		}
+		ROOT = {
+			NOT = {
+				or = {
+					tag = ITA
+					tag = ALS
+				}
+				has_country_flag = ITA_CONQ
+			}
+		}
+	}
+	should_release_ITA_first = {
+		or = {
+			and = {
+				or = {
+					2 = { is_valid_annexation_state = yes }
+					159 = { is_valid_annexation_state = yes }
+				}
+				count_triggers = {
+					amount = 2
+					2 = { is_valid_annexation_state = yes }
+					159 = { is_valid_annexation_state = yes }
+					160 = { is_valid_annexation_state = yes }
+					838 = { is_valid_annexation_state = yes }
+					117 = { is_valid_annexation_state = yes }
+				}
+				has_country_flag = ITA_CONQ
+			}
+			not = {
+				and = {
+					or = {
+						2 = { is_valid_annexation_state = yes }
+						159 = { is_valid_annexation_state = yes }
+					}
+					count_triggers = {
+						amount = 2
+						2 = { is_valid_annexation_state = yes }
+						159 = { is_valid_annexation_state = yes }
+						160 = { is_valid_annexation_state = yes }
+						838 = { is_valid_annexation_state = yes }
+						117 = { is_valid_annexation_state = yes }
+					}
+				}
+			}
+		}
+	}
+
 ##宝石
 can_release_HUN = {
 	or = {
