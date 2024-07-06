@@ -226,7 +226,7 @@ scripted_gui = {
 					set_country_flag = ENG_tech_rev_gui_visble
 				}
 			}
-			ENG_shuaxin_button = {
+			ENG_shuaxin_button_click = {
 				ENG_count_enterprise_proportion = yes
 			}
 		}
@@ -243,7 +243,7 @@ scripted_gui = {
 
 		properties = {
 			ENG_tech_rev_progress = {
-				frame = VAR_ENG_tech_rev_progress
+				frame = 35 #VAR_ENG_tech_rev_progress
 			}
 		}
 
@@ -255,6 +255,8 @@ scripted_gui = {
 				clr_country_flag = ENG_tech_rev_gui_visble 
 			}
 
+			
+
 		}
 		
 	}
@@ -265,25 +267,185 @@ scripted_gui = {
 
 		properties = {
 			ENG_miracle_engineering_main_progress = {
-				frame = 35
+				frame = ENG_VAR_me_research_progress_frame
 			}
+			
 
 			ENG_miracle_engineering_progress_blue = {
-				frame = ENG_me_progress_blue
+				frame = 50 #ENG_me_progress_blue
 			}
 			ENG_miracle_engineering_progress_green = {
-				frame = ENG_me_progress_green
+				frame = 30 #ENG_me_progress_green
 			}
 			ENG_miracle_engineering_progress_red = {
-				frame = ENG_me_progress_red
+				frame = 75 #ENG_me_progress_red
+			}
+
+			ENG_miracle_engineering_trigger_1_yes = {
+				frame = ENG_VAR_me_trigger_1
+			}
+			ENG_miracle_engineering_trigger_2_yes = {
+				frame = ENG_VAR_me_trigger_2
 			}
 		}
 
 		triggers = {
+			ENG_miracle_engineering_trigger_1_text_visible = {
+				always = no
+			}
+			ENG_miracle_engineering_trigger_1_frame_visible = {
+				always = no
+			}
+			ENG_miracle_engineering_trigger_1_yes_visible = {
+				always = no
+			}
+			ENG_miracle_engineering_trigger_2_text_visible = {
+				always = no
+			}
+			ENG_miracle_engineering_trigger_2_frame_visible = {
+				always = no
+			}
+			ENG_miracle_engineering_trigger_2_yes_visible = {
+				always = no
+			}
+
+			ENG_miracle_engineering_blue_text_visible = {
+				#always = no
+			}
+			ENG_miracle_engineering_green_text_visible = {
+				#always = no
+			}
+			ENG_miracle_engineering_red_text_visible = {
+				#always = no
+			}
+
+			ENG_miracle_engineering_progress_blue_visible = {
+				#always = no
+			}
+			ENG_miracle_engineering_progress_green_visible = {
+				#always = no
+			}
+			ENG_miracle_engineering_progress_red_visible = {
+				#always = no
+			}
+
+			
+			ENG_promotion_stage_button_click_enabled = { #推进至下一阶段按钮点击条件
+				or = {
+					check_variable = {
+						ENG_VAR_me_research_progress = ENG_VAR_me_research_max_progress
+					}
+					check_variable = {
+						ENG_VAR_me_research_progress > ENG_VAR_me_research_max_progress
+					}
+				}
+				not = {
+					check_variable = {
+						ENG_VAR_me_project_schedule_4 = 2 
+					}
+				}
+				
+			}
+
+			ENG_miracle_engineering_complete_button_click_enabled = { #项目完成按钮点击条件	
+				check_variable = {
+					ENG_VAR_me_project_schedule_4 = 2
+				}
+				check_variable = {
+					ENG_VAR_me_trigger_1 = 2
+				}
+				check_variable = {
+					ENG_VAR_me_trigger_2 = 2
+				}		
+			}
+
 
 		}
-		effects = {
-			
+
+		effects = {		
+			ENG_promotion_stage_button_click = { #推进至下一阶段按钮效果
+				subtract_from_variable = { #扣除研究进度
+					ENG_VAR_me_research_progress = ENG_VAR_me_research_max_progress
+				}
+				ENG_count_me_research_speed = yes
+				#推进至下一阶段
+					if = {
+						limit = {
+							check_variable = {
+								ENG_VAR_me_project_schedule_1 = 1
+							}
+						}
+						set_variable = { 
+							ENG_VAR_me_project_schedule_1 = 2
+						}
+						set_variable = { 
+							ENG_VAR_me_project_schedule_2 = 1
+						}
+					}
+					else_if = {
+						limit = {
+							check_variable = {
+								ENG_VAR_me_project_schedule_2 = 1
+							}
+						}
+						set_variable = { 
+							ENG_VAR_me_project_schedule_2 = 2
+						}
+						set_variable = { 
+							ENG_VAR_me_project_schedule_3 = 1
+						}
+					}
+					else_if = {
+						limit = {
+							check_variable = {
+								ENG_VAR_me_project_schedule_3 = 1
+							}
+						}
+						set_variable = { 
+							ENG_VAR_me_project_schedule_3 = 2
+						}
+						set_variable = { 
+							ENG_VAR_me_project_schedule_4 = 1
+						}
+					}
+					else_if = {
+						limit = {
+							check_variable = {
+								ENG_VAR_me_project_schedule_4 = 1
+							}
+						}
+						set_variable = { 
+							ENG_VAR_me_project_schedule_4 = 2
+						}
+					}
+
+
+
+
+			}
+			ENG_miracle_engineering_complete_button_click = { #完成项目效果
+				if = {
+					limit = {
+						check_variable = {
+							ENG_VAR_me_project = 1
+						}
+					}
+					country_event = ENG_event_me.3
+				}
+				else_if = {
+					limit = {
+						check_variable = {
+							ENG_VAR_me_project = 2
+						}
+					}
+					country_event = ENG_event_me.6
+				}
+			}
+
+
+
+
+
 		}
 		
 	}
