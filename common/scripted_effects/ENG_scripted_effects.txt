@@ -3915,6 +3915,268 @@
 
 #
 #圣杯解体
+	JAP_bomb_surrender = { #核爆投降
+		every_country = { #常见的傀儡国转为圣杯傀儡
+			limit = {
+				or = {
+					tag = PAW
+					tag = VIN
+					tag = CAM
+					tag = PHI
+					tag = KOR
+					tag = RYU				
+				}				
+				is_subject_of = JAP
+			}
+			ENG = {
+				set_autonomy = {
+					target = PREV
+					autonomy_state = autonomy_puppet
+				}
+			}
+		}
+
+		if = {	#释放越南判定		
+			limit = {
+				JAP = {
+					owns_state = 857
+					owns_state = 671
+					owns_state = 670
+					owns_state = 827
+					owns_state = 826
+					owns_state = 286
+					owns_state = 750
+					owns_state = 856
+				}
+				VIN = {
+					exists = no
+				}
+			}
+
+			ENG = {
+				release_puppet = VIN
+			}
+			VIN = {
+				add_state_core = 857
+				add_state_core = 671
+				add_state_core = 670
+				add_state_core = 827
+				add_state_core = 826
+				add_state_core = 286
+				add_state_core = 750
+				add_state_core = 856
+
+				transfer_state = 857
+				transfer_state = 671
+				transfer_state = 670
+				transfer_state = 827
+				transfer_state = 826
+				transfer_state = 286
+				transfer_state = 750
+				transfer_state = 856
+			}
+		}
+
+		if = {	#如果苏联进战，给他萨哈林		
+			limit = {
+				JAP = {
+					has_war_with = SOV
+					owns_state = 537
+
+				}
+			}
+			SOV = {
+				transfer_state = 537
+			}
+		}
+		
+		if = { #如果统战寄了，那就圣杯傀儡中国
+			limit = {  #检测统战寄没寄
+				CHI = {
+					or = {
+						is_subject_of = JAP
+						exists = no
+					}
+				}
+				ROC = {
+					or = {
+						is_subject_of = JAP
+						exists = no
+					}
+				}
+				PRC = {
+					or = {
+						is_subject_of = JAP
+						exists = no
+					}
+				}
+			}
+			every_country = { #圣杯吃所有日本和他的傀儡占的中国地块
+				limit = {
+					or = {
+						tag = jap
+						is_subject_of = JAP
+					}
+				}
+				every_owned_state = {
+					limit = {
+						has_state_flag = is_whole_chinese_state_area
+					}
+					transfer_state_to = ENG
+				}
+			}
+			ENG = { #释放roc傀儡，并把中国地块转交给他
+				release_puppet = ROC
+				every_owned_state = {
+					limit = {
+						has_state_flag = is_whole_chinese_state_area
+					}
+					add_core_of = ROC
+					transfer_state_to = ROC
+				}
+			}
+		}
+		else = { #统战没寄
+			JAP = { #释放樱花中国战区
+				create_dynamic_country = { #樱花中国战区
+					original_tag = JAP
+					copy_tag = JAP
+					save_global_event_target_as = JAP_Chinese_occupied_areas
+					set_country_flag = { flag = disabled_annexations days = 15 value = 1 }
+					set_politics = { ruling_party = neutrality }
+					set_political_party = { ideology = neutrality popularity = 100 }
+					
+					add_timed_idea = {
+						idea = ready_to_surrender
+						days = 15
+					}
+					set_cosmetic_tag = JAP_occupied
+				}
+				every_controlled_state = { #转交占领区
+					limit = {
+						has_state_flag = is_whole_chinese_state_area
+					}
+					add_core_of = event_target:JAP_Chinese_occupied_areas
+					
+					if = {
+						limit = {
+							is_fully_controlled_by = JAP					
+						}
+						event_target:JAP_Chinese_occupied_areas = { transfer_state = PREV }
+					}
+					else = {
+						event_target:JAP_Chinese_occupied_areas = { set_state_owner = PREV }
+					}
+				}
+				every_enemy_country = { #和中国势力宣战
+					limit = {
+						is_chinese_country = yes
+					}
+					event_target:JAP_Chinese_occupied_areas = {
+						add_to_war = {
+							targeted_alliance = JAP
+							enemy = PREV
+						}
+					}
+				}
+				every_enemy_country = { #和其他势力白和
+					limit = {
+						is_chinese_country = no
+					}
+					event_target:JAP_Chinese_occupied_areas = {
+						white_peace = { 
+							tag = PREV
+						}
+					}	
+				}				
+			}
+		}
+		
+		JAP = {	#其他傀儡独立继续打
+			every_enemy_country = { #清除了残余战争借口
+				JAP = {
+					remove_wargoal = {
+						type = all
+						target = PREV
+					}
+				}
+			}
+		
+			if = { #其余附庸国独立
+				limit = { exists = yes }
+				every_country = {
+					limit = {
+						OR = {
+							is_guaranteed_by = PREV
+							is_subject_of = PREV
+							has_non_aggression_pact_with = PREV
+							has_military_access_to = PREV
+							gives_military_access_to = PREV
+						}
+					}
+					diplomatic_relation = {
+						country = JAP
+						relation = military_access
+						active = no
+					}
+					JAP = {
+						if = {
+							limit = { has_subject = PREV }
+							set_autonomy = {
+								target = PREV
+								autonomy_state = autonomy_free
+							}
+						}
+						diplomatic_relation = {
+							country = PREV
+							relation = guarantee
+							active = no
+						}
+						diplomatic_relation = {
+							country = PREV
+							relation = non_aggression_pact
+							active = no
+						}
+						diplomatic_relation = {
+							country = PREV
+							relation = military_access
+							active = no
+						}
+					}
+				}
+			}
+		}	
+		
+		every_country = { #盟友离开阵营
+			limit = { 
+				is_in_faction_with = JAP 
+			}
+			leave_faction = yes
+		}
+		
+		JAP = { #与所有敌国白和
+			every_enemy_country = {
+				limit = {
+					is_valid_peace_target = yes
+				}
+				white_peace = { 
+					tag = JAP
+					message = JAP_beiluorili
+				}
+			
+			}
+		}
+
+		ENG = { #剩下的本土被圣杯傀儡
+			set_autonomy = {
+				target = JAP
+				autonomy_state = autonomy_puppet
+			}
+		}
+	}
+
+
+
 	ENG_JIETI = {
 		hidden_effect = {
 			every_country = {
