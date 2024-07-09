@@ -2,6 +2,7 @@
 add_namespace = ENG_news
 add_namespace = ENG_event_wto
 add_namespace = ENG_event_me
+add_namespace = ENG_event_wj
 #event ENG_event.12
 #第一阶段国策触发事件
 	country_event = {  #黄金时代
@@ -4612,7 +4613,255 @@ add_namespace = ENG_event_me
 		}	 
 		
 	}
- 
+
+	country_event = { #民主主义者要求公投
+		id = ENG_event.910
+		title = ENG_event.910.t
+		desc = ENG_event.910.d
+		fire_only_once = no
+		is_triggered_only = yes
+		option = {
+			name = ENG_event.910.a
+			ai_chance = {
+				base = 40
+				modifier = {
+					add = 10
+					democratic > 0.40
+				}
+				modifier = {
+					add = 10
+					democratic > 0.50
+				}
+				modifier = {
+					add = 10
+					democratic > 0.60
+				}
+				modifier = {
+					add = 10
+					democratic > 0.70
+				}
+				modifier = {
+					add = 10
+					democratic > 0.80
+				}
+				modifier = {
+					add = 10
+					democratic > 0.90
+				}
+			}
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = no
+			}
+			add_stability = -0.05
+			if = {
+				limit = {
+					is_in_faction = yes
+				}
+				leave_faction = yes
+				FROM = {
+					add_to_faction = ROOT
+				}
+			}
+			else = {
+				FROM = {
+					add_to_faction = ROOT
+				}
+			}
+			if = {
+				limit = { is_subject = yes }
+				hidden_effect = {
+					OVERLORD = {
+						country_event = ENG_event.911
+					}
+				}
+			}
+		}
+		option = {
+			name = ENG_event.910.a
+			ai_chance = {
+				base = 60
+				modifier = {
+					add = -10
+					democratic > 0.40
+				}
+				modifier = {
+					add = -10
+					democratic > 0.50
+				}
+				modifier = {
+					add = -10
+					democratic > 0.60
+				}
+				modifier = {
+					add = -10
+					democratic > 0.70
+				}
+				modifier = {
+					add = -10
+					democratic > 0.80
+				}
+				modifier = {
+					add = -10
+					democratic > 0.90
+				}
+			}
+			add_war_support = 0.05
+			add_stability = -0.05
+			add_popularity = {
+				ideology = democratic
+				popularity = -0.05
+			}
+		}
+	}
+
+	country_event = { #遭遇颜色革命
+		id = ENG_event.911
+		title = ENG_event.911.t
+		desc = ENG_event.911.d
+		fire_only_once = no
+		is_triggered_only = yes
+		option = {
+			name = ENG_event.911.a
+			ai_chance = {
+				factor = 100
+			}
+			add_political_power = -15
+		}
+		option = {
+			name = ENG_event.911.b
+			ai_chance = {
+				factor = 0
+			}
+			create_wargoal = {
+				target = FROM
+				type = puppet_wargoal_focus
+			}
+		}
+	}
+	country_event = { #邀请加入民主国家联盟
+		id = ENG_event.912
+		title = ENG_event.912.t
+		desc = ENG_event.912.d
+		fire_only_once = no
+		is_triggered_only = yes
+		option = {
+			name = ENG_event.912.a
+			ai_chance = {
+				factor = 100  
+			}
+			if = {
+				limit = {
+					is_in_faction = yes
+				}
+				leave_faction = yes
+				FROM = {
+					add_to_faction = ROOT
+				}
+			}
+			else = {
+				FROM = {
+					add_to_faction = ROOT
+				}
+			}
+		}
+		option = {
+			name = ENG_event.912.b
+			ai_chance = {
+				factor = 0
+			}
+			add_political_power = -10
+		}
+	}
+
+#外交事件（有一些在上面其他里）
+	country_event = { #圣杯提出对石油条约进行谈判
+		id = ENG_event_wj.1
+		title = ENG_event_wj.1.t
+		desc = ENG_event_wj.1.d
+		fire_only_once = yes
+		is_triggered_only = yes
+		option = {
+			name = ENG_event_wj.1.a
+			ai_chance = {
+				factor = 100  
+			}
+
+			ENG = {
+				country_event = ENG_event_wj.3
+			}
+
+			remove_ideas = LAN_oil_treaty
+			custom_effect_tooltip =  ENG_tooltip_dsjjrzy
+		}
+		option = {
+			name = ENG_event_wj.1.b
+			ai_chance = {
+				factor = 0
+			}
+			add_political_power = -10
+			ENG = {
+				set_country_flag = FLAG_ENG_albty_no
+			}
+			ENG = {
+				country_event = ENG_event_wj.4
+			}
+		}
+	}
+	country_event = { #圣杯援助抵达
+		id = ENG_event_wj.2
+		title = ENG_event_wj.2.t
+		desc = ENG_event_wj.2.d
+		fire_only_once = yes
+		is_triggered_only = yes
+		option = {
+			name = ENG_event_wj.2.a
+			ai_chance = {
+				factor = 100   
+			}
+			LAN = {
+				add_ideas = ENG_idea_sbjjyz
+			}
+			LAN = {
+				add_to_variable = { ubs_save = 1000 }
+				custom_effect_tooltip = ENG_tooltip_var_hcp_add_1000
+			}
+			ENG = {
+				add_to_faction = LAN
+			}
+			 
+		}
+	}
+	country_event = { #阿拉伯同意
+		id = ENG_event_wj.3
+		title = ENG_event_wj.3.t
+		desc = ENG_event_wj.3.d
+		fire_only_once = yes
+		is_triggered_only = yes
+		option = {
+			name = ENG_event_wj.3.a
+			ai_chance = {
+				factor = 100  
+			}
+			set_country_flag = FLAG_ENG_albty_yes
+		}
+	}
+	country_event = { #阿拉伯拒绝
+		id = ENG_event_wj.4
+		title = ENG_event_wj.4.t
+		desc = ENG_event_wj.4.d
+		fire_only_once = yes
+		is_triggered_only = yes
+		option = {
+			name = ENG_event_wj.4.a
+			ai_chance = {
+				factor = 100  
+			}
+
+			set_country_flag = FLAG_ENG_albty_no
+		}
+	}
+
 #wto事件
 	country_event = { #邀请某国加入世贸
 		id = ENG_event_wto.1
@@ -4980,7 +5229,11 @@ add_namespace = ENG_event_me
 		option = {
 			name = ENG_news.8.b
 			trigger = {
-				tag = DEN		
+				or = {
+					tag = DEN
+					tag = NOR
+				}
+						
 			}	
 			effect_tooltip = {		
 				ENG = {
@@ -5069,6 +5322,24 @@ add_namespace = ENG_event_me
 						is_core_of = EGY
 					}
 					EGY = {
+						transfer_state = PREV
+					}
+				}
+				every_state = {
+					limit = {
+						is_controlled_by = ENG
+						is_core_of = MGU
+					}
+					MGU = {
+						transfer_state = PREV
+					}
+				}
+				every_state = {
+					limit = {
+						is_controlled_by = ENG
+						is_core_of = EAS
+					}
+					EAS = {
 						transfer_state = PREV
 					}
 				}
