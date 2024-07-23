@@ -22,6 +22,8 @@ country_event = {
 			id = FRA_Gensokyo.049
 		}
 		hidden_effect = {
+			clear_array = THIS.Ruling_coalition_array
+			FRA_change_to_hoi_pie_chart = yes
 			news_event = {
 				id = FRA_Gensokyo_news.001
 			}
@@ -872,9 +874,9 @@ country_event = {
 			if = {
 				limit = {
 					or = {
-						controls_state = 879
+						controls_state = 545
 						any_subject_country = {
-							controls_state = 879
+							controls_state = 545
 						}
 					}
 				}
@@ -979,6 +981,34 @@ country_event = {
 						country_event = FRA_Gensokyo_Alliance.11 #accepts
 					} 
 					50 = { country_event = FRA_Gensokyo_Alliance.12 } #refuses
+				}
+			}
+			if = {
+				limit = {
+					or = {
+						controls_state = 295
+						any_subject_country = {
+							controls_state = 295
+						}
+					}
+				}
+				random_list = {
+					50 = {
+						modifier = {
+							has_government = communism
+							factor = 2
+						}
+						modifier = {
+							has_country_leader_ideology = socialism
+							factor = 2
+						}
+						modifier = {
+							has_government = fascism
+							factor = 0.25
+						}
+						country_event = FRA_Gensokyo_Alliance.13 #accepts
+					} 
+					50 = { country_event = FRA_Gensokyo_Alliance.14 } #refuses
 				}
 			}
 		}
@@ -1930,7 +1960,10 @@ country_event = {
 			set_cosmetic_tag = NFA_FRA_NA
 			set_country_flag = FRA_Ally_Original
 			FRA = {
-				set_cosmetic_tag = FRA_NFA_Unition
+				if = {
+					limit = { FRA_has_level_three_tag = no }
+					set_cosmetic_tag = FRA_NFA_Unition
+				}
 				faction_leader = {
 					add_to_faction = ROOT
 				}
@@ -1980,7 +2013,10 @@ country_event = {
 			set_country_flag = FRA_Ally_Original
 			load_focus_tree = generic_focus
 		}
-		set_cosmetic_tag = FRA_NFA_Unition
+		if = {
+			limit = { FRA_has_level_three_tag = no }
+			set_cosmetic_tag = FRA_NFA_Unition
+		}
 		faction_leader = {
 			add_to_faction = NFA
 		}
@@ -2462,7 +2498,11 @@ country_event = {
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
 		}
-		set_cosmetic_tag = Gensokyo_SSF
+		if = {
+			limit = { FRA_has_level_higher_one_tag = no }
+			drop_cosmetic_tag = yes
+			set_cosmetic_tag = Gensokyo_SSF
+		}
 		set_country_leader_ideology = leninism
 		ai_chance = {
 			base = 10
@@ -2504,7 +2544,11 @@ country_event = {
 		add_to_variable = { support_of_LCR = 25 }
 		set_variable = { FRA_Ruling_Party_VAR = 1 }
 		FRA_set_rule_party_name = yes
-		set_cosmetic_tag = Gensokyo_Farsighted
+		if = {
+			limit = { FRA_has_level_higher_one_tag = no }
+			drop_cosmetic_tag = yes
+			set_cosmetic_tag = Gensokyo_Farsighted
+		}
 		if = {
 			limit = { has_government = communism }
 			meta_effect = {
@@ -2599,6 +2643,10 @@ country_event = {
 			country_event = {
 				id = FRA_Gensokyo.041
 			}
+			country_event = {
+				id = FRA_Gensokyo.075
+				days = 14
+			}
 		}
 		hidden_effect = { load_oob = FRA_revolution_ended_there }
 		if = {
@@ -2608,6 +2656,12 @@ country_event = {
 				add_idea = race_mankind
 			}
 		}
+		add_to_variable = {
+			var = support_of_Sanae
+			value = 50
+			tooltip = support_of_Sanae_rose_50
+		}
+		FRA_change_to_hoi_pie_chart = yes
 	}
 }
 
@@ -3025,6 +3079,235 @@ country_event = {
 	picture = GFX_FRA_Marisa_event
 	option = {
 		name = FRA_Gensokyo.067.a
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#[DVL.Getname]进攻幻想乡
+country_event = {
+	id = FRA_Gensokyo.068
+	title = FRA_Gensokyo.068.t
+	desc = FRA_Gensokyo.068.desc
+	is_triggered_only = yes
+	picture = GFX_event_Reimu
+	option = {
+		name = FRA_Gensokyo.068.a
+		#DVL = { declare_war_on = { target = ROOT type = yes } }
+		FRA = {
+			if = {
+				limit = { exists = yes }
+				country_event = {
+					id = FRA_Gensokyo.069
+				}
+				ROOT = {
+					add_to_war = {
+						targeted_alliance = FRA
+						enemy = DVL
+						hostility_reason = asked_to_join
+					}
+				}
+			}
+		}
+		KMK = {
+			if = {
+				limit = { exists = yes }
+				country_event = {
+					id = FRA_Gensokyo.069
+				}
+				ROOT = {
+					add_to_war = {
+						targeted_alliance = KMK
+						enemy = DVL
+						hostility_reason = asked_to_join
+					}
+				}
+			}
+		}
+		add_stability = 0.05
+		add_war_support = 0.05
+		ai_chance = {
+			base = 50
+		}
+	}
+	option = {
+		name = FRA_Gensokyo.068.b
+		FRA = {
+			if = {
+				limit = { exists = yes }
+				country_event = {
+					id = FRA_Gensokyo.070
+				}
+			}
+		}
+		KMK = {
+			if = {
+				limit = { exists = yes }
+				country_event = {
+					id = FRA_Gensokyo.070
+				}
+			}
+		}
+		add_stability = -0.3
+		add_war_support = -0.3
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#圣杯履行条约
+country_event = {
+	id = FRA_Gensokyo.069
+	title = FRA_Gensokyo.069.t
+	desc = FRA_Gensokyo.069.desc
+	is_triggered_only = yes
+	picture = GFX_event_Altria
+	option = {
+		name = FRA_Gensokyo.069.a
+		add_stability = 0.05
+		add_war_support = 0.05
+		give_military_access = ENG
+		ENG = { give_military_access = FRA }
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#圣杯背叛了我们！
+country_event = {
+	id = FRA_Gensokyo.070
+	title = FRA_Gensokyo.070.t
+	desc = FRA_Gensokyo.070.desc
+	is_triggered_only = yes
+	picture = GFX_event_Altria
+	option = {
+		name = FRA_Gensokyo.070.a
+		add_ideas = FRA_fight_to_the_death
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#幻想乡永不投降，民主永不落！
+country_event = {
+	id = FRA_Gensokyo.072
+	title = FRA_Gensokyo.072.t
+	desc = FRA_Gensokyo.072.desc
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo.072.a
+		set_cosmetic_tag = FREE_FRA
+		FRA = {
+			FRA_Marisa = { set_nationality = ROOT }
+			FRA_Kamishirasawa_Keine = { set_nationality = ROOT }
+			FRA_Kasen = { set_nationality = ROOT }
+			FRA_Komeiji_Koishi = { set_nationality = ROOT }
+			FRA_Huziwara_no_Mokou = { set_nationality = ROOT }
+			FRA_Lilywhite = { set_nationality = ROOT }
+			FRA_Komeiji_Satori = { set_nationality = ROOT }
+			FRA_Saigyouji_Yuyuko = { set_nationality = ROOT }
+			FRA_Youmu = { set_nationality = ROOT }
+			FRA_Reimu = { set_nationality = ROOT }
+			FRA_Inubashiri = { set_nationality = ROOT }
+			FRA_Syameimaru = { set_nationality = ROOT }
+			FRA_Nitori = { set_nationality = ROOT }
+			FRA_Okazaki_Yumemi = { set_nationality = ROOT }
+		}
+		if = {
+			limit = { check_variable = { FRA.FRA_Ruling_Party_VAR = 3 } }
+			promote_character = FRA_Kasen
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = no
+			}
+			custom_effect_tooltip = election_five_yeas_later
+			add_popularity = { ideology = democratic popularity = 0.5 }
+			set_variable = { ROOT.FRA_Ruling_Party_VAR = 3 }
+		}
+		else_if = {
+			limit = { check_variable = { FRA.FRA_Ruling_Party_VAR = 4 } }
+			promote_character = FRA_Marisa
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = no
+			}
+			custom_effect_tooltip = election_five_yeas_later
+			add_popularity = { ideology = democratic popularity = 0.5 }
+			set_variable = { ROOT.FRA_Ruling_Party_VAR = 4 }
+		}
+		else_if = {
+			limit = { check_variable = { FRA.FRA_Ruling_Party_VAR = 5 } }
+			promote_character = FRA_Kamishirasawa_Keine
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = no
+			}
+			custom_effect_tooltip = election_five_yeas_later
+			add_popularity = { ideology = democratic popularity = 0.5 }
+			set_variable = { ROOT.FRA_Ruling_Party_VAR = 5 }
+		}
+		every_state = {
+			limit = { has_state_flag = FRA_mainland_state }
+			add_core_of = ROOT
+		}
+		set_party_name = {
+			ideology = democratic
+			long_name = FREE_FRA_Party
+			name = FREE_FRA_Party
+		}
+		hidden_effect = { inherit_technology = FRA }
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#[FROM.getname]提议团结抗战
+country_event = {
+	id = FRA_Gensokyo.073
+	title = FRA_Gensokyo.073.t
+	desc = FRA_Gensokyo.073.desc
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo.073.a
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#[FROM.getname]同意了
+country_event = {
+	id = FRA_Gensokyo.074
+	title = FRA_Gensokyo.074.t
+	desc = FRA_Gensokyo.074.desc
+	is_triggered_only = yes	
+	option = {
+		name = FRA_Gensokyo.074.a
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#大众爱国党
+country_event = {
+	id = FRA_Gensokyo.075
+	title = FRA_Gensokyo.075.t
+	desc = FRA_Gensokyo.075.desc
+	is_triggered_only = yes
+	picture = GFX_FRA_Sanae_coronation_event
+	option = {
+		name = FRA_Gensokyo.075.a
+			set_party_name = {
+				ideology = neutrality
+				long_name = FRA_Sanae_formal_party
+				name = FRA_Sanae_formal_party
+			}
 		ai_chance = {
 			base = 10
 		}
@@ -3544,14 +3827,14 @@ country_event = {
 		name = FRA_Gensokyo_Alliance.01.a
 		every_state = {
 			limit = {
-				has_state_flag = RAE_state_area
+				has_state_flag = ZIM_state_area
 			}
 			add_core_of = ROOT
 		}
 		every_country = {
 			limit = {
 				or = {
-					tag = RAE
+					tag = ZIM
 				}
 				is_subject_of = ROOT
 			}
@@ -3561,7 +3844,7 @@ country_event = {
 		}
 		every_state = {
 			limit = {
-				has_state_flag = RAE_state_area
+				has_state_flag = ZIM_state_area
 				or = {
 					is_fully_controlled_by = ROOT
 					any_subject_country = {
@@ -3582,7 +3865,7 @@ country_event = {
 	option = {
 		name = FRA_Gensokyo_Alliance.02.a
 		set_temp_variable = {
-			tag_to_release = RAE
+			tag_to_release = ZIM
 		}
 		release_targeted_tag = yes
 	}
@@ -3754,6 +4037,59 @@ country_event = {
 		release_targeted_tag = yes
 	}
 }
+#刚果投票加入
+country_event = {
+	id = FRA_Gensokyo_Alliance.13
+	title = FRA_Gensokyo_Alliance.13.t
+	desc = FRA_Gensokyo_Alliance.13.desc
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo_Alliance.01.a
+		every_state = {
+			limit = {
+				has_state_flag = COG_state_area
+			}
+			add_core_of = ROOT
+		}
+		every_country = {
+			limit = {
+				or = {
+					tag = COG
+				}
+				is_subject_of = ROOT
+			}
+			ROOT = {
+				annex_country = { target = PREV transfer_troops = yes }
+			}
+		}
+		every_state = {
+			limit = {
+				has_state_flag = COG_state_area
+				or = {
+					is_fully_controlled_by = ROOT
+					any_subject_country = {
+						has_full_control_of_state = PREV
+					}
+				}
+			}
+			transfer_state_to = ROOT
+		}
+	}
+}
+#刚果投票脱离
+country_event = {
+	id = FRA_Gensokyo_Alliance.14
+	title = FRA_Gensokyo_Alliance.14.t
+	desc = FRA_Gensokyo_Alliance.14.desc
+	is_triggered_only = yes
+	option = {
+		name = FRA_Gensokyo_Alliance.02.a
+		set_temp_variable = {
+			tag_to_release = COG
+		}
+		release_targeted_tag = yes
+	}
+}
 
 #######  隐   藏     #######
 #开局政治
@@ -3768,6 +4104,7 @@ country_event = {
 		FRA_Set_opening_party_situation = yes
 		FRA_initialize_govern_of_Kasen = yes
 		set_variable = { FRA_Ruling_Party_VAR = 4 }
+		FRA_Approval_Rating_Start = yes
 	}
 	option = {
 		name = FRA_Gensokyo.1000.a
@@ -5085,9 +5422,37 @@ country_event = {
 	desc = FRA_Gensokyo.2000.desc
 	is_triggered_only = yes
 	option = {
-		name = French_Gensokyo
-		set_cosmetic_tag = French_Gensokyo
-		set_country_leader_ideology = Utopian_Socialism
+		name = FRA_support_seat_middle_and_right_rise_middle
+			custom_effect_tooltip = FRA_support_seat_middle_and_right_rise_middle
+			#
+			multiply_variable = { FRANA_PFG_support_us = 1.2 }
+			round_variable = FRANA_PFG_support_us
+			clamp_variable = {
+				var = FRANA_PFG_support_us
+				max = FRANA_seat_of_PFG
+			}
+			#
+			multiply_variable = { FRANA_IDU_support_us = 1.2 }
+			round_variable = FRANA_IDU_support_us
+			clamp_variable = {
+				var = FRANA_IDU_support_us
+				max = FRANA_seat_of_IDU
+			}
+			#
+			multiply_variable = { FRANA_GFN_support_us = 1.2 }
+			round_variable = FRANA_GFN_support_us
+			clamp_variable = {
+				var = FRANA_GFN_support_us
+				max = FRANA_seat_of_GFN
+			}
+			#
+			multiply_variable = { FRANA_MNR_support_us = 1.2 }
+			round_variable = FRANA_MNR_support_us
+			clamp_variable = {
+				var = FRANA_MNR_support_us
+				max = FRANA_seat_of_MNR
+			}
+			FRA_Bills_of_National_Assembly_calculate = yes
 	}
 	option = {
 		name = Gensokyo_SSF
@@ -5095,30 +5460,17 @@ country_event = {
 		set_country_leader_ideology = leninism
 	}
 	option = {
-		name = FRA_Gensokyo.2000.a
-		FRA_Sanae = {
-			add_country_leader_role = {
-				country_leader = {
-					desc = ""
-					ideology = Volkswagen_Sanaeism_subideology
-					traits = {
-					}
-					expire = "1999.1.1.1"
-					id = -1
-				}
-				promote_leader = yes
-			}
-		}
-		set_party_name = {
-			ideology = communism
-			long_name = FRA_Sanae_party
-			name = FRA_Sanae_party
-		}
-		set_politics = { ruling_party = communism }
-		add_popularity = { ideology = communism popularity = 0.7 }
+		name = FRA_change_to_hoi_pie_chart
+		FRA_change_to_hoi_pie_chart = yes
 	}
 	option = {
 		name = FRA_Gensokyo.2000.a
+		set_popularities = {
+			democratic = temp_popularity_of_democratic
+			neutrality = temp_popularity_of_neutrality
+			fascism = temp_popularity_of_fascism
+			communism = temp_popularity_of_communism
+		}
 	}
 }
 

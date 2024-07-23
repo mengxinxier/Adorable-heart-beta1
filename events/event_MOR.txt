@@ -282,7 +282,31 @@ add_namespace = iberia_con
 		}
 		option = {
 			name = iberia.018.a
+			retire_character = NPT_Carmen
 			hidden_effect = {
+				add_country_leader_role = {
+					character = NPT_Lumen
+					country_leader = {
+						ideology = liberalism
+						traits = { DEN_gallant_doctor }
+					}
+					promote_leader = yes
+				}
+				set_party_name = {
+					ideology = democratic
+					long_name = "地方议会"
+					name = "地方议会"
+				}
+				set_party_name = {
+					ideology = fascism
+					long_name = "阿戈尔部队"
+					name = "阿戈尔部队"
+				}
+				set_party_name = {
+					ideology = communism
+					long_name = "左翼政党"
+					name = "左翼政党"
+				}
 				complete_national_focus = MOR_obey_church_rule	
 			}
 		}
@@ -1510,11 +1534,6 @@ add_namespace = iberia_con
 		is_triggered_only = yes
 		option = {
 			name = iberia_rec.014.a
-			
-			set_autonomy = {
-				target = FROM
-				autonomy_state = autonomy_colony
-			}
 		}
 	}
 						
@@ -1552,19 +1571,6 @@ add_namespace = iberia_con
 					type = annex_everything
 				}
 				add_civil_war_target = ARF
-				division_template = {
-					name = "民兵旅"
-					regiments = {
-						irregular_infantry = { x = 0 y = 0 }
-						irregular_infantry = { x = 0 y = 1 }
-						irregular_infantry = { x = 0 y = 2 }
-						irregular_infantry = { x = 1 y = 0 }
-						irregular_infantry = { x = 1 y = 1 }
-						irregular_infantry = { x = 1 y = 2 }
-					}
-					is_locked = yes
-					force_allow_recruiting = yes
-				}
 			}
 			add_political_power = 100
 			add_war_support = 0.10
@@ -1655,15 +1661,18 @@ add_namespace = iberia_con
 			clr_global_flag = MOR_declare_ambition_flag
 			if = {
 				limit = { has_war_with = NPT }
-				white_peace = NPT
+				remove_civil_war_target = NPT
+				MOR = { white_peace = NPT }
 			}
 			if = {
 				limit = { has_war_with = ARF }
-				white_peace = ARF
+				remove_civil_war_target = ARF
+				MOR = { white_peace = ARF }
 			}
 			if = {
 				limit = { has_war_with = BLA }
-				white_peace = BLA
+				remove_civil_war_target = BLA
+				MOR = { white_peace = BLA }
 			}
 			if = {
 				limit = { country_exists = BLA }
@@ -1685,7 +1694,8 @@ add_namespace = iberia_con
 					transfer_state_to = NPT
 				}
 			}
-			else = {
+			else_if = {
+				limit = { country_exists = ARF }
 				every_owned_state = {
 					limit = {
 						has_state_flag = Neptune_core_state_flag
