@@ -797,7 +797,7 @@ focus_tree = {
 		search_filters = {FOCUS_FILTER_POLITICAL FOCUS_FILTER_SOV_POLITICAL_PARANOIA}
 		completion_reward = {
 			add_to_variable = { KMK_political_power_gain = 0.05 }
-			add_to_variable = { conscription_factor = 0.2 }
+			add_to_variable = { KMK_conscription_factor = 0.2 }
 		}
 	}
 
@@ -844,8 +844,8 @@ focus_tree = {
 		search_filters = {FOCUS_FILTER_SOV_POLITICAL_PARANOIA}
 
 		completion_reward = {
-			add_to_variable = { conscription_factor = 0.15 }
-			add_to_variable = { conscription = 0.02 }
+			add_to_variable = { KMK_conscription_factor = 0.3 }
+			add_to_variable = { KMK_conscription = 0.03 }
 			add_to_variable = { KMK_political_power_gain = 0.08 }
 		}
 	}
@@ -867,6 +867,7 @@ focus_tree = {
 		completion_reward = {
 			add_to_variable = { KMK_trade_laws_cost_factor = -0.05 }
 			add_to_variable = { KMK_economy_cost_factor = -0.05 }
+			add_to_variable = { KMK_weekly_manpower = 50000 }
 		}
 	}
 	focus = {
@@ -1773,9 +1774,6 @@ focus = {
 		ai_will_do = {
 			base = 10
 		}
-		mutually_exclusive = {
-			focus = KMK_Remiria_26
-		}
 		select_effect = {
 		}
 		available = {
@@ -1798,8 +1796,10 @@ focus = {
 		ai_will_do = {
 			base = 10
 		}
-		prerequisite = {focus = KMK_Remiria_Established_strategy}
-		prerequisite = {focus = KMK_Remiria_25}
+		bypass = {not = {has_country_flag = Anastasia}}
+		prerequisite = {
+			focus = KMK_Remiria_25
+			focus = KMK_Remiria_Established_strategy}
 		relative_position_id = KMK_Remiria_25
 		select_effect = {
 		}
@@ -1814,7 +1814,7 @@ focus = {
 		}
 	}
 	focus = {
-		#既定战略
+		#跟随我们的盟友
 		id = KMK_Remiria_Established_strategy
 		icon = GFX_focus_AST_never_gallipoli
 		x = 2
@@ -1823,24 +1823,23 @@ focus = {
 		ai_will_do = {
 			base = 10
 		}
-		mutually_exclusive = {
-			focus = KMK_Remiria_26
-		}
 		relative_position_id = KMK_Remiria_25
 		select_effect = {
 		}
 		available = {
-			has_country_flag = Anastasia
+				has_government = democratic
 		}
 		#cancelable = no
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			create_faction = Imperial_Convention
+			ENG = {
+				country_event = generic.2002
+			}
 		}
 	}
 	focus = {
-		#摒弃前嫌
+		#向德意志复仇
 		id = KMK_Remiria_go_of_past_grievances
 		icon = GFX_focus_AST_never_gallipoli
 		x = 0
@@ -1863,10 +1862,15 @@ focus = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			create_faction = Imperial_Convention
+			declare_war_on = {
+				target = GER
+				type = annex_everything
+			}
 		}
+		will_lead_to_war_with = GER
 	}
 	focus = {
+		#要塞化边境
 		id = SCA_jingtiyaoguaishan
 		icon = GFX_goal_generic_occupy_states_ongoing_war
 		cost = 6
@@ -1882,6 +1886,7 @@ focus = {
 	}
 
 	focus = {
+		#主动出击
 		id = SCA_rongrudiguo
 		icon = GFX_focus_generic_home_defense
 		cost = 6
@@ -1898,10 +1903,16 @@ focus = {
 			is_subject = no
 		}
 		completion_reward = {
-	    }
+	    declare_war_on = {
+				target = DVL
+				type = annex_everything
+			}
+		}
+		will_lead_to_war_with = DVL
 	}
 
 	focus = {
+		#还是防守适合我们
 		id = SCA_diyuyaoguaishanweixie
 		icon = GFX_focus_generic_little_entente
 		cost = 6
@@ -1915,12 +1926,18 @@ focus = {
 			focus = SCA_rongrudiguo
 		}
 		available ={
+			has_war_with = DVL
 			is_subject = no
 		}
 		completion_reward = {
+			add_timed_idea = {
+				idea = KMK_defense_plan
+				days = 100
+			}
 	    }
 	}
 	focus = {
+		#摒弃前嫌
 		id = SCA_jianshexuanwuchuan
 		icon = GFX_goal_generic_construction
 		cost = 6
@@ -1932,11 +1949,150 @@ focus = {
 		}
 		available ={
 			is_subject = no
+			any_state = { 
+				AND = {is_core_of = GER
+				is_core_of = DVL}
+				is_controlled_by = ROOT
+			}
+			DVL = {
+				OR = {
+					exists = no
+					has_capitulated = yes
+				}
+			}
+			GER = {
+				OR = {
+					exists = no
+					has_capitulated = yes
+				}
+			}
 		}
 		completion_reward = {
-	    }
+			if = { #set up AUS puppet
+				limit = {
+					942 = {
+						is_owned_or_subject_trigger = yes
+					}
+					153 = {
+						is_owned_or_subject_trigger = yes
+					}
+					39 = {
+						is_owned_or_subject_trigger = yes
+					}
+					783 = {
+						is_owned_or_subject_trigger = yes
+					}
+					784 = {
+						is_owned_or_subject_trigger = yes
+					}
+					836 = {
+						is_owned_or_subject_trigger = yes
+					}
+					835 = {
+						is_owned_or_subject_trigger = yes
+					}
+					775 = {
+						is_owned_or_subject_trigger = yes
+					}
+					152 = {
+						is_owned_or_subject_trigger = yes
+					}
+					102 = {
+						is_owned_or_subject_trigger = yes
+					}
+					683 = {
+						is_owned_or_subject_trigger = yes
+					}
+					103 = {
+						is_owned_or_subject_trigger = yes
+					}
+					736 = {
+						is_owned_or_subject_trigger = yes
+					}
+					488 = {
+						is_owned_or_subject_trigger = yes
+					}
+					4 = {
+						is_owned_or_subject_trigger = yes
+					}
+				}
+
+				AUS = {
+					transfer_state = 4
+					transfer_state = 488
+					transfer_state = 736
+					transfer_state = 103
+					transfer_state = 683
+					transfer_state = 102
+					transfer_state = 775
+					transfer_state = 152
+					transfer_state = 784
+					transfer_state = 836
+					transfer_state = 835
+					transfer_state = 942 
+					transfer_state = 153
+					transfer_state = 783
+					transfer_state = 39
+
+					add_state_core = 4
+					add_state_core = 39
+					add_state_core = 488
+					add_state_core = 736
+					add_state_core = 103
+					add_state_core = 683
+					add_state_core = 102
+					add_state_core= 775
+					add_state_core= 152
+					add_state_core = 784
+					add_state_core= 836
+					add_state_core = 835
+					add_state_core = 942 
+					add_state_core = 153
+					add_state_core = 783
+					add_ideas = KMK_cost_victory
+				}
+				puppet = AUS
+			}
+			every_state = {
+				limit = { 
+					OR = {is_core_of = GER 
+					is_core_of = DVL}
+					is_owned_or_subject_trigger = yes
+					CONTROLLER = {
+						NOT = {
+							tag = AUS
+						}
+					}
+					NOT = {
+						or = {state = 42
+						state = 781
+						is_core_of = KMK}
+					}
+				}
+				GER = {
+					transfer_state = PREV
+					add_state_core = PREV
+				}
+			}
+			if = {
+				limit = {
+					country_exists = GER
+				}
+				puppet = GER
+			}
+			GER = {
+				add_ideas = KMK_cost_victory
+				remove_state_core = 8
+				remove_state_core = 781
+				remove_state_core = 28
+				remove_state_core = 42
+			}
+			add_state_core = 42
+			add_state_core = 781
+		}
 	}
 	focus = {
+		#败而不馁
 		id = SCA_zhongzukaifang
 		icon = GFX_goal_generic_national_unity
 		cost = 6
@@ -1945,18 +2101,35 @@ focus = {
 		relative_position_id = SCA_jianshexuanwuchuan
 		prerequisite = {
 			focus = SCA_jianshexuanwuchuan
-		}
-		prerequisite = {
 			focus = SCA_rongrudiguo
 		}
 		available ={
 			is_subject = no
 		}
-		completion_reward = {
+		completion_reward = {Puppet = UKR
+			UKR = {
+					transfer_state = 202
+					transfer_state = 201
+			}
+			SOV = {
+				declare_war_on = {
+				target = UKR
+				type = annex_everything
+			}
+			}
+			
+	    }
+	    ai_will_do = {
+	    	factor = 1
+	    	modifier = {
+	    		has_war = yes
+	    		factor = 0
+	    	}
 	    }
 	}
 
 	focus = {
+		#故乡倒映的星之海
 		id = SCA_yaoguaishanbilei
 		icon = GFX_focus_SCA_yaoguaishanbilei
 		cost = 6
@@ -1965,14 +2138,26 @@ focus = {
 		relative_position_id = SCA_jianshexuanwuchuan
 		prerequisite = {
 			focus = SCA_jianshexuanwuchuan
-		}
-		prerequisite = {
 			focus = SCA_diyuyaoguaishanweixie
 		}
 		available ={
 			is_subject = no
 		}
 		completion_reward = {
+			608 = {
+				OWNER = { 
+						ROOT = { 
+							create_wargoal = { 
+								type = take_state
+								target = PREV
+								expire = 0
+								generator = {
+									608
+								}
+							}
+						} 
+					} 
+			}
 		}
 	}
 
@@ -1992,6 +2177,15 @@ focus = {
 		bypass = {
 		}
 		completion_reward = {
+			UKR = {
+				UKR_become_great_end = yes
+				every_state = {
+				limit = {
+					is_core_of = SOV
+				}
+				add_core_of = UKR
+				}
+			}
 	    }
 	    ai_will_do = {
 	    	factor = 1
@@ -2003,6 +2197,7 @@ focus = {
 	}
 
 	focus = {
+		#胜利的代价
 		id = SCA_hetongyanjiu
 		icon = GFX_focus_research
 		cost = 6
@@ -2013,14 +2208,21 @@ focus = {
 			focus = SCA_tongyihetong
 		}
 		available ={
+			SOV = {
+				OR = {
+					exists = no
+					has_capitulated = yes
+				}
+			}
 			is_subject = no
 		}
 		completion_reward = {
-		  	add_research_slot = 1
+			UKR = {add_ideas = KMK_cost_victory}
 	    }
 	}
 
 	focus = {
+		#重建旧礼
 		id = SCA_shoushigongtongfangyu
 		icon = GFX_goal_molotov_ribbentrop_pact
 		cost = 6
@@ -2033,10 +2235,67 @@ focus = {
 		available ={
 		}
 		completion_reward = {
+			if = {
+			limit = {
+				CHI = {
+					exists = yes
+					NOT = {
+						is_in_faction_with = KMK
+					}
+				}
+			}
+			declare_war_on = {
+				target = CHI
+				type = annex_everything
+			}
+			}
+			if = {
+			limit = {
+				ROC = {
+					exists = yes
+					NOT = {
+						is_in_faction_with = KMK
+					}
+				}
+			}
+			declare_war_on = {
+				target = ROC
+				type = annex_everything
+			}
+			}
+		if = {
+			limit = {
+				PRC = {
+					exists = yes
+					NOT = {
+						is_in_faction_with = KMK
+					}
+				}
+			}
+			declare_war_on = {
+				target = PRC
+				type = annex_everything
+			}
+		}
+		if = {
+			limit = {
+				JAP = {
+					exists = yes
+					NOT = {
+						is_in_faction_with = KMK
+					}
+				}
+			}
+			declare_war_on = {
+				target = JAP
+				type = annex_everything
+			}
+		}
 	    }
 	}
 
 	focus = {
+		#天问
 		id = SCA_shoushikejibangzhu
 		icon = GFX_goal_continuous_research
 		cost = 6
@@ -2057,9 +2316,6 @@ focus = {
 		icon = GFX_focus_generic_league_of_nations
 		x = 58
 		y = 0
-		mutually_exclusive = {
-			focus = KMK_Remiria_25
-		}
 		cost = 6
 		ai_will_do = {
 			base = 10
@@ -2070,6 +2326,7 @@ focus = {
 			has_country_flag = reunit_huanxiangxiang
 			is_in_faction = no
 			is_subject = no
+			not = {has_country_flag = Anastasia}
 		}
 		#cancelable = no
 		available_if_capitulated = no
@@ -2085,7 +2342,7 @@ focus = {
 		}
 	}
 	focus = {
-		#再造德意志
+		#我们的自然边界
 		id = KMK_Remiria_27
 		icon = GFX_GER_establish
 		prerequisite = {
@@ -2110,7 +2367,7 @@ focus = {
 		}
 	}
 	focus = {
-		#终结布尔什维克
+		#万里归乡
 		id = KMK_Remiria_28
 		icon = GFX_goal_attack_communists
 		prerequisite = {
@@ -2155,7 +2412,7 @@ focus = {
 		will_lead_to_war_with = SOV
 	}
 	focus = {
-		#建立通往北美的前哨站
+		#建立通往北欧的前哨站
 		id =KMK_Remilia_1
 		icon = GFX_USA_Automatic_forming
 		prerequisite = { 
@@ -2176,7 +2433,7 @@ focus = {
 		will_lead_to_war_with = PAQ
 	}
 	focus = {
-		#威胁精灵
+		#北欧吸血鬼政权的建立
 		id =KMK_Remilia_2
 		icon = GFX_USA_when_that_day_come
 		prerequisite = { 
@@ -2205,7 +2462,7 @@ focus = {
 		will_lead_to_war_with = NFA
 	}
 	focus ={
-		#结盟精灵
+		#吸血鬼同盟
 		id =KMK_Remilia_3
 		icon = GFX_USA_wake_up
 		prerequisite = { 
@@ -2232,7 +2489,7 @@ focus = {
 		will_lead_to_war_with = NFA
 	}
 	focus = {
-		#终结圣杯霸权
+		#我们阳光下的土地
 		id = KMK_Remilia_4
 		icon = GFX_focus_GTMX_ENG_hsxqe
 		prerequisite = {
@@ -2263,7 +2520,7 @@ focus = {
 		}
 	}
 	focus = {
-		#
+		#摧毁暗影之国
 		id = KMK_Remilia_114514
 		icon = GFX_focus_GTMX_ENG_hsxqe
 		prerequisite = {
@@ -2284,7 +2541,7 @@ focus = {
 		}
 	}
 	focus = {
-		#
+		#夺回幻想乡的殖民地
 		id = KMK_Remilia_114515
 		icon = GFX_focus_GTMX_ENG_hsxqe
 		prerequisite = {
@@ -2305,7 +2562,7 @@ focus = {
 		}
 	}
 	focus = {
-		#
+		#口舌之祸的诅咒
 		id = KMK_Remilia_114516
 		icon = GFX_focus_GTMX_ENG_hsxqe
 		prerequisite = {
@@ -2326,7 +2583,7 @@ focus = {
 		}
 	}
 	focus = {
-		#
+		#终结布尔什维克
 		id = KMK_Remilia_114517
 		icon = GFX_focus_GTMX_ENG_hsxqe
 		prerequisite = {
@@ -2347,7 +2604,7 @@ focus = {
 		}
 	}
 	focus = {
-		#
+		#命运之战
 		id = KMK_Remilia_114518
 		icon = GFX_focus_GTMX_ENG_hsxqe
 		prerequisite = {
