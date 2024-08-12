@@ -47,6 +47,181 @@ state_event = {
 	}
 }
 
+# Which cores to return?
+country_event = {
+	id = annex.3
+	immediate = { log = "[GetDateText]: [Root.GetName]: event annex.3" }
+	title = annex.3.t
+	desc = annex.3.d
+	is_triggered_only = yes
+	option = {
+		name = annex.3.a #return all land
+		ai_chance = {
+			factor = 1
+		}
+		clr_country_flag = KR_returning_land
+		custom_effect_tooltip = KR_will_return_all
+		hidden_effect = {
+			event_target:return_to = {
+				country_event = annex.4
+			}
+		}
+	}
+	option = {
+		name = annex.3.b #return all land but vital provinces
+		trigger = {
+			any_owned_state = {
+				is_controlled_by = ROOT
+				is_claim_or_core_of_ROOT = no
+				is_important_state = yes
+				NOT = { has_state_flag = KR_keeping_state@ROOT }
+				OR = {
+					is_core_of = event_target:return_to
+					is_claimed_by = event_target:return_to
+				}
+			}
+		}
+		ai_chance = {
+			factor = 100
+		}
+		custom_effect_tooltip = KR_will_return_rest
+		hidden_effect = {
+			clr_country_flag = KR_returning_land
+			every_owned_state = {
+				limit = {
+					is_claim_or_core_of_ROOT = no
+					is_important_state = yes
+					NOT = { has_state_flag = KR_keeping_state@ROOT }
+					OR = {
+						is_core_of = event_target:return_to
+						is_claimed_by = event_target:return_to
+					}
+				}
+				set_state_flag = KR_keeping_state@ROOT
+			}
+			if = {
+				limit = {
+					any_owned_state = {
+						is_claim_or_core_of_ROOT = no
+						is_important_state = no
+						NOT = { has_state_flag = KR_keeping_state@ROOT }
+						OR = {
+							any_neighbor_state = { is_owned_by = event_target:return_to }
+							is_coastal = yes
+						}
+						OR = {
+							is_core_of = event_target:return_to
+							is_claimed_by = event_target:return_to
+						}
+					}
+				}
+				event_target:return_to = {
+					country_event = annex.4
+				}
+			}
+		}
+	}
+	option = {
+		name = annex.3.c #return cores only
+		trigger = {
+			is_ai = no
+			any_owned_state = {
+				is_claim_or_core_of_ROOT = no
+				is_important_state = no
+				NOT = { has_state_flag = KR_keeping_state@ROOT 	}
+				is_core_of = event_target:return_to
+			}
+			any_owned_state = {
+				is_claim_or_core_of_ROOT = no
+				is_important_state = no
+				NOT = { has_state_flag = KR_keeping_state@ROOT 	}
+				NOT = { is_core_of = event_target:return_to }
+				is_claimed_by = event_target:return_to
+			}
+		}
+		custom_effect_tooltip = KR_will_return_cores
+		hidden_effect = {
+			clr_country_flag = KR_returning_land
+			every_owned_state = {
+				limit = {
+					is_claim_or_core_of_ROOT = no
+					NOT = { has_state_flag = KR_keeping_state@ROOT }
+					NOT = { is_core_of = event_target:return_to }
+					is_claimed_by = event_target:return_to
+				}
+				set_state_flag = KR_keeping_state@ROOT
+			}
+			event_target:return_to = {
+				country_event = annex.4
+			}
+		}
+	}
+	option = {
+		name = annex.3.e #keep it all you pig
+		trigger = {
+			is_ai = no
+		}
+		clr_country_flag = KR_returning_land
+		custom_effect_tooltip = KR_will_not_return
+		hidden_effect = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						is_core_of = event_target:return_to
+						is_claimed_by = event_target:return_to
+					}
+					is_claim_or_core_of_ROOT = no
+					NOT = { has_state_flag = KR_keeping_state@ROOT }
+				}
+				set_state_flag = KR_keeping_state@ROOT
+			}
+		}
+	}
+}
+
+# Cores/claims have been returned by an ally
+country_event = {
+	id = annex.4
+	immediate = { log = "[GetDateText]: [Root.GetName]: event annex.4" }
+	title = annex.4.t
+	desc = annex.4.d
+	is_triggered_only = yes
+	option = {
+		name = annex.4.a
+		add_opinion_modifier = {
+			target = FROM
+			modifier = KR_returned_land
+		}
+		while_loop_effect = {
+			limit = {
+				any_state = {
+					is_owned_by = FROM
+					is_claim_or_core_of_ROOT = yes
+					is_claim_or_core_of_FROM = no
+					OR = {
+						any_neighbor_state = { is_owned_by = ROOT }
+						is_coastal = yes
+					}
+					NOT = { has_state_flag = KR_keeping_state@FROM }
+				}
+			}
+			every_state = {
+				limit = {
+					is_owned_by = FROM
+					is_claim_or_core_of_ROOT = yes
+					is_claim_or_core_of_FROM = no
+					OR = {
+						any_neighbor_state = { is_owned_by = ROOT }
+						is_coastal = yes
+					}
+					NOT = { has_state_flag = KR_keeping_state@FROM }
+				}
+				transfer_to_ROOT = yes
+			}
+		}
+	}
+}
+
 #####################################
 ##   C E N T R A L   E U R O P E   ##
 #####################################
@@ -4533,13 +4708,14 @@ state_event = {
 			name = Unleash_a_loyal_government
 			trigger = {
 				KVO = { is_ally_of_ROOT = no }
-				NOT = { country_exists = KVO }
+				YUG = { is_ally_of_ROOT = no }
+				NOT = { country_exists = YUG }
 			}
 			ai_chance = {
 				base = 100
 			}
 			set_temp_variable = {
-				tag_to_release = KVO
+				tag_to_release = YUG
 			}
 			remove_targeted_core = yes
 			KVO_state_country_core = yes
@@ -4548,6 +4724,7 @@ state_event = {
 		option = {
 			name = annex.1048.a
 			trigger = {
+				YUG = { is_ally_of_ROOT = no }
 				KVO = { is_ally_of_ROOT = no }
 			}
 			ai_chance = {
@@ -4603,6 +4780,7 @@ state_event = {
 		option = {
 			name = annex.1048.b
 			trigger = {
+				YUG = { is_ally_of_ROOT = no }
 				KVO = { is_ally_of_ROOT = yes }
 			}
 			ai_chance = {
@@ -4624,6 +4802,7 @@ state_event = {
 		option = {
 			name = annex.1048.c
 			trigger = {
+				YUG = { is_ally_of_ROOT = no }
 				KVO = { is_ally_of_ROOT = no }
 			}
 			ai_chance = {
@@ -4641,6 +4820,7 @@ state_event = {
 		option = {
 			name = annex.occupation
 			trigger = {
+				YUG = { is_ally_of_ROOT = no }
 				KVO = { is_ally_of_ROOT = no }
 			}
 			ai_chance = {
