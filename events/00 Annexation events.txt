@@ -5712,6 +5712,22 @@ country_event = {
 			}
 			recheck_annexations_immediate = yes
 		}
+		option = {
+			name = annex.integration  #整合
+			trigger = {
+				tag = BUL
+				or = {
+					184 = { is_valid_annexation_state = no }
+					769 = { is_valid_annexation_state = no }
+				}
+			}
+			ai_chance = {
+				base = 100
+			}
+			184 = { add_core_of = ROOT }
+			769 = { add_core_of = ROOT }
+			recheck_annexations_immediate = yes
+		}
 	}
 
 	#罗马尼亚的命运
@@ -5782,6 +5798,7 @@ country_event = {
 			name = annex.1070.a  #给罗马尼亚
 			trigger = {
 				ROM = { is_ally_with = ROOT }
+				is_russia_uniter_tag = no
 			}
 			ai_chance = {
 				base = 100
@@ -5793,12 +5810,13 @@ country_event = {
 			recheck_annexations_immediate = yes
 		}
 		option = {
-			name = annex.1072.b  #给俄罗斯
+			name = annex.1072.a  #给俄罗斯
 			trigger = {
 				var:202.owner = {
 					is_russia_uniter_tag = yes
 					is_ally_with = ROOT
 				}
+				is_russia_uniter_tag = no
 			}
 			ai_chance = {
 				base = 100
@@ -5806,6 +5824,20 @@ country_event = {
 			78 = {
 				add_core_of = var:202.owner
 				transfer_state_to = var:202.owner
+			}
+			recheck_annexations_immediate = yes
+		}
+		option = {
+			name = annex.integration  #整合
+			trigger = {
+				is_russia_uniter_tag = yes
+				78 = { is_valid_annexation_state = no }
+			}
+			ai_chance = {
+				base = 100
+			}
+			78 = {
+				add_core_of = ROOT
 			}
 			recheck_annexations_immediate = yes
 		}
@@ -5831,7 +5863,7 @@ country_event = {
 			}
 			every_owned_state = {
 				limit = {
-					is_Thrace_area = yes
+					is_Edirne_area = yes
 					is_claim_or_core_of_ROOT = no
 				}
 				add_core_of = GRE
@@ -5849,7 +5881,7 @@ country_event = {
 			}
 			every_owned_state = {
 				limit = {
-					is_Thrace_area = yes
+					is_Edirne_area = yes
 					is_claim_or_core_of_ROOT = no
 				}
 				add_core_of = TUR
@@ -5875,6 +5907,22 @@ country_event = {
 			}
 			occupy_tiny_country = yes
 			set_country_flag = Edirne_CONQ
+			recheck_annexations_immediate = yes
+		}
+		option = {
+			name = annex.integration  #整合
+			trigger = {
+				tag = TUR
+				or = {
+					341 = { is_valid_annexation_state = no }
+					773 = { is_valid_annexation_state = no }
+				}
+			}
+			ai_chance = {
+				base = 100
+			}
+			341 = { add_core_of = ROOT }
+			773 = { add_core_of = ROOT }
 			recheck_annexations_immediate = yes
 		}
 	}
@@ -6506,7 +6554,7 @@ country_event = {
 				base = 0
 			}
 			occupy_tiny_country = yes
-			set_country_flag = UKR_CONQ
+			set_country_flag = Crimean_CONQ
 			recheck_annexations_immediate = yes
 		}
 	}
@@ -6707,7 +6755,7 @@ country_event = {
 			remove_targeted_core = yes
 			every_state = {
 				limit = {
-					has_state_flag = is_GEO_state_area
+					has_state_flag = is_AZR_state_area
 				}
 				add_core_of = var:tag_to_release
 			}
@@ -6999,6 +7047,60 @@ country_event = {
 		immediate = {
 			hidden_effect = {
 			}
+		}
+		option = {
+			name = Unleash_a_loyal_government
+			trigger = {
+				NOT = { country_exists = TUR }
+			}
+			ai_chance = {
+				base = 100
+			}
+			set_temp_variable = {
+				tag_to_release = TUR
+			}
+			every_state = {
+				limit = { is_core_of = TUR }
+				set_state_flag = former_TUR_core_state
+			}
+			every_state = {
+				limit = { is_claimed_by = TUR }
+				set_state_flag = former_TUR_claimed_state
+			}
+			remove_targeted_core = yes
+			every_state = {
+				limit = {
+					or = {
+						region = 129
+						state = 585
+						state = 187
+					}
+				}
+				add_core_of = TUR
+			}
+			release_targeted_tag = yes
+			every_state = {
+				limit = { has_state_flag = former_TUR_core_state }
+				add_core_of = TUR
+			}
+			every_state = {
+				limit = { has_state_flag = former_TUR_claimed_state }
+				add_claim_by = TUR
+			}
+			recheck_annexations_immediate = yes
+		}
+		option = {
+			#occupy
+			name = annex.occupation
+			trigger = {
+				TUR = { is_ally_of_ROOT = no }
+			}
+			ai_chance = {
+				base = 0
+			}
+			occupy_medium_country = yes
+			set_country_flag = TUR_CONQ
+			recheck_annexations_immediate = yes
 		}
 	}
 
