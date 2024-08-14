@@ -715,13 +715,29 @@ save_and_load_jisuan = {
 			value = lirun_meiyue
 		}
 	}
-	#####利息结算####
-	set_variable = {
-		ubs_load_lixi = 1.005
+	###自动还款###
+	if = {
+		limit = {
+			check_variable = { ubs_save > 0 }
+			check_variable = { ubs_load > 0 }
+			check_variable = { adorable_heart_automatic_repayment_var = 2 }
+		}
+		if = {
+			limit = {
+				not = { check_variable = { ubs_load > ubs_save } }
+			}
+			subtract_from_variable = { ubs_save = ubs_load }
+			set_variable = { ubs_load = 0 }
+		}
+		else = {
+			subtract_from_variable = { ubs_load = ubs_save }
+			set_variable = { ubs_save = 0 }
+		}
 	}
+	#####利息结算####
 	multiply_variable = {
 		var = ubs_load
-		value = ubs_load_lixi
+		value = 1.005
 	}
 	###图标变化
 		if = {
