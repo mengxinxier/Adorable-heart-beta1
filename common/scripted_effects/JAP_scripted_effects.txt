@@ -109,7 +109,6 @@ JAP_fading_sun = {
 				NOT = { has_global_flag = JAP_Fading_Sun }
 			}
 			set_global_flag = JAP_Fading_Sun
-			set_global_flag = JAP_fading_sun_fired
 			JAP = {
 				#清除了残余战争借口
 				every_enemy_country = {
@@ -120,7 +119,7 @@ JAP_fading_sun = {
 						}
 					}
 				}
-				#附庸国独立
+				#附庸国独立（中国区）
 				if = {
 					limit = { exists = yes }
 					every_country = {
@@ -132,6 +131,7 @@ JAP_fading_sun = {
 								has_military_access_to = PREV
 								gives_military_access_to = PREV
 							}
+							is_chinese_country = yes
 						}
 						diplomatic_relation = {
 							country = JAP
@@ -165,18 +165,9 @@ JAP_fading_sun = {
 					}
 				}
 			}
-			#清除本土外的核心与宣称
+			#清除本土外的核心与宣称（国区）
 			every_state = {
-				limit = {
-					NOT = {
-						region = 154 #Home Islands
-						state = 526 #Okinawa
-						state = 537 #Sakhalin
-						state = 555 #Kurils
-						state = 645 #Iwo Jima
-						state = 648 #Marcus Island
-					}
-				}
+				limit = { has_state_flag = is_whole_chinese_state_area }
 				remove_core_of = JAP
 				remove_claim_by = JAP
 			}
@@ -190,6 +181,7 @@ JAP_fading_sun = {
 				set_political_party = { ideology = neutrality popularity = 100 }
 				ROOT = {
 					every_enemy_country = {
+						limit = { is_chinese_country = yes }
 						event_target:JAP_peace_conference_tag = {
 							add_to_war = {
 								targeted_alliance = ROOT
@@ -198,13 +190,7 @@ JAP_fading_sun = {
 						}
 					}
 					every_owned_state = {
-						limit = {
-							NOT = {
-								region = 154 #Home Islands
-								state = 526 #Okinawa
-								state = 555 #Kurils
-							}
-						}
+						limit = { has_state_flag = is_whole_chinese_state_area }
 						add_core_of = event_target:JAP_peace_conference_tag
 						if = {
 							limit = {
@@ -225,50 +211,27 @@ JAP_fading_sun = {
 					days = 15
 				}
 				set_cosmetic_tag = JAP_treaty
+				every_enemy_country = {
+					limit = { is_chinese_country = no }
+					white_peace = { 
+						tag = PREV
+					}
+				}
 			}
 			#盟友-离开阵营
 			every_other_country = {
-				limit = { is_in_faction_with = JAP }
-				if = {
-					limit = {
-						OR = {
-							is_chinese_country = yes
-							has_capitulated = yes
-						}
-					}
-					leave_faction = yes
-				}
-				else = {
-					set_country_flag = JAP_was_in_sphere
-				}
-			}
-			###白和
-			every_enemy_country = {
 				limit = {
-					is_valid_peace_target = yes
-					NOT = { has_country_flag = JAP_no_peace }
+					is_in_faction_with = JAP
+					is_chinese_country = yes
 				}
-				if = {
-					limit = {
-						is_chinese_country = yes
-					}
+				leave_faction = yes
+				every_enemy_country = {
+					limit = { is_chinese_country = no }
 					white_peace = { 
 						tag = ROOT
-						message = JAP_beiluorili
 					}
 				}
-				# else = {
-				# 	white_peace = { 
-				# 		tag = ROOT
-				# 	}
-				# }
 			}
-			# #解散阵营
-			# if = {
-			# 	limit = { is_faction_leader = no }
-			# 	set_faction_leader = yes
-			# }
-			# dismantle_faction = yes
 		}
 	}
 }

@@ -1979,7 +1979,7 @@
 		set_country_flag = FLAG_ENG_cywjhh #处于己方回合
 		#行动力
 			set_variable = { #行动力上限
-				VAR_ENG_London_max_action_point = 5
+				VAR_ENG_London_max_action_point = VAR_ENG_London_base_action_point
 			}
 			if = { #金融城行动力
 				limit = {
@@ -2524,7 +2524,7 @@
 						07:gui_display_frame = 1
 					}
 					check_variable = {
-						07:var_gui_defense_power < 60
+						07:var_gui_defense_power < 100
 					}
 				}
 				set_variable = { #设定ai选择地块为当前区域
@@ -3102,7 +3102,7 @@
 						13:gui_display_frame = 4
 					}
 					check_variable = {
-						13:var_gui_defense_power < 60
+						13:var_gui_defense_power < 100
 					}
 				}
 				set_variable = { #设定ai选择地块为当前区域
@@ -3689,9 +3689,497 @@
 				ENG_jisuan_London_fortress = yes
 			}
 		}
-#
+#wto相关
+	ENG_new_members_join_wto = { #新成员加入世贸
+		hidden_effect = { 
+			add_to_variable = { 
+				global.num_wto_member = 1
+			}
+			add_to_array = {
+				array = global.wto_member
+				value = ROOT
+			}
+			if = {
+				limit = {
+					is_in_array = { 
+						array = global.wto_member
+						value = ENG
+					}
+				}
+				remove_from_array = { global.wto_member = ENG }
+			}
+		}
+	}
+
+	ENG_members_remove_wto = { #有成员离开世贸
+		hidden_effect = {
+			add_to_variable = {
+				global.num_wto_member = -1
+			}
+			remove_from_array = { global.wto_member = ROOT }
+		}
+	}
+
+	ENG_jisuan_wto_gdp = { #计算gdp
+		set_variable = { #所有国家gdp
+			global.var_all_gdp = 0 
+		}
+		set_variable = { #wto国家gdp
+			global.var_wto_gdp = 0
+		}
+		set_variable = { #gdp占比
+			global.var_wto_gdp_proportion = 0
+		}
+		set_variable = { #动态修正变量1
+			ENG_VAR_wto_dynamic_1 = 0
+		}
+		set_variable = { #动态修正变量2
+			ENG_VAR_wto_dynamic_2 = 0
+		}
+		set_variable = { #动态修正变量3
+			global.ENG_VAR_wto_dynamic_3 = 0
+		}
+		set_variable = { #动态修正变量4
+			global.ENG_VAR_wto_dynamic_4 = 0
+		}
+		set_variable = { #动态修正变量5
+			global.ENG_VAR_wto_dynamic_5 = 0
+		}
+
+		for_each_scope_loop = { #将消失的国家移除出去 
+			array = global.econ_countries
+			if = {
+				limit = {
+					has_idea = ENG_idea_wto		
+					exists = no		
+				}
+				add_to_variable = {
+					global.num_wto_member = -1
+				}
+				remove_from_array = { global.wto_member = THIS }
+			}
+		}
+		for_each_scope_loop = { #计算所有国家gdp
+			array = global.econ_countries
+			add_to_variable = { 
+				global.var_all_gdp = total_shouru
+			}
+		}
+		for_each_scope_loop = { #计算wto国家gdp
+			array = global.econ_countries
+			if = {
+				limit = {
+					or = {
+						tag = ENG
+						has_idea = ENG_idea_wto
+					}
+
+				}
+				add_to_variable = { 
+					global.var_wto_gdp = total_shouru
+				}
+			}
+			
+		}
+
+		set_variable = {  #gdp占比
+			global.var_wto_gdp_proportion = global.var_wto_gdp
+		}
+		divide_variable = { 
+			global.var_wto_gdp_proportion = global.var_all_gdp 
+		}
+
+		set_variable = { #动态修正变量1
+			ENG_VAR_wto_dynamic_1 = 0.3
+		}
+		multiply_variable = {
+			var = ENG_VAR_wto_dynamic_1
+			value = global.var_wto_gdp_proportion
+		}
+
+		set_variable = { #动态修正变量2
+			ENG_VAR_wto_dynamic_2 = 0.6
+		}
+		multiply_variable = {
+			var = ENG_VAR_wto_dynamic_2
+			value = global.var_wto_gdp_proportion
+		}
+
+		set_variable = { #动态修正变量3
+			global.ENG_VAR_wto_dynamic_3 = 0.2
+		}
+		multiply_variable = {
+			var = global.ENG_VAR_wto_dynamic_3
+			value = global.var_wto_gdp_proportion
+		}
+
+		set_variable = { #动态修正变量4
+			global.ENG_VAR_wto_dynamic_4 = -0.4
+		}
+		multiply_variable = {
+			var = global.ENG_VAR_wto_dynamic_4
+			value = global.var_wto_gdp_proportion
+		}
+
+		set_variable = { #动态修正变量5
+			global.ENG_VAR_wto_dynamic_5 = -1000
+		}
+		multiply_variable = {
+			var = global.ENG_VAR_wto_dynamic_5
+			value = global.var_wto_gdp_proportion
+		}
+		
+	}
+#科技革命
+	ENG_count_enterprise_proportion = { #计算高新企业占比
+		set_variable = { #国家总工厂数
+			ENG_VAR_gyzl = num_of_factories 
+		}
+		set_variable = {  #高新企业占比
+			VAR_ENG_tech_rev_enterprise_proportion = VAR_ENG_tech_rev_enterprise_num
+		}
+		divide_variable = { 
+			VAR_ENG_tech_rev_enterprise_proportion = num_of_factories
+		}
+
+		set_variable = { #动态修正变量1
+			ENG_VAR_tech_rev_dynamic_1 = 1
+		}
+		multiply_variable = {
+			var = ENG_VAR_tech_rev_dynamic_1
+			value = VAR_ENG_tech_rev_enterprise_proportion
+		}
+
+		set_variable = { #动态修正变量2
+			ENG_VAR_tech_rev_dynamic_2 = -2
+		}
+		multiply_variable = {
+			var = ENG_VAR_tech_rev_dynamic_2
+			value = VAR_ENG_tech_rev_enterprise_proportion
+		}
+		
+
+	}
+
+
+#奇迹工程
+	ENG_count_me_research_speed = { #计算研究速度（和其他可随时刷新的）
+		set_variable = { #基础研究速度
+			ENG_VAR_me_research_speed = ENG_VAR_me_research_base_speed
+		}
+		set_variable = { #读取当前科研加成
+			ENG_VAR_me_research_factor = modifier@research_speed_factor
+		}
+		add_to_variable = { #加上1
+			ENG_VAR_me_research_factor = 1
+		}
+
+		multiply_variable = { #计算科研加成
+			var = ENG_VAR_me_research_speed
+			value = ENG_VAR_me_research_factor
+		}
+
+		set_variable = { #读取当前科研加成
+			ENG_VAR_me_research_factor_2 = ENG_VAR_me_research_additional_factor
+		}
+		add_to_variable = { #加上1
+			ENG_VAR_me_research_factor_2 = 1
+		}
+
+		multiply_variable = { #计算额外加成
+			var = ENG_VAR_me_research_speed
+			value = ENG_VAR_me_research_factor_2
+		}
+
+		#计算研究进度条的变量
+		set_variable = { #
+			ENG_VAR_me_research_progress_frame = ENG_VAR_me_research_progress
+		}
+		divide_variable = { 
+			ENG_VAR_me_research_progress_frame = ENG_VAR_me_research_max_progress
+		}
+		multiply_variable = { #
+			var = ENG_VAR_me_research_progress_frame
+			value = 100
+		}
+	}
+
+
+	ENG_count_me_research_progress = { #每月研究进度
+		add_to_variable = { #加上1
+			ENG_VAR_me_research_progress = ENG_VAR_me_research_speed
+		}
+	}
+
+#日本投降
+	JAP_bomb_surrender = { #核爆投降
+		every_country = { #常见的傀儡国转为圣杯傀儡
+			limit = {
+				or = {
+					tag = PAW
+					tag = VIN
+					tag = CAM
+					tag = PHI
+					tag = KOR
+					tag = RYU				
+				}				
+				is_subject_of = JAP
+			}
+			ENG = {
+				set_autonomy = {
+					target = PREV
+					autonomy_state = autonomy_puppet
+				}
+			}
+		}
+
+		if = {	#释放越南判定		
+			limit = {
+				JAP = {
+					owns_state = 857
+					owns_state = 671
+					owns_state = 670
+					owns_state = 827
+					owns_state = 826
+					owns_state = 286
+					owns_state = 750
+					owns_state = 856
+				}
+				VIN = {
+					exists = no
+				}
+			}
+
+			ENG = {
+				release_puppet = VIN
+			}
+			VIN = {
+				add_state_core = 857
+				add_state_core = 671
+				add_state_core = 670
+				add_state_core = 827
+				add_state_core = 826
+				add_state_core = 286
+				add_state_core = 750
+				add_state_core = 856
+
+				transfer_state = 857
+				transfer_state = 671
+				transfer_state = 670
+				transfer_state = 827
+				transfer_state = 826
+				transfer_state = 286
+				transfer_state = 750
+				transfer_state = 856
+			}
+		}
+
+		if = {	#如果苏联进战，给他萨哈林		
+			limit = {
+				JAP = {
+					has_war_with = SOV
+					owns_state = 537
+
+				}
+			}
+			SOV = {
+				transfer_state = 537
+			}
+		}
+		
+		if = { #如果统战寄了，那就圣杯傀儡中国
+			limit = {  #检测统战寄没寄
+				CHI = {
+					or = {
+						is_subject_of = JAP
+						exists = no
+					}
+				}
+				ROC = {
+					or = {
+						is_subject_of = JAP
+						exists = no
+					}
+				}
+				PRC = {
+					or = {
+						is_subject_of = JAP
+						exists = no
+					}
+				}
+			}
+			every_country = { #圣杯吃所有日本和他的傀儡占的中国地块
+				limit = {
+					or = {
+						tag = jap
+						is_subject_of = JAP
+					}
+				}
+				every_owned_state = {
+					limit = {
+						has_state_flag = is_whole_chinese_state_area
+					}
+					transfer_state_to = ENG
+				}
+			}
+			ENG = { #释放roc傀儡，并把中国地块转交给他
+				release_puppet = ROC
+				every_owned_state = {
+					limit = {
+						has_state_flag = is_whole_chinese_state_area
+					}
+					add_core_of = ROC
+					transfer_state_to = ROC
+				}
+			}
+		}
+		else = { #统战没寄
+			JAP = { #释放樱花中国战区
+				create_dynamic_country = { #樱花中国战区
+					original_tag = JAP
+					copy_tag = JAP
+					save_global_event_target_as = JAP_Chinese_occupied_areas
+					set_country_flag = { flag = disabled_annexations days = 15 value = 1 }
+					set_politics = { ruling_party = neutrality }
+					set_political_party = { ideology = neutrality popularity = 100 }
+					
+					add_timed_idea = {
+						idea = ready_to_surrender
+						days = 120
+					}
+					set_cosmetic_tag = JAP_occupied
+				}
+				every_controlled_state = { #转交占领区
+					limit = {
+						has_state_flag = is_whole_chinese_state_area
+					}
+					add_core_of = event_target:JAP_Chinese_occupied_areas
+					
+					if = {
+						limit = {
+							is_fully_controlled_by = JAP					
+						}
+						event_target:JAP_Chinese_occupied_areas = { transfer_state = PREV }
+					}
+					else = {
+						event_target:JAP_Chinese_occupied_areas = { set_state_owner = PREV }
+					}
+				}
+				every_enemy_country = { #和中国势力宣战
+					limit = {
+						is_chinese_country = yes
+					}
+					event_target:JAP_Chinese_occupied_areas = {
+						add_to_war = {
+							targeted_alliance = JAP
+							enemy = PREV
+						}
+					}
+				}
+				every_enemy_country = { #和其他势力白和
+					limit = {
+						is_chinese_country = no
+					}
+					event_target:JAP_Chinese_occupied_areas = {
+						white_peace = { 
+							tag = PREV
+						}
+					}	
+				}				
+			}
+		}
+		
+		JAP = {	#其他傀儡独立继续打
+			every_enemy_country = { #清除了残余战争借口
+				JAP = {
+					remove_wargoal = {
+						type = all
+						target = PREV
+					}
+				}
+			}
+		
+			if = { #其余附庸国独立
+				limit = { exists = yes }
+				every_country = {
+					limit = {
+						OR = {
+							is_guaranteed_by = PREV
+							is_subject_of = PREV
+							has_non_aggression_pact_with = PREV
+							has_military_access_to = PREV
+							gives_military_access_to = PREV
+						}
+					}
+					diplomatic_relation = {
+						country = JAP
+						relation = military_access
+						active = no
+					}
+					JAP = {
+						if = {
+							limit = { has_subject = PREV }
+							set_autonomy = {
+								target = PREV
+								autonomy_state = autonomy_free
+							}
+						}
+						diplomatic_relation = {
+							country = PREV
+							relation = guarantee
+							active = no
+						}
+						diplomatic_relation = {
+							country = PREV
+							relation = non_aggression_pact
+							active = no
+						}
+						diplomatic_relation = {
+							country = PREV
+							relation = military_access
+							active = no
+						}
+					}
+				}
+			}
+		}	
+		
+		every_country = { #盟友离开阵营
+			limit = { 
+				is_in_faction_with = JAP 
+			}
+			leave_faction = yes
+		}
+		
+		JAP = { #与所有敌国白和
+			every_enemy_country = {
+				limit = {
+					is_valid_peace_target = yes
+				}
+				white_peace = { 
+					tag = JAP
+					message = JAP_beiluorili
+				}
+			
+			}
+		}
+
+		ENG = { #剩下的本土被圣杯傀儡
+			set_autonomy = {
+				target = JAP
+				autonomy_state = autonomy_puppet
+			}
+		}
+	}
+
+
+
 #
 #圣杯解体
+	
+
+
+
 	ENG_JIETI = {
 		hidden_effect = {
 			every_country = {

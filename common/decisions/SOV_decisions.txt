@@ -1226,8 +1226,11 @@ SOV_gain_profit_in_risk = {
 				NOT = { has_country_flag = SOV_refuse_to_invest }
 				NOT = { original_tag = DVL }
 				NOT = { 
-					original_tag = NPT 
-					has_government = fascism
+					is_NPT_state = yes
+					has_country_leader = {
+						character = NPT_Arfoire
+						ruling_only = yes
+					}
 				}
 				NOT = { 
 					original_tag = POL 
@@ -1240,17 +1243,17 @@ SOV_gain_profit_in_risk = {
 		}
 		available = {
 			has_active_mission = SOV_economic_crisis_easing
-			custom_trigger_tooltip = {
-				tooltip = SOV_dec_find_donors_tt
-				check_variable = { SOV_find_donors < 2 }
-			}
+			# custom_trigger_tooltip = {
+			# 	tooltip = SOV_dec_find_donors_tt
+			# 	check_variable = { SOV_find_donors < 2 }
+			# }
 		}
 		ai_will_do = {
 			base = 100
 		}
 		target_trigger = {
 			FROM = {
-				num_of_controlled_factories > 45
+				num_of_controlled_factories > 55
 				NOT = { has_war_with = ROOT }
 				NOT = { tag = DVL }
 				NOT = { is_in_faction_with = DVL }
@@ -1262,48 +1265,39 @@ SOV_gain_profit_in_risk = {
 				}
 			}
 		}
-		cancel_trigger = { 
-			OR = {
-				NOT = { country_exists = FROM } 
-				has_war_with = FROM
-			}
-		}
+		# cancel_trigger = { 
+		# 	OR = {
+		# 		NOT = { country_exists = FROM } 
+		# 		has_war_with = FROM
+		# 	}
+		# }
 		custom_cost_text = RUS_150_ubs_save_cost
 		custom_cost_trigger = {
 			check_variable = { ubs_save > 150 }
 		}
 		fire_only_once = no
-		days_remove = 60
-		days_re_enable = 90
-		cancel_effect = {
-			hidden_effect = {
-				add_to_variable = {
-					ubs_save = 150
-				}
-			}
-			custom_effect_tooltip = SOV_get_150_add_to_reserve
-			if = { 
-				limit = { check_variable = { SOV_find_donors < 1 } }
-				set_variable = { SOV_find_donors = 0 }
-			}
-			else = {
-				add_to_variable = {	SOV_find_donors = -1 }
-			}
-		}
+		# days_remove = 60
+		days_re_enable = 120
+		# cancel_effect = {
+		# 	hidden_effect = {
+		# 		add_to_variable = {
+		# 			ubs_save = 200
+		# 		}
+		# 	}
+		# 	custom_effect_tooltip = SOV_get_200_add_to_reserve
+		# 	if = { 
+		# 		limit = { check_variable = { SOV_find_donors < 1 } }
+		# 		set_variable = { SOV_find_donors = 0 }
+		# 	}
+		# 	else = {
+		# 		add_to_variable = {	SOV_find_donors = -1 }
+		# 	}
+		# }
 		complete_effect = {
 			add_to_variable = {
 				ubs_save = -150
 			}
-			add_to_variable = {	SOV_find_donors = 1 }
-		}
-		remove_effect = {
-			if = { 
-				limit = { check_variable = { SOV_find_donors < 1 } }
-				set_variable = { SOV_find_donors = 0 }
-			}
-			else = {
-				add_to_variable = {	SOV_find_donors = -1 }
-			}
+			# add_to_variable = {	SOV_find_donors = 1 }
 			FROM = {
 				country_event = SOV_dip.24
 			}
@@ -1320,6 +1314,30 @@ SOV_gain_profit_in_risk = {
 				}
 			}
 		}
+		# remove_effect = {
+		# 	if = { 
+		# 		limit = { check_variable = { SOV_find_donors < 1 } }
+		# 		set_variable = { SOV_find_donors = 0 }
+		# 	}
+		# 	else = {
+		# 		add_to_variable = {	SOV_find_donors = -1 }
+		# 	}
+		# 	FROM = {
+		# 		country_event = SOV_dip.24
+		# 	}
+		# 	custom_effect_tooltip = if_they_accept
+		# 	effect_tooltip = {
+		# 		random_owned_controlled_state = {
+		# 			prioritize = { 653 572 582 583 403 265 217 581 401 251 }
+		# 			limit = { is_core_of = ROOT }
+		# 			add_extra_state_shared_building_slots = 1
+		# 			add_building_construction = {
+		# 				type = industrial_complex
+		# 				level = 1
+		# 			}
+		# 		}
+		# 	}
+		# }
 	}
 
 	SOV_enlarge_investment_and_construction = {
@@ -2003,1148 +2021,6 @@ SOV_development_of_industry_category = {
 				SOV_promote_regional_development = yes
 				set_state_flag = SOV_promoted_urbanization
 			}
-		}
-	}
-}
-
-SOV_form_soviet_republic = {
-
-	SOV_release_POL_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = POL }
-			any_owned_state = {
-				is_small_poland_state = yes
-				is_eastern_Poland = no
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					is_small_poland_state = yes
-					is_eastern_Poland = no
-				}
-				transfer_state_to = POL
-			}
-			puppet = POL
-		}
-	}
-
-	SOV_release_PER_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = PER }
-			any_owned_state = {
-				OR = {
-					is_core_of = PER
-					is_claimed_by = PER
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = PER
-						is_claimed_by = PER
-					}
-				}
-				transfer_state_to = PER
-			}
-			puppet = PER
-		}
-	}
-
-	SOV_release_AFG_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = AFG }
-			any_owned_state = {
-				OR = {
-					is_core_of = AFG
-					is_claimed_by = AFG
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = AFG
-						is_claimed_by = AFG
-					}
-				}
-				transfer_state_to = AFG
-			}
-			puppet = AFG
-		}
-	}
-
-	SOV_release_TUR_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = TUR }
-			any_owned_state = {
-				OR = {
-					is_core_of = TUR
-					is_claimed_by = TUR
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					OR = {
-						is_core_of = TUR
-						is_claimed_by = TUR
-					}
-				}
-				transfer_state_to = TUR
-			}
-			puppet = TUR
-		}
-	}
-
-	SOV_release_IRQ_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = IRQ }
-			any_owned_state = {
-				OR = {
-					is_core_of = IRQ
-					is_claimed_by = IRQ
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = IRQ
-						is_claimed_by = IRQ
-					}
-				}
-				transfer_state_to = IRQ
-			}
-			puppet = IRQ
-		}
-	}
-
-	SOV_release_FIN_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = FIN }
-			any_owned_state = {
-				OR = {
-					is_core_of = FIN
-					is_claimed_by = FIN
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = FIN
-						is_claimed_by = FIN
-					}
-				}
-				transfer_state_to = FIN
-			}
-			puppet = FIN
-		}
-	}
-
-	SOV_release_DEN_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = DEN }
-			any_owned_state = {
-				OR = {
-					is_core_of = DEN
-					is_claimed_by = DEN
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = DEN
-						is_claimed_by = DEN
-					}
-				}
-				transfer_state_to = DEN
-			}
-			puppet = DEN
-		}
-	}
-
-	SOV_release_CZE_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = CZE }
-			any_owned_state = {
-				OR = {
-					is_core_of = CZE
-					is_claimed_by = CZE
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = CZE
-						is_claimed_by = CZE
-					}
-				}
-				transfer_state_to = CZE
-			}
-			puppet = CZE
-		}
-	}
-
-	SOV_release_HUN_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = HUN }
-			any_owned_state = {
-				OR = {
-					is_core_of = HUN
-					is_claimed_by = HUN
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = HUN
-						is_claimed_by = HUN
-					}
-				}
-				transfer_state_to = HUN
-			}
-			puppet = HUN
-		}
-	}
-	
-	SOV_release_balkan_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = ROM }
-			any_owned_state = {
-				OR = {
-					is_core_of = ROM
-					is_claimed_by = ROM
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = ROM
-						is_claimed_by = ROM
-					}
-				}
-				transfer_state_to = ROM
-			}
-			puppet = ROM
-		}
-	}
-
-	SOV_release_GEU_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			OR = {
-				owns_state = 58
-				AND = {
-					owns_state = 57
-					owns_state = 51
-					owns_state = 781
-				}
-				owns_state = 55
-				owns_state = 52
-				AND = {
-					owns_state = 65
-					owns_state = 66
-				}
-				owns_state = 64
-			}
-			NOT = { country_exists = GEU }
-			any_owned_state = {
-				has_state_flag = L_GER
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					has_state_flag = L_GER
-				}
-				transfer_state_to = GEU
-			}
-			puppet = GEU
-			every_state = {
-				limit = { has_state_flag = L_GER }
-				add_core_of = GEU
-			}
-			hidden_effect = {
-				GEU = { 
-					inherit_technology = ROOT
-				}
-			}
-		}
-	}
-
-	SOV_release_YUG_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = YUG }
-			any_owned_state = {
-				OR = {
-					is_core_of = YUG
-					is_claimed_by = YUG
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = YUG
-						is_claimed_by = YUG
-					}
-				}
-				transfer_state_to = YUG
-			}
-			puppet = YUG
-		}
-	}
-
-	SOV_release_BUL_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = BUL }
-			any_owned_state = {
-				OR = {
-					is_core_of = BUL
-					is_claimed_by = BUL
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = BUL
-						is_claimed_by = BUL
-					}
-				}
-				transfer_state_to = BUL
-			}
-			puppet = BUL
-		}
-	}
-
-	SOV_release_ENG_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = ENG }
-			any_owned_state = {
-				OR = {
-					is_core_of = ENG
-					is_claimed_by = ENG
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = ENG
-						is_claimed_by = ENG
-					}
-				}
-				transfer_state_to = ENG
-			}
-			puppet = ENG
-		}
-	}
-
-	SOV_release_ALB_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = ALB }
-			any_owned_state = {
-				OR = {
-					is_core_of = ALB
-					is_claimed_by = ALB
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = ALB
-						is_claimed_by = ALB
-					}
-				}
-				transfer_state_to = ALB
-			}
-			puppet = ALB
-		}
-	}
-
-	SOV_release_GRE_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = GRE }
-			any_owned_state = {
-				OR = {
-					is_core_of = GRE
-					is_claimed_by = GRE
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = GRE
-						is_claimed_by = GRE
-					}
-				}
-				transfer_state_to = GRE
-			}
-			puppet = GRE
-		}
-	}
-
-	SOV_release_ITA_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = ITA }
-			any_owned_state = {
-				OR = {
-					is_core_of = ITA
-					is_claimed_by = ITA
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = ITA
-						is_claimed_by = ITA
-					}
-				}
-				transfer_state_to = ITA
-			}
-			puppet = ITA
-		}
-	}
-
-	SOV_release_FRA_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = FRA }
-			any_owned_state = {
-				OR = {
-					is_core_of = FRA
-					is_claimed_by = FRA
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = FRA
-						is_claimed_by = FRA
-					}
-				}
-				transfer_state_to = FRA
-			}
-			puppet = FRA
-		}
-	}
-
-	SOV_release_KMK_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = KMK }
-			any_owned_state = {
-				OR = {
-					is_core_of = KMK
-					is_claimed_by = KMK
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = KMK
-						is_claimed_by = KMK
-					}
-				}
-				transfer_state_to = KMK
-			}
-			puppet = KMK
-		}
-	}
-
-	SOV_release_NPT_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = NPT }
-			any_owned_state = {
-				OR = {
-					is_core_of = NPT
-					is_claimed_by = NPT
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = NPT
-						is_claimed_by = NPT
-					}
-				}
-				transfer_state_to = NPT
-			}
-			puppet = NPT
-		}
-	}
-
-	SOV_release_BAL_puppet_state = {
-		icon = GFX_decision_eng_trade_unions_demand
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			NOT = { country_exists = BAL }
-			any_owned_state = {
-				OR = {
-					is_core_of = BAL
-					is_claimed_by = BAL
-				}
-				NOT = {
-					is_core_of = ROOT
-					is_claimed_by = ROOT
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 0
-		days_remove = 7
-		fire_only_once = no
-		remove_effect = {
-			every_owned_state = {
-				limit = {
-					NOT = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
-					NOT = {
-						any_other_country = {
-							is_ally_with = SOV
-							PREV = {
-								OR = {
-									is_claimed_by = PREV
-									is_core_of = PREV
-								}
-							}
-						}
-					}
-					OR = {
-						is_core_of = BAL
-						is_claimed_by = BAL
-					}
-				}
-				transfer_state_to = BAL
-			}
-			puppet = BAL
 		}
 	}
 }
@@ -6213,37 +5089,6 @@ SOV_comecon_category = {
 	}
 
 #工业援助
-	comecon_assisted_factory_construction = {
-		icon = GFX_decision_generic_factory
-		priority = 9
-		visible = {
-			has_idea = SOV_comecon_buff
-		}
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 200 }
-		}
-		custom_cost_text = RUS_200_ubs_save_cost
-		days_remove = 90
-		ai_will_do = {
-			base = 100
-		}
-		days_re_enable = 30
-		fire_only_once = no
-		complete_effect = {
-			add_to_variable = {
-				ubs_save = -200
-			}
-		}
-		remove_effect = {
-			random_owned_controlled_state = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
-			}
-		}
-	}
 
 	comecon_learn_production_technology = {
 		priority = 8
@@ -6267,11 +5112,31 @@ SOV_comecon_category = {
 			}
 		}
 		remove_effect = {
-			add_tech_bonus = {
-				name = comecon_learn_production_technology
-				bonus = 0.25
-				uses = 1
-				category = industry
+			random_list = {
+				40 = {
+					add_tech_bonus = {
+						name = comecon_learn_production_technology
+						bonus = 0.25
+						uses = 1
+						category = industry
+					}
+				}
+				30 = {
+					add_tech_bonus = {
+						name = comecon_learn_production_technology
+						bonus = 0.25
+						uses = 1
+						category = armor
+					}
+				}
+				30 = {
+					add_tech_bonus = {
+						name = comecon_learn_production_technology
+						bonus = 0.25
+						uses = 1
+						category = artillery
+					}
+				}
 			}
 		}
 	}
@@ -6281,7 +5146,7 @@ SOV_comecon_category = {
 		priority = 7
 		visible = {
 			has_idea = SOV_comecon_buff
-			industrial_complex < 25
+			industrial_complex < 45
 		}
 		cost = 10
 		ai_will_do = {
@@ -6332,7 +5197,7 @@ SOV_comecon_category = {
 				OR = {
 					num_of_civilian_factories < 2
 					has_equipment = {
-						infantry_equipment > 500
+						infantry_equipment > 1500
 					}
 				}
 			}
@@ -6416,14 +5281,14 @@ SOV_comecon_category = {
 					num_of_civilian_factories < 2
 					AND = {
 						has_equipment = {
-							artillery_equipment > 10
+							artillery_equipment > 100
 						}
 						if = {
 							limit = {
 								has_tech = interwar_antiair
 							}
 							has_equipment = {
-								anti_air_equipment > 10
+								anti_air_equipment > 100
 							}
 						}
 						if = {
@@ -6431,7 +5296,7 @@ SOV_comecon_category = {
 								has_tech = interwar_antitank
 							}
 							has_equipment = {
-								anti_tank_equipment > 10
+								anti_tank_equipment > 100
 							}
 						}
 					}
@@ -6523,18 +5388,8 @@ SOV_comecon_category = {
 				factor = 0
 				OR = {
 					num_of_civilian_factories < 2
-					AND = {
-						has_equipment = {
-							mechanized_equipment > 10
-						}
-						if = {
-							limit = {
-								has_tech = mechanised_infantry
-							}
-							has_equipment = {
-								mechanized_equipment > 10
-							}
-						}
+					has_equipment = {
+						mechanized_equipment > 100
 					}
 				}
 			}
@@ -6918,15 +5773,15 @@ SOV_comecon_category = {
 		fire_only_once = no
 
 		ai_will_do = {
-			factor = 100
+			factor = 10
 			modifier = {
 				factor = 0
-				num_of_naval_factories < 2
+				num_of_naval_factories < 1
 			}
 			modifier = {
-				factor = 0.001
-				num_of_naval_factories < 2
-				num_of_civilian_factories < 16
+				factor = 10
+				num_of_naval_factories > 0
+				num_of_civilian_factories > 16
 			}
 		}
 		modifier = {
