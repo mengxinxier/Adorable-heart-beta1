@@ -428,6 +428,11 @@ add_namespace = test_event
 				division_template = "nationalist front"		
 				is_locked = no
 			}
+			SOV = {
+				transfer_navy = {
+					target = UKR
+				}
+			}
 			hidden_effect = {
 				set_capital = {
 					state = 219
@@ -1818,7 +1823,368 @@ add_namespace = test_event
 			}
 		}
 	}
+	country_event = {
+		id = rus_for.12
+		title = rus_for.12.t
+		desc = rus_for.12.d
+		is_triggered_only = yes
 
+		option = {
+			name = rus_for.12.a
+			ai_chance = {
+			base = 10
+			}
+			FRA = { country_event = rus_for.13 }
+		}
+		option = {
+			name = rus_for.12.b
+			ai_chance = {
+			base = 0
+			}
+			UKR = { country_event = rus_for.14 }
+		}
+	}	
+	country_event = {
+		id = rus_for.13
+		title = rus_for.13.t
+		desc = rus_for.13.d
+		is_triggered_only = yes
+
+		option = {
+			name = rus_for.13.a
+			ai_chance = {
+			base = 10
+			}
+			ENG = { country_event = rus_for.15 }
+			effect_tooltip = {
+			ENG = { add_to_faction = UKR }
+			ENG = { add_to_faction = FRA }		
+			ENG = { set_faction_name = sanguoxieyue }
+			}
+		}
+		option = {
+			name = rus_for.13.b
+			ai_chance = {
+			base = 0
+			}
+			ENG = { country_event = rus_for.16 }
+		}
+	}	
+	country_event = {
+		id = rus_for.14
+		title = rus_for.14.t
+		desc = rus_for.14.d
+		is_triggered_only = yes
+
+		option = {
+			name = rus_for.14.a
+			complete_national_focus = UKR_independent_diplomacy
+		}
+	}	
+	country_event = {
+		id = rus_for.15
+		title = rus_for.15.t
+		desc = rus_for.15.d
+		is_triggered_only = yes
+
+		option = {
+			name = rus_for.15.a
+			UKR = { country_event = rus_for.17 }
+			effect_tooltip = {
+			ENG = { add_to_faction = UKR }
+			ENG = { add_to_faction = FRA }		
+			ENG = { set_faction_name = sanguoxieyue }
+			}
+		}
+	}	
+	country_event = {
+		id = rus_for.16
+		title = rus_for.16.t
+		desc = rus_for.16.d
+		is_triggered_only = yes
+
+		option = {
+			name = rus_for.16.a
+			UKR = { country_event = rus_for.14 }
+		}
+	}	
+	country_event = {
+		id = rus_for.17
+		title = rus_for.17.t
+		desc = rus_for.17.d
+		is_triggered_only = yes
+
+		option = {
+			name = rus_for.17.a
+			ENG = { add_to_faction = UKR }
+			ENG = { add_to_faction = FRA }
+			ENG = { set_faction_name = sanguoxieyue }
+		}
+	}	
+	country_event = {
+		id = rus_for.18
+		title = rus_for.18.t
+		desc = rus_for.18.d
+		is_triggered_only = yes
+
+	option = { #Accept
+		name = rus_for.18.a
+		
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 10
+				NOT = { is_in_faction_with = FROM }
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.6
+				}
+			}
+			modifier = {
+				factor = 5
+				NOT = { is_in_faction_with = FROM }
+				alliance_strength_ratio < 0.6
+			}
+			modifier = {
+				factor = 100
+				is_subject_of = FROM
+			}
+			modifier = {
+				factor = 10
+				is_in_faction_with = FROM
+				has_opinion = {
+					target = FROM
+					value > 75
+				}
+			}
+			modifier = {
+				factor = 0.5
+				NOT = { is_in_faction_with = FROM }
+				strength_ratio = {
+					tag = FROM
+					ratio > 0.8
+				}
+			}
+			modifier = {
+				factor = 0
+				NOT = { is_in_faction_with = FROM }
+				strength_ratio = {
+					tag = FROM
+					ratio > 1
+				}
+			}
+		}
+
+		FROM = {
+			effect_tooltip = {
+				if = {
+					limit = {
+						ROOT = { controls_state = 463 }
+					}
+					transfer_state = 463 #ALASKA
+				}
+			}
+			hidden_effect = {
+				country_event = rus_for.19
+			}
+		}	
+	}
+
+	option = { #Refuse
+		name = rus_for.18.b
+		
+		ai_chance = {
+			base = 10
+		}
+
+		FROM = {
+			effect_tooltip = {
+				create_wargoal = {
+					type = puppet_wargoal_focus
+					target = ROOT
+				}
+			}
+			hidden_effect = {
+				country_event = rus_for.20
+			}
+		}
+	}
+	}
+	
+	country_event = {
+		id = rus_for.19
+		title = rus_for.19.t
+		desc = rus_for.19.d
+		is_triggered_only = yes
+
+	option = { #Ok
+		name = rus_for.19.a
+		
+		if = {
+			limit = {
+				FROM = { controls_state = 463 }
+			}
+			transfer_state = 463 #ALASKA
+		}
+		}
+	}	
+	
+	country_event = {
+		id = rus_for.20
+		title = rus_for.20.t
+		desc = rus_for.20.d
+		is_triggered_only = yes
+	option = { #WAAAAAGH!
+		name = rus_for.20.a
+
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 5
+				strength_ratio = {
+					tag = FROM
+					ratio > 1
+				}
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+				alliance_strength_ratio > 0.8
+			}
+			modifier = {
+				factor = 0.5
+				is_in_faction_with = FROM
+				has_opinion = {
+					target = FROM
+					value > 75
+				}
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.8
+				}
+			}
+			modifier = {
+				factor = 0
+				is_in_faction_with = FROM
+			}
+		}
+		
+		create_wargoal = {
+			type = puppet_wargoal_focus
+			target = FROM
+		}
+	}
+
+	option = { #Leave it be
+		name = rus_for.20.b
+
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+country_event = {
+	id = rus_for.21
+	title = rus_for.21.t
+	desc = rus_for.21.d
+	picture = GFX_report_event_generic_parliament
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = rus_for.21.a
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0
+				strength_ratio = { tag = FROM ratio > 1 }
+			}
+		}
+		effect_tooltip = {
+			FROM = { puppet = ROOT }
+		}
+		hidden_effect = {
+			FROM = {
+				country_event = { id = rus_for.22 hours = 18 random_hours = 6 }
+			}
+		}
+	}
+
+	option = { # Decline
+		name = rus_for.21.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				factor = 0.8
+				strength_ratio = { tag = FROM ratio < 0.5 }
+			}
+			modifier = {
+				factor = 0.8
+				has_opinion = { target = FROM value > 99 }
+			}
+			modifier = {
+				factor = 0.8
+				strength_ratio = { tag = FROM ratio < 0.3 }
+			}
+			modifier = {
+				factor = 0.8
+				strength_ratio = { tag = FROM ratio < 0.2 }
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = { tag = FROM ratio < 0.1 }
+			}
+		}
+		effect_tooltip = {
+			FROM = {
+				create_wargoal = {
+				    type = puppet_wargoal_focus
+				    target = ROOT
+				}
+			}
+		}
+		hidden_effect = {
+			FROM = {
+				country_event = { id = rus_for.23 hours = 18 random_hours = 6 }
+			}
+		}
+	}
+}
+
+country_event = {
+	id = rus_for.22
+	title = rus_for.22.t
+	desc = rus_for.22.d
+	picture = GFX_report_event_generic_parliament
+	
+	is_triggered_only = yes
+	
+	option = { # Ok
+		name = rus_for.22.a
+		puppet = FROM
+	}
+}
+
+country_event = {
+	id = rus_for.23
+	title = rus_for.23.t
+	desc = rus_for.23.d
+	picture = GFX_report_event_generic_parliament
+	
+	is_triggered_only = yes
+	
+	option = { # Damn
+		name = rus_for.23.a
+		create_wargoal = {
+		    type = puppet_wargoal_focus
+		    target = FROM
+		}
+	}
+}
 #风味事件
 
 	country_event = {
