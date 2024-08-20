@@ -665,22 +665,11 @@ focus_tree = {
 		y = 1
 		relative_position_id = KMK_remilia_maid_Guard
 		cost = 10
-
 		available = {
-
 		}
-		
-		search_filters = {FOCUS_FILTER_POLITICAL FOCUS_FILTER_SOV_POLITICAL_PARANOIA}
-
 		completion_reward = {
-			add_to_variable = { SOV_the_politburo_economy_cost_factor = -0.2 }
-			add_to_variable = { SOV_the_politburo_trade_laws_cost_factor = -0.2 }
-			add_to_variable = { SOV_the_politburo_mobilization_laws_cost_factor = -0.2 }
-			custom_effect_tooltip = KMK_Remilia_onevoice_scarlet_ns_tt
-
+			add_war_support = 0.15
 			add_political_power = 50
-
-			SOV_paranoia_medium_decrease_effect = yes
 		}
 	}
 
@@ -828,7 +817,7 @@ focus_tree = {
 	focus = {
 		#广言纳谏
 		id = KMK_Widely_accept
-		icon = GFX_focus_SOV_purge_bukharinists
+		icon = GFX_focus_research
 		prerequisite = { focus = KMK_Political_unity }
 		x = 0
 		y = 1
@@ -1803,7 +1792,11 @@ focus = {
 		}
 		select_effect = {
 		}
+		mutually_exclusive = {
+			focus = KMK_Remiria_Established_strategy
+		}
 		available = {
+			is_subject = no
 			has_country_flag = Anastasia
 		}
 		#cancelable = no
@@ -1852,9 +1845,13 @@ focus = {
 			base = 10
 		}
 		relative_position_id = KMK_Remiria_25
+		mutually_exclusive = {
+			focus = KMK_Remiria_25
+		}
 		select_effect = {
 		}
 		available = {
+			is_subject = no
 				has_government = democratic
 		}
 		#cancelable = no
@@ -1875,6 +1872,14 @@ focus = {
 		cost = 6
 		ai_will_do = {
 			base = 10
+		}
+		bypass = {
+			OR = {
+				GER = {
+					is_in_faction_with = ROOT
+				}
+				has_war_with = GER
+			}
 		}
 		relative_position_id = KMK_Fortified_border
 		prerequisite = {
@@ -2023,6 +2028,7 @@ focus = {
 		mutually_exclusive = {
 			focus = KMK_Defense_better
 		}
+		bypass = {has_global_flag = second_weltkrieg_has_started}
 		available ={
 			date > 1939.9.1
 			is_subject = no
@@ -2047,9 +2053,9 @@ focus = {
 		prerequisite = {
 			focus = KMK_Fortified_border
 		}
+		bypass = {has_global_flag = second_weltkrieg_has_started}
 		mutually_exclusive = {
-			date > 1939.9.1
-			is_subject = no
+			focus = KMK_initiative_attack
 		}
 		available ={
 			has_war_with = DVL
@@ -2076,9 +2082,11 @@ focus = {
 		available ={
 			is_subject = no
 			any_state = { 
-				AND = {is_core_of = GER
+				or = {is_core_of = GER
 				is_core_of = DVL}
-				is_controlled_by = ROOT
+				not = {is_controlled_by = GER
+				is_controlled_by = DVL
+				}
 			}
 			DVL = {
 				OR = {
@@ -2286,6 +2294,8 @@ focus = {
 					} 
 			}
 		}
+		will_lead_to_war_with = JAP
+		will_lead_to_war_with = CHI
 	}
 
 	focus = {
@@ -2554,7 +2564,7 @@ focus = {
 	focus = {
 		#北欧吸血鬼政权的建立
 		id =KMK_Remilia_2
-		icon = GFX_USA_when_that_day_come
+		icon = GFX_goal_generic_major_war
 		prerequisite = { 
 			focus = KMK_Remilia_1
 		}
@@ -2566,7 +2576,11 @@ focus = {
 		y = 1
 		cost=10
 		available = {
+			is_faction_leader = yes
+			or = {
 			NOT = {SWE = {has_government = fascism}}
+			SWE = {is_subject = yes}
+			}
 		}
 		completion_reward = {
 			create_wargoal = {
@@ -2579,7 +2593,7 @@ focus = {
 	focus ={
 		#吸血鬼同盟
 		id =KMK_Remilia_3
-		icon = GFX_USA_wake_up
+		icon = GFX_goal_generic_national_unity
 		prerequisite = { 
 			focus = KMK_Remilia_1
 		}
@@ -2591,7 +2605,10 @@ focus = {
 		y = 1
 		cost=10
 		available = {
+			or = {
 			SWE = {has_government = fascism}
+			SWE = {is_subject = no}
+			}
 		}
 		completion_reward = {
 			SWE = {
@@ -2679,6 +2696,7 @@ focus = {
 		icon = GFX_focus_por_concordat
 		prerequisite = {
 			focus = KMK_Remilia_114514
+			focus = KMK_Remilia_114515
 		}
 		relative_position_id = KMK_Remilia_114514
 		x = 4
@@ -2701,6 +2719,7 @@ focus = {
 		icon = GFX_PAN_focu_336
 		prerequisite = {
 			focus = KMK_Remilia_114514
+			focus = KMK_Remilia_114515
 		}
 		relative_position_id = KMK_Remilia_114514
 		x = -2
@@ -2781,7 +2800,7 @@ focus = {
 	add_tech_bonus = {
 				bonus = 0.99
 				uses = 2
-				category = motorized_equipment
+				category = category_tanks
 			}
 	every_army_leader = {
 				add_defense = 1
@@ -3200,6 +3219,7 @@ focus = {
 	available_if_capitulated = no
 	cancel_if_invalid = yes
 	completion_reward = {
+		add_ideas = KMK_Navy_red
 		mio:KMK_arsenal_organization = {
 				add_mio_size = 2
 				add_mio_funds_gain_factor = 0.35
@@ -4252,8 +4272,8 @@ focus = {
 		x = 0
 		y = 1
 		mutually_exclusive = {
-			focus = FRA_Air_supremacy_seized
-			focus = FRA_Industrial_strike_capabilities
+			focus = KMK_Remilia_armed_Aerial_competition
+			focus = KMK_Remilia_armed_Industrial_strike_capabilities
 		}
 		cost = 5
 		allow_branch = {
@@ -4338,8 +4358,8 @@ focus = {
 		x = 2
 		y = 1
 		mutually_exclusive = {
-			focus = KMK_Remilia_armed_Air_supremacy_seized
 			focus = KMK_Remilia_armed_Aerial_competition
+			focus = KMK_Remilia_armed_Industrial_strike_capabilities
 		}
 		cost = 5
 		allow_branch = {
