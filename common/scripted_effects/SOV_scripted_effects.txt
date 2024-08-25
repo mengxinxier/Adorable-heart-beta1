@@ -954,15 +954,15 @@ SOV_new_members_join_comecon = {
 		add_to_variable = {
 			ubs_save = 50
 		}
-		if = {
-			limit = {
-				is_in_array = { 
-					array = global.comecon_member
-					value = SOV
-				}
-			}
-			remove_from_array = { global.comecon_member = SOV }
-		}
+		# if = {
+		# 	limit = {
+		# 		is_in_array = { 
+		# 			array = global.comecon_member
+		# 			value = SOV
+		# 		}
+		# 	}
+		# 	remove_from_array = { global.comecon_member = SOV }
+		# }
 	}
 	custom_effect_tooltip = get_fifty_units_of_currency_tt
 }
@@ -1356,3 +1356,54 @@ willow_AI_add_design_base_plate = {
 		obsolete = yes
 	}
 }
+
+SOV_CMEA_investment_button_click_effect = {
+	add_to_variable = { ROOT.ubs_save = -100 }
+	add_to_variable = { global.Comecon_Investment_pools_var = 100 }
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history = THIS
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_state = 1
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_time = global.date
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_financial_aid = 0
+	}
+}
+
+SOV_CMEA_apply_button_click_effect = {
+	set_variable = { ROOT.80_per_debt = ROOT.ubs_load }
+	multiply_variable = { ROOT.80_per_debt = 0.8 }
+	set_variable = { ROOT.Comecon_Investment_pools_var_cut = ROOT.80_per_debt }
+	clamp_variable = {
+		var = ROOT.Comecon_Investment_pools_var_cut
+		max = global.Comecon_Investment_pools_var
+	}
+	subtract_from_variable = { global.Comecon_Investment_pools_var = ROOT.Comecon_Investment_pools_var_cut }
+	subtract_from_variable = { ROOT.ubs_load = ROOT.Comecon_Investment_pools_var_cut }
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history = THIS
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_state = 2
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_time = global.date
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_financial_aid = ROOT.Comecon_Investment_pools_var_cut
+	}
+	clear_variable = ROOT.80_per_debt
+	clear_variable = ROOT.Comecon_Investment_pools_var_cut
+	set_country_flag = {
+		flag = apply_for_financial_aid
+		days = 365
+		value = 1
+	}
+}
+
+
+

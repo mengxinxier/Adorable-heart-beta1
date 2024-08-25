@@ -1,37 +1,10 @@
 
 DEN_strike_frenzy_decision_category = {
 
-	#杜伦布贼党秘密活动：循环直到罢工消失或者变成红色
-	DEN_communist_propaganda = {
-		icon = GFX_decision_generic_political_discourse
-		priority = 99
-		activation = {
-			always = no
-		}
-		available = {
-			always = no
-		}
-		cancel_trigger = {
-			OR = {
-				has_government = communism
-				has_completed_focus = DEN_ban_Durham_bandits
-			}
-		}
-		days_mission_timeout = var:DEN_cp
-		timeout_effect = {
-			add_popularity = {
-				ideology = communism
-				popularity = 0.02
-			}
-			hidden_effect = {
-				activate_mission = DEN_communist_propaganda
-			}
-		}
-	}
-
-	#工人威胁罢工：罢工结束或者满足工人要求
+#第一阶段：罢工预备
+	#工人威胁罢工
 	DEN_workers_threaten_to_strike = {
-		icon = GFX_decision_generic_political_rally
+		icon = GFX_decision_revolt
 		priority = 98
 		activation = {
 			always = no
@@ -39,25 +12,11 @@ DEN_strike_frenzy_decision_category = {
 		available = {
 			always = no
 		}
-		cancel_trigger = {
-			OR = {
-				has_government = communism
-				custom_trigger_tooltip = {
-					tooltip = DEN_strike_abatement_tooltip
-					NOT = {
-						has_idea = DEN_Durham_thieves
-						has_idea = DEN_Durham_thieves2
-						has_idea = DEN_Durham_thieves3
-						has_idea = DEN_Durham_thieves4
-					}
-				}
-			}
-		}
-		days_mission_timeout = 30
+		days_mission_timeout = 60
 		timeout_effect = {
 			DEN_strike_intensification = yes
 			hidden_effect = {
-				activate_mission = DEN_workers_threaten_to_strike
+				country_event = den_crisis.013
 			}
 			random_list = {
 				35 = {
@@ -77,261 +36,33 @@ DEN_strike_frenzy_decision_category = {
 					}
 				}
 				10 = {
-					add_to_variable = { ubs_load = 50 }
-					custom_effect_tooltip = DEN_increase_50_debt
-				}
-				30 = {
-
+					add_to_variable = { ubs_load = 200 }
+					custom_effect_tooltip = DEN_increase_200_debt
 				}
 			}
+			activate_mission = DEN_workers_demand_to_fulfill_promises
 		}
 	}
 
-	#工人冲击工会：罢工处于一定阶段并且红色支持度高于25%触发
-	DEN_workers_attack_the_union = {
-		icon = GFX_decision_generic_political_rally
-		priority = 97
-		activation = {
+	#逮捕激进工人：延长 工人威胁罢工&工人要求兑现承诺 的倒计时 不合理
+	DEN_arrest_radical_workers = {
+		icon = GFX_decision_generic_arrest
+		visible = {
 			OR = {
-				has_idea = DEN_Durham_thieves2
-				has_idea = DEN_Durham_thieves3
-				has_idea = DEN_Durham_thieves4
-			}
-			communism > 0.3
-			NOT = {
-				OR = {
-					has_government = communism
-					communism < 0.3
-					custom_trigger_tooltip = {
-						tooltip = DEN_strike_abatement_tooltip
-						NOT = {
-							has_idea = DEN_Durham_thieves
-							has_idea = DEN_Durham_thieves2
-							has_idea = DEN_Durham_thieves3
-							has_idea = DEN_Durham_thieves4
-						}
-					}
-					has_country_flag = DEN_lose_control_of_the_union
-				}
+				has_active_mission = DEN_workers_threaten_to_strike
+				has_active_mission = DEN_workers_demand_to_fulfill_promises
 			}
 		}
 		available = {
-			always = no
-		}
-		cancel_trigger = {
-			OR = {
-				has_government = communism
-				communism < 0.3
+			if = {
+				limit = { has_country_flag = DEN_arrest_radical_workers_flag }  
 				custom_trigger_tooltip = {
-					tooltip = DEN_strike_abatement_tooltip
-					NOT = {
-						has_idea = DEN_Durham_thieves
-						has_idea = DEN_Durham_thieves2
-						has_idea = DEN_Durham_thieves3
-						has_idea = DEN_Durham_thieves4
-					}
-				}
-				has_country_flag = DEN_lose_control_of_the_union
-			}
-		}
-		fire_only_once = no
-		days_mission_timeout = 14
-		timeout_effect = {
-			country_event = den_crisis.6
-		}
-	}
-
-	#工人党要求选举：50%以上红色支持度触发
-	DEN_worker_party_called_for_elections = {
-		icon = GFX_decision_generic_political_rally
-		priority = 96
-		activation = {
-			communism > 0.5
-			NOT = { has_government = communism }
-			OR = {
-				has_idea = DEN_Durham_thieves3
-				has_idea = DEN_Durham_thieves4
-			}
-			NOT = { has_country_flag = DEN_rejection_of_election }
-		}
-		available = {
-			always = no
-		}
-		cancel_trigger = {
-			OR = {
-				has_government = communism
-				communism < 0.5
-				custom_trigger_tooltip = {
-					tooltip = DEN_strike_abatement_tooltip
-					NOT = {
-						has_idea = DEN_Durham_thieves
-						has_idea = DEN_Durham_thieves2
-						has_idea = DEN_Durham_thieves3
-						has_idea = DEN_Durham_thieves4
-					}
-				}
-				has_country_flag = DEN_rejection_of_election
-			}
-		}
-		days_mission_timeout = 30
-		timeout_effect = {
-			country_event = den_crisis.15
-		}
-	}
-
-	DEN_workers_party_plotte_insurrection = {
-		icon = GFX_decision_revolt
-		priority = 999
-		activation = {
-			communism > 0.5
-			NOT = { has_government = communism }
-			has_idea = DEN_Durham_thieves4
-			has_country_flag = DEN_rejection_of_election
-		}
-		available = {
-			has_government = communism
-		}
-		cancel_trigger = {
-			OR = {
-				has_government = communism
-				communism < 0.5
-				custom_trigger_tooltip = {
-					tooltip = DEN_strike_abatement_tooltip
-					NOT = {
-						has_idea = DEN_Durham_thieves
-						has_idea = DEN_Durham_thieves2
-						has_idea = DEN_Durham_thieves3
-						has_idea = DEN_Durham_thieves4
-					}
-				}
-			}
-		}
-		days_mission_timeout = 30
-		timeout_effect = {
-			country_event = den_crisis.16
-		}
-	}
-	
-	#满足工人要求：延长罢工准备时间：提供合理值
-	DEN_meet_workers_demands = {
-		icon = GFX_decision_generic_fundraising
-		visible = {
-			has_active_mission = DEN_workers_threaten_to_strike
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 0.01
-				check_variable = { ubs_save > 100 }
-			}
-			modifier = {
-				factor = 10000
-				OR = {
-					has_idea = DEN_Durham_thieves2
-					has_idea = DEN_Durham_thieves3
-					has_idea = DEN_Durham_thieves4
-				}
-			}
-		}
-		custom_cost_text = RUS_50_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 50 }
-		}
-		fire_only_once = no
-		days_re_enable = 90
-		complete_effect = {
-			add_to_variable = { ubs_save = -50 }
-			DEN_contradiction_alleviation = yes
-			add_days_mission_timeout = {
-				mission = DEN_workers_threaten_to_strike
-				days = 20
-			}
-		}
-	}
-
-	#驱散罢工者：延长罢工准备时间：提供不合理值
-	DEN_disperse_the_strikers = {
-		icon = GFX_decision_generic_police_action
-		visible = {
-			has_active_mission = DEN_workers_threaten_to_strike
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			base = 10
-			modifier = {
-				factor = 0.15
-				OR = {
-					has_idea = DEN_Durham_thieves3
-					has_idea = DEN_Durham_thieves4
+					has_country_flag = { flag = DEN_arrest_radical_workers_flag days > 30 }
+					tooltip = DEN_arrest_radical_workers_trigger_tooltip
 				}
 			}
 		}
 		fire_only_once = no
-		days_re_enable = 90
-		complete_effect = {
-			DEN_intensification_of_contradiction = yes
-			add_days_mission_timeout = {
-				mission = DEN_workers_threaten_to_strike
-				days = 20
-			}
-		}
-	}
-
-	#与工人党谈判：增加红色，但是延长罢工准备：提供合理值
-	DEN_negotiate_with_workers_party = {
-		icon = GFX_decision_generic_police_action
-		visible = {
-			has_active_mission = DEN_workers_threaten_to_strike
-			has_country_flag = DEN_lose_control_of_the_union
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			base = 10
-			modifier = {
-				factor = 0.15
-				communism > 0.50
-			}
-			modifier = {
-				factor = 2.5
-				communism < 0.30
-			}
-		}
-		fire_only_once = no
-		days_re_enable = 30
-		complete_effect = {
-			add_popularity = {
-				ideology = communism
-				popularity = 0.02
-			}
-			DEN_contradiction_alleviation = yes
-			random_list = {
-				50 = { }
-				50 = { country_event = den_crisis.14 }
-			}
-		}
-	}
-
-	#逮捕工人党成员：消除红色影响，缩短罢工准备：提供不合理
-	DEN_arrest_workers_party_members = {
-		icon = GFX_decision_generic_police_action
-		visible = {
-			has_active_mission = DEN_workers_threaten_to_strike
-			has_country_flag = DEN_lose_control_of_the_union
-			has_completed_focus = DEN_strengthen_public_security
-		}
-		available = {
-			
-		}
-		fire_only_once = no
-		days_re_enable = 45
-		days_remove = 30
 		cost = 50
 		ai_will_do = {
 			base = 100
@@ -344,423 +75,844 @@ DEN_strike_frenzy_decision_category = {
 				communism < 0.30
 			}
 		}
-		modifier = {
-			communism_drift = -0.1
-		}
-		remove_effect = {
+		complete_effect = {
+			if = {
+				limit = { has_active_mission = DEN_workers_threaten_to_strike }
+				add_days_mission_timeout = {
+					mission = DEN_workers_threaten_to_strike
+					days = 15
+				}
+			}
+			else_if = {
+				limit = { has_active_mission = DEN_workers_demand_to_fulfill_promises }
+				add_days_mission_timeout = {
+					mission = DEN_workers_demand_to_fulfill_promises
+					days = 20
+				}
+				hidden_effect = {
+					random_list = {
+						50 = { country_event = { id = den_crisis.019 days = 7 } }
+						50 = {}
+					}
+				}
+			}
 			add_popularity = {
 				ideology = communism
-				popularity = -0.05
+				popularity = -0.02
 			}
 			DEN_intensification_of_contradiction = yes
-			add_to_variable = { DEN_cp = 14 }
-			custom_effect_tooltip = DEN_arrest_workers_party_members_tt
-			random_list = {
-				50 = { }
-				50 = { country_event = den_crisis.13 }
+			hidden_effect = {
+				clr_country_flag = DEN_arrest_radical_workers_flag
+				set_country_flag = DEN_arrest_radical_workers_flag
 			}
 		}
 	}
-
-	#补贴消费品生产：提供合理值，降低红色
-	DEN_subsidized_production_of_consumer_goods = {
-		icon = GFX_decision_generic_police_action
+	#查禁秘密集会：延长 工人威胁罢工&工人要求兑现承诺 的倒计时 不合理
+	DEN_ban_secret_gatherings = {
+		icon = GFX_decision_oppression
 		visible = {
-			has_active_mission = DEN_workers_threaten_to_strike
+			OR = {
+				has_active_mission = DEN_workers_threaten_to_strike
+				has_active_mission = DEN_workers_demand_to_fulfill_promises
+			}
 		}
-		custom_cost_text = RUS_100_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 100 }
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_ban_secret_gatherings_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_ban_secret_gatherings_flag days > 30 }
+					tooltip = DEN_ban_secret_gatherings_trigger_tooltip
+				}
+			}
 		}
 		fire_only_once = no
-		days_re_enable = 45
-		days_remove = 30
+		days_remove = 7
+		cost = 50
 		ai_will_do = {
-			base = 0
+			base = 100
 			modifier = {
-				add = 15
-				check_variable = { ubs_save > 200 }
-				check_variable = { ubs_load < 10 }
+				factor = 2.5
+				communism > 0.50
 			}
-		}
-		modifier = {
-			consumer_goods_factor = -0.2
-			communism_drift = -0.02
-		}
-		complete_effect = {
-			add_political_power = 25
-			add_popularity = {
-				ideology = communism
-				popularity = -0.05
-			}
-			hidden_effect = {
-				add_to_variable = { ubs_save = -100 }
+			modifier = {
+				factor = 0.1
+				communism < 0.30
 			}
 		}
 		remove_effect = {
-			DEN_contradiction_alleviation = yes
+			if = {
+				limit = { has_active_mission = DEN_workers_threaten_to_strike }
+				add_days_mission_timeout = {
+					mission = DEN_workers_threaten_to_strike
+					days = 10
+				}
+			}
+			else_if = {
+				limit = { has_active_mission = DEN_workers_demand_to_fulfill_promises }
+				add_days_mission_timeout = {
+					mission = DEN_workers_demand_to_fulfill_promises
+					days = 30
+				}
+				random_list = {
+					50 = { country_event = { id = den_crisis.019 days = 7 } }
+					50 = {}
+				}
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = -0.02
+			}
+			DEN_intensification_of_contradiction = yes
+			hidden_effect = {
+				clr_country_flag = DEN_ban_secret_gatherings_flag
+				set_country_flag = DEN_ban_secret_gatherings_flag
+			}
 		}
 	}
-
-	#降低工人工资：获得资金，提升红色
-	DEN_reduce_employment_costs = {
-		icon = GFX_decision_generic_police_action
+	#修筑街垒：延长 工人威胁罢工 的倒计时 中性 一次性
+	DEN_build_barricades = {
+		icon = GFX_decision_generic_protection
 		visible = {
 			has_active_mission = DEN_workers_threaten_to_strike
-			NOT = { has_government = communism }
 		}
 		available = {
 			
 		}
+		fire_only_once = yes
+		cost = 20
+		days_remove = 14
 		ai_will_do = {
-			base = 0
+			base = 100
 			modifier = {
-				add = 50
-				check_variable = { ubs_save < 100 }
-				check_variable = { ubs_load > 100 }
+				factor = 2.5
+				communism > 0.50
+			}
+			modifier = {
+				factor = 0.1
+				communism < 0.30
+			}
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = DEN_workers_threaten_to_strike
+				days = 20
+			}
+		}
+	}
+
+#第二阶段：和公会作斗争
+	#工人要求兑现承诺
+	DEN_workers_demand_to_fulfill_promises = {
+		icon = GFX_decision_revolt
+		priority = 98
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 100
+		timeout_effect = {
+			DEN_strike_intensification = yes
+			country_event = den_crisis.020
+			random_list = {
+				35 = {
+					random_owned_controlled_state = {
+						damage_building = {
+							type = infrastructure
+							damage = 1
+						}
+					}
+				}
+				25 = {
+					random_owned_controlled_state = {
+						damage_building = {
+							type = industrial_complex
+							damage = 1
+						}
+					}
+				}
+				10 = {
+					add_to_variable = { ubs_load = 200 }
+					custom_effect_tooltip = DEN_increase_200_debt
+				}
+			}
+			activate_mission = DEN_worker_party_called_for_elections
+		}
+	}
+
+	#与工人代表谈判：延长 工人要求兑现承诺 的倒计时 合理
+	DEN_negotiate_with_worker_representatives = {
+		icon = GFX_decision_generic_political_discourse
+		visible = {
+			has_active_mission = DEN_workers_demand_to_fulfill_promises
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_negotiate_with_worker_representatives_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_negotiate_with_worker_representatives_flag days > 30 }
+					tooltip = DEN_negotiate_with_worker_representatives_trigger_tooltip
+				}
 			}
 		}
 		fire_only_once = no
-		days_re_enable = 180
-		complete_effect = {
+		cost = 50
+		days_remove = 7
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				communism > 0.50
+			}
+			modifier = {
+				factor = 0.1
+				communism > 0.30
+			}
+		}
+		remove_effect = {
 			add_popularity = {
 				ideology = communism
 				popularity = 0.05
 			}
-			DEN_strike_intensification = yes
-			add_to_variable = { ubs_save = 300 }
-			custom_effect_tooltip = SOV_get_300_add_to_reserve
-		}
-	}
-
-	#调整物价：获得资金或者取悦人民
-	DEN_price_adjustment = {
-		icon = GFX_decision_generic_police_action
-		visible = {
-			has_active_mission = DEN_workers_threaten_to_strike
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			base = 100
-		}
-		fire_only_once = yes
-		days_re_enable = 30
-		cost = 10
-		complete_effect = {
+			add_days_mission_timeout = {
+				mission = DEN_workers_demand_to_fulfill_promises
+				days = 30
+			}
+			DEN_contradiction_alleviation = yes
 			hidden_effect = {
-				country_event = den_crisis.7
+				random_list = {
+					30 = { country_event = { id = den_crisis.019 days = 7 } }
+					70 = { }
+				}
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_negotiate_with_worker_representatives_flag
+				set_country_flag = DEN_negotiate_with_worker_representatives_flag
 			}
 		}
 	}
-
-	DEN_regulate_land_in_the_east = {
-		icon = GFX_decision_generic_factory
+	#发放失业救济：延长 工人要求兑现承诺 的倒计时 合理
+	DEN_subsidizing_unemployed_individuals = {
+		icon = GFX_decision_hol_attract_foreign_investors
 		visible = {
-			has_completed_focus = DEN_land_reform_project
+			has_active_mission = DEN_workers_demand_to_fulfill_promises
 		}
-		available = {
-			any_state = {
-				OR = {
-					state = 1096
-					state = 1095
-					state = 1103
-					state = 1104
-				}
-				is_fully_controlled_by = ROOT
-			}
-		}
+		fire_only_once = no
+		days_remove = 14
 		ai_will_do = {
 			base = 100
-		}
-		custom_cost_text = RUS_200_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 200 }
-		}
-		days_remove = 120
-		fire_only_once = yes
-		remove_effect = {
-			
-			every_owned_state = {
-				limit = {
-					OR = {
-						state = 1096
-						state = 1095
-						state = 1103
-						state = 1104
-					}
-				}
-				add_extra_state_shared_building_slots = 2
+			modifier = {
+				factor = 2.5
+				communism > 0.50
 			}
-			every_owned_state = {
-				limit = {
-					OR = {
-						state = 1096
-						state = 1095
-						state = 1103
-						state = 1104
-					}
-					infrastructure < 3
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-				}
+			modifier = {
+				factor = 0.1
+				communism < 0.30
 			}
-		}
-	}
-
-	DEN_regulate_central_land = {
-		icon = GFX_decision_generic_factory
-		visible = {
-			has_completed_focus = DEN_land_reform_project
-		}
-		available = {
-			any_state = {
-				OR = {
-					state = 960
-					state = 138
-					state = 37
-				}
-				is_fully_controlled_by = ROOT
-			}
-		}
-		ai_will_do = {
-			base = 100
-		}
-		custom_cost_text = RUS_150_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 150 }
-		}
-		days_remove = 90
-		fire_only_once = yes
-		remove_effect = {
-			
-			every_owned_state = {
-				limit = {
-					OR = {
-						state = 960
-						state = 138
-						state = 37
-					}
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			every_owned_state = {
-				limit = {
-					OR = {
-						state = 960
-						state = 138
-						state = 37
-					}
-					infrastructure < 3
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-				}
-			}
-		}
-	}
-		
-	DEN_regulate_land_in_the_west = {
-		icon = GFX_decision_generic_factory
-		visible = {
-			has_completed_focus = DEN_land_reform_project
-		}
-		available = {
-			any_state = {
-				OR = {
-					state = 99
-					state = 782
-				}
-				is_fully_controlled_by = ROOT
-			}
-		}
-		ai_will_do = {
-			base = 100
 		}
 		custom_cost_text = RUS_100_ubs_save_cost
 		custom_cost_trigger = {
 			check_variable = { ubs_save > 100 }
 		}
-		fire_only_once = yes
-		days_remove = 60
+		complete_effect = {
+			add_to_variable = { ubs_save = -100 }
+		}
 		remove_effect = {
-			
-			every_owned_state = {
-				limit = {
-					OR = {
-						state = 99
-						state = 782
-					}
-				}
-				add_extra_state_shared_building_slots = 2
+			add_days_mission_timeout = {
+				mission = DEN_workers_demand_to_fulfill_promises
+				days = 30
 			}
-			every_owned_state = {
-				limit = {
-					OR = {
-						state = 99
-						state = 782
-					}
-					infrastructure < 3
+			hidden_effect = {
+				random_list = {
+					30 = { country_event = { id = den_crisis.019 days = 7 } }
+					70 = { }
 				}
-				add_building_construction = {
-					type = infrastructure
-					level = 1
+			}
+			DEN_contradiction_alleviation = yes
+		}
+	}
+	#设定最低工资：延长 工人要求兑现承诺 的倒计时 合理 一次性
+	DEN_set_minimum_wage = {
+		icon = GFX_decision_generic_operation
+		visible = {
+			has_active_mission = DEN_workers_demand_to_fulfill_promises
+		}
+		available = {
+			
+		}
+		fire_only_once = yes
+		cost = 100
+		days_remove = 14
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 2.5
+				communism > 0.50
+			}
+			modifier = {
+				factor = 0.1
+				communism < 0.30
+			}
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = DEN_workers_demand_to_fulfill_promises
+				days = 90
+			}
+			DEN_contradiction_alleviation = yes
+		}
+	}
+	#限制企业裁员：延长 工人要求兑现承诺 的倒计时 合理 一次性
+	DEN_restrict_enterprise_layoffs = {
+		icon = GFX_decision_gre_investment_decisions
+		visible = {
+			has_active_mission = DEN_workers_demand_to_fulfill_promises
+		}
+		available = {
+			
+		}
+		fire_only_once = yes
+		cost = 100
+		days_remove = 14
+		ai_will_do = {
+			base = 100
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = DEN_workers_threaten_to_strike
+				days = 60
+			}
+			DEN_contradiction_alleviation = yes
+		}
+	}
+
+#第三阶段：和共产党对决
+	#共产党抢班夺权：倒计时结束，红色占比大于50%则判定红色胜利
+	DEN_worker_party_called_for_elections = {
+		icon = GFX_decision_revolt
+		priority = 99
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		
+		days_mission_timeout = 60
+		timeout_effect = {
+			country_event = den_crisis.025
+			hidden_effect = {
+				remove_mission = DEN_communist_party_demands_elections
+				remove_mission = DEN_suppression_of_reactionary_forces
+			}
+		}
+	}
+
+	#共产党鼓动选举：循环倒计时 增加红色支持度 
+	DEN_communist_party_demands_elections = {
+		icon = GFX_decision_generic_political_rally
+		priority = 98
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 45
+		timeout_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.02
+			}
+			hidden_effect = {
+				activate_mission = DEN_communist_party_demands_elections
+			}
+		}
+	}
+	#承诺任命共产党部长：延长 共产党抢班夺权 倒计时 增加红色支持度
+	DEN_promise_to_appoint_minister_of_communist_party = {
+		icon = GFX_decision_generic_decision
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			NOT = { has_country_flag = DEN_turn_left }
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_promise_to_appoint_minister_of_communist_party_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_promise_to_appoint_minister_of_communist_party_flag days > 30 }
+					tooltip = DEN_promise_to_appoint_minister_of_communist_party_trigger_tooltip
 				}
+			}
+		}
+		fire_only_once = no
+		cost = 50
+		days_remove = 7
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 0
+				communism < 0.50
+			}
+		}
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+			add_days_mission_timeout = {
+				mission = DEN_worker_party_called_for_elections
+				days = 45
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_promise_to_appoint_minister_of_communist_party_flag
+				set_country_flag = DEN_promise_to_appoint_minister_of_communist_party_flag
+			}
+		}
+	}
+	#打压左翼政党：降低红色支持度 循环使用
+	DEN_suppressing_the_communist = {
+		icon = GFX_decision_generic_police_action
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			NOT = { has_country_flag = DEN_turn_left }
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_suppressing_the_communist_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_suppressing_the_communist_flag days > 14 }
+					tooltip = DEN_suppressing_the_communist_trigger_tooltip
+				}
+			}
+		}
+		fire_only_once = no
+		cost = 50
+		days_remove = 7
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 0
+				communism < 0.50
+			}
+		}
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = -0.05
+			}
+			add_days_mission_timeout = {
+				mission = DEN_worker_party_called_for_elections
+				days = -15
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_suppressing_the_communist_flag
+				set_country_flag = DEN_suppressing_the_communist_flag
+			}
+		}
+	}
+	#抛出政治黑料：降低红色支持度 循环使用
+	DEN_throwing_political_black_materials = {
+		icon = GFX_decision_generic_political_address
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			NOT = { has_country_flag = DEN_turn_left }
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_throwing_political_black_materials_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_throwing_political_black_materials_flag days > 14 }
+					tooltip = DEN_throwing_political_black_materials_trigger_tooltip
+				}
+			}
+		}
+		fire_only_once = no
+		cost = 25
+		days_remove = 7
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				communism < 0.50
+			}
+		}
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = -0.02
+			}
+			add_days_mission_timeout = {
+				mission = DEN_worker_party_called_for_elections
+				days = -10
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_throwing_political_black_materials_flag
+				set_country_flag = DEN_throwing_political_black_materials_flag
+			}
+		}
+	}
+	#枪击多龙芝：降低红色支持度 一次性 引发政治暴力
+	DEN_shooting_Repart = {
+		icon = GFX_decision_generic_assassination
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			NOT = { has_country_flag = DEN_turn_left }
+			has_country_flag = DEN_counterattack_political_violence
+		}
+		available = {
+			
+		}
+		fire_only_once = yes
+		cost = 0
+		days_remove = 14
+		ai_will_do = {
+			base = 100
+		}
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = -0.10
+			}
+			country_event = den_crisis.022
+		}
+	}
+	#与Y党交易：降低红色支持度 影响后续选举
+	DEN_transactions_with_party_Y = {
+		icon = GFX_decision_generic_political_discourse
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			NOT = { has_country_flag = DEN_turn_left }
+		}
+		available = {
+			
+		}
+		fire_only_once = yes
+		cost = 100
+		days_remove = 14
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				communism < 0.50
+			}
+		}
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = -0.10
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.15
 			}
 		}
 	}
 	
-	DEN_regulate_overseas_land = {
-		icon = GFX_decision_generic_factory
-		visible = {
-			has_completed_focus = DEN_land_reform_project
+	#反动集团政治打压：循环倒计时 降低红色支持度 
+	DEN_suppression_of_reactionary_forces = {
+		icon = GFX_decision_generic_police_action
+		priority = 98
+		activation = {
+			always = no
 		}
 		available = {
-			any_state = {
-				OR = {
-					state = 337
-					state = 100
-				}
-				is_fully_controlled_by = ROOT
+			always = no
+		}
+		days_mission_timeout = 45
+		timeout_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = -0.02
+			}
+			hidden_effect = {
+				activate_mission = DEN_suppression_of_reactionary_forces
 			}
 		}
+	}
+	#向须理出未来让步：延长 共产党抢班夺权 倒计时 降低红色支持度
+	DEN_make_concessions_to_Suride = {
+		icon = GFX_decision_generic_decision
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			has_country_flag = DEN_turn_left
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_make_concessions_to_Suride_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_make_concessions_to_Suride_flag days > 30 }
+					tooltip = DEN_make_concessions_to_Suride_trigger_tooltip
+				}
+			}
+		}
+		fire_only_once = no
+		cost = 50
+		days_remove = 7
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 0
+				communism < 0.50
+			}
+		}
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = -0.05
+			}
+			add_days_mission_timeout = {
+				mission = DEN_worker_party_called_for_elections
+				days = 45
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_make_concessions_to_Suride_flag
+				set_country_flag = DEN_make_concessions_to_Suride_flag
+			}
+		}
+	}
+	#联合左翼党派：增加红色支持度 循环使用
+	DEN_united_left_wing_parties = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			has_country_flag = DEN_turn_left
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_united_left_wing_parties_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_united_left_wing_parties_flag days > 14 }
+					tooltip = DEN_united_left_wing_parties_trigger_tooltip
+				}
+			}
+		}
+		fire_only_once = no
+		cost = 50
+		days_remove = 7
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 0
+				communism > 0.50
+			}
+		}
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.10
+			}
+			add_days_mission_timeout = {
+				mission = DEN_worker_party_called_for_elections
+				days = -15
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_united_left_wing_parties_flag
+				set_country_flag = DEN_united_left_wing_parties_flag
+			}
+		}
+	}
+	#利用宣传阵地：增加红色支持度 循环使用
+	DEN_utilize_propaganda_platforms = {
+		icon = GFX_decision_eng_propaganda_campaigns
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			has_country_flag = DEN_turn_left
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_utilize_propaganda_platforms_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_utilize_propaganda_platforms_flag days > 14 }
+					tooltip = DEN_utilize_propaganda_platforms_trigger_tooltip
+				}
+			}
+		}
+		fire_only_once = no
+		cost = 25
+		days_remove = 7
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				communism > 0.50
+			}
+		}
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+			add_days_mission_timeout = {
+				mission = DEN_worker_party_called_for_elections
+				days = -10
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_utilize_propaganda_platforms_flag
+				set_country_flag = DEN_utilize_propaganda_platforms_flag
+			}
+		}
+	}
+	#向右翼议员复仇：增加红色支持度 一次性 引发政治暴力
+	DEN_attacking_right_wing_legislators = {
+		icon = GFX_decision_generic_assassination
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			has_country_flag = DEN_turn_left
+			has_country_flag = DEN_counterattack_political_violence
+		}
+		available = {
+			
+		}
+		fire_only_once = yes
+		cost = 0
+		days_remove = 14
 		ai_will_do = {
 			base = 100
 		}
-		custom_cost_text = RUS_150_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 150 }
+		remove_effect = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.10
+			}
+			country_event = den_crisis.023
+		}
+	}
+	#扩大工人运动：增加红色支持度 影响后续选举
+	DEN_expand_the_worker_movement = {
+		icon = GFX_decision_generic_nationalism
+		visible = {
+			has_active_mission = DEN_worker_party_called_for_elections
+			has_country_flag = DEN_turn_left
+		}
+		available = {
+			
 		}
 		fire_only_once = yes
-		days_remove = 120
+		cost = 100
+		days_remove = 14
+		ai_will_do = {
+			base = 100
+			modifier = {
+				factor = 0
+				communism > 0.50
+			}
+		}
 		remove_effect = {
-			
-			every_owned_state = {
-				limit = {
-					OR = {
-						state = 337
-						state = 100
-					}
-				}
-				add_extra_state_shared_building_slots = 2
-			}
-			every_owned_state = {
-				limit = {
-					OR = {
-						state = 337
-						state = 100
-					}
-					infrastructure < 3
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-				}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.15
 			}
 		}
 	}
 
-}
+#经济活动
 
-gtmx_UBS_bank = {
-
-	DEN_start_sale_AUTO_META = {
-		icon = decision_eng_trade_unions_support
+	#扩大出口订单：赚钱
+	DEN_increase_export_orders = {
+		icon = GFX_decision_gre_paying_ifc_debt
 		allowed = {
-			original_tag = DEN
+			always = no
 		}
-		visible = {
-			NOT = { has_idea = DEN_sale_AUTO_META }
-			has_completed_focus = DEN_open_machinery_field
-		}
-		available = {
-			is_subject = no
-		}
+		fire_only_once = yes
+		cost = 10
+		days_remove = 14
 		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 100
-				check_variable = { ubs_load > 100 }
-			}
+			base = 100
 		}
-		cost = 50
-		fire_only_once = no
-		complete_effect = {
-			add_ideas = DEN_sale_AUTO_META
-		}
-	}
-	DEN_cease_sale_AUTO_META = {
-		icon = decision_generic_break_treaty
-		allowed = {
-			original_tag = DEN
-		}
-		visible = {
-			has_idea = DEN_sale_AUTO_META
-			has_completed_focus = DEN_open_machinery_field
-		}
-		available = {
-			is_subject = no
-		}
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 100
-				OR = {
-					AND = {
-						check_variable = { ubs_load < 10 }
-						check_variable = { ubs_save > 100 }
+		remove_effect = {
+			FROM = { country_event = den_crisis.033 }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				add_political_power = 50
+				random_list = {
+					50 = {
+						add_to_variable = { ubs_save = 50 }
+						custom_effect_tooltip = SOV_get_50_add_to_reserve
 					}
-					date > 1940.1.1
-					has_war = yes
+					30 = {
+						add_to_variable = { ubs_save = 75 }
+						custom_effect_tooltip = SOV_get_75_add_to_reserve
+					}
+					10 = {
+						add_to_variable = { ubs_save = 100 }
+						custom_effect_tooltip = SOV_get_100_add_to_reserve
+					}
 				}
 			}
-		}
-		cost = 50
-		fire_only_once = no
-		complete_effect = {
-			remove_ideas = DEN_sale_AUTO_META
+			custom_effect_tooltip = DEN_achieved_trade_volume_tt
+			effect_tooltip = {
+				DEN_alleviate_the_great_depression = yes
+			}
 		}
 	}
-	DEN_sale_of_AUTO_META = {
-		icon = decision_eng_trade_unions_support
-		allowed = {
-			original_tag = DEN
-		}
+	DEN_announce_the_passage_of_economic_crisis = {
+		icon = GFX_decision_gre_paying_ifc_debt
+		priority = 1000
 		visible = {
-			has_idea = DEN_sale_AUTO_META
-			has_completed_focus = DEN_open_machinery_field
+			OR = {
+				has_idea = DEN_great_depression5
+				has_idea = DEN_great_depression4
+				has_idea = DEN_great_depression3
+				has_idea = DEN_great_depression2
+				has_idea = DEN_great_depression
+			}
 		}
 		available = {
-			is_subject = no
-			has_equipment = {
-				KEI_AUTO_META_equipments > 499
+			custom_trigger_tooltip = {
+				check_variable = {
+					ubs_load < 50
+				}
+				tooltip = national_debt_less_than_50_tt
 			}
 		}
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 100
-				check_variable = { ubs_load > 100 }
-				check_variable = { ubs_save < 100 }
-			}
-		}
+		fire_only_once = yes
 		cost = 0
-		fire_only_once = no
-		days_re_enable = 60
-		complete_effect = {
-			add_equipment_to_stockpile = {
-				type = KEI_AUTO_META_equipments
-				amount = -500
+		ai_will_do = {
+			base = 1000
+		}
+		remove_effect = {
+			hidden_effect = {
+				remove_ideas = DEN_great_depression
+				remove_ideas = DEN_great_depression2
+				remove_ideas = DEN_great_depression3
+				remove_ideas = DEN_great_depression4
+				remove_ideas = DEN_great_depression5
 			}
-			add_to_variable = { ubs_save = 100 }
-			custom_effect_tooltip = SOV_get_100_add_to_reserve
+			effect_tooltip = {
+				if = {
+					limit = { has_idea = DEN_great_depression }
+					remove_ideas = DEN_great_depression
+				}
+				if = {
+					limit = { has_idea = DEN_great_depression2 }
+					remove_ideas = DEN_great_depression2
+				}
+				if = {
+					limit = { has_idea = DEN_great_depression3 }
+					remove_ideas = DEN_great_depression3
+				}
+				if = {
+					limit = { has_idea = DEN_great_depression4 }
+					remove_ideas = DEN_great_depression4
+				}
+				if = {
+					limit = { has_idea = DEN_great_depression5 }
+					remove_ideas = DEN_great_depression5
+				}
+			}
+			add_political_power = 200
+			add_stability = 0.10
+			add_war_support = 0.10
 		}
 	}
+	
 }
+
 
 DEN_public_works_construction_category = {
 
@@ -867,126 +1019,6 @@ DEN_public_works_construction_category = {
 			}
 		}
 	}
-	
-	DEN_integrate_Juliet_research_institute = {
-		icon = GFX_decision_generic_research
-		visible = {
-			has_completed_focus = DEN_integrate_enterprise_institute
-		}
-		available = {
-			if = { 
-				limit = { is_ai = no }
-				has_idea = DEN_Juliet
-			}
-		}
-		custom_cost_text = RUS_100_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 100 }
-		}
-		ai_will_do = {
-			base = 1000
-		}
-		fire_only_once = yes
-		days_remove = 90
-		complete_effect = {
-			hidden_effect = {
-				add_to_variable = { ubs_save = -100 }
-			}
-		}
-		remove_effect = {
-			remove_advisor_role = {
-				slot = political_advisor
-				character = DEN_Juliet
-			}
-			DEN_integrate_research_institute = yes
-			add_tech_bonus = {
-				name = DEN_integrate_Juliet_research_institute
-				category = artillery
-				bonus = 0.5
-				uses = 1
-			}
-		}
-	}
-		
-	DEN_integrate_Naoto_research_institute = {
-		icon = GFX_decision_generic_research
-		visible = {
-			has_completed_focus = DEN_integrate_enterprise_institute
-		}
-		available = {
-			if = { 
-				limit = { is_ai = no }
-				has_idea = DEN_Naoto
-			}
-		}
-		custom_cost_text = RUS_100_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 100 }
-		}
-		ai_will_do = {
-			base = 1000
-		}
-		fire_only_once = yes
-		days_remove = 90
-		complete_effect = {
-			hidden_effect = {
-				add_to_variable = { ubs_save = -100 }
-			}
-		}
-		remove_effect = {
-			remove_advisor_role = {
-				slot = political_advisor
-				character = DEN_Naoto
-			}
-			DEN_integrate_research_institute = yes
-			add_tech_bonus = {
-				name = DEN_integrate_Naoto_research_institute
-				category = AUTO_META
-				bonus = 0.5
-				uses = 1
-			}
-		}
-	}
-		
-	DEN_integrate_Akane_research_institute = {
-		icon = GFX_decision_generic_research
-		visible = {
-			has_completed_focus = DEN_integrate_enterprise_institute
-		}
-		available = {
-			if = { 
-				limit = { is_ai = no }
-				has_idea = DEN_Akane
-			}
-		}
-		ai_will_do = {
-			base = 1000
-		}
-		custom_cost_text = RUS_100_ubs_save_cost
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 100 }
-		}
-		fire_only_once = yes
-		days_remove = 90
-		complete_effect = {
-			hidden_effect = {
-				add_to_variable = { ubs_save = -100 }
-			}
-		}
-		remove_effect = {
-			remove_advisor_role = {
-				slot = political_advisor
-				character = DEN_Akane
-			}
-			DEN_integrate_research_institute = yes
-			add_tech_bonus = {
-				name = DEN_integrate_Akane_research_institute
-				category = armor
-				bonus = 0.5
-				uses = 1
-			}
-		}
-	}
 }
 
 DEN_rebuild_the_Kalma_alliance = {
@@ -1061,12 +1093,63 @@ DEN_rebuild_the_Kalma_alliance = {
 DEN_the_fourth_D_S_war_category = {
 
 	DEN_convene_German_troops = {
-		icon = GFX_decision_generic_military
+		icon = GFX_decision_generic_army_support
+		visible = {
+			has_completed_focus = DEN_mobilize_paramilitary_organizations
+			has_war = yes
+		}
 		available = {
-			has_full_control_of_state = 138
+			37 = { is_controlled_by = ROOT }
 		}
 		fire_only_once = yes
-		cost = 0
+		cost = 10
+		ai_will_do = {
+			base = 1000
+		}
+		complete_effect = {
+			hidden_effect = {
+				division_template = {
+					name = "德意志旅"
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+						artillery = { x = 0 y = 1 }
+					}
+				}
+			}
+			138 = {
+				create_unit = {
+					division = "name = \"德意志旅\" division_template = \"德意志旅\" start_experience_factor = 0" 
+					count = 1
+					owner = ROOT
+				}
+				create_unit = {
+					division = "name = \"德意志旅\" division_template = \"德意志旅\" start_experience_factor = 0" 
+					count = 1
+					owner = ROOT
+				}
+			}
+		}
+	}
+
+	DEN_convene_military_academy_troops = {
+		icon = GFX_decision_generic_military
+		visible = {
+			has_completed_focus = DEN_mobilize_paramilitary_organizations
+			has_war = yes
+		}
+		available = {
+			37 = { is_controlled_by = ROOT }
+		}
+		fire_only_once = yes
+		cost = 10
 		ai_will_do = {
 			base = 1000
 		}
@@ -1090,47 +1173,297 @@ DEN_the_fourth_D_S_war_category = {
 			}
 			138 = {
 				create_unit = {
-					division = "大洗军校国防生"
+					division = "name = \"大洗军校国防生\" division_template = \"大洗军校国防生\" start_experience_factor = 0" 
+					count = 1
 					owner = ROOT
 				}
 			}
 		}
 	}
 
-	DEN_first_level_mobilization_order = {
-		icon = GFX_decision_generic_speech
+	DEN_convene_star_sea_academy_troops = {
+		icon = GFX_decision_generic_intelligence_operation
+		visible = {
+			has_completed_focus = DEN_mobilize_paramilitary_organizations
+			has_war = yes
+		}
+		available = {
+			37 = { is_controlled_by = ROOT }
+		}
 		fire_only_once = yes
-		cost = 0
+		cost = 10
 		ai_will_do = {
 			base = 1000
 		}
 		complete_effect = {
-			add_ideas = war_economy
+			hidden_effect = {
+				division_template = {
+					name = "星之海学生军"
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+						artillery_brigade = { x = 2 y = 0 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+					}
+				}
+			}
+			138 = {
+				create_unit = {
+					division = "name = \"星之海学生军\" division_template = \"星之海学生军\" start_experience_factor = 0" 
+					count = 1
+					owner = ROOT
+				}
+				create_unit = {
+					division = "name = \"星之海学生军\" division_template = \"星之海学生军\" start_experience_factor = 0" 
+					count = 1
+					owner = ROOT
+				}
+			}
 		}
 	}
-		
-	DEN_accelerate_weapon_manufacturing = {
-		icon = GFX_decision_generic_merge_plant_tank
-		fire_only_once = yes
-		cost = 0
+}
+
+DEN_gateway_to_baltic_sea_category = {
+
+	#圣杯&德国：施加影响力
+	DEN_apply_pressure_on_strait = {
+		icon = GEX_decision_generic_political_address
+		visible = {
+			OR = {
+				tag = ENG
+				tag = DVL
+			}
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_apply_pressure_on_strait_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_apply_pressure_on_strait_flag days > 30 }
+					tooltip = DEN_apply_pressure_on_strait_trigger_tooltip
+				}
+			}
+		}
 		ai_will_do = {
-			base = 1000
+			base = 0
 		}
+		fire_only_once = no
+		days_remove = 14
+		cost = 10
 		complete_effect = {
-			add_timed_idea = {
-				idea = DEN_accelerate_weapon_manufacturing_descision
-				days = 120
-			}
-			add_equipment_to_stockpile = {
-				type = KEI_AUTO_META_equipments
-				producer = ROOT
-				amount = 2000
-			}
-			add_equipment_to_stockpile = {
-				type = infantry_equipment
-				producer = ROOT
-				amount = 2500
+			hidden_effect = {
+				if = {
+					limit = { tag = ENG }
+					DEN = { activate_mission = DEN_applying_influence_from_ENG }
+					DVL = { activate_mission = DEN_applying_influence_from_ENG }
+				}
+				if = {
+					limit = { tag = DVL }
+					DEN = { activate_mission = DEN_applying_influence_from_DVL }
+					ENG = { activate_mission = DEN_applying_influence_from_DVL }
+				}
 			}
 		}
+		remove_effect = {
+			if = {
+				limit = { tag = ENG }
+				random_list = {
+					50 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 1 } custom_effect_tooltip = DEN_increase_1_strait_influence }
+					30 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 3 } custom_effect_tooltip = DEN_increase_3_strait_influence }
+					10 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
+				}
+			}
+			if = {
+				limit = { tag = DVL }
+				random_list = {
+					50 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 1 } custom_effect_tooltip = DEN_increase_1_strait_influence }
+					30 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 3 } custom_effect_tooltip = DEN_increase_3_strait_influence }
+					10 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
+				}
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_apply_pressure_on_strait_flag
+				set_country_flag = DEN_apply_pressure_on_strait_flag
+			}
+		}
+	}
+	#圣杯正在施加影响力
+	DEN_applying_influence_from_ENG = {
+		icon = GFX_decision_generic_political_discourse
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 14
+		timeout_effect = {
+			random_list = {
+				50 = { custom_effect_tooltip = DEN_increase_1_strait_influence }
+				30 = { custom_effect_tooltip = DEN_increase_3_strait_influence }
+				10 = { custom_effect_tooltip = DEN_increase_5_strait_influence }
+			}
+		}
+	}
+	#德国正在施加影响力
+	DEN_applying_influence_from_DVL = {
+		icon = GFX_decision_generic_political_discourse
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 14
+		timeout_effect = {
+			random_list = {
+				50 = { custom_effect_tooltip = DEN_increase_1_strait_influence }
+				30 = { custom_effect_tooltip = DEN_increase_3_strait_influence }
+				10 = { custom_effect_tooltip = DEN_increase_5_strait_influence }
+			}
+		}
+	}
+	#杜伦布：亲圣杯宣传
+	DEN_pro_ENG_propaganda = {
+		icon = GEX_decision_generic_political_address
+		visible = {
+			tag = DEN
+			has_completed_focus = DEN_deal_with_foreign
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_pro_ENG_propaganda_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_pro_ENG_propaganda_flag days > 30 }
+					tooltip = DEN_pro_ENG_propaganda_trigger_tooltip
+				}
+			}
+			NOT = { has_country_flag = DEN_promotion_in_progress }
+		}
+		ai_will_do = {
+			base = 0
+		}
+		fire_only_once = no
+		days_remove = 14
+		cost = 10
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = DEN_promotion_in_progress
+				ENG = { activate_mission = DEN_make_intimate_remarks_in_ENG }
+				DVL = { activate_mission = DEN_make_intimate_remarks_in_ENG }
+			}
+		}
+		remove_effect = {
+			custom_effect_tooltip = "[ENG.GetNameWithFlag]"
+			random_list = {
+				50 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 1 } custom_effect_tooltip = DEN_increase_1_strait_influence }
+				30 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 3 } custom_effect_tooltip = DEN_increase_3_strait_influence }
+				10 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_promotion_in_progress
+				clr_country_flag = DEN_pro_ENG_propaganda_flag
+				set_country_flag = DEN_pro_ENG_propaganda_flag
+			}
+		}
+	}
+	#杜伦布：亲柏林宣传
+	DEN_pro_DVL_propaganda = {
+		icon = GEX_decision_generic_political_address
+		visible = {
+			tag = DEN
+			has_completed_focus = DEN_deal_with_foreign
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = DEN_pro_DVL_propaganda_flag }  
+				custom_trigger_tooltip = {
+					has_country_flag = { flag = DEN_pro_DVL_propaganda_flag days > 30 }
+					tooltip = DEN_pro_DVL_propaganda_trigger_tooltip
+				}
+			}
+			NOT = { has_country_flag = DEN_promotion_in_progress }
+		}
+		ai_will_do = {
+			base = 0
+		}
+		fire_only_once = no
+		days_remove = 14
+		cost = 10
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = DEN_promotion_in_progress
+				ENG = { activate_mission = DEN_make_intimate_remarks_in_DVL }
+				DVL = { activate_mission = DEN_make_intimate_remarks_in_DVL }
+			}
+		}
+		remove_effect = {
+			custom_effect_tooltip = "[DVL.GetNameWithFlag]"
+			random_list = {
+				50 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 1 } custom_effect_tooltip = DEN_increase_1_strait_influence }
+				30 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 3 } custom_effect_tooltip = DEN_increase_3_strait_influence }
+				10 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
+			}
+			hidden_effect = {
+				clr_country_flag = DEN_promotion_in_progress
+				clr_country_flag = DEN_pro_DVL_propaganda_flag
+				set_country_flag = DEN_pro_DVL_propaganda_flag
+			}
+		}
+	}
+	#杜伦布正在亲圣杯宣传
+	DEN_make_intimate_remarks_in_ENG = {
+		icon = GFX_decision_generic_political_discourse
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 14
+		timeout_effect = {
+			custom_effect_tooltip = "[ENG.GetNameWithFlag]"
+			random_list = {
+				50 = { custom_effect_tooltip = DEN_increase_1_strait_influence }
+				30 = { custom_effect_tooltip = DEN_increase_3_strait_influence }
+				10 = { custom_effect_tooltip = DEN_increase_5_strait_influence }
+			}
+		}
+	}
+	#杜伦布正在亲德国宣传
+	DEN_make_intimate_remarks_in_DVL = {
+		icon = GFX_decision_generic_political_discourse
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 14
+		timeout_effect = {
+			custom_effect_tooltip = "[DVL.GetNameWithFlag]"
+			random_list = {
+				50 = { custom_effect_tooltip = DEN_increase_1_strait_influence }
+				30 = { custom_effect_tooltip = DEN_increase_3_strait_influence }
+				10 = { custom_effect_tooltip = DEN_increase_5_strait_influence }
+			}
+		}
+	}
+	DEN_autumn_elections_are_about_to_begin = {
+		icon = GFX_decision_generic_political_address
+		priority = 1000
+		is_good = yes
+		activation = {
+			always = no
+		}
+		available = {
+			always = no
+		}
+		days_mission_timeout = 1339
 	}
 }

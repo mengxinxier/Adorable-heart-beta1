@@ -1,8 +1,15 @@
-
+#!gfx:interface\ICON_SOV.gfx
+#!gfx:interface\ICON_UKR.gfx
+#!gfx:interface\PAN_focu.gfx
+#!gfx:interface\PAN_focus.gfx
+#!gfx:interface\ICON_GEU.gfx
+#!gfx:interface\ICON_GER.gfx
+#!gfx:interface\generic_goals.gfx
+#!gfx:interface\ICON_nordic.gfx
 focus_tree = {
 	continuous_focus_position = {
-		x = 100
-		y = 100
+		x = 1800
+		y = 1500
 	}
 	
 	id = DEN_focus
@@ -16,13 +23,12 @@ focus_tree = {
 	}
 	
 	default = no
-	shared_focus = NORDIC_form_joint_alliance
 
 	focus = {
 		id = DEN_international_machinery_show
-		icon = GFX_goal_generic_aristocratic_cooperation
+		icon = GFX_focus_SWE_urbanization
 
-		x = 11
+		x = 5
 		y = 1
 		cost = 3
 		ai_will_do = {
@@ -36,39 +42,212 @@ focus_tree = {
 				bonus = 0.5
 				uses = 1
 			}
-			country_event = denmark.2
+			country_event = denmark.002
+			hidden_effect = {
+				country_event = { id = denmark.008 days = 7 }
+			}
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_POLITICAL }
 	}
-	
+
 	focus = {
-		id = DEN_speech_by_foreign_ministry
-		icon = GFX_goal_generic_radar
-		x = -1
+		id = DEN_investigate_Marie_case
+		icon = GFX_goal_generic_secret_documents
+		x = 2
 		y = 1
 		relative_position_id = DEN_international_machinery_show
 		prerequisite = {
 			focus = DEN_international_machinery_show
 		}
 
-		cost = 2
+		cost = 1
 		ai_will_do = {
 			base = 1
 		}
+		available = {
+			has_country_flag = DEN_Breguet_feigned_death
+		}
 		completion_reward = {
-			country_event = denmark.8
-			hidden_effect = {
-				add_to_variable = { ubs_save = 200 }
+			country_event = denmark.009
+			add_popularity = {
+				ideology = communism
+				popularity = -0.05
 			}
-			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			add_equipment_to_stockpile = {
+				type = KEI_AUTO_META_equipments
+				producer = ROOT
+				amount = 1000
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = DEN_accept_Kiel_guerrilla_team
+		icon = GFX_focus_generic_socialist_action
+		x = 0
+		y = 1
+		relative_position_id = DEN_international_machinery_show
+		prerequisite = {
+			focus = DEN_international_machinery_show
+		}
+
+		cost = 1
+		ai_will_do = {
+			base = 1
+		}
+		available = {
+			NOT = { country_exists = SHL }
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_war_support = 0.05
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
 		
 	focus = {
+		id = DEN_public_security_mecha
+		icon = GFX_focus_CHL_domestic_production_of_the_willys_mb
+		x = 0
+		y = 1
+		relative_position_id = DEN_investigate_Marie_case
+		prerequisite = {
+			focus = DEN_investigate_Marie_case
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			capital_scope = {
+				create_unit = {
+					division = "name = \"镇暴部队\" division_template = \"镇暴部队\" start_experience_factor = 0.2"
+					owner = ROOT
+					count = 1
+				}
+				create_unit = {
+					division = "name = \"镇暴部队\" division_template = \"镇暴部队\" start_experience_factor = 0.2"
+					owner = ROOT
+					count = 1
+				}
+			}
+			138 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+			}
+			if = {
+				limit = { NOT = { has_tech = tech_military_police } }
+				set_technology = {
+					tech_military_police = 1
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = DEN_public_security_mecha
+					category = military_police_tech
+					bonus = 0.5
+					uses = 1
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+			
+	focus = {
+		id = DEN_collaborating_with_enterprises
+		icon = GFX_focus_generic_self_management
+		x = -1
+		y = 1
+		relative_position_id = DEN_public_security_mecha
+		prerequisite = {
+			focus = DEN_public_security_mecha
+		}
+		mutually_exclusive = {
+			focus = DEN_collaborate_with_guild
+		}
+
+		cost = 3
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				set_country_flag = DEN_woof_woof_visible
+				if = {
+					limit = { has_idea = DEN_woof_woof }
+					swap_ideas = {
+						remove_idea = DEN_woof_woof
+						add_idea = DEN_woof_woof2
+					}
+				}
+			}
+			custom_effect_tooltip = DEN_woof_woof_tt
+			effect_tooltip = {
+				swap_ideas = {
+					remove_idea = DEN_woof_woof
+					add_idea = DEN_woof_woof2
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						has_idea = DEN_Durham_thieves
+						has_idea = DEN_Durham_thieves2
+						has_idea = DEN_Durham_thieves3
+						has_idea = DEN_Durham_thieves4
+					}
+				}
+				DEN_strike_intensification = yes
+			}
+			else = {
+				custom_effect_tooltip = DEN_collaborating_with_enterprises_tt
+			}
+		}
+	}
+				
+	focus = {
+		id = DEN_collaborate_with_guild
+		icon = GFX_goal_generic_labor_regulation
+		x = 1
+		y = 1
+		relative_position_id = DEN_public_security_mecha
+		prerequisite = {
+			focus = DEN_public_security_mecha
+		}
+		mutually_exclusive = {
+			focus = DEN_collaborating_with_enterprises
+		}
+
+		cost = 3
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_political_power = 50
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+		}
+	}
+		
+	focus = {
 		id = DEN_renovate_old_infrastructure
 		icon = GFX_goal_generic_construct_civilian
-		x = 1
+		x = -2
 		y = 1
 		relative_position_id = DEN_international_machinery_show
 		prerequisite = {
@@ -80,11 +259,17 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
+			add_tech_bonus = {
+				name = DEN_renovate_old_infrastructure
+				category = industry
+				bonus = 0.5
+				uses = 1
+			}
 			138 = {
 				add_extra_state_shared_building_slots = 2
 				add_building_construction = {
-					type = arms_factory
-					level = 2
+					type = infrastructure
+					level = 1
 				}
 			}
 			1095 = {
@@ -110,10 +295,7 @@ focus_tree = {
 		icon = GFX_goal_generic_education
 		x = 1
 		y = 1
-		relative_position_id = DEN_speech_by_foreign_ministry
-		prerequisite = {
-			focus = DEN_speech_by_foreign_ministry
-		}
+		relative_position_id = DEN_renovate_old_infrastructure
 		prerequisite = {
 			focus = DEN_renovate_old_infrastructure
 		}
@@ -123,96 +305,694 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			add_advisor_role = {
-				character = DEN_Michiru
-				advisor = {
-					slot = political_advisor
-					idea_token = DEN_Michiru
-					traits = { DEN_gallant_doctor }
-					cost = 100
-					ai_will_do = {
-						base = 1
-					}
-				}
-			}
-			add_advisor_role = {
-				character = DEN_Nana
-				advisor = {
-					slot = political_advisor
-					idea_token = DEN_Nana
-					traits = { DEN_psychologist }
-					cost = 100
-					ai_will_do = {
-						base = 1
-					}
-				}
-			}
+			add_research_slot = 1
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = DEN_Michiru
+			show_ideas_tooltip = DEN_Nana
 			custom_effect_tooltip = available_designer
 			show_ideas_tooltip = novo_lab
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
-
+				
 	focus = {
-		id = DEN_extend_term
-		icon = GFX_focus_usa_voter_registration_act
-		x = -3
-		y = 1
-		relative_position_id = DEN_graduation_ceremony
-		prerequisite = {
-			focus = DEN_graduation_ceremony
-		}
-		mutually_exclusive = {
-			focus = DEN_insist_on_election
-		}
-		available = {
-			always = no
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			custom_effect_tooltip = this_focus_triggered_by_events_tt
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-	
-	focus = {
-		id = DEN_insist_on_election
-		icon = GFX_goal_generic_national_unity
-		x = 2
-		y = 1
-		relative_position_id = DEN_graduation_ceremony
-		prerequisite = {
-			focus = DEN_graduation_ceremony
-		}
-		mutually_exclusive = {
-			focus = DEN_extend_term
-		}
-		available = {
-			always = no
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			custom_effect_tooltip = this_focus_triggered_by_events_tt
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-	
-	focus = {
-		id = DEN_smooth_over_with_DVL
-		icon = GFX_goal_generic_phone_crisis
+		id = DEN_invite_foreign_investment
+		icon = GFX_goal_generic_economics_reform
 		x = -1
 		y = 1
-		relative_position_id = DEN_extend_term
+		relative_position_id = DEN_renovate_old_infrastructure
 		prerequisite = {
-			focus = DEN_extend_term
+			focus = DEN_renovate_old_infrastructure
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_stability = 0.05
+			1103 = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+					
+	focus = {
+		id = DEN_deal_with_foreign
+		icon = GFX_focus_generic_baltic_sea_fleet
+		x = 1
+		y = 1
+		relative_position_id = DEN_invite_foreign_investment
+		prerequisite = {
+			focus = DEN_invite_foreign_investment
+		}
+		prerequisite = {
+			focus = DEN_graduation_ceremony
+		}
+
+		cost = 2
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			unlock_decision_tooltip = DEN_pro_ENG_propaganda
+			unlock_decision_tooltip = DEN_pro_DVL_propaganda
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+																		
+	focus = {
+		id = DEN_trading_with_demons
+		icon = GFX_befriend_DVL
+		x = -1
+		y = 1
+		relative_position_id = DEN_deal_with_foreign
+		prerequisite = {
+			focus = DEN_deal_with_foreign
+		}
+		mutually_exclusive = {
+			focus = DEN_expand_maritime_trade
+		}
+
+		cost = 2
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			DEN_alleviate_the_great_depression = yes
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			if = {
+				limit = { has_global_flag = DEN_gateway_to_baltic_sea_flag }
+				add_to_variable = { DEN.DEN_strait_influence_from_DVL = 10 }
+				custom_effect_tooltip = DEN_increase_10_strait_influence_from_DVL
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.05
+			}
+			add_war_support = -0.05
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = DEN_expand_maritime_trade
+		icon = GFX_befriend_ENG
+		x = 1
+		y = 1
+		relative_position_id = DEN_deal_with_foreign
+		prerequisite = {
+			focus = DEN_deal_with_foreign
+		}
+		mutually_exclusive = {
+			focus = DEN_trading_with_demons
+		}
+
+		cost = 2
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			DEN_alleviate_the_great_depression = yes
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			if = {
+				limit = { has_global_flag = DEN_gateway_to_baltic_sea_flag }
+				add_to_variable = { DEN.DEN_strait_influence_from_ENG = 10 }
+				custom_effect_tooltip = DEN_increase_10_strait_influence_from_ENG
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.05
+			}
+			add_war_support = -0.05
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = DEN_consolidate_the_archipelago
+		icon = GFX_focus_generic_fortify_iceland
+		x = 1
+		y = 1
+		relative_position_id = DEN_trading_with_demons
+		prerequisite = {
+			focus = DEN_trading_with_demons
+			focus = DEN_expand_maritime_trade
+		}
+		available = {
+			has_country_flag = DEN_economic_crisis_affect_Durham
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = {
+					ubs_load = 200
+				}
+			}
+			custom_effect_tooltip = DEN_increase_200_debt
+			1160 = {
+				add_building_construction = {
+					type = anti_air_building
+					level = 2
+				}
+				add_building_construction = {
+					type = coastal_bunker
+					level = 2
+					province = 6361
+				}
+			}
+			337 = {
+				add_building_construction = {
+					type = anti_air_building
+					level = 2
+				}
+				add_building_construction = {
+					type = coastal_bunker
+					level = 2
+					province = 13003
+				}
+			}
+			1104 = {
+				add_building_construction = {
+					type = anti_air_building
+					level = 2
+				}
+				add_building_construction = {
+					type = coastal_bunker
+					level = 2
+					province = 211
+				}
+			}
+		}
+	}
+	
+	focus = {
+		id = DEN_strengthen_maritime_trade
+		icon = GFX_focus_generic_north_atlantic_fleet
+		x = -2
+		y = 1
+		relative_position_id = DEN_consolidate_the_archipelago
+		prerequisite = {
+			focus = DEN_consolidate_the_archipelago
+		}
+		prerequisite = {
+			focus = DEN_currency_depreciation
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_idea = DEN_great_depression5
+					has_idea = DEN_great_depression4
+					has_idea = DEN_great_depression3
+					has_idea = DEN_great_depression2
+					has_idea = DEN_great_depression
+				}
+			}
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			activate_targeted_decision = { target = DVL decision = DEN_increase_export_orders }
+			activate_targeted_decision = { target = ENG decision = DEN_increase_export_orders }
+			activate_targeted_decision = { target = NOR decision = DEN_increase_export_orders }
+			activate_targeted_decision = { target = POL decision = DEN_increase_export_orders }
+			activate_targeted_decision = { target = BAL decision = DEN_increase_export_orders }
+			activate_targeted_decision = { target = FIN decision = DEN_increase_export_orders }
+			activate_targeted_decision = { target = SOV decision = DEN_increase_export_orders }
+		}
+	}
+
+	focus = {
+		id = DEN_encourage_immigration
+		icon = GFX_focus_generic_full_employment
+		x = 0
+		y = 1
+		relative_position_id = DEN_consolidate_the_archipelago
+		prerequisite = {
+			focus = DEN_consolidate_the_archipelago
+		}
+
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		available = {
+			OR = {
+				owns_state = 100
+				owns_state = 1160
+				owns_state = 337
+			}
+		}
+		bypass_if_unavailable = yes
+		completion_reward = {
+			add_political_power = 50
+			add_stability = -0.05
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			100 = {
+				add_extra_state_shared_building_slots = 2
+				add_manpower = 2000000
+			}
+			1160 = {
+				add_extra_state_shared_building_slots = 1
+				add_manpower = 100000
+			}
+			337 = {
+				add_extra_state_shared_building_slots = 1
+				add_manpower = 100000
+			}
+			swap_ideas = {
+				remove_idea = DEN_drift_north
+				add_idea = DEN_drift_north2
+			}
+		}
+	}
+		
+	focus = {
+		id = DEN_build_Faroe_island
+		icon = GFX_focus_DEN_develop_faroes
+		x = 1
+		y = 2
+		relative_position_id = DEN_strengthen_maritime_trade
+		prerequisite = {
+			focus = DEN_strengthen_maritime_trade
+		}
+
+		cost = 6
+		ai_will_do = {
+			base = 1
+		}
+		bypass = {
+			NOT = { owns_state = 337 }
+		}
+		completion_reward = {
+			337 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+		}
+	}
+			
+	focus = {
+		id = DEN_invest_in_Bornholm
+		icon = GFX_focus_DEN_develop_bornholm
+		x = -1
+		y = 2
+		relative_position_id = DEN_strengthen_maritime_trade
+		prerequisite = {
+			focus = DEN_strengthen_maritime_trade
+		}
+
+		cost = 6
+		ai_will_do = {
+			base = 1
+		}
+		bypass = {
+			NOT = { owns_state = 1160 }
+		}
+		completion_reward = {
+			1160 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+		}
+	}
+				
+	focus = {
+		id = DEN_offshore_oil_recovery
+		icon = GFX_focus_generic_offshore_oil_rig
+		x = 0
+		y = 1
+		relative_position_id = DEN_strengthen_maritime_trade
+		prerequisite = {
+			focus = DEN_strengthen_maritime_trade
+		}
+
+		cost = 8
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_resource = {
+				type = oil
+				amount = 6
+				state = 99
+			}
+			add_resource = {
+				type = oil
+				amount = 12
+				state = 100
+			}
+			add_tech_bonus = {
+				name = DEN_offshore_oil_recovery
+				category = refining_tech
+				bonus = 0.5
+				uses = 2
+			}
+		}
+	}
+					
+	focus = {
+		id = DEN_develop_Iceland
+		icon = GFX_focus_generic_develop_iceland_silhouette
+		x = 1
+		y = 1
+		relative_position_id = DEN_invest_in_Bornholm
+		prerequisite = {
+			focus = DEN_invest_in_Bornholm
+		}
+		prerequisite = {
+			focus = DEN_build_Faroe_island
+		}
+
+		cost = 6
+		ai_will_do = {
+			base = 1
+		}
+		bypass = {
+			NOT = { owns_state = 100 }
+		}
+		completion_reward = {
+			100 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+			add_resource = {
+				type = steel
+				amount = 16
+				state = 100
+			}
+			add_resource = {
+				type = aluminium
+				amount = 6
+				state = 100
+			}
+			custom_effect_tooltip = DEN_develop_Iceland_tt
+			add_ideas = DEN_develop_Iceland_focus
+		}
+	}
+		
+	focus = {
+		id = DEN_currency_depreciation
+		icon = GFX_focus_DEN_devalue_krone
+		x = -1
+		y = 1
+		relative_position_id = DEN_balance_government_budgets
+		prerequisite = {
+			focus = DEN_balance_government_budgets
+		}
+		prerequisite = {
+			focus = DEN_trading_with_demons
+			focus = DEN_expand_maritime_trade
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_political_power = -50
+			add_stability = -0.10
+			DEN_alleviate_the_great_depression = yes
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+			
+	focus = {
+		id = DEN_balance_government_budgets
+		icon = GFX_goal_generic_neutrality_focus
+		x = 1
+		y = 1
+		relative_position_id = DEN_collaborating_with_enterprises
+		prerequisite = {
+			focus = DEN_collaborating_with_enterprises
+			focus = DEN_collaborate_with_guild
+		}
+
+		available = {
+			has_country_flag = DEN_economic_crisis_affect_Durham
+		}
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_timed_idea = {
+				idea = DEN_focus_on_economy
+				days = 360
+			}
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+					
+	focus = {
+		id = DEN_unemployment_benefit
+		icon = GFX_goal_generic_citizens
+		x = 1
+		y = 1
+		relative_position_id = DEN_balance_government_budgets
+		prerequisite = {
+			focus = DEN_balance_government_budgets
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		bypass = {
+			NOT = {
+				has_idea = DEN_Durham_thieves4
+				has_idea = DEN_Durham_thieves3
+				has_idea = DEN_Durham_thieves2
+				has_idea = DEN_Durham_thieves
+			}
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = {
+					ubs_load = 200
+				}
+			}
+			custom_effect_tooltip = DEN_increase_200_debt
+			DEN_strike_relief = yes
+			add_stability = 0.10
+			add_war_support = 0.10
+			add_political_power = 120
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {
+		id = DEN_agricultural_subsidies
+		icon = GFX_GEU_FARM_BUTIE
+		x = 1
+		y = 1
+		relative_position_id = DEN_unemployment_benefit
+		prerequisite = {
+			focus = DEN_unemployment_benefit
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_political_power = 50
+			hidden_effect = {
+				add_to_variable = {
+					ubs_load = 200
+				}
+			}
+			custom_effect_tooltip = DEN_increase_200_debt
+			add_ideas = DEN_agricultural_subsidies_focus
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+						
+	focus = {
+		id = DEN_merge_national_banks
+		icon = GFX_focus_ARG_anti_corruption_policies
+		x = -1
+		y = 1
+		relative_position_id = DEN_currency_depreciation
+		prerequisite = {
+			focus = DEN_currency_depreciation
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = 400 }
+			}
+			custom_effect_tooltip = SOV_get_400_add_to_reserve
+			add_ideas = DEN_central_bank
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+							
+	focus = {
+		id = DEN_public_works
+		icon = GFX_focus_generic_the_giant_wakes
+		x = 1
+		y = 1
+		relative_position_id = DEN_currency_depreciation
+		prerequisite = {
+			focus = DEN_currency_depreciation
+		}
+		prerequisite = {
+			focus = DEN_unemployment_benefit
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_political_power = 50
+			hidden_effect = {
+				add_to_variable = {
+					ubs_load = 200
+				}
+			}
+			custom_effect_tooltip = DEN_increase_200_debt
+			37 = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+			138 = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+																				
+	focus = {
+		id = DEN_subsidized_industry
+		icon = GFX_focus_DEN_limited_regulations
+		x = 0
+		y = 1
+		relative_position_id = DEN_public_works
+		prerequisite = {
+			focus = DEN_public_works
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = 400 }
+			}
+			custom_effect_tooltip = SOV_get_400_add_to_reserve
+			37 = {
+				remove_building = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+			99 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			138 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			add_tech_bonus = {
+				name = DEN_subsidized_industry
+				category = industry
+				bonus = 0.5
+				uses = 2
+			}
+			add_ideas = DEN_develop_industrial_zones
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+								
+	focus = {
+		id = DEN_low_interest_agricultural_loans
+		icon = GFX_focus_DEN_national_unity
+		x = 1
+		y = 1
+		relative_position_id = DEN_agricultural_subsidies
+		prerequisite = {
+			focus = DEN_agricultural_subsidies
 		}
 
 		cost = 4
@@ -224,385 +1004,24 @@ focus_tree = {
 				add_to_variable = { ubs_save = 200 }
 			}
 			custom_effect_tooltip = SOV_get_200_add_to_reserve
-			DVL = {
-				add_opinion_modifier = {
-					target = ROOT
-					modifier = RUS_supportive_government
-				}
-			}
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-		
-	focus = {
-		id = DEN_agricultural_export
-		icon = GFX_goal_generic_wheat
-		x = -3
-		y = 1
-		relative_position_id = DEN_smooth_over_with_DVL
-		prerequisite = {
-			focus = DEN_smooth_over_with_DVL
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			1095 = {
-				add_extra_state_shared_building_slots = 1
+			99 = {
+				add_extra_state_shared_building_slots = 2
 				add_building_construction = {
 					type = industrial_complex
-					level = 1
-				}
-			}
-			hidden_effect = {
-				add_to_variable = { ubs_save = 100 }
-			}
-			custom_effect_tooltip = SOV_get_100_add_to_reserve
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-	}
-			
-	focus = {
-		id = DEN_open_machinery_field
-		icon = GFX_goal_generic_positive_trade_relations
-		x = -1
-		y = 1
-		relative_position_id = DEN_smooth_over_with_DVL
-		prerequisite = {
-			focus = DEN_smooth_over_with_DVL
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			add_ideas = DEN_sale_AUTO_META
-			unlock_decision_tooltip = DEN_start_sale_AUTO_META
-			unlock_decision_tooltip = DEN_cease_sale_AUTO_META
-			unlock_decision_tooltip = DEN_sale_of_AUTO_META
-			add_equipment_to_stockpile = {
-				type = KEI_AUTO_META_equipments
-				producer = ROOT
-				amount = 1000
-			}
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
-	}
-				
-	focus = {
-		id = DEN_encourage_foreign_investment
-		icon = GFX_goal_generic_gold_money
-		x = 1
-		y = 1
-		relative_position_id = DEN_smooth_over_with_DVL
-		prerequisite = {
-			focus = DEN_smooth_over_with_DVL
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			DEN_alleviate_the_great_depression = yes
-			add_tech_bonus = {
-				name = DEN_encourage_foreign_investment
-				category = industry
-				uses = 1
-				bonus = 0.5
-			}
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-	}
-				
-	focus = {
-		id = DEN_cut_subsidies
-		icon = GFX_focus_generic_decrease_unemployment
-		x = -2
-		y = 1
-		relative_position_id = DEN_encourage_foreign_investment
-		prerequisite = {
-			focus = DEN_encourage_foreign_investment
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 1
-			modifier = {
-				factor = 0.1
-				communism > 0.40
-			}
-		}
-		completion_reward = {
-			add_popularity = {
-				ideology = communism
-				popularity = 0.05
-			}
-			if = {
-				limit = { NOT = { has_government = communism } }
-				DEN_intensification_of_contradiction = yes
-			}
-			add_to_variable = { ubs_save = 100 }
-			custom_effect_tooltip = SOV_get_100_add_to_reserve
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-				
-	focus = {
-		id = DEN_renovate_old_industry
-		icon = GFX_goal_generic_construct_civ_factory
-		x = 0
-		y = 1
-		relative_position_id = DEN_encourage_foreign_investment
-		prerequisite = {
-			focus = DEN_encourage_foreign_investment
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
-			}
-			random_owned_controlled_state = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
+					level = 2
 				}
 			}
 		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
 	}
-
+									
 	focus = {
-		id = DEN_currency_depreciation
-		icon = GFX_focus_mex_privatisation
-		x = -1
-		y = 1
-		relative_position_id = DEN_cut_subsidies
-		prerequisite = {
-			focus = DEN_cut_subsidies
-		}
-		prerequisite = {
-			focus = DEN_agricultural_export
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			add_political_power = 50
-			add_stability = -0.05
-			DEN_alleviate_the_great_depression = yes
-			if = {
-				limit = { NOT = { has_government = communism } }
-				DEN_intensification_of_contradiction = yes
-			}
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-	
-	focus = {
-		id = DEN_guarantee_production
-		icon = GFX_focus_generic_public_works_A
-		x = -1
-		y = 1
-		relative_position_id = DEN_renovate_old_industry
-		prerequisite = {
-			focus = DEN_renovate_old_industry
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			if = {
-				limit = { NOT = { has_government = communism } }
-				DEN_contradiction_alleviation = yes
-			}
-			random_owned_controlled_state = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
-			}
-			add_to_variable = { ubs_load = 100 }
-			custom_effect_tooltip = DEN_increase_100_debt
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-	
-	focus = {
-		id = DEN_strike_prohibition_act
-		icon = GFX_goal_generic_industrial_plan
-		x = 1
-		y = 1
-		relative_position_id = DEN_renovate_old_industry
-		prerequisite = {
-			focus = DEN_renovate_old_industry
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 1
-		}
-		bypass = {
-			has_government = communism
-		}
-		completion_reward = {
-			DEN_strike_relief = yes
-			add_popularity = {
-				ideology = communism
-				popularity = -0.10
-			}
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-	
-	focus = {
-		id = DEN_forced_loan
-		icon = GFX_goal_generic_deals
-		x = 1
-		y = 1
-		relative_position_id = DEN_currency_depreciation
-		prerequisite = {
-			focus = DEN_currency_depreciation
-		}
-		prerequisite = {
-			focus = DEN_guarantee_production
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			hidden_effect = {
-				remove_ideas = {
-					DEN_great_depression5
-					DEN_great_depression4
-					DEN_great_depression3
-					DEN_great_depression2
-					DEN_great_depression
-				}
-				set_variable = { exincome_modifier = 0 }
-			}
-			custom_effect_tooltip = DEN_forced_loan_tt
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-	
-	focus = {
-		id = DEN_investigate_Marie_case
-		icon = GFX_goal_crush_resistance
+		id = DEN_agricultural_machinery
+		icon = GFX_focus_generic_agricultural_subsidies
 		x = 3
 		y = 1
-		relative_position_id = DEN_extend_term
+		relative_position_id = DEN_agricultural_subsidies
 		prerequisite = {
-			focus = DEN_extend_term
-			focus = DEN_insist_on_election
-		}
-
-		cost = 2
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			country_event = denmark.11
-			add_popularity = {
-				ideology = communism
-				popularity = -0.05
-			}
-			add_equipment_to_stockpile = {
-				type = KEI_AUTO_META_equipments
-				producer = ROOT
-				amount = 1000
-			}
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-	
-	focus = {
-		id = DEN_restricted_trade_union
-		icon = GFX_goal_generic_armed_protest
-		x = 0
-		y = 1
-		relative_position_id = DEN_investigate_Marie_case
-		prerequisite = {
-			focus = DEN_investigate_Marie_case
-		}
-		cost = 4
-		ai_will_do = {
-			base = 1
-			modifier = {
-				factor = 1.5
-				communism > 0.5
-			}
-		}
-		bypass = {
-			has_government = communism
-		}
-		completion_reward = {
-			DEN_strike_relief = yes
-			add_ideas = DEN_restricted_trade_union_focus
-			add_popularity = {
-				ideology = communism
-				popularity = -0.10
-			}
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-	
-	focus = {
-		id = DEN_strengthen_public_security
-		icon = GFX_goal_generic_secret_police_2
-		x = -1
-		y = 1
-		relative_position_id = DEN_restricted_trade_union
-		prerequisite = {
-			focus = DEN_restricted_trade_union
-		}
-		available = {
-
-		}
-		bypass = {
-			has_government = communism
-		}
-		cost = 4
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			unlock_decision_tooltip = DEN_arrest_workers_party_members
-			add_popularity = {
-				ideology = communism
-				popularity = -0.10
-			}
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-		
-	focus = {
-		id = DEN_land_reform_project
-		icon = GFX_goal_generic_construct_infrastructure
-		x = 1
-		y = 1
-		relative_position_id = DEN_restricted_trade_union
-		prerequisite = {
-			focus = DEN_restricted_trade_union
+			focus = DEN_agricultural_subsidies
 		}
 
 		cost = 6
@@ -610,60 +1029,28 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			unlock_decision_tooltip = DEN_regulate_land_in_the_east
-			unlock_decision_tooltip = DEN_regulate_central_land
-			unlock_decision_tooltip = DEN_regulate_land_in_the_west
-			unlock_decision_tooltip = DEN_regulate_overseas_land
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-	}
-		
-	focus = {
-		id = DEN_ban_Durham_bandits
-		icon = GFX_goal_generic_anti_communism
-		x = 1
-		y = 1
-		relative_position_id = DEN_strengthen_public_security
-		prerequisite = {
-			focus = DEN_strengthen_public_security
-		}
-		prerequisite = {
-			focus = DEN_land_reform_project
-		}
-		bypass = {
-			has_government = communism
-		}
-		available = {
-			NOT = { has_government = communism }
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 10
-		}
-		completion_reward = {
-			add_stability = -0.05
-			set_country_flag = DEN_ban_Durham_bandits_flag
-			add_popularity = {
-				ideology = communism
-				popularity = -0.15
-			}
 			hidden_effect = {
-				country_event = den_crisis.20
+				add_to_variable = { ubs_save = 200 }
 			}
-			custom_effect_tooltip = DEN_ban_Durham_bandits_tt
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			swap_ideas = {
+				remove_idea = DEN_agricultural_subsidies_focus
+				add_idea = DEN_agricultural_subsidies_focus2
+			}
 		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
-			
+										
 	focus = {
-		id = DEN_fiscal_austerity
-		icon = GFX_goal_generic_empty_coffers
-		x = 0
+		id = DEN_Jutland_agricultural_region
+		icon = GFX_focus_generic_farmland
+		x = 1
 		y = 1
-		relative_position_id = DEN_insist_on_election
+		relative_position_id = DEN_low_interest_agricultural_loans
 		prerequisite = {
-			focus = DEN_insist_on_election
+			focus = DEN_low_interest_agricultural_loans
+		}
+		prerequisite = {
+			focus = DEN_agricultural_machinery
 		}
 
 		cost = 6
@@ -671,29 +1058,99 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			1095 = {
-				add_extra_state_shared_building_slots = 1
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			1162 = {
+				add_extra_state_shared_building_slots = 2
 				add_building_construction = {
 					type = industrial_complex
-					level = 1
+					level = 2
 				}
 			}
-			hidden_effect = {
-				add_to_variable = { ubs_save = 100 }
+			782 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
 			}
-			custom_effect_tooltip = SOV_get_100_add_to_reserve
 		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
-				
+											
 	focus = {
-		id = DEN_unemployment_benefit
-		icon = GFX_goal_generic_land_seizure
+		id = DEN_forestry_and_paper_mills
+		icon = GFX_focus_CHL_expand_the_forestry
+		x = 1
+		y = 1
+		relative_position_id = DEN_agricultural_machinery
+		prerequisite = {
+			focus = DEN_agricultural_machinery
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			1095 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+		}
+	}
+												
+	focus = {
+		id = DEN_modernization_of_fishery
+		icon = GFX_focus_generic_refit_civilian_ships
+		x = 1
+		y = 1
+		relative_position_id = DEN_Jutland_agricultural_region
+		prerequisite = {
+			focus = DEN_Jutland_agricultural_region
+		}
+		prerequisite = {
+			focus = DEN_forestry_and_paper_mills
+		}
+
+		cost = 6
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			138 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+			1160 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+				}
+			}
+		}
+	}
+											
+	focus = {
+		id = DEN_expressway_plan
+		icon = GFX_goal_generic_road2
 		x = 2
 		y = 1
-		relative_position_id = DEN_insist_on_election
+		relative_position_id = DEN_subsidized_industry
 		prerequisite = {
-			focus = DEN_insist_on_election
+			focus = DEN_subsidized_industry
 		}
 
 		cost = 4
@@ -701,72 +1158,38 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			if = {
-				limit = { NOT = { has_government = communism } }
-				DEN_contradiction_alleviation = yes
-				add_popularity = {
-					ideology = fascism
-					popularity = 0.05
-				}
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
 			}
-			else = {
-				random_owned_controlled_state = {
-					add_extra_state_shared_building_slots = 1
-					add_building_construction = {
-						type = industrial_complex
-						level = 1
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 37
+						state = 138
+						state = 1095
+						state = 1104
+						state = 1103
 					}
 				}
-			}
-			add_to_variable = { ubs_load = 100 }
-			custom_effect_tooltip = DEN_increase_100_debt
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-					
-	focus = {
-		id = DEN_subsidized_industry
-		icon = GFX_focus_generic_industry_3
-		x = -1
-		y = 1
-		relative_position_id = DEN_unemployment_benefit
-		prerequisite = {
-			focus = DEN_fiscal_austerity
-		}
-		prerequisite = {
-			focus = DEN_unemployment_benefit
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			if = {
-				limit = { NOT = { has_government = communism } }
-				DEN_contradiction_alleviation = yes
-			}
-			random_owned_controlled_state = {
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
-					type = industrial_complex
+					type = infrastructure
 					level = 1
 				}
 			}
-			add_to_variable = { ubs_load = 100 }
-			custom_effect_tooltip = DEN_increase_100_debt
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
-					
+
 	focus = {
-		id = DEN_tariff_adjustment
-		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 1
+		id = DEN_Zealand_steel_plant
+		icon = GFX_focus_generic_steel
+		x = -2
 		y = 1
-		relative_position_id = DEN_unemployment_benefit
+		relative_position_id = DEN_subsidized_industry
 		prerequisite = {
-			focus = DEN_unemployment_benefit
+			focus = DEN_subsidized_industry
 		}
 
 		cost = 4
@@ -774,19 +1197,29 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			add_ideas = limited_exports
 			hidden_effect = {
-				add_to_variable = { ubs_save = 100 }
+				add_to_variable = { ubs_save = 200 }
 			}
-			custom_effect_tooltip = SOV_get_100_add_to_reserve
-			DEN_alleviate_the_great_depression = yes
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			37 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+			add_resource = {
+				type = steel
+				amount = 12
+				state = 37
+			}
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
-						
+												
 	focus = {
-		id = DEN_selfhelp_committee
-		icon = GFX_goal_generic_citizens
+		id = DEN_yanxueping_reservoir
+		icon = GFX_focus_generic_hydroelectric_energy
 		x = 0
 		y = 1
 		relative_position_id = DEN_subsidized_industry
@@ -794,130 +1227,383 @@ focus_tree = {
 			focus = DEN_subsidized_industry
 		}
 
-		cost = 6
+		cost = 4
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
-			if = {
-				limit = { NOT = { has_government = communism } }
-				DEN_contradiction_alleviation = yes
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
 			}
-			add_stability = 0.05
-			add_political_power = 50
-			add_popularity = {
-				ideology = fascism
-				popularity = 0.05
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			1096 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
 			}
-			DEN_alleviate_the_great_depression = yes
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-							
-	focus = {
-		id = DEN_workers_picket
-		icon = GFX_goal_generic_partisans
-		x = -1
-		y = 1
-		relative_position_id = DEN_selfhelp_committee
-		prerequisite = {
-			focus = DEN_selfhelp_committee
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			if = {
-				limit = { NOT = { has_government = communism } }
-				DEN_contradiction_alleviation = yes
-			}
-			add_manpower = 100000
-			army_experience = 15
-			add_popularity = {
-				ideology = fascism
-				popularity = 0.05
-			}
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER }
-	}
-							
-	focus = {
-		id = DEN_rural_construction
-		icon = GFX_goal_generic_civilian_production
-		x = 1
-		y = 1
-		relative_position_id = DEN_selfhelp_committee
-		prerequisite = {
-			focus = DEN_selfhelp_committee
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				add_extra_state_shared_building_slots = 1
-			}
-			random_owned_controlled_state = {
-				add_extra_state_shared_building_slots = 1
-			}
-			add_to_variable = { ubs_load = 100 }
-			custom_effect_tooltip = DEN_increase_100_debt
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-	}
-								
-	focus = {
-		id = DEN_public_works
-		icon = GFX_goal_generic_road
-		x = 1
-		y = 1
-		relative_position_id = DEN_workers_picket
-		prerequisite = {
-			focus = DEN_workers_picket
-		}
-		prerequisite = {
-			focus = DEN_rural_construction
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
+			960 = {
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
 					type = industrial_complex
 					level = 1
 				}
 			}
-			add_to_variable = { ubs_load = 100 }
-			custom_effect_tooltip = DEN_increase_100_debt
-			activate_targeted_decision = { target = 1096 decision = DEN_dec_public_works_construction }
-			activate_targeted_decision = { target = 1095 decision = DEN_dec_public_works_construction }
-			activate_targeted_decision = { target = 1103 decision = DEN_dec_public_works_construction }
-			activate_targeted_decision = { target = 1104 decision = DEN_dec_public_works_construction }
 		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
+		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
-									
+													
+	focus = {
+		id = DEN_cement_plant
+		icon = GFX_goal_generic_construct_civ_factory
+		x = 1
+		y = 1
+		relative_position_id = DEN_Zealand_steel_plant
+		prerequisite = {
+			focus = DEN_Zealand_steel_plant
+		}
+		prerequisite = {
+			focus = DEN_yanxueping_reservoir
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = DEN_cement_plant
+				category = construction_tech
+				bonus = 0.5
+				uses = 2
+			}
+			1161 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+		}
+	}
+														
+	focus = {
+		id = DEN_invest_in_South_Kalma
+		icon = GFX_focus_generic_road_investment
+		x = 1
+		y = 1
+		relative_position_id = DEN_yanxueping_reservoir
+		prerequisite = {
+			focus = DEN_yanxueping_reservoir
+		}
+		prerequisite = {
+			focus = DEN_expressway_plan
+		}
+
+		cost = 6
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = 200 }
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			1095 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+				}
+			}
+		}
+	}
+																		
+	focus = {
+		id = DEN_forced_loan
+		icon = GFX_focus_ARG_crackdown_on_corruption
+		x = -1
+		y = 1
+		relative_position_id = DEN_merge_national_banks
+		prerequisite = {
+			focus = DEN_merge_national_banks
+		}
+		prerequisite = {
+			focus = DEN_encourage_immigration
+		}
+
+		cost = 4
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_political_power = -50
+			add_stability = -0.10
+			hidden_effect = {
+				add_to_variable = { ubs_save = 400 }
+			}
+			custom_effect_tooltip = SOV_get_400_add_to_reserve
+			DEN_alleviate_the_great_depression = yes
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	
+	focus = {
+		id = DEN_the_fourth_war
+		icon = GFX_focus_generic_provoke_border_clashes
+		x = 15
+		y = 6
+		relative_position_id = DEN_international_machinery_show
+
+		cost = 2
+
+		available = {
+			always = no
+		}
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 100
+				has_war_with = SWE
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
+		}
+	}
+		
+	focus = {
+		id = DEN_mobilize_paramilitary_organizations
+		icon = GFX_focus_generic_little_entente
+		x = -2
+		y = 1
+		relative_position_id = DEN_the_fourth_war
+		prerequisite = {
+			focus = DEN_the_fourth_war
+		}
+
+		cost = 2
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 100
+				has_war_with = SWE
+			}
+		}
+		completion_reward = {
+			unlock_decision_tooltip = DEN_convene_German_troops
+			unlock_decision_tooltip = DEN_convene_military_academy_troops
+			unlock_decision_tooltip = DEN_convene_star_sea_academy_troops
+			army_experience = 15
+		}
+	}
+			
+	focus = {
+		id = DEN_emergency_industrial_requisition
+		icon = GFX_goal_generic_martial_law
+		x = 0
+		y = 1
+		relative_position_id = DEN_the_fourth_war
+		prerequisite = {
+			focus = DEN_the_fourth_war
+		}
+
+		cost = 4
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 100
+				has_war_with = SWE
+			}
+		}
+
+		bypass = {
+			has_idea = war_economy
+		}
+
+		completion_reward = {
+			add_war_support = 0.05
+			add_ideas = war_economy
+		}
+	}
+				
+	focus = {
+		id = DEN_armed_merchant_ships
+		icon = GFX_focus_generic_merchant_fleet
+		x = 2
+		y = 1
+		relative_position_id = DEN_the_fourth_war
+		prerequisite = {
+			focus = DEN_the_fourth_war
+		}
+
+		cost = 4
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 50
+				has_war_with = SWE
+			}
+		}
+		completion_reward = {
+			navy_experience = 15
+			set_technology = {
+				coastal_defense_ships = 1
+			}
+			create_equipment_variant = {
+				name = "Coastal Defense"				
+				type = ship_hull_cruiser_coastal_defense_ship
+				modules = {
+					fixed_ship_battery_slot = ship_light_medium_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = cruiser_ship_engine_1
+					fixed_ship_armor_slot = ship_armor_cruiser_2
+					fixed_ship_secondaries_slot = empty
+					mid_1_custom_slot = ship_anti_air_1
+					mid_2_custom_slot = empty
+					rear_1_custom_slot = ship_light_medium_battery_1
+				}
+			}
+			hidden_effect = {
+				load_oob = "DEN_coastal_defense"
+			}
+		}
+	}
+					
+	focus = {
+		id = DEN_defending_Kalma
+		icon = GFX_goal_generic_fortify_city
+		x = -3
+		y = 2
+		relative_position_id = DEN_the_fourth_war
+		prerequisite = {
+			focus = DEN_the_fourth_war
+		}
+
+		cost = 4
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 100
+				has_war_with = SWE
+			}
+		}
+
+		bypass = {
+			1104 = { NOT = { is_controlled_by = ROOT } }
+		}
+
+		completion_reward = {
+			add_war_support = 0.05
+			capital_scope = {
+				add_dynamic_modifier = {
+					modifier = DEN_defend_main_city
+				}
+			}
+		}
+	}
+						
+	focus = {
+		id = DEN_emergency_firearm_production
+		icon = GFX_focus_generic_reorient_production
+		x = -1
+		y = 2
+		relative_position_id = DEN_the_fourth_war
+		prerequisite = {
+			focus = DEN_the_fourth_war
+		}
+
+		cost = 2
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 100
+				has_war_with = SWE
+			}
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = DEN_accelerate_weapon_manufacturing_descision
+				days = 90
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				producer = ROOT
+				amount = 2500
+			}
+			99 = {
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+			138 = {
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+		}
+	}
+							
+	focus = {
+		id = DEN_slow_down_ban_on_superpowers
+		icon = GFX_goal_fire_paper_peoples
+		x = 1
+		y = 2
+		relative_position_id = DEN_the_fourth_war
+		prerequisite = {
+			focus = DEN_the_fourth_war
+		}
+
+		cost = 2
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 100
+				has_war_with = SWE
+			}
+		}
+		completion_reward = {
+			add_stability = -0.05
+			add_manpower = 10000
+			remove_ideas = DEN_limiting_superpowers
+			DEN_unseal_Star_Sea_Academy_effect = yes
+		}
+	}
+
 	focus = {
 		id = DEN_expand_war_department
-		icon = GFX_goal_generic_axis_build_infantry
-		x = 10
+		icon = GFX_goal_generic_national_defense_fund
+		x = 13
 		y = 0
 		relative_position_id = DEN_international_machinery_show
 		available = {
-			OR = {
-				has_completed_focus = DEN_public_works
-				has_completed_focus = DEN_forced_loan
-			}
+			has_completed_focus = DEN_the_fourth_war
 		}
-		cost = 4
+		cost = 5
 		ai_will_do = {
 			base = 1
 		}
@@ -935,517 +1621,764 @@ focus_tree = {
 				amount = 2000
 			}
 		}
-		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
 	}
 							
 	focus = {
-		id = DEN_strengthen_war_research
-		icon = GFX_goal_generic_combined_arms_artillery_antiair_antitank
+		id = DEN_develop_Breguet_company
+		icon = GFX_goal_DEN_Breguet
+		x = -5
+		y = 1
+		relative_position_id = DEN_expand_war_department
+		prerequisite = {
+			focus = DEN_expand_war_department
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			army_experience = 15
+			add_tech_bonus = {
+				name = DEN_develop_Breguet_company
+				category = AUTO_META
+				bonus = 0.5
+				uses = 1
+			}
+			mio:DEN_Breguet_organization = {
+				add_mio_funds_gain_factor = 0.15
+				custom_effect_tooltip = DEN_unlock_new_traits
+			}
+		}
+	}
+										
+	focus = {
+		id = DEN_Ooarai_women_college
+		icon = GFX_goal_DEN_oarai
 		x = -2
 		y = 1
 		relative_position_id = DEN_expand_war_department
 		prerequisite = {
 			focus = DEN_expand_war_department
 		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			mio:DEN_oarai_organization = {
+				add_mio_funds_gain_factor = 0.15
+				add_mio_size = 2
+			}
+			every_unit_leader = {
+				limit = {
+					OR = {
+						is_character = DEN_miho
+						is_character = DEN_Saori
+						is_character = DEN_Hana
+						is_character = DEN_Yukari
+						is_character = DEN_Mako
+					}
+				}
+				if = {
+					limit = { NOT = { has_trait = armor_officer } }
+					add_trait = {
+						trait = armor_officer
+					}
+				}
+				add_skill_level = 1
+			}
+		}
+	}
 
+	focus = {
+		id = DEN_invest_star_sea_academy
+		icon = GFX_goal_DEN_ocean_of_star
+		x = 1
+		y = 1
+		relative_position_id = DEN_expand_war_department
+		prerequisite = {
+			focus = DEN_expand_war_department
+		}
+		available = {
+			NOT = { has_idea = DEN_limiting_superpowers }
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			mio:DEN_ocean_of_star_organization = {
+				add_mio_funds_gain_factor = 0.15
+				add_mio_size = 2
+			}
+			every_army_leader = {
+				limit = { has_trait = DEN_haunter }
+				add_skill_level = 1
+			}
+		}
+	}
+										
+	focus = {
+		id = DEN_great_war_courtyard
+		icon = GFX_goal_DEN_orlogsvaerftet
+		x = 4
+		y = 1
+		relative_position_id = DEN_expand_war_department
+		prerequisite = {
+			focus = DEN_expand_war_department
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			navy_experience = 25
+			mio:DEN_orlogsvaerftet_organization = {
+				add_mio_funds_gain_factor = 0.15
+				custom_effect_tooltip = DEN_unlock_new_traits
+			}
+			mio:DEN_flyvemaskinevaerksted_organization = {
+				add_mio_funds_gain_factor = 0.15
+				add_mio_size = 1
+			}
+		}
+	}
+										
+	focus = {
+		id = DEN_integrate_enterprise_research_institute
+		icon = GFX_PAN_focu_150
+		x = -2
+		y = 1
+		relative_position_id = DEN_develop_Breguet_company
+		prerequisite = {
+			focus = DEN_develop_Breguet_company
+		}
 		cost = 6
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
-			add_ideas = DEN_strengthen_war_research_focus
-			army_experience = 25
+			mio:DEN_Breguet_organization = {
+				add_mio_size = 1
+				custom_effect_tooltip = DEN_unlock_new_traits
+			}
 		}
-		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
 	}
-								
+											
 	focus = {
-		id = DEN_automatic_machinery_project
-		icon = GFX_goal_generic_production2
-		x = -1
+		id = DEN_electricity_equipment_in_Iberia
+		icon = GFX_PAN_focu_268
+		x = 0
 		y = 1
-		relative_position_id = DEN_strengthen_war_research
+		relative_position_id = DEN_develop_Breguet_company
 		prerequisite = {
-			focus = DEN_strengthen_war_research
+			focus = DEN_develop_Breguet_company
 		}
-
-		cost = 4
+		cost = 5
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
-			add_ideas = DEN_Breguet_idea
 			add_tech_bonus = {
-				name = DEN_automatic_machinery_project
+				name = DEN_electricity_equipment_in_Iberia
 				category = AUTO_META
 				bonus = 0.5
 				uses = 1
 			}
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-	}
-									
-	focus = {
-		id = DEN_oarai_research_fund
-		icon = GFX_focus_manufacturers_cooperation
-		x = 1
-		y = 1
-		relative_position_id = DEN_strengthen_war_research
-		prerequisite = {
-			focus = DEN_strengthen_war_research
-		}
+			random_owned_controlled_state = {
+				prioritize = { 1104 }
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { DEN_national_army_KEI_AUTO_META_units_max_org_factor = 0.20 }
 
-		cost = 4
+				add_to_variable = { DEN_national_navy_air_mission_efficiency = 0.10 }
+			}
+			custom_effect_tooltip = DEN_electricity_equipment_in_Iberia_tt
+		}
+	}
+												
+	focus = {
+		id = DEN_emphasize_rapid_armor
+		icon = GFX_goal_tank_offensive
+		x = 2
+		y = 1
+		relative_position_id = DEN_develop_Breguet_company
+		prerequisite = {
+			focus = DEN_develop_Breguet_company
+		}
+		prerequisite = {
+			focus = DEN_Ooarai_women_college
+		}
+		cost = 5
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
 			add_tech_bonus = {
-				name = DEN_oarai_research_fund
+				name = DEN_emphasize_rapid_armor
 				category = armor
-				uses = 2
 				bonus = 0.5
+				uses = 2
 			}
-			random_owned_controlled_state = {
-				add_extra_state_shared_building_slots = 1
+			hidden_effect = {
+				add_to_variable = { DEN_national_army_army_armor_attack_factor = 0.15 }
+				add_to_variable = { DEN_national_army_army_armor_defence_factor = 0.20 }
+			}
+			custom_effect_tooltip = DEN_emphasize_rapid_armor_tt
+		}
+	}
+													
+	focus = {
+		id = DEN_enhance_light_firepower
+		icon = GFX_goal_machine_gun
+		x = 0
+		y = 1
+		relative_position_id = DEN_electricity_equipment_in_Iberia
+		prerequisite = {
+			focus = DEN_electricity_equipment_in_Iberia
+		}
+		prerequisite = {
+			focus = DEN_integrate_enterprise_research_institute
+		}
+		prerequisite = {
+			focus = DEN_emphasize_rapid_armor
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { DEN_national_army_KEI_AUTO_META_units_defence_factor = 0.15 }
+				add_to_variable = { DEN_national_army_KEI_AUTO_META_units_attack_factor = 0.20 }
+			}
+			custom_effect_tooltip = DEN_enhance_light_firepower_tt
+		}
+	}
+												
+	focus = {
+		id = DEN_study_new_tactics
+		icon = GFX_goal_checkmate
+		x = 1
+		y = 1
+		relative_position_id = DEN_Ooarai_women_college
+		prerequisite = {
+			focus = DEN_Ooarai_women_college
+		}
+		cost = 6
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			army_experience = 15
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.5
+				name = DEN_study_new_tactics
+				category = land_doctrine
+				uses = 1
+			}
+			hidden_effect = {
+				add_to_variable = { DEN_national_army_planning_speed = 0.25 }
+				add_to_variable = { DEN_national_army_max_planning_factor = 0.20 }
+			}
+			custom_effect_tooltip = DEN_study_new_tactics_tt
+		}
+	}
+													
+	focus = {
+		id = DEN_optimize_operational_units
+		icon = GFX_goal_small_infantry
+		x = 1
+		y = 1
+		relative_position_id = DEN_emphasize_rapid_armor
+		prerequisite = {
+			focus = DEN_emphasize_rapid_armor
+		}
+		prerequisite = {
+			focus = DEN_study_new_tactics
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { DEN_national_army_army_morale_factor = 0.15 }
+				add_to_variable = { DEN_national_army_dig_in_speed_factor = 0.20 }
+				add_to_variable = { DEN_national_army_recon_factor = 0.15 }
+			}
+			custom_effect_tooltip = DEN_optimize_operational_units_tt
+		}
+	}
+													
+	focus = {
+		id = DEN_authorize_magic_research
+		icon = GFX_goal_SOV_magical_studies
+		x = 0
+		y = 1
+		relative_position_id = DEN_invest_star_sea_academy
+		prerequisite = {
+			focus = DEN_invest_star_sea_academy
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = DEN_authorize_magic_research
+				category = magic_army_tech
+				bonus = 0.5
+				uses = 2
+			}
+			100 = {
+				add_extra_state_shared_building_slots = 2
 				add_building_construction = {
-					type = arms_factory
-					level = 1
+					type = Alchemy_Workshop
+					level = 2
 				}
 			}
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
 	}
-										
+														
 	focus = {
-		id = DEN_integrate_enterprise_institute
-		icon = GFX_focus_SOV_merge_plants
-		x = 0
+		id = DEN_adaptive_training
+		icon = GFX_goal_generic_mountain_warfare2
+		x = -1
 		y = 1
-		relative_position_id = DEN_automatic_machinery_project
+		relative_position_id = DEN_authorize_magic_research
 		prerequisite = {
-			focus = DEN_automatic_machinery_project
+			focus = DEN_authorize_magic_research
 		}
-
-		cost = 6
+		prerequisite = {
+			focus = DEN_study_new_tactics
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			army_experience = 15
+			if = {
+				limit = {
+					NOT = { has_tech = tech_mountaineers }
+				}
+				set_technology = {
+					tech_mountaineers = 1
+				}
+			}
+			else = {
+				add_tech_bonus = {
+					name = DEN_adaptive_training
+					category = mountaineers_tech
+					bonus = 0.5
+					uses = 2
+				}
+			}
+			add_doctrine_cost_reduction = {
+				cost_reduction = 0.5
+				name = DEN_adaptive_training
+				category = cat_mountaineers_doctrine
+				uses = 2
+			}
+			hidden_effect = {
+				add_to_variable = { DEN_national_army_terrain_penalty_reduction = 0.15 }
+			}
+			custom_effect_tooltip = DEN_adaptive_training_tt
+		}
+	}
+															
+	focus = {
+		id = DEN_strengthen_battlefield_hospital
+		icon = GFX_PAN_focu_54
+		x = 1
+		y = 1
+		relative_position_id = DEN_authorize_magic_research
+		prerequisite = {
+			focus = DEN_authorize_magic_research
+		}
+		cost = 5
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
 			if = {
 				limit = {
-					is_ai = yes
+					NOT = { has_tech = tech_field_hospital }
 				}
-				add_to_variable = { ubs_save = 300 }
+				set_technology = {
+					tech_field_hospital = 1
+				}
+				add_tech_bonus = {
+					name = DEN_strengthen_battlefield_hospital
+					category = hospital_tech
+					bonus = 0.5
+					uses = 1
+				}
 			}
-			unlock_decision_tooltip = DEN_integrate_Juliet_research_institute
-			unlock_decision_tooltip = DEN_integrate_Naoto_research_institute
-			unlock_decision_tooltip = DEN_integrate_Akane_research_institute
+			else = {
+				add_tech_bonus = {
+					name = DEN_strengthen_battlefield_hospital
+					category = hospital_tech
+					bonus = 0.5
+					uses = 2
+				}
+			}
 		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
 	}
-											
+																
 	focus = {
-		id = DEN_tank_performance_optimization
-		icon = GFX_goal_mechanized_offensive
-		x = 0
-		y = 1
-		relative_position_id = DEN_oarai_research_fund
-		prerequisite = {
-			focus = DEN_oarai_research_fund
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			army_experience = 15
-			add_tech_bonus = {
-				name = DEN_tank_performance_optimization
-				category = cat_medium_armor
-				uses = 1
-				bonus = 0.5
-			}
-			mio:DEN_oarai_organization = {
-				add_mio_size = 1
-			}
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_ARMY_XP }
-	}
-													
-	focus = {
-		id = DEN_new_armor_theory
-		icon = GFX_focus_generic_tank_air_support
-		x = -1
-		y = 1
-		relative_position_id = DEN_tank_performance_optimization
-		prerequisite = {
-			focus = DEN_tank_performance_optimization
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			army_experience = 45
-			add_doctrine_cost_reduction = {
-				cost_reduction = 0.5
-				name = DEN_new_armor_theory
-				uses = 1
-				category = land_doctrine
-			}
-			mio:DEN_oarai_organization = {
-				add_mio_size = 1
-			}
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_ARMY_XP }
-	}
-														
-	focus = {
-		id = DEN_armored_training_program
-		icon = GFX_goal_generic_heavy_armour_russian
+		id = DEN_promote_magical_military_ration
+		icon = GFX_goal_ammunitions
 		x = 1
 		y = 1
-		relative_position_id = DEN_tank_performance_optimization
+		relative_position_id = DEN_optimize_operational_units
 		prerequisite = {
-			focus = DEN_tank_performance_optimization
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = DEN_strengthen_war_research_focus
-				add_idea = DEN_strengthen_war_research_focus2
-			}
-			mio:DEN_oarai_organization = {
-				add_mio_size = 1
-			}
-		}
-		search_filters = { FOCUS_FILTER_ARMY_XP }
-	}
-
-	focus = {
-		id = DEN_chariot_ceremony
-		icon = GFX_goal_generic_army_tanks
-		x = 1
-		y = 1
-		relative_position_id = DEN_new_armor_theory
-		prerequisite = {
-			focus = DEN_new_armor_theory
+			focus = DEN_enhance_light_firepower
 		}
 		prerequisite = {
-			focus = DEN_armored_training_program
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = DEN_strengthen_war_research_focus2
-				add_idea = DEN_strengthen_war_research_focus3
-			}
-			mio:DEN_oarai_organization = {
-				add_mio_size = 1
-			}
-		}
-		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
-	}
-	
-	focus = {
-		id = DEN_military_exercise
-		icon = GFX_focus_chi_army_reform
-		x = 2
-		y = 1
-		relative_position_id = DEN_expand_war_department
-		prerequisite = {
-			focus = DEN_expand_war_department
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			every_army_leader = {
-				limit = { skill < 3 }
-				add_planning = 1
-				add_logistics = 1
-			}
-			army_experience = 15
-		}
-		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
-	}
-		
-	focus = {
-		id = DEN_optimized_gun_structure
-		icon = GFX_goal_generic_small_arms
-		x = 0
-		y = 1
-		relative_position_id = DEN_military_exercise
-		prerequisite = {
-			focus = DEN_military_exercise
-		}
-
-		cost = 4
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = DEN_optimized_gun_structure
-				category = infantry_weapons
-				bonus = 0.5
-				uses = 2
-			}
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-	}
-			
-	focus = {
-		id = DEN_engineer_training
-		icon = GFX_goal_generic_construction2
-		x = -1
-		y = 1
-		relative_position_id = DEN_optimized_gun_structure
-		prerequisite = {
-			focus = DEN_military_exercise
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = DEN_engineer_training
-				category = support_tech
-				bonus = 0.5
-				uses = 2
-			}
-			hidden_effect = {
-				set_technology = { 
-					SOV_engineer_training_tech = 1 
-					popup = no 
-				}	
-			}
-			custom_effect_tooltip = SOV_engineer_training_tech_effect
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-	}
-				
-	focus = {
-		id = DEN_new_artillery
-		icon = GFX_goal_generic_army_artillery
-		x = 1
-		y = 1
-		relative_position_id = DEN_optimized_gun_structure
-		prerequisite = {
-			focus = DEN_military_exercise
-		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = DEN_new_artillery
-				category = artillery
-				bonus = 0.5
-				uses = 2
-			}
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-	}
-					
-	focus = {
-		id = DEN_rubber_industry
-		icon = GFX_focus_generic_rubber
-		x = 1
-		y = 1
-		relative_position_id = DEN_engineer_training
-		prerequisite = {
-			focus = DEN_engineer_training
+			focus = DEN_optimize_operational_units
 		}
 		prerequisite = {
-			focus = DEN_new_artillery
+			focus = DEN_adaptive_training
 		}
-
-		cost = 6
+		prerequisite = {
+			focus = DEN_strengthen_battlefield_hospital
+		}
+		cost = 8
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
 			if = {
-				limit = { NOT = { has_tech = fuel_refining } }
+				limit = {
+					NOT = { has_tech = tech_logistics_company }
+				}
 				set_technology = {
-					fuel_refining = 1
+					tech_logistics_company = 1
 				}
 			}
 			else = {
 				add_tech_bonus = {
-					name = DEN_rubber_industry
+					name = DEN_promote_magical_military_ration
+					category = logistics_tech
 					bonus = 0.5
-					uses = 1
-					category = synth_resources
+					uses = 2
 				}
 			}
-			99 = {
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = synthetic_refinery
-					level = 2
-				}
+			hidden_effect = {
+				add_to_variable = { DEN_national_army_supply_consumption_factor = -0.20 }
 			}
+			custom_effect_tooltip = DEN_promote_magical_military_ration_tt
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
 	}
-						
+
 	focus = {
-		id = DEN_urban_mobile_force
-		icon = GFX_focus_generic_little_entente
+		id = DEN_develop_small_vessels
+		icon = GFX_goal_generic_destroyer
 		x = -1
 		y = 1
-		relative_position_id = DEN_rubber_industry
+		relative_position_id = DEN_great_war_courtyard
 		prerequisite = {
-			focus = DEN_rubber_industry
+			focus = DEN_great_war_courtyard
 		}
-
-		cost = 6
-		ai_will_do = {
-			base = 1
-		}
-		completion_reward = {
-			add_ideas = DEN_urban_mobile_force_focus
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-	}
-							
-	focus = {
-		id = DEN_aircraft_production_line
-		icon = GFX_goal_generic_air_bomber
-		x = 1
-		y = 1
-		relative_position_id = DEN_rubber_industry
-		prerequisite = {
-			focus = DEN_rubber_industry
-		}
-
-		cost = 4
+		cost = 5
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
 			add_tech_bonus = {
-				name = DEN_aircraft_production_line
-				category = light_fighter
+				name = DEN_develop_small_vessels
+				category = dd_tech
 				bonus = 0.5
 				uses = 2
 			}
-			add_equipment_to_stockpile = {
-				type = small_plane_airframe
-				amount = 50
+			hidden_effect = {
+				add_to_variable = { DEN_national_navy_screening_efficiency = 0.10 }
+			}
+			custom_effect_tooltip = DEN_develop_small_vessels_tt
+		}
+	}
+	
+	focus = {
+		id = DEN_rapid_naval_strategy
+		icon = GFX_goal_generic_design_equipment_standards
+		x = 1
+		y = 1
+		relative_position_id = DEN_great_war_courtyard
+		prerequisite = {
+			focus = DEN_great_war_courtyard
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			hidden_effect = {
+				add_to_variable = { DEN_national_navy_naval_speed_factor = 0.10 }
+				add_to_variable = { DEN_national_navy_naval_retreat_speed = 0.15 }
+			}
+			custom_effect_tooltip = DEN_rapid_naval_strategy_tt
+		}
+	}
+		
+	focus = {
+		id = DEN_pilot_and_sailor_training
+		icon = GFX_focus_SMB_blue_water_fleet
+		x = 3
+		y = 1
+		relative_position_id = DEN_great_war_courtyard
+		prerequisite = {
+			focus = DEN_great_war_courtyard
+		}
+		cost = 6
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			air_experience = 25
+			navy_experience = 25
+			hidden_effect = {
+				add_to_variable = { DEN_national_navy_air_ace_generation_chance_factor = 0.15 }
+				add_to_variable = { DEN_national_navy_positioning = 0.10 }
+			}
+			custom_effect_tooltip = DEN_pilot_and_sailor_training_tt
+		}
+	}
+			
+	focus = {
+		id = DEN_strengthen_fuel_reserves
+		icon = GFX_goal_generic_basic_oil
+		x = 5
+		y = 1
+		relative_position_id = DEN_great_war_courtyard
+		prerequisite = {
+			focus = DEN_great_war_courtyard
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			random_owned_controlled_state = {
+				prioritize = { 782 138 }
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = fuel_silo
+					level = 2
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { DEN_national_navy_navy_fuel_consumption_factor = -0.15 }
+				add_to_variable = { DEN_national_navy_air_fuel_consumption_factor = -0.15 }
+			}
+			custom_effect_tooltip = DEN_strengthen_fuel_reserves_tt
+		}
+	}
+				
+	focus = {
+		id = DEN_build_cruisers
+		icon = GFX_goal_generic_cruiser
+		x = 1
+		y = 1
+		relative_position_id = DEN_develop_small_vessels
+		prerequisite = {
+			focus = DEN_develop_small_vessels
+		}
+		prerequisite = {
+			focus = DEN_rapid_naval_strategy
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = DEN_build_cruisers
+				category = mio_cat_tech_all_cruiser_and_modules
+				bonus = 0.5
+				uses = 2
 			}
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+					
+	focus = {
+		id = DEN_expand_shipyards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -1
+		y = 1
+		relative_position_id = DEN_pilot_and_sailor_training
+		prerequisite = {
+			focus = DEN_pilot_and_sailor_training
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			random_owned_controlled_state = {
+				prioritize = { 99 }
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { DEN_national_navy_industrial_capacity_dockyard = 0.20 }
+			}
+			custom_effect_tooltip = DEN_expand_shipyards_tt
+		}
+	}
+						
+	focus = {
+		id = DEN_aviation_industry
+		icon = GFX_focus_generic_air_bases
+		x = 1
+		y = 1
+		relative_position_id = DEN_pilot_and_sailor_training
+		prerequisite = {
+			focus = DEN_pilot_and_sailor_training
+		}
+		prerequisite = {
+			focus = DEN_strengthen_fuel_reserves
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			mio:DEN_flyvertroppernes_organization = {
+				add_mio_size = 2
+				add_mio_funds_gain_factor = 0.15
+				custom_effect_tooltip = DEN_unlock_new_traits
+			}
+		}
 	}
 							
 	focus = {
-		id = DEN_dispersed_enveloping_theory
-		icon = GFX_focus_generic_provoke_border_clashes
-		x = -1
+		id = DEN_introduce_aircraft_design
+		icon = GFX_focus_generic_copy_plane_designs
+		x = 1
 		y = 1
-		relative_position_id = DEN_urban_mobile_force
+		relative_position_id = DEN_strengthen_fuel_reserves
 		prerequisite = {
-			focus = DEN_urban_mobile_force
+			focus = DEN_strengthen_fuel_reserves
 		}
-
-		cost = 6
+		cost = 5
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
-			effect_tooltip = {
-				swap_ideas = {
-					remove_idea = DEN_urban_mobile_force_focus
-					add_idea = DEN_urban_mobile_force_focus2b
-				}
-			}
-			hidden_effect = {
-				if = {
-					limit = { has_idea = DEN_urban_mobile_force_focus }
-					swap_ideas = {
-						remove_idea = DEN_urban_mobile_force_focus
-						add_idea = DEN_urban_mobile_force_focus2b
-					}
-				}
-				else = {
-					swap_ideas = {
-						remove_idea = DEN_urban_mobile_force_focus2a
-						add_idea = DEN_urban_mobile_force_focus3
-					}
-				}
+			add_tech_bonus = {
+				name = DEN_introduce_aircraft_design
+				category = mio_cat_all_light_fighter_and_modules
+				bonus = 0.5
+				uses = 4
 			}
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+							
+	focus = {
+		id = DEN_torpedo_tactics
+		icon = GFX_goal_generic_submarine
+		x = 1
+		y = 1
+		relative_position_id = DEN_build_cruisers
+		prerequisite = {
+			focus = DEN_build_cruisers
+		}
+		prerequisite = {
+			focus = DEN_expand_shipyards
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = DEN_torpedo_tactics
+				category = mio_cat_tech_all_submarine_and_modules
+				bonus = 0.5
+				uses = 2
+			}
+		}
 	}
 								
 	focus = {
-		id = DEN_sports_combat_training
-		icon = GFX_focus_prc_infiltration
+		id = DEN_underground_production_facilities
+		icon = GFX_goal_fortify_city_AA
 		x = 1
 		y = 1
-		relative_position_id = DEN_urban_mobile_force
+		relative_position_id = DEN_expand_shipyards
 		prerequisite = {
-			focus = DEN_urban_mobile_force
+			focus = DEN_aviation_industry
 		}
-
+		prerequisite = {
+			focus = DEN_expand_shipyards
+		}
+		cost = 5
+		ai_will_do = {
+			base = 1
+		}
+		completion_reward = {
+			add_offsite_building = {
+				type = arms_factory
+				level = 2
+			}
+			hidden_effect = {
+				add_to_variable = { DEN_national_navy_industry_air_damage_factor = -0.30 }
+			}
+			custom_effect_tooltip = DEN_underground_production_facilities_tt
+		}
+	}
+									
+	focus = {
+		id = DEN_electronic_information_engineer
+		icon = GFX_focus_ITA_bersaglieri
+		x = 1
+		y = 1
+		relative_position_id = DEN_aviation_industry
+		prerequisite = {
+			focus = DEN_aviation_industry
+		}
 		cost = 6
 		ai_will_do = {
 			base = 1
 		}
 		completion_reward = {
-			effect_tooltip = {
-				swap_ideas = {
-					remove_idea = DEN_urban_mobile_force_focus
-					add_idea = DEN_urban_mobile_force_focus2a
+			add_tech_bonus = {
+				name = DEN_electronic_information_engineer
+				category = radar_tech
+				bonus = 0.5
+				uses = 2
+			}
+			37 = {
+				add_building_construction = {
+					type = radar_station
+					level = 3
 				}
 			}
 			hidden_effect = {
-				if = {
-					limit = { has_idea = DEN_urban_mobile_force_focus }
-					swap_ideas = {
-						remove_idea = DEN_urban_mobile_force_focus
-						add_idea = DEN_urban_mobile_force_focus2a
-					}
-				}
-				else = {
-					swap_ideas = {
-						remove_idea = DEN_urban_mobile_force_focus2b
-						add_idea = DEN_urban_mobile_force_focus3
-					}
-				}
+				add_to_variable = { DEN_national_navy_air_weather_penalty = -0.10 }
+				add_to_variable = { DEN_national_navy_air_night_penalty = -0.15 }
+				add_to_variable = { DEN_national_navy_spotting_chance = 0.10 }
 			}
+			custom_effect_tooltip = DEN_electronic_information_engineer_tt
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
 	}
-									
+
 	focus = {
 		id = DEN_elected_government
 		icon = GFX_goal_generic_democracy
-		x = 11
+		x = 18
 		y = 0
 		relative_position_id = DEN_expand_war_department
-		available = {
-			has_completed_focus = DEN_forced_loan
-		}
 		allow_branch = {
 			has_government = democratic
 			has_country_leader = {
@@ -1458,10 +2391,7 @@ focus_tree = {
 			base = 1
 		}
 		available = {
-			OR = {
-				has_completed_focus = DEN_public_works
-				has_completed_focus = DEN_forced_loan
-			}
+			has_completed_focus = DEN_forced_loan
 		}
 		completion_reward = {
 			add_popularity = {
@@ -2321,8 +3251,8 @@ focus_tree = {
 	focus = {
 		id = DEN_rebuild_the_Kalmar_Union
 		icon = GFX_goal_northern_lights
-		x = 0
-		y = 10
+		x = 2
+		y = 11
 		relative_position_id = DEN_international_machinery_show
 		available = {
 			OR = {

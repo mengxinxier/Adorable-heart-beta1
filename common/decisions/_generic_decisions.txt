@@ -1,73 +1,121 @@
 political_actions = {
-	AI_release_GER = {
+	return_cores_to_ally = {
+		icon = generic_agreement
 		available = {
+			ROOT = {
+				OR = {
+					has_war = no
+					surrender_progress < 0.20
+				}
+			}
 		}
 		visible = {
-			OR = {
-				is_debug = yes
-				is_ai = yes
-			}
+			is_in_faction = yes
+			NOT = { has_country_flag = KR_returning_land }
 			any_owned_state = {
-				has_state_flag = L_GER
-				not = {
-					or = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
+				OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
 				}
-				NOT = {
-					has_state_flag = occupied_by_@ROOT
+				is_claim_or_core_of_ROOT = no
+				OR = {
+					any_neighbor_state = { is_owned_by = FROM }
+					is_coastal = yes
 				}
+				NOT = { has_state_flag = KR_keeping_state@ROOT }
+			}
+			FROM = {
+				is_in_faction_with = ROOT
+				exists = yes
 			}
 		}
-		fire_only_once = no
+		target_root_trigger = {
+			is_in_faction = yes
+		}
+		target_array = allies
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = ROOT
+				exists = yes
+			}
+		}
 		cost = 0
+		fire_only_once = no
+		ai_will_do = {
+			factor = 100
+		}
 		complete_effect = {
-			every_owned_state = {
-				limit = {
-					is_controlled_by = ROOT
-					NOT = {
-						is_core_of = ROOT
-					}
-					NOT = {
-						has_state_flag = occupied_by_@ROOT
-					}
-				}
-				#德国
-				if = {
-					limit = {
-						can_release_germany = yes
-					}
-					ROOT = {
-						country_event = {
-							id = annex.1000
-						}
-					}
-				}
-				else_if = {
-					limit = {
-						can_release_Prussia = yes
-					}
-					ROOT = {
-						country_event = {
-							id = annex.1001
-						}
-					}
-				}
-				else_if = {
-					limit = {
-						can_release_rhineland = yes
-					}
-					ROOT = {
-						country_event = {
-							id = annex.1002
-						}
-					}
+			log = "[GetDateText]: [Root.GetName]: Decision return_cores_to_ally target: [From.GetName]"
+			set_country_flag = KR_returning_land
+			FROM = { save_event_target_as = return_to }
+			country_event = annex.3
+		}
+	}
+	return_cores_to_subject = {
+		icon = generic_agreement
+		available = {
+			ROOT = {
+				OR = {
+					has_war = no
+					surrender_progress < 0.20
 				}
 			}
 		}
+		visible = {
+			is_in_faction = no
+			num_subjects > 0
+			NOT = { has_country_flag = KR_returning_land }
+			any_owned_state = {
+				OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
+				}
+				is_claim_or_core_of_ROOT = no
+				OR = {
+					any_neighbor_state = { is_owned_by = FROM }
+					is_coastal = yes
+				}
+				NOT = { has_state_flag = KR_keeping_state@ROOT }
+			}
+			FROM = {
+				is_subject_of = ROOT
+				exists = yes
+			}
+		}
+		target_root_trigger = {
+			is_in_faction = no
+			num_subjects > 0
+		}
+		target_array = subjects
+		target_trigger = {
+			FROM = {
+				is_subject_of = ROOT
+				exists = yes
+			}
+		}
+		cost = 0
+		fire_only_once = no
 		ai_will_do = {
-			base = 1000
+			factor = 100
+		}
+		complete_effect = {
+			log = "[GetDateText]: [Root.GetName]: Decision return_cores_to_subject target: [From.GetName]"
+			set_country_flag = KR_returning_land
+			FROM = { save_event_target_as = return_to }
+			country_event = annex.3
+		}
+	}
+	DEBUG_TEST = {
+		available = {
+			is_germany_tag = yes
+			has_country_flag = GER_CONQ
+			custom_trigger_tooltip = {
+				tooltip = 11
+				NOT = {
+					is_germany_tag = yes
+					has_country_flag = GER_CONQ
+				}
+			}
 		}
 	}
 	AI_improve_north_America = {
@@ -5111,8 +5159,18 @@ adorable_heart_generic_decision = {
 		}
 		complete_effect = {
 			set_country_flag = show_welcome_splash
-			set_variable = {
-				adorable_heart_welcome_screen = 4
+			if = {
+				limit = { check_variable = { Route_Guide_Button_Var < 2 } }
+				set_variable = { Country_History_Button_Var = 1 }
+				set_variable = { Local_History_Button_Var = 1 }
+				set_variable = { World_History_Button_Var = 1 }
+				set_variable = { Route_Guide_Button_Var = 2 }
+			}
+			else = {
+				set_variable = { Country_History_Button_Var = 1 }
+				set_variable = { Local_History_Button_Var = 1 }
+				set_variable = { World_History_Button_Var = 1 }
+				set_variable = { Route_Guide_Button_Var = 1 }
 			}
 		}
 	}
@@ -5442,502 +5500,5 @@ White_peace_with_USA_D_C = {
 	}
 }
 sinkiang_mineral_category = {
-	# sinkiang_mineral_oil = {
-	# 	icon = GFX_decision_oil
-	# 	target_trigger = {
-	# 		FROM = { oil > 30 }
-	# 		FROM = { oil < 70 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_oil }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation3
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_oil }
-	# 		add_resource = {
-	# 			type = oil
-	# 			amount = 15
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_oil_II = {
-	# 	icon = GFX_decision_oil
-	# 	target_trigger = {
-	# 		FROM = { oil > 69 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_oil }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation4
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_oil }
-	# 		add_resource = {
-	# 			type = oil
-	# 			amount = 40
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_aluminium = {
-	# 	icon = GFX_decision_aluminium
-	# 	target_trigger = {
-	# 		FROM = { aluminium > 30 }
-	# 		FROM = { aluminium < 70 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_aluminium }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation3
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_aluminium }
-	# 		add_resource = {
-	# 			type = aluminium
-	# 			amount = 15
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_aluminium_II = {
-	# 	icon = GFX_decision_aluminium
-	# 	target_trigger = {
-	# 		FROM = { aluminium > 69 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_aluminium }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation4
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_aluminium }
-	# 		add_resource = {
-	# 			type = aluminium
-	# 			amount = 40
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_rubber = {
-	# 	icon = GFX_decision_rubber
-	# 	target_trigger = {
-	# 		FROM = { rubber > 30 }
-	# 		FROM = { rubber < 70 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_rubber }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation3
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_rubber }
-	# 		add_resource = {
-	# 			type = rubber
-	# 			amount = 15
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_rubber_II = {
-	# 	icon = GFX_decision_rubber
-	# 	target_trigger = {
-	# 		FROM = { rubber > 69 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_rubber }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation4
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_rubber }
-	# 		add_resource = {
-	# 			type = rubber
-	# 			amount = 40
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_tungsten = {
-	# 	icon = GFX_decision_tungsten
-	# 	target_trigger = {
-	# 		FROM = { tungsten > 30 }
-	# 		FROM = { tungsten < 70 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_tungsten }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation3
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_tungsten }
-	# 		add_resource = {
-	# 			type = tungsten
-	# 			amount = 15
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_tungsten_II = {
-	# 	icon = GFX_decision_tungsten
-	# 	target_trigger = {
-	# 		FROM = { tungsten > 69 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_tungsten }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation4
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_tungsten }
-	# 		add_resource = {
-	# 			type = tungsten
-	# 			amount = 40
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_steel = {
-	# 	icon = GFX_decision_steel
-	# 	target_trigger = {
-	# 		FROM = { steel > 30 }
-	# 		FROM = { steel < 70 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_steel }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation3
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_steel }
-	# 		add_resource = {
-	# 			type = steel
-	# 			amount = 15
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_steel_II = {
-	# 	icon = GFX_decision_steel
-	# 	target_trigger = {
-	# 		FROM = { steel > 69 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_steel }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation4
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_steel }
-	# 		add_resource = {
-	# 			type = steel
-	# 			amount = 40
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_chromium = {
-	# 	icon = GFX_decision_chromium
-	# 	target_trigger = {
-	# 		FROM = { chromium > 30 }
-	# 		FROM = { chromium < 70 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_chromium }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation3
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_chromium }
-	# 		add_resource = {
-	# 			type = chromium
-	# 			amount = 15
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_chromium_II = {
-	# 	icon = GFX_decision_chromium
-	# 	target_trigger = {
-	# 		FROM = { chromium > 69 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_chromium }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation4
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_chromium }
-	# 		add_resource = {
-	# 			type = chromium
-	# 			amount = 40
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_originium = {
-	# 	icon = GFX_decision_originium
-	# 	target_trigger = {
-	# 		FROM = { originium > 30 }
-	# 		FROM = { originium < 70 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_originium }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation3
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_originium }
-	# 		add_resource = {
-	# 			type = originium
-	# 			amount = 15
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
-	# sinkiang_mineral_originium_II = {
-	# 	icon = GFX_decision_originium
-	# 	target_trigger = {
-	# 		FROM = { originium > 69 }
-	# 		FROM = {
-	# 			NOT = { has_state_flag = sinkiang_mineral_originium }
-	# 		}
-	# 		or = {
-	# 			any_country = {
-	# 				is_subject_of = ROOT
-	# 				controls_state = FROM
-	# 			}
-	# 			ROOT = { controls_state = FROM }
-	# 		}
-	# 	}
-	# 	available = {
-	# 		has_tech = excavation4
-	# 	}
-	# 	state_target = yes
-	# 	on_map_mode = map_and_decisions_view
-	# 	target_array = controlled_states
-	# 	cost = 25
-	# 	days_remove = 60
-	# 	ai_will_do = {
-	# 		factor = 1
-	# 	}
-	# 	remove_effect = {
-	# 		FROM = { set_state_flag = sinkiang_mineral_originium }
-	# 		add_resource = {
-	# 			type = originium
-	# 			amount = 40
-	# 			state = FROM
-	# 		}
-	# 	}
-	# }
 }
 
