@@ -27,6 +27,7 @@ SOV_faction_management_category = {
 				add_dynamic_modifier = {
 					modifier = SOV_comecon_leader
 				}
+				add_to_array = { global.comecon_member = ROOT }
 			}
 		}
 	}
@@ -2059,9 +2060,11 @@ SOV_territorial_affairs = {
 		}
 		remove_effect = {
 			every_state = {
-				limit = { is_core_of = UKR }
-				remove_claim_by = ROOT
-				add_core_of = ROOT
+				limit = {
+					is_core_of = UKR
+					is_controlled_by = ROOT
+				}
+				add_core_of_ROOT = yes
 			}
 			hidden_effect = {
 				country_event = ukr_politics.45
@@ -2575,9 +2578,9 @@ SOV_special_military_operations_category = {
 		}
 		timeout_effect = {
 			SOV = {
-				every_core_state = {
-					remove_core_of = UKR
-				}
+				# every_core_state = {
+				# 	remove_core_of = UKR
+				# }
 				ROOT = { country_event = ukr_politics.8 }
 			}
 			remove_mission = UKR_constant_supply_mission
@@ -5884,8 +5887,16 @@ The_comintern_international_aid_category = {
 		cost = 0
 		fire_only_once = yes
 		complete_effect = {
-			country_event = { days = 1 id = SOV_news.4 }
-			SOV = { add_to_faction = FROM }
+			news_event = { days = 1 id = SOV_news.4 }
+			FROM = {
+				faction_leader = {
+					every_other_country = {
+						limit = { is_in_faction_with = PREV }
+						SOV = { add_to_faction = PREV }
+					}
+					SOV = { add_to_faction = PREV }
+				}
+			}
 		}
 	}
 
@@ -6653,4 +6664,323 @@ SOV_World_Soviets = {
 		}
 	}
 }
+
+Reunit_Russia_decision_cate = {
+	Reunit_Russia_decision = {
+		allowed = {
+			is_russia_uniter_tag = yes
+			NOT = {
+				or = {
+					tag = SOV
+					tag = UKR
+				}
+			}
+		}
+		visible = {
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_all_russia_state
+				NOT = {
+					any_state = {
+						has_state_flag = is_RUS_state_area
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			has_war = no
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			if = {
+				limit = { has_government = communism }
+				set_cosmetic_tag = Soviet_Russian
+			}
+			else = {
+				set_cosmetic_tag = Russian
+				if = {
+					limit = { controlled_states = 195 }
+					set_province_name = {
+						id = 6174
+						name = "彼得格勒"
+					}
+					195 = { set_state_name = "彼得格勒" }
+				}
+				if = {
+					limit = { controlled_states = 217 }
+					set_province_name = {
+						id = 3529
+						name = "察里津"
+					}
+					217 = { set_state_name = "察里津" }
+				}
+			}
+			if = {
+				limit = { amount_research_slots < 4 }
+				set_research_slots = 4
+			}
+			every_controlled_state = {
+				limit = { has_state_flag = is_RUS_state_area }
+				add_core_of_ROOT = yes
+			}
+			every_state = {
+				limit = {
+					has_state_flag = is_RUS_state_area
+					NOT = {
+						or = {
+							is_core_of = ROOT
+							is_claimed_by = ROOT
+						}
+					}
+				}
+				add_claim_by = ROOT
+			}
+			set_country_flag = Reunit_Russia_country
+			if = {
+				limit = { controlled_states = 219 }
+				set_capital = {
+					state = 219
+					remember_old_capital = no
+				}
+			}
+		}
+	}
+	Rebuild_CCCP_decision = {
+		allowed = {
+			is_russia_uniter_tag = yes
+			NOT = {
+				or = {
+					tag = SOV
+					tag = UKR
+				}
+			}
+		}
+		visible = { has_government = communism }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_all_russia_state
+				NOT = {
+					any_state = {
+						has_state_flag = is_RUS_state_area
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			count_triggers = {
+				amount = 5
+				custom_trigger_tooltip = {
+					tooltip = control_all_UKR_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_UKR_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_BLR_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_BLR_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_TAM_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_TAM_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_GEO_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_GEO_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_AZR_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_AZR_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_KUB_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_KUB_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_KAR_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_KAR_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_CRI_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_CRI_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+			}
+			has_war = no
+			has_government = communism
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_cosmetic_tag = EAM_Soviet_union
+			if = {
+				limit = { amount_research_slots < 5 }
+				set_research_slots = 5
+			}
+			every_controlled_state = {
+				limit = { has_state_flag = Soviet_union_state_area }
+				add_core_of_ROOT = yes
+			}
+			if = {
+				limit = { controlled_states = 219 }
+				set_capital = {
+					state = 219
+					remember_old_capital = no
+				}
+			}
+			custom_effect_tooltip = Rebuild_CCCP_decision_TT
+			hidden_effect = {
+				SOV_state_country_core = yes
+				UKR = { enable_coring_at_eighty_compliance = yes }
+				BLR = { enable_coring_at_eighty_compliance = yes }
+				TAM = { enable_coring_at_eighty_compliance = yes }
+				GEO = { enable_coring_at_eighty_compliance = yes }
+				AZR = { enable_coring_at_eighty_compliance = yes }
+				KUB = { enable_coring_at_eighty_compliance = yes }
+				KAR = { enable_coring_at_eighty_compliance = yes }
+				CRI = { enable_coring_at_eighty_compliance = yes }
+				if = {
+					limit = {
+						tag = EAM
+						is_in_faction_with = PRC
+						PRC = { is_faction_leader = yes }
+					}
+					news_event = { id = PRC_news.03 }
+				}
+			}
+		}
+	}
+	RUS_target_decision_core = {
+		icon = generic_nationalism
+		allowed = {
+			is_russia_uniter_tag = yes
+			NOT = {
+				or = {
+					tag = SOV
+					tag = UKR
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				NOT = { is_core_of = ROOT }
+				has_state_flag = is_RUS_state_area
+			}
+			ROOT = { has_country_flag = Reunit_Russia_country }
+		}
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_array = controlled_states
+		cost = 25
+		days_remove = 30
+		ai_will_do = {
+			factor = 100
+		}
+		remove_effect = {
+			FROM = { add_core_of_ROOT = yes }
+		}
+	}
+}
+
+
+Reunit_Tresen_decision_cate = {
+	Reunit_Tresen_decision = {
+		allowed = {
+			is_Tresen_tag = yes
+		}
+		visible = {
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_all_Tresen_state
+				NOT = {
+					any_state = {
+						or = {
+							is_core_of = TAM
+							is_core_of = PER
+							is_core_of = AFG
+						}
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			has_war = no
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_cosmetic_tag = Tresen_Federation
+			if = {
+				limit = { amount_research_slots < 4 }
+				set_research_slots = 4
+			}
+			every_controlled_state = {
+				limit = { has_state_flag = is_RUS_state_area }
+				add_core_of_ROOT = yes
+			}
+			if = {
+				limit = {
+					is_in_third_international = yes
+				}
+				every_state = {
+					limit = { has_state_flag = is_Tresen_state_area }
+					add_core_of_ROOT = yes
+				}
+			}
+			else = {
+				every_state = {
+					limit = { has_state_flag = is_whole_Tresen_state_area }
+					add_core_of_ROOT = yes
+				}
+			}
+			set_country_flag = Reunit_Tresen_country
+		}
+	}
+}
+
 

@@ -65,31 +65,25 @@ AUS_clr_pubilcity_slot = {
 }
 
 GER_BACK = {
-	GER = {
-		load_focus_tree = germany_focus
-	}
+	#64 = { clr_state_flag = state_has_fallen }
+	GER = { load_focus_tree = germany_focus }
 	hidden_effect = {
 		news_event = {
-			id = austria.1666
+			id = austria_news.03
 			days = 1
 		}
 	}
-	KMS = {
-		every_character = {
-			set_nationality = GER
+	if = {
+		limit = { KMK = { is_in_axis = yes } }
+		KMS = { every_character = { set_nationality = GER } }
+		GER = {
+			annex_country = {
+				target = KMS
+				transfer_troops = yes
+			}
 		}
 	}
-	GER = {
-		annex_country = {
-			target = AUS
-			transfer_troops = yes
-		}
-		annex_country = {
-			target = KMS
-			transfer_troops = yes
-		}
-		complete_national_focus = GER_01
-	}
+	GER = { complete_national_focus = GER_01 }
 	every_country = {
 		limit = {
 			is_in_faction_with = GER
@@ -4823,5 +4817,632 @@ GER_Compute_European_Union = {
 	}
 	set_variable = { global.num_of_GER_European_Union_half_vote = global.num_of_GER_European_Union_all_vote }
 	divide_variable = { global.num_of_GER_European_Union_half_vote = 2 }
+}
+
+#计算德意志领土数量
+GER_compute_germany_state_num = {
+	every_country = {
+		limit = { is_germany_tag = yes }
+		set_variable = { unm_of_control_germany_state = 0 }
+		every_controlled_state = {
+			limit = { has_state_flag = L_GER }
+			PREV = {
+				add_to_variable = { unm_of_control_germany_state = 1 }
+			}
+		}
+	}
+}
+
+#计算德意志领土归属
+GER_compute_germany_state_ascription = {
+##奥地利
+	if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { region = 21 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = { has_government = communism }
+				}
+			}
+		}
+		set_variable = { global.AUS_state_ascription_var = 1 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { region = 21 }
+					is_controlled_by_Independent_Germany_country = yes
+					or = {
+						controller = { has_government = democratic }
+						controller = { has_government = neutrality }
+					}
+				}
+			}
+		}
+		set_variable = { global.AUS_state_ascription_var = 2 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { region = 21 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = GER
+					}
+				}
+			}
+		}
+		set_variable = { global.AUS_state_ascription_var = 3 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { region = 21 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = DVL
+					}
+				}
+			}
+		}
+		set_variable = { global.AUS_state_ascription_var = 4 }
+	}
+##巴伐利亚
+	if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 50
+							state = 52
+							state = 53
+							state = 54
+							state = 780
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = { has_government = communism }
+				}
+			}
+		}
+		set_variable = { global.BYA_state_ascription_var = 1 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 50
+							state = 52
+							state = 53
+							state = 54
+							state = 780
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					or = {
+						controller = { has_government = democratic }
+						controller = { has_government = neutrality }
+					}
+				}
+			}
+		}
+		set_variable = { global.BYA_state_ascription_var = 2 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 50
+							state = 52
+							state = 53
+							state = 54
+							state = 780
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = GER
+					}
+				}
+			}
+		}
+		set_variable = { global.BYA_state_ascription_var = 3 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 50
+							state = 52
+							state = 53
+							state = 54
+							state = 780
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = DVL
+					}
+				}
+			}
+		}
+		set_variable = { global.BYA_state_ascription_var = 4 }
+	}
+##东普鲁士
+	if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 188
+							state = 5
+							state = 777
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = { has_government = communism }
+				}
+			}
+		}
+		set_variable = { global.EPRU_state_ascription_var = 1 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 188
+							state = 5
+							state = 777
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					or = {
+						controller = { has_government = democratic }
+						controller = { has_government = neutrality }
+					}
+				}
+			}
+		}
+		set_variable = { global.EPRU_state_ascription_var = 2 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 188
+							state = 5
+							state = 777
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = GER
+					}
+				}
+			}
+		}
+		set_variable = { global.EPRU_state_ascription_var = 3 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 188
+							state = 5
+							state = 777
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = DVL
+					}
+				}
+			}
+		}
+		set_variable = { global.EPRU_state_ascription_var = 4 }
+	}
+##南石-荷
+	if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { state = 58 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = { has_government = communism }
+				}
+			}
+		}
+		set_variable = { global.KIL_state_ascription_var = 1 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { state = 58 }
+					is_controlled_by_Independent_Germany_country = yes
+					or = {
+						controller = { has_government = democratic }
+						controller = { has_government = neutrality }
+					}
+				}
+			}
+		}
+		set_variable = { global.KIL_state_ascription_var = 2 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { state = 58 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = GER
+					}
+				}
+			}
+		}
+		set_variable = { global.KIL_state_ascription_var = 3 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { state = 58 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = DVL
+					}
+				}
+			}
+		}
+		set_variable = { global.KIL_state_ascription_var = 4 }
+	}
+##北石-荷
+	if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { state = 782 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = { has_government = communism }
+				}
+			}
+		}
+		set_variable = { global.NSCH_state_ascription_var = 1 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { state = 782 }
+					is_controlled_by_Independent_Germany_country = yes
+					or = {
+						controller = { has_government = democratic }
+						controller = { has_government = neutrality }
+					}
+				}
+			}
+		}
+		set_variable = { global.NSCH_state_ascription_var = 2 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { state = 782 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = GER
+					}
+				}
+			}
+		}
+		set_variable = { global.NSCH_state_ascription_var = 3 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = { state = 782 }
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = DVL
+					}
+				}
+			}
+		}
+		set_variable = { global.NSCH_state_ascription_var = 4 }
+	}
+##下德意志
+	if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							region = 8
+							state = 67
+							state = 57
+							state = 55
+							state = 51
+						}
+						not = { state = 58 }
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = { has_government = communism }
+				}
+			}
+		}
+		set_variable = { global.NGER_state_ascription_var = 1 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							region = 8
+							state = 67
+							state = 57
+							state = 55
+							state = 51
+						}
+						not = { state = 58 }
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					or = {
+						controller = { has_government = democratic }
+						controller = { has_government = neutrality }
+					}
+				}
+			}
+		}
+		set_variable = { global.NGER_state_ascription_var = 2 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							region = 8
+							state = 67
+							state = 57
+							state = 55
+							state = 51
+						}
+						not = { state = 58 }
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = GER
+					}
+				}
+			}
+		}
+		set_variable = { global.NGER_state_ascription_var = 3 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							region = 8
+							state = 67
+							state = 57
+							state = 55
+							state = 51
+						}
+						not = { state = 58 }
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = DVL
+					}
+				}
+			}
+		}
+		set_variable = { global.NGER_state_ascription_var = 4 }
+	}
+##莱茵兰
+	if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 42
+							state = 781
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = { has_government = communism }
+				}
+			}
+		}
+		set_variable = { global.RHI_state_ascription_var = 1 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 42
+							state = 781
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					or = {
+						controller = { has_government = democratic }
+						controller = { has_government = neutrality }
+					}
+				}
+			}
+		}
+		set_variable = { global.RHI_state_ascription_var = 2 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 42
+							state = 781
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = GER
+					}
+				}
+			}
+		}
+		set_variable = { global.RHI_state_ascription_var = 3 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 42
+							state = 781
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = DVL
+					}
+				}
+			}
+		}
+		set_variable = { global.RHI_state_ascription_var = 4 }
+	}
+##西普鲁士
+	if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 776
+							state = 86
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = { has_government = communism }
+				}
+			}
+		}
+		set_variable = { global.WPRU_state_ascription_var = 1 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 776
+							state = 86
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					or = {
+						controller = { has_government = democratic }
+						controller = { has_government = neutrality }
+					}
+				}
+			}
+		}
+		set_variable = { global.WPRU_state_ascription_var = 2 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 776
+							state = 86
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = GER
+					}
+				}
+			}
+		}
+		set_variable = { global.WPRU_state_ascription_var = 3 }
+	}
+	else_if = {
+		limit = {
+			all_state = {
+				if = {
+					limit = {
+						or = {
+							state = 776
+							state = 86
+						}
+					}
+					is_controlled_by_Independent_Germany_country = yes
+					controller = {
+						has_government = fascism
+						tag = DVL
+					}
+				}
+			}
+		}
+		set_variable = { global.WPRU_state_ascription_var = 4 }
+	}
+}
+
+clr_all_GEU_Deputy_Leader = {
+	hidden_effect = {
+		remove_ideas = {
+			GEU_Lisa_Engel_idea
+			GEU_Ayanami_Rei_idea
+			GEU_Carlo_Mierendorff_idea
+			GEU_Anisufia_idea
+			GEU_Illyasviel_von_Einzbern_idea
+			GEU_Inoue_Takina_idea
+		}
+	}
 }
 

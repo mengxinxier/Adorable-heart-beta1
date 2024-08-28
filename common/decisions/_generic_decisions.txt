@@ -1,73 +1,121 @@
 political_actions = {
-	AI_release_GER = {
+	return_cores_to_ally = {
+		icon = generic_agreement
 		available = {
+			ROOT = {
+				OR = {
+					has_war = no
+					surrender_progress < 0.20
+				}
+			}
 		}
 		visible = {
-			OR = {
-				is_debug = yes
-				is_ai = yes
-			}
+			is_in_faction = yes
+			NOT = { has_country_flag = KR_returning_land }
 			any_owned_state = {
-				has_state_flag = L_GER
-				not = {
-					or = {
-						is_core_of = ROOT
-						is_claimed_by = ROOT
-					}
+				OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
 				}
-				NOT = {
-					has_state_flag = occupied_by_@ROOT
+				is_claim_or_core_of_ROOT = no
+				OR = {
+					any_neighbor_state = { is_owned_by = FROM }
+					is_coastal = yes
 				}
+				NOT = { has_state_flag = KR_keeping_state@ROOT }
+			}
+			FROM = {
+				is_in_faction_with = ROOT
+				exists = yes
 			}
 		}
-		fire_only_once = no
+		target_root_trigger = {
+			is_in_faction = yes
+		}
+		target_array = allies
+		target_trigger = {
+			FROM = {
+				is_in_faction_with = ROOT
+				exists = yes
+			}
+		}
 		cost = 0
+		fire_only_once = no
+		ai_will_do = {
+			factor = 100
+		}
 		complete_effect = {
-			every_owned_state = {
-				limit = {
-					is_controlled_by = ROOT
-					NOT = {
-						is_core_of = ROOT
-					}
-					NOT = {
-						has_state_flag = occupied_by_@ROOT
-					}
-				}
-				#德国
-				if = {
-					limit = {
-						can_release_germany = yes
-					}
-					ROOT = {
-						country_event = {
-							id = annex.1000
-						}
-					}
-				}
-				else_if = {
-					limit = {
-						can_release_Prussia = yes
-					}
-					ROOT = {
-						country_event = {
-							id = annex.1001
-						}
-					}
-				}
-				else_if = {
-					limit = {
-						can_release_rhineland = yes
-					}
-					ROOT = {
-						country_event = {
-							id = annex.1002
-						}
-					}
+			log = "[GetDateText]: [Root.GetName]: Decision return_cores_to_ally target: [From.GetName]"
+			set_country_flag = KR_returning_land
+			FROM = { save_event_target_as = return_to }
+			country_event = annex.3
+		}
+	}
+	return_cores_to_subject = {
+		icon = generic_agreement
+		available = {
+			ROOT = {
+				OR = {
+					has_war = no
+					surrender_progress < 0.20
 				}
 			}
 		}
+		visible = {
+			is_in_faction = no
+			num_subjects > 0
+			NOT = { has_country_flag = KR_returning_land }
+			any_owned_state = {
+				OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
+				}
+				is_claim_or_core_of_ROOT = no
+				OR = {
+					any_neighbor_state = { is_owned_by = FROM }
+					is_coastal = yes
+				}
+				NOT = { has_state_flag = KR_keeping_state@ROOT }
+			}
+			FROM = {
+				is_subject_of = ROOT
+				exists = yes
+			}
+		}
+		target_root_trigger = {
+			is_in_faction = no
+			num_subjects > 0
+		}
+		target_array = subjects
+		target_trigger = {
+			FROM = {
+				is_subject_of = ROOT
+				exists = yes
+			}
+		}
+		cost = 0
+		fire_only_once = no
 		ai_will_do = {
-			base = 1000
+			factor = 100
+		}
+		complete_effect = {
+			log = "[GetDateText]: [Root.GetName]: Decision return_cores_to_subject target: [From.GetName]"
+			set_country_flag = KR_returning_land
+			FROM = { save_event_target_as = return_to }
+			country_event = annex.3
+		}
+	}
+	DEBUG_TEST = {
+		available = {
+			is_germany_tag = yes
+			has_country_flag = GER_CONQ
+			custom_trigger_tooltip = {
+				tooltip = 11
+				NOT = {
+					is_germany_tag = yes
+					has_country_flag = GER_CONQ
+				}
+			}
 		}
 	}
 	AI_improve_north_America = {
@@ -5111,8 +5159,18 @@ adorable_heart_generic_decision = {
 		}
 		complete_effect = {
 			set_country_flag = show_welcome_splash
-			set_variable = {
-				adorable_heart_welcome_screen = 4
+			if = {
+				limit = { check_variable = { Route_Guide_Button_Var < 2 } }
+				set_variable = { Country_History_Button_Var = 1 }
+				set_variable = { Local_History_Button_Var = 1 }
+				set_variable = { World_History_Button_Var = 1 }
+				set_variable = { Route_Guide_Button_Var = 2 }
+			}
+			else = {
+				set_variable = { Country_History_Button_Var = 1 }
+				set_variable = { Local_History_Button_Var = 1 }
+				set_variable = { World_History_Button_Var = 1 }
+				set_variable = { Route_Guide_Button_Var = 1 }
 			}
 		}
 	}
