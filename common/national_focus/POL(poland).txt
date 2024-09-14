@@ -1,19 +1,30 @@
+#!gfx:interface\ICON_SOV.gfx
+#!gfx:interface\ICON_UKR.gfx
+#!gfx:interface\PAN_focu.gfx
+#!gfx:interface\PAN_focus.gfx
+#!gfx:interface\ICON_GEU.gfx
+#!gfx:interface\ICON_GER.gfx
+#!gfx:interface\generic_goals.gfx
+#!gfx:interface\ICON_nordic.gfx
+#!gfx:interface\ICON_NPT.gfx
 focus_tree = {
 	id = polish_focus
 	country = {
 		factor = 0
 		modifier = {
-			add = 0
+			add = 10
 			tag = POL
 		}
 	}
 	default = no
 
+	continuous_focus_position = { x = 100 y = 1000 }
+
 #工业复兴计划
 	focus = {
 		id = POL_industrial_plan
 		icon = GFX_goal_SOV_bulgar_history
-		x = 4
+		x = 8
 		y = 0
 		cost = 6
 		ai_will_do = {
@@ -31,39 +42,212 @@ focus_tree = {
 	}
 
 	focus = {
-		id = POL_institute_of_chemistry
-		icon = GFX_focus_research
-		x = -2
+		id = POL_government_reform
+		icon = GFX_focus_generic_self_management
+		x = -6
 		y = 1
-		cost = 6
 		relative_position_id = POL_industrial_plan
 		prerequisite = {
 			focus = POL_industrial_plan
+		}
+		cost = 4
+		available = {
+			
+		}
+		ai_will_do = {
+			factor = 15
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+		completion_reward = {
+			custom_effect_tooltip = POL_government_reform_tt
+			hidden_effect = {
+				add_to_variable = { POL_sg_political_power_factor = 0.05 }
+				add_to_variable = { POL_sg_stability_factor = 0.10 }
+			}
+		}
+	}
+
+	focus = {
+		id = POL_respect_technical_talents
+		icon = GFX_goal_KTG_Educate_natives
+		x = -1
+		y = 1
+		cost = 4
+		relative_position_id = POL_government_reform
+		prerequisite = {
+			focus = POL_government_reform
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_political_power = 100
+			add_stability = 0.10
+			hidden_effect = {
+				add_to_variable = { ubs_save = 100 }
+			}
+			custom_effect_tooltip = SOV_get_100_add_to_reserve
+		}
+	}
+				
+	focus = {
+		id = POL_establish_universities
+		icon = GFX_goal_KTG_Bookstack
+		x = -1
+		y = 1
+		cost = 4
+		relative_position_id = POL_respect_technical_talents
+		prerequisite = {
+			focus = POL_respect_technical_talents
 		}
 		ai_will_do = {
 			factor = 10
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 		completion_reward = {
-			add_research_slot = 1
-			add_tech_bonus = {
-				name = POL_institute_of_chemistry
-				bonus = 0.5
-				uses = 1
-				category = cat_synth_oil
+			custom_effect_tooltip = POL_establish_universities_tt
+			hidden_effect = {
+				add_to_variable = { POL_sg_research_speed_factor = 0.08 }
 			}
+			custom_effect_tooltip = available_political_advisor
+			
 		}
 	}
 	
 	focus = {
-		id = POL_resource_exploitation
-		icon = GFX_goal_generic_construction2
-		x = -2
+		id = POL_local_autonomy
+		icon = GFX_goal_democracy_people
+		x = 1
 		y = 1
 		cost = 4
-		relative_position_id = POL_institute_of_chemistry
+		relative_position_id = POL_government_reform
 		prerequisite = {
-			focus = POL_institute_of_chemistry
+			focus = POL_government_reform
+		}
+		ai_will_do = {
+			factor = 15
+			modifier = {
+				factor = 0
+				check_variable = {
+					ubs_load > 200
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			remove_ideas = POL_apartheid_policy
+			custom_effect_tooltip = POL_pay_500_tt
+			hidden_effect = {
+				set_variable = { POL_debt = 500 }
+				if = {
+					limit = { 
+						check_variable = { ubs_save > POL_debt }
+					}
+					subtract_from_variable = { ubs_save = POL_debt }
+				}
+				else = {
+					subtract_from_variable = { POL_debt = ubs_save }
+					set_variable = { ubs_save = 0 }
+					add_to_variable = { ubs_load = POL_debt }
+				}
+				clear_variable = POL_debt
+			}
+		}
+	}
+		
+	focus = {
+		id = POL_knight_court
+		icon = GFX_focus_generic_court
+		x = 1
+		y = 1
+		cost = 4
+		relative_position_id = POL_respect_technical_talents
+		prerequisite = {
+			focus = POL_respect_technical_talents
+		}
+		prerequisite = {
+			focus = POL_local_autonomy
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			custom_effect_tooltip = POL_knight_court_tt
+			hidden_effect = {
+				add_to_variable = { POL_sg_industrial_capacity_factory = 0.05 }
+				add_to_variable = { POL_sg_production_factory_efficiency_gain_factor = 0.10 }
+			}
+		}
+	}
+			
+	focus = {
+		id = POL_Inspect_quasi_military_organizations
+		icon = GFX_focus_FIN_parmis_devils
+		x = 0
+		y = 1
+		cost = 4
+		relative_position_id = POL_knight_court
+		prerequisite = {
+			focus = POL_knight_court
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			custom_effect_tooltip = POL_Inspect_quasi_military_organizations_tt
+			hidden_effect = {
+				add_to_variable = { POL_sg_global_building_slots_factor = 0.10 }
+				add_to_variable = { POL_sg_production_speed_buildings_factor = 0.05 }
+			}
+		}
+	}
+
+	focus = {
+		id = POL_hospital_of_the_dead
+		icon = GFX_goal_public_health_commission
+		x = -1
+		y = 1
+		cost = 4
+		relative_position_id = POL_Inspect_quasi_military_organizations
+		prerequisite = {
+			focus = POL_Inspect_quasi_military_organizations
+		}
+		prerequisite = {
+			focus = POL_establish_universities
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_MANPOWER }
+		completion_reward = {
+			custom_effect_tooltip = POL_hospital_of_the_dead_tt
+			hidden_effect = {
+				remove_dynamic_modifier = {
+					modifier = POL_spectre_government
+				}
+				add_dynamic_modifier = {
+					modifier = POL_spectre_government2
+				}
+				add_to_variable = { POL_sg_consumer_goods_factor = -0.05 }
+				add_to_variable = { exoutcome = 0.10 }
+			}
+			custom_effect_tooltip = available_political_advisor
+			
+		}
+	}
+
+	focus = {
+		id = POL_resource_exploitation
+		icon = GFX_goal_generic_mining_iron
+		x = 3
+		y = 1
+		cost = 4
+		relative_position_id = POL_myshko_group
+		prerequisite = {
+			focus = POL_myshko_group
 		}
 		ai_will_do = {
 			factor = 10
@@ -76,70 +260,6 @@ focus_tree = {
 				uses = 2
 				category = excavation_tech
 			}
-		}
-	}
-	
-	focus = {
-		id = POL_synthetic_rubber_project
-		icon = GFX_goal_DEI_focus_moar_rubber
-		x = 0
-		y = 1
-		cost = 6
-		relative_position_id = POL_institute_of_chemistry
-		prerequisite = {
-			focus = POL_institute_of_chemistry
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			if = {
-				limit = {
-					NOT = {
-						has_tech = fuel_refining
-					}
-				}
-				set_technology = {
-					fuel_refining = 1
-				}
-			}
-			else = {
-				add_tech_bonus = {
-					name = POL_synthetic_rubber_project
-					bonus = 0.5
-					uses = 1
-					category = synth_resources
-				}
-			}
-			random_owned_controlled_state = {
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = synthetic_refinery
-					level = 2
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = POL_magic_ore
-		icon = GFX_focus_generic_steel
-		x = 1
-		y = 1
-		cost = 8
-		relative_position_id = POL_resource_exploitation
-		prerequisite = {
-			focus = POL_resource_exploitation
-		}
-		prerequisite = {
-			focus = POL_synthetic_rubber_project
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
 			#开发利沃夫钨矿
 			add_resource = {
 				type = tungsten
@@ -175,29 +295,56 @@ focus_tree = {
 				amount = 26
 				state = 86
 			}
-			custom_effect_tooltip = POL_pay_300_tt
-			hidden_effect = {
-				set_variable = { POL_debt = 300 }
-				if = {
-					limit = { 
-						check_variable = { ubs_save > POL_debt }
+		}
+	}
+	
+	focus = {
+		id = POL_synthetic_rubber_project
+		icon = GFX_goal_DEI_focus_moar_rubber
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_myshko_group
+		prerequisite = {
+			focus = POL_myshko_group
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_tech = fuel_refining
 					}
-					subtract_from_variable = { ubs_save = POL_debt }
 				}
-				else = {
-					subtract_from_variable = { POL_debt = ubs_save }
-					set_variable = { ubs_save = 0 }
-					add_to_variable = { ubs_load = POL_debt }
+				set_technology = {
+					fuel_refining = 1
 				}
-				clear_variable = POL_debt
+			}
+			else = {
+				add_tech_bonus = {
+					name = POL_synthetic_rubber_project
+					bonus = 0.5
+					uses = 1
+					category = synth_resources
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 2
+				}
 			}
 		}
 	}
 
 	focus = {
 		id = POL_myshko_group
-		icon = GFX_goal_SOV_Worthy_Enver
-		x = 0
+		icon = GFX_goal_generic_industrial_plan
+		x = -2
 		y = 1
 		cost = 6
 		relative_position_id = POL_industrial_plan
@@ -216,8 +363,8 @@ focus_tree = {
 	
 	focus = {
 		id = POL_integrated_railway_line
-		icon = GFX_goal_generic_construct_infrastructure
-		x = 0
+		icon = GFX_focus_generic_public_works_A
+		x = -1
 		y = 1
 		cost = 6
 		relative_position_id = POL_myshko_group
@@ -242,10 +389,63 @@ focus_tree = {
 			show_ideas_tooltip = POL_railway
 		}
 	}
+				
+	focus = {
+		id = POL_automobile_production
+		icon = GFX_focus_generic_truck
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_integrated_railway_line
+		prerequisite = {
+			focus = POL_integrated_railway_line
+		}
+		prerequisite = {
+			focus = POL_synthetic_rubber_project
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			custom_effect_tooltip = available_designer
+			show_ideas_tooltip = POL_Loewenstein
+			add_tech_bonus = {
+				name = POL_automobile_production
+				bonus = 0.5
+				uses = 1
+				category = motorized_equipment
+			}
+		}
+	}
+	
+	focus = {
+		id = POL_expansion_of_industrial_zones
+		icon = GFX_PAN_focu_297
+		x = -1
+		y = 1
+		cost = 6
+		relative_position_id = POL_integrated_railway_line
+		prerequisite = {
+			focus = POL_integrated_railway_line
+		}
+		prerequisite = {
+			focus = POL_local_autonomy
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {	
+			unlock_decision_tooltip = POL_build_new_town_in_A
+			unlock_decision_tooltip = POL_build_new_town_in_B
+			unlock_decision_tooltip = POL_build_new_town_in_C
+		}
+	}
 		
 	focus = {
-		id = POL_highway_program
-		icon = GFX_goal_POL_national_highway_system
+		id = POL_develop_heavy_industry
+		icon = GFX_PAN_focu_364
 		x = 1
 		y = 1
 		cost = 6
@@ -254,7 +454,39 @@ focus_tree = {
 			focus = POL_synthetic_rubber_project
 		}
 		prerequisite = {
-			focus = POL_integrated_railway_line
+			focus = POL_resource_exploitation
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			every_core_state = {
+				limit = { 
+					is_owned_by = ROOT 
+					infrastructure < 4
+					infrastructure > 1
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+			}
+		}
+	}
+	
+	focus = {
+		id = POL_daily_necessities_industry
+		icon = GFX_goal_generic_construct_civ_factory
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_expansion_of_industrial_zones
+		prerequisite = {
+			focus = POL_expansion_of_industrial_zones
+		}
+		prerequisite = {
+			focus = POL_automobile_production
 		}
 		ai_will_do = {
 			factor = 10
@@ -276,34 +508,40 @@ focus_tree = {
 	}
 			
 	focus = {
-		id = POL_automobile_production
-		icon = GFX_focus_generic_truck
-		x = -1
+		id = POL_highway_program
+		icon = GFX_goal_generic_road
+		x = 1
 		y = 1
 		cost = 6
-		relative_position_id = POL_highway_program
+		relative_position_id = POL_automobile_production
 		prerequisite = {
-			focus = POL_highway_program
+			focus = POL_automobile_production
+		}
+		prerequisite = {
+			focus = POL_develop_heavy_industry
 		}
 		ai_will_do = {
 			factor = 10
 		}
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
+		search_filters = { FOCUS_FILTER_INDUSTRY }
 		completion_reward = {
-			custom_effect_tooltip = available_designer
-			show_ideas_tooltip = POL_Loewenstein
-			add_tech_bonus = {
-				name = POL_automobile_production
-				bonus = 0.5
-				uses = 1
-				category = motorized_equipment
+			every_core_state = {
+				limit = { 
+					is_owned_by = ROOT 
+					infrastructure < 4
+					infrastructure > 1
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
 			}
 		}
 	}
 				
 	focus = {
-		id = POL_Warsaw_industrial_center
-		icon = GFX_focus_POL_warsaw_main_station
+		id = POL_Warsaw_decentralize
+		icon = GFX_PAN_focu_8
 		x = 2
 		y = 1
 		cost = 6
@@ -329,13 +567,13 @@ focus_tree = {
 				
 	focus = {
 		id = POL_old_industrial_areas
-		icon = GFX_goal_generic_construct_civ_factory
-		x = 0
+		icon = GFX_goal_generic_improve_industry
+		x = 1
 		y = 1
 		cost = 6
-		relative_position_id = POL_Warsaw_industrial_center
+		relative_position_id = POL_Warsaw_decentralize
 		prerequisite = {
-			focus = POL_Warsaw_industrial_center
+			focus = POL_Warsaw_decentralize
 		}
 		ai_will_do = {
 			factor = 15
@@ -368,41 +606,16 @@ focus_tree = {
 			}
 		}
 	}
-					
-	focus = {
-		id = POL_university_of_Warsaw
-		icon = GFX_goal_KTG_Educate_natives
-		x = 2
-		y = 1
-		cost = 6
-		relative_position_id = POL_Warsaw_industrial_center
-		prerequisite = {
-			focus = POL_Warsaw_industrial_center
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		available = {
-			num_of_civilian_factories > 49
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-		completion_reward = {
-			add_research_slot = 1
-		}
-	}
 						
 	focus = {
 		id = POL_agricultural_reform
-		icon = GFX_goal_SOV_agricultural_aid
-		x = 1
+		icon = GFX_goal_generic_famine
+		x = 5
 		y = 1
 		cost = 6
-		relative_position_id = POL_integrated_railway_line
+		relative_position_id = POL_industrial_plan
 		prerequisite = {
-			focus = POL_integrated_railway_line
-		}
-		prerequisite = {
-			focus = POL_old_industrial_areas
+			focus = POL_industrial_plan
 		}
 		ai_will_do = {
 			factor = 10
@@ -417,9 +630,9 @@ focus_tree = {
 	}
 						
 	focus = {
-		id = POL_new_industrial_district
-		icon = GFX_focus_generic_industry_3
-		x = 1
+		id = POL_thermal_power_plant
+		icon = GFX_PAN_focu_253
+		x = -1
 		y = 1
 		cost = 6
 		relative_position_id = POL_old_industrial_areas
@@ -467,43 +680,67 @@ focus_tree = {
 	}
 							
 	focus = {
-		id = POL_introduce_magic_crops
-		icon = GFX_goal_magic_agriculture
+		id = POL_machinery_manufacturing_industry
+		icon = GFX_goal_generic_light_industry
 		x = -1
 		y = 1
 		cost = 6
-		relative_position_id = POL_agricultural_reform
+		relative_position_id = POL_thermal_power_plant
 		prerequisite = {
-			focus = POL_agricultural_reform
+			focus = POL_thermal_power_plant
+		}
+		prerequisite = {
+			focus = POL_develop_heavy_industry
 		}
 		ai_will_do = {
 			factor = 10
 		}
 		search_filters = { FOCUS_FILTER_INDUSTRY }
 		completion_reward = {
-			#华沙
-			add_resource = {
-				type = originium
-				amount = 104
-				state = 10
+			random_owned_controlled_state = {
+				prioritize = { 95 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
 			}
-			92 = { SOV_promote_regional_development = yes }
-			1088 = { SOV_promote_regional_development = yes }
+			random_owned_controlled_state = {
+				prioritize = { 93 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 997 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 1088 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
 		}
 	}
 								
 	focus = {
-		id = POL_invest_east
-		icon = GFX_goal_factory_complex
-		x = 1
+		id = POL_organize_acres_of_land
+		icon = GFX_goal_generic_land_seizure
+		x = 0
 		y = 1
 		cost = 6
 		relative_position_id = POL_agricultural_reform
 		prerequisite = {
 			focus = POL_agricultural_reform
-		}
-		prerequisite = {
-			focus = POL_new_industrial_district
 		}
 		ai_will_do = {
 			factor = 10
@@ -544,16 +781,71 @@ focus_tree = {
 			}
 		}
 	}
-								
+						
 	focus = {
-		id = POL_arms_production
-		icon = GFX_goal_generic_construct_mil_factory
+		id = POL_purify_polluted_areas
+		icon = GFX_PAN_focu_366
 		x = 1
 		y = 1
 		cost = 6
-		relative_position_id = POL_new_industrial_district
+		relative_position_id = POL_organize_acres_of_land
 		prerequisite = {
-			focus = POL_new_industrial_district
+			focus = POL_organize_acres_of_land
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			#华沙
+			add_resource = {
+				type = originium
+				amount = 104
+				state = 10
+			}
+			92 = { SOV_promote_regional_development = yes }
+			1088 = { SOV_promote_regional_development = yes }
+		}
+	}
+							
+	focus = {
+		id = POL_introduce_magic_crops
+		icon = GFX_goal_magic_agriculture
+		x = 0
+		y = 1
+		cost = 6
+		relative_position_id = POL_purify_polluted_areas
+		prerequisite = {
+			focus = POL_purify_polluted_areas
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			#华沙
+			add_resource = {
+				type = originium
+				amount = 104
+				state = 10
+			}
+			92 = { SOV_promote_regional_development = yes }
+			1088 = { SOV_promote_regional_development = yes }
+		}
+	}
+									
+	focus = {
+		id = POL_developing_new_towns
+		icon = GFX_PAN_focu_425
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_daily_necessities_industry
+		prerequisite = {
+			focus = POL_daily_necessities_industry
+		}
+		prerequisite = {
+			focus = POL_highway_program
 		}
 		ai_will_do = {
 			factor = 10
@@ -594,28 +886,53 @@ focus_tree = {
 			}
 		}
 	}
-
+								
 	focus = {
-		id = POL_agricultural_mechanization
-		icon = GFX_goal_SOV_industrializing_land
-		x = 1
+		id = POL_arms_production
+		icon = GFX_goal_generic_construct_mil_factory
+		x = 0
 		y = 1
 		cost = 6
-		relative_position_id = POL_automobile_production
+		relative_position_id = POL_machinery_manufacturing_industry
 		prerequisite = {
-			focus = POL_automobile_production
-		}
-		prerequisite = {
-			focus = POL_introduce_magic_crops
+			focus = POL_machinery_manufacturing_industry
 		}
 		ai_will_do = {
 			factor = 10
 		}
 		search_filters = { FOCUS_FILTER_INDUSTRY }
 		completion_reward = {
-			swap_ideas = {
-				remove_idea = POL_agricultural_reform_focus
-				add_idea = POL_agricultural_reform_focus2
+			random_owned_controlled_state = {
+				prioritize = { 94 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 997 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 95 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+			random_owned_controlled_state = {
+				prioritize = { 93 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
 			}
 		}
 	}
@@ -623,15 +940,15 @@ focus_tree = {
 	focus = {
 		id = POL_hydropower_project
 		icon = GFX_focus_generic_hydroelectric_energy
-		x = 1
+		x = -1
 		y = 1
 		cost = 6
-		relative_position_id = POL_introduce_magic_crops
+		relative_position_id = POL_organize_acres_of_land
 		prerequisite = {
-			focus = POL_invest_east
+			focus = POL_organize_acres_of_land
 		}
 		prerequisite = {
-			focus = POL_introduce_magic_crops
+			focus = POL_old_industrial_areas
 		}
 		ai_will_do = {
 			factor = 10
@@ -662,31 +979,10 @@ focus_tree = {
 			activate_targeted_decision = { target = 87 decision = POL_duild_dec_lhydropower_station }
 		}
 	}
-
+								
 	focus = {
-		id = POL_new_town_plan
-		icon = GFX_goal_generic_construct_public_housing
-		x = 1
-		y = 1
-		cost = 6
-		relative_position_id = POL_invest_east
-		prerequisite = {
-			focus = POL_invest_east
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		completion_reward = {	
-			unlock_decision_tooltip = POL_build_new_town_in_A
-			unlock_decision_tooltip = POL_build_new_town_in_B
-			unlock_decision_tooltip = POL_build_new_town_in_C
-		}
-	}
-	
-	focus = {
-		id = POL_fulfilment_of_plan
-		icon = GFX_goal_AUS_raised_working_week
+		id = POL_improve_agricultural_facilities
+		icon = GFX_PAN_focu_290
 		x = 0
 		y = 1
 		cost = 6
@@ -694,23 +990,94 @@ focus_tree = {
 		prerequisite = {
 			focus = POL_hydropower_project
 		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			#华沙
+			add_resource = {
+				type = originium
+				amount = 104
+				state = 10
+			}
+			92 = { SOV_promote_regional_development = yes }
+			1088 = { SOV_promote_regional_development = yes }
+		}
+	}
+	
+	focus = {
+		id = POL_agricultural_mechanization
+		icon = GFX_goal_SOV_industrializing_land
+		x = -1
+		y = 1
+		cost = 6
+		relative_position_id = POL_improve_agricultural_facilities
 		prerequisite = {
-			focus = POL_agricultural_mechanization
+			focus = POL_improve_agricultural_facilities
 		}
 		prerequisite = {
-			focus = POL_new_town_plan
-		}
-		available = {
-			num_of_civilian_factories > 79
+			focus = POL_machinery_manufacturing_industry
 		}
 		ai_will_do = {
 			factor = 10
 		}
-		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
+		search_filters = { FOCUS_FILTER_INDUSTRY }
 		completion_reward = {
-			add_stability = 0.05
-			add_political_power = 25
-			add_ideas = POL_casimir_industrializes
+			swap_ideas = {
+				remove_idea = POL_agricultural_reform_focus
+				add_idea = POL_agricultural_reform_focus2
+			}
+		}
+	}
+		
+	focus = {
+		id = POL_food_factory
+		icon = GFX_goal_generic_food_processing
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_improve_agricultural_facilities
+		prerequisite = {
+			focus = POL_improve_agricultural_facilities
+		}
+		prerequisite = {
+			focus = POL_introduce_magic_crops
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = POL_agricultural_reform_focus
+				add_idea = POL_agricultural_reform_focus2
+			}
+		}
+	}
+		
+	focus = {
+		id = POL_grain_exports
+		icon = GFX_GEU_FARM_BUTIE
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_introduce_magic_crops
+		prerequisite = {
+			focus = POL_introduce_magic_crops
+		}
+		prerequisite = {
+			focus = POL_escort_navy
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = POL_agricultural_reform_focus
+				add_idea = POL_agricultural_reform_focus2
+			}
 		}
 	}
 
@@ -719,8 +1086,9 @@ focus_tree = {
 	focus = {
 		id = POL_make_sail
 		icon = GFX_goal_generic_build_navy
-		x = 11
+		x = 9
 		y = 0
+		relative_position_id = POL_industrial_plan
 		cost = 4
 		ai_will_do = {
 			factor = 10
@@ -762,14 +1130,17 @@ focus_tree = {
 	}
 		
 	focus = {
-		id = POL_drift_north
-		icon = GFX_focus_generic_population_growth
-		x = 0
+		id = POL_modernization_of_ship_design
+		icon = GFX_goal_navy_schematics
+		x = 1
 		y = 1
 		cost = 4
 		relative_position_id = POL_Gdynia_shipyard
 		prerequisite = {
 			focus = POL_Gdynia_shipyard
+		}
+		prerequisite = {
+			focus = POL_build_Konigsberg
 		}
 		ai_will_do = {
 			factor = 10
@@ -791,17 +1162,14 @@ focus_tree = {
 	}
 	
 	focus = {
-		id = POL_naval_union_college
-		icon = GFX_focus_RUS_champagne_diplomacy
+		id = POL_maritime_trade
+		icon = GFX_goal_navy_funding
 		x = -1
 		y = 1
 		cost = 4
-		relative_position_id = POL_drift_north
+		relative_position_id = POL_modernization_of_ship_design
 		prerequisite = {
-			focus = POL_drift_north
-		}
-		prerequisite = {
-			focus = POL_university_of_Warsaw
+			focus = POL_modernization_of_ship_design
 		}
 		ai_will_do = {
 			factor = 10
@@ -809,7 +1177,7 @@ focus_tree = {
 		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
 		completion_reward = {
 			add_tech_bonus = {
-				name = POL_naval_union_college
+				name = POL_maritime_trade
 				bonus = 0.5
 				uses = 2
 				category = naval_equipment
@@ -817,58 +1185,40 @@ focus_tree = {
 			navy_experience = 25
 		}
 	}
-
+			
 	focus = {
-		id = POL_garrison_Danzig
-		icon = GFX_focus_generic_manpower
-		x = 1
+		id = POL_escort_navy
+		icon = GFX_focus_generic_cruiser2
+		x = 0
 		y = 1
-		cost = 4
-		relative_position_id = POL_drift_north
+		cost = 6
+		relative_position_id = POL_maritime_trade
 		prerequisite = {
-			focus = POL_drift_north
+			focus = POL_maritime_trade
 		}
 		ai_will_do = {
 			factor = 10
 		}
-		search_filters = { FOCUS_FILTER_ANNEXATION FOCUS_FILTER_INDUSTRY }
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_NAVY_XP }
 		completion_reward = {
-			776 = {
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-				}
-				add_building_construction = {
-					type = anti_air_building
-					level = 1
-				}
-				add_building_construction = {
-					province = 362
-					type = bunker
-					level = 2
-				}
-				add_building_construction = {
-					province = 362
-					type = coastal_bunker
-					level = 2
-				}
+			add_tech_bonus = {
+				name = POL_escort_navy
+				bonus = 0.5
+				uses = 3
+				category = naval_equipment
 			}
 		}
 	}
 
 	focus = {
-		id = POL_navy_modernization
-		icon = GFX_goal_generic_navy_doctrines_tactics
+		id = POL_maritime_college
+		icon = GFX_goal_generic_naval_academy
 		x = 1
 		y = 1
 		cost = 4
-		relative_position_id = POL_naval_union_college
+		relative_position_id = POL_modernization_of_ship_design
 		prerequisite = {
-			focus = POL_naval_union_college
-		}
-		prerequisite = {
-			focus = POL_garrison_Danzig
+			focus = POL_modernization_of_ship_design
 		}
 		ai_will_do = {
 			factor = 10
@@ -876,13 +1226,13 @@ focus_tree = {
 		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
 		completion_reward = {
 			add_doctrine_cost_reduction = {
-				name = POL_navy_modernization
+				name = POL_maritime_college
 				cost_reduction = 0.5
 				uses = 1
 				category = naval_doctrine
 			}
 			add_tech_bonus = {
-				name = POL_navy_modernization
+				name = POL_maritime_college
 				bonus = 0.5
 				uses = 1
 				category = naval_equipment
@@ -891,47 +1241,23 @@ focus_tree = {
 	}
 	
 	focus = {
-		id = POL_guardian_of_Baltic
+		id = POL_train_naval_officers
 		icon = GFX_focus_generic_navy_battleship2
 		x = 0
 		y = 1
 		cost = 6
-		relative_position_id = POL_navy_modernization
+		relative_position_id = POL_maritime_college
 		prerequisite = {
-			focus = POL_navy_modernization
+			focus = POL_maritime_college
 		}
 		ai_will_do = {
 			factor = 10
 		}
 		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_RESEARCH }
 		completion_reward = {
-			add_ideas = POL_guardian_of_Baltic_focus
+			add_ideas = POL_train_naval_officers_focus
 			navy_experience = 25
 			add_war_support = 0.05
-		}
-	}
-		
-	focus = {
-		id = POL_import_design
-		icon = GFX_focus_generic_cruiser2
-		x = 0
-		y = 1
-		cost = 6
-		relative_position_id = POL_guardian_of_Baltic
-		prerequisite = {
-			focus = POL_guardian_of_Baltic
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_NAVY_XP }
-		completion_reward = {
-			add_tech_bonus = {
-				name = POL_import_design
-				bonus = 0.5
-				uses = 3
-				category = naval_equipment
-			}
 		}
 	}
 			
@@ -939,11 +1265,11 @@ focus_tree = {
 		id = POL_pack_play
 		icon = GFX_goal_generic_wolf_pack
 		x = -1
-		y = 2
+		y = 1
 		cost = 6
-		relative_position_id = POL_guardian_of_Baltic
+		relative_position_id = POL_train_naval_officers
 		prerequisite = {
-			focus = POL_guardian_of_Baltic
+			focus = POL_train_naval_officers
 		}
 		mutually_exclusive = {
 			focus = POL_face_the_future
@@ -954,8 +1280,8 @@ focus_tree = {
 		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_NAVY_XP }
 		completion_reward = {
 			swap_ideas = {
-				remove_idea = POL_guardian_of_Baltic_focus
-				add_idea = POL_guardian_of_Baltic_focus_a
+				remove_idea = POL_train_naval_officers_focus
+				add_idea = POL_train_naval_officers_focus_a
 			}
 			add_tech_bonus = {
 				name = POL_pack_play
@@ -970,11 +1296,11 @@ focus_tree = {
 		id = POL_face_the_future
 		icon = GFX_goal_generic_navy_carrier
 		x = 1
-		y = 2
+		y = 1
 		cost = 6
-		relative_position_id = POL_guardian_of_Baltic
+		relative_position_id = POL_train_naval_officers
 		prerequisite = {
-			focus = POL_guardian_of_Baltic
+			focus = POL_train_naval_officers
 		}
 		mutually_exclusive = {
 			focus = POL_pack_play
@@ -985,8 +1311,8 @@ focus_tree = {
 		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_NAVY_XP }
 		completion_reward = {
 			swap_ideas = {
-				remove_idea = POL_guardian_of_Baltic_focus
-				add_idea = POL_guardian_of_Baltic_focus_b
+				remove_idea = POL_train_naval_officers_focus
+				add_idea = POL_train_naval_officers_focus_b
 			}
 			add_tech_bonus = {
 				name = POL_face_the_future
@@ -999,7 +1325,7 @@ focus_tree = {
 	
 	focus = {
 		id = POL_build_Konigsberg
-		icon = GFX_goal_generic_construct_civilian
+		icon = GFX_goal_factory_complex
 		x = 1
 		y = 1
 		cost = 4
@@ -1024,59 +1350,16 @@ focus_tree = {
 			}
 		}
 	}
-		
-	focus = {
-		id = POL_population_migration
-		icon = GFX_goal_generic_forceful_treaty
-		x = 0
-		y = 1
-		cost = 4
-		relative_position_id = POL_build_Konigsberg
-		prerequisite = {
-			focus = POL_build_Konigsberg
-		}
-		ai_will_do = {
-			factor = 25
-		}
-		search_filters = { FOCUS_FILTER_MANPOWER }
-		completion_reward = {
-			5 = {
-				add_manpower = -100000
-				add_extra_state_shared_building_slots = 1
-			}
-			777 = {
-				add_manpower = -80000
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-				}
-			}
-			63 = {
-				add_manpower = 150000
-			}
-			every_state = {
-				limit = {
-					OR = {
-						state = 5
-						state = 777
-					}
-				}
-				add_core_of = ROOT
-			}
-			news_event = poland_news.1
-		}
-	}
 			
 	focus = {
-		id = POL_coastal_economy
-		icon = GFX_focus_generic_refit_civilian_ships
-		x = 1
+		id = POL_purchase_of_ships
+		icon = GFX_goal_generic_aristocratic_cooperation
+		x = 3
 		y = 1
 		cost = 4
-		relative_position_id = POL_population_migration
+		relative_position_id = POL_modernization_of_ship_design
 		prerequisite = {
-			focus = POL_population_migration
+			focus = POL_modernization_of_ship_design
 		}
 		ai_will_do = {
 			factor = 10
@@ -1094,47 +1377,15 @@ focus_tree = {
 			}
 		}
 	}
-				
-	focus = {
-		id = POL_expanded_shipyard
-		icon = GFX_goal_generic_construct_naval_dockyard
-		x = -1
-		y = 1
-		cost = 4
-		relative_position_id = POL_coastal_economy
-		prerequisite = {
-			focus = POL_garrison_Danzig
-		}
-		prerequisite = {
-			focus = POL_coastal_economy
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			custom_effect_tooltip = POL_expanded_shipyard_tt
-			every_owned_state = {
-				limit = {
-					is_core_of = ROOT
-					is_coastal = yes
-				}
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = dockyard
-					level = 1
-				}
-			}
-		}
-	}
 
 #国家动员计划
 
 	focus = {
 		id = POL_national_mobilization_plan
 		icon = GFX_focus_ETH_freedom_at_gunpoint
-		x = 18
+		x = 8
 		y = 0
+		relative_position_id = POL_make_sail
 		cost = 4
 		ai_will_do = {
 			factor = 10
@@ -1159,7 +1410,7 @@ focus_tree = {
 	focus = {
 		id = POL_new_order
 		icon = GFX_focus_POL_belarus_army
-		x = -1
+		x = 0
 		y = 1
 		cost = 4
 		relative_position_id = POL_national_mobilization_plan
@@ -1179,16 +1430,64 @@ focus_tree = {
 			add_ideas = POL_officer_corps
 		}
 	}
-			
+						
 	focus = {
-		id = POL_army_modernization
-		icon = GFX_focus_generic_combined_arms
-		x = 0
+		id = POL_selection_of_horse_breeds
+		icon = GFX_PAN_focu_150
+		x = 1
 		y = 1
 		cost = 4
 		relative_position_id = POL_new_order
 		prerequisite = {
 			focus = POL_new_order
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+		completion_reward = {
+			add_war_support = 0.05
+			add_ideas = POL_selection_of_horse_breeds_focus
+		}
+	}
+				
+	focus = {
+		id = POL_adaptive_training
+		icon = GFX_focus_CHL_departemento_de_las_tropas_nacistas_de_asalto
+		x = 0
+		y = 1
+		cost = 4
+		relative_position_id = POL_selection_of_horse_breeds
+		prerequisite = {
+			focus = POL_selection_of_horse_breeds
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+		completion_reward = {
+			add_war_support = 0.05
+			add_ideas = POL_selection_of_horse_breeds_focus
+		}
+	}
+	
+	focus = {
+		id = POL_army_modernization
+		icon = GFX_focus_generic_combined_arms
+		x = 2
+		y = 1
+		cost = 4
+		relative_position_id = POL_national_mobilization_plan
+		prerequisite = {
+			focus = POL_national_mobilization_plan
 		}
 		ai_will_do = {
 			factor = 15
@@ -1232,66 +1531,16 @@ focus_tree = {
 			}
 		}
 	}
-				
+					
 	focus = {
-		id = POL_tank_academy
-		icon = GFX_goal_KTG_Bookstack
-		x = -2
+		id = POL_production_standardization
+		icon = GFX_goal_generic_design_equipment_standards
+		x = 0
 		y = 1
 		cost = 4
-		relative_position_id = POL_army_modernization
+		relative_position_id = POL_Archer_arms_factory
 		prerequisite = {
-			focus = POL_army_modernization
-		}
-		prerequisite = {
-			focus = POL_population_migration
-		}
-		ai_will_do = {
-			factor = 25
-			modifier = {
-				factor = 0
-				check_variable = {
-					ubs_load > 200
-				}
-			}
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-		completion_reward = {
-			add_ideas = POL_tank_academy_focus
-			add_tech_bonus = {
-				name = POL_tank_academy
-				bonus = 0.5
-				uses = 1
-				category = armor
-			}
-			custom_effect_tooltip = POL_pay_300_tt
-			hidden_effect = {
-				set_variable = { POL_debt = 300 }
-				if = {
-					limit = { 
-						check_variable = { ubs_save > POL_debt }
-					}
-					subtract_from_variable = { ubs_save = POL_debt }
-				}
-				else = {
-					subtract_from_variable = { POL_debt = ubs_save }
-					set_variable = { ubs_save = 0 }
-					add_to_variable = { ubs_load = POL_debt }
-				}
-				clear_variable = POL_debt
-			}
-		}
-	}
-			
-	focus = {
-		id = POL_Archer_arms_factory
-		icon = GFX_goal_generic_production2
-		x = 1
-		y = 1
-		cost = 6
-		relative_position_id = POL_national_mobilization_plan
-		prerequisite = {
-			focus = POL_national_mobilization_plan
+			focus = POL_Archer_arms_factory
 		}
 		ai_will_do = {
 			factor = 10
@@ -1300,22 +1549,30 @@ focus_tree = {
 				has_war = yes
 			}
 		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
+		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
 		completion_reward = {
-			custom_effect_tooltip = available_designer
-			show_ideas_tooltip = POL_Archer
+			swap_ideas = {
+				remove_idea = POL_selection_of_horse_breeds_focus
+				add_idea = POL_selection_of_horse_breeds_focus2
+			}
+			add_tech_bonus = {
+				name = POL_production_standardization
+				bonus = 0.5
+				uses = 1
+				category = infantry_tech
+			}
 		}
 	}
-				
+					
 	focus = {
 		id = POL_munitions_industry
-		icon = GFX_focus_generic_military_equipment
+		icon = GFX_PAN_focu_463
 		x = 0
 		y = 1
 		cost = 4
-		relative_position_id = POL_Archer_arms_factory
+		relative_position_id = POL_production_standardization
 		prerequisite = {
-			focus = POL_Archer_arms_factory
+			focus = POL_production_standardization
 		}
 		ai_will_do = {
 			factor = 10
@@ -1354,162 +1611,49 @@ focus_tree = {
 			}
 		}
 	}
-					
+						
 	focus = {
-		id = POL_modern_cavalry
-		icon = GFX_goal_generic_cavalry
-		x = 1
+		id = POL_optimized_light_fire
+		icon = GFX_goal_generic_warfighting_technology
+		x = 2
 		y = 1
-		cost = 4
-		relative_position_id = POL_army_modernization
+		cost = 6
+		relative_position_id = POL_Archer_arms_factory
 		prerequisite = {
-			focus = POL_army_modernization
+			focus = POL_Archer_arms_factory
 		}
 		prerequisite = {
-			focus = POL_munitions_industry
+			focus = POL_new_order
 		}
 		ai_will_do = {
 			factor = 10
-			modifier = {
-				factor = 1.5
-				has_war = yes
-			}
-		}
-		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
-		completion_reward = {
-			add_war_support = 0.05
-			add_ideas = POL_modern_cavalry_focus
-		}
-	}
-
-	focus = {
-		id = POL_antitank_equipment
-		icon = GFX_goal_POL_tank_hunt
-		x = -1
-		y = 1
-		cost = 6
-		relative_position_id = POL_tank_academy
-		prerequisite = {
-			focus = POL_tank_academy
-		}
-		ai_will_do = {
-			factor = 25
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 		completion_reward = {
-			mio:HSF_hessen_organization = {
-				add_mio_size = 2
-			}
 			add_tech_bonus = {
-				name = POL_antitank_equipment
+				name = POL_optimized_light_fire
 				bonus = 0.5
 				uses = 2
-				category = cat_anti_tank
-			}
-		}
-	}
-						
-	focus = {
-		id = POL_adaptive_design
-		icon = GFX_goal_POL_tank_map
-		x = 1
-		y = 1
-		cost = 6
-		relative_position_id = POL_tank_academy
-		prerequisite = {
-			focus = POL_tank_academy
-		}
-		prerequisite = {
-			focus = POL_modern_cavalry
-		}
-		ai_will_do = {
-			factor = 25
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-		completion_reward = {
-			mio:HSF_hessen_organization = {
-				add_mio_research_bonus = 0.10
+				category = infantry_weapons
 			}
 			add_tech_bonus = {
-				name = POL_adaptive_design
+				name = POL_optimized_light_fire
 				bonus = 0.5
-				uses = 2
-				category = armor
+				uses = 1
+				category = support_tech
 			}
 		}
 	}
 							
 	focus = {
-		id = POL_Casimir_war_lane
-		icon = GFX_goal_Focus_Military_Mobilisation
-		x = 1
-		y = 1
-		cost = 6
-		relative_position_id = POL_antitank_equipment
-		prerequisite = {
-			focus = POL_antitank_equipment
-		}
-		prerequisite = {
-			focus = POL_adaptive_design
-		}
-		ai_will_do = {
-			factor = 25
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-		completion_reward = {
-			mio:HSF_hessen_organization = {
-				add_mio_funds = 0.15
-				add_mio_size = 1
-			}
-			swap_ideas = {
-				remove_idea = POL_tank_academy_focus
-				add_idea = POL_tank_academy_focus2
-			}
-			custom_effect_tooltip = HSF_hessen_tooltip
-		}
-	}
-					
-	focus = {
-		id = POL_production_standardization
-		icon = GFX_goal_generic_improve_industry
+		id = POL_application_materials
+		icon = GFX_PAN_focu_347
 		x = 0
 		y = 1
-		cost = 4
-		relative_position_id = POL_modern_cavalry
-		prerequisite = {
-			focus = POL_modern_cavalry
-		}
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 1.5
-				has_war = yes
-			}
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = POL_modern_cavalry_focus
-				add_idea = POL_modern_cavalry_focus2
-			}
-			add_tech_bonus = {
-				name = POL_production_standardization
-				bonus = 0.5
-				uses = 1
-				category = infantry_tech
-			}
-		}
-	}
-						
-	focus = {
-		id = POL_optimized_light_fire
-		icon = GFX_goal_generic_small_arms
-		x = 2
-		y = 1
 		cost = 6
-		relative_position_id = POL_modern_cavalry
+		relative_position_id = POL_optimized_light_fire
 		prerequisite = {
-			focus = POL_modern_cavalry
+			focus = POL_optimized_light_fire
 		}
 		ai_will_do = {
 			factor = 10
@@ -1533,13 +1677,13 @@ focus_tree = {
 							
 	focus = {
 		id = POL_military_exercise
-		icon = GFX_goal_generic_position_armies
-		x = 0
+		icon = GFX_goal_wargaming
+		x = 1
 		y = 1
 		cost = 4
-		relative_position_id = POL_production_standardization
+		relative_position_id = POL_army_modernization
 		prerequisite = {
-			focus = POL_production_standardization
+			focus = POL_army_modernization
 		}
 		ai_will_do = {
 			factor = 10
@@ -1561,26 +1705,61 @@ focus_tree = {
 	}
 								
 	focus = {
-		id = POL_artillery_knight
-		icon = GFX_goal_generic_artillery_factories
+		id = POL_revised_mobilization_order
+		icon = GFX_goal_generic_martial_law
 		x = 0
 		y = 1
-		cost = 6
-		relative_position_id = POL_optimized_light_fire
+		cost = 4
+		relative_position_id = POL_military_exercise
 		prerequisite = {
-			focus = POL_optimized_light_fire
+			focus = POL_military_exercise
 		}
 		ai_will_do = {
 			factor = 10
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			army_experience = 25
+			add_doctrine_cost_reduction = {
+				name = POL_military_exercise
+				cost_reduction = 0.5
+				category = land_doctrine
+				uses = 1
+			}
+		}
+	}
+										
+	focus = {
+		id = POL_mechanized_knight
+		icon = GFX_focus_SWE_lynx_armored_car
+		x = -1
+		y = 1
+		cost = 4
+		relative_position_id = POL_munitions_industry
+		prerequisite = {
+			focus = POL_munitions_industry
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 		completion_reward = {
-			add_ideas = POL_artillery_knight_focus
+			custom_effect_tooltip = available_military_high_command
+			show_ideas_tooltip = POL_Nearl
 			add_tech_bonus = {
-				name = POL_artillery_knight
-				bonus = 0.5
-				uses = 2
-				category = artillery
+				name = POL_armor_program
+				bonus = 0.75
+				uses = 1
+				ahead_reduction = 2.5
+				category = armor
 			}
 		}
 	}
@@ -1588,15 +1767,12 @@ focus_tree = {
 	focus = {
 		id = POL_armor_program
 		icon = GFX_goal_generic_army_tanks
-		x = -1
+		x = 0
 		y = 1
 		cost = 4
-		relative_position_id = POL_military_exercise
+		relative_position_id = POL_mechanized_knight
 		prerequisite = {
-			focus = POL_military_exercise
-		}
-		mutually_exclusive = {
-			focus = POL_fire_first
+			focus = POL_mechanized_knight
 		}
 		ai_will_do = {
 			factor = 10
@@ -1620,17 +1796,14 @@ focus_tree = {
 	}
 										
 	focus = {
-		id = POL_fire_first
-		icon = GFX_goal_generic_army_artillery2
+		id = POL_lightweight_artillery
+		icon = GFX_goal_generic_artillery_factories
 		x = 1
 		y = 1
 		cost = 4
-		relative_position_id = POL_military_exercise
+		relative_position_id = POL_munitions_industry
 		prerequisite = {
-			focus = POL_military_exercise
-		}
-		mutually_exclusive = {
-			focus = POL_armor_program
+			focus = POL_munitions_industry
 		}
 		ai_will_do = {
 			factor = 10
@@ -1652,17 +1825,91 @@ focus_tree = {
 			}
 		}
 	}
-											
+									
 	focus = {
-		id = POL_logistics_construction
-		icon = GFX_goal_SOV_logistics
+		id = POL_improve_the_power_of_artillery_shells
+		icon = GFX_goal_proving_grounds
+		x = 0
+		y = 1
+		cost = 6
+		relative_position_id = POL_lightweight_artillery
+		prerequisite = {
+			focus = POL_lightweight_artillery
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			add_ideas = POL_improve_the_power_of_artillery_shells_focus
+			add_tech_bonus = {
+				name = POL_improve_the_power_of_artillery_shells
+				bonus = 0.5
+				uses = 2
+				category = artillery
+			}
+		}
+	}
+
+	focus = {
+		id = POL_ministry_of_national_defense_engineering
+		icon = GFX_goal_generic_military_sphere
+		x = 1
+		y = 1
+		cost = 4
+		relative_position_id = POL_adaptive_training
+		prerequisite = {
+			focus = POL_adaptive_training
+		}
+		prerequisite = {
+			focus = POL_revised_mobilization_order
+		}
+		ai_will_do = {
+			factor = 25
+			modifier = {
+				factor = 0
+				check_variable = {
+					ubs_load > 200
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			add_ideas = POL_ministry_of_national_defense_engineering_focus
+			add_tech_bonus = {
+				name = POL_ministry_of_national_defense_engineering
+				bonus = 0.5
+				uses = 1
+				category = armor
+			}
+			custom_effect_tooltip = POL_pay_300_tt
+			hidden_effect = {
+				set_variable = { POL_debt = 300 }
+				if = {
+					limit = { 
+						check_variable = { ubs_save > POL_debt }
+					}
+					subtract_from_variable = { ubs_save = POL_debt }
+				}
+				else = {
+					subtract_from_variable = { POL_debt = ubs_save }
+					set_variable = { ubs_save = 0 }
+					add_to_variable = { ubs_load = POL_debt }
+				}
+				clear_variable = POL_debt
+			}
+		}
+	}
+														
+	focus = {
+		id = POL_western_frontier_defense_line
+		icon = GFX_PAN_focu_250
 		x = -1
 		y = 1
 		cost = 6
-		relative_position_id = POL_fire_first
+		relative_position_id = POL_ministry_of_national_defense_engineering
 		prerequisite = {
-			focus = POL_fire_first
-			focus = POL_armor_program
+			focus = POL_ministry_of_national_defense_engineering
 		}
 		ai_will_do = {
 			factor = 10
@@ -1680,9 +1927,182 @@ focus_tree = {
 				category = industry
 			}
 			swap_ideas = {
-				remove_idea = POL_modern_cavalry_focus2
-				add_idea = POL_modern_cavalry_focus3
+				remove_idea = POL_selection_of_horse_breeds_focus2
+				add_idea = POL_selection_of_horse_breeds_focus3
 			}
+		}
+	}
+													
+	focus = {
+		id = POL_eastern_fortification
+		icon = GFX_goal_generic_city_chain_forts
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_ministry_of_national_defense_engineering
+		prerequisite = {
+			focus = POL_ministry_of_national_defense_engineering
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			add_tech_bonus = {
+				name = POL_industrial_plan
+				bonus = 0.5
+				uses = 1
+				category = industry
+			}
+			swap_ideas = {
+				remove_idea = POL_selection_of_horse_breeds_focus2
+				add_idea = POL_selection_of_horse_breeds_focus3
+			}
+		}
+	}
+
+	focus = {
+		id = POL_logistics_construction
+		icon = GFX_focus_generic_supply_line
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_western_frontier_defense_line
+		prerequisite = {
+			focus = POL_western_frontier_defense_line
+			focus = POL_eastern_fortification
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			add_tech_bonus = {
+				name = POL_industrial_plan
+				bonus = 0.5
+				uses = 1
+				category = industry
+			}
+			swap_ideas = {
+				remove_idea = POL_selection_of_horse_breeds_focus2
+				add_idea = POL_selection_of_horse_breeds_focus3
+			}
+		}
+	}
+
+	focus = {
+		id = POL_Archer_arms_factory
+		icon = GFX_goal_generic_production2
+		x = -3
+		y = 1
+		cost = 6
+		relative_position_id = POL_national_mobilization_plan
+		prerequisite = {
+			focus = POL_national_mobilization_plan
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				has_war = yes
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			custom_effect_tooltip = available_designer
+			show_ideas_tooltip = POL_Archer
+		}
+	}
+
+	focus = {
+		id = POL_auxiliary_arm
+		icon = GFX_focus_FIN_weapon_caches
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_application_materials
+		prerequisite = {
+			focus = POL_application_materials
+		}
+		prerequisite = {
+			focus = POL_adaptive_training
+		}
+		ai_will_do = {
+			factor = 25
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			mio:HSF_hessen_organization = {
+				add_mio_size = 2
+			}
+			add_tech_bonus = {
+				name = POL_auxiliary_arm
+				bonus = 0.5
+				uses = 2
+				category = cat_anti_tank
+			}
+		}
+	}
+						
+	focus = {
+		id = POL_adaptive_design
+		icon = GFX_goal_generic_heavy_armour_russian
+		x = -1
+		y = 1
+		cost = 6
+		relative_position_id = POL_armor_program
+		prerequisite = {
+			focus = POL_armor_program
+		}
+		ai_will_do = {
+			factor = 25
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			mio:HSF_hessen_organization = {
+				add_mio_research_bonus = 0.10
+			}
+			add_tech_bonus = {
+				name = POL_adaptive_design
+				bonus = 0.5
+				uses = 2
+				category = armor
+			}
+		}
+	}
+							
+	focus = {
+		id = POL_tank_production_line
+		icon = GFX_goal_Focus_Military_Mobilisation
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_armor_program
+		prerequisite = {
+			focus = POL_armor_program
+		}
+		ai_will_do = {
+			factor = 25
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			mio:HSF_hessen_organization = {
+				add_mio_funds = 0.15
+				add_mio_size = 1
+			}
+			swap_ideas = {
+				remove_idea = POL_ministry_of_national_defense_engineering_focus
+				add_idea = POL_ministry_of_national_defense_engineering_focus2
+			}
+			custom_effect_tooltip = HSF_hessen_tooltip
 		}
 	}
 
@@ -1691,9 +2111,10 @@ focus_tree = {
 	focus = {
 		id = POL_air_force_expansion
 		icon = GFX_goal_generic_build_airforce
-		x = 23
+		x = 8
 		y = 0
 		cost = 4
+		relative_position_id = POL_national_mobilization_plan
 		ai_will_do = {
 			factor = 5
 		}
@@ -1711,38 +2132,11 @@ focus_tree = {
 			}
 		}
 	}
-			
-	focus = {
-		id = POL_industrial_mobilization_act
-		icon = GFX_goal_generic_military_sphere
-		x = -2
-		y = 1
-		cost = 6
-		relative_position_id = POL_air_force_expansion
-		prerequisite = {
-			focus = POL_air_force_expansion
-			focus = POL_national_mobilization_plan
-		}
-		available = {
-			any_enemy_country = {
-				is_major = yes
-			}
-		}
-		ai_will_do = {
-			factor = 100
-		}
-		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_SWI_MILITARY_READINESS }
-		completion_reward = {
-			add_ideas = POL_industrial_mobilization_act_focus
-			add_war_support = 0.10
-			add_stability = -0.05
-		}
-	}
 		
 	focus = {
 		id = POL_air_defense_construction
-		icon = GFX_goal_POL_airplane_hunt
-		x = 0
+		icon = GFX_PAN_focu_175
+		x = -2
 		y = 1
 		cost = 6
 		relative_position_id = POL_air_force_expansion
@@ -1767,16 +2161,44 @@ focus_tree = {
 			}
 		}
 	}
-			
+						
 	focus = {
-		id = POL_experimental_radar
-		icon = GFX_goal_generic_radar
-		x = 2
+		id = POL_pilot_training
+		icon = GFX_focus_SOV_flying_clubs
+		x = 1
 		y = 1
-		cost = 6
+		cost = 4
 		relative_position_id = POL_air_force_expansion
 		prerequisite = {
 			focus = POL_air_force_expansion
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			air_experience = 25
+			add_doctrine_cost_reduction = {
+				name = POL_pilot_training
+				cost_reduction = 0.5
+				category = air_doctrine
+				uses = 1
+			}
+		}
+	}
+			
+	focus = {
+		id = POL_experimental_radar
+		icon = GFX_goal_generic_radar2
+		x = 1
+		y = 1
+		cost = 6
+		relative_position_id = POL_air_defense_construction
+		prerequisite = {
+			focus = POL_air_defense_construction
+		}
+		prerequisite = {
+			focus = POL_pilot_training
 		}
 		ai_will_do = {
 			factor = 5
@@ -1799,14 +2221,14 @@ focus_tree = {
 	}
 			
 	focus = {
-		id = POL_air_force_modernization
+		id = POL_joint_air_ground_exercise
 		icon = GFX_goal_generic_air_fighter
-		x = -1
+		x = 0
 		y = 1
 		cost = 6
-		relative_position_id = POL_air_defense_construction
+		relative_position_id = POL_pilot_training
 		prerequisite = {
-			focus = POL_air_defense_construction
+			focus = POL_pilot_training
 		}
 		ai_will_do = {
 			factor = 5
@@ -1825,15 +2247,12 @@ focus_tree = {
 	focus = {
 		id = POL_underground_industry
 		icon = GFX_goal_generic_construct_military
-		x = 1
+		x = -1
 		y = 1
 		cost = 6
 		relative_position_id = POL_air_defense_construction
 		prerequisite = {
 			focus = POL_air_defense_construction
-		}
-		prerequisite = {
-			focus = POL_experimental_radar
 		}
 		ai_will_do = {
 			factor = 5
@@ -1851,41 +2270,16 @@ focus_tree = {
 			}
 		}
 	}
-					
-	focus = {
-		id = POL_pilot_training
-		icon = GFX_focus_SOV_flying_clubs
-		x = -1
-		y = 1
-		cost = 4
-		relative_position_id = POL_air_force_modernization
-		prerequisite = {
-			focus = POL_air_force_modernization
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH }
-		completion_reward = {
-			air_experience = 25
-			add_doctrine_cost_reduction = {
-				name = POL_pilot_training
-				cost_reduction = 0.5
-				category = air_doctrine
-				uses = 1
-			}
-		}
-	}
 						
 	focus = {
-		id = POL_fighter_modernization
+		id = POL_aerodynamics_research_institute
 		icon = GFX_focus_generic_copy_plane_designs
-		x = 1
+		x = 2
 		y = 1
 		cost = 6
-		relative_position_id = POL_air_force_modernization
+		relative_position_id = POL_pilot_training
 		prerequisite = {
-			focus = POL_air_force_modernization
+			focus = POL_pilot_training
 		}
 		ai_will_do = {
 			factor = 10
@@ -1928,9 +2322,59 @@ focus_tree = {
 	}
 							
 	focus = {
-		id = POL_Baudrachet_factory
+		id = POL_fighter_modernization
+		icon = GFX_goal_generic_air_fighter2_new
+		x = 0
+		y = 1
+		cost = 6
+		relative_position_id = POL_aerodynamics_research_institute
+		prerequisite = {
+			focus = POL_aerodynamics_research_institute
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			add_tech_bonus = {
+				name = POL_fighter_modernization
+				bonus = 0.25
+				uses = 2
+				category = light_fighter
+			}
+			add_tech_bonus = {
+				name = POL_fighter_modernization
+				bonus = 0.5
+				uses = 1
+				category = heavy_air
+			}
+			create_equipment_variant = {
+				name = "Firebat.6"
+				type = small_plane_airframe_2
+				modules = {
+					fixed_main_weapon_slot = heavy_mg_4x
+					fixed_auxiliary_weapon_slot_1 = heavy_mg_4x
+					engine_type_slot = engine_2_1x
+					special_type_slot_1 = empty
+				}
+			}
+			create_equipment_variant = {
+				name = "Firebat.8"
+				type = small_plane_airframe_3
+				modules = {
+					fixed_main_weapon_slot = heavy_mg_4x
+					fixed_auxiliary_weapon_slot_1 = heavy_mg_4x
+					engine_type_slot = engine_2_1x
+					special_type_slot_1 = empty
+				}
+			}
+		}
+	}
+							
+	focus = {
+		id = POL_ground_crew
 		icon = GFX_focus_generic_aircraft_production
-		x = 1
+		x = 0
 		y = 1
 		cost = 6
 		relative_position_id = POL_underground_industry
@@ -1953,9 +2397,9 @@ focus_tree = {
 		x = 0
 		y = 1
 		cost = 4
-		relative_position_id = POL_fighter_modernization
+		relative_position_id = POL_joint_air_ground_exercise
 		prerequisite = {
-			focus = POL_fighter_modernization
+			focus = POL_joint_air_ground_exercise
 		}
 		ai_will_do = {
 			factor = 10
@@ -2047,294 +2491,6 @@ focus_tree = {
 					uses = 2
 					category = para_tech
 				}
-			}
-		}
-	}
-#通用改革
-	focus = {
-		id = POL_government_reform
-		icon = GFX_focus_generic_self_management
-		x = 30
-		y = 0
-		cost = 4
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 15
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
-		completion_reward = {
-			custom_effect_tooltip = POL_government_reform_tt
-			hidden_effect = {
-				add_to_variable = { POL_sg_political_power_factor = 0.05 }
-				add_to_variable = { POL_sg_stability_factor = 0.10 }
-			}
-		}
-	}
-
-	focus = {
-		id = POL_reorganize_party
-		icon = GFX_focus_generic_military_academy
-		x = -1
-		y = 1
-		cost = 4
-		relative_position_id = POL_government_reform
-		prerequisite = {
-			focus = POL_government_reform
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			add_political_power = 100
-			add_stability = 0.10
-			hidden_effect = {
-				add_to_variable = { ubs_save = 100 }
-			}
-			custom_effect_tooltip = SOV_get_100_add_to_reserve
-		}
-	}
-	
-	focus = {
-		id = POL_national_problem
-		icon = GFX_goal_generic_national_unity
-		x = 1
-		y = 1
-		cost = 4
-		relative_position_id = POL_government_reform
-		prerequisite = {
-			focus = POL_government_reform
-		}
-		ai_will_do = {
-			factor = 15
-			modifier = {
-				factor = 0
-				check_variable = {
-					ubs_load > 200
-				}
-			}
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			remove_ideas = POL_apartheid_policy
-			custom_effect_tooltip = POL_pay_500_tt
-			hidden_effect = {
-				set_variable = { POL_debt = 500 }
-				if = {
-					limit = { 
-						check_variable = { ubs_save > POL_debt }
-					}
-					subtract_from_variable = { ubs_save = POL_debt }
-				}
-				else = {
-					subtract_from_variable = { POL_debt = ubs_save }
-					set_variable = { ubs_save = 0 }
-					add_to_variable = { ubs_load = POL_debt }
-				}
-				clear_variable = POL_debt
-			}
-		}
-	}
-		
-	focus = {
-		id = POL_union_of_labor
-		icon = GFX_focus_por_workers_of_iberia
-		x = 1
-		y = 1
-		cost = 4
-		relative_position_id = POL_reorganize_party
-		prerequisite = {
-			focus = POL_reorganize_party
-		}
-		prerequisite = {
-			focus = POL_national_problem
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			custom_effect_tooltip = POL_union_of_labor_tt
-			hidden_effect = {
-				add_to_variable = { POL_sg_industrial_capacity_factory = 0.05 }
-				add_to_variable = { POL_sg_production_factory_efficiency_gain_factor = 0.10 }
-			}
-		}
-	}
-		
-	focus = {
-		id = POL_hospital_of_the_dead
-		icon = GFX_goal_public_health_commission
-		x = -1
-		y = 1
-		cost = 4
-		relative_position_id = POL_union_of_labor
-		prerequisite = {
-			focus = POL_union_of_labor
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_MANPOWER }
-		completion_reward = {
-			custom_effect_tooltip = POL_hospital_of_the_dead_tt
-			hidden_effect = {
-				remove_dynamic_modifier = {
-					modifier = POL_spectre_government
-				}
-				add_dynamic_modifier = {
-					modifier = POL_spectre_government2
-				}
-				add_to_variable = { POL_sg_consumer_goods_factor = -0.05 }
-				add_to_variable = { exoutcome = 0.10 }
-			}
-			custom_effect_tooltip = available_political_advisor
-			
-		}
-	}
-			
-	focus = {
-		id = POL_district_council
-		icon = GFX_focus_RUS_generic_council
-		x = 1
-		y = 1
-		cost = 4
-		relative_position_id = POL_union_of_labor
-		prerequisite = {
-			focus = POL_union_of_labor
-		}
-		mutually_exclusive = {
-			focus = POL_national_committee
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			custom_effect_tooltip = POL_district_council_tt
-			hidden_effect = {
-				add_to_variable = { POL_sg_global_building_slots_factor = 0.10 }
-				add_to_variable = { POL_sg_production_speed_buildings_factor = 0.05 }
-			}
-		}
-	}
-				
-	focus = {
-		id = POL_national_committee
-		icon = GFX_focus_ETH_re-convene_the_parliament
-		x = 3
-		y = 1
-		cost = 4
-		relative_position_id = POL_union_of_labor
-		prerequisite = {
-			focus = POL_union_of_labor
-		}
-		mutually_exclusive = {
-			focus = POL_district_council
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			custom_effect_tooltip = POL_national_committee_tt
-			hidden_effect = {
-				add_to_variable = { POL_sg_max_command_power = 40 }
-				add_to_variable = { POL_sg_industrial_capacity_factory = 0.05 }
-			}
-		}
-	}
-			
-	focus = {
-		id = POL_technical_personnel
-		icon = GFX_goal_generic_scientific_exchange
-		x = -1
-		y = 1
-		cost = 4
-		relative_position_id = POL_hospital_of_the_dead
-		prerequisite = {
-			focus = POL_hospital_of_the_dead
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_RESEARCH }
-		completion_reward = {
-			custom_effect_tooltip = POL_technical_personnel_tt
-			hidden_effect = {
-				add_to_variable = { POL_sg_research_speed_factor = 0.08 }
-			}
-			custom_effect_tooltip = available_political_advisor
-			
-		}
-	}
-				
-	focus = {
-		id = POL_service_system
-		icon = GFX_goal_army_guy_2
-		x = 1
-		y = 1
-		cost = 4
-		relative_position_id = POL_hospital_of_the_dead
-		prerequisite = {
-			focus = POL_hospital_of_the_dead
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_MANPOWER }
-		completion_reward = {
-			custom_effect_tooltip = POL_service_system_tt
-			hidden_effect = {
-				add_to_variable = { POL_sg_conscription_factor = 0.15 }
-			}
-		}
-	}
-					
-	focus = {
-		id = POL_national_constitution
-		icon = GFX_focus_RUS_agency
-		x = 1
-		y = 1
-		cost = 4
-		relative_position_id = POL_district_council
-		prerequisite = {
-			focus = POL_district_council
-			focus = POL_national_committee
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			country_event = polish.31
-		}
-	}
-						
-	focus = {
-		id = POL_national_identity
-		icon = GFX_goal_SOV_cultural_political_union
-		x = 1
-		y = 1
-		cost = 4
-		relative_position_id = POL_service_system
-		prerequisite = {
-			focus = POL_service_system
-		}
-		prerequisite = {
-			focus = POL_national_constitution
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		search_filters = { FOCUS_FILTER_AIR_XP }
-		completion_reward = {
-			custom_effect_tooltip = POL_national_identity_tt
-			hidden_effect = {
-				add_to_variable = { POL_sg_army_core_defence_factor = 0.10 }
-				add_to_variable = { POL_sg_compliance_growth = 0.15 }
 			}
 		}
 	}
