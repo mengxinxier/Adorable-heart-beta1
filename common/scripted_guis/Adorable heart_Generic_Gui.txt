@@ -78,35 +78,31 @@ scripted_gui = {
 		ai_weights = {
 		}
 	}
-	#核心
-	Get_core_window = {
-		window_name = "Get_core_window"
+	##核心
+	Adorable_heart_alerts_window = {
 		context_type = player_context
-		visible = {
-			has_country_flag = Get_core_window_visible
-            is_ai = no
-			#check_variable = { ROOT.num_GetCroeState > 0 }
-		}
-		effects = {
-			Get_core_window_close_button_click = {
-				sound_effect = "click_close"
-				clr_country_flag = Get_core_window_visible
-				clear_array = ROOT.GetCroeState_array
-				set_variable = { ROOT.num_GetCroeState = 0 }
-            }
-		}
-		triggers = {
-		}
-		dynamic_lists = {
-		}
-		properties = {
-		}
+		window_name = "Adorable_heart_alerts_window"
+		dirty = global.Adorable_heart_alerts_dirty
 		ai_enabled = {
 			always = no
 		}
-		ai_check = {
+		dynamic_lists = {
+			state_integration_alerts_grid = {
+				array = state_integration_alerts
+				entry_container = state_integration_alert
+				value = integrated_state
+			}
 		}
-		ai_weights = {
+		effects = {
+			state_integration_bg_right_click = {
+				set_temp_variable = { target = integrated_state }
+				clear_integration_alert = yes
+			}
+		}
+		properties = {
+			state_integration_alert_progressbar = {
+				x = integration_progressbar_value_@var:integrated_state
+			}
 		}
 	}
 	#开局介绍
@@ -280,6 +276,13 @@ scripted_gui = {
 							id = generic.2013
 						}
 					}
+					set_country_flag = Adorable_heart_opinion_button_visible
+					set_variable = { adorable_heart_super_event_music_button_var = 2 }
+					if = {
+						limit = { is_chinese_country = yes }
+						set_variable = { Chinese_Secondary_News_button_var = 2 }
+					}
+					else = { set_variable = { Chinese_Secondary_News_button_var = 1 } }
 				}
 			}
 		}
@@ -306,7 +309,7 @@ scripted_gui = {
 	}
 }
 
-	##城市介绍
+##城市介绍
 scripted_gui = {
     Adorable_heart_city_story_button_container = {
         context_type = selected_state_context
@@ -375,6 +378,120 @@ scripted_gui = {
 		properties = {
 		}
 		effects = {
+		}
+	}
+#钢铁萌心选项
+	Adorable_heart_opinion_button = {
+		context_type = player_context
+		parent_window_token = top_bar
+		window_name = "Adorable_heart_opinion_button"
+		visible = {
+			has_country_flag = Adorable_heart_opinion_button_visible
+		}
+		properties = {
+		}
+		triggers = {
+			open_button_visible = {
+				not = { has_country_flag = Adorable_heart_opinion_window_visible }
+			}
+			close_button_visible = {
+				has_country_flag = Adorable_heart_opinion_window_visible
+			}
+		}
+		effects = {
+			open_button_click = {
+				if = {
+					limit = {
+						has_country_flag = Adorable_heart_opinion_window_visible
+					}
+					clr_country_flag = Adorable_heart_opinion_window_visible
+				}
+				else = {
+					set_country_flag = Adorable_heart_opinion_window_visible
+				}
+				if = {
+					limit = {
+						not = { has_country_flag = Adorable_heart_opinion_arrows_alert_unvisible }
+					}
+					set_country_flag = Adorable_heart_opinion_arrows_alert_unvisible
+				}
+			}
+			close_button_click = {
+				if = {
+					limit = {
+						has_country_flag = Adorable_heart_opinion_window_visible
+					}
+					clr_country_flag = Adorable_heart_opinion_window_visible
+				}
+				else = {
+					set_country_flag = Adorable_heart_opinion_window_visible
+				}
+				if = {
+					limit = {
+						not = { has_country_flag = Adorable_heart_opinion_arrows_alert_unvisible }
+					}
+					set_country_flag = Adorable_heart_opinion_arrows_alert_unvisible
+				}
+			}
+		}
+	}
+	Adorable_heart_opinion_arrows_alert = {
+		context_type = player_context
+		parent_window_token = top_bar
+		window_name = "Adorable_heart_opinion_arrows_alert"
+		visible = {
+			has_country_flag = Adorable_heart_opinion_button_visible
+			not = { has_country_flag = Adorable_heart_opinion_arrows_alert_unvisible }
+		}
+		properties = {
+		}
+		effects = {
+		}
+	}
+	Adorable_heart_opinion_window = {
+		context_type = player_context
+		window_name = "Adorable_heart_opinion_window"
+		visible = {
+			has_country_flag = Adorable_heart_opinion_window_visible
+		}
+		properties = {
+			adorable_heart_super_event_music_button = {
+				frame = adorable_heart_super_event_music_button_var
+			}
+			Chinese_Secondary_News_button = {
+				frame = Chinese_Secondary_News_button_var
+			}
+		}
+		effects = {
+			adorable_heart_super_event_music_button_click = {
+				if = {
+					limit = {
+						not = { check_variable = { adorable_heart_super_event_music_button_var = 2 } }
+					}
+					set_variable = { adorable_heart_super_event_music_button_var = 2 }
+				}
+				else = {
+					set_variable = { adorable_heart_super_event_music_button_var = 1 }
+				}
+			}
+			Chinese_Secondary_News_button_click = {
+				if = {
+					limit = {
+						not = { check_variable = { Chinese_Secondary_News_button_var = 2 } }
+					}
+					set_variable = { Chinese_Secondary_News_button_var = 2 }
+				}
+				else = {
+					set_variable = { Chinese_Secondary_News_button_var = 1 }
+				}
+			}
+			Welcome_window_open_button_click = {
+				set_country_flag = show_welcome_splash
+				set_variable = { Country_History_Button_Var = 1 }
+				set_variable = { Local_History_Button_Var = 1 }
+				set_variable = { World_History_Button_Var = 1 }
+				set_variable = { Route_Guide_Button_Var = 1 }
+			}
 		}
 	}
 }
