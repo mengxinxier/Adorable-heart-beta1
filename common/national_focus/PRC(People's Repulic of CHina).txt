@@ -297,6 +297,14 @@ focus_tree = {
 		cancel_if_invalid = yes
 		cancelable = no
 		select_effect = {
+			hidden_effect = {
+				country_event = { id = PRC_add.72 days = 10 }
+				country_event = { id = PRC_add.73 days = 20 }
+				country_event = { id = PRC_add.74 days = 30 }
+				country_event = { id = PRC_add.75 days = 40 }
+				country_event = { id = PRC_add.76 days = 50 }
+				country_event = { id = PRC_add.77 days = 60 }
+			}
 		}
 		completion_reward = {
 			custom_effect_tooltip = PRC_Spark_tt
@@ -325,6 +333,7 @@ focus_tree = {
 			custom_effect_tooltip = will_be_bypass
 			unlock_decision_tooltip = PRC_Construction_of_Sichuan_Chongqing_Railway
 			unlock_decision_tooltip = PRC_Construction_of_YunGui_Railway
+			clr_country_flag = Base_Country
 			hidden_effect = {
 				country_event = {
 					id = PRC_add.58
@@ -388,8 +397,17 @@ focus_tree = {
 					has_war_with = XSM
 				}
 			}
+			any_home_area_neighbor_country = {
+				tag = XSM
+			}
 		}
 		bypass = {
+			XSM = {
+				or = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
 		}
 		complete_tooltip = {
 		}
@@ -421,8 +439,17 @@ focus_tree = {
 		}
 		available = {
 			SIK = { has_government = communism }
+			any_home_area_neighbor_country = {
+				tag = SIK
+			}
 		}
 		bypass = {
+			SIK = {
+				or = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -454,8 +481,17 @@ focus_tree = {
 		}
 		available = {
 			SIK = { not = { has_government = communism } }
+			any_home_area_neighbor_country = {
+				tag = SIK
+			}
 		}
 		bypass = {
+			SIK = {
+				or = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -485,6 +521,18 @@ focus_tree = {
 		}
 		available = {
 			not = { has_global_flag = CHI_REUNIT }
+			XSM = {
+				or = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+			SIK = {
+				or = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
 		}
 		bypass = {
 		}
@@ -599,7 +647,6 @@ focus_tree = {
 			base = 4
 		}
 		available = {
-			not = { has_global_flag = CHI_REUNIT }
 			controlled_states = 608
 		}
 		bypass = {
@@ -630,6 +677,12 @@ focus_tree = {
 		}
 		available = {
 			not = { has_global_flag = CHI_REUNIT }
+			any_home_area_neighbor_country = {
+				custom_trigger_tooltip = {
+					tooltip = is_in_third_international
+					is_in_third_international = yes
+				}
+			}
 		}
 		bypass = {
 		}
@@ -639,6 +692,7 @@ focus_tree = {
 			SOV = { country_event = { id = PRC_add.57 } }
 			custom_effect_tooltip = PRC_Northwest_Construction_Program_tt
 			unlock_decision_tooltip = PRC_Northwest_Construction_Program_decision
+			custom_effect_tooltip = PRC_support_of_zhang_maybe_high
 		}
 	}
 	#中苏大铁路
@@ -669,34 +723,44 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			SOV = {
+				activate_targeted_decision = { target = ROOT decision = SOV_invite_dec_to_join_comecon_outside_allies }
+				activate_targeted_decision = { target = ROOT decision = SOV_aid_dec_western_front }
+			}
+			unlock_decision_tooltip = PRC_ask_for_SOV_equipment
+			unlock_decision_tooltip = PRC_ask_for_SOV_industrial
 		}
 	}
-	#西部大开发
-	focus = {
-		id = PRC_development_o_western_region
-		icon = GFX_goal_generic_commie_investments
-		prerequisite = {
-			focus = PRC_China_Soviet_Railway
-		}
-		relative_position_id = PRC_China_Soviet_Railway
-		x = -1
-		y = 1
-		cost = 4
-		allow_branch = {
-		}
-		ai_will_do = {
-			base = 4
-		}
-		available = {
-			not = { has_global_flag = CHI_REUNIT }
-		}
-		bypass = {
-		}
-		available_if_capitulated = no
-		cancel_if_invalid = yes
-		completion_reward = {
-		}
-	}
+	# #西部大开发
+	# focus = {
+	# 	id = PRC_development_o_western_region
+	# 	icon = GFX_goal_generic_commie_investments
+	# 	prerequisite = {
+	# 		focus = PRC_China_Soviet_Railway
+	# 	}
+	# 	relative_position_id = PRC_China_Soviet_Railway
+	# 	x = -1
+	# 	y = 1
+	# 	cost = 4
+	# 	allow_branch = {
+	# 	}
+	# 	ai_will_do = {
+	# 		base = 4
+	# 	}
+	# 	available = {
+	# 		not = { has_global_flag = CHI_REUNIT }
+	# 		has_railway_connection = {
+	# 			start_province = 6380
+	# 			target_province = 6999
+	# 		}
+	# 	}
+	# 	bypass = {
+	# 	}
+	# 	available_if_capitulated = no
+	# 	cancel_if_invalid = yes
+	# 	completion_reward = {
+	# 	}
+	# }
 	#扩大苏援项目
 	focus = {
 		id = PRC_Expand_Soviet_aid_project
@@ -718,12 +782,34 @@ focus_tree = {
 		}
 		available = {
 			not = { has_global_flag = CHI_REUNIT }
+			has_railway_connection = {
+				start_province = 6380
+				target_province = 6999
+			}
 		}
 		bypass = {
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 30
+				tooltip = China_Industrial_Points_Var_up_30_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
+			add_power_balance_value = {
+				id = PRC_Line_struggle_bop
+				value = 0.05
+			}
+			swap_ideas = {
+				remove_idea = PRC_Soviet_specialists_idea
+				add_idea = PRC_Expand_Soviet_aid_project_idea
+			}
 		}
 	}
 	#邀请苏联专家
@@ -750,6 +836,24 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_power_balance_value = {
+				id = PRC_Line_struggle_bop
+				value = 0.02
+			}
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 20
+				tooltip = China_Industrial_Points_Var_up_20_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
+			swap_ideas = {
+				remove_idea = PRC_Comintern_appropriations
+				add_idea = PRC_Soviet_specialists_idea
+			}
 		}
 	}
 	#根据地建设
@@ -820,6 +924,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_power_balance_value = {
+				id = PRC_Line_struggle_bop
+				value = 0.2
+			}
 			add_ideas = PRC_Wartime_communism_idea
 		}
 	}
@@ -850,6 +958,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_power_balance_value = {
+				id = PRC_Line_struggle_bop
+				value = -0.2
+			}
 			add_ideas = PRC_land_reform_idea
 		}
 	}
@@ -882,6 +994,16 @@ focus_tree = {
 		cancel_if_invalid = yes
 		completion_reward = {
 			add_ideas = PRC_Solidarity_with_workers_idea
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 5
+				tooltip = China_Industrial_Points_Var_up_5_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 	}
 	#扩大国控产业
@@ -967,6 +1089,16 @@ focus_tree = {
 		cancel_if_invalid = yes
 		completion_reward = {
 			add_ideas = PRC_Ultra_industrialized_idea
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 10
+				tooltip = China_Industrial_Points_Var_up_10_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 	}
 	#加强数据计算
@@ -1198,6 +1330,16 @@ focus_tree = {
 		cancel_if_invalid = yes
 		completion_reward = {
 			add_ideas = PRC_Big_production_movement_idea
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 5
+				tooltip = China_Industrial_Points_Var_up_5_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 	}
 	#马克思主义中国化
@@ -1302,6 +1444,16 @@ focus_tree = {
 					instant_build = yes
 				}
 			}
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 2
+				tooltip = China_Industrial_Points_Var_up_2_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 	}
 	#重启江兵工总厂
@@ -1358,6 +1510,16 @@ focus_tree = {
 					level = 1
 					instant_build = yes
 				}
+			}
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 2
+				tooltip = China_Industrial_Points_Var_up_2_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
 			}
 		}
 	}
@@ -1630,6 +1792,16 @@ focus_tree = {
 				}
 			}
 			remove_ideas = PRC_Agricultural_issues_1
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 2
+				tooltip = China_Industrial_Points_Var_up_2_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 	}
 ##建国
@@ -1672,6 +1844,7 @@ focus_tree = {
 				}
 			}
 		}
+		cancelable = no
 		bypass = {
 		}
 		available_if_capitulated = no
@@ -1681,6 +1854,36 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = PRC_Convene_first_CPPCC_tt
+			hidden_effect = {
+				if = { 
+					limit = {
+						power_balance_value = {
+							id = PRC_Line_struggle_bop
+							value < -0.2
+						}
+					}
+					country_event = { id = PRC_add.78 }
+				}
+				else_if = { 
+					limit = {
+						power_balance_value = {
+							id = PRC_Line_struggle_bop
+							value > 0.2
+						}
+					}
+					if = {
+						limit = { has_country_flag = Chen_duxiu_is_Representatives_of_Moscow }
+						country_event = { id = PRC_add.79 }
+					}
+					else = {
+						country_event = { id = PRC_add.80 }
+					}
+				}
+				else = { country_event = { id = PRC_add.81 } }
+				remove_power_balance = {
+					id = PRC_Line_struggle_bop
+				}
+			}
 		}
 	}
 	#成立最高苏维埃
@@ -1923,6 +2126,40 @@ focus_tree = {
 				division_template = "东北游击队"
 				disband = yes
 			}
+			complete_national_focus = PRC_founding_of_country_is_over
+			if = {
+				limit = {
+					PRC = {
+						has_country_leader = {
+							ruling_only = yes
+							character = PRC_lidesheng
+						}
+					}
+				}
+				complete_national_focus = PRC_The_red_sun_of_the_people
+			}
+			if = {
+				limit = {
+					PRC = {
+						has_country_leader = {
+							ruling_only = yes
+							character = PRC_Chiyoda_Momo
+						}
+					}
+				}
+				complete_national_focus = PRC_Guidance_from_Kremlin
+			}
+			if = {
+				limit = {
+					PRC = {
+						has_country_leader = {
+							ruling_only = yes
+							character = PRC_Chen_duxiu
+						}
+					}
+				}
+				complete_national_focus = PRC_Guidance_from_Kremlin
+			}
 		}
 	}
 	#社会主义文化
@@ -1964,6 +2201,8 @@ focus_tree = {
 			base = 4
 		}
 		available = {
+			CHI = { exists = no }
+			ROC = { exists = no }
 		}
 		bypass = {
 		}
@@ -2428,9 +2667,9 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			unlock_decision_tooltip = man_dec_nongyegaizao
-			unlock_decision_tooltip = man_dec_shougongyegaizao
-			unlock_decision_tooltip = man_dec_gongshangyegaizao
+			unlock_decision_tooltip = PRC_dec_nongyegaizao
+			unlock_decision_tooltip = PRC_dec_shougongyegaizao
+			unlock_decision_tooltip = PRC_dec_gongshangyegaizao
 		}
 	}
 	#大跃进
@@ -3079,15 +3318,28 @@ focus_tree = {
 		cost = 4
 		relative_position_id = PRC_Deepen_economic_integration_of_China_and_USSR
 		ai_will_do = {
-			base = 4
+			base = 0
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = is_in_third_international
+				is_in_third_international = yes
+			}
 		}
 		bypass = {
 		}
 		complete_tooltip = {
 		}
 		completion_reward = {
+			SOV = {
+				set_autonomy = {
+					target = PRC
+					autonomy_state = SOV_Self_governing_member_states
+				}
+			}
+			unlock_decision_category_tooltip = PRC_Sino_Soviet_friendship
+			unlock_decision_tooltip = PRC_Joined_the_Soviet_Union
+			unlock_decision_tooltip = PRC_Save_the_Soviets
 		}
 	}
 	#成立苏维埃联盟东亚政治局
@@ -3105,15 +3357,62 @@ focus_tree = {
 		cost = 4
 		relative_position_id = PRC_Deepen_economic_integration_of_China_and_USSR
 		ai_will_do = {
-			base = 4
+			base = 0
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = is_in_third_international
+				is_in_third_international = yes
+			}
 		}
 		bypass = {
 		}
 		complete_tooltip = {
 		}
 		completion_reward = {
+			set_cosmetic_tag = SOV_East_Asia
+			custom_effect_tooltip = PRC_Establish_SOV_East_Asia_TT
+			hidden_effect = {
+				every_country = {
+					limit = {
+						is_subject_of = ROOT
+						capital_scope = {
+							or = {
+								has_state_flag = is_whole_chinese_state_area
+								is_core_of = KOR
+								is_core_of = JAP
+							}
+						}
+					}
+					every_core_state = {
+						add_core_of = ROOT
+					}
+					every_character = { set_nationality = ROOT }
+					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+				}
+				JAP = {
+					every_core_state = {
+						if = {
+							limit = {
+								not = { is_core_of = ROOT }
+							}
+							add_claim_by = ROOT
+						}
+					}
+					enable_country_integration_80_compliance = yes
+				}
+				KOR = {
+					every_core_state = {
+						if = {
+							limit = {
+								not = { is_core_of = ROOT }
+							}
+							add_claim_by = ROOT
+						}
+					}
+					enable_country_integration_80_compliance = yes
+				}
+			}
 		}
 	}
 	#东亚风暴
@@ -3629,6 +3928,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 20
+				tooltip = China_Industrial_Points_Var_up_20_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 			add_timed_idea = {
 				idea = PRC_the_first_five_years_plan_idea
 				days = 1825
@@ -3656,6 +3965,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 10
+				tooltip = China_Industrial_Points_Var_up_10_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 			random_owned_controlled_state = {
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
@@ -3711,9 +4030,22 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			CHI_Improve_industry = yes
-			custom_effect_tooltip = unlock_designer
-			show_ideas_tooltip = PRC_tank
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 30
+				tooltip = China_Industrial_Points_Var_up_30_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
+			custom_effect_tooltip = available_mio_tt
+			custom_effect_tooltip = PRC_tank
+			mio:PRC_tank = {
+				add_mio_funds = 1000
+				add_mio_size = 6
+			}
 		}
 	}
 	#工业规划
@@ -3737,6 +4069,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 20
+				tooltip = China_Industrial_Points_Var_up_20_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 			add_ideas = PRC_Industrial_planning_idea
 		}
 	}
@@ -3761,7 +4103,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			CHI_Improve_industry = yes
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 50
+				tooltip = China_Industrial_Points_Var_up_50_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 	}
 	#武汉长江大桥
@@ -3786,6 +4137,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 20
+				tooltip = China_Industrial_Points_Var_up_20_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 			1048 = {
 				add_extra_state_shared_building_slots = 3
 				add_building_construction = {
@@ -3872,6 +4233,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 20
+				tooltip = China_Industrial_Points_Var_up_20_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 			add_ideas = PRC_Development_of_light_industry
 		}
 	}
@@ -3925,6 +4296,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 20
+				tooltip = China_Industrial_Points_Var_up_20_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 			add_tech_bonus = {
 				bonus = 1
 				uses = 2
@@ -3963,7 +4344,6 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			CHI_Improve_industry = yes
 		}
 	}
 	#勘探油田
@@ -3987,6 +4367,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 20
+				tooltip = China_Industrial_Points_Var_up_20_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 			883 = {
 				add_resource = {
 					type = oil
@@ -4016,7 +4406,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			CHI_Improve_industry = yes
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 50
+				tooltip = China_Industrial_Points_Var_up_50_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 	}
 	#长春第一汽车制造厂
@@ -4150,7 +4549,16 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			CHI_Improve_industry = yes
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 50
+				tooltip = China_Industrial_Points_Var_up_50_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 	}
 	#华东电网建设
@@ -4460,6 +4868,24 @@ focus_tree = {
 			remove_ideas = PRC_Research_deficiencies_1
 			add_research_slot = 1
 			add_ideas = PRC_Chinese_Academy_of_Sciences
+			custom_effect_tooltip = FRA_Automechanical_research_tt
+			custom_effect_tooltip = FRA_Research_on_new_types_of_aircraft_tt
+			if = {
+				limit = {
+					NOT = { has_country_flag = special_research_folder_available }
+				}
+				set_country_flag = special_research_folder_available
+			}
+			hidden_effect = {
+				set_technology = {
+					AUTO_META_research_available = 1
+					popup = no
+				}
+				set_technology = {
+					Siege_helicopter_available = 1
+					popup = no
+				}
+			}
 		}
 	}
 	#游子归国
@@ -4484,9 +4910,14 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = available_theorist
-			show_ideas_tooltip = MAN_luoji
+			show_ideas_tooltip = PRC_luoji
 			custom_effect_tooltip = available_theorist
-			show_ideas_tooltip = MAN_dingyi
+			show_ideas_tooltip = PRC_dingyi
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = PRC_Ruan_Mei_idea
+			hidden_effect = {
+				country_event = { id = PRC_add.101 }
+			}
 		}
 	}
 	#两弹一星
@@ -5866,6 +6297,8 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_war_support = 0.2
+			add_ideas = PRC_Great_War_Against_Sakura_idea
 		}
 	}
 	#论持久战
@@ -6272,6 +6705,18 @@ focus_tree = {
 			base = 20
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = WWI_eu_has_end
+				has_global_flag = second_weltkrieg_has_started
+				DVL = {
+					or = {
+						exists = no
+						is_subject = yes
+					}
+				}
+			}
+			has_war_with = JAP
+			SOV = { has_war = no }
 		}
 		bypass = {
 			not = { has_war_with = JAP }
@@ -6279,6 +6724,9 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			SOV = {
+				country_event = { id = PRC_add.70 }
+			}
 		}
 	}
 	#扩大中苏铁路

@@ -1911,6 +1911,7 @@ country_event = {
 	option = {
 		name = PRC_add.48.a
 		clr_country_flag = aid_from_Rhodes_Island
+		retire_character = RIS_Sussurro
 		ai_chance = {
 			base = 10
 		}
@@ -2047,9 +2048,22 @@ country_event = {
 	picture = GFX_report_event_SOV_international_workers_day
 	option = {
 		name = PRC_add.54.a
-		add_power_balance_value = {
-			id = PRC_Line_struggle_bop
-			value = 0.02
+		if = {
+			limit = { tag = PRC }
+			add_power_balance_value = {
+				id = PRC_Line_struggle_bop
+				value = 0.02
+			}
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 10
+				tooltip = China_Industrial_Points_Var_up_10_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 		ai_chance = {
 			base = 10
@@ -2067,9 +2081,22 @@ country_event = {
 	picture = GFX_report_event_SOV_international_workers_day
 	option = {
 		name = PRC_add.55.a
-		add_power_balance_value = {
-			id = PRC_Line_struggle_bop
-			value = 0.02
+		if = {
+			limit = { tag = PRC }
+			add_power_balance_value = {
+				id = PRC_Line_struggle_bop
+				value = 0.02
+			}
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 10
+				tooltip = China_Industrial_Points_Var_up_10_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 		ai_chance = {
 			base = 10
@@ -2087,9 +2114,22 @@ country_event = {
 	picture = GFX_report_event_SOV_international_workers_day
 	option = {
 		name = PRC_add.56.a
-		add_power_balance_value = {
-			id = PRC_Line_struggle_bop
-			value = 0.05
+		if = {
+			limit = { tag = PRC }
+			add_power_balance_value = {
+				id = PRC_Line_struggle_bop
+				value = 0.05
+			}
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 20
+				tooltip = China_Industrial_Points_Var_up_20_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
 		}
 		ai_chance = {
 			base = 10
@@ -2169,7 +2209,7 @@ country_event = {
 	desc = PRC_add.60.desc
 	picture = GFX_CHI_Peking_event
 	is_triggered_only = yes
-	fire_only_once = no
+	fire_only_once = yes
 	option = {
 		name = PRC_add.60.a
 		608 = {
@@ -2181,7 +2221,10 @@ country_event = {
 			add_core_of_ROOT = yes
 		}
 		hidden_effect = {
-			country_event = { id = PRC_add.61 }
+			country_event = {
+				id = PRC_add.61
+				days = 7
+			}
 		}
 		ai_chance = {
 			base = 10
@@ -2259,6 +2302,492 @@ country_event = {
 	}
 }
 
+#迈向工业化
+country_event = {
+	id = PRC_add.65
+	title = PRC_add.65.title
+	desc = PRC_add.65.desc
+	picture = GFX_PRC_Industrialization_event
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = PRC_add.65.a
+		add_political_power = 100
+		add_stability = 0.2
+		add_war_support = 0.2
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		random_owned_controlled_state = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#[PRC.Getname]请求我们援助装备
+country_event = {
+	id = PRC_add.66
+	title = PRC_add.66.title
+	desc = PRC_add.66.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	picture = GFX_PRC_Chiyoda_Momo_event
+	option = {
+		name = PRC_add.66.a
+		custom_effect_tooltip = PRC_support_of_zhang_maybe_high
+		PRC = { country_event = SOV_dip.23 }
+		effect_tooltip = {
+			send_equipment = {
+				amount = 2500
+				type = infantry_equipment
+				target = FROM
+			}
+			send_equipment = {
+				amount = 300
+				target = FROM
+				type = artillery_equipment
+			}	
+		}
+		hidden_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -2500
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = -300
+			}
+		}
+		add_to_variable = { PRC_ask_for_SOV_equipment = 1 }
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 1.0
+				OR = {
+					check_variable = {
+						PRC.num_equipment@infantry_equipment < 0
+					}
+					check_variable = {
+						PRC.num_equipment@artillery_equipment < 0
+					}
+				}
+			}
+			modifier = {
+				add = 0.5
+				FROM = {
+					has_war = yes
+				}
+			}
+			modifier = {
+				factor = 100
+				has_equipment = {
+					infantry_equipment > 5000
+				}
+				has_equipment = {
+					artillery_equipment > 500
+				}
+			}
+		}
+	}
+	option = {
+		name = PRC_add.66.b
+		custom_effect_tooltip = PRC_support_of_zhang_maybe_down
+		PRC = { country_event = PRC_add.67 }
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#[FROM.Getname]拒绝援助
+country_event = {
+	id = PRC_add.67
+	title = PRC_add.67.title
+	desc = PRC_add.67.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	picture = GFX_report_event_SOV_Sakura_monologue
+	option = {
+		name = PRC_add.67.a
+		add_power_balance_value = {
+			id = PRC_Line_struggle_bop
+			value = -0.01
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#[PRC.Getname]请求我们援助工业设备
+country_event = {
+	id = PRC_add.68
+	title = PRC_add.68.title
+	desc = PRC_add.68.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	picture = GFX_PRC_Chiyoda_Momo_event
+	option = {
+		name = PRC_add.68.a
+		custom_effect_tooltip = PRC_support_of_zhang_maybe_high
+		PRC = { country_event = PRC_add.69 }
+		add_to_variable = { PRC_ask_for_SOV_industrial = 1 }
+		add_timed_idea = {
+			idea = SOV_Aid_PRC_idea
+			days = 30
+		}
+		effect_tooltip = {
+			PRC = {
+				random_list = {
+					50 = {
+						random_owned_controlled_state = {
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = {
+								type = industrial_complex
+								level = 1
+								instant_build = yes
+							}
+						}
+					}
+					50 = {
+						random_owned_controlled_state = {
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = {
+								type = arms_factory
+								level = 1
+								instant_build = yes
+							}
+						}
+					}
+				}
+				add_to_variable = {
+					var = China_Industrial_Points_Var
+					value = 10
+					tooltip = China_Industrial_Points_Var_up_10_tt
+				}
+				clamp_variable = {
+					var = China_Industrial_Points_Var
+					min = 0
+					max = 500
+				}
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+	option = {
+		name = PRC_add.68.b
+		custom_effect_tooltip = PRC_support_of_zhang_maybe_down
+		PRC = { country_event = PRC_add.67 }
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#[FROM.GetName]送来工业设备
+country_event = {
+	id = PRC_add.69
+	title = PRC_add.69.title
+	desc = PRC_add.69.desc
+	is_triggered_only = yes
+	option = {
+		name = PRC_add.69.a
+		add_political_power = 15
+		random_list = {
+			50 = {
+				random_owned_controlled_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			50 = {
+				random_owned_controlled_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		add_to_variable = {
+			var = China_Industrial_Points_Var
+			value = 10
+			tooltip = China_Industrial_Points_Var_up_10_tt
+		}
+		clamp_variable = {
+			var = China_Industrial_Points_Var
+			min = 0
+			max = 500
+		}
+		if = {
+			limit = { tag = PRC }
+			add_power_balance_value = {
+				id = PRC_Line_struggle_bop
+				value = 0.02
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#[PRC.Getname]请求我们干涉东亚战争
+country_event = {
+	id = PRC_add.70
+	title = PRC_add.70.title
+	desc = PRC_add.70.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	picture = GFX_report_event_SOV_unquenchable_fighting_spirit
+	option = {
+		name = PRC_add.70.a
+		unlock_decision_tooltip = SOV_Intervention_in_Greater_East_Asia_War
+		set_country_flag = SOV_Intervention_in_Greater_East_Asia_War
+		add_war_support = 0.1
+		PRC = { country_event = PRC_add.71 }
+		ai_will_do = {
+			base = 10
+		}
+	}
+	option = {
+		name = PRC_add.70.b
+		add_war_support = -0.15
+		PRC = { country_event = PRC_add.67 }
+		ai_will_do = {
+			base = 0
+		}
+	}
+}
+
+#[FROM.GetName]同意出兵
+country_event = {
+	id = PRC_add.71
+	title = PRC_add.71.title
+	desc = PRC_add.71.desc
+	is_triggered_only = yes
+	picture = GFX_report_event_SOV_unquenchable_fighting_spirit
+	option = {
+		name = PRC_add.71.a
+		custom_effect_tooltip = SOV_Intervention_in_Greater_East_Asia_War_tt
+		give_military_access = SOV
+		SOV = { give_military_access = ROOT }
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#风味事件1
+country_event = {
+	id = PRC_add.72
+	title = PRC_add.72.title
+	desc = PRC_add.72.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_chenduxiu_event
+	option = {
+		name = PRC_add.72.a
+		add_political_power = 10
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#风味事件2
+country_event = {
+	id = PRC_add.73
+	title = PRC_add.73.title
+	desc = PRC_add.73.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_Chiyoda_Momo_event
+	option = {
+		name = PRC_add.73.a
+		add_political_power = 10
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#风味事件3
+country_event = {
+	id = PRC_add.74
+	title = PRC_add.74.title
+	desc = PRC_add.74.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_lidesheng_event
+	option = {
+		name = PRC_add.74.a
+		add_political_power = 10
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#风味事件4
+country_event = {
+	id = PRC_add.75
+	title = PRC_add.75.title
+	desc = PRC_add.75.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_Shu_event2
+	option = {
+		name = PRC_add.75.a
+		add_political_power = 10
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#风味事件5
+country_event = {
+	id = PRC_add.76
+	title = PRC_add.76.title
+	desc = PRC_add.76.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_Zhouenlai_event
+	option = {
+		name = PRC_add.76.a
+		add_political_power = 10
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#风味事件6
+country_event = {
+	id = PRC_add.77
+	title = PRC_add.77.title
+	desc = PRC_add.77.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_Nian_event
+	option = {
+		name = PRC_add.77.a
+		add_political_power = 10
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#毛润芝胜利结算事件
+country_event = {
+	id = PRC_add.78
+	title = PRC_add.78.title
+	desc = PRC_add.78.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_lidesheng_event
+	option = {
+		name = PRC_add.78.a
+		complete_national_focus = PRC_Rectification_exercise
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#陈独秀胜利结算事件
+country_event = {
+	id = PRC_add.79
+	title = PRC_add.79.title
+	desc = PRC_add.79.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_chenduxiu_event
+	option = {
+		name = PRC_add.79.a
+		complete_national_focus = PRC_Formation_of_Supreme_Soviet
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#千代桃胜利结算事件
+country_event = {
+	id = PRC_add.80
+	title = PRC_add.80.title
+	desc = PRC_add.80.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_Chiyoda_Momo_event
+	option = {
+		name = PRC_add.80.a
+		complete_national_focus = PRC_Formation_of_Supreme_Soviet
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+#张国焘胜利结算事件
+country_event = {
+	id = PRC_add.81
+	title = PRC_add.81.title
+	desc = PRC_add.81.desc
+	is_triggered_only = yes
+	picture = GFX_PRC_Zhang_guo_tao_event
+	option = {
+		name = PRC_add.81.a
+		PRC_remove_all_ideas = yes
+		PRC_Zhang_guo_tao = {
+			add_country_leader_role = {
+				country_leader = {
+					desc = ""
+					ideology = Military_socialism
+					traits = {
+					}
+					expire = "1999.1.1.1"
+					id = -1
+				}
+				promote_leader = yes
+			}
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
 #####招安
 
 #罗德岛留学生归国
@@ -2287,6 +2816,9 @@ country_event = {
 	fire_only_once = no
 	option = {
 		name = PRC_add.101.a
+		set_country_flag = PRC_Ruan_Mei_come_back
+		PRC_Ruan_Mei = { custom_effect_tooltip = be_an_available_advisor }
+		show_ideas_tooltip = PRC_Ruan_Mei_idea
 		ai_chance = {
 			base = 10
 		}
