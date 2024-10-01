@@ -369,7 +369,7 @@ focus_tree = {
 			}
 			hidden_effect = {
 				add_to_variable = { ubs_save = 200 }
-			}
+			} 
 			custom_effect_tooltip = SOV_get_200_add_to_reserve
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
@@ -2403,6 +2403,10 @@ focus_tree = {
 		ai_will_do = {
 			base = 1
 		}
+		allow_branch = {
+			NOT = { has_completed_focus = DEN_coalition_government }
+			NOT = { has_completed_focus = DEN_comprehensive_martial_law }
+		}
 		available = {
 			always = no
 		}
@@ -4325,13 +4329,29 @@ focus_tree = {
 		ai_will_do = {
 			base = 1
 		}
+		allow_branch = {
+			NOT = { has_completed_focus = DEN_everything_go_smoothly }
+			NOT = { has_completed_focus = DEN_comprehensive_martial_law }
+		}
+		offset = {
+			x = -4
+			y = -12
+			trigger = {
+				has_completed_focus = DEN_coalition_government
+			}
+		}
 		available = {
 			always = no
 		}
 		completion_reward = {
-			set_power_balance = {
-				id = DEN_coalition_government_balance
-				set_value = 0
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
+			hidden_effect = {
+				country_event = { id = den_line.003 days = 3 }
+			}
+			add_ideas = {
+				DEN_chaotic_government
+				DEN_disobedient_paramilitary_organization
+				DEN_lack_of_international_recognition
 			}
 		}
 	}
@@ -4350,7 +4370,12 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			add_political_power = 50
+			add_popularity = {
+				ideology = communism
+				popularity = 0.10
+			}
+			country_event = den_line.002
 		}
 	}
 			
@@ -4368,7 +4393,7 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
 				
@@ -4386,7 +4411,13 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			add_political_power = 25
+			add_stability = 0.05
+			country_event = den_line.005
+			add_offsite_building = {
+				type = industrial_complex
+				level = 1
+			}
 		}
 	}
 					
@@ -4404,7 +4435,12 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			add_war_support = 0.05
+			country_event = den_line.006
+			add_offsite_building = {
+				type = arms_factory
+				level = 1
+			}
 		}
 	}
 						
@@ -4422,7 +4458,7 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			country_event = den_line.007
 		}
 	}
 							
@@ -4440,7 +4476,8 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			country_event = den_line.008
+			remove_ideas = DEN_disobedient_paramilitary_organization
 		}
 	}
 								
@@ -4461,7 +4498,7 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			country_event = den_line.009
 		}
 	}
 									
@@ -4482,7 +4519,7 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			country_event = den_line.010
 		}
 	}
 								
@@ -4500,7 +4537,7 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			country_event = den_line.013
 		}
 	}
 									
@@ -4520,8 +4557,35 @@ focus_tree = {
 		ai_will_do = {
 			base = 1
 		}
+		available = {
+			if = {
+				limit = {
+					has_power_balance = {
+						id = DEN_coalition_government_balance
+					}
+				}
+				power_balance_value = {
+					id = DEN_coalition_government_balance
+					value > 0.5
+				}
+			}
+		}
 		completion_reward = {
-			
+			if = {
+				limit = { has_power_balance = { id = DEN_coalition_government_balance } }
+				add_power_balance_value = {
+					id = DEN_coalition_government_balance
+					value = 0.10
+				}
+			}
+			army_experience = 25
+			every_character = {
+				limit = {
+					has_character_flag = DEN_Kiel_sailors
+				}
+				add_skill_level = 2
+				add_attack = 1
+			}
 		}
 	}
 										
@@ -4541,8 +4605,38 @@ focus_tree = {
 		ai_will_do = {
 			base = 1
 		}
+		available = {
+			if = {
+				limit = {
+					has_power_balance = {
+						id = DEN_coalition_government_balance
+					}
+				}
+				power_balance_value = {
+					id = DEN_coalition_government_balance
+					value < 0.5
+				}
+			}
+			else = {
+				always = no
+			}
+		}
 		completion_reward = {
-			
+			if = {
+				limit = { has_power_balance = { id = DEN_coalition_government_balance } }
+				add_power_balance_value = {
+					id = DEN_coalition_government_balance
+					value = -0.10
+				}
+			}
+			effect_tooltip = {
+				every_character = {
+					limit = {
+						has_character_flag = DEN_Kiel_sailors
+					}
+					set_nationality = SOV
+				}
+			}
 		}
 	}
 											
@@ -4560,7 +4654,7 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			country_event = den_line.014
 		}
 	}
 												
@@ -4581,7 +4675,8 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			country_event = den_line.015
+			remove_ideas = DEN_chaotic_government
 		}
 	}
 													
@@ -4606,7 +4701,7 @@ focus_tree = {
 			base = 1
 		}
 		completion_reward = {
-			
+			country_event = den_line.016
 		}
 	}
 														
@@ -4626,8 +4721,11 @@ focus_tree = {
 		ai_will_do = {
 			base = 1
 		}
+		available = {
+			always = no
+		}
 		completion_reward = {
-			
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
 															
@@ -4647,8 +4745,11 @@ focus_tree = {
 		ai_will_do = {
 			base = 1
 		}
+		available = {
+			always = no
+		}
 		completion_reward = {
-			
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
 																
@@ -5117,11 +5218,22 @@ focus_tree = {
 		ai_will_do = {
 			base = 1
 		}
+		offset = {
+			x = -20
+			y = 0			
+			trigger = {
+				has_completed_focus = DEN_comprehensive_martial_law
+			}
+		}
+		allow_branch = {
+			NOT = { has_completed_focus = DEN_coalition_government }
+			NOT = { has_completed_focus = DEN_everything_go_smoothly }
+		}
 		available = {
 			always = no
 		}
 		completion_reward = {
-			
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
 					
