@@ -4858,8 +4858,8 @@ focus_tree = {
 		}
 	}
 	focus = {
-		#破坏一切之人
-		id = KMK_flandre_01
+		#怀柔政策
+		id = KMK_flandre_Intelligence_Bureau
 		icon = GFX_goal_fulanduolu
 		x = 8
 		y = 1
@@ -4868,6 +4868,37 @@ focus_tree = {
 		}
 		prerequisite = {
 			focus = KMK_flandre_Huairou_Policy
+		}
+		cost = 6
+		ai_will_do = {
+			base = 10
+		}
+		select_effect = {
+		}
+		available = {
+			has_country_flag = reunit_huanxiangxiang
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			if = {
+				limit = {
+					has_intelligence_agency = no
+				}
+				create_intelligence_agency = yes
+			}
+			upgrade_intelligence_agency = upgrade_army_department
+			upgrade_intelligence_agency = upgrade_anti_partisan
+		}
+	}
+	focus = {
+		#破坏一切之人
+		id = KMK_flandre_01
+		icon = GFX_goal_fulanduolu
+		x = 8
+		y = 2
+		prerequisite = {
+			focus = KMK_flandre_Intelligence_Bureau
 		}
 		cost = 6
 		ai_will_do = {
@@ -5069,14 +5100,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			if = {
-				limit = {
-					has_intelligence_agency = no
-				}
-				create_intelligence_agency = yes
+			custom_effect_tooltip = AUS_13_01
+			set_variable = {
+				KMK_pub_slot_B = 0
 			}
-			upgrade_intelligence_agency = upgrade_army_department
-			upgrade_intelligence_agency = upgrade_anti_partisan
 		}
 	}
 	focus = {
@@ -5207,7 +5234,7 @@ focus_tree = {
 	available = {
 	}
 	completion_reward = {
-			create_wargoal = {
+			declare_war_on = {
 				target = TRB
 				type = annex_everything
 			}
@@ -5233,19 +5260,19 @@ focus_tree = {
 	available = {
 	}
 	completion_reward = {
-			create_wargoal = {
+			declare_war_on = {
 				target = NPT
 				type = annex_everything
 			}
-			create_wargoal = {
+			declare_war_on = {
 				target = BLA
 				type = annex_everything
 			}
-			create_wargoal = {
+			declare_war_on = {
 				target = ARF
 				type = annex_everything
 			}
-			create_wargoal = {
+			declare_war_on = {
 				target = MOR
 				type = annex_everything
 			}
@@ -5274,7 +5301,7 @@ focus_tree = {
 	available = {
 	}
 	completion_reward = {
-			create_wargoal = {
+			declare_war_on = {
 				target = GER
 				type = annex_everything
 			}
@@ -5553,21 +5580,10 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			if = {
-				limit = {
-					not = {
-						SOV = {
-							has_country_leader = {
-									ruling_only = yes character = SOV_Sakura 
-							}
-						}
-					}
-				}
-			create_faction = mfsn_Agreement
+			hidden_effect = {
+				MGU = {annex_country ={ target = PGM }}
 			}
-			else = {
-				
-			}
+			custom_effect_tooltip = KMK_start_magical_girl_party
 		}
 	}
 	focus ={
@@ -5582,15 +5598,38 @@ focus_tree = {
 		y = 1
 		cost=10
 		available = {
+			MGS = {communism > 0.6}
 			MGU = {communism > 0.6}
 			MST = {communism > 0.6}
 		}
 		completion_reward = {
+			if = {
+				limit = {
+					not = {
+						SOV = {
+							has_country_leader = {
+									ruling_only = yes character = SOV_Sakura 
+							}
+						}
+					}
+				}
+			create_faction = mfsn_Agreement
 			MGU = {
+				country_event = generic.2008
+			}
+			MGS = {
 				country_event = generic.2008
 			}
 			MST = {
 				country_event = generic.2008
+			}
+			}
+			else = {
+				SOV = {
+					add_to_faction = MGS
+					add_to_faction = MGU
+					add_to_faction = MST
+				}
 			}
 		}
 	}
@@ -5629,6 +5668,7 @@ focus_tree = {
 				}
 				add_core_of = ROOT
 			}
+			annex_country = { target = MGS }
 			annex_country = { target = MGU }
 			annex_country = { target = MST }
 			MGU = {
@@ -5637,6 +5677,11 @@ focus_tree = {
 				}
 			}
 			MST = {
+				every_character = {
+					set_nationality = KMK
+				}
+			}
+			MGS = {
 				every_character = {
 					set_nationality = KMK
 				}
@@ -5654,20 +5699,16 @@ focus_tree = {
 		relative_position_id = KMK_flandre_mhsj
 		x = 0
 		y = -3
-		cost = 6
+		cost = 3
 		ai_will_do = {
 			base = 10
 		}
 		select_effect = {
-			country_event = {
-				id = KMK.0030
-				days = 28
-			}
 		}
 		available = {
-		not = {
+			not = {
 				country_exists = ENG
-				}
+			}
 		}
 		#cancelable = no
 		available_if_capitulated = no
@@ -6030,7 +6071,7 @@ focus_tree = {
 	available = {
 	}
 	completion_reward = {
-		create_wargoal = {
+		declare_war_on = {
 				target = SOV
 				type = annex_everything
 			}
@@ -6318,13 +6359,33 @@ focus_tree = {
 		cost = 2
 		ai_will_do = {
 		base = 10
-	}
-	select_effect = {
-	}
-	available = {
-	}
-	completion_reward = {
-	}
+		}
+		select_effect = {
+		}
+		available = {
+			not = {
+				SOV = {
+					has_country_leader = {
+						ruling_only = yes character = SOV_Sakura 
+					}
+				}
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+			
+			}
+			else = {
+				create_faction = Socialism_Agreement
+			}
+			hidden_effect = {
+				set_country_flag = xiaoying_zhuxi
+			}
+			custom_effect_tooltip = KMK_xiaoying_zhuxi_tt
+		}
 	}
 	focus = {
 		#真正的布尔什维克
@@ -6368,10 +6429,13 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			SOV = {surrender_progress > 0.8}
+			or = {
+				not= {country_exists = SOV}
+				SOV = {is_puppet_of = KMK}
+				SOV = {surrender_progress > 0.8}
+			}
 		}
 		completion_reward = {
-			puppet = SOV
 			SOV = {
 				create_country_leader = {
 					name = SOV_Sakura
@@ -6380,6 +6444,22 @@ focus_tree = {
 					ideology = leninism
 					traits = { Sakura_cards }
 					expire = "1965.1.1"
+				}
+			}
+			if = {
+				limit = {
+					not= {country_exists = SOV}
+				}
+				every_state = {
+					limit = {is_core_of = SOV}
+					SOV = {
+						transfer_state = PREV
+					}
+				}
+				puppet = SOV
+				else = {
+					white_peace = SOV
+					puppet = SOV
 				}
 			}
 		}
