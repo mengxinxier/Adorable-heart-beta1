@@ -6,7 +6,7 @@ focus_tree = {
 		factor = 0
 		
 		modifier = {
-			add = 0
+			add = 25
 			tag = MGU
 		}
 	}
@@ -36,7 +36,7 @@ focus_tree = {
 		    add_popularity = { ideology = neutrality popularity = 0.05 }
 		    add_popularity = { ideology = fascism popularity = 0.05 }
 			add_political_power = 160
-			news_event = { id = magicunion.1019 }
+			hidden_effect = { news_event = { id = magicunion.1019 } }
         remove_ideas = MGU_chuanxiao
         add_ideas = MGU_jinzhichuanxiao
         add_ideas = volunteer_only
@@ -1104,9 +1104,9 @@ focus_tree = {
             				}
 
             add_timed_idea = {
-            idea = MGU_gongyeyuanqu
-            days = 365
-                   }
+                idea = MGU_gongyeyuanqu
+                days = 365
+                }
     		}
     	}
 
@@ -1851,6 +1851,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_ideas = MGU_Malfaris_TB
+			custom_effect_tooltip = TBMGU_132_1_txt
 		}
 	}
 	focus = { #量产猫猫焰使魔
@@ -2602,7 +2603,7 @@ focus_tree = {
 				desc = "POLITICS_AKIMI_HOMURA_DEMO_DESC"
 				picture = "gfx/leaders/MGU/MGU_Akemi_Homura_Demon.dds"
 				expire = "1999.1.1"
-				ideology = Homuraism
+				ideology = homura_subideology
 				traits = {
 					demonoffakeworld_1
 				}
@@ -2618,7 +2619,7 @@ focus_tree = {
 				logistics_skill = 9
 			}
 			remove_unit_leader_role = MGU_Akemi_Homura
-			news_event = news.1027
+			hidden_effect = { news_event = news.1027 }
 		}
 	}
 
@@ -2679,7 +2680,7 @@ focus_tree = {
 
 
 			country_event = { id = magicunion.721 days = 1 }
-			news_event = { id = news.1028 days = 3 }
+			hidden_effect = { news_event = { id = news.1028 days = 3 } }
 		}
 	}
 
@@ -3643,16 +3644,21 @@ focus_tree = {
 		focus = TBMGU_Walpurgis_Night_01
 		}
 		available = {
-		    date > 1941.3.1
+		    date > 1940.1.1
 		}
 		mutually_exclusive = {
 		}
 		completion_reward = {
-            stability_factor = 0.10
-            add_days_remove  = {
-                decision = form_MGU_Walpurgis_Night_TIME
+		    #add_days_remove
+            add_days_mission_timeout  = {
+                decision = form_MGU_Rumors_of_Witch_Night_0
                 days = 180
             }
+			add_to_variable = {
+				MGU_Magia_Exedra_stability_factor = 0.05
+			}
+			force_update_dynamic_modifier = yes
+			custom_effect_tooltip = TBMGU_Walpurgis_Night_04_txt
 		}
 	}
 	focus = { #推迟魔女之夜出现时间
@@ -3673,10 +3679,11 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
-            add_days_remove  = {
-                decision = form_MGU_Walpurgis_Night_TIME
+            add_days_mission_timeout  = {
+                decision = form_MGU_Rumors_of_Witch_Night_0
                 days = 360
             }
+        custom_effect_tooltip = TBMGU_Walpurgis_Night_05_txt
 		}
 	}
 	focus = { #直面风暴
@@ -3697,7 +3704,10 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
-            add_country_leader_trait = MST_I_am_the_storm
+            add_country_leader_trait = MST_I_am_the_storm #这个没有实际效果只是用来看的
+            MGU_akemi_homura = {
+                add_unit_leader_trait = MST_I_am_the_storm_trait
+            }
 		}
 	}
 
@@ -3770,7 +3780,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_to_variable = {
-				MGU_Magia_Exedra_army_attack_factor = 0.1
+				MGU_Magia_Exedra_army_attack_factor = 0.05
 			}
 			custom_effect_tooltip = MGU_campaigns_of_quick_decision_ns_tt
 			force_update_dynamic_modifier = yes
@@ -3811,11 +3821,21 @@ focus_tree = {
 		focus = TBMGU_Ode_and_Prayer_02
 		}
 		available = {
+		    OR = {
+				has_idea = MGU_Magic_Doll_army_3_4
+				has_idea = MGU_Magic_Doll_army_3_5
+				has_idea = MGU_Magic_Doll_army_3_6
+		    }
+
 		}
 		mutually_exclusive = {
 		}
 		completion_reward = {
-
+			add_to_variable = {
+				MGU_Magia_Exedra_stability_factor = 0.05
+			}
+			custom_effect_tooltip = TBMGU_Ode_and_Prayer_03_txt
+			force_update_dynamic_modifier = yes
 		}
 	}
 
@@ -3837,7 +3857,11 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
-
+			add_to_variable = {
+				MGU_Magia_Exedra_stability_weekly = 0.02
+			}
+			custom_effect_tooltip = TBMGU_Ode_and_Prayer_04_txt
+			force_update_dynamic_modifier = yes
 		}
 	}
 
@@ -3920,8 +3944,8 @@ focus_tree = {
 		focus = TBMGU_Ode_and_Prayer_07
 		}
 		available = {
-		has_tech = nukes
-		has_nuclear_bombs = 1
+		has_tech = rdf1
+		has_done_agency_upgrade = upgrade_anti_partisan
 		}
 		mutually_exclusive = {
 		}
@@ -3944,10 +3968,23 @@ focus_tree = {
 		focus = TBMGU_Ode_and_Prayer_08
 		}
 		available = {
+		    num_of_nukes > 10
 		}
 		mutually_exclusive = {
 		}
 		completion_reward = {
+			hidden_effect = {
+		    add_nuclear_bombs = -10
+		    }
+            280 = { damage_building = { type = infrastructure damage = 1 } }
+            280 = { damage_building = { type = supply_node damage = 1 } }
+            280 = { damage_building = { type = arms_factory damage = 1 } }
+            280 = { damage_building = { type = industrial_complex damage = 1 } }
+            280 = { damage_building = { type = air_base damage = 1 } }
+		    custom_effect_tooltip = TBMGU_Ode_and_Prayer_09_txt
+
+		    SOV = { add_opinion_modifier = { target = MGU modifier = MGU_Morales_is_dead } }
+		    PAN = { add_opinion_modifier = { target = MGU modifier = MGU_Morales_is_dead } }
 
 		}
 	}
@@ -3966,11 +4003,18 @@ focus_tree = {
 		focus = TBMGU_Ode_and_Prayer_07
 		}
 		available = {
+			 custom_trigger_tooltip = {
+				tooltip = RUS_500_ubs_save_cost_tooltip
+					check_variable = {
+						ubs_save > 500
+					}
+			}
 		}
 		mutually_exclusive = {
 		}
 		completion_reward = {
-
+				custom_effect_tooltip = RUS_500_ubs_save_cost_tooltip
+				add_to_variable = { ubs_save = -500 }
 		}
 	}
 
@@ -3988,6 +4032,8 @@ focus_tree = {
 		focus = TBMGU_Ode_and_Prayer_10
 		}
 		available = {
+            has_done_agency_upgrade = upgrade_interrogation_techniques
+            has_done_agency_upgrade = upgrade_psycho_warfare
 		}
 		mutually_exclusive = {
 		}
@@ -4013,7 +4059,7 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
-            add_political_power = 100
+            give_guarantee = BRA
 		}
 	}
 	focus = { #火塘与迷雾
@@ -4316,11 +4362,33 @@ focus_tree = {
             }
 		}
 	}
+	focus = { #购买奴隶少女
+		id = TBMGU_Downfall_02_1
+		icon = GFX_focus_MGU_HOMURA
+		x = -2
+		y = 2
+		relative_position_id = TBMGU_Downfall_01
+		cost = 1
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_Downfall_02
+		}
+		available = {
+		}
+		mutually_exclusive = {
+		}
+		completion_reward = {
+		    add_manpower = 30000
+            add_stability = 0.05
+		}
+	}
 	focus = { #发动战争
 		id = TBMGU_Downfall_03
 		icon = GFX_focus_MGU_HOMURA
 		x = -1
-		y = 2
+		y = 3
 		relative_position_id = TBMGU_Downfall_01
 		cost = 4
 		ai_will_do = {
@@ -4592,7 +4660,7 @@ focus_tree = {
 		}
 	}
 
-	focus = { #神社叛乱
+	focus = { #神殿突袭
 		id = TBMGU_Tearalaments_07
 		icon = GFX_focus_MGU_HOMURA
 		x = 0
@@ -4610,11 +4678,17 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
-
+            custom_effect_tooltip = TBMGU_Tearalaments_07_txt
+            hidden_effect = {
+                add_timed_idea = {
+                    idea = MGU_hidden_idea_011
+                    days = 100
+                }
+            }
 		}
 	}
 
-	focus = { #制造对立
+	focus = { #破坏封印
 		id = TBMGU_Tearalaments_08
 		icon = GFX_focus_MGU_HOMURA
 		x = 0
@@ -4628,15 +4702,52 @@ focus_tree = {
 		focus = TBMGU_Tearalaments_07
 		}
 		available = {
+			 custom_trigger_tooltip = {
+				tooltip = TBMGU_Tearalaments_08_txt
+				477 = { is_controlled_by = MGU }
+			}
 		}
 		mutually_exclusive = {
 		}
 		completion_reward = {
-
+        		division_template = {
+                    name = "珠泪哀歌部队" #名字
+                    division_names_group = "珠泪哀歌部队"
+                    is_locked = yes
+                            regiments = {
+                                magic_assault = { x = 0 y = 0 }
+                                magic_assault = { x = 0 y = 1 }
+                                magic_assault = { x = 0 y = 2 }
+                                magic_assault = { x = 0 y = 3 }
+                                magic_assault = { x = 0 y = 4 }
+                                magic_artillery = { x = 1 y = 0 }
+                                magic_artillery = { x = 2 y = 1 }
+                                magic_artillery = { x = 1 y = 2 }
+                                magic_artillery = { x = 2 y = 3 }
+                            }
+                            support = {
+                                recon = { x = 0 y = 0 }
+                                artillery = { x = 0 y = 1 }
+                                engineer = { x = 0 y = 2 }
+                                field_hospital = { x = 0 y = 3 }
+                            }
+                }
+                    477 = {
+            			create_unit = {
+            				division = "name = \"珠泪哀歌部队\" division_template = \"珠泪哀歌部队\" start_experience_factor = 0.4 start_equipment_factor = 1 "
+            				owner = MGU
+            				count = 24
+            				allow_spawning_on_enemy_provs = yes
+            			}
+            		}
+				add_manpower = 200000
+                add_equipment_to_stockpile = { type = magic_assault_equipment amount = 2400 producer = MGU }
+                add_equipment_to_stockpile = { type = support_equipment amount = 1500 producer = MGU }
+                add_equipment_to_stockpile = { type = magic_artillery_equipment amount = 1200 producer = MGU }
 		}
 	}
 
-	focus = { #煽动仇恨
+	focus = { #珠泪哀歌
 		id = TBMGU_Tearalaments_09
 		icon = GFX_focus_MGU_HOMURA
 		x = 0
@@ -4654,6 +4765,48 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
+		    MS1 = {
+			    MGU_LGAG_SL = { set_nationality = MGU }
+			    MGU_LGAG_HFNS = { set_nationality = MGU }
+			    MGU_LGAG_LLKLS = { set_nationality = MGU }
+			    MGU_LGAG_QDKLS = { set_nationality = MGU }
+			}
+            add_naval_commander_role = {
+              character = MGU_LGAG_SL
+              skill = 4
+              traits = { blue_water_expert seawolf }
+              attack_skill = 2
+              defense_skill = 3
+              planning_skill = 3
+              logistics_skill = 5
+            }
+            add_naval_commander_role = {
+              character = MGU_LGAG_HFNS
+              skill = 3
+              traits = { blue_water_expert seawolf }
+              attack_skill = 1
+              defense_skill = 2
+              planning_skill = 2
+              logistics_skill = 4
+            }
+            add_naval_commander_role = {
+              character = MGU_LGAG_LLKLS
+              skill = 8
+              traits = { blue_water_expert seawolf silent_hunter torpedo_expert loading_drill_master superior_tactician concealment_expert }
+              attack_skill = 6
+              defense_skill = 7
+              planning_skill = 7
+              logistics_skill = 9
+            }
+            add_naval_commander_role = {
+              character = MGU_LGAG_QDKLS
+              skill = 5
+              traits = { blue_water_expert seawolf silent_hunter torpedo_expert loading_drill_master }
+              attack_skill = 3
+              defense_skill = 4
+              planning_skill = 4
+              logistics_skill = 6
+            }
 
 		}
 	}
@@ -4903,6 +5056,16 @@ focus_tree = {
                 }
             }
             }
+            279 = {
+            controller = {
+                ROOT = {
+                    create_wargoal = {
+                        target = PREV
+                        type = annex_everything
+                    }
+                }
+            }
+            }
 		}
 	}
 	focus = { #新式突击步枪
@@ -5053,4 +5216,350 @@ focus_tree = {
             }
 		}
 	}
+
+	focus = { #跨过大洋
+		id = TBMGU_West_Africa_01
+		icon = GFX_focus_MGU_HOMURA
+		x = 32
+		y = 17
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		}
+		available = {
+		has_country_flag = MGU_COUP_All_Hail_HOMURA_flag
+			has_equipment = {
+				convoy > 500
+			}
+		}
+		completion_reward = {
+
+            add_political_power = 100
+		}
+	}
+	focus = { #友善互助协议
+		id = TBMGU_West_Africa_02
+		icon = GFX_focus_MGU_HOMURA
+		x = -1
+		y = 1
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_01
+		}
+		mutually_exclusive = {
+			focus = TBMGU_West_Africa_06
+		}
+		available = {
+		}
+		completion_reward = {
+				diplomatic_relation = {
+					country = SAF
+					relation = non_aggression_pact
+					active = yes
+				}
+		}
+	}
+	focus = { #购买魔法少女
+		id = TBMGU_West_Africa_03
+		icon = GFX_focus_MGU_HOMURA
+		x = -2
+		y = 2
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_02
+		}
+		available = {
+			 custom_trigger_tooltip = {
+				tooltip = RUS_500_ubs_save_cost_tooltip
+					check_variable = {
+						ubs_save > 500
+					}
+			}
+			has_tech = strike_unit3
+		}
+		completion_reward = {
+			add_ideas = jixiemonv
+				custom_effect_tooltip = RUS_500_ubs_save_cost_tooltip
+				add_to_variable = { ubs_save = -500 }
+            SAF = {
+				add_to_variable = { ubs_save = 500 }
+                set_technology = {
+                    strike_unit3 = 1
+                }
+		    }
+		}
+	}
+	focus = { #推动立法保障
+		id = TBMGU_West_Africa_04
+		icon = GFX_focus_MGU_HOMURA
+		x = 0
+		y = 2
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_02
+		}
+		available = {
+		has_political_power > 300
+		}
+		completion_reward = {
+            add_political_power = -300
+            SAF = { add_political_power = 150 }
+		}
+	}
+	focus = { #南大西洋联合舰队
+		id = TBMGU_West_Africa_05
+		icon = GFX_focus_MGU_HOMURA
+		x = -1
+		y = 3
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_03
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_04
+		}
+		available = {
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = dd_bonus
+				bonus = 0.5
+				uses = 2
+				category = cv_tech
+			}
+			add_tech_bonus = {
+				name = cr_bonus
+				bonus = 0.5
+				uses = 2
+				category = bb_tech
+			}
+            SAF = {
+                diplomatic_relation = {
+                    country = MGU
+                    relation = docking_rights
+                    active = yes
+                }
+            }
+            MGU = {
+                diplomatic_relation = {
+                    country = SAF
+                    relation = docking_rights
+                    active = yes
+                }
+            }
+            custom_effect_tooltip = TBMGU_West_Africa_05_txt
+            hidden_effect = { add_ideas = MGU_hidden_idea_009 }
+		}
+	}
+	focus = { #煽动反殖民运动
+		id = TBMGU_West_Africa_06
+		icon = GFX_focus_MGU_HOMURA
+		x = 2
+		y = 1
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_01
+		}
+		mutually_exclusive = {
+			focus = TBMGU_West_Africa_02
+		}
+		available = {
+			 custom_trigger_tooltip = {
+				tooltip = second_weltkrieg_not_over
+				NOT = { has_global_flag = second_weltkrieg_has_started }
+				DVL = {
+						NOT = { exists = no }
+						NOT = { is_subject = yes }
+				}
+			}
+		}
+		completion_reward = {
+            SAF = { add_stability = -0.40 }
+		    custom_effect_tooltip = TBMGU_West_Africa_06_txt
+		    set_country_flag = MGU_ENG_hate_flag
+		}
+	}
+	focus = { #西非反殖民战争
+		id = TBMGU_West_Africa_07
+		icon = GFX_focus_MGU_HOMURA
+		x = 2
+		y = 2
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_06
+		}
+		available = {
+			 custom_trigger_tooltip = {
+				tooltip = second_weltkrieg_not_over
+				NOT = { has_global_flag = second_weltkrieg_has_started }
+				DVL = {
+						NOT = { exists = no }
+						NOT = { is_subject = yes }
+				}
+			}
+            has_equipment = {
+				infantry_equipment > 10000
+			}
+		}
+		completion_reward = {
+		    add_equipment_to_stockpile = { type = infantry_equipment amount = -10000 }
+			MS2 = {
+				transfer_state = 272
+			}
+			SAF = {
+                every_owned_state = {
+                    add_core_of = MS2
+                }
+			}
+        		division_template = {
+                    name = "西非反抗军" #名字
+                    division_names_group = "西非反抗军"
+                    is_locked = yes
+                    regiments = {
+                    infantry = { x = 0 y = 0 }
+                    infantry = { x = 0 y = 1 }
+                    infantry = { x = 1 y = 0 }
+                    infantry = { x = 1 y = 1 }
+                     }
+                     support = {
+                     }
+                }
+
+                    272 = {
+            			create_unit = {
+            				division = "name = \"西非反抗军\" division_template = \"西非反抗军\" start_experience_factor = 0.1 start_equipment_factor = 1 "
+            				owner = MS2
+            				count = 8
+            				allow_spawning_on_enemy_provs = yes
+            			}
+            		}
+			####开战
+			MS2 = {
+				declare_war_on = { target = SAF type = annex_everything }
+			}
+			MS2 = {
+				add_manpower = 200000
+				add_equipment_to_stockpile = {type = infantry_equipment_1 amount = 6800 }
+			}
+		}
+	}
+	focus = { #西非的命运
+		id = TBMGU_West_Africa_08
+		icon = GFX_focus_MGU_HOMURA
+		x = 2
+		y = 3
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_07
+		}
+		available = {
+			 custom_trigger_tooltip = {
+				tooltip = second_weltkrieg_not_over
+				NOT = { has_global_flag = second_weltkrieg_has_started }
+				DVL = {
+						NOT = { exists = no }
+						NOT = { is_subject = yes }
+				}
+			}
+			country_exists = MS2
+		    OR = {
+		        SAF = { has_capitulated = yes }
+		        NOT = { country_exists = SAF }
+		    }
+		}
+		completion_reward = {
+			add_ideas = jixiemonv
+            country_event = magicunion.1084
+            ENG = { country_event = magicunion.1085 }
+		}
+	}
+	focus = { #支援军火
+		id = TBMGU_West_Africa_09
+		icon = GFX_focus_MGU_HOMURA
+		x = 4
+		y = 3
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_07
+		}
+		available = {
+            has_equipment = {
+				infantry_equipment > 6000
+			}
+		    272 = { is_controlled_by = MS2 }
+		}
+		completion_reward = {
+				    add_equipment_to_stockpile = { type = infantry_equipment amount = -6000 }
+                    272 = {
+            			create_unit = {
+            				division = "name = \"西非反抗军\" division_template = \"西非反抗军\" start_experience_factor = 0.1 start_equipment_factor = 1 "
+            				owner = MS2
+            				count = 15
+            				allow_spawning_on_enemy_provs = yes
+            			}
+            		}
+		}
+	}
+	focus = { #阿非利加战略
+		id = TBMGU_West_Africa_10
+		icon = GFX_focus_MGU_HOMURA
+		x = 2
+		y = 4
+		relative_position_id = TBMGU_West_Africa_01
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		prerequisite = {
+		focus = TBMGU_West_Africa_08
+		}
+		available = {
+			 custom_trigger_tooltip = {
+				tooltip = second_weltkrieg_not_over
+				NOT = { has_global_flag = second_weltkrieg_has_started }
+				DVL = {
+						NOT = { exists = no }
+						NOT = { is_subject = yes }
+				}
+			}
+		}
+		completion_reward = {
+            custom_effect_tooltip = TBMGU_West_Africa_10_txt
+		}
+	}
+
 }
