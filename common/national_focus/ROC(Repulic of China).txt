@@ -22,6 +22,7 @@ focus_tree = {
 			factor = 4
 		}
 		available = {
+			is_subject = no
 		}
 		bypass = {
 		}
@@ -490,9 +491,11 @@ focus_tree = {
 		cancel_if_invalid = yes
 		continue_if_invalid = no
 		available_if_capitulated = no
-		complete_tooltip = {
-			country_event = {
-				id = roc.59
+		select_effect = {
+			hidden_effect = {
+				country_event = {
+					id = roc.59
+				}
 			}
 		}
 		completion_reward = {
@@ -836,7 +839,11 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			add_political_power = 120
+			add_political_power = 50
+			every_controlled_state = {
+				limit = { not = { is_core_of = ROOT } }
+				add_compliance = 10
+			}
 		}
 	}
 	focus = {
@@ -1601,11 +1608,9 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			YUN = {
-				country_event = {
-					id = roc.25
-					days = 1
-				}
+			activate_targeted_decision = {
+				target = YUN
+				decision = CHI_Seek_FROM_cooperation
 			}
 		}
 	}
@@ -1671,6 +1676,58 @@ focus_tree = {
 			}
 		}
 	}
+	##联合共产党
+	focus = {
+		id = ROC_United_CCP
+		icon = GFX_focus_prc_social_democracy
+		x = 3
+		y = 1
+		relative_position_id = ROC_Declaration_of_the_Northern_Expedition
+		cost = 4
+		prerequisite = {
+			focus = ROC_Declaration_of_the_Northern_Expedition
+		}
+		ai_will_do = {
+			factor = 4
+			modifier = {
+				AND = {
+					JAP = {
+						has_government = fascism
+						is_subject = no
+					}
+					MAN = {
+						is_subject_of = JAP
+					}
+				}
+				factor = 0
+			}
+		}
+		available = {
+			CHI = { exists = yes }
+		}
+		bypass = {
+			OR = {
+				PRC = { exists = no }
+				PRC = { is_subject_of = ROC }
+				has_war_with = PRC
+			}
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+		complete_tooltip = {
+		}
+		completion_reward = {
+			PRC = {
+				country_event = {
+					id = roc.63
+					days = 2
+				}
+			}
+			custom_effect_tooltip = if_PRC_accept
+			custom_effect_tooltip = ROC_United_CCP_TT
+		}
+	}
 	focus = {
 		id = ROC_mission_accomplished
 		icon = GFX_goal_generic_major_war
@@ -1681,6 +1738,7 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_Unified_Southwest
 			focus = ROC_Contact_Marshal_Zhang
+			focus = ROC_United_CCP
 		}
 		ai_will_do = {
 			factor = 4
@@ -1703,7 +1761,7 @@ focus_tree = {
 				is_in_faction_with = CHI
 			}
 			has_army_manpower = {
-				size > 299999
+				size > 99999
 			}
 		}
 		bypass = {
@@ -1723,9 +1781,9 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			create_wargoal = {
-				type = annex_everything
+			activate_targeted_decision = {
 				target = CHI
+				decision = CHI_attck_FROM
 			}
 		}
 		will_lead_to_war_with = CHI
@@ -1740,6 +1798,9 @@ focus_tree = {
 		cost = 4
 		prerequisite = {
 			focus = ROC_mission_accomplished
+		}
+		mutually_exclusive = {
+			focus = ROC_Form_coalition_government
 		}
 		ai_will_do = {
 			factor = 4
@@ -1779,12 +1840,72 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			create_wargoal = {
-				type = annex_everything
+			activate_targeted_decision = {
 				target = PRC
+				decision = CHI_attck_FROM
 			}
 		}
 		will_lead_to_war_with = PRC
+	}
+	##组建联合政府
+	focus = {
+		id = ROC_Form_coalition_government
+		icon = GFX_focus_chi_united_front
+		x = 1
+		y = 2
+		relative_position_id = ROC_United_CCP
+		cost = 4
+		prerequisite = {
+			focus = ROC_United_CCP
+		}
+		mutually_exclusive = {
+			focus = ROC_End_the_Communist_Party
+		}
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_country_flag = Cooperation_between_KMT_and_CCP
+			has_country_flag = roc_left_win
+			has_government = PRC
+			is_subject = no
+			PRC = { is_subject = no }
+			CHI = { exists = no }
+		}
+		bypass = {
+			OR = {
+				PRC = { exists = no }
+				PRC = { is_subject_of = ROC }
+				has_war_with = PRC
+			}
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+		complete_tooltip = {
+		}
+		completion_reward = {
+			PRC = {
+				country_event = {
+					id = roc.66
+					days = 2
+				}
+			}
+			custom_effect_tooltip = if_PRC_accept
+			effect_tooltip = {
+				if = {
+					limit = { not = { has_cosmetic_tag = ROC_jianguo } }
+					set_cosmetic_tag = ROC_CKUG
+				}
+				PRC = {
+					every_core_state = {
+						add_core_of = ROOT
+					}
+					every_character = { set_nationality = ROOT }
+					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+				}
+			}
+		}
 	}
 	focus = {
 		id = ROC_Founding_ROC
@@ -1828,9 +1949,23 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			set_cosmetic_tag = ROC_jianguo
+			if = {
+				limit = { has_country_flag = ROC_Form_coalition_government }
+				set_cosmetic_tag = ROC_CKUG
+			}
+			else = { set_cosmetic_tag = ROC_jianguo }
 			set_capital = {
 				state = 613
+			}
+			613 = {
+				if = {
+					limit = { not = { is_core_of = ROOT } }
+					add_compliance = 50
+				}
+			}
+			set_victory_points = {
+				province = 11913
+				value = 50
 			}
 			add_ideas = ROC_crushed_country_1
 			remove_ideas = junfa_idea2
@@ -2203,24 +2338,7 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
-			MAN = {
-				exists = no
-			}
-			YUN = {
-				exists = no
-			}
-			SIK = {
-				exists = no
-			}
-			MON = {
-				exists = no
-			}
-			TIB = {
-				exists = no
-			}
-			XSM = {
-				exists = no
-			}
+			has_global_flag = CHI_REUNIT
 		}
 		bypass = {
 		}
@@ -3392,32 +3510,35 @@ focus_tree = {
 			set_country_flag = CHI_ROC
 			every_other_country = {
 				limit = {
-					OR = {
-						tag = TIB
-						tag = XSM
-						tag = SIK
-						tag = MON
+					is_chinese_country = yes
+					not = {
+						or = {
+							is_subject_of = ROOT
+							is_in_faction_with = ROOT
+							has_war_with = ROOT
+						}
 					}
 				}
-				country_event = {
-					id = chi.71
-				}
-			}
-			if = {
-				limit = {
-					YUN = {
-						is_subject_of = ROC
+				if = {
+					limit = {
+						has_country_flag = Participate_in_the_competition_for_China_reunification
+						is_subject = no
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = CHI_attck_FROM
+						}
 					}
 				}
-				unlock_decision_tooltip = ROC_annex_YUN_decision
-			}
-			if = {
-				limit = {
-					MAN = {
-						is_subject_of = ROC
+				else = {
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = CHI_Ask_FROM_for_submission
+						}
 					}
 				}
-				unlock_decision_tooltip = ROC_annex_MAN_decision
 			}
 		}
 	}
@@ -3602,7 +3723,7 @@ focus_tree = {
 						controller = {
 							is_in_ally = no
 							not = { tag = SHH }
-							not = { tag = PRC }
+							not = { tag = ROOT }
 						}
 					}
 				}
@@ -3619,7 +3740,7 @@ focus_tree = {
 								tag = SHH
 							}
 							not = {
-								tag = PRC
+								tag = ROOT
 							}
 							is_in_ally = no
 						}
@@ -4148,7 +4269,7 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
-			596 = {
+			1048 = {
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
 					type = industrial_complex
@@ -4160,7 +4281,7 @@ focus_tree = {
 					amount = 5
 				}
 			}
-			1068 = {
+			620 = {
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
 					type = industrial_complex

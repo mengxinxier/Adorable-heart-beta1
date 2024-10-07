@@ -16,14 +16,14 @@ add_namespace = test_event
 		fire_only_once = yes
 		option = {
 			name = ukr_politics.1.a
-			hidden_effect = {
-				country_event = { id = ukr_politics.2 days = 3 }
-				set_variable = {
-					ukr_lefr = 0
-					ukr_right = 1
-				}
-			}
 			add_political_power = 10
+				set_power_balance = {
+					id = UKR_power_balance
+					left_side = UKR_democratic_side
+					right_side = UKR_fascism_side
+					set_default = yes
+				}
+			hidden_effect = { country_event = { id = ukr_politics.12 days = 60 } }
 		}
 	}
 
@@ -432,24 +432,658 @@ add_namespace = test_event
 				transfer_navy = {
 					target = UKR
 				}
-			}
+				}
 			hidden_effect = {
+			annex_country = {
+					target = SOV
+				}
 				set_capital = {
 					state = 219
 					remember_old_capital = no
 				}
-				annex_country = {
-					target = SOV
-				}
 			}
-			add_war_support = 0.15
-			add_political_power = 150
+			add_war_support = -0.5
+			add_stability = -0.3
 			hidden_effect = {
 				news_event = rus_news.1
 			}
 		}
 	}
-
+	
+	#乌克兰书报审查
+	country_event = {
+		id = ukr_politics.10
+		title = ukr_politics.10.t
+		is_triggered_only = yes
+		desc = ukr_politics.10.d
+		option = {
+			name = ukr_politics.10.a
+			add_power_balance_value = {
+			id = UKR_power_balance
+			value = 0.1
+			}
+			add_war_support = 0.1
+		}		
+		option = {
+			name = ukr_politics.10.b
+			add_power_balance_value = {
+			id = UKR_power_balance
+			value = -0.1
+			}
+			add_political_power = 50
+		}
+	}	
+	
+	#乌克兰皇室开支
+	country_event = {
+		id = ukr_politics.11
+		title = ukr_politics.11.t
+		is_triggered_only = yes
+		desc = ukr_politics.10.d
+		option = {
+			name = ukr_politics.11.a
+			add_power_balance_value = {
+			id = UKR_power_balance
+			value = -0.2
+			}
+			add_political_power = 100
+			add_stability = -0.05
+			add_war_support = -0.05
+		}		
+		option = {
+			name = ukr_politics.11.b
+			custom_effect_tooltip = UBS_SAVE_UP_600
+			hidden_effect = {
+				add_to_variable = { ubs_save = 600 }
+			}
+		}
+	}
+	
+	#一次平常的就餐
+	country_event = {
+		id = ukr_politics.12
+		title = ukr_politics.12.t
+		is_triggered_only = yes
+		desc = ukr_politics.12.d
+		picture = GFX_report_event_UKR_yongcan
+		option = {
+			name = ukr_politics.12.a
+			add_political_power = -50
+		}		
+		option = {
+			name = ukr_politics.12.b
+			set_country_flag = UKR_waerjilihezuo
+		UKR_huilinai = {
+			add_field_marshal_role = {
+				traits = {
+					harsh_leader
+					aggressive_assaulter
+					inspirational_leader
+					expert_delegator
+				}
+				skill = 3
+				attack_skill = 5
+				defense_skill = 3
+				planning_skill = 3
+				logistics_skill = 4
+				legacy_id = -1
+			}
+		}			
+		}
+	}	
+	
+	#为瓦尔基里提供弹药
+	country_event = {
+		id = ukr_politics.13
+		title = ukr_politics.13.t
+		fire_only_once = yes
+		trigger = {
+			tag = UKR
+			has_war_with = SOV 
+			has_country_flag = UKR_waerjilihezuo
+			is_subject = no
+			has_government = neutrality
+		}
+	
+		mean_time_to_happen = {
+			days = 30
+		}
+	
+		desc = ukr_politics.13.d
+		picture = GFX_event_generic_soldier
+		option = {
+			name = ukr_politics.13.a
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 1000
+			}
+		}
+		option = {
+			name = ukr_politics.13.b
+			hidden_effect = {
+				country_event = { id = ukr_politics.14 days = 20 }
+			}
+		}
+	}
+	
+	#我的弹药在哪里
+	country_event = {
+		id = ukr_politics.14
+		title = ukr_politics.14.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.14.d
+		picture = GFX_report_event_UKR_3
+		
+		option = {
+			name = ukr_politics.14.a
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 1000
+			}
+		}		
+		option = {
+			name = ukr_politics.14.b
+			hidden_effect = {
+				country_event = { id = ukr_politics.15 days = 15 }
+			}
+		}
+	}
+	
+	#瓦尔基里反叛
+	country_event = {
+		id = ukr_politics.15
+		title = ukr_politics.15.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.15.d
+		picture = GFX_report_event_ARG_coup_detat
+		
+		option = {
+			name = ukr_politics.15.a
+		set_country_flag = UKR_bingbian
+		mark_focus_tree_layout_dirty = yes
+		SOV_Anastasia = { retire = yes }
+		UKR_huilinai = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = { hardened_officer }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		if = {
+		limit = { has_idea = UKR_waerjili }
+		swap_ideas = {
+		remove_idea = UKR_waerjili
+		add_idea = UKR_waerjili_3
+		}		
+		}
+		else = {
+		swap_ideas = {
+		remove_idea = UKR_waerjili_2
+		add_idea = UKR_waerjili_3
+				}
+			}
+		set_cosmetic_tag = UK2
+		country_event = { id = ukr_politics.16 days = 1 }
+		hidden_effect = {
+			remove_power_balance = {
+				id = UKR_power_balance
+			}
+		}
+		}
+	}	
+	
+	#权力的重塑
+	country_event = {
+		id = ukr_politics.16
+		title = ukr_politics.16.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.16.d
+		picture = GFX_report_event_gre_trial
+		
+		option = {
+			name = ukr_politics.16.a
+		add_stability = -0.2
+		add_political_power = -100
+		custom_effect_tooltip = UKR_zhubudaiti
+		set_country_flag = waerjiliguwen
+		custom_effect_tooltip = available_theorist
+		show_ideas_tooltip = UKR_wagena
+		UKR_pavel_shatilov = { retire = yes }
+		UKR_sergey_markov = { retire = yes }
+		UKR_mikhail_drozdovsky = { retire = yes }
+		UKR_anton_denikin = { retire = yes }
+		SOV_Kolchak = { retire = yes }
+		SOV_Meretskov = { retire = yes }
+		UKR_aleksandr_nemits = { retire = yes }
+		UKR_dimitry_kulik = { retire = yes }
+		UKR_georgiy_stark = { retire = yes }
+		UKR_gordey_levchenko = { retire = yes }
+		UKR_vsevolod_marchenko = { retire = yes }
+		SOV_Shumyatsky = { retire = yes }
+		SOV_chernov = { retire = yes }
+		SOV_Dmitri_Romanov = { retire = yes }
+		SOV_Irakli_Tsereteli = { retire = yes }
+		SOV_Kerensky = { retire = yes }
+		SOV_trubetskoy = { retire = yes }
+		SOV_Savenkov = { retire = yes }
+		UKR_patriarch_kirill = { retire = yes }
+		UKR_gerasim_vdovenko = { retire = yes }
+		UKR_aleksandr_liverovsky = { retire = yes }
+		UKR_nikolay_kondratyev = { retire = yes }
+		UKR_lev_kafenhaus = { retire = yes }
+		UKR_mykola_boretskyi = { retire = yes }
+		UKR_panas_liubchenko = { retire = yes }
+		UKR_borys_martos = { retire = yes }
+		UKR_vyacheslav_tkachov = { retire = yes }
+		UKR_aleksandr_kazakov = { retire = yes }
+		UKR_nikolay_shutt = { retire = yes }
+		hidden_effect = {
+			country_event = { id = ukr_politics.17 days = 10 }
+		}
+		}
+	}
+	
+	
+	#战场女武神
+	country_event = {
+		id = ukr_politics.17
+		title = ukr_politics.17.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.17.d
+		picture = GFX_report_event_UKR_6
+		
+		option = {
+			name = ukr_politics.17.a
+		UKR_Maximilian = {
+			add_corps_commander_role = {
+				traits = {
+					infantry_officer
+					skilled_staffer
+				}
+				skill = 4
+				attack_skill = 4
+				defense_skill = 2
+				planning_skill = 3
+				logistics_skill = 2
+				legacy_id = -1
+			}
+		}		
+		hidden_effect = {
+			country_event = { id = ukr_politics.18 days = 7 }
+		}
+		}
+	}
+	
+	#啊海军
+	country_event = {
+		id = ukr_politics.18
+		title = ukr_politics.18.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.18.d
+		picture = GFX_report_event_UKR_7
+		
+		option = {
+			name = ukr_politics.18.a
+		UKR_mingnai = {
+			add_naval_commander_role = {
+				traits = {
+					naval_lineage
+					superior_tactician
+					blue_water_expert
+				}
+				skill = 4
+				attack_skill = 5
+				defense_skill = 3
+				maneuvering_skill = 4
+				coordination_skill = 3
+				legacy_id = -1
+			}
+		}		
+		UKR_munetani = {
+			add_naval_commander_role = {
+				traits = {
+					fly_swatter
+					fleet_protector
+				}
+				skill = 3
+				attack_skill = 3
+				defense_skill = 3
+				maneuvering_skill = 3
+				coordination_skill = 3
+				legacy_id = -1
+			}
+		}
+		set_country_flag = UKR_mingnaiguwen
+		custom_effect_tooltip = available_chief_of_navy
+		show_ideas_tooltip = UKR_mingnai		
+		hidden_effect = {
+			country_event = { id = ukr_politics.19 days = 7 }
+		}
+		}
+	}	
+	
+	#恐惧
+	country_event = {
+		id = ukr_politics.19
+		title = ukr_politics.19.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.19.d
+		picture = GFX_report_event_UKR_8
+		
+		option = {
+			name = ukr_politics.19.a
+		UKR_Makarov = {
+			add_corps_commander_role = {
+				traits = {
+					career_officer
+					trickster
+				}
+				skill = 3
+				attack_skill = 4
+				defense_skill = 2
+				planning_skill = 4
+				logistics_skill = 2
+				legacy_id = -1
+			}
+		}
+		set_country_flag = makaluofuguwen
+		custom_effect_tooltip = available_military_high_command
+		show_ideas_tooltip = UKR_Makarov		
+		hidden_effect = {
+			country_event = { id = ukr_politics.20 days = 7 }
+		}
+		}
+	}	
+	#龙
+	country_event = {
+		id = ukr_politics.20
+		title = ukr_politics.20.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.20.d
+		picture = GFX_report_event_UKR_9
+		
+		option = {
+			name = ukr_politics.20.a
+		UKR_aoduyin = {
+			add_corps_commander_role = {
+				traits = {
+					bearer_of_artillery
+					urban_assault_specialist
+				}
+				skill = 4
+				attack_skill = 6
+				defense_skill = 5
+				planning_skill = 2
+				logistics_skill = 3
+				legacy_id = -1
+			}
+		}
+		set_country_flag = aoduyinguwen
+		custom_effect_tooltip = available_chief_of_airforce
+		show_ideas_tooltip = UKR_aoduyin
+		hidden_effect = {
+			country_event = { id = ukr_politics.21 days = 7 }
+		}
+		}
+	}	
+	#面包
+	country_event = {
+		id = ukr_politics.21
+		title = ukr_politics.21.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.21.d
+		picture = GFX_report_event_UKR_5
+		
+		option = {
+			name = ukr_politics.21.a
+		UKR_ailixiya = {
+			add_corps_commander_role = {
+				traits = {
+					trait_engineer
+					order_mahoushojo
+				}
+				skill = 3
+				attack_skill = 3
+				defense_skill = 3
+				planning_skill = 3
+				logistics_skill = 5
+				legacy_id = -1
+			}
+		}
+		set_country_flag = ailixiyaguwen
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = UKR_ailixiya			
+		hidden_effect = {
+			country_event = { id = ukr_politics.22 days = 7 }
+		}
+		}
+	}	
+	#吸血公主
+	country_event = {
+		id = ukr_politics.22
+		title = ukr_politics.22.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.22.d
+		picture = GFX_report_event_UKR_10
+		
+		option = {
+			name = ukr_politics.22.a
+		UKR_yilinna = {
+			add_corps_commander_role = {
+				traits = {
+					organizer
+					naval_invader
+				}
+				skill = 2
+				attack_skill = 3
+				defense_skill = 3
+				planning_skill = 6
+				logistics_skill = 3
+				legacy_id = -1
+			}
+		}
+		set_country_flag = yilinnaguwen
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = UKR_yilinna		
+		hidden_effect = {
+			country_event = { id = ukr_politics.23 days = 7 }
+		}
+		}
+	}	
+	#无序
+	country_event = {
+		id = ukr_politics.23
+		title = ukr_politics.23.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.23.d
+		picture = GFX_report_event_UKR_13
+		
+		option = {
+			name = ukr_politics.23.a
+		UKR_wuxu = {
+			add_corps_commander_role = {
+				traits = {
+					brilliant_strategist
+					media_personality
+				}
+				skill = 4
+				attack_skill = 5
+				defense_skill = 5
+				planning_skill = 5
+				logistics_skill = 5
+				legacy_id = -1
+			}
+		}
+		set_country_flag = wuxuguwen
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = UKR_wuxu	
+		hidden_effect = {
+			country_event = { id = ukr_politics.24 days = 7 }
+		}
+		}
+	}	
+	#小蝶
+	country_event = {
+		id = ukr_politics.24
+		title = ukr_politics.24.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.24.d
+		picture = GFX_report_event_UKR_11
+		
+		option = {
+			name = ukr_politics.24.a
+		UKR_xiaodie = {
+			add_corps_commander_role = {
+				traits = {
+					trait_cautious
+					order_mahoushojo
+				}
+				skill = 2
+				attack_skill = 2
+				defense_skill = 2
+				planning_skill = 3
+				logistics_skill = 7
+				legacy_id = -1
+			}
+		}
+		set_country_flag = xiaodieguwen
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = UKR_xiaodie		
+		hidden_effect = {
+			country_event = { id = ukr_politics.25 days = 7 }
+		}
+		}
+	}	
+	#药王
+	country_event = {
+		id = ukr_politics.25
+		title = ukr_politics.25.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.25.d
+		picture = GFX_report_event_UKR_12
+		
+		option = {
+			name = ukr_politics.25.a
+		UKR_chuangzhen = {
+			add_corps_commander_role = {
+				traits = {
+					politically_connected
+				}
+				skill = 1
+				attack_skill = 1
+				defense_skill = 1
+				planning_skill = 1
+				logistics_skill = 3
+				legacy_id = -1
+			}
+		}
+		set_country_flag = chuangzhenguwen
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = UKR_chuangzhen		
+		hidden_effect = {
+			country_event = { id = ukr_politics.26 days = 7 }
+		}
+		}
+	}	
+	#安那其
+	country_event = {
+		id = ukr_politics.26
+		title = ukr_politics.26.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.26.d
+		picture = GFX_report_event_UKR_14
+		
+		option = {
+			name = ukr_politics.26.a
+		UKR_annaqi = {
+			add_corps_commander_role = {
+				traits = {
+					cavalry_officer
+					skilled_staffer
+				}
+				skill = 3
+				attack_skill = 4
+				defense_skill = 2
+				planning_skill = 2
+				logistics_skill = 4
+				legacy_id = -1
+			}
+		}
+		set_country_flag = UKR_annaqiguwen
+		custom_effect_tooltip = available_political_advisor
+		show_ideas_tooltip = UKR_annaqi
+		hidden_effect = {
+			country_event = { id = ukr_politics.27 days = 7 }
+		}
+		}
+	}	
+	#新女武神
+	country_event = {
+		id = ukr_politics.27
+		title = ukr_politics.27.t
+		is_triggered_only = yes
+		fire_only_once = yes
+		desc = ukr_politics.27.d
+		picture = GFX_report_event_UKR_15
+		
+		option = {
+			name = ukr_politics.27.a
+		UKR_ailiyasi = {
+			add_corps_commander_role = {
+				traits = {
+					order_mahoushojo
+					trait_engineer
+				}
+				skill = 3
+				attack_skill = 5
+				defense_skill = 4
+				planning_skill = 1
+				logistics_skill = 1
+				legacy_id = -1
+			}
+		}		
+		UKR_Radi_Jaeger = {
+			add_corps_commander_role = {
+				traits = {
+					armor_officer
+					career_officer
+				}
+				skill = 2
+				attack_skill = 3
+				defense_skill = 3
+				planning_skill = 2
+				logistics_skill = 3
+				legacy_id = -1
+			}
+		}
+		}
+	}
 	news_event = {
 		id = rus_news.1
 		title = rus_news.1.t
@@ -706,7 +1340,18 @@ add_namespace = test_event
 			SOV_orthodox_conformity = yes
 		}
 	}
-
+	country_event = {
+		id = test_event.3
+		title = test_event.3.t
+		desc = test_event.3.d
+		is_triggered_only = yes
+		fire_only_once = yes
+		option = {
+			name = test_event.3.a
+			set_country_flag = UKR_bingbian
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
 #第一届国民大会
 
 	#召开会议
@@ -735,7 +1380,7 @@ add_namespace = test_event
 		option = {
 			name = rus_na.2.a
 			add_political_power = 5
-			add_stability = 0.01
+			add_stability = 0.05
 			hidden_effect = {
 				country_event = { id = rus_na.3 days = 1 }
 			}
@@ -752,8 +1397,12 @@ add_namespace = test_event
 		option = {
 			name = rus_na.3.a
 			ai_chance = { base = 75 }
-			add_political_power = 5
+			add_political_power = -50
 			add_popularity = { ideology = communism popularity = 0.01 }
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
+			}
 			hidden_effect = {
 				country_event = { id = rus_na.4 days = 1 }
 			}
@@ -770,11 +1419,13 @@ add_namespace = test_event
 					}
 				}
 			}
-			add_stability = -0.02
-			custom_effect_tooltip = RUS_disagreement_at_meeting_tt
+			add_stability = -0.05
 			add_popularity = { ideology = fascism popularity = 0.04 }
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = 1 }
 				country_event = { id = rus_na.4 days = 1 }
 			}
 		}
@@ -791,9 +1442,11 @@ add_namespace = test_event
 			name = rus_na.4.a
 			ai_chance = { base = 50 }
 			add_popularity = { ideology = neutrality popularity = 0.02 }
-			custom_effect_tooltip = RUS_disagreement_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = 1 }
 				country_event = { id = rus_na.5 days = 1 }
 			}
 		}
@@ -810,6 +1463,10 @@ add_namespace = test_event
 				}
 			}
 			add_popularity = { ideology = democratic popularity = 0.02 }
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
+			}
 			hidden_effect = {
 				country_event = { id = rus_na.5 days = 1 }
 			}
@@ -828,9 +1485,11 @@ add_namespace = test_event
 			ai_chance = { base = 50 }
 			add_popularity = { ideology = neutrality popularity = 0.02 }
 			add_popularity = { ideology = fascism popularity = 0.02 }
-			custom_effect_tooltip = RUS_disagreement_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = 1 }
 				country_event = { id = rus_na.6 days = 1 }
 			}
 		}
@@ -848,6 +1507,10 @@ add_namespace = test_event
 			}
 			add_popularity = { ideology = democratic popularity = 0.02 }
 			add_popularity = { ideology = communism popularity = 0.02 }
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
+			}
 			hidden_effect = {
 				country_event = { id = rus_na.6 days = 1 }
 			}
@@ -866,8 +1529,12 @@ add_namespace = test_event
 			ai_chance = { 
 				base = 25 
 			}
-			add_political_power = 15
+			add_political_power = -50
 			add_popularity = { ideology = democratic popularity = 0.05 }
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
+			}
 			hidden_effect = {
 				country_event = { id = rus_na.7 days = 1 }
 			}
@@ -884,12 +1551,14 @@ add_namespace = test_event
 					}
 				}
 			}
-			add_stability = -0.02
+			add_stability = -0.05
 			add_war_support = -0.05
 			add_popularity = { ideology = neutrality popularity = 0.10 }
-			custom_effect_tooltip = RUS_disagreement_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = 1 }
 				country_event = { id = rus_na.7 days = 1 }
 			}
 		}
@@ -907,8 +1576,12 @@ add_namespace = test_event
 			ai_chance = { 
 				base = 25 
 			}
-			add_political_power = 5
+			add_political_power = -50
 			add_popularity = { ideology = democratic popularity = 0.02 }
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
+			}
 			hidden_effect = {
 				country_event = { id = rus_na.8 days = 1 }
 			}
@@ -925,11 +1598,13 @@ add_namespace = test_event
 					}
 				}
 			}
-			add_stability = 0.01
+			add_stability = -0.05
 			add_popularity = { ideology = neutrality popularity = 0.05 }
-			custom_effect_tooltip = RUS_disagreement_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = 1 }
 				country_event = { id = rus_na.8 days = 1 }
 			}
 		}
@@ -944,38 +1619,25 @@ add_namespace = test_event
 		fire_only_once = yes
 		option = {
 			name = rus_na.8.a
-			add_political_power = 5
+			add_political_power = -50
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				if = {
-					limit = { check_variable = { RUS_disagreement > 5 } }
-					country_event = { id = rus_na.13 days = 1 }
-				}
-				else = {
-					country_event = { id = rus_na.9 days = 1 }
-				}
+				country_event = { id = rus_na.9 days = 1 }
 			}
 		}
 		option = {
 			name = rus_na.8.b
 			
-			add_stability = 0.01
-			random_owned_controlled_state = {
-				limit = {
-					is_core_of = ROOT
-				}
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
+			add_stability = -0.05
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
 			}
 			hidden_effect = {
-				if = {
-					limit = { check_variable = { RUS_disagreement > 5 } }
-					country_event = { id = rus_na.13 days = 1 }
-				}
-				else = {
-					country_event = { id = rus_na.9 days = 1 }
-				}
+				country_event = { id = rus_na.9 days = 1 }
 			}
 		}
 	}
@@ -1009,12 +1671,14 @@ add_namespace = test_event
 					}
 				}
 			}
-			add_political_power = 5
+			add_political_power = -50
 			add_popularity = { ideology = neutrality popularity = 0.05 }
-			custom_effect_tooltip = RUS_large_disagreement_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = 1 }
-				country_event = { id = rus_na.13 days = 1 }
+				country_event = { id = rus_na.10 days = 1 }
 			}
 		}
 		option = {
@@ -1039,18 +1703,14 @@ add_namespace = test_event
 					}
 				}
 			}
-			add_stability = 0.01
+			add_stability = -0.05
 			add_popularity = { ideology = democratic popularity = 0.05 }
-			custom_effect_tooltip = RUS_compromise_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = -1 }
-				if = {
-					limit = { check_variable = { RUS_disagreement > 5 } }
-					country_event = { id = rus_na.13 days = 1 }
-				}
-				else = {
 					country_event = { id = rus_na.10 days = 1 }
-				}
 			}
 		}
 	}
@@ -1067,18 +1727,14 @@ add_namespace = test_event
 			ai_chance = { 
 				base = 25 
 			}
-			add_political_power = 5
+			add_political_power = -50
 			add_popularity = { ideology = democratic popularity = 0.05 }
-			custom_effect_tooltip = RUS_compromise_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = -1 }
-				if = {
-					limit = { check_variable = { RUS_disagreement > 5 } }
-					country_event = { id = rus_na.13 days = 1 }
-				}
-				else = {
 					country_event = { id = rus_na.11 days = 1 }
-				}
 			}
 		}
 		option = {
@@ -1093,18 +1749,14 @@ add_namespace = test_event
 					}
 				}
 			}
-			add_stability = 0.01
+			add_stability = -0.05
 			add_popularity = { ideology = neutrality popularity = 0.05 }
-			custom_effect_tooltip = RUS_disagreement_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = 1 }
-				if = {
-					limit = { check_variable = { RUS_disagreement > 5 } }
-					country_event = { id = rus_na.13 days = 1 }
-				}
-				else = {
 					country_event = { id = rus_na.11 days = 1 }
-				}
 			}
 		}
 	}
@@ -1122,16 +1774,12 @@ add_namespace = test_event
 				base = 25 
 			}
 			add_popularity = { ideology = democratic popularity = 0.05 }
-			custom_effect_tooltip = RUS_compromise_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = -0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = -1 }
-				if = {
-					limit = { check_variable = { RUS_disagreement > 5 } }
-					country_event = { id = rus_na.13 days = 1 }
-				}
-				else = {
 					country_event = { id = rus_na.12 days = 1 }
-				}
 			}
 		}
 		option = {
@@ -1146,18 +1794,13 @@ add_namespace = test_event
 					}
 				}
 			}
-			add_stability = 0.01
 			add_popularity = { ideology = neutrality popularity = 0.05 }
-			custom_effect_tooltip = RUS_disagreement_at_meeting_tt
+			add_power_balance_value = {
+				id = UKR_power_balance
+				value = 0.1
+			}
 			hidden_effect = {
-				add_to_variable = { RUS_disagreement = 1 }
-				if = {
-					limit = { check_variable = { RUS_disagreement > 5 } }
-					country_event = { id = rus_na.13 days = 1 }
-				}
-				else = {
 					country_event = { id = rus_na.12 days = 1 }
-				}
 			}
 		}
 	}
@@ -1171,9 +1814,8 @@ add_namespace = test_event
 		fire_only_once = yes
 		option = {
 			name = rus_na.12.a
-			add_political_power = 5
-			add_popularity = { ideology = democratic popularity = 0.10 }
-			RUS_constitutional_monarchy_win_effect = yes
+			add_political_power = 50
+			complete_national_focus = UKR_aftermath_of_the_war
 		}
 	}
 
@@ -1437,17 +2079,82 @@ add_namespace = test_event
 	country_event = {
 		id = rus_na.19
 		title = rus_na.19.t
-		desc = rus_na.19.d
+	desc = {
+		trigger = {
+			is_power_balance_in_range = {
+				id = UKR_power_balance
+				range = UKR_bop_democratic_side3
+			}
+		}
+		text = rus_na.19.d.d
+	}
+	desc = {
+		trigger = {
+			is_power_balance_in_range = {
+				id = UKR_power_balance
+				range = UKR_bop_fascism_side3
+			}
+		}
+		text = rus_na.19.d.f
+	}
+	desc = {
+		trigger = {
+			is_power_balance_in_range = {
+				id = UKR_power_balance
+				range = UKR_tsar_side
+			}
+		}
+		text = rus_na.19.d.t
+	}
 		is_triggered_only = yes
 		fire_only_once = yes
-		option = {
+	option = {
 			name = rus_na.19.a
-			add_political_power = 15
-			add_popularity = {
-				ideology = neutrality
-				popularity = 0.10
+		trigger = {
+			is_power_balance_in_range = {
+				id = UKR_power_balance
+				range = UKR_bop_democratic_side3
 			}
-			RUS_royalist_win_effect = yes
+		}
+		set_country_flag = RUS_republican_win
+		RUS_republican_win_effect = yes
+		hidden_effect = {
+			remove_power_balance = {
+				id = UKR_power_balance
+			}
+		}
+		}		
+	option = {
+			name = rus_na.19.b
+		trigger = {
+			is_power_balance_in_range = {
+				id = UKR_power_balance
+				range = UKR_bop_fascism_side3
+			}
+		}
+		set_country_flag = RUS_fxs_win
+		RUS_fxs_win_effect = yes
+		hidden_effect = {
+			remove_power_balance = {
+				id = UKR_power_balance
+			}
+		}
+		}		
+	option = {
+			name = rus_na.19.c
+		trigger = {
+			is_power_balance_in_range = {
+				id = UKR_power_balance
+				range = UKR_tsar_side
+			}
+		}
+		set_country_flag = RUS_royalist_win
+		RUS_royalist_win_effect = yes
+		hidden_effect = {
+			remove_power_balance = {
+				id = UKR_power_balance
+			}
+		}
 		}
 	}
 
@@ -1499,7 +2206,824 @@ add_namespace = test_event
 			RUS_junta_win_effect = yes
 		}
 	}
-
+	
+	#归还流亡者的财产？
+	country_event = {
+		id = rus_na.21
+		title = rus_na.21.t
+		desc = rus_na.21.d
+		is_triggered_only = yes
+		option = {
+			name = rus_na.21.a
+			ai_chance = {
+				base = 5
+			}
+			add_to_variable = { ubs_save = -500 }
+			custom_effect_tooltip = UBS_SAVE_down_500
+		}
+		option = {
+			name = rus_na.21.b
+			ai_chance = {
+				base = 5
+			}
+			add_stability = -0.15
+		}
+	}	
+	
+	#平反尼古拉二世
+	country_event = {
+		id = rus_na.22
+		title = rus_na.22.t
+		desc = rus_na.22.d
+		is_triggered_only = yes
+		option = {
+			name = rus_na.22.a
+			ai_chance = {
+				base = 5
+			}
+			add_political_power = 100
+			add_stability = 0.05
+		}
+	}	
+	
+	#来自莫斯科的橄榄枝
+	country_event = {
+		id = rus_na.23
+		title = rus_na.23.t
+		desc = rus_na.23.d
+		is_triggered_only = yes
+		option = {
+			name = rus_na.23.a
+			ai_chance = {
+				base = 5
+			}
+			UKR = { country_event = rus_na.24 }
+		}		
+		option = {
+			name = rus_na.23.b
+			ai_chance = {
+				base = 0
+			}
+			UKR = { country_event = rus_na.25 }
+		}
+	}	
+	
+	#同意
+	country_event = {
+		id = rus_na.24
+		title = rus_na.24.t
+		desc = rus_na.24.d
+		is_triggered_only = yes
+		option = {
+			name = rus_na.24.a
+			ai_chance = {
+				base = 5
+			}
+			SIB = { every_character = { set_nationality = UKR } }
+			UKR = { annex_country = { target = SIB transfer_troops = yes } }
+		}
+	}	
+	
+	#拒绝
+	country_event = {
+		id = rus_na.25
+		title = rus_na.25.t
+		desc = rus_na.25.d
+		is_triggered_only = yes
+		option = {
+			name = rus_na.25.a
+			ai_chance = {
+				base = 5
+			}
+		}
+	}	
+	
+	#第二届选举
+	country_event = {
+		id = rus_na.26
+		title = rus_na.26.t
+		desc = rus_na.26.d
+		is_triggered_only = yes
+		option = {
+			name = rus_na.26.a
+			ai_chance = {
+				base = 5
+			}
+			set_country_flag = RUS_pujingnadangxuan
+			mark_focus_tree_layout_dirty = yes
+			complete_national_focus = UKR_hainengyoushui
+		}		
+		option = {
+			name = rus_na.26.b
+			ai_chance = {
+				base = 5
+			}
+			set_country_flag = RUS_pujingnadangxuan
+			mark_focus_tree_layout_dirty = yes
+			complete_national_focus = UKR_hainengyoushui
+		}		
+		option = {
+			name = rus_na.26.c
+			ai_chance = {
+				base = 5
+			}
+			set_country_flag = RUS_pujingnadangxuan
+			mark_focus_tree_layout_dirty = yes
+			complete_national_focus = UKR_hainengyoushui
+		}
+	}
+	
+	#新的领袖
+	country_event = {
+		id = rus_na.27
+		title = rus_na.27.t
+		desc = rus_na.27.d
+		is_triggered_only = yes
+		option = {
+			name = rus_na.27.a
+			ai_chance = {
+				base = 5
+			}
+		SOV_Anastasia = { retire = yes }
+		UKR_rpk16 = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = Strasserism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = Strasserism
+						traits = { old_coup_maker }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_leader = Strasserism
+			}
+		}
+		}		
+		option = {
+			name = rus_na.27.b
+			ai_chance = {
+				base = 5
+			}
+		SOV_Anastasia = { retire = yes }
+		UKR_kaduoke = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = occultism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = occultism
+						traits = { temperamental }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_leader = occultism
+			}
+		}
+		}		
+		option = {
+			name = rus_na.27.c
+			ai_chance = {
+				base = 5
+			}
+		SOV_Anastasia = { retire = yes }
+		SOV_Savenkov = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = Right_populism_subideology
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = Right_populism_subideology
+						traits = { DEN_fascist_populist }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_leader = Right_populism_subideology
+			}
+		}
+		}
+	}	
+	#沙皇的命运
+	country_event = {
+		id = rus_na.28
+		title = rus_na.28.t
+		desc = rus_na.28.d
+		picture = GFX_report_event_generic_read_write
+		is_triggered_only = yes
+		option = {
+			name = rus_na.28.a
+			ai_chance = {
+				base = 5
+			}
+		SOV_Anastasia = { retire = yes }
+		add_stability = -0.1
+		add_political_power = 50
+		}		
+		option = {
+			name = rus_na.28.b
+			ai_chance = {
+				base = 5
+			}
+		SOV_Anastasia = { retire = yes }
+		add_stability = -0.05
+		add_war_support = 0.05
+		}		
+		option = {
+			name = rus_na.28.c
+			ai_chance = {
+				base = 5
+			}
+		SOV_Anastasia = { retire = yes }
+		add_ideas = RUS_beikuileideshahuang
+		}
+	}	
+	#合作还是毁灭
+	country_event = {
+		id = rus_na.29
+		title = rus_na.29.t
+		desc = rus_na.29.d
+		picture = GFX_report_event_gre_trial
+		is_triggered_only = yes
+		option = {
+			name = rus_na.29.a
+			ai_chance = {
+				base = 5
+			}
+		UKR_kaduoke = { retire = yes }
+		add_war_support = 0.05
+		add_popularity = { ideology = fascism popularity = 0.05 }
+		}
+	}	
+	#莫斯科大会
+	country_event = {
+		id = rus_na.30
+		title = rus_na.30.t
+		desc = rus_na.30.d
+		picture = GFX_report_event_ace_died
+		is_triggered_only = yes
+		option = {
+			name = rus_na.30.a
+			ai_chance = {
+				base = 5
+			}
+			country_event = rus_na.31
+		}
+	}	
+	#惊天霹雳
+	country_event = {
+		id = rus_na.31
+		title = rus_na.31.t
+		desc = rus_na.31.d
+		picture = GFX_report_event_ITA_air_crash
+		is_triggered_only = yes
+		option = {
+			name = rus_na.31.a
+			ai_chance = {
+				base = 5
+			}
+			UKR_huilinai = { retire = yes }
+		UKR_wagena = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = oligarchism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = oligarchism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			set_country_flag = RUS_huilinai_dead
+			mark_focus_tree_layout_dirty = yes
+		}
+	}	
+	#紧急会议
+	country_event = {
+		id = rus_na.32
+		title = rus_na.32.t
+		desc = rus_na.32.d
+		picture = GFX_report_event_tur_inonu_diplomacy
+		is_triggered_only = yes
+		option = {
+			name = rus_na.32.a
+			ai_chance = {
+				base = 5
+			}
+		UKR_chuangzhen = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = { silent_workhorse }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		}		
+		option = {
+			name = rus_na.32.b
+			ai_chance = {
+				base = 5
+			}
+		UKR_aoduyin = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = militarism_subtype
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = militarism_subtype
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		set_politics = {
+			ruling_party = fascism
+			elections_allowed = no
+			}
+		add_popularity = {
+			 ideology = fascism
+			 popularity = 0.5
+			}
+	set_party_name = {
+		ideology = fascism
+		long_name = UKR_waerjili_party_long
+		name = UKR_waerjili_party
+	}			
+		}		
+		option = {
+			name = rus_na.32.c
+			ai_chance = {
+				base = 5
+			}
+		UKR_mingnai = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		}		
+		option = {
+			name = rus_na.32.e
+			ai_chance = {
+				base = 5
+			}
+		UKR_yilinna = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = Farsighted_socialism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = Farsighted_socialism
+						traits = { technocrat }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		set_politics = {
+			ruling_party = communism
+			elections_allowed = no
+			}
+		add_popularity = {
+			 ideology = communism
+			 popularity = 0.5
+			}
+	set_party_name = {
+		ideology = communism
+		long_name = UKR_waerjili_party_long
+		name = UKR_waerjili_party
+	}
+		}		
+		option = {
+			name = rus_na.32.f
+			ai_chance = {
+				base = 5
+			}
+		UKR_wuxu = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = autocracy_subideology
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = autocracy_subideology
+						traits = { untethered trusty SWE_fallen_riksdag_trait }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		}		
+		option = {
+			name = rus_na.32.g
+			ai_chance = {
+				base = 5
+			}
+			country_event = rus_na.33
+		}
+	}
+	#掀桌子
+	country_event = {
+		id = rus_na.33
+		title = rus_na.33.t
+		desc = rus_na.33.d
+		picture = GFX_report_event_UKR_6
+		is_triggered_only = yes
+		option = {
+			name = rus_na.33.a
+			ai_chance = {
+				base = 5
+			}
+		UKR_Maximilian = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = Absolute_monarchy
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = Absolute_monarchy
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		set_cosmetic_tag = KEM
+	set_party_name = {
+		ideology = neutrality
+		long_name = UKR_liulike_party_long
+		name = UKR_liulike_party
+	}
+		complete_national_focus = UKR_nvwushendapojiangju
+		}		
+		option = {
+			name = rus_na.33.b
+			ai_chance = {
+				base = 5
+			}
+		country_event = rus_na.34
+		}		
+		option = {
+			name = rus_na.33.c
+			ai_chance = {
+				base = 5
+			}
+		country_event = rus_na.35
+		}		
+		option = {
+			name = rus_na.33.e
+			ai_chance = {
+				base = 5
+			}
+		country_event = rus_na.36
+		}
+	}	
+	#龙吼
+	country_event = {
+		id = rus_na.34
+		title = rus_na.34.t
+		desc = rus_na.34.d
+		picture = GFX_report_event_UKR_2
+		is_triggered_only = yes
+		option = {
+			name = rus_na.34.a
+			ai_chance = {
+				base = 5
+			}
+		UKR_Maximilian = { retire = yes }
+		UKR_aoduyin = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = militarism_subtype
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = militarism_subtype
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		set_politics = {
+			ruling_party = fascism
+			elections_allowed = no
+			}
+		add_popularity = {
+			 ideology = fascism
+			 popularity = 0.5
+			}
+	set_party_name = {
+		ideology = fascism
+		long_name = UKR_waerjili_party_long
+		name = UKR_waerjili_party
+	}
+		}
+	}	
+	#无序
+	country_event = {
+		id = rus_na.35
+		title = rus_na.35.t
+		desc = rus_na.35.d
+		picture = GFX_report_event_UKR_1
+		is_triggered_only = yes
+		option = {
+			name = rus_na.35.a
+			ai_chance = {
+				base = 5
+			}
+		UKR_Maximilian = { retire = yes }
+		UKR_wuxu = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = autocracy_subideology
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = autocracy_subideology
+						traits = { untethered trusty SWE_fallen_riksdag_trait }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		}		
+	}	
+	#反戈一击
+	country_event = {
+		id = rus_na.36
+		title = rus_na.36.t
+		desc = rus_na.36.d
+		picture = GFX_report_event_UKR_6
+		is_triggered_only = yes
+		option = {
+			name = rus_na.36.a
+			ai_chance = {
+				base = 5
+			}
+		UKR_Maximilian = { retire = yes }
+		UKR_Selvaria_bles = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = centrism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = centrism
+						traits = { polemarch }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		complete_national_focus = UKR_nvwushendapojiangju
+		}		
+	}	
+	#混乱世界
+	country_event = {
+		id = rus_na.37
+		title = rus_na.37.t
+		desc = rus_na.37.d
+		picture = GFX_report_event_UKR_4
+		is_triggered_only = yes
+		option = {
+			name = rus_na.37.a
+			ai_chance = {
+				base = 5
+			}
+		country_event = rus_na.38
+		}		
+		option = {
+			name = rus_na.37.b
+			ai_chance = {
+				base = 5
+			}
+		add_stability = -0.05
+		}		
+	}	
+	#我
+	country_event = {
+		id = rus_na.38
+		title = rus_na.38.t
+		desc = rus_na.38.d
+		picture = GFX_report_event_UKR_11
+		is_triggered_only = yes
+		option = {
+			name = rus_na.38.a
+			ai_chance = {
+				base = 5
+			}
+		UKR_xiaodie = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = moderatism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = moderatism
+						traits = { UKR_shanliangmofa_trait }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		}		
+	}	
+	#临时领袖
+	country_event = {
+		id = rus_na.39
+		title = rus_na.39.t
+		desc = rus_na.39.d
+		picture = GFX_report_event_UKR_5
+		is_triggered_only = yes
+		option = {
+			name = rus_na.39.a
+			ai_chance = {
+				base = 5
+			}
+		UKR_ailixiya = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = moderatism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = moderatism
+						traits = { hero_of_the_peasantry }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		}		
+		option = {
+			name = rus_na.39.b
+			ai_chance = {
+				base = 5
+			}
+		UKR_Riela_marcellis = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = { moderate_reformist }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		}		
+		option = {
+			name = rus_na.39.c
+			ai_chance = {
+				base = 5
+			}
+		UKR_ailiyasi = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = despotism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = despotism
+						traits = { feminist_ultranationalist }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		}		
+		option = {
+			name = rus_na.39.e
+			ai_chance = {
+				base = 5
+			}
+		}		
+	}
 #外交
 
 	country_event = {
@@ -1931,59 +3455,10 @@ add_namespace = test_event
 		name = rus_for.18.a
 		
 		ai_chance = {
-			base = 1
-			modifier = {
-				factor = 10
-				NOT = { is_in_faction_with = FROM }
-				strength_ratio = {
-					tag = FROM
-					ratio < 0.6
-				}
-			}
-			modifier = {
-				factor = 5
-				NOT = { is_in_faction_with = FROM }
-				alliance_strength_ratio < 0.6
-			}
-			modifier = {
-				factor = 100
-				is_subject_of = FROM
-			}
-			modifier = {
-				factor = 10
-				is_in_faction_with = FROM
-				has_opinion = {
-					target = FROM
-					value > 75
-				}
-			}
-			modifier = {
-				factor = 0.5
-				NOT = { is_in_faction_with = FROM }
-				strength_ratio = {
-					tag = FROM
-					ratio > 0.8
-				}
-			}
-			modifier = {
-				factor = 0
-				NOT = { is_in_faction_with = FROM }
-				strength_ratio = {
-					tag = FROM
-					ratio > 1
-				}
-			}
+			base = 10
 		}
 
 		FROM = {
-			effect_tooltip = {
-				if = {
-					limit = {
-						ROOT = { controls_state = 463 }
-					}
-					transfer_state = 463 #ALASKA
-				}
-			}
 			hidden_effect = {
 				country_event = rus_for.19
 			}
@@ -1994,7 +3469,7 @@ add_namespace = test_event
 		name = rus_for.18.b
 		
 		ai_chance = {
-			base = 10
+			base = 0
 		}
 
 		FROM = {
@@ -2020,14 +3495,10 @@ add_namespace = test_event
 	option = { #Ok
 		name = rus_for.19.a
 		
-		if = {
-			limit = {
-				FROM = { controls_state = 463 }
-			}
-			transfer_state = 463 #ALASKA
+		puppet = ASK
+		ASK = { set_cosmetic_tag = ASK_RUS }
 		}
-		}
-	}	
+	}
 	
 	country_event = {
 		id = rus_for.20

@@ -1718,6 +1718,142 @@ CHI_construction = {
 			}
 		}
 	}
+	##东北源翠石
+	CHI_originium_884 = {
+		icon = GFX_decision_originium
+		allowed = {
+			always = yes
+		}
+		visible = {
+			884 = {
+				NOT = {
+					has_state_flag = yikaicai
+				}
+			}
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 884
+			}
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 3
+			owns_state = 884
+			controls_state = 884
+			has_tech = excavation1
+			884 = {
+				NOT = {
+					has_state_flag = yikaicai
+				}
+			}
+		}
+		fire_only_once = yes
+		cost = 15
+		days_remove = 60
+		modifier = {
+			civilian_factory_use = 3
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		remove_effect = {
+			884 = {
+				add_resource = {
+					type = originium
+					amount = 21
+				}
+				set_state_flag = yikaicai
+			}
+		}
+	}
+	##西安源翠石
+	CHI_originium_799 = {
+		icon = GFX_decision_originium
+		allowed = {
+			always = yes
+		}
+		visible = {
+			799 = {
+				NOT = {
+					has_state_flag = yikaicai
+				}
+			}
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 799
+			}
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 3
+			owns_state = 799
+			controls_state = 799
+			has_tech = excavation2
+			799 = { NOT = { has_state_flag = yikaicai } }
+		}
+		fire_only_once = yes
+		cost = 15
+		days_remove = 60
+		modifier = {
+			civilian_factory_use = 3
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		remove_effect = {
+			799 = {
+				add_resource = {
+					type = originium
+					amount = 31
+				}
+				set_state_flag = yikaicai
+			}
+		}
+	}
+	##新疆源翠石
+	CHI_originium_1085 = {
+		icon = GFX_decision_originium
+		allowed = {
+			always = yes
+		}
+		visible = {
+			1085 = {
+				NOT = {
+					has_state_flag = yikaicai
+				}
+			}
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 1085
+			}
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 3
+			owns_state = 1085
+			controls_state = 1085
+			has_tech = excavation2
+			1085 = { NOT = { has_state_flag = yikaicai } }
+		}
+		fire_only_once = yes
+		cost = 15
+		days_remove = 60
+		modifier = {
+			civilian_factory_use = 3
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		remove_effect = {
+			1085 = {
+				add_resource = {
+					type = originium
+					amount = 33
+				}
+				set_state_flag = yikaicai
+			}
+		}
+	}
 }
 
 CHI_liangshi = {
@@ -5387,7 +5523,7 @@ CHI_reunit_of_china_d_c = {
 		}
 		available = {
 			is_subject = no
-			date>1937.1.1
+			#date>1937.1.1
 			custom_trigger_tooltip = {
 				tooltip = not_other_competiter_for_China_reunification
 				not = {
@@ -5416,7 +5552,7 @@ CHI_reunit_of_china_d_c = {
 						}
 						news_event = {
 							#国左
-							id = roc.666
+							id = roc_news.001
 							days = 1
 						}
 					}
@@ -5426,14 +5562,14 @@ CHI_reunit_of_china_d_c = {
 						}
 						news_event = {
 							#蓝衣社
-							id = roc.668
+							id = roc_news.003
 							days = 1
 						}
 					}
 					else = {
 						news_event = {
 							#国右
-							id = roc.667
+							id = roc_news.002
 							days = 1
 						}
 					}
@@ -5473,9 +5609,246 @@ CHI_reunit_of_china_d_c = {
 			}
 		}
 	}
+	##进攻
+	CHI_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = CHI_war_plan_going_on
+			}
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = CHI_war_plan_going_on
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		remove_effect = {
+			clr_country_flag = CHI_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			if = {
+				limit = {
+					tag = ROC
+					has_country_flag = Cooperation_between_KMT_and_CCP
+					FROM = { tag = CHI }
+				}
+				PRC = { country_event = { id = roc.68 } }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	##要求臣服
+	CHI_Ask_FROM_for_submission = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = CHI_war_plan_going_on
+			}
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 10
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = CHI_war_plan_going_on
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+			FROM = { country_event = { id = chi.80 } }
+		}
+		remove_effect = {
+			clr_country_flag = CHI_war_plan_going_on
+			if = {
+				limit = {
+					FROM = {
+						not = {
+							or = {
+								has_war_with = ROOT
+								is_in_faction_with = ROOT
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+				declare_war_on = {
+					target = FROM
+					type = annex_everything
+				}
+			}
+		}
+		remove_trigger = {
+			FROM = {
+				or = {
+					has_war_with = ROOT
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	##谋求合作
+	CHI_Seek_FROM_cooperation = {
+		icon = GFX_decision_eng_propaganda_campaigns
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 10
+		days_remove = 10
+		complete_effect = {
+		}
+		remove_effect = {
+			FROM = { country_event = { id = chi.77 } }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	##整合
+	CHI_integration_FROM = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
+			has_global_flag = CHI_REUNIT
+			has_war = no
+			FROM = { is_subject_of = ROOT }
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			FROM = {
+				every_core_state = {
+					add_core_of = ROOT
+				}
+				every_character = { set_nationality = ROOT }
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
 }
 
 Build_chinese_united_font = {
+	##组建统一战线
 	CHI_declare_Build_chinese_united_font = {
 		allowed = {
 		}
@@ -5486,11 +5859,11 @@ Build_chinese_united_font = {
 				is_subject = no
 				is_major = yes
 			}
-			NOT = {
-				has_global_flag = CHI_REUNIT
-			}
+			NOT = { has_global_flag = CHI_REUNIT }
+			#controlled_states = 608
 		}
 		available = {
+			#controlled_states = 608
 			is_subject = no
 			not = {
 				has_global_flag = CHINA_united_font_has_built
@@ -5506,6 +5879,14 @@ Build_chinese_united_font = {
 			factor = 100
 		}
 		complete_effect = {
+			if = {
+				limit = {
+					not = { has_global_flag = The_Great_War_Against_Sakura }
+					has_war_with = JAP
+					JAP = { is_faction_leader = yes }
+				}
+				set_global_flag = The_Great_War_Against_Sakura
+			}
 			if = {
 				limit = {
 					NOT = {
@@ -5600,6 +5981,7 @@ Build_chinese_united_font = {
 			}
 		}
 	}
+	##解散统一战线
 	CHI_dismate_Build_chinese_united_font = {
 		allowed = {
 		}
@@ -5644,33 +6026,58 @@ Build_chinese_united_font = {
 			}
 		}
 	}
-}
-
-CHI_generic_core = {
-	CHI_target_decision_CORE = {
-		icon = generic_nationalism
-		target_trigger = {
-			FROM = {
-				NOT = {
-					is_core_of = ROOT
+	##要求[JAP.Getname]投降
+	CHI_Demand_surrender_of_Japan = {
+		icon = generic_political_discourse
+		visible = {
+			is_subject = no
+			is_faction_leader = yes
+			has_war_with = JAP
+			JAP = { is_faction_leader = yes }
+			NOT = { has_global_flag = JAP_Fading_Sun }
+		}
+		available = {
+			is_subject = no
+			is_faction_leader = yes
+			has_war_with = JAP
+			JAP = { is_faction_leader = yes }
+			custom_trigger_tooltip = {
+				tooltip = JAP_not_control_any_china_big_city
+				608 = { is_controlled_by_JAP_or_her_ally = no }
+				613 = { is_controlled_by_JAP_or_her_ally = no }
+				609 = { is_controlled_by_JAP_or_her_ally = no }
+				799 = { is_controlled_by_JAP_or_her_ally = no }
+				650 = { is_controlled_by_JAP_or_her_ally = no }
+				716 = { is_controlled_by_JAP_or_her_ally = no }
+				886 = { is_controlled_by_JAP_or_her_ally = no }
+				885 = { is_controlled_by_JAP_or_her_ally = no }
+			}
+			custom_trigger_tooltip = {
+				tooltip = JAP_not_control_KOR
+				not = {
+					any_state = {
+						region = 191
+						is_controlled_by_JAP_or_her_ally = yes
+					}
 				}
-				has_state_flag = is_whole_chinese_state_area
 			}
 		}
-		state_target = yes
-		on_map_mode = map_and_decisions_view
-		target_array = controlled_states
-		cost = 10
-		days_remove = 30
+		fire_only_once = yes
 		ai_will_do = {
-			factor = 100
+			factor = 1000
 		}
-		remove_effect = {
-			FROM = {
-				add_core_of_ROOT = yes
+		complete_effect = {
+			JAP = {
+				country_event = {
+					id = chi.75
+					days = 5
+				}
 			}
 		}
 	}
+}
+
+CHI_generic_core = {
 	CHI_target_decision_get_Concession = {
 		icon = generic_nationalism
 		available = {
@@ -5746,114 +6153,140 @@ CHI_generic_core = {
 			}
 		}
 	}
-	man_dec_zhenghewaidongbei = {
-		available = {
-			owns_state = 561
-			owns_state = 657
-			owns_state = 560
-			owns_state = 409
-			owns_state = 408
-			owns_state = 537
-		}
-		visible = {
-			OR = {
-				tag = MAN
-				tag = CHI
-				tag = ROC
-				tag = PRC
-			}
-			has_global_flag = CHI_REUNIT
-			owns_state = 561
-			owns_state = 657
-			owns_state = 560
-			owns_state = 409
-			owns_state = 408
-			owns_state = 537
-		}
-		cost = 50
-		#cancel_if_invalid = yes
-		ai_will_do = {
-			factor = 100
-		}
-		fire_only_once = yes
-		complete_effect = {
-			set_province_name = {
-				id = 957
-				name = "海参崴"
-			}
-			set_province_name = {
-				id = 12189
-				name = "伯力"
-			}
-			set_province_name = {
-				id = 7763
-				name = "海兰泡"
-			}
-			set_province_name = {
-				id = 12559
-				name = "庙街"
-			}
-			set_province_name = {
-				id = 12660
-				name = "雅克萨"
-			}
-			set_province_name = {
-				id = 3843
-				name = "双城子"
-			}
-			408 = {
-				set_state_name = "海参崴"
-			}
-			537 = {
-				set_state_name = "库页岛"
-			}
-			409 = {
-				set_state_name = "伯力"
-			}
-			657 = {
-				set_state_name = "海兰泡"
-			}
-			560 = {
-				set_state_name = "庙街"
-			}
-			561 = {
-				set_state_name = "外兴安岭"
-			}
-			if = {
-				limit = {
-					has_country_leader = {
-						ruling_only = yes
-						character = PRC_Chen_duxiu
-					}
-				}
-				set_global_flag = man_trm_tebie
-				TRM = {
-					add_state_core = 561
-					add_state_core = 657
-					add_state_core = 560
-					add_state_core = 409
-					add_state_core = 408
-					add_state_core = 537
-					transfer_state = 561
-					transfer_state = 657
-					transfer_state = 560
-					transfer_state = 409
-					transfer_state = 408
-					transfer_state = 537
-				}
-				set_autonomy = {
-					target = TRM
-					autonomy_state = autonomy_PRC_autonomy_state
-				}
-			}
-			else = {
-				country_event = man.103
-			}
-		}
-	}
+	# man_dec_zhenghewaidongbei = {
+	# 	available = {
+	# 		owns_state = 561
+	# 		owns_state = 657
+	# 		owns_state = 560
+	# 		owns_state = 409
+	# 		owns_state = 408
+	# 		owns_state = 537
+	# 	}
+	# 	visible = {
+	# 		OR = {
+	# 			tag = MAN
+	# 			tag = CHI
+	# 			tag = ROC
+	# 			tag = PRC
+	# 		}
+	# 		has_global_flag = CHI_REUNIT
+	# 		owns_state = 561
+	# 		owns_state = 657
+	# 		owns_state = 560
+	# 		owns_state = 409
+	# 		owns_state = 408
+	# 		owns_state = 537
+	# 	}
+	# 	cost = 50
+	# 	#cancel_if_invalid = yes
+	# 	ai_will_do = {
+	# 		factor = 100
+	# 	}
+	# 	fire_only_once = yes
+	# 	complete_effect = {
+	# 		set_province_name = {
+	# 			id = 957
+	# 			name = "海参崴"
+	# 		}
+	# 		set_province_name = {
+	# 			id = 12189
+	# 			name = "伯力"
+	# 		}
+	# 		set_province_name = {
+	# 			id = 7763
+	# 			name = "海兰泡"
+	# 		}
+	# 		set_province_name = {
+	# 			id = 12559
+	# 			name = "庙街"
+	# 		}
+	# 		set_province_name = {
+	# 			id = 12660
+	# 			name = "雅克萨"
+	# 		}
+	# 		set_province_name = {
+	# 			id = 3843
+	# 			name = "双城子"
+	# 		}
+	# 		408 = {
+	# 			set_state_name = "海参崴"
+	# 		}
+	# 		537 = {
+	# 			set_state_name = "库页岛"
+	# 		}
+	# 		409 = {
+	# 			set_state_name = "伯力"
+	# 		}
+	# 		657 = {
+	# 			set_state_name = "海兰泡"
+	# 		}
+	# 		560 = {
+	# 			set_state_name = "庙街"
+	# 		}
+	# 		561 = {
+	# 			set_state_name = "外兴安岭"
+	# 		}
+	# 		if = {
+	# 			limit = {
+	# 				has_country_leader = {
+	# 					ruling_only = yes
+	# 					character = PRC_Chen_duxiu
+	# 				}
+	# 			}
+	# 			set_global_flag = man_trm_tebie
+	# 			TRM = {
+	# 				add_state_core = 561
+	# 				add_state_core = 657
+	# 				add_state_core = 560
+	# 				add_state_core = 409
+	# 				add_state_core = 408
+	# 				add_state_core = 537
+	# 				transfer_state = 561
+	# 				transfer_state = 657
+	# 				transfer_state = 560
+	# 				transfer_state = 409
+	# 				transfer_state = 408
+	# 				transfer_state = 537
+	# 			}
+	# 			set_autonomy = {
+	# 				target = TRM
+	# 				autonomy_state = autonomy_PRC_autonomy_state
+	# 			}
+	# 		}
+	# 		else = {
+	# 			country_event = man.103
+	# 		}
+	# 	}
+	# }
 }
 
 political_actions = {
+	SIC_weekly_refresh = {
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 2
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+			has_war = no
+		}
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = SIC_weekly_refresh
+			}
+			601 = { set_demilitarized_zone = yes }
+			605 = { set_demilitarized_zone = yes }
+		}
+	}
     CHI_Defending_Shaanxi = {
 		icon = border_war
         allowed = {
@@ -5883,31 +6316,5 @@ political_actions = {
             }
 		}
 	}
-    CHI_Defending_Nanjing = {
-		icon = border_war
-        allowed = {
-			always = no
-		}
-        available = {
-			hidden_trigger = { always = no }
-		}
-        days_mission_timeout = 60
-		is_good = no
-		cancel_trigger = {
-			divisions_in_state = {
-				state = 613	#金陵
-				size > 10
-			}
-        }
-		cancel_effect = {
-			country_event = chi_simple.11
-		}
-        timeout_effect = {
-            add_stability = -0.05
-			ROC = {
-                country_event = chi_simple.10
-            }
-		}
-	}    
 }
 
