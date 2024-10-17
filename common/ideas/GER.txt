@@ -1,6 +1,93 @@
 ideas = {
 	country = {
 ######################## 奥 地 利 时 期 #################################
+		##苦涩的失败者
+		sour_loser = {
+			allowed = {
+				always = no
+			}
+			allowed_civil_war = {
+				always = yes
+			}
+			removal_cost = -1
+			modifier = {
+				drift_defence_factor = 0.5
+			}
+		}
+		##意志的胜利
+		triumphant_will = {
+			allowed = {
+				always = no
+			}
+			removal_cost = -1
+			allowed_civil_war = {
+				has_government = fascism
+			}
+			modifier = {
+				political_power_gain = 1
+				drift_defence_factor = 0.5
+				army_attack_against_major_factor = 0.05
+				army_defence_against_major_factor = 0.05
+				army_breakthrough_against_major_factor = 0.05
+			}
+		}
+		#梅福券
+		GER_mefo_bills = {
+			allowed = {
+				original_tag = GER
+			}
+			allowed_civil_war = {
+				has_government = fascism
+			}
+			available = {
+				has_war = no
+			}
+			removal_cost = -1
+			picture = ger_mefo_bills
+			modifier = {
+				consumer_goods_factor = -0.1
+				production_speed_arms_factory_factor = 0.1
+				production_speed_dockyard_factor = 0.1
+				production_speed_naval_base_factor = 0.1
+				production_speed_coastal_bunker_factor = 0.1
+				production_speed_bunker_factor = 0.1
+				production_speed_air_base_factor = 0.1
+				production_speed_anti_air_building_factor = 0.1
+				production_speed_radar_station_factor = 0.1
+				production_speed_fuel_silo_factor = 0.1
+				production_speed_synthetic_refinery_factor = 0.1
+				political_power_cost = 0.1
+				custom_modifier_tooltip = GER_mefo_bills_tt
+			}
+			on_remove = {
+				set_country_flag = ger_has_cancelled_mefo
+				set_country_flag = GER_mefo_bills_on_war
+			}
+		}
+		#偿付梅福券
+		GER_mefo_bills_ended = {
+			allowed = {
+				original_tag = GER
+			}
+			allowed_civil_war = {
+				has_government = fascism
+			}
+			removal_cost = -1
+			picture = ger_mefo_bills
+			modifier = {
+				custom_modifier_tooltip = UBS_COST_50_monthly_money
+			}
+			on_add = {
+				add_to_variable = {
+					exoutcome = 50
+				}
+			}
+			on_remove = {
+				add_to_variable = {
+					exoutcome = -50
+				}
+			}
+		}
 		AUS_german_aero_tech = {
 			allowed = {
 				always = no
@@ -956,14 +1043,11 @@ ideas = {
 			}
 			targeted_modifier = {
 				tag = DVL
-				defense_bonus_against = 0.1
-			}
-			targeted_modifier = {
-				tag = DVL
-				attack_bonus_against = 0.1
+				defense_bonus_against = 0.15
+				attack_bonus_against = 0.15
 			}
 		}
-		AUS_National_syndicalism = {
+		AUS_National_syndicalism_idea = {
 			#国家工团主义
 			allowed = {
 				always = no
@@ -978,17 +1062,16 @@ ideas = {
 			picture = NATSOC_ECONOMICS
 			modifier = {
 				consumer_goods_factor = -0.1
-				production_speed_buildings_factor = 0.05
+				industrial_capacity_factory = 0.05
 			}
 		}
 		AUS_National_syndicalism_1 = {
 			#国家工团主义
-			name = AUS_National_syndicalism
+			name = AUS_National_syndicalism_idea
 			allowed = {
 				always = no
 			}
 			cancel = {
-				has_global_flag = GER_REBUILD_ALREADY
 			}
 			allowed_civil_war = {
 				always = yes
@@ -1002,7 +1085,7 @@ ideas = {
 		}
 		AUS_National_syndicalism_2 = {
 			#国家工团主义
-			name = AUS_National_syndicalism
+			name = AUS_National_syndicalism_idea
 			allowed = {
 				always = no
 			}
@@ -1029,7 +1112,6 @@ ideas = {
 				always = no
 			}
 			cancel = {
-				has_global_flag = GER_REBUILD_ALREADY
 			}
 			allowed_civil_war = {
 				always = yes
@@ -1043,6 +1125,26 @@ ideas = {
 				industrial_capacity_factory = 0.08
 				production_factory_max_efficiency_factor = 0.08
 				production_factory_efficiency_gain_factor = 0.08
+			}
+		}
+		##德意志劳工文化
+		AUS_German_Labor_Culture_idea = {
+			name = AUS_German_Labor_Culture
+			allowed = {
+				always = no
+			}
+			cancel = {
+			}
+			allowed_civil_war = {
+				always = yes
+			}
+			removal_cost = -1
+			picture = NATSOC_ECONOMICS
+			modifier = {
+				line_change_production_efficiency_factor = 0.05
+				industrial_capacity_factory = 0.05
+				production_factory_max_efficiency_factor = 0.05
+				production_factory_efficiency_gain_factor = 0.05
 			}
 		}
 		AUS_four_years_plan = {
@@ -1274,7 +1376,7 @@ ideas = {
 		}
 		AUS_army_for_germany = {
 			#为德意志服役
-			name = AUS_43
+			name = AUS_Served_in_Germany
 			allowed = {
 				always = no
 			}
@@ -1330,6 +1432,9 @@ ideas = {
 			picture = tur_disorganised_armed_forces
 			rule = {
 				can_not_declare_war = yes
+			}
+			modifier = {
+				ai_join_ally_desire_factor = -1000
 			}
 		}
 		#干涉主义
@@ -1395,6 +1500,59 @@ ideas = {
 				#战斗修正种类
 				attack_bonus_against = 0.1
 				defense_bonus_against = 0.1
+			}
+		}
+		#《哥得兰条约》
+		GER_Treaty_of_Gotland = {
+			picture = generic_volunteer_expedition_bon
+			removal_cost = -1
+			allowed = {
+				always = no
+			}
+			available = {
+				SWE = { exists = yes }
+				not = { has_war_with = SWE }
+			}
+			modifier = {
+				political_power_factor = -0.1
+			}
+		}
+		GER_Treaty_of_Gotland_for_SWE = {
+			picture = generic_volunteer_expedition_bon
+			name = GER_Treaty_of_Gotland
+			removal_cost = -1
+			allowed = {
+				always = no
+			}
+			available = {
+				GER = { exists = yes }
+				not = { has_war_with = GER }
+			}
+			modifier = {
+			}
+			research_bonus = {
+				industry = 0.1
+				electronics = 0.1
+				infantry_weapons = 0.1
+				support_tech = 0.1
+				artillery = 0.1
+				armor = 0.1
+			}
+		}
+		#德式战车道
+		AUS_true_German_style_battle_lane_idea = {
+			name = AUS_true_German_style_battle_lane
+			picture = generic_volunteer_expedition_bon
+			removal_cost = -1
+			allowed = {
+				always = no
+			}
+			available = {
+			}
+			modifier = {
+				army_armor_attack_factor = 0.1
+				army_armor_defence_factor = 0.1
+				breakthrough_factor = 0.1
 			}
 		}
 ######################## 德 意 志 时 期 #################################
@@ -3776,7 +3934,7 @@ ideas = {
 			}
 			available = {
 				or = {
-					has_completed_focus = AUS_37
+					has_completed_focus = AUS_Information_on_Hesse
 					has_global_flag = GER_REBUILD_ALREADY
 				}
 			}
@@ -4134,7 +4292,10 @@ ideas = {
 				log = "[GetDateText]: [Root.GetName]: add idea krupp2"
 			}
 			allowed = {
-				tag = GER
+				or = {
+					tag = GER
+					tag = DVL
+				}
 			}
 			picture = krupp
 			traits = {
@@ -4153,7 +4314,10 @@ ideas = {
 				log = "[GetDateText]: [Root.GetName]: add idea aeg"
 			}
 			allowed = {
-				tag = GER
+				or = {
+					tag = GER
+					tag = DVL
+				}
 			}
 			traits = {
 				electronics_manufacturer
@@ -4170,7 +4334,10 @@ ideas = {
 				log = "[GetDateText]: [Root.GetName]: add idea braun_company"
 			}
 			allowed = {
-				tag = GER
+				or = {
+					tag = GER
+					tag = DVL
+				}
 			}
 			traits = {
 				electronics_manufacturer
@@ -4188,7 +4355,10 @@ ideas = {
 				log = "[GetDateText]: [Root.GetName]: add idea basf"
 			}
 			allowed = {
-				tag = GER
+				or = {
+					tag = GER
+					tag = DVL
+				}
 			}
 			traits = {
 				chemical_producer
@@ -4331,6 +4501,65 @@ ideas = {
 			research_bonus = {
 				motorized_equipment = 0.1
 			}
+		}
+	}
+	economy = {
+		law = yes
+		use_list_view = yes
+		##总体战
+		GER_total_war_law = {
+			allowed = { tag = GER }
+			icon = GER_total_war_law
+			available = {
+				has_war = yes
+				has_war_support > 0.8
+				OR = {
+					has_idea = extensive_conscription
+					has_idea = service_by_requirement
+					has_idea = all_adults_serve
+					has_idea = scraping_the_barrel
+				}
+				any_enemy_country = {
+					ic_ratio = {
+						tag = ROOT
+						ratio > 0.5
+					}
+				}
+			}
+			ai_will_do = {
+				factor = 1
+				modifier = {
+					factor = 25
+					#Prio this if nation has a lot of manpower compared to MIC
+					manpower_per_military_factory > 10000
+				}
+				modifier = {
+					#Block  unless nation has a lot of manpower
+					factor = 0
+					manpower_per_military_factory < 3000
+				}
+				modifier = {
+					# never take this if we are on low conscription laws for safety
+					factor = 0
+					OR = {
+						has_idea = volunteer_only
+						has_idea = limited_conscription
+					}
+				}
+			}
+			cost = 75
+			removal_cost = -1
+			level = 1
+			modifier = {
+				consumer_goods_expected_value = 0.1
+				stability_weekly = -0.01
+				conscription = -0.03
+				production_speed_arms_factory_factor = 0.3
+				industrial_capacity_factory = 0.3
+				conversion_cost_civ_to_mil_factor = -0.5
+				conversion_cost_mil_to_civ_factor = -0.5
+			}
+			cancel_if_invalid = no
 		}
 	}
 }
