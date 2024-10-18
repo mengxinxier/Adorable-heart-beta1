@@ -15,6 +15,7 @@ country_event = { #选择临时盟主
 	fire_only_once = no
 
 	immediate = {
+
 	}
 
 	option = { #红晴结菜
@@ -61,6 +62,65 @@ country_event = { #选择临时盟主
 	}
 }
 
+country_event = { #盟主大选
+	id = MGU_event.1001
+	title = MGU_event.1001.t
+	desc = MGU_event.1001.d
+	picture = GFX_event_MGU_envoy
+
+	is_triggered_only = yes
+	fire_only_once = no
+
+	immediate = {
+
+	}
+
+	option = { #红晴结菜
+		name = MGU_event.1001.a
+		set_politics = {
+			ruling_party = democratic
+		 }
+		load_focus_tree = MGU_brazil_tree_focus
+	}
+	option = { #下一个
+		name = MGU_event.1001.a
+        country_event = MGU_event.1002
+	}
+}
+country_event = { #盟主大选
+	id = MGU_event.1002
+	title = MGU_event.1002.t
+	desc = MGU_event.1002.d
+	picture = GFX_event_MGU_envoy
+
+	is_triggered_only = yes
+	fire_only_once = no
+
+	immediate = {
+
+	}
+
+	option = { #红晴结菜
+		name = MGU_event.1002.a
+		add_country_leader_role = {
+			character = "MGU_Kureha_Yuna"
+			country_leader={
+				ideology = interim_government_subtype
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		load_focus_tree = MGU_brazil_tree_focus
+	}
+	option = { #下一个
+		name = MGU_event.1002.a
+        country_event = MGU_event.1003
+	}
+}
+
 ####MAGIUS事件链
 
 
@@ -82,7 +142,23 @@ country_event = { #来自魔联的使节
 		name = MGU_event.1.a
 		#news_event = { id = news.1022 days = 3}
 		MGS = {
-			country_event = { id = MGU_event.2 days = 2}
+			country_event = { id = MGU_event.2 days = 15}
+		}
+		ai_chance = {
+		    factor = 10
+		}
+	}
+	option = { #让我们敞开天窗说亮话吧？结束这场哑谜吧！
+		name = MGU_event.1.b
+			declare_war_on = { target = MGU type = annex_everything }
+        	every_owned_state = { add_core_of = MGU }
+		MGU = {
+        	every_owned_state = { add_core_of = MGS }
+			set_country_flag = MGU_ENVOY_BACK
+		}
+			set_country_flag = MGU_ENVOY_BACK
+		ai_chance = {
+		    factor = 0
 		}
 	}
 }
@@ -101,6 +177,36 @@ country_event = { #劝诱
 		MGU = {
 			country_event = { id = MGU_event.3 days = 3 }
 		}
+		ai_chance = {
+		    factor = 10
+		}
+    		trigger = {
+    			is_ai = yes
+            }
+	}
+	option = { #让我们敞开天窗说亮话吧？结束这场哑谜吧！
+		name = MGU_event.2.b
+			declare_war_on = { target = MGU type = annex_everything }
+        	every_owned_state = { add_core_of = MGU }
+		MGU = {
+        	every_owned_state = { add_core_of = MGS }
+			set_country_flag = MGU_ENVOY_BACK
+		}
+			set_country_flag = MGU_ENVOY_BACK
+		ai_chance = {
+		    factor = 0
+		}
+	}
+	option = { #向魔联屈服
+		name = MGU_event.2.c
+		custom_effect_tooltip = MGU_event_2_c_txt
+		MGU = {
+        	country_event = { id = MGU_event.6 days = 3}
+		}
+			set_country_flag = MGU_ENVOY_BACK
+		ai_chance = {
+		    factor = 0
+		}
 	}
 }
 
@@ -117,6 +223,7 @@ country_event = { #大使返回
 		name = MGU_event.3.a
 		MGU = {
 			country_event = { id = MGU_event.4 days = 10 }
+			set_country_flag = MGU_ENVOY_BACK
 		}
 		MGS = {
 			set_country_flag = MGU_ENVOY_BACK
@@ -137,17 +244,18 @@ country_event = { #环伊吕波的消息
 				
 	option = {
 		name = MGU_event.4.a
-		set_country_flag = MGU_IROHA_NEWS		
+		set_country_flag = MGU_IROHA_NEWS
+		set_country_flag = MGU_ENVOY_BACK
 		random_list = { 
-			60 = { #内战
+			50 = { #内战
 				MGS = {
 					country_event = { id = MGU_event.5 days = 3}
 				}
 			}
-			30 = { #大成功
+			20 = { #大成功
 				country_event = { id = MGU_event.6 days = 3}
 			}  
-			10 = { #失败
+			30 = { #失败
 				country_event = { id = MGU_event.7 days = 3}
 			} 
 		}
@@ -238,7 +346,7 @@ country_event = { #环伊吕波归来（好结局）
 				character = "MGU_Eternal_Sakura"
 				country_leader={
 					ideology = interim_government_subtype
-					#traits = { }
+					traits = { MGU_Pray_night_sky_traits }
 					expire = "1999.1.1.1"
 					id = -1
 				}
@@ -261,22 +369,34 @@ country_event = { #玛吉斯之翼的抗议（坏结局）
 		name = MGU_event.7.a
 		####开战MGS
 		MGS = {
-			declare_war_on = { target = MGU type = annex_everything } 
+			declare_war_on = { target = MGU type = annex_everything }
+        	every_owned_state = { add_core_of = MGU }
+		    IF = {
+				limit = { is_ai = yes }
+                add_timed_idea = {
+                    idea = MGU_new_age_army_JJ
+                    days = 365
+                }
+		    }
 		}
 		MGU = {
-			transfer_units_fraction = {
-				target = MGS
-				size = 0.6
-				stockpile_ratio = 0.5
-				army_ratio = 0.6
-				navy_ratio = 0.5
-				air_ratio = 0.4
-				keep_unit_leaders = {		
+		    every_owned_state = { add_core_of = MGS }
+		    IF = {
+				limit = { is_ai = yes }
+				transfer_units_fraction = {
+					target = MGS
+					size = 0.6
+					stockpile_ratio = 0.5
+					army_ratio = 0.6
+					navy_ratio = 0.6
+					air_ratio = 0.6
+					keep_unit_leaders = {
+					}
+					keep_unit_leaders_trigger = {
+					always = yes
+					}
 				}
-				keep_unit_leaders_trigger = {
-				always = yes
-				}
-			}
+		    }
 		}
 		MST = {
 			drop_cosmetic_tag = yes 
@@ -364,7 +484,7 @@ country_event = { #玛吉斯之翼解散
 		}
 		MGU = {
 			add_manpower = 5439
-			country_event = { id = MGU_event.10 days = 4 }
+		#	country_event = { id = MGU_event.10 days = 4 }
 		}
 	}	
 }
@@ -660,12 +780,15 @@ country_event = { #魔联解体（目前未完成）
 country_event = { #大选的结果
 	id = MGU_event.18
 	title = MGU_event.18.t
-	desc = MGU_event.18.d
+	desc = MGU_event.18.desc
 	picture = GFX_event_MGU_iroha_news
 	
 	is_triggered_only = yes
 	fire_only_once = no
-				
+
+	immediate = {
+    }
+
 	option = { #红晴结菜
 		name = MGU_event.18.a
 		trigger = {
@@ -676,13 +799,17 @@ country_event = { #大选的结果
 		add_country_leader_role = {
 			character = "MGU_Kureha_Yuna"
 			country_leader={
-				ideology = centrism
+				ideology = despotism
 				#traits = { }
 				expire = "1999.1.1.1"
 				id = -1
 			}
 			promote_leader = yes
 		}
+		hidden_effect = {
+			load_focus_tree = MGU_brazil_tree_focus
+		}
+		ai_chance = { factor = 10 }
 	}
 
 	option = { #七海八千代
@@ -690,7 +817,10 @@ country_event = { #大选的结果
 		set_politics = { 
 			ruling_party = democratic
 		 }
-		#country_event = { id = MGU_event.114514 days = 1 }
+		hidden_effect = {
+			load_focus_tree = MGU_brazil_tree_focus
+		}
+		ai_chance = { factor = 10 }
 	}
 
 	option = { #和泉十七夜
@@ -698,7 +828,10 @@ country_event = { #大选的结果
 		set_politics = { 
 			ruling_party = communism
 		 }
-		#country_event = { id = MGU_event.114514 days = 1 }
+		hidden_effect = {
+			load_focus_tree = MGU_brazil_tree_focus
+		}
+		ai_chance = { factor = 10 }
 	}
 
 	option = { #环彩羽
@@ -710,12 +843,36 @@ country_event = { #大选的结果
 			character = "MGU_Tamaki_Iroha"
 			ideology = Utopian_Socialism
 		}
-		#country_event = { id = MGU_event.114514 days = 1 }
+		hidden_effect = {
+			load_focus_tree = MGU_brazil_tree_focus
+		}
+		ai_chance = { factor = 10 }
+	}
+
+	option = { #下一页
+		name = MGU_event.18.e
+		country_event = MGU_event.19
+		ai_chance = { factor = 30 }
+	}
+
+
+}
+
+country_event = { #大选的结果2
+	id = MGU_event.19
+	title = MGU_event.19.t
+	desc = MGU_event.19.desc
+	picture = GFX_event_MGU_iroha_news
+
+	is_triggered_only = yes
+	fire_only_once = no
+
+	immediate = {
 	}
 
 	option = { #梓美冬
-		name = MGU_event.18.e
-		set_politics = { 
+		name = MGU_event.19.a
+		set_politics = {
 			ruling_party = democratic
 		 }
 		add_country_leader_role = {
@@ -728,43 +885,75 @@ country_event = { #大选的结果
 			}
 			promote_leader = yes
 		}
-		#country_event = { id = MGU_event.114514 days = 1 }
+		hidden_effect = {
+			load_focus_tree = MGU_brazil_tree_focus
+		}
+		ai_chance = { factor = 10 }
 	}
 
 	option = { #巴麻美
-		name = MGU_event.18.f
+		name = MGU_event.19.b
 		add_country_leader_role = {
 			character = "MGU_Tomoe_Mami"
 			country_leader={
-				ideology = moderatism
+				ideology = military_politicism
 				#traits = { }
 				expire = "1999.1.1.1"
 				id = -1
 			}
 			promote_leader = yes
 		}
-		#country_event = { id = MGU_event.114514 days = 1 }
+		hidden_effect = {
+			load_focus_tree = MGU_brazil_tree_focus
+		}
+		ai_chance = { factor = 10 }
 	}
 
-	option = { #美树沙耶香
-		name = MGU_event.18.g
-		set_politics = { 
-			ruling_party = democratic
-		 }
+#	option = { #美树沙耶香
+#		name = MGU_event.19.c
+#		set_politics = {
+#			ruling_party = democratic
+#		 }
+#		add_country_leader_role = {
+#			character = "MGU_Miki_Sayaka"
+#			country_leader={
+#				ideology = liberalism
+#				#traits = { }
+#				expire = "1999.1.1.1"
+#				id = -1
+#			}
+#			promote_leader = yes
+#		}
+#		hidden_effect = {
+#			load_focus_tree = MGU_brazil_tree_focus
+#		}
+#		ai_chance = { factor = 10 }
+#	}
+
+	option = { #里见灯花
+		name = MGU_event.19.d
 		add_country_leader_role = {
-			character = "MGU_Miki_Sayaka"
-			country_leader={
-				ideology = liberalism
-				#traits = { }
-				expire = "1999.1.1.1"
-				id = -1
-			}
+			character = "MGU_Satomi_Toka"
+            country_leader = {
+                ideology = oligarchism
+                #desc = "POLITICS__DESC"
+                expire = "1960.1.1.1"
+                id = -1
+            }
 			promote_leader = yes
 		}
-		#country_event = { id = MGU_event.114514 days = 1 }
+		hidden_effect = {
+			load_focus_tree = MGU_brazil_tree_focus
+		}
+		ai_chance = { factor = 10 }
 	}
-
+	option = { #上一页
+		name = MGU_event.19.e
+		country_event = MGU_event.18
+		ai_chance = { factor = 0 }
+	}
 }
+
 
 ##########################################################
 
@@ -2235,6 +2424,7 @@ country_event = {
 			    base = 10
 		    }
             custom_effect_tooltip = MGU_event_1014_c_txt
+            set_country_flag = MGU_PAU_hate_flag
     		trigger = {
     			tag = MGU
             }
@@ -2414,8 +2604,35 @@ country_event = {
 			    base = 10
 		    }
 		    set_country_flag = MGU_remit_aladiya_flag
+		    MS1 = {
+			    MGU_aladiya = {
+				    set_nationality = MGU
+			    }
+			}
+        #add_field_marshal_role
+        #add_corps_commander_role
+        #add_advisor_role
 
-        recruit_character = MGU_aladiya
+
+		#	add_corps_commander_role = {
+		#		character = MGU_aladiya
+		#		skill = 5
+		#		traits = { chaos_mahoushojo trait_reckless  infantry_leader adaptable scavenger }
+		#		attack_skill = 6
+		#		defense_skill = 4
+		#		planning_skill = 3
+		#		logistics_skill = 3
+		#	}
+		#	add_advisor_role = {
+		#		character = MGU_aladiya
+		#		advisor = {
+		#			slot = high_command
+		#			idea_token = MGU_aladiya
+		#			traits = { army_commando_3 }
+		#			cost = 100
+		#		}
+		#	}
+
 	#	create_corps_commander = {
 	#		name = "阿拉蒂娅"
 	#		portrait_path = "gfx/leaders/MGU/aladiya.png"
@@ -3507,7 +3724,7 @@ country_event = {
             		magic_assault = { x = 0 y = 4 }
             	}
             	support = {
-            		mot_recon = { x = 0 y = 0 }
+            		recon = { x = 0 y = 0 }
             		artillery = { x = 0 y = 1 }
             		engineer = { x = 0 y = 2 }
             		field_hospital = { x = 0 y = 3 }
@@ -3577,6 +3794,7 @@ country_event = {
 		    army_experience = 100
             add_ideas = race_magic_girl
             add_ideas = mofa
+            load_focus_tree = MGU_COUP_focus
 		}
 		MRB = {
         		division_template = {
@@ -3936,7 +4154,7 @@ country_event = {
     option = {
     		name = magicunion.1061_MGU.a
 		    ai_chance = {
-			    base = 100
+			    base = 0
 		    }
 		    add_ideas = MGU_worker_rights_TB
 			annex_country = {
@@ -3950,7 +4168,7 @@ country_event = {
     option = {
     		name = magicunion.1061_MGU.b
 		    ai_chance = {
-			    base = 0
+			    base = 10
 		    }
     		trigger = {
     			tag = MGU
@@ -3987,6 +4205,7 @@ country_event = {
 	major = no
 	fire_only_once = yes
 	    trigger = {
+	        tag = MGU
             date > 1937.1.1
             MRB = { exists = yes }
         }
@@ -4007,7 +4226,1153 @@ country_event = {
             }
     	}
 }
+country_event = {
+	##政变阴云
+	id = magicunion.1064_MGU
+	title = magicunion.1064_MGU.t
+	desc = magicunion.1064_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = no
+	    trigger = {
+	        tag = MGU
+	        has_global_flag = MGU_Homura_COUP
+            date > 1938.3.1
+        }
+	immediate = {
+        set_country_flag = MGU_COUP_COUP_flag
+	}
+    option = {
+    		name = magicunion.1064_MGU.a
 
+		    ai_chance = {
+			    base = 100
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+}
+
+country_event = {
+	##请盟主下台 魔联之春
+	id = magicunion.1065_MGU
+	title = magicunion.1065_MGU.t
+	desc = magicunion.1065_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = yes
+	immediate = {
+		if = {
+		    limit = {
+		        is_faction_leader = yes
+		    }
+		    MGU = { dismantle_faction = yes }
+		}
+		if = {
+		    limit = {
+		    is_faction_leader = no
+		    is_in_faction = yes
+		    }
+		    MGU = { leave_faction = yes }
+		}
+	}
+    option = {
+    		name = magicunion.1065_MGU.a
+            country_event = { id = MGU_event.18 days = 2 }
+		    ai_chance = {
+			    base = 100
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+}
+
+country_event = {
+	##少女密室 少女的密室
+	id = magicunion.10651_MGU
+	title = magicunion.10651_MGU.t
+	desc = magicunion.10651_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = yes
+	immediate = {
+			hidden_effect = {
+            add_country_leader_role = {
+                character = "MGU_Kureha_Yuna"
+                country_leader={
+                    ideology = despotism
+                    #traits = { }
+                    expire = "1999.1.1.1"
+                    id = -1
+                }
+                promote_leader = yes
+            }
+			add_timed_idea = {
+				idea = MGU_COUP_COUP_GET
+				days = 720
+			}
+			add_timed_idea = {
+				idea = MGU_COUP_COUP_GET_2
+				days = 1440
+			}
+			load_focus_tree = generic_focus
+			clr_global_flag = MGU_Homura_COUP
+    			remove_ideas = MGU_mofategong
+    			remove_ideas = MGU_gongyeyuanqu
+    			remove_ideas = MGU_Malfaris_TB
+    			remove_ideas = MGU_COUP_LV_A_1
+    			remove_ideas = MGU_COUP_LV_A_1a
+    			remove_ideas = MGU_COUP_LV_A_2
+    			remove_ideas = MGU_COUP_LV_A_011
+    			remove_ideas = MGU_COUP_LV_A_012
+    			remove_ideas = MGU_COUP_LV_A_013
+    			remove_ideas = MGU_mofategong_1
+    			remove_ideas = MGU_chuanxiao
+    			remove_ideas = MGU_jinzhichuanxiao
+    			remove_ideas = MGU_COUP_AI_BUFF
+    			remove_ideas = MGU_yilaimofa
+    			remove_ideas = MGU_new_age_army
+    			remove_ideas = MGU_new_age_army_1
+    			remove_ideas = MGU_new_age_army_2
+    			remove_ideas = MGU_new_age_army_3
+    			remove_ideas = MGU_Magic_Doll_army
+    			remove_ideas = MGU_Magic_Doll_army_2
+    			remove_ideas = MGU_Magic_Doll_army_3
+    		}
+	}
+    option = {
+    		name = magicunion.10651_MGU.a
+		    ai_chance = {
+			    base = 100
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+    option = {
+    		name = magicunion.10651_MGU.b
+		    ai_chance = {
+			    base = 0
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+}
+
+country_event = {
+	##向晓美焰致敬
+	id = magicunion.1066_MGU
+	title = magicunion.1066_MGU.t
+	desc = magicunion.1066_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = no
+	is_triggered_only = yes
+	immediate = {
+	}
+    option = {
+    		name = magicunion.1066_MGU.a
+    		add_manpower = -2630
+    		custom_effect_tooltip = MGU_COUP_All_Hail_HOMURA_txt
+    		add_ideas = MGU_Magia_Exedra
+		    ai_chance = {
+			    base = 100
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+}
+
+country_event = {
+	##魔女之夜的降临 计时器
+	id = magicunion.1067_MGU
+	title = magicunion.1067_MGU.t
+	desc = magicunion.1067_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = yes
+	hidden = yes
+	immediate = {
+        		##魔女之夜
+        	set_global_flag = MGU_Witch_Night_befall
+            MS1 = {
+        		transfer_state = 1164
+				add_timed_idea = {
+    				idea = MGU_new_age_army_Walpurgis_Night
+    				days = 365
+    			}
+        	}
+        	1164 = {
+        			add_core_of = MS1
+        	}
+
+        	MS1 = {
+                        division_template = {
+                            name = "魔女之夜的使魔"
+                            is_locked = yes
+                            regiments = {
+                                magic_assault = { x = 0 y = 0 }
+                                magic_assault = { x = 0 y = 1 }
+                                magic_assault = { x = 0 y = 2 }
+                                magic_assault = { x = 0 y = 3 }
+                                magic_assault = { x = 0 y = 4 }
+                                magic_artillery = { x = 1 y = 0 }
+                                magic_artillery = { x = 2 y = 1 }
+                                magic_artillery = { x = 1 y = 2 }
+                                magic_artillery = { x = 2 y = 3 }
+                            }
+                            support = {
+                                recon = { x = 0 y = 0 }
+                                artillery = { x = 0 y = 1 }
+                                engineer = { x = 0 y = 2 }
+                                field_hospital = { x = 0 y = 3 }
+                            }
+                        }
+                        add_equipment_to_stockpile = { type = magic_assault_equipment amount = 10000 producer = MS1 }
+                        add_equipment_to_stockpile = { type = support_equipment amount = 6000 producer = MS1 }
+                        add_equipment_to_stockpile = { type = magic_artillery_equipment amount = 5000 producer = MS1 }
+				        1164 = { create_unit = {
+            				division = "name = \"魔女之夜的使魔\" division_template = \"魔女之夜的使魔\" start_experience_factor = 0.6 start_equipment_factor = 1 "
+            				owner = MS1
+            				count = 60
+            				allow_spawning_on_enemy_provs = yes
+            			} }
+            }
+	}
+    option = {
+    		name = magicunion.1067_MGU.a
+    		news_event = { id = magicunion.1068 days = 1 }
+		    ai_chance = {
+			    base = 1
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+}
+
+country_event = {
+	##魔女之夜的降临 自动触发
+	id = magicunion.10671_MGU
+	title = magicunion.10671_MGU.t
+	desc = magicunion.10671_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = no
+	hidden = yes
+	trigger = {
+		date > 1942.1.1
+        NOT = { has_global_flag = MGU_Witch_Night_befall }
+        OR = {
+            MGU = { exists = no }
+            NOT = { has_global_flag = MGU_Homura_COUP }
+        }
+	}
+	immediate = {
+        		##魔女之夜
+        	set_global_flag = MGU_Witch_Night_befall
+            MS1 = {
+        		transfer_state = 1164
+				add_timed_idea = {
+    				idea = MGU_new_age_army_Walpurgis_Night
+    				days = 365
+    			}
+        	}
+        	1164 = {
+        			add_core_of = MS1
+        	}
+
+        	MS1 = {
+                        division_template = {
+                            name = "魔女之夜的使魔"
+                            is_locked = yes
+                            regiments = {
+                                magic_assault = { x = 0 y = 0 }
+                                magic_assault = { x = 0 y = 1 }
+                                magic_assault = { x = 0 y = 2 }
+                                magic_assault = { x = 0 y = 3 }
+                                magic_assault = { x = 0 y = 4 }
+                                magic_artillery = { x = 1 y = 0 }
+                                magic_artillery = { x = 2 y = 1 }
+                                magic_artillery = { x = 1 y = 2 }
+                                magic_artillery = { x = 2 y = 3 }
+                            }
+                            support = {
+                                recon = { x = 0 y = 0 }
+                                artillery = { x = 0 y = 1 }
+                                engineer = { x = 0 y = 2 }
+                                field_hospital = { x = 0 y = 3 }
+                            }
+                        }
+                        add_equipment_to_stockpile = { type = magic_assault_equipment amount = 10000 producer = MS1 }
+                        add_equipment_to_stockpile = { type = support_equipment amount = 6000 producer = MS1 }
+                        add_equipment_to_stockpile = { type = magic_artillery_equipment amount = 5000 producer = MS1 }
+				        1164 = { create_unit = {
+            				division = "name = \"魔女之夜的使魔\" division_template = \"魔女之夜的使魔\" start_experience_factor = 0.6 start_equipment_factor = 1 "
+            				owner = MS1
+            				count = 60
+            				allow_spawning_on_enemy_provs = yes
+            			} }
+            }
+	}
+    option = {
+    		name = magicunion.1067_MGU.a
+			news_event = { id = magicunion.1068 days = 1 }
+		    ai_chance = {
+			    base = 1
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+}
+
+news_event = {
+	#魔女之夜降临 新闻
+	id = magicunion.1068
+	title = magicunion.1068.t
+	desc = magicunion.1068.desc
+	picture = GFX_event_MGU_envelope
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1068.a
+	}
+}
+
+news_event = {
+	#虫群天灾 新闻
+	id = magicunion.1069
+	title = magicunion.1069.t
+	desc = magicunion.1069.desc
+	picture = GFX_event_MGU_envelope
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1069.a
+		ai_chance = {
+			factor = 100
+		}
+
+	}
+	option = {
+		name = magicunion.1069.b
+		ai_chance = {
+			factor = 0
+		}
+
+	}
+}
+
+country_event = {
+	##虫群天灾 真的
+	id = magicunion.1070_MGU
+	title = magicunion.1070_MGU.t
+	desc = magicunion.1070_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = yes
+	hidden = yes
+	immediate = {
+        		##虫群天灾
+        	BRA = {
+                        division_template = {
+                            name = "天灾虫群"
+                            is_locked = yes
+                            regiments = {
+                                magic_assault = { x = 0 y = 0 }
+                                magic_assault = { x = 0 y = 1 }
+                                magic_assault = { x = 0 y = 2 }
+                                magic_assault = { x = 0 y = 3 }
+                                magic_assault = { x = 0 y = 4 }
+                                magic_artillery = { x = 1 y = 0 }
+                                magic_artillery = { x = 2 y = 1 }
+                                magic_artillery = { x = 1 y = 2 }
+                                magic_artillery = { x = 2 y = 3 }
+                            }
+                            support = {
+                                recon = { x = 0 y = 0 }
+                                artillery = { x = 0 y = 1 }
+                                engineer = { x = 0 y = 2 }
+                                field_hospital = { x = 0 y = 3 }
+                            }
+                        }
+                        add_equipment_to_stockpile = { type = magic_assault_equipment amount = 10000 producer = MS1 }
+                        add_equipment_to_stockpile = { type = support_equipment amount = 6000 producer = MS1 }
+                        add_equipment_to_stockpile = { type = magic_artillery_equipment amount = 5000 producer = MS1 }
+				        1164 = { create_unit = {
+            				division = "name = \"天灾虫群\" division_template = \"天灾虫群\" start_experience_factor = 0.6 start_equipment_factor = 1 "
+            				owner = BRA
+            				count = 60
+            				allow_spawning_on_enemy_provs = yes
+            			} }
+            }
+	}
+    option = {
+    		name = magicunion.1067_MGU.a
+			news_event = { id = magicunion.1068 days = 1 }
+		    ai_chance = {
+			    base = 1
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+}
+
+country_event = {
+	#政府密探1
+	id = magicunion.1071
+	title = magicunion.1071.t
+	desc = magicunion.1071.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1071.a
+	}
+}
+country_event = {
+	#政府密探2
+	id = magicunion.1072
+	title = magicunion.1072.t
+	desc = magicunion.1072.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1072.a
+	}
+
+}
+country_event = {
+	#政府密探3
+	id = magicunion.1073
+	title = magicunion.1073.t
+	desc = magicunion.1073.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1073.a
+	}
+}
+country_event = {
+	#政府密探4
+	id = magicunion.1074
+	title = magicunion.1074.t
+	desc = magicunion.1074.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1074.a
+	}
+	option = {
+		name = magicunion.1074.b
+				add_manpower = -1
+	}
+}
+country_event = {
+	#政府密探5
+	id = magicunion.1075
+	title = magicunion.1075.t
+	desc = magicunion.1075.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1075.a
+	}
+}
+
+country_event = {
+	#整合虫巢 阵营？
+	id = magicunion.1076
+	title = magicunion.1076.t
+	desc = magicunion.1076.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {#阵营
+		name = magicunion.1076.a
+		    	BRA = {
+		    		country_event = generic.2008
+		    	}
+	}
+	option = {#傀儡
+		name = magicunion.1076.b
+	    set_autonomy = {
+		    target = BRA
+		    autonomy_state = autonomy_puppet
+	    }
+	}
+	option = {#吞并
+		name = magicunion.1076.c
+        country_event = magicunion.1077
+        BRA = { every_owned_state = { add_core_of = MGU } }
+	}
+}
+country_event = {
+	#整合虫巢 吞并（要不要军队）
+	id = magicunion.1077
+	title = magicunion.1077.t
+	desc = magicunion.1077.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1077.a
+	    annex_country = { target = BRA transfer_troops = yes }
+	    country_event = magicunion.1078
+	}
+	option = {
+		name = magicunion.1077.b
+		annex_country = { target = BRA transfer_troops = no }
+		country_event = magicunion.1078
+	}
+}
+country_event = {
+	#整合虫巢 吞并（要不要将领）
+	id = magicunion.1078
+	title = magicunion.1078.t
+	desc = magicunion.1078.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1078.a
+		BRA= {
+		    every_unit_leader = {
+			    set_nationality = 加入哪个国家的国家代码
+		    }
+	    }
+	}
+	option = {
+		name = magicunion.1078.b
+	}
+}
+
+country_event = {
+	#帝国密约
+	id = magicunion.1079
+	title = magicunion.1079.t
+	desc = magicunion.1079.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1079.a
+        effect_tooltip = {
+            add_war_support = -0.30
+            add_stability = -0.20
+        }
+	}
+}
+
+country_event = {
+	#帝国密约 战争
+	id = magicunion.1080
+	title = magicunion.1080.t
+	desc = magicunion.1080.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	immediate = {
+
+	}
+	option = {
+		name = magicunion.1080.a
+        effect_tooltip = {
+            1036 = { damage_building = { type = infrastructure damage = 0.8 } }
+            307 = { damage_building = { type = infrastructure damage = 0.8 } }
+            1143 = { damage_building = { type = supply_node damage = 1 } }
+            1031 = { damage_building = { type = supply_node damage = 1 } }
+        }
+	}
+
+}
+
+country_event = {
+	id = magicunion.1081
+	title = magicunion.1081.t
+	desc = magicunion.1081.desc
+	#picture = GFX_event_HoshinoAi
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1081.a
+
+			add_corps_commander_role = {
+				character = MGU_SkyThunder_driver
+				skill = 6
+				traits = { panzer_leader Divine_Arsenal_Sky_Thunder }
+				attack_skill = 8
+				defense_skill = 8
+				planning_skill = 3
+				logistics_skill = 3
+			}
+
+		set_technology = {
+			Sky_Thunder_tech = 1
+		}
+		division_template = {
+			name = "天霆号组件"
+			is_locked = yes
+			priority = 2
+			regiments = {
+					MGU_Sky_Thunder_units = { x = 0 y = 0 }
+					MGU_Sky_Thunder_units = { x = 0 y = 1 }
+					MGU_Sky_Thunder_units = { x = 0 y = 2 }
+					MGU_Sky_Thunder_units = { x = 0 y = 3 }
+					MGU_Sky_Thunder_units = { x = 1 y = 0 }
+					MGU_Sky_Thunder_units = { x = 1 y = 1 }
+					MGU_Sky_Thunder_units = { x = 1 y = 2 }
+				}
+				support = {
+                    recon = { x = 0 y = 0 }
+                    maintenance_company = { x = 0 y = 1 }
+                    engineer = { x = 0 y = 2 }
+                    field_hospital = { x = 0 y = 3 }
+                    signal_company = { x = 0 y = 4 }
+				}
+			}
+		for_loop_effect = {
+				start = 0
+				end = 1
+				add = 1
+
+				capital_scope = {
+					create_unit = {
+						division = "name = \"神灭兵器－天霆号 扼宙斯\" division_template = \"天霆号组件\" start_experience_factor = 0.8 start_equipment_factor = 1"
+						owner = ROOT
+					}
+				}
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+country_event = {#机组测试事件
+	id = magicunion.1082
+	title = magicunion.1082.t
+	desc = magicunion.1082.desc
+	#picture = GFX_event_HoshinoAi
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1082.a
+			add_corps_commander_role = {
+				character = MGU_SkyThunder_driver
+				skill = 6
+				traits = { panzer_leader Divine_Arsenal_Sky_Thunder }
+				attack_skill = 8
+				defense_skill = 8
+				planning_skill = 3
+				logistics_skill = 3
+			}
+		ai_chance = {
+			factor = 100
+		}
+	}
+}
+
+country_event = {
+	#政府密探6
+	id = magicunion.1083
+	title = magicunion.1083.t
+	desc = magicunion.1083.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {
+		name = magicunion.1083.a
+    		custom_effect_tooltip = magicunion_1075_a_txt
+	}
+}
+
+country_event = {
+	#西非的命运
+	id = magicunion.1084
+	title = magicunion.1084.t
+	desc = magicunion.1084.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {#阵营
+		name = magicunion.1084.a
+		    	MS2 = {
+		    		country_event = generic.2008
+		    	}
+	}
+	option = {#傀儡
+		name = magicunion.1084.b
+	    set_autonomy = {
+		    target = MS2
+		    autonomy_state = autonomy_puppet
+	    }
+	}
+	option = {#吞并
+		name = magicunion.1084.c
+		annex_country = { target = MS2 transfer_troops = no }
+	}
+	option = {#维持现状
+		name = magicunion.1084.d
+	}
+}
+
+country_event = {
+	#王冠领沦陷
+	id = magicunion.1085
+	title = magicunion.1085.t
+	desc = magicunion.1085.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {#撤出西非
+		name = magicunion.1085.a
+        white_peace = MS2
+		ai_chance = {
+			factor = 25
+		}
+	}
+	option = {#绝不容忍
+		name = magicunion.1085.b
+        add_war_support = 0.05
+        add_political_power = -20
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+country_event = {
+	# 港口要求吞并
+	id = magicunion.1086
+	title = magicunion.1086.t
+	desc = magicunion.1086.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {#只能接受
+		name = magicunion.1086.a
+        MGU = { annex_country = { target = PGM transfer_troops = no } }
+		ai_chance = {
+			factor = 25
+		}
+	}
+	option = {#战争
+		name = magicunion.1086.b
+        MGU = {
+            create_wargoal = { target = PGM type = annex_everything }
+        }
+		ai_chance = {
+			factor = 0
+		}
+	}
+	option = {#傀儡
+		name = magicunion.1086.c
+        MGU = {
+            set_autonomy = {
+                target = PGM
+                autonomy_state = autonomy_puppet
+            }
+        }
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+country_event = {
+	# 破坏封印
+	id = magicunion.1087
+	title = magicunion.1087.t
+	desc = magicunion.1087.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {#
+		name = magicunion.1087.a
+
+		ai_chance = {
+			factor = 25
+		}
+	}
+}
+country_event = {
+	# 艾琉希欧向虫虫屈服 战争已经无望
+	id = magicunion.1088
+	title = magicunion.1088.t
+	desc = magicunion.1088.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {#只能接受
+		name = magicunion.1088.a
+        white_peace = { tag = BRA message = BRA_win_PAQ }
+				    every_state = {
+					    limit = {
+					        is_owned_by = PAQ
+						    is_core_of = BRA
+					    }
+					    BRA = {
+						    transfer_state = PREV
+					    }
+				    }
+		    BRA = { country_event = BRA.26 }
+		ai_chance = {
+			factor = 25
+		}
+	}
+	option = {#战争！继续！
+		name = magicunion.1088.b
+            add_war_support =0.05
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+country_event = {
+	# 傀儡艾琉希欧帝国
+	id = magicunion.1089
+	title = magicunion.1089.t
+	desc = magicunion.1089.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {#傀儡
+		name = magicunion.1089.a
+        MGU = {
+            set_autonomy = {
+                target = PAQ
+                autonomy_state = autonomy_puppet
+            }
+        }
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#战争
+		name = magicunion.1089.b
+        MGU = {
+            create_wargoal = { target = PAQ type = annex_everything }
+        }
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+country_event = {
+	# 虫母死了
+	id = magicunion.1090
+	title = magicunion.1090.t
+	desc = magicunion.1090.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	hidden = yes
+	immediate = {
+		if = {
+			limit = {
+				BRA = { has_war_with = PAQ }
+				BRA = { is_subject = no }
+                BRA = { is_ai = yes }
+                PAN = { is_ai = yes }
+                GUA = { is_ai = yes }
+                PAJ = { is_ai = yes }
+                PAQ = { is_ai = yes }
+                PA1 = { is_ai = yes }
+                CUB = { is_ai = yes }
+                PAS = { is_ai = yes }
+                PAU = { is_ai = yes }
+                PAM = { is_ai = yes }
+                PAO = { is_ai = yes }
+                CHL = { is_ai = yes }
+                PGM = { is_ai = yes }
+				country_exists = BRA
+				1036 = { is_controlled_by = PAQ }
+			}
+            set_global_flag = BRA_Sally_is_dead_flag
+            set_global_flag = BRA_Sally_is_dead_flag_2
+            MGU = { complete_national_focus = TBMGU_Jungle_fire_1_3 }
+            MGU = { country_event = { id = magicunion.1091 days = 10 } }
+            BRA = { leave_faction = yes }
+            BRA = { add_ideas = MGU_BRA_scourge_chongchao }
+
+            BRA = {
+                set_technology = { magic_weapons0 = 1 }
+                set_technology = { magic_weapons1 = 1 }
+                set_technology = { magic_weapons2 = 1 }
+                set_technology = { magic_weapons3 = 1 }
+        		division_template = {
+                    name = "天灾虫群" #名字
+                    division_names_group = "天灾虫群"
+                    is_locked = yes
+                    regiments = {
+                    infantry = { x = 0 y = 0 }
+                    infantry = { x = 0 y = 1 }
+                    infantry = { x = 1 y = 0 }
+                    infantry = { x = 1 y = 1 }
+                    infantry = { x = 2 y = 0 }
+                    infantry = { x = 2 y = 1 }
+                    magic_assault = { x = 0 y = 2 }
+                    magic_assault = { x = 1 y = 2 }
+                    magic_assault = { x = 2 y = 2 }
+                     }
+                    support = {
+                        engineer = { x = 0 y = 0 }
+                        artillery = { x = 0 y = 1 }
+                    }
+                }
+                    898 = {
+            			create_unit = {
+            				division = "name = \"天灾虫群\" division_template = \"天灾虫群\" start_experience_factor = 0.1 start_equipment_factor = 1 "
+            				owner = BRA
+            				count = 60
+            				allow_spawning_on_enemy_provs = yes
+            			}
+            		}
+            }
+
+		}
+	}
+	option = {#嘤嘤嘤
+		name = magicunion.1090.a
+	}
+}
+country_event = {
+	# 虫母死了2
+	id = magicunion.1091
+	title = magicunion.1091.t
+	desc = magicunion.1091.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	immediate = {
+	}
+	option = {#我们是人类！
+		name = magicunion.1091.a
+		set_country_flag = MGU_We_are_humans_flag
+	}
+	option = {#唏。可以和解吗？
+		name = magicunion.1091.a
+		if = {
+		    limit = {
+		        is_faction_leader = yes
+		    }
+		    MGU = { dismantle_faction = yes }
+		}
+		if = {
+		    limit = {
+		    is_faction_leader = no
+		    is_in_faction = yes
+		    }
+		    MGU = { leave_faction = yes }
+		}
+		BRA = {
+			puppet = MGU
+		}
+	}
+}
+
+country_event = {
+	# 向瓦社投降
+	id = magicunion.1092
+	title = magicunion.1092.t
+	desc = magicunion.1092.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	option = {#傀儡魔联
+		name = magicunion.1092.a
+        PAN = {
+            set_autonomy = {
+                target = MGU
+                autonomy_state = autonomy_puppet
+            }
+        }
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#继续战争
+		name = magicunion.1092.b
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+country_event = {
+	# QB来信
+	id = magicunion.1093
+	title = magicunion.1093.t
+	desc = magicunion.1093.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = no
+	fire_only_once = yes
+	    trigger = {
+	        tag = MST
+	        MST = { is_ai = yes }
+	        MGU = { is_ai = yes }
+	        MGS = { is_ai = yes }
+        }
+	option = {#不管
+		name = magicunion.1093.a
+		MST = { complete_national_focus = MST_A001 }
+		ai_chance = {
+			factor = 8
+		}
+	}
+	option = {#入主魔联
+		name = magicunion.1093.b
+		MST = { complete_national_focus = MST_B001 }
+		ai_chance = {
+			factor = 2
+		}
+	}
+}
+
+country_event = {
+	# 北美干涉
+	id = magicunion.1094
+	title = magicunion.1094.t
+	desc = magicunion.1094.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {#欢迎一切帮助
+		name = magicunion.1094.a
+		set_country_flag = MGU_NA_interfere
+		MGU = { country_event = magicunion.1095 }
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#拒绝帮助
+		name = magicunion.1094.b
+		MGU = { country_event = magicunion.1096 }
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+country_event = {
+	# 北美同意
+	id = magicunion.1095
+	title = magicunion.1095.t
+	desc = magicunion.1095.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {#
+		name = magicunion.1095.a
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
+country_event = {
+	# 北美拒绝
+	id = magicunion.1096
+	title = magicunion.1096.t
+	desc = magicunion.1096.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {#
+		name = magicunion.1096.a
+		clr_country_flag = MGU_NA_interfere
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#
+		name = magicunion.1096.b
+		clr_country_flag = MGU_NA_interfere
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
+
+country_event = {
+	# 要求兑现承诺
+	id = magicunion.1097
+	title = magicunion.1097.t
+	desc = magicunion.1097.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {#
+		name = magicunion.1097.a
+        add_ideas = USA_Excellent_spirit_suit
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#
+		name = magicunion.1097.b
+        add_ideas = NFA_zqcj
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#
+		name = magicunion.1097.c
+			add_tech_bonus = {
+				name = TBMGU_131_3
+				bonus = 1
+				uses = 2
+				category = industry
+		    }
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#
+		name = magicunion.1097.d
+				name = dd_bonus
+				bonus = 1.0
+				uses = 1
+				category = dd_tech
+			}
+			add_tech_bonus = {
+				name = cl_bonus
+				bonus = 1.0
+				uses = 1
+				category = cl_tech
+				category = ca_tech
+			}
+			add_tech_bonus = {
+				name = bb_bonus
+				bonus = 1.0
+				uses = 1
+				category = bb_tech
+				category = bb_tech
+			}
+			add_tech_bonus = {
+				name = cv_bonus
+				bonus = 1.0
+				uses = 1
+				category = cv_tech
+				category = cv_tech
+			}
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
+
+country_event = {
+	# 要求兑现承诺
+	id = magicunion.1098
+	title = magicunion.1098.t
+	desc = magicunion.1098.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {#
+		name = magicunion.1098.a
+		add_political_power = -200
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
 
 country_event = { #玛吉斯之翼解散
 	id = MGU_event.9
@@ -4076,10 +5441,13 @@ news_event = {
 			MGU = {
     			exists = no
     		}
+			MST = {
+    			exists = no
+    		}
     		NOT = {
     			has_global_flag = GTMX_FALL_OF_TBMGU
     		}
-    		has_global_flag = MGU_Homura_COUP
+    		# has_global_flag = MGU_Homura_COUP
 	}
 	immediate = {
 		set_global_flag = GTMX_FALL_OF_TBMGU
@@ -4096,7 +5464,7 @@ news_event = {
 		name = TBMGUprisoner.80.b
 		trigger = {
 			NOT = {
-				controls_state = 500
+                controls_state = 500
 			}
 		}
 	}
@@ -4294,4 +5662,16 @@ country_event = {
 		recruit_character = MGU_emohomura
 	}
 }
-
+country_event = {
+	id = TBMGUprisoner.84
+	title = TBMGUprisoner.84.t
+	desc = TBMGUprisoner.84.d
+	picture = GFX_event_MGU_PRISONER_5
+	is_triggered_only = yes
+	option = {
+		name = TBMGUprisoner.84.a
+		clr_country_flag = MGU_prisoner_owner
+		clr_country_flag = MGU_PRISON_RUNNING
+		recruit_character = MGU_DEMO_homura
+	}
+}
