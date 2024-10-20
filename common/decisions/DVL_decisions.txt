@@ -903,8 +903,110 @@ DVL_Unit_Germany = {
 	}
 }
 
+DVL_catch_Zero_Two = {
+	DVL_Research_BAY_materials = {
+		icon = GFX_science_decision
+		visible = {
+		}
+		cost = 100
+		fire_only_once = yes
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		modifier = {
+			civilian_factory_use = 5
+			research_speed_factor = -0.1
+		}
+		days_remove = 60
+		complete_effect = {
+		}
+		remove_effect = {
+			custom_effect_tooltip = FRA_Automechanical_research_tt
+			hidden_effect = {
+				country_event = { id = WizardCountry.014 }
+			}
+		}
+	}
+	DVL_appease_Zero_Two = {
+		icon = GFX_decision_ger_mefo_bills
+		visible = {
+			NOT = { has_country_flag = DVL_catch_Zero_Two_success }
+		}
+		cost = 25
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			NOT = {
+				has_country_flag = DVL_catch_Zero_Two_ing
+			}
+		}
+		modifier = {
+			civilian_factory_use = 10
+		}
+		days_remove = 30
+		complete_effect = {
+			set_country_flag = DVL_catch_Zero_Two_ing
+		}
+		remove_effect = {
+			country_event = {
+				id = WizardCountry.015
+			}
+		}
+	}
+	DVL_torture_Zero_Two = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+			NOT = { has_country_flag = DVL_catch_Zero_Two_success }
+		}
+		cost = 25
+		fire_only_once = yes
+		ai_will_do = {
+			base = 0
+		}
+		available = {
+			NOT = {
+				has_country_flag = DVL_catch_Zero_Two_ing
+			}
+		}
+		days_remove = 1
+		complete_effect = {
+			set_country_flag = DVL_catch_Zero_Two_ing
+		}
+		remove_effect = {
+			country_event = {
+				id = WizardCountry.016
+			}
+		}
+	}
+	DVL_brainwash_Zero_Two = {
+		icon = GFX_decision_generic_research
+		visible = {
+			NOT = { has_country_flag = DVL_catch_Zero_Two_success }
+		}
+		cost = 25
+		ai_will_do = {
+			base = 100
+		}
+		available = {
+			has_tech = magic_weapons3
+			NOT = {
+				has_country_flag = DVL_catch_Zero_Two_ing
+			}
+		}
+		days_remove = 30
+		complete_effect = {
+			set_country_flag = DVL_catch_Zero_Two_ing
+		}
+		remove_effect = {
+			country_event = { id = WizardCountry.020 }
+		}
+	}
+}
+
 DVL_National_Economic_Policy = {
-	##检测军队数量
 	##培养高级军官
 	DVL_Train_senior_officers = {
 		icon = GFX_decision_category_army_reform
@@ -1153,6 +1255,158 @@ DVL_National_Economic_Policy = {
 	}
 }
 
+DVL_foreign_ministry = {
+	##进攻
+	DVL_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = DVL_war_plan_going_on
+			}
+			or = {
+				any_home_area_neighbor_country = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				any_allied_country = {
+					any_home_area_neighbor_country = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = DVL_war_plan_going_on
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		remove_effect = {
+			clr_country_flag = DVL_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	##邀请
+	DVL_diplo_invite_FROM = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+		}
+		available = {
+			is_faction_leader = yes
+			FROM = {
+				is_in_faction = no
+				not = { has_country_flag = DVL_diplo_invite_FROM }
+			}
+			not = {
+				or = {
+					has_war_with = FROM
+					is_in_faction_with = FROM
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = {
+				set_country_flag = DVL_diplo_invite_FROM
+				country_event = {
+					id = generic.2008
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	##整合
+	DVL_integration_FROM = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
+			has_war = no
+			FROM = { is_subject_of = ROOT }
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			FROM = {
+				every_core_state = {
+					add_core_of = ROOT
+				}
+				every_character = { set_nationality = ROOT }
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
 DVL_ATRI_research_dc = {
 	DVL_ATRI_research = {
 		icon = GFX_science_decision
@@ -1347,6 +1601,481 @@ DVL_ATRI_Study_Plan = {
 	}
 }
 
+DVL_Invest_Germany_companies = {
+ ##投资阿德勒
+	DVL_Invest_adler = {
+		icon = GFX_science_decision
+		visible = {
+			is_ai = yes
+		}
+		available = {
+		}
+		modifier = {
+		}
+		cost = 150
+		days_remove = 100
+		remove_effect = {
+			mio:GER_adler = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_adler
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_heavy_armor
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	DVL_Invest_adler_mission = {
+		icon = GFX_science_decision
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+		}
+		timeout_effect = {
+			mio:GER_adler = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_adler
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_heavy_armor
+			}
+		}
+	}
+ ##投资曼恩
+	DVL_Invest_man = {
+		icon = GFX_science_decision
+		visible = {
+			is_ai = yes
+		}
+		available = {
+		}
+		modifier = {
+		}
+		cost = 150
+		days_remove = 100
+		remove_effect = {
+			mio:GER_man_company = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_man
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_medium_armor
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	DVL_Invest_man_mission = {
+		icon = GFX_science_decision
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+		}
+		timeout_effect = {
+			mio:GER_man_company = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_man
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_medium_armor
+			}
+		}
+	}
+ ##投资沃马格
+	DVL_Invest_vomag = {
+		icon = GFX_science_decision
+		visible = {
+			is_ai = yes
+		}
+		available = {
+		}
+		modifier = {
+		}
+		cost = 150
+		days_remove = 100
+		remove_effect = {
+			mio:GER_vomag = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_vomag
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_light_armor
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	DVL_Invest_vomag_mission = {
+		icon = GFX_science_decision
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+		}
+		timeout_effect = {
+			mio:GER_vomag = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_vomag
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_light_armor
+			}
+		}
+	}
+ ##投资戴姆勒-奔驰
+	DVL_Invest_daimler_benz = {
+		icon = GFX_science_decision
+		visible = {
+			is_ai = yes
+		}
+		available = {
+		}
+		modifier = {
+		}
+		cost = 150
+		days_remove = 100
+		remove_effect = {
+			mio:GER_daimler_benz_organization = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_daimler_benz
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = armor
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	DVL_Invest_daimler_benz_mission = {
+		icon = GFX_science_decision
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+		}
+		timeout_effect = {
+			mio:GER_daimler_benz_organization = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_daimler_benz
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = armor
+			}
+		}
+	}
+ ##投资瓦尔特
+	DVL_Invest_walther = {
+		icon = GFX_science_decision
+		visible = {
+			is_ai = yes
+		}
+		available = {
+		}
+		modifier = {
+		}
+		cost = 150
+		days_remove = 100
+		remove_effect = {
+			mio:GER_walther = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_walther
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = infantry_weapons
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	DVL_Invest_walther_mission = {
+		icon = GFX_science_decision
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+		}
+		timeout_effect = {
+			mio:GER_walther = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_walther
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = infantry_weapons
+			}
+		}
+	}
+ ##投资克虏伯
+	DVL_Invest_krupp = {
+		icon = GFX_science_decision
+		visible = {
+			is_ai = yes
+		}
+		available = {
+		}
+		modifier = {
+		}
+		cost = 150
+		days_remove = 100
+		remove_effect = {
+			mio:GER_krupp4 = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_krupp
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = artillery
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	DVL_Invest_krupp_mission = {
+		icon = GFX_science_decision
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+		}
+		timeout_effect = {
+			mio:GER_krupp4 = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_krupp
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = artillery
+			}
+		}
+	}
+ ##投资欧宝
+	DVL_Invest_opel = {
+		icon = GFX_science_decision
+		visible = {
+			is_ai = yes
+		}
+		available = {
+		}
+		modifier = {
+		}
+		cost = 150
+		days_remove = 100
+		remove_effect = {
+			mio:GER_opel = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_opel
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = motorized_equipment
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	DVL_Invest_opel_mission = {
+		icon = GFX_science_decision
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+		}
+		timeout_effect = {
+			mio:GER_opel = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_opel
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = motorized_equipment
+			}
+		}
+	}
+ ##投资德意志武器弹药
+	DVL_Invest_dwm = {
+		icon = GFX_science_decision
+		visible = {
+			is_ai = yes
+		}
+		available = {
+		}
+		modifier = {
+		}
+		cost = 150
+		days_remove = 100
+		remove_effect = {
+			mio:GER_dwm_organisation = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_dwm
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = support_tech
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	DVL_Invest_dwm_mission = {
+		icon = GFX_science_decision
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+		}
+		timeout_effect = {
+			mio:GER_dwm_organisation = {
+				add_mio_funds = 400
+			}
+			add_tech_bonus = {
+				name = DVL_Invest_dwm
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = support_tech
+			}
+		}
+	}
+}
+
 DVL_debug = {
 	DVL_debug_change_to_DVL_Albedo = {
 		complete_effect = {
@@ -1392,270 +2121,300 @@ DVL_debug = {
 			add_ideas = DVL_MoMo_idea
 		}
 	}
-	DVL_debug_core = {
+	DVL_debug_change_to_DVL_ATRI = {
 		complete_effect = {
-			every_state = {
-				limit = {
-					or = {
-						has_state_flag = L_GER
-						state = 1
-						state = 100
-						state = 101
-						state = 926
-						state = 337
-						state = 118
-						state = 114
-						state = 177
-						state = 116
-						state = 753
-						state = 759
-						state = 160
-						region = 33
-					}
-				}
-				transfer_state_to = ROOT
-				add_core_of = ROOT
+			DVL_remove_all_ideas = yes
+			add_ideas = DVL_ATRI_idea
+		}
+	}
+	# DVL_debug_core = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = {
+	# 				or = {
+	# 					has_state_flag = G_GER
+	# 					state = 1
+	# 					state = 100
+	# 					state = 101
+	# 					state = 926
+	# 					state = 337
+	# 					state = 118
+	# 					state = 114
+	# 					state = 177
+	# 					state = 116
+	# 					state = 753
+	# 					state = 759
+	# 					state = 160
+	# 					region = 38
+	# 					region = 155
+	# 					region = 33
+	# 				}
+	# 			}
+	# 			transfer_state_to = ROOT
+	# 			add_core_of = ROOT
+	# 		}
+	# 	}
+	# }
+	# DVL_debug_build_DMK = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Koumakan_Reichskommissariat }
+	# 			transfer_state_to = DMK
+	# 			add_core_of = DMK
+	# 		}
+	# 		puppet = DMK
+	# 	}
+	# }
+	# DVL_debug_build_DVF = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Gensokyo_Reichskommissariat }
+	# 			transfer_state_to = DVF
+	# 			add_core_of = DVF
+	# 		}
+	# 		puppet = DVF
+	# 	}
+	# }
+	# DVL_debug_build_DBR = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Hakugyokurou_Reichskommissariat }
+	# 			transfer_state_to = DBR
+	# 			add_core_of = DBR
+	# 		}
+	# 		puppet = DBR
+	# 	}
+	# }
+	# DVL_debug_build_FOT = {
+	# 	complete_effect = {
+	# 		1157 = {
+	# 			transfer_state_to = FOT
+	# 			add_core_of = FOT
+	# 		}
+	# 		puppet = FOT
+	# 	}
+	# }
+	# DVL_debug_build_DVN = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = Iberia_Reichskommissariat }
+	# 			transfer_state_to = DVN
+	# 			add_core_of = DVN
+	# 		}
+	# 		puppet = DVN
+	# 	}
+	# }
+	# DVL_debug_build_DVP = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Kazimierz_Reichskommissariat }
+	# 			transfer_state_to = DVP
+	# 			add_core_of = DVP
+	# 		}
+	# 		puppet = DVP
+	# 	}
+	# }
+	# DVL_debug_build_DVE = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Britain_Reichskommissariat }
+	# 			transfer_state_to = DVE
+	# 			add_core_of = DVE
+	# 		}
+	# 		puppet = DVE
+	# 	}
+	# }
+	# DVL_debug_build_DCO = {
+	# 	complete_effect = {
+	# 		123 = {
+	# 			transfer_state_to = DCO
+	# 			add_core_of = DCO
+	# 		}
+	# 		puppet = DCO
+	# 	}
+	# }
+	# DVL_debug_build_ALP = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Alps_Reichskommissariat }
+	# 			transfer_state_to = ALP
+	# 			add_core_of = ALP
+	# 		}
+	# 		puppet = ALP
+	# 	}
+	# }
+	# DVL_debug_build_DVI = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Italy_Reichskommissariat }
+	# 			transfer_state_to = DVI
+	# 			add_core_of = DVI
+	# 		}
+	# 		puppet = DVI
+	# 	}
+	# }
+	# DVL_debug_build_DVR = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Koumakan_Reichskommissariat }
+	# 			transfer_state_to = DVR
+	# 			add_core_of = DVR
+	# 		}
+	# 		puppet = DVR
+	# 	}
+	# }
+	# DVL_debug_build_DVB = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Leithanien_Reichskommissariat }
+	# 			transfer_state_to = DVB
+	# 			add_core_of = DVB
+	# 		}
+	# 		puppet = DVB
+	# 	}
+	# }
+	# DVL_debug_build_DVD = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Koumakan_Reichskommissariat }
+	# 			transfer_state_to = DVD
+	# 			add_core_of = DVD
+	# 		}
+	# 		puppet = DVD
+	# 	}
+	# }
+	# DVL_debug_build_DVM = {
+	# 	complete_effect = {
+	# 		every_state = {
+	# 			limit = { has_state_flag = DVL_Koumakan_Reichskommissariat }
+	# 			transfer_state_to = DVM
+	# 			add_core_of = DVM
+	# 		}
+	# 		puppet = DVM
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_01 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 1 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_02 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 2 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_03 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 3 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_04 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 4 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_05 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 5 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_06 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 6 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_07 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 7 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_08 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 8 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_09 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 9 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_10 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 10 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_11 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 11 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_12 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 12 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_13 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 13 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_14 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 14 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_15 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 15 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_16 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 16 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+	# DVL_Battle_for_prime_ministers_event_titile_17 = {
+	# 	complete_effect = {
+	# 		set_variable = { DVL_Battle_for_prime_ministers_event_id = 17 }
+	# 		set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+	# 	}
+	# }
+}
+
+DVL_ai = {
+	DVL_ai_change_to_DVL_Demiurge = {
+		available = {
+			date > 1937.6.1
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			complete_national_focus = DVL_Under_the_throne
+			complete_national_focus = DVL_prime_ministers_Demiurge
+			remove_ideas = {
+				DVL_Albedo_idea
+				DVL_Demiurge_idea
+				DVL_Sebas_Tian_idea
+				DVL_MoMo_idea
 			}
-		}
-	}
-	DVL_debug_build_DMK = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Koumakan_Reichskommissariat }
-				transfer_state_to = DMK
-				add_core_of = DMK
-			}
-			puppet = DMK
-		}
-	}
-	DVL_debug_build_DVF = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Gensokyo_Reichskommissariat }
-				transfer_state_to = DVF
-				add_core_of = DVF
-			}
-			puppet = DVF
-		}
-	}
-	DVL_debug_build_DBR = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Hakugyokurou_Reichskommissariat }
-				transfer_state_to = DBR
-				add_core_of = DBR
-			}
-			puppet = DBR
-		}
-	}
-	DVL_debug_build_FOT = {
-		complete_effect = {
-			1157 = {
-				transfer_state_to = FOT
-				add_core_of = FOT
-			}
-			puppet = FOT
-		}
-	}
-	DVL_debug_build_DVN = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = Iberia_Reichskommissariat }
-				transfer_state_to = DVN
-				add_core_of = DVN
-			}
-			puppet = DVN
-		}
-	}
-	DVL_debug_build_DVP = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Kazimierz_Reichskommissariat }
-				transfer_state_to = DVP
-				add_core_of = DVP
-			}
-			puppet = DVP
-		}
-	}
-	DVL_debug_build_DVE = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Britain_Reichskommissariat }
-				transfer_state_to = DVE
-				add_core_of = DVE
-			}
-			puppet = DVE
-		}
-	}
-	DVL_debug_build_DCO = {
-		complete_effect = {
-			123 = {
-				transfer_state_to = DCO
-				add_core_of = DCO
-			}
-			puppet = DCO
-		}
-	}
-	DVL_debug_build_ALP = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Alps_Reichskommissariat }
-				transfer_state_to = ALP
-				add_core_of = ALP
-			}
-			puppet = ALP
-		}
-	}
-	DVL_debug_build_DVI = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Italy_Reichskommissariat }
-				transfer_state_to = DVI
-				add_core_of = DVI
-			}
-			puppet = DVI
-		}
-	}
-	DVL_debug_build_DVR = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Koumakan_Reichskommissariat }
-				transfer_state_to = DVR
-				add_core_of = DVR
-			}
-			puppet = DVR
-		}
-	}
-	DVL_debug_build_DVB = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Leithanien_Reichskommissariat }
-				transfer_state_to = DVB
-				add_core_of = DVB
-			}
-			puppet = DVB
-		}
-	}
-	DVL_debug_build_DVD = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Koumakan_Reichskommissariat }
-				transfer_state_to = DVD
-				add_core_of = DVD
-			}
-			puppet = DVD
-		}
-	}
-	DVL_debug_build_DVM = {
-		complete_effect = {
-			every_state = {
-				limit = { has_state_flag = DVL_Koumakan_Reichskommissariat }
-				transfer_state_to = DVM
-				add_core_of = DVM
-			}
-			puppet = DVM
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_01 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 1 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_02 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 2 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_03 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 3 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_04 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 4 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_05 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 5 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_06 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 6 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_07 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 7 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_08 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 8 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_09 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 9 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_10 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 10 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_11 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 11 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_12 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 12 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_13 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 13 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_14 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 14 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_15 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 15 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_16 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 16 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
-		}
-	}
-	DVL_Battle_for_prime_ministers_event_titile_17 = {
-		complete_effect = {
-			set_variable = { DVL_Battle_for_prime_ministers_event_id = 17 }
-			set_country_flag = DVL_Battle_for_prime_ministers_new_visible
+			add_ideas = DVL_Demiurge_idea
 		}
 	}
 }

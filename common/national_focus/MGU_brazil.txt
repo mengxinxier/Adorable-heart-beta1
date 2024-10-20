@@ -1,0 +1,7776 @@
+
+focus_tree = {
+	id = MGU_brazil_tree_focus
+	
+	country = {
+		factor = 0
+		modifier = {
+			add = 0
+			tag = MGU
+		}
+	}
+	
+	default = no
+
+
+	##### Shared Military Branch #####
+	continuous_focus_position = { x = 0 y = 2500 }
+	##################################
+
+	
+	focus = {
+		id = MGU_tribunal_de_seguranca_nacional
+		icon = GFX_focus_BRA_tribunal
+		#prerequisite = { focus = }
+		x = 0
+		y = 0
+		#relative_position_id =
+
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		OR = {
+			has_country_leader = {
+			    character = MGU_Tomoe_Mami
+			    ruling_only = yes
+			}
+			has_country_leader = {
+			    character = MGU_Satomi_Toka
+			    ruling_only = yes
+			}
+		}
+
+		}
+		allow_branch = {
+			IF = {
+				limit = {
+					has_game_rule = {
+						rule = obsolete_focus_branches_visibility
+						option = HIDE
+					}
+				}
+				NOT = { has_completed_focus = MGU_end_the_state_of_emergency }
+				NOT = { has_completed_focus = MGU_prepare_for_second_intentona }
+			}
+		}
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_aotci_ns_intro
+			add_to_variable = {
+				MGU_coup_communism_factor = -0.2
+				tooltip = communism_drift_factor_tt
+			}
+			add_to_variable = {
+				MGU_coup_democratic_factor = -0.2
+				tooltip = democratic_drift_factor_tt
+			}
+			add_to_variable = {
+				MGU_coup_stability_factor = 0.04
+				tooltip = stability_factor_tt
+			}
+			add_political_power = 120
+
+			if = {
+				limit = {
+					has_game_rule = {
+						rule = obsolete_focus_branches_visibility
+						option = HIDE
+					}
+				}
+				mark_focus_tree_layout_dirty = yes
+			}
+		}
+	}
+
+	##### Historical and Fascist Branch #####
+
+	focus = {
+		id = MGU_ensure_continued_military_support
+		icon = GFX_focus_generic_military_dictatorship
+		prerequisite = { focus = MGU_tribunal_de_seguranca_nacional }
+		x = -2
+		y = 1
+		relative_position_id = MGU_tribunal_de_seguranca_nacional
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+			NOT = {
+				OR = {
+					has_completed_focus = MGU_estado_novo
+					has_completed_focus = MGU_estado_moderno
+				}
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			#custom_effect_tooltip = "TODO_JUNO: Add decision system"
+			add_war_support = 0.1
+			custom_effect_tooltip = MGU_modify_aotci_ns_intro
+			add_to_variable = {
+				MGU_coup_neutrality_factor = 0.2
+				tooltip = neutrality_drift_factor_tt
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_work_with_the_integralists
+		icon = GFX_focus_BRA_work_with_the_integralists
+		prerequisite = { focus = MGU_tribunal_de_seguranca_nacional }
+		x = 2
+		y = 1
+		relative_position_id = MGU_tribunal_de_seguranca_nacional
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+			NOT = {
+				OR = {
+					has_completed_focus = MGU_estado_novo
+					has_completed_focus = MGU_estado_moderno
+				}
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_boost_integralist_support_tt
+			custom_effect_tooltip = MGU_modify_aotci_ns_intro
+			add_to_variable = {
+				MGU_coup_fascism_factor = 0.05
+				tooltip = fascism_drift_factor_tt
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_estado_moderno
+		icon = GFX_focus_BRA_estado_moderno
+		prerequisite = { focus = MGU_work_with_the_integralists }
+		prerequisite = { focus = MGU_cohen_plan }
+		x = 0
+		y = 2
+		relative_position_id = MGU_work_with_the_integralists
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			has_country_leader = {
+				character = MGU_Satomi_Toka
+				ruling_only = yes
+			}
+		}
+
+		bypass = {
+			has_government = fascism
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			
+			#set_country_leader_ideology = fascism_ideology
+			custom_effect_tooltip = MGU_estado_moderno_tt
+			hidden_effect = {
+			every_other_country = {
+				limit = {
+					any_owned_state = {
+						OR = {
+							is_on_continent = south_america
+							is_on_continent = north_america
+						}
+					}
+				}
+				news_event = { id = south_american_news.51 hours = 1 }
+			}
+
+			}
+			set_politics = {
+				ruling_party = fascism
+				last_election = "1934.3.26"
+				election_frequency = 48
+				elections_allowed = no
+			}
+			hidden_effect = {
+				retire_country_leader = yes
+			}
+			remove_dynamic_modifier = {
+				modifier = MGU_aftermath_of_the_coup
+			}
+			add_dynamic_modifier = { modifier = MGU_estado_moderno_modifier }
+		}
+	}
+
+	focus = {
+		id = MGU_estado_novo
+		icon = GFX_focus_BRA_estado_novo
+		prerequisite = { focus = MGU_ensure_continued_military_support }
+		prerequisite = { focus = MGU_cohen_plan }
+		x = 0
+		y = 2
+		relative_position_id = MGU_ensure_continued_military_support
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			has_country_leader = {
+				character = MGU_Tomoe_Mami
+				ruling_only = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			hidden_effect = {
+				every_country = {
+					limit = {
+						any_owned_state = {
+							OR = {
+								is_on_continent = south_america
+								is_on_continent = north_america
+							}
+						}
+					}
+					news_event = { 
+						id = south_american_news.50 
+						hours = 1 
+					}
+				}
+			
+			retire_country_leader = yes
+				MGU_getulio_vargas = { 
+					add_country_leader_role = {
+						country_leader = {
+							ideology = despotism
+							expire = "1965.1.1.1"
+							traits = {
+								MGU_authoritarian_populist
+							}
+						}
+					}
+					promote_leader = yes 
+				}
+			}
+			set_politics = {
+				ruling_party = neutrality
+				last_election = "1934.3.26"
+				election_frequency = 48
+				elections_allowed = no
+			}
+			hidden_effect = {
+				retire_country_leader = yes
+			}
+			remove_dynamic_modifier = {
+				modifier = MGU_aftermath_of_the_coup
+			}
+			add_dynamic_modifier = {
+				modifier = MGU_estado_novo_modifier
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_cohen_plan
+		icon = GFX_focus_BRA_cohen_plan 
+		prerequisite = { focus = MGU_ensure_continued_military_support focus = MGU_work_with_the_integralists }
+		x = 0
+		y = 2
+		relative_position_id = MGU_tribunal_de_seguranca_nacional
+		cost = 10
+		available = {
+			OR = {
+				fascism > 0.50
+				neutrality > 0.50
+			}
+		}
+
+		cancel_if_invalid = no
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_cohen_plan_tt
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MGU_the_polaca
+		icon = GFX_focus_BRA_the_polaca
+		prerequisite = { focus = MGU_estado_novo }
+		x = 0
+		y = 1
+		relative_position_id = MGU_estado_novo
+		cost = 10
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_estado_novo_ns_intro
+			add_to_variable = { MGU_estado_novo_neutrality_factor = 0.1 tooltip = neutrality_drift_factor_tt }
+			remove_dynamic_modifier = { modifier = MGU_weak_government }
+		}
+	}
+
+	focus = {
+		id = MGU_anaue
+		icon = GFX_focus_BRA_anaue
+		prerequisite = { focus = MGU_estado_moderno }
+		x = 0
+		y = 1
+		relative_position_id = MGU_estado_moderno
+		cost = 10
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_ideas = MGU_anaue_idea
+			custom_effect_tooltip = MGU_anaue_tt
+			hidden_effect = {
+				#set_variable = { MGU_green_shirt_division_cap = 0 }
+				#set_variable = { MGU_max_green_shirt_division_cap = 10 }
+				##add_to_variable = { MGU_green_shirt_division_cap = 1 }
+				#clamp_variable = {
+				#	var = MGU_green_shirt_division_cap
+				#	min = 0 
+				#	max = MGU_max_green_shirt_division_cap
+				#}
+			
+				division_template = {
+					name = "Integralist Militia"		
+					#division_names_group = SWE_BS_01
+					is_locked = yes
+					#force_allow_recruiting = yes
+					template_counter = 89
+					# Note: Represents brownshirts
+					regiments = {
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 1 y = 0 }
+						militia = { x = 1 y = 1 }
+					}
+					#division_cap = 0
+					override_model = MGU_militia_alt_1_entity
+				}
+				#set_division_template_cap = { 
+				#	division_template = "Integralist Militia" 
+				#	division_cap = MGU_green_shirt_division_cap   
+				#}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_autarky
+		icon = GFX_focus_BRA_autarky
+		prerequisite = { focus = MGU_the_polaca focus = MGU_anaue }
+		x = 0
+		y = 2
+		relative_position_id = MGU_the_polaca
+
+		cost = 5
+		available = {
+			num_of_factories > 25
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			#add_ideas = GER_autarky_idea
+			IF = {
+				limit = { has_dynamic_modifier = { modifier = MGU_estado_novo_modifier } }
+				custom_effect_tooltip = MGU_modify_estado_novo_ns_intro
+				add_to_variable = {
+					MGU_estado_novo_production_speed_arms_factory_factor = 0.05
+					tooltip = production_speed_arms_factory_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_novo_production_speed_dockyard_factor = 0.05
+					tooltip = production_speed_dockyard_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_novo_production_speed_industrial_complex_factor = 0.05
+					tooltip = production_speed_industrial_complex_factor_tt
+				}
+			}
+			ELSE = {
+				custom_effect_tooltip = MGU_modify_estado_moderno_ns_intro
+				add_to_variable = {
+					MGU_estado_moderno_production_speed_arms_factory_factor = 0.05
+					tooltip = production_speed_arms_factory_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_moderno_production_speed_dockyard_factor = 0.05
+					tooltip = production_speed_dockyard_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_moderno_production_speed_industrial_complex_factor = 0.05
+					tooltip = production_speed_industrial_complex_factor_tt
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_corporatism
+		icon = GFX_focus_ICE_state_corporatism
+		prerequisite = { focus = MGU_anaue focus = MGU_the_polaca}
+
+		x = 0
+		y = 2
+		relative_position_id = MGU_anaue
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			num_of_factories > 25
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			IF = {
+				limit = { has_dynamic_modifier = { modifier = MGU_estado_novo_modifier } }
+				custom_effect_tooltip = MGU_modify_estado_novo_ns_intro
+				add_to_variable = {
+					MGU_estado_novo_production_factory_max_efficiency_factor = 0.05
+					tooltip = production_factory_max_efficiency_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_novo_consumer_goods_factor = -0.05
+					tooltip = consumer_goods_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_novo_industrial_capacity_dockyard = 0.05
+					tooltip = industrial_capacity_dockyard_tt
+				}
+			}
+			ELSE = {
+				custom_effect_tooltip = MGU_modify_estado_moderno_ns_intro
+				add_to_variable = {
+					MGU_estado_moderno_production_factory_max_efficiency_factor = 0.05
+					tooltip = industrial_capacity_factory_tt
+				}
+				add_to_variable = {
+					MGU_estado_moderno_consumer_goods_factor = -0.05
+					tooltip = consumer_goods_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_moderno_industrial_capacity_dockyard = 0.05
+					tooltip = industrial_capacity_dockyard_tt
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_departamendo_de_propaganda
+		icon = GFX_focus_BRA_department_of_propaganda
+		prerequisite = { focus = MGU_autarky focus = MGU_corporatism }
+		x = 0
+		y = 1
+		relative_position_id = MGU_autarky
+		cost = 5
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			add_ideas = MGU_propaganda_idea
+		}
+	}
+
+	focus = {
+		id = MGU_departamento_de_ordem_politica_e_social
+		icon = GFX_focus_SWI_embrace_rote_drei
+		prerequisite = { focus = MGU_corporatism focus = MGU_autarky  }
+		x = 0
+		y = 1
+		relative_position_id = MGU_corporatism
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+		
+			IF = {
+				limit = {
+					has_dlc = "La Resistance"
+				}
+				#create_intelligence_agency = yes
+				create_intelligence_agency = { 
+					name = "Departamento de Ordem"
+					icon = GFX_intelligence_agency_logo_MGU_neutrality
+				}
+				upgrade_intelligence_agency = upgrade_passive_defense 
+			}
+			ELSE = {
+				add_ideas = MGU_departamento_de_political_e_social_no_lar
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_tech_slot_1
+		icon = GFX_focus_research
+		prerequisite = { focus = MGU_departamento_de_ordem_politica_e_social  focus = MGU_departamendo_de_propaganda }
+		x = 0
+		y = 6
+		relative_position_id = MGU_cohen_plan
+		cost = 10
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+		amount_research_slots < 5
+		}
+
+		search_filters = { FOCUS_FILTER_RESEARCH }
+
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = MGU_ban_political_parties
+		icon = GFX_focus_BRA_ban_communist_party
+		prerequisite = { focus = MGU_the_polaca }
+		x = -4
+		y = 1
+		relative_position_id = MGU_the_polaca
+		cost = 5
+		ai_will_do = {
+			factor = 30
+		}
+		available = {
+			neutrality > 0.6
+			has_stability > 0.6
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL}
+
+		completion_reward = {
+			IF = {
+				limit = {
+					fascism > 0.4
+				}
+				start_civil_war = {
+					ideology = fascism #SPLITTING TAG
+					size = party_popularity@fascism
+				}
+				hidden_effect = {
+					set_popularities = {
+						fascism = 0
+					}
+				}
+			}
+			ELSE_IF = {
+				limit = {
+					communism > 0.4
+				}
+				start_civil_war = {
+					ideology = communism #SPLITTING TAG
+					size = party_popularity@communism
+				}
+				hidden_effect = {
+					set_popularities = {
+						communism = 0
+					}				
+				}
+			}
+			ELSE_IF = {
+				limit = {
+					democratic > 0.4
+				}
+				start_civil_war = {
+					ideology = democratic #SPLITTING TAG
+					size = party_popularity@democratic
+				}
+				hidden_effect = {
+					set_popularities = {
+						democratic = 0
+					}				
+				}
+			}
+			custom_effect_tooltip = MGU_modify_estado_novo_ns_intro
+			add_to_variable = {
+				MGU_estado_novo_fascism_factor = -0.2
+				tooltip = fascism_drift_factor_tt
+			}
+			add_to_variable = {
+				MGU_estado_novo_democratic_factor = -0.2
+				tooltip = democratic_drift_factor_tt
+			}
+			add_to_variable = {
+				MGU_estado_novo_communism_factor = -0.2
+				tooltip = communism_drift_factor_tt
+			}
+			add_to_variable = {
+				MGU_estado_novo_stability_factor = 0.1
+				tooltip = stability_factor_tt
+			}
+		}
+	}
+
+
+	focus = {
+		id = MGU_establish_psad
+		icon = GFX_focus_generic_improve_the_administration
+		prerequisite = { focus = MGU_the_polaca }
+		x = -2
+		y = 1
+		relative_position_id = MGU_the_polaca
+		cost = 5
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+			num_of_factories > 25
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			add_ideas = MGU_psad_idea
+		}
+	}
+
+	focus = {
+		id = MGU_decree_no_37
+		icon = GFX_focus_BRA_decree_number_37
+		prerequisite = { focus = MGU_establish_psad focus = MGU_ban_political_parties }
+		x = 0
+		y = 1
+		relative_position_id = MGU_ban_political_parties
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+			has_civil_war = no
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			remove_ideas = MGU_separatism_idea
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MGU_federal_employment_plan
+		icon = GFX_focus_generic_hydroelectric_energy
+		prerequisite = { focus = MGU_establish_psad focus = MGU_ban_political_parties }
+		x = 0
+		y = 1
+		relative_position_id = MGU_establish_psad
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			NOT = {
+				has_civil_war = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_estado_novo_ns_intro
+			add_to_variable = { MGU_estado_novo_recruitable_population_factor = -0.02 tooltip = conscription_factor_tt}
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_reward_army_loyalty
+		icon = GFX_goal_generic_military_sphere
+		prerequisite = { focus = MGU_decree_no_37 focus = MGU_federal_employment_plan }
+		x = 1
+		y = 2
+		relative_position_id = MGU_decree_no_37
+		cost = 10
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = MGU_army_reward
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_depose_vargas
+		icon = GFX_focus_generic_military_mission
+		prerequisite = { focus = MGU_reward_army_loyalty }
+		x = 2
+		y = 1
+		relative_position_id = MGU_reward_army_loyalty
+		cost = 5
+		available = {
+			has_stability > 0.7
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			#retire_country_leader = yes
+			MGU_eurico_gaspar_dutra = {
+				add_country_leader_role = {
+					country_leader = {
+						ideology = moderatism
+						expire = "1965.1.1.1"
+						traits = { war_industrialist }
+					}
+				} 
+				promote_leader = yes
+			}
+			hidden_effect = {
+				retire_country_leader = yes
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_secure_our_borders
+		icon = GFX_focus_BRA_secure_our_borders
+		prerequisite = { focus = MGU_reward_army_loyalty focus = MGU_restoration_of_honor }
+
+		x = 0
+		y = 3
+		relative_position_id = MGU_reward_army_loyalty
+		cost = 10
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+			OR = {
+				has_war_support > 0.6
+				has_war = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			add_timed_idea = { 
+				idea = MGU_secure_our_borders_idea
+				days = 1460
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_reject_cosmopolitanism
+		icon = GFX_focus_BRA_reject_cosmopolitanism
+		prerequisite = { focus = MGU_anaue }
+		x = 2
+		y = 1
+		relative_position_id = MGU_anaue
+		cost = 10
+		ai_will_do = {
+			factor = 9
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_MANPOWER }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_estado_moderno_ns_intro
+			add_to_variable = { 
+				MGU_estado_moderno_stability_factor = -0.05 
+				tooltip = stability_factor_tt
+			}
+			add_to_variable = {
+				MGU_estado_moderno_war_support_factor = 0.1
+				tooltip = war_support_factor_tt
+			}
+			add_to_variable = {
+				MGU_estado_moderno_recruitable_population_factor = 0.03
+				tooltip = conscription_factor_tt
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_departamento_feminino
+		icon = GFX_focus_SOV_womens_fascist_movement
+		prerequisite = { focus = MGU_anaue }
+		x = 4
+		y = 1
+		relative_position_id = MGU_anaue
+		cost = 10
+		ai_will_do = {
+			factor = 11
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_MANPOWER }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_estado_moderno_ns_intro
+			add_to_variable = { MGU_estado_moderno_recruitable_population_factor = 0.1 tooltip = conscription_factor_tt }
+			add_to_variable = { MGU_estado_moderno_stability_factor = -0.05 tooltip = stability_factor_tt }
+		}
+	}
+
+	focus = {
+		id = MGU_in_vargas_we_trust
+		icon = GFX_focus_BRA_tribunal
+		prerequisite = { focus = MGU_reject_cosmopolitanism focus = MGU_departamento_feminino }
+		#mutually_exclusive = { focus = MGU_integrity_of_the_fatherland }
+		x = 0
+		y = 1
+		relative_position_id = MGU_reject_cosmopolitanism
+		cost = 10
+		ai_will_do = {
+			factor = 2
+		}
+		available = {
+			has_country_leader = {
+				character = MGU_Satomi_Toka
+				ruling_only = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_POLITICAL_CHARACTER }
+
+		completion_reward = {
+
+			add_country_leader_trait = { 
+				trait = MGU_reluctant_integralist 
+			}
+			remove_country_leader_trait = {
+				trait = MGU_authoritarian_populist
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_integrity_of_the_fatherland
+		icon = GFX_focus_BRA_defense_of_the_fatherland 
+		prerequisite = { focus = MGU_reject_cosmopolitanism focus = MGU_departamento_feminino }
+		#mutually_exclusive = { focus = MGU_in_vargas_we_trust }
+		x = 0
+		y = 1
+		relative_position_id = MGU_departamento_feminino
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_POLITICAL_CHARACTER}
+
+		completion_reward = {
+			
+			custom_effect_tooltip = MGU_modify_estado_moderno_ns_intro
+			#retire_country_leader = yes
+		}
+	}
+
+	focus = {
+		id = MGU_brazil_integral
+		icon = GFX_focus_BRA_brazil_integral
+		prerequisite = { focus = MGU_in_vargas_we_trust focus = MGU_integrity_of_the_fatherland }
+		x = 1
+		y = 1
+		relative_position_id = MGU_in_vargas_we_trust
+		cost = 5
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+			fascism > 0.7
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+
+		completion_reward = {
+			remove_dynamic_modifier = {
+				modifier = MGU_weak_government
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_reinvigorate_the_navy
+		icon = GFX_goal_generic_navy_cruiser
+		prerequisite = { focus = MGU_brazil_integral }
+		x = -1
+		y = 1
+		relative_position_id = MGU_brazil_integral
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			any_owned_state = {
+				is_coastal = yes
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = MGU_navy_reward
+				days = 730
+			}
+			navy_experience = 20
+		}
+	}
+
+
+	#focus = {
+	#	id = MGU_internal_revolution
+	#	#icon = 
+	#	prerequisite = { focus = MGU_brazil_integral }
+	#	x = 1
+	#	y = 1
+	#	relative_position_id = MGU_brazil_integral
+	#	cost = 10
+	#	ai_will_do = {
+	#		factor = 10
+	#	}
+	#	available = {
+	#	}
+#
+	#	search_filters = { }
+#
+	#	completion_reward = {
+	#		
+	#	}
+	#}
+
+	focus = {
+		id = MGU_ethical_internationalism
+		icon = GFX_focus_BRA_ethical_internationalism
+		prerequisite = { focus = MGU_brazil_integral }
+		x = 0
+		y = 4
+		relative_position_id = MGU_brazil_integral
+		cost = 10
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			add_timed_idea = { 
+				idea = MGU_ethical_internationalism_idea
+				days = 1460
+			}
+		}
+	}
+
+	##################################
+
+	##### Industrial Branch ##### 
+
+	focus = {
+		id = MGU_coffee_crisis_aftermath
+		icon = GFX_focus_BRA_coffee_crisis
+		#prerequisite = { focus =  }
+		x = 12
+		y = 0
+		relative_position_id = MGU_tribunal_de_seguranca_nacional
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+
+		offset = {
+			x = -33
+			y = 0
+			trigger = {
+				has_game_rule = {
+					rule = obsolete_focus_branches_visibility
+					option = HIDE
+				}
+				has_completed_focus = MGU_prepare_for_second_intentona 
+			}
+		}
+
+		offset = {
+			x = -15
+			y = 0
+			trigger = {
+				has_game_rule = {
+					rule = obsolete_focus_branches_visibility
+					option = HIDE
+				}
+				has_completed_focus = MGU_end_the_state_of_emergency 
+			}
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_economy_intro
+			add_to_variable = {
+				MGU_economy_industrial_capacity_factor = 0.05
+				tooltip = industrial_capacity_factory_tt
+			}
+			add_to_variable = {
+				MGU_economy_production_efficiency_gain_factor = 0.05
+				tooltip = production_factory_efficiency_gain_factor_tt
+			}
+			add_to_variable = {
+				MGU_economy_production_max_efficiency_factor = 0.05
+				tooltip = production_factory_max_efficiency_factor_tt
+			}
+			custom_effect_tooltip = available_industrial_concern
+			show_ideas_tooltip = MGU_departamento_nacional_do_cafe_idea
+		}
+	}
+
+	focus = {
+		id = MGU_radio_nacional
+		icon = GFX_focus_SWE_radiotjanst
+		prerequisite = { focus = MGU_coffee_crisis_aftermath  }
+		x = -1
+		y = 1
+		relative_position_id = MGU_coffee_crisis_aftermath
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL}
+
+		completion_reward = {
+			add_ideas = MGU_radio_nacional_idea
+			IF = {
+				limit = { NOT = { has_tech = radio } }
+				set_technology = { radio = 1 }
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_desenvolvimentismo
+		icon = GFX_focus_ETH_adopt_the_lira
+		prerequisite = { focus = MGU_coffee_crisis_aftermath  }
+		x = 1
+		y = 1
+		relative_position_id = MGU_coffee_crisis_aftermath
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_economy_intro
+			add_to_variable = {
+				MGU_economy_production_efficiency_gain_factor = 0.1
+				tooltip = production_factory_efficiency_gain_factor_tt
+			}
+			add_to_variable = {
+				MGU_economy_production_max_efficiency_factor = 0.1
+				tooltip = production_factory_max_efficiency_factor_tt
+			}	
+			MGU_remove_economy_modifier = yes	
+			add_tech_bonus = {
+				name = MGU_electronics_bonus
+				bonus = 0.5
+				uses = 2
+				category = electronics
+			}			
+		}
+	}
+
+	focus = {
+		id = MGU_promote_resource_extraction
+		icon = GFX_focus_generic_resource_extraction
+		prerequisite = { focus = MGU_radio_nacional focus = MGU_desenvolvimentismo }
+		x = 0
+		y = 1
+		relative_position_id = MGU_radio_nacional
+		cost = 10
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					OR = {
+						has_dynamic_modifier = { modifier = MGU_neglected_state_dynamic_modifier }	
+						has_dynamic_modifier = { modifier = MGU_growing_state_dynamic_modifier }
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				custom_effect_tooltip = MGU_modify_neglected_state
+				add_to_variable = {
+					MGU_state_development_state_resources_factor = 0.1
+					tooltip = MODIFIER_STATE_RESOURCES_FACTOR_tt
+				}
+			}
+			add_tech_bonus = {
+				name = MGU_resource_extraction_bonus
+				bonus = 0.50
+				uses = 2
+				category = excavation_tech
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_companhia_siderurgica_nacional
+		icon = GFX_focus_BRA_national_steel_company
+		prerequisite = { focus = MGU_desenvolvimentismo focus = MGU_radio_nacional  }
+		x = 0
+		y = 1
+		relative_position_id = MGU_desenvolvimentismo
+		cost = 10
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			capital_scope = {
+				add_resource = {
+					type = steel
+					amount = 24
+					#state = 662
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_stimulate_the_civilian_economy
+		icon = GFX_goal_generic_construct_civ_factory
+		prerequisite = { focus = MGU_desenvolvimentismo  }
+		x = 4
+		y = 1
+		relative_position_id = MGU_desenvolvimentismo
+		cost = 10
+		ai_will_do = {
+			factor = 18
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						state = 961
+						state = 962
+						state = 963
+						state = 964
+						state = 965
+						state = 966
+						state = 967
+						state = 968
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = MGU_industry_bonus
+				bonus = 0.5
+				uses = 2
+				category = industry
+			}			
+		}
+	}
+
+	focus = {
+		id = MGU_domestic_arms_industry
+		icon = GFX_goal_generic_construct_mil_factory
+		prerequisite = { focus = MGU_stimulate_the_civilian_economy  }
+		x = 0
+		y = 1
+		relative_position_id = MGU_stimulate_the_civilian_economy
+		cost = 10
+		ai_will_do = {
+			factor = 16
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						state = 961
+						state = 962
+						state = 963
+						state = 964
+						state = 965
+						state = 966
+						state = 967
+						state = 968
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_war_production
+		icon = GFX_focus_secret_rearmament
+		prerequisite = { focus = MGU_domestic_arms_industry  }
+		x = 0
+		y = 1
+		relative_position_id = MGU_domestic_arms_industry
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_economy_intro
+			add_to_variable = {
+				MGU_economy_industrial_capacity_factor = 0.1
+				tooltip = industrial_capacity_factory_tt
+			}	
+			MGU_remove_economy_modifier = yes
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						state = 961
+						state = 962
+						state = 963
+						state = 964
+						state = 965
+						state = 966
+						state = 967
+						state = 968
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = { #INDUSTRIAL
+		id = MGU_reach_out_to_the_great_powers
+		icon = GFX_focus_ARG_reach_out_to_the_great_powers
+		prerequisite = { focus = MGU_promote_resource_extraction focus = MGU_companhia_siderurgica_nacional }
+		x = 0
+		y = 1
+		relative_position_id = MGU_promote_resource_extraction
+		cost = 5
+		available = {
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		search_filters = { }
+
+		completion_reward = { 
+			custom_effect_tooltip = ARG_international_loan_decisions_tt
+		}
+	}
+
+	focus = {
+		id = MGU_deal_with_the_cangaceiro
+		icon = GFX_focus_BRA_deal_with_the_cangaco
+		prerequisite = { focus = MGU_radio_nacional  }
+		x = -2
+		y = 1
+		relative_position_id = MGU_radio_nacional
+		cost = 5
+		available = {
+			NOT = {
+				has_completed_focus = MGU_sway_the_cangaco
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_deal_with_the_cangaceiro_tt
+		}
+	}
+
+	focus = {
+		id = MGU_promote_immigration_to_brazil
+		icon = GFX_focus_generic_promote_SA_immigration
+		prerequisite = { focus = MGU_desenvolvimentismo  }
+		x = 2
+		y = 1
+		relative_position_id = MGU_desenvolvimentismo
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			set_country_flag = JUNO_promote_immigration_flag
+			custom_effect_tooltip = MGU_promote_immigration_to_brazil_tt
+		}
+	}
+
+	focus = {
+		id = MGU_invest_in_railways
+		icon = GFX_focus_generic_railroad
+		prerequisite = { focus = MGU_promote_resource_extraction focus = MGU_companhia_siderurgica_nacional }
+		x = -2
+		y = 1
+		relative_position_id = MGU_promote_resource_extraction
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					OR = {
+						has_dynamic_modifier = { modifier = MGU_neglected_state_dynamic_modifier }	
+						has_dynamic_modifier = { modifier = MGU_growing_state_dynamic_modifier }
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				custom_effect_tooltip = MGU_modify_neglected_state
+				add_to_variable = {
+					MGU_state_development_production_speed = 0.1
+					tooltip = MODIFIER_STATE_PRODUCTION_SPEED_BUILDINGS_FACTOR_tt
+				}
+				add_to_variable = {
+					MGU_state_development_local_factories = 0.1
+					tooltip = local_factories_tt
+				}
+			}
+			add_tech_bonus = {
+				name = MGU_invest_in_railways_bonus
+				bonus = 0.50
+				uses = 1
+				category = train_tech
+			}
+			add_timed_idea = {
+				idea = MGU_rail_investment
+				days = 730
+			}
+			IF = {
+				limit = {
+					495 = { is_owned_and_controlled_by = ROOT }
+				}
+				495 = {
+					add_building_construction = {
+						type = supply_node
+						province = 1979
+						level = 1
+						instant_build = yes
+					}
+				}
+				build_railway = {
+					level = 1
+					build_only_on_allied = yes
+					fallback = yes
+					start_province = 8189
+					target_province = 1979
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_national_petroleum_council
+		icon = GFX_focus_generic_stockpile_fuel
+		prerequisite = { focus = MGU_invest_in_railways }
+		x = 0
+		y = 1
+		relative_position_id = MGU_invest_in_railways
+		cost = 10
+		ai_will_do = {
+			factor = 19
+		}
+		available = {
+			499 = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			499 = {
+				add_extra_state_shared_building_slots = 1
+				add_resource = {
+					type = oil
+					amount = 16
+				}	
+				add_to_variable = {
+					MGU_state_development_local_building_slots_factor = 0.2
+					tooltip = MODIFIER_LOCAL_BUILDING_SLOTS_FACTOR_tt
+				}
+				add_to_variable = {
+					MGU_state_development_state_resources_factor = 0.2
+					tooltip = MODIFIER_STATE_RESOURCES_FACTOR_tt
+				}
+				set_state_flag = MGU_resource_boost
+			}
+			add_tech_bonus = {
+				name = MGU_oil_industry_bonus
+				bonus = 0.25
+				uses = 1
+				category = synth_resources
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_batalha_do_borracha
+		icon = GFX_focus_BRA_rubber_war
+		prerequisite = { focus = MGU_companhia_siderurgica_nacional focus = MGU_promote_resource_extraction }
+		x = 2
+		y = 1
+		relative_position_id = MGU_companhia_siderurgica_nacional
+		cost = 10
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 280
+						state = 505
+					}	
+				}
+				add_extra_state_shared_building_slots = 1
+				add_resource = {
+					type = rubber
+					amount = 20
+				}
+				add_to_variable = {
+					MGU_state_development_local_building_slots_factor = 0.2
+					tooltip = MODIFIER_LOCAL_BUILDING_SLOTS_FACTOR_tt
+				}
+				add_to_variable = {
+					MGU_state_development_state_resources_factor = 0.2
+					tooltip = MODIFIER_STATE_RESOURCES_FACTOR_tt
+				}
+				set_state_flag = MGU_resource_boost
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_invest_in_road_infrastructure
+		icon = GFX_focus_generic_road_investment
+		prerequisite = { 
+			focus = MGU_batalha_do_borracha 
+			focus = MGU_invest_in_railways }
+		x = 3
+		y = 1
+		relative_position_id = MGU_invest_in_railways
+		cost = 5
+		ai_will_do = {
+			factor = 8
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					OR = {
+						has_dynamic_modifier = { modifier = MGU_neglected_state_dynamic_modifier }	
+						has_dynamic_modifier = { modifier = MGU_growing_state_dynamic_modifier }
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				custom_effect_tooltip = MGU_modify_neglected_state
+				add_to_variable = {
+					MGU_state_development_production_speed = 0.1
+					tooltip = MODIFIER_STATE_PRODUCTION_SPEED_BUILDINGS_FACTOR_tt
+				}
+				add_to_variable = {
+					MGU_state_development_local_factories = 0.1
+					tooltip = local_factories_tt
+				}
+			}
+			add_timed_idea = {
+				idea = MGU_road_investment
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_invest_in_ports
+		icon = GFX_focus_POL_develop_polish_shipbuilding
+		prerequisite = { focus = MGU_national_petroleum_council  }
+		x = 0
+		y = 1
+		relative_position_id = MGU_national_petroleum_council
+		cost = 5
+		ai_will_do = {
+			factor = 9
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					OR = {
+						has_dynamic_modifier = { modifier = MGU_neglected_state_dynamic_modifier }	
+						has_dynamic_modifier = { modifier = MGU_growing_state_dynamic_modifier }
+					}
+					is_coastal = yes
+				}
+				add_extra_state_shared_building_slots = 1
+				custom_effect_tooltip = MGU_modify_neglected_state
+				add_to_variable = {
+					MGU_state_development_production_speed = 0.1
+					tooltip = MODIFIER_STATE_PRODUCTION_SPEED_BUILDINGS_FACTOR_tt
+				}
+				add_to_variable = {
+					MGU_state_development_local_factories = 0.1
+					tooltip = local_factories_tt
+				}
+			}
+			add_timed_idea = {
+				idea = MGU_port_investment
+				days = 730
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_fabrica_nacional_de_motores
+		icon = GFX_focus_BRA_fabrica_national_de_motores
+		prerequisite = { focus = MGU_invest_in_road_infrastructure  }
+		x = -1
+		y = 2
+		relative_position_id = MGU_invest_in_road_infrastructure
+		#mutually_exclusive = { focus = MGU_expand_fordlandia }
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+				IF = {
+					limit = {
+						NOT = { has_completed_focus = SMB_motorized }
+					}
+					custom_effect_tooltip = available_mio_tt
+					show_mio_tooltip = MGU_fnm_organization
+				}
+				mio:MGU_fnm_organization = {
+					add_mio_size = 3
+				}
+
+			}
+			ELSE = {
+				add_tech_bonus = {
+					name = MGU_nacional_de_motores_bonus
+					bonus = 0.50
+					uses = 2
+					category = motorized_equipment
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_expand_fordlandia
+		icon = GFX_focus_SWE_lynx_armored_car
+		prerequisite = { focus = MGU_invest_in_road_infrastructure  }
+		x = 1
+		y = 2
+		relative_position_id = MGU_invest_in_road_infrastructure
+		#mutually_exclusive = { focus = MGU_fabrica_nacional_de_motores }
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			USA = {
+				NOT = { 
+					has_government = communism
+				}
+			}
+			NOT = {
+				#OR = {
+					has_government = communism
+					has_war_with = USA
+				#}
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			938 = {
+				add_resource = {
+					type = rubber
+					amount = 10
+				}
+				add_extra_state_shared_building_slots = 1
+				add_victory_points = {
+					province = 2035
+					value = 1
+				}
+			}
+			hidden_effect = {
+				set_province_name = {
+					id = 2035
+					name = MGU_fordlandia_name
+				}
+			}
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+				custom_effect_tooltip = available_mio_tt
+				show_mio_tooltip = USA_ford_motor_company_organization
+				mio:USA_ford_motor_company_organization = {
+					add_mio_size = 2
+				}
+			}
+			ELSE = {
+				add_tech_bonus = {
+					name = MGU_nacional_de_motores_bonus
+					bonus = 0.75
+					uses = 1
+					category = motorized_equipment
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_bonus_tech_slot
+		icon = GFX_focus_research
+		prerequisite = { focus = MGU_invest_in_road_infrastructure  }
+		x = 0
+		y = 1
+		relative_position_id = MGU_invest_in_road_infrastructure
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			#num_of_factories > 50
+			amount_research_slots < 5
+		}
+		search_filters = { FOCUS_FILTER_RESEARCH }
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = MGU_banco_do_brasil
+		icon = GFX_focus_BRA_banco_do_brasil
+		prerequisite = { focus = MGU_batalha_do_borracha 
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_batalha_do_borracha
+		cost = 5
+		ai_will_do = {
+			factor = 7
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_economy_intro
+			add_to_variable = {
+				MGU_economy_industrial_capacity_factor = 0.05
+				tooltip = industrial_capacity_factory_tt
+			}
+			add_to_variable = {
+				MGU_economy_production_efficiency_gain_factor = 0.05
+				tooltip = production_factory_efficiency_gain_factor_tt
+			}
+			add_to_variable = {
+				MGU_economy_production_max_efficiency_factor = 0.05
+				tooltip = production_factory_max_efficiency_factor_tt
+			}
+			
+			custom_effect_tooltip = available_industrial_concern
+			show_ideas_tooltip = MGU_banco_do_brasil_idea			
+		}
+	}
+
+	focus = {
+		id = MGU_federal_development
+		icon = GFX_focus_generic_agricultural_subsidies
+		prerequisite = { focus = MGU_banco_do_brasil  }
+		x = -1
+		y = 1
+		relative_position_id = MGU_banco_do_brasil
+		##mutually_exclusive = { focus = MGU_centralize_development }
+		cost = 5
+		available = {
+		}
+		ai_will_do = {
+			factor = 5
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					OR = {
+						has_dynamic_modifier = { modifier = MGU_neglected_state_dynamic_modifier }	
+						has_dynamic_modifier = { modifier = MGU_growing_state_dynamic_modifier }
+					}
+				}
+				custom_effect_tooltip = MGU_modify_neglected_state
+				add_to_variable = {
+					MGU_state_development_production_speed = 0.1
+					tooltip = MODIFIER_STATE_PRODUCTION_SPEED_BUILDINGS_FACTOR_tt
+				}
+				add_to_variable = {
+					MGU_state_development_local_factories = 0.1
+					tooltip = local_factories_tt
+				}
+				add_to_variable = {
+					MGU_state_development_local_building_slots_factor = 0.1
+					tooltip = MODIFIER_LOCAL_BUILDING_SLOTS_FACTOR_tt
+				}
+				add_to_variable = {
+					MGU_state_development_state_resources_factor = 0.1
+					tooltip = MODIFIER_STATE_RESOURCES_FACTOR_tt
+				}
+			}
+			MGU_remove_economy_modifier = yes
+		}
+	}
+
+	focus = {
+		id = MGU_centralize_development
+		icon = GFX_focus_BRA_new_capital
+		prerequisite = { focus = MGU_banco_do_brasil  }
+		x = 1
+		y = 1
+		relative_position_id = MGU_banco_do_brasil
+		##mutually_exclusive = { focus = MGU_federal_development }
+		cost = 5
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_centralize_development_tt
+			set_capital = {
+				state = 505
+				remember_old_capital = no
+			}
+			505 = {
+				add_victory_points = {
+					province = 8140
+					value = 10
+				}
+				add_dynamic_modifier = { modifier = MGU_new_capital_modifier }
+				add_building_construction = {
+					type = supply_node
+					province = 8140
+					level = 1
+					instant_build = yes
+				}	
+				build_railway = {
+					level = 1
+					build_only_on_allied = yes
+					fallback = yes
+					start_province = 12977
+					target_province = 8140
+				}			
+			}
+			hidden_effect = {
+				set_province_name = { id = 8140 name = MGU_new_capital }
+			}
+			#500 = {
+			#	add_victory_points = {
+			#		province = 10980
+			#		value = -5
+			#	}
+			#}
+		}
+	}
+
+	focus = {
+		id = MGU_financial_stimulation
+		icon = GFX_focus_BRA_growth
+		prerequisite = { focus = MGU_centralize_development focus = MGU_federal_development  }
+		x = 0
+		y = 2
+		relative_position_id = MGU_banco_do_brasil
+		cost = 5
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			unlock_decision_tooltip = MGU_federal_investment_in_rural_state
+			custom_effect_tooltip = MGU_financial_stimulation_tt
+		}
+	}
+
+	##############################################
+
+	##### Cooperation in the Americas Branch #####
+
+	focus = {
+		id = MGU_cooperation_in_the_americas
+		icon = GFX_focus_BRA_good_neighbor_policy
+		#mutually_exclusive = { focus = MGU_domination_of_the_americas }
+		prerequisite = { 
+			focus = MGU_secure_our_borders 
+			focus = MGU_the_international_crisis
+		}
+		x = -10
+		y = 1
+		relative_position_id = MGU_secure_our_borders
+		cost = 5
+		ai_will_do = {
+			factor = 30
+			modifier = {
+				factor = 5
+				has_completed_focus = MGU_reward_army_loyalty
+			}
+		}
+		available = {
+			OR = {
+				has_government = democratic
+				has_government = neutrality
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			add_political_power = 100
+			every_other_country = {
+				limit = {
+					capital_scope = {
+						is_on_continent = south_america
+					}
+					NOT = {
+						has_war_with = ROOT
+					}
+				}
+				country_event = {
+					id = JUNO_brazil_events.14
+					hours = 1
+				}
+				event_option_tooltip = JUNO_brazil_events.14.a
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_defense_spending
+		icon = GFX_focus_BRA_for_the_fatherland
+		prerequisite = { 
+			focus = MGU_cooperation_in_the_americas 
+			#focus = MGU_the_international_crisis
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_cooperation_in_the_americas
+		cost = 10
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+			any_country = {
+				has_war = yes
+				has_civil_war = no
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0 
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				} 
+			}
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = dockyard
+						size > 0 
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					is_coastal = yes
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				} 
+			}
+
+			add_timed_idea = {
+				idea = MGU_national_defence_fund_idea
+				days = 360
+			}
+
+		}
+	}
+
+	#focus = {
+	#	id = MGU_rio_conference
+	#	#icon = 
+	#	prerequisite = { 
+	#		focus = MGU_reach_out_to_our_neighbors 
+	#		#focus = MGU_the_international_crisis
+	#	}
+	#	x = 0
+	#	y = 1
+	#	relative_position_id = MGU_reach_out_to_our_neighbors
+	#	cost = 5
+	#	ai_will_do = {
+	#		factor = 5
+	#	}
+	#	available = {
+	#	}
+	#	search_filters = { }
+	#	completion_reward = {
+	#		every_other_country	= {
+	#			limit = {
+	#				capital_scope = {
+	#					is_on_continent = south_america
+	#					is_core_of = PREV
+	#				}
+	#				NOT = {
+	#					has_war_with = FROM
+	#				}
+	#			}
+	#			country_event = {
+	#				id = JUNO_brazil_events.80
+	#				hours = 1
+	#			}
+	#		}
+	#	}
+	#}
+
+	#focus = {
+	#	id = MGU_organization_of_american_unity
+	#	#icon = 
+	#	prerequisite = { 
+	#		focus = MGU_cooperation_in_the_americas 
+	#		#focus = MGU_the_international_crisis
+	#	}
+	#	x = 6
+	#	y = 1
+	#	relative_position_id = MGU_cooperation_in_the_americas
+	#	cost = 5
+	#	ai_will_do = {
+	#		factor = 5
+	#	}
+	#	available = {
+	#		is_in_faction = no
+	#	}
+	#	search_filters = { }
+	#	completion_reward = {
+	#		custom_effect_tooltip = MGU_organization_of_american_unity_tt
+	#		custom_effect_tooltip = MGU_org_american_unity_warning_tt
+	#		add_ideas = SMB_organization_of_american_states_member
+	#	}
+	#}
+
+
+	focus = {
+		id = MGU_reach_out_to_our_neighbors
+		icon = GFX_focus_BRA_north_and_south_america
+		prerequisite = { 
+			focus = MGU_cooperation_in_the_americas 
+			#focus = MGU_the_international_crisis
+		}
+		x = 2
+		y = 1
+		relative_position_id = MGU_cooperation_in_the_americas
+		cost = 5
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 0
+				is_in_faction = yes
+			}
+		}
+		available = {
+			is_subject = no
+			is_in_faction = no
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			set_rule = {
+				can_create_factions = yes
+			}
+			create_faction = MGU_org_american_states_faction
+		}
+	}
+
+	focus = {
+		id = MGU_south_american_defense_cooperation
+		icon = GFX_focus_generic_little_entente
+		prerequisite = { 
+			focus = MGU_reach_out_to_our_neighbors 
+			#focus = MGU_the_international_crisis
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_reach_out_to_our_neighbors
+		cost = 5
+		bypass = {
+		}
+		available = {
+			is_in_faction = yes
+			OR = {
+				has_government = democratic
+				has_government = neutrality
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					NOT = {
+						has_completed_focus = MGU_reach_out_to_our_neighbors
+					}
+				}
+				custom_effect_tooltip = MGU_south_american_defense_cooperation_tt
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = ROOT
+					capital_scope = {
+						is_on_continent = south_america
+						is_core_of = PREV
+					}
+				}
+				every_army_leader = {
+					random_list = {
+						10 = {
+							modifier = {
+								factor = 0
+								has_trait = ranger
+							}
+							add_trait = { trait = ranger }
+						}
+						10 = {
+							modifier = {
+								factor = 0
+								has_trait = jungle_rat
+							}
+							add_trait = { trait = jungle_rat }
+						}
+						10 = {
+							modifier = {
+								factor = 0
+								has_trait = trait_mountaineer 
+							}
+							add_trait = { trait = trait_mountaineer  }
+						}
+						10 = {
+							modifier = {
+								factor = 0
+								has_trait = hill_fighter
+							}
+							add_trait = { trait = hill_fighter }
+						}
+						10 = {
+							modifier = {
+								factor = 0
+								has_trait = desert_fox
+							}
+							add_trait = { trait = desert_fox }
+						}
+						50 = {
+							#do nothing
+						}
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_foreign_legion
+		icon = GFX_focus_generic_manpower
+		prerequisite = { 
+			focus = MGU_reach_out_to_our_neighbors 
+			#focus = MGU_the_international_crisis
+		}
+		x = 2
+		y = 1
+		relative_position_id = MGU_reach_out_to_our_neighbors
+		cost = 5
+		bypass = {
+		}
+		available = {
+			#is_in_faction = yes
+			OR = {
+				has_government = democratic
+				has_government = neutrality
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			division_template = {
+				name = "Legião Estrangeira"
+				#division_names_group = MGU_FL_01
+				is_locked = yes
+				force_allow_recruiting = yes
+				#division_cap = 6
+				template_counter = 03
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+					infantry = { x = 1 y = 2 }
+				}
+				support = {
+					engineer = { x = 0 y = 0 }
+					artillery = { x = 0 y = 1 }
+				}
+				override_model = FRA_infantry_entity
+			}
+			custom_effect_tooltip = MGU_foreign_legion_tt
+			hidden_effect = {
+				capital_scope = {
+					create_unit = {
+						division = "division_template =\"Legião Estrangeira\" start_experience_factor = 0.2 start_equipment_factor	= 1.0"
+						owner = ROOT
+						count = 3
+					} 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_south_american_research_cooperation
+		icon = GFX_goal_tfv_generic_tech_sharing
+		prerequisite = { 
+			focus = MGU_south_american_defense_cooperation 
+			#focus = MGU_the_international_crisis
+		}
+		#mutually_exclusive = { focus = MGU_us_brazil_technology_exchange }
+		x = 0
+		y = 1
+		relative_position_id = MGU_south_american_defense_cooperation
+		cost = 5
+		bypass = {
+		}
+		available = {
+			is_in_faction = yes
+			OR = {
+				has_government = democratic
+				has_government = neutrality
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			every_other_country = {
+				limit = {
+					is_in_faction_with = ROOT
+					capital_scope = {
+						is_on_continent = south_america
+						is_core_of = PREV
+					}
+				}
+				country_event = {
+					id = JUNO_brazil_events.120
+					hours = 1
+				}
+			}
+			custom_effect_tooltip = MGU_south_american_tech_sharing_group_tt
+			effect_tooltip = {
+				add_to_tech_sharing_group = MGU_south_american_tech_sharing_group
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_washington_accords
+		icon = GFX_focus_chi_mission_to_the_us
+		prerequisite = { 
+			focus = MGU_cooperation_in_the_americas 
+		}
+		x = -2
+		y = 1
+		relative_position_id = MGU_cooperation_in_the_americas
+		cost = 5
+		ai_will_do = {
+			factor = 20
+		}
+		available = {	
+			any_other_country = {
+				original_tag = USA
+				has_war_with_major = yes
+				has_government = democratic
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+			NOT = {
+				is_in_faction = yes
+			}
+		}
+
+		bypass = {
+			is_in_faction_with = USA
+		}
+		cancel_if_invalid = yes
+
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			every_other_country = {
+				limit = {
+					original_tag = USA
+					has_war_with_major = yes
+					has_government = democratic
+				}
+				country_event = {
+					id = JUNO_brazil_events.15
+					hours = 1
+				}
+			}
+			custom_effect_tooltip = MGU_washington_accords_tt
+			event_option_tooltip = JUNO_brazil_events.16.a
+		}
+	}
+
+	focus = {
+		id = MGU_disrupt_operation_bolivar
+		icon = GFX_focus_BRA_disrupt_bolivar
+		prerequisite = { 
+			focus = MGU_defense_spending
+		}
+		relative_position_id = MGU_defense_spending
+		x = 0
+		y = 1
+		
+		cost = 10
+		available = {
+			any_country = {
+				original_tag = GER
+				NOT = {
+					has_government = BRA
+				}
+			}
+			has_intelligence_agency = yes
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					has_dlc = "La Resistance"
+				}
+				add_ideas = MGU_disrupt_bolivar_LaR
+			}
+			ELSE = {
+				add_ideas = MGU_disrupt_bolivar_no_lar
+			}
+			GER = {
+				country_event = {
+					id = JUNO_brazil_events.13
+					hours = 1
+				}
+				event_option_tooltip = JUNO_brazil_events.13.a
+			}
+
+		}
+	}
+
+	focus = {
+		id = MGU_potenji_river_conference
+		icon = GFX_focus_BRA_rio_protocol
+		prerequisite = { 
+			focus = MGU_washington_accords 
+			#focus = MGU_the_international_crisis
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_washington_accords
+		cost = 10
+		bypass = {
+			is_in_faction_with = USA
+		}
+		available = {
+			is_subject = no
+			USA = {
+				OR = {
+					has_war = yes
+					is_in_faction = yes
+				}
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			USA = {
+				country_event = {
+					id = JUNO_brazil_events.20
+					hours = 1
+				}
+				faction_leader = {
+					add_to_faction = ROOT
+				}
+			}
+			custom_effect_tooltip = MGU_potenji_river_conference_tt
+			every_other_country = {
+				limit = {
+					has_war_with = USA
+					is_major = yes
+				}
+				ROOT = {
+					add_to_war = {
+					    targeted_alliance = USA
+					    enemy = PREV
+					    hostility_reason = asked_to_join
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_natal_naval_base
+
+		icon = GFX_focus_generic_air_bases
+
+		prerequisite = { 
+			focus = MGU_washington_accords 
+			#focus = MGU_the_international_crisis
+		}
+
+		x = -2
+		y = 1
+
+		relative_position_id = MGU_washington_accords
+
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+
+			USA = {
+				exists = yes 
+			}
+
+			NOT = {
+				has_war_with = USA
+			}
+
+			USA = {
+				has_war = yes
+			}
+
+			498 = {
+				is_owned_and_controlled_by = ROOT
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+
+			IF = {
+				limit = {
+					USA = {
+						NOT = {
+							has_military_access_to = ROOT
+						}
+					}
+				}
+				ROOT = {
+					give_military_access = USA
+				}
+				USA = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = natal_airbase_modifier
+					}
+				}
+			}
+
+			IF = {
+				limit = {
+					ENG = {
+						NOT = {
+							has_military_access_to = ROOT
+						}
+						is_in_faction_with = USA
+					}
+				}
+				ROOT = {
+					give_military_access = ENG
+				}
+				ENG = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = natal_airbase_modifier
+					}
+				}
+			}
+
+			# TODO, might be a different state later?
+			IF = {
+				limit = {
+					498 = {
+						free_building_slots = {
+							building = air_base
+							size > 2 
+							include_locked = yes
+						}
+					}
+				}
+				498 = {
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = air_base
+						level = 3
+						instant_build = yes
+					} 
+				}
+				ELSE_IF = {
+					limit = {
+						498 = {
+							free_building_slots = {
+								building = air_base
+								size > 1 
+								include_locked = yes
+							}
+						}
+					}
+					498 = {
+						add_extra_state_shared_building_slots = 2
+						add_building_construction = {
+							type = air_base
+							level = 2
+							instant_build = yes
+						} 
+					}
+				}
+				ELSE_IF = {
+					limit = {
+						498 = {
+							free_building_slots = {
+								building = air_base
+								size > 0 
+								include_locked = yes
+							}
+						}
+					}
+					498 = {
+						add_extra_state_shared_building_slots = 2
+						add_building_construction = {
+							type = air_base
+							level = 1
+							instant_build = yes
+						} 
+					}
+				}
+			}
+
+			add_tech_bonus = {
+				name = JUNO_natal_base_sharing
+				bonus = 0.5
+				uses = 2
+				category = air_equipment
+			}
+
+		}
+	}
+
+
+	focus = {
+		id = MGU_smoking_cobras
+		icon = GFX_focus_BRA_cobras_fumantes
+		prerequisite = { 
+			focus = MGU_washington_accords 
+			#focus = MGU_the_international_crisis
+		}
+		x = -4
+		y = 1
+		relative_position_id = MGU_washington_accords
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			is_in_faction_with = USA
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+				add_equipment_subsidy = {
+					cic = 1000
+					equipment_type = infantry_equipment
+					seller_tags = { USA } 
+				}
+				add_equipment_subsidy = {
+					cic = 1000
+					equipment_type = artillery_equipment
+					seller_tags = { USA } 
+				}
+			}
+			add_equipment_to_stockpile = { 
+				type = infantry_equipment
+				amount = 4000
+				producer = USA
+			}
+		}
+	}
+
+
+	focus = {
+		id = MGU_no_fascism_in_south_america
+		icon = GFX_focus_generic_anti_fascist_diplomacy
+		prerequisite = { 
+			focus = MGU_cooperation_in_the_americas 
+			#focus = MGU_the_international_crisis
+		}
+		x = -4
+		y = 1
+		relative_position_id = MGU_cooperation_in_the_americas
+		cost = 10
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			NOT = {
+				USA = {
+					has_government = fascism
+				}
+			}
+			any_country = {
+				capital_scope = {
+					is_on_continent = south_america
+				}
+				has_government = fascism
+				NOT = {
+					OR = {
+						original_tag = ELS
+						original_tag = MEX
+						original_tag = DOM
+						original_tag = PAN
+					}
+				}
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			hidden_effect = {
+				every_other_country = {
+					limit = {
+						capital_scope = {
+							is_on_continent = south_america
+						}
+						has_government = fascism
+						NOT = {
+							OR = {
+								original_tag = ELS
+								original_tag = MEX
+								original_tag = DOM
+								original_tag = PAN
+							}
+						}
+					}
+					ROOT = {
+						create_wargoal = {
+							type = puppet_wargoal_focus
+							target = PREV
+							expire = 0
+						}
+					}
+				}
+			}
+			custom_effect_tooltip = MGU_no_fascism_in_south_america_tt
+		} 
+	}
+
+	focus = {
+		id = MGU_senta_a_pua
+		icon = GFX_focus_BRA_senta_a_pua
+		prerequisite = { 
+			focus = MGU_natal_naval_base 
+			#focus = MGU_the_international_crisis
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_natal_naval_base
+		cost = 5
+		available = {
+			is_in_faction_with = USA
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			if = {
+				limit = {
+					has_dlc = "By Blood Alone"
+				}
+				add_equipment_to_stockpile = { 
+					type = small_plane_airframe_1
+					amount = 200
+					producer = USA
+				}
+			}
+			else = {
+				add_equipment_to_stockpile = { 
+					type = fighter_equipment_1
+					amount = 200
+					producer = USA
+				}
+			}
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+				add_equipment_subsidy = {
+					cic = 500
+					equipment_type = small_plane_airframe
+					seller_tags = { USA } 
+				}
+				add_equipment_subsidy = {
+					cic = 500
+					equipment_type = large_plane_airframe
+					seller_tags = { USA } 
+				}
+				add_equipment_subsidy = {
+					cic = 500
+					equipment_type = medium_plane_airframe
+					seller_tags = { USA } 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_no_communism_in_south_america
+		icon = GFX_goal_generic_war_with_comintern
+		prerequisite = { 
+			focus = MGU_cooperation_in_the_americas 
+			#focus = MGU_the_international_crisis
+		}
+		x = 4
+		y = 1
+		relative_position_id = MGU_cooperation_in_the_americas
+		cost = 10
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			NOT = {
+				USA = {
+					has_government = communism
+				}
+			}
+			any_country = {
+				capital_scope = {
+					is_on_continent = south_america
+				}
+				has_government = communism
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_no_communism_in_south_america_tt
+			every_country = {
+				limit = {
+					capital_scope = {
+						is_on_continent = south_america
+					}
+					has_government = communism
+				}
+				BRA = {
+					create_wargoal = {
+						type = puppet_wargoal_focus
+						target = PREV
+						expire = 0
+					} 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_us_brazil_technology_exchange
+		icon = GFX_goal_tfv_generic_tech_sharing
+		prerequisite = { 
+			focus = MGU_potenji_river_conference 
+			#focus = MGU_the_international_crisis
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_potenji_river_conference
+		#mutually_exclusive = { focus = MGU_south_american_research_cooperation }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			is_in_faction_with = USA
+		}
+
+		search_filters = { FOCUS_FILTER_RESEARCH }
+
+		completion_reward = {
+			USA = {
+				country_event = {
+					id = JUNO_brazil_events.120
+					hours = 1
+				}
+			}
+			custom_effect_tooltip = MGU_us_brazil_technology_exchange_tt
+			effect_tooltip = {
+				add_to_tech_sharing_group = MGU_USA_tech_sharing_group
+			}
+		} 
+	}
+
+
+
+
+	##############################################
+
+	##### Domination of the Americas Branch #####
+
+	focus = {
+		id = MGU_domination_of_the_americas
+		icon = GFX_focus_por_recover_latin_america
+		#mutually_exclusive = { focus = MGU_cooperation_in_the_americas }
+		prerequisite = { 
+			focus = MGU_secure_our_borders 
+			focus = MGU_ethical_internationalism
+		}
+		x = 5
+		y = 1
+		relative_position_id = MGU_secure_our_borders
+		cost = 10
+		ai_will_do = {
+			factor = 9
+			modifier = {
+				factor = 10
+				OR = {
+					has_government = fascism
+					has_completed_focus = MGU_empire_of_brazil
+				}
+			}
+		}
+		available = {
+			OR = {
+				has_government = fascism
+				has_government = neutrality
+			}
+			has_army_manpower = { size > 199999 }
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			hidden_effect = {
+				every_other_country = {
+					limit = {
+						any_controlled_state = { 
+							OR = {
+								is_on_continent = north_america
+								is_on_continent = south_america
+							}
+						}
+					}
+					news_event = {
+						id = JUNO_brazil_news.1
+						hours = 1
+					}
+				}
+			}
+			add_timed_idea = {
+				idea = MGU_defense_of_the_fatherland_idea
+				days = 720
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_berlin_accords
+		icon = GFX_focus_chi_mission_to_germany
+		prerequisite = { 
+			focus = MGU_domination_of_the_americas 
+		}
+		bypass = {
+			is_in_faction_with = GER
+		}
+		##mutually_exclusive = { focus = MGU_rome_accords }
+		x = -4
+		y = 1
+		relative_position_id = MGU_domination_of_the_americas
+		cost = 5
+		ai_will_do = {
+			factor = 20
+			modifier = {
+				factor = 0
+				has_completed_focus = MGU_rome_accords
+				GER = {
+					has_war_with = ITA
+				}
+			}
+		}
+		available = {
+			is_subject = no
+			is_in_faction = no
+			GER = {
+				OR = {
+					has_government = fascism
+					has_government = neutrality
+				}
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			add_political_power = 50
+			GER = {
+				country_event = {
+					id = JUNO_brazil_events.30
+					hours = 1
+				}
+			}
+			custom_effect_tooltip = MGU_accords_tt
+			effect_tooltip = {
+				IF = {
+					limit = {
+						GER = {
+							is_in_faction = yes
+						}
+					}
+					GER = {
+						add_to_faction = ROOT
+					}
+				}
+				ELSE = {
+					event_option_tooltip = JUNO_brazil_events.30.a
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_expand_operation_bolivar
+		icon = GFX_focus_BRA_expand_bolivar
+		prerequisite = { 
+			focus = MGU_berlin_accords 
+			focus = MGU_rome_accords
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_berlin_accords
+		cost = 10
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+			is_in_faction_with = GER
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			GER = {
+				country_event = {
+					id = JUNO_brazil_events.31
+					hours = 1
+				}
+			}
+			add_ideas = MGU_aid_operation_bolivar
+			create_operative_leader = {
+				name = "Maximilian Vogel"
+				traits = { operative_double_agent operative_infiltrator }
+				female = no
+				bypass_recruitment = yes
+				nationalities = { BRA ARG CHL}
+				GFX = GFX_portrait_europe_generic_operative_male_14
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_german_tanks
+		icon = GFX_focus_BRA_acquire_german_tanks
+		prerequisite = { 
+			focus = MGU_expand_operation_bolivar 
+		}
+		x = -1
+		y = 1
+		relative_position_id = MGU_expand_operation_bolivar
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+			GER = {
+				exists = yes
+			}
+			NOT = {
+				has_war_with = GER
+			}
+			is_in_faction_with = ROOT
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+
+			#add_tech_bonus = {
+			#	name = MGU_German_tank_exchange
+			#	bonus = 0.5
+			#	uses = 3
+			#	category = armor
+			#}	
+
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny" 
+				}
+				show_mio_tooltip = GER_daimler_benz_organization
+				mio:GER_daimler_benz_organization = {
+					add_mio_size = 2
+				}
+			}
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0 
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				} 
+			}
+
+			IF = {
+				limit = {
+					NOT = {
+						has_idea = JUNO_license_idea
+					}
+				}
+				add_ideas = JUNO_license_idea
+			}
+			IF = {
+				limit = {
+					has_dlc = "No Step Back"
+				}
+				IF = {
+					limit = {
+						NOT = {
+							has_tech = basic_medium_tank_chassis
+						}
+					}
+				}
+				set_technology = { basic_medium_tank_chassis = 1 }
+				create_equipment_variant = {
+					name = "Panzer IV Ausf. A"
+					type = medium_tank_chassis_1
+					parent_version = 1
+					modules = {
+						main_armament_slot = tank_close_support_gun
+						turret_type_slot = tank_medium_three_man_tank_turret
+						suspension_type_slot = tank_bogie_suspension
+						armor_type_slot = tank_welded_armor
+						engine_type_slot = tank_gasoline_engine
+						special_type_slot_1 = tank_radio_1
+						special_type_slot_2 = smoke_launchers
+					}
+					upgrades = {
+						tank_nsb_engine_upgrade = 6
+						tank_nsb_armor_upgrade = 2
+					}
+					icon = "GFX_GER_basic_medium_tank_medium"
+				}
+				custom_effect_tooltip = MGU_german_tanks_tt
+				add_equipment_to_stockpile = {
+					type = medium_tank_chassis_1
+					variant_name = "Panzer IV Ausf. A"
+					amount = 200
+					producer = BRA
+					#override_model = GER_medium_armor_entity
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_german_subs
+		icon = GFX_focus_BRA_german_submarine_development
+		prerequisite = { 
+			focus = MGU_expand_operation_bolivar 
+		}
+		x = 1
+		y = 1
+		relative_position_id = MGU_expand_operation_bolivar
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+			GER = {
+				exists = yes
+			}
+			NOT = {
+				has_war_with = GER
+			}
+			is_in_faction_with = ROOT
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+
+			navy_experience = 15
+
+			add_tech_bonus = {
+				name = MGU_german_sub_initiative
+				bonus = 0.75
+				uses = 1
+				category = submarine_doctrine
+			}
+
+			add_tech_bonus = {
+				name = MGU_german_sub_initiative
+				bonus = 0.5
+				uses = 1
+				category = ss_tech
+			}
+
+			random_core_state = {
+				limit = {
+					is_coastal = yes
+					free_building_slots = {
+						building = dockyard
+						size > 0
+						include_locked = yes
+					}
+
+					NOT = {
+						has_dynamic_modifier = { modifier = MGU_neglected_state_dynamic_modifier }
+					}
+
+					is_owned_and_controlled_by = ROOT
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = naval_base
+					level = 2
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+				    }
+				}
+			}
+
+			IF = {
+				limit = {
+					has_dlc = "Man the Guns"
+					NOT = {
+						has_tech = cruiser_submarines
+					}
+				}
+				set_technology = { cruiser_submarines = 1 } 
+
+				create_equipment_variant = {
+					name = "Lobo do Mar Class"
+					type = ship_hull_cruiser_submarine
+					allow_without_tech = yes # Display tooltip as if we have the tech.
+					name_group = ITA_SS_HISTORICAL #TODO, choose a good namelist
+					parent_version = 0
+					allow_without_tech = yes # Display tooltip as if we have the tech.
+					modules = {
+						fixed_ship_torpedo_slot = ship_torpedo_sub_1
+						fixed_ship_engine_slot = sub_ship_engine_2
+						front_1_custom_slot = ship_torpedo_sub_1
+						mid_1_custom_slot = empty
+						rear_1_custom_slot = ship_torpedo_sub_1
+					}
+				} 
+				#Line Production
+				add_equipment_production = {
+					equipment = {
+						type = ship_hull_cruiser_submarine
+						creator = "BRA"
+						version_name = "Lobo do Mar Class"
+					}
+					name = "Almirante Dönitz"
+					requested_factories = 1
+					progress = 0.5
+					amount = 1
+				}
+				add_equipment_production = {
+					equipment = {
+						type = ship_hull_cruiser_submarine
+						creator = "BRA"
+						version_name = "Lobo do Mar Class"
+					}
+					name = "Almirante Hermann"
+					requested_factories = 1
+					progress = 0.5
+					amount = 1
+				}
+
+			}
+				
+
+			IF = {	
+				limit = {
+					has_dlc = "Man the Guns"
+					has_tech = cruiser_submarines
+				}
+				create_equipment_variant = {
+					name = "Lobo do Mar Class"
+					type = ship_hull_cruiser_submarine
+					allow_without_tech = yes # Display tooltip as if we have the tech.
+					name_group = ITA_SS_HISTORICAL #TODO, choose a good namelist
+					parent_version = 0
+					allow_without_tech = yes # Display tooltip as if we have the tech.
+					modules = {
+						fixed_ship_torpedo_slot = ship_torpedo_sub_1
+						fixed_ship_engine_slot = sub_ship_engine_2
+						front_1_custom_slot = ship_torpedo_sub_1
+						mid_1_custom_slot = empty
+						rear_1_custom_slot = ship_torpedo_sub_1
+					}
+				}
+				#Line Production
+				add_equipment_production = {
+					equipment = {
+						type = ship_hull_cruiser_submarine
+						creator = "BRA"
+						version_name = "Lobo do Mar Class"
+					}
+					name = "Almirante Dönitz"
+					requested_factories = 1
+					progress = 0.5
+					amount = 1
+				}
+				add_equipment_production = {
+					equipment = {
+						type = ship_hull_cruiser_submarine
+						creator = "BRA"
+						version_name = "Lobo do Mar Class"
+					}
+					name = "Almirante Hermann"
+					requested_factories = 1
+					progress = 0.5
+					amount = 1
+				}
+			}
+		}
+
+	}
+
+	focus = {
+		id = MGU_german_cooperation
+		icon = GFX_focus_ger_reichskommisariats
+		prerequisite = { 
+			focus = MGU_german_tanks 
+			focus = MGU_german_subs
+		}
+		x = -1
+		y = 1
+		relative_position_id = MGU_german_subs
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			GER = {
+				exists = yes
+			}
+			NOT = {
+				has_war_with = GER
+			}
+			498 = {
+				is_owned_and_controlled_by = ROOT
+			}
+			is_in_faction_with = ROOT
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			498 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = naval_base
+					level = 3
+					instant_build = yes
+					province = {
+						id = 10933
+				    }
+				}
+				add_building_construction = {
+					type = dockyard
+					level = 3
+					instant_build = yes
+				}
+				
+
+			}
+			custom_effect_tooltip = MGU_german_cooperation_tt
+			custom_effect_tooltip = MGU_german_cooperation_tt_2
+			hidden_effect = {
+				GER = {
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-1"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-1"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-2"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-2"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-3"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-3"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-4"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-4"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-5"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-5"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-6"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-6"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-7"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-7"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-8"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-8"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-9"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-9"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+					create_ship = {
+						type = ship_hull_submarine_1
+						equipment_variant = "Type II Class"
+						creator = GER
+						name = "Type IIA U-10"
+					}
+					transfer_ship={
+					  prefer_name = "Type IIA U-10"
+					  type = submarine
+					  target = ROOT
+					  exclude_refitting = no
+					}
+				}
+				IF = {
+					limit = {
+						299 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					299 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						720 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					720 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						704 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					704 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						703 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					703 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						702 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					702 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						691 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					691 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						692 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					692 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						694 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					694 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						308 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					308 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						695 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					695 = { add_claim_by = ROOT }
+				}
+				IF = {
+					limit = {
+						178 = {
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									is_owned_by = GER
+								}
+							}
+						}
+					}
+					178 = { add_claim_by = ROOT }
+				}
+			}
+			every_navy_leader = {
+				limit = {
+					NOT = { has_character_flag = SMB_naval_academy_boost }
+				}
+				add_trait = {
+					trait = seawolf 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_guyana_crisis
+		icon = GFX_focus_generic_attack_the_guyanas
+		prerequisite = { 
+			focus = MGU_domination_of_the_americas 
+		}
+		x = 4
+		y = 1
+		relative_position_id = MGU_domination_of_the_americas
+		cost = 5
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 5
+				OR = {
+					ENG = { has_war_with_major = yes }
+					FRA = { has_war_with_major = yes }
+					HOL = { has_war_with_major = yes }
+				}
+			}
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+		will_lead_to_war_with = ENG
+		will_lead_to_war_with = FRA
+		will_lead_to_war_with = HOL
+		completion_reward = {
+			every_other_country = {
+				limit = {
+					any_owned_state = {
+						region = 280
+					}
+					NOT = {
+						OR = {
+							is_in_faction_with = ROOT
+							capital_scope = {
+								is_on_continent = south_america
+							}
+							has_war_with = ROOT
+						}
+					}
+				}
+				country_event = {
+					id = JUNO_brazil_events.32
+					hours = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_defense_of_the_fatherland
+		icon = GFX_focus_BRA_for_the_fatherland
+		prerequisite = { 
+			focus = MGU_domination_of_the_americas 
+		}
+		x =-2
+		y = 1
+		relative_position_id = MGU_domination_of_the_americas
+		cost = 10
+		ai_will_do = {
+			factor = 30
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			add_political_power = 100
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0 
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				} 
+			}  
+		}
+	}
+
+	focus = {
+		id = MGU_uruguay_ultimatum
+		icon = GFX_focus_generic_attack_uruguay
+		prerequisite = { 
+			focus = MGU_anaue
+			focus = MGU_the_polaca 
+		}
+		x = -2
+		y = 1
+		relative_position_id = MGU_anaue
+		cost = 5
+		ai_will_do = {
+			factor = 0
+		}
+		will_lead_to_war_with = URG
+		available = {
+			has_war_support > 0.5
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			URG = {
+				country_event = {
+					id = JUNO_brazil_events.40
+					hours = 1
+				}
+			}
+			add_war_support = 0.1
+		}
+	}
+
+	focus = {
+		id = MGU_rome_accords
+		icon = GFX_focus_befriend_italy
+		prerequisite = { 
+			focus = MGU_domination_of_the_americas 
+		}
+		bypass = {
+			is_in_faction_with = ITA
+		}
+		##mutually_exclusive = { focus = MGU_berlin_accords }
+		x = 0
+		y = 1
+		relative_position_id = MGU_domination_of_the_americas
+		cost = 5
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_completed_focus = MGU_berlin_accords
+				ITA = {
+					has_war_with = GER
+				}
+			}
+		}
+		available = {
+			is_subject = no
+			is_in_faction = no
+			ITA = {
+				OR = {
+					has_government = fascism
+					has_government = neutrality
+				}
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			ITA = {
+				country_event = {
+					id = JUNO_brazil_events.30
+					hours = 1
+				}
+			}
+			add_political_power = 50
+			custom_effect_tooltip = MGU_accords_tt
+			effect_tooltip = {
+				IF = {
+					limit = {
+						ITA = {
+							is_in_faction = yes
+						}
+					}
+					ITA = {
+						add_to_faction = ROOT
+					}
+				}
+				ELSE = {
+					ITA = {
+						create_faction = faction_name_MGU_ita
+						add_to_faction = ROOT
+					}
+				}
+				ITA = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = large_increase 
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_italian_car_industry
+		icon = GFX_focus_ITA_redirect_alfa_romeo_production
+		prerequisite = { 
+			focus = MGU_rome_accords 
+			focus = MGU_berlin_accords
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_rome_accords
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			ITA = {
+				OR = {
+					has_government = fascism
+					has_government = neutrality
+				}
+			}
+			is_in_faction_with = ITA
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = MGU_italian_truck_exchange
+				bonus = 0.50
+				uses = 2
+				category = motorized_equipment 
+				category = cat_mechanized_equipment 
+			}	
+
+			add_equipment_to_stockpile = { 
+				type = motorized_equipment
+				amount = 200 
+				producer = ITA
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_italian_aircraft
+		icon = GFX_focus_BRA_italian_aircraft_development
+		prerequisite = { 
+			focus = MGU_italian_car_industry 
+		}
+		x = -1
+		y = 1
+		relative_position_id = MGU_italian_car_industry
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			ITA = {
+				exists = yes
+			}
+			NOT = {
+				has_war_with = ITA
+			}
+			is_in_faction_with = ITA
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+
+			air_experience = 15
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny" 
+				}
+				custom_effect_tooltip = available_mio_tt
+				show_mio_tooltip = ITA_fiat_aviazione_organization
+				mio:ITA_fiat_aviazione_organization = {
+					add_mio_size = 2
+				}
+			}
+			ELSE = {
+				IF = {
+					limit = {
+						NOT = {
+							has_idea = JUNO_license_air_idea
+						}
+					}
+					add_ideas = JUNO_license_air_idea
+				}
+				add_tech_bonus = {
+					name = MGU_Italian_plane_exchange
+					bonus = 0.5
+					uses = 2
+					category = light_air
+					category = medium_air
+				}	
+			}
+			if = {
+				limit = {
+					has_dlc = "By Blood Alone"
+				}
+				add_equipment_to_stockpile = { 
+					type = small_plane_airframe_1
+					amount = 200
+					producer = ITA
+				}
+			}
+			else = {
+				add_equipment_to_stockpile = { 
+					type = fighter_equipment_1
+					amount = 200
+					producer = ITA
+				}
+			}
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0 
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				} 
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_italian_trucks
+		icon = GFX_focus_BRA_joint_italian_motor_development
+		prerequisite = { 
+			focus = MGU_italian_car_industry 
+		}
+		x = 1
+		y = 1
+		relative_position_id = MGU_italian_car_industry
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			ITA = {
+				exists = yes
+			}
+			NOT = {
+				has_war_with = ITA
+			}
+			is_in_faction_with = ITA
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = { 
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+
+				custom_effect_tooltip = available_mio_tt
+				show_mio_tooltip = ITA_fiat_organization
+				mio:ITA_fiat_organization = {
+					add_mio_size = 2
+				}
+
+				random_core_state = {
+					limit = {
+						free_building_slots = {
+							building = arms_factory
+							size > 0 
+							include_locked = yes
+						}
+						is_owned_and_controlled_by = ROOT
+						NOT = {
+							OR = {
+								state = 961
+								state = 962
+								state = 963
+								state = 964
+								state = 965
+								state = 966
+								state = 967
+								state = 968
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					} 
+				}
+			}
+			ELSE = {
+				random_core_state = {
+					limit = {
+						free_building_slots = {
+							building = industrial_complex
+							size > 0
+							include_locked = yes
+						}
+						is_owned_and_controlled_by = ROOT
+						NOT = {
+							OR = {
+								state = 961
+								state = 962
+								state = 963
+								state = 964
+								state = 965
+								state = 966
+								state = 967
+								state = 968
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_italian_cooperation
+		icon = GFX_focus_ITA_ministry_of_italian_africa
+		prerequisite = { 
+			focus = MGU_italian_trucks 
+			focus = MGU_italian_aircraft
+		}
+		x = -1
+		y = 1
+		relative_position_id = MGU_italian_trucks
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			ITA = {
+				exists = yes
+				is_in_faction_with = ROOT
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			every_state = {
+				limit = {
+					OR = {
+						region = 226
+						region = 140
+					}					
+					NOT = {
+						OR = {
+							is_owned_by = ROOT
+							is_owned_by = ITA
+							OWNER = {
+								is_in_faction_with = ROOT
+							}
+						}
+					}
+				}
+				add_claim_by = ROOT
+			}
+			add_equipment_to_stockpile = { 
+				type = infantry_equipment
+				amount = 4000
+				producer = ITA
+			}
+			random_army_leader = {		
+				limit = {
+					NOT = {
+						has_trait = ranger
+					}
+				}
+				add_trait = {
+					trait = ranger
+				}
+			}
+			random_army_leader = {	
+				limit = {
+					NOT = {
+						has_trait = ranger
+					}
+				}	
+				add_trait = {
+					trait = ranger
+				}
+			}
+			random_army_leader = {	
+				limit = {
+					NOT = {
+						has_trait = ranger
+					}
+				}	
+				add_trait = {
+					trait = ranger
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_attack_bolivia
+		icon = GFX_focus_generic_attack_bolivia
+		prerequisite = { 
+			focus = MGU_guyana_crisis 
+			#focus = MGU_uruguay_ultimatum
+		}
+		bypass = {
+			BOL = {
+				OR = {
+					is_in_faction_with = ROOT
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+		x = -1
+		y = 1
+		relative_position_id = MGU_guyana_crisis
+		cost = 5
+		ai_will_do = {
+			factor = 15
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+		will_lead_to_war_with = BOL
+		completion_reward = {
+			create_wargoal = {
+				target = BOL
+				type = annex_everything
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_paraguay_intervention
+		icon = GFX_focus_generic_attack_paraguay
+		prerequisite = { 
+			#focus = MGU_uruguay_ultimatum
+			focus = MGU_guyana_crisis
+		}
+		bypass = {
+			PAR = {
+				OR = {
+					is_in_faction_with = ROOT
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+		x = 1
+		y = 1
+		relative_position_id = MGU_guyana_crisis
+		will_lead_to_war_with = PAR
+		cost = 5
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			PAR = {
+				country_event = {
+					id = JUNO_brazil_events.45
+					hours = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_provoke_argentina
+		icon = GFX_focus_generic_attack_argentina
+		prerequisite = { 
+			focus = MGU_attack_bolivia 
+			focus = MGU_paraguay_intervention
+		}
+		bypass = {
+			ARG = {
+				OR = {
+					is_in_faction_with = ROOT
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_paraguay_intervention
+		cost = 5
+		ai_will_do = {
+			factor = 15
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+		will_lead_to_war_with = ARG
+		completion_reward = {
+			ARG = {
+				country_event = {
+					id = JUNO_brazil_events.37
+					hours = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_attack_chile
+		icon = GFX_focus_generic_attack_chile
+		prerequisite = { 
+			focus = MGU_paraguay_intervention 
+			focus = MGU_attack_bolivia
+		}
+		bypass = {
+			CHL = {
+				OR = {
+					is_in_faction_with = ROOT
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+		x = 0
+		y = 1
+		relative_position_id = MGU_attack_bolivia
+		cost = 5
+		ai_will_do = {
+			factor = 15
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+		will_lead_to_war_with = CHL
+		completion_reward = {
+			create_wargoal = {
+				target = CHL
+				type = annex_everything
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_panama_push
+		icon = GFX_goal_generic_attack_allies	
+		prerequisite = { 
+			focus = MGU_provoke_argentina
+			focus = MGU_attack_chile
+		}
+		x = 1
+		y = 1
+		relative_position_id = MGU_attack_chile
+		will_lead_to_war_with = ECU
+		will_lead_to_war_with = VEN
+		will_lead_to_war_with = PRU
+		will_lead_to_war_with = PAN
+		will_lead_to_war_with = COL
+		cost = 10
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					ECU = {
+						exists = yes
+						NOT = {
+							is_in_faction_with = ROOT
+						}
+					}
+				}
+				create_wargoal = {
+					target = ECU
+					type = annex_everything
+					expire = 0
+				}
+			}
+			IF = {
+				limit = {
+					VEN = {
+						exists = yes
+						NOT = {
+							is_in_faction_with = ROOT
+						}
+					}
+				}
+				create_wargoal = {
+					target = VEN
+					type = annex_everything
+					expire = 0
+				}
+			}
+			IF = {
+				limit = {
+					PRU = {
+						exists = yes
+						NOT = {
+							is_in_faction_with = ROOT
+						}
+					}
+				}
+				create_wargoal = {
+					target = PRU
+					type = annex_everything
+					expire = 0
+				}
+			}
+			IF = {
+				limit = {
+					PAN = {
+						exists = yes
+						NOT = {
+							is_in_faction_with = ROOT
+						}
+					}
+				}
+				create_wargoal = {
+					target = PAN
+					type = annex_everything
+					expire = 0
+				}
+			}
+			IF = {
+				limit = {
+					COL = {
+						exists = yes
+						NOT = {
+							is_in_faction_with = ROOT
+						}
+					}
+				}
+				create_wargoal = {
+					target = COL
+					type = annex_everything
+					expire = 0
+				}
+			}
+			add_timed_idea = { 
+				idea = MGU_panama_push
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_form_mercosul
+		icon = GFX_focus_BRA_form_mercosul
+		prerequisite = { 
+			focus = MGU_domination_of_the_americas
+			#focus = MGU_provoke_argentina
+		}
+		x = 2
+		y = 1
+		relative_position_id = MGU_domination_of_the_americas
+		cost = 5
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 0 
+				is_in_faction = yes
+			}
+		}
+		available = {
+			is_subject = no
+			is_in_faction = no
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			set_rule = { can_create_factions = yes }
+			create_faction = MGU_faction_mercosul_name
+			custom_effect_tooltip = MGU_form_mercosul_focus_tt
+		}
+	}
+
+	##############################################
+
+	##### Domination of the Americas Branch #####
+
+	focus = {
+		id = MGU_end_the_state_of_emergency
+		icon = GFX_focus_BRA_end_the_state_of_emergency
+		x = -15
+		y = 0
+		relative_position_id = MGU_tribunal_de_seguranca_nacional
+
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+		    OR = {
+                has_government = democratic
+                has_government = neutrality
+		    }
+		}
+		allow_branch = {
+			IF = {
+				limit = {
+					has_game_rule = {
+						rule = obsolete_focus_branches_visibility
+						option = HIDE
+					}
+				}
+				NOT = { has_completed_focus = MGU_prepare_for_second_intentona }
+				NOT = { has_completed_focus = MGU_tribunal_de_seguranca_nacional }
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+
+		completion_reward = {
+			remove_dynamic_modifier = {
+				modifier = MGU_aftermath_of_the_coup
+			}
+			if = {
+				limit = {
+					has_game_rule = {
+						rule = obsolete_focus_branches_visibility
+						option = HIDE
+					}
+				}
+				mark_focus_tree_layout_dirty = yes
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_repeal_the_national_security_law
+		icon = GFX_focus_BRA_repeale_national_security_law
+		x = -4
+		y = 1
+		relative_position_id = MGU_end_the_state_of_emergency
+		prerequisite = { focus = MGU_end_the_state_of_emergency }
+		#mutually_exclusive = { focus = MGU_romanticize_the_old_empire }
+		cost = 5
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+		    has_government = democratic
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			hidden_effect = {
+			}
+			effect_tooltip = {
+
+			}
+		#	set_party_name = {
+		#		ideology = democratic
+		#		name = MGU_democratic_union
+		#		long_name = MGU_democratic_union_long
+		#	}
+		}
+	}
+
+
+#强化自由 自由主义
+
+
+
+#强化自由 自由主义 结束↑↑
+
+	focus = {
+		id = MGU_greater_federalism
+		icon = GFX_focus_BRA_greater_federalism
+		x = -1
+		y = 1
+		relative_position_id = MGU_repeal_the_national_security_law
+		prerequisite = { focus = MGU_repeal_the_national_security_law }
+		#mutually_exclusive = { focus = MGU_continue_centralization }
+		#mutually_exclusive = { focus = MGU_greater_Liberalism }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			has_country_leader = {
+			    character = MGU_Azusa_Mifuyu
+			    ruling_only = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+
+		completion_reward = {
+			add_ideas = MGU_federal_republic
+		}
+	}
+
+	#focus = {
+	#	id = MGU_democratic_socialism
+	#	#icon = 
+	#	x = -4
+	#	y = 4
+	#	relative_position_id = MGU_greater_federalism
+	#	prerequisite = { focus = MGU_end_military_interference }
+	#	cost = 10
+	#	ai_will_do = {
+	#		factor = 5
+	#	}
+	#	available = {
+	#	}
+#
+	#	search_filters = { FOCUS_FILTER_POLITICAL }
+#
+	#	completion_reward = {
+	#		custom_effect_tooltip = "TODO: Unlock some socialist advisors"
+	#	}
+	#}
+
+	focus = {
+		id = MGU_continue_centralization
+		icon = GFX_focus_BRA_centralization
+		x = 1
+		y = 1
+		relative_position_id = MGU_repeal_the_national_security_law
+		prerequisite = { focus = MGU_repeal_the_national_security_law }
+		#mutually_exclusive = { focus = MGU_greater_federalism }
+		#mutually_exclusive = { focus = MGU_greater_Liberalism }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			has_country_leader = {
+			    character = MGU_Nanami_Yachiyo
+			    ruling_only = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+
+		completion_reward = {
+			add_ideas = MGU_presidential_republic
+		}
+	}
+
+	focus = {
+		id = MGU_court_the_military
+		icon = GFX_focus_BRA_reach_out_to_military_dem
+		x = 0
+		y = 2
+		relative_position_id = MGU_continue_centralization
+		prerequisite = { focus = MGU_continue_centralization }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_MANPOWER }
+
+		completion_reward = {
+			add_ideas = MGU_court_the_military_idea
+		}
+	}
+
+
+	focus = {
+		id = MGU_implement_a_national_guard
+		icon = GFX_focus_BRA_national_guard
+		x = 0
+		y = 2
+		relative_position_id = MGU_greater_federalism
+		prerequisite = { focus = MGU_greater_federalism }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_implement_a_national_guard_tt
+			IF = {
+				limit = {
+					NOT = {
+						has_tech = tech_military_police
+					}
+				}
+				set_technology = { tech_military_police = 1 }
+			}
+			ELSE = {
+				army_experience = 20
+			}
+			hidden_effect = {
+				division_template = {
+					name = "Guarda Nacional"
+					#division_names_group = 
+					is_locked = no
+					force_allow_recruiting = yes
+					override_model = MGU_militia_entity
+					#division_cap = 6
+					template_counter = 06
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+						infantry = { x = 1 y = 0 }
+						infantry = { x = 1 y = 1 }
+						infantry = { x = 1 y = 2 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+						military_police = { x = 0 y = 1 }
+					}
+				}
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Guarda Nacional\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Guarda Nacional\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Guarda Nacional\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Guarda Nacional\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Guarda Nacional\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Guarda Nacional\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_nationalize_the_banks
+		icon = GFX_focus_BRA_nationalize_banks
+		x = 0
+		y = 1
+		relative_position_id = MGU_implement_a_national_guard
+		prerequisite = { focus = MGU_implement_a_national_guard }
+		##mutually_exclusive = { focus = MGU_establish_the_brazilian_investment_bank }
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+
+		completion_reward = {
+			add_ideas = MGU_nationalized_banks
+		}
+	}
+
+	focus = {
+		id = MGU_establish_the_brazilian_investment_bank
+		icon = GFX_focus_BRA_pro_business_taxes
+		x = 0
+		y = 1
+		relative_position_id = MGU_court_the_military
+		prerequisite = { 
+			focus = MGU_court_the_military 
+		#	focus = MGU_constitutional_monarchy
+		}
+		##mutually_exclusive = { focus = MGU_nationalize_the_banks }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_ideas = MGU_tax_haven
+		}
+	}
+
+	focus = {
+		id = MGU_church
+		icon = GFX_focus_por_concordat
+		x = 0
+		y = 1
+		relative_position_id = MGU_establish_the_brazilian_investment_bank
+		prerequisite = { focus = MGU_establish_the_brazilian_investment_bank }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+
+		completion_reward = {
+			add_ideas = MGU_collaboration_with_the_church
+		}
+	}
+
+	focus = {
+		id = MGU_implement_article_138
+		icon = GFX_focus_generic_population_growth
+		x = 0
+		y = 1
+		relative_position_id = MGU_nationalize_the_banks
+		prerequisite = { focus = MGU_nationalize_the_banks }
+		cost = 10
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+
+		completion_reward = {
+			add_ideas = MGU_article_138
+		}
+	}
+
+	focus = {
+		id = MGU_tech_slot_2
+		icon = GFX_focus_BRA_university_of_sao_paulo
+		x = 1
+		y = 1
+		relative_position_id = MGU_implement_article_138
+		prerequisite = { focus = MGU_implement_article_138 focus = MGU_church }
+		cost = 10
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+		amount_research_slots < 5
+		}
+
+		search_filters = { FOCUS_FILTER_RESEARCH }
+
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = MGU_ban_the_communist_party
+		icon = GFX_focus_BRA_ban_communist_party
+		x = 2
+		y = 1
+		relative_position_id = MGU_court_the_military
+		prerequisite = { 
+			focus = MGU_court_the_military 
+			#focus = MGU_constitutional_monarchy 
+		}
+		cost = 5
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+			communism < 0.50
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY}
+
+		completion_reward = {
+			hidden_effect = {
+				set_temp_variable = {
+					var = ban_ideology_var
+					value = party_popularity@communism
+				}
+				multiply_temp_variable = {
+					var = ban_ideology_var
+					value = -1
+				}
+				add_popularity = {
+					ideology = communism
+					popularity = ban_ideology_var
+				}
+				multiply_temp_variable = {
+					var = ban_ideology_var
+					value = 0.66
+				}
+				set_country_flag = banned_communism_flag
+			}
+			custom_effect_tooltip = ban_communist_party_tt
+			add_stability = ban_ideology_var
+			custom_effect_tooltip = MGU_ban_the_communist_party_dynamic_tt
+		}
+	}
+
+	focus = {
+		id = MGU_posts_for_generals
+		icon = GFX_focus_generic_military_mission
+		x = 0
+		y = 2
+		relative_position_id = MGU_ban_the_communist_party
+		prerequisite = { focus = MGU_ban_the_communist_party }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL_CHARACTER}
+
+		completion_reward = {
+			remove_dynamic_modifier = {
+				modifier = MGU_weak_government
+			}
+			custom_effect_tooltip = MGU_posts_for_generals_tt
+		}
+	}
+
+	focus = {
+		id = MGU_third_republic
+		icon = GFX_focus_BRA_third_republic
+		x = 0
+		y = 1
+		relative_position_id = MGU_posts_for_generals
+		prerequisite = { focus = MGU_posts_for_generals }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			num_of_factories > 25
+			has_stability > 0.7
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			set_cosmetic_tag = MGU_third_republic_democratic
+			add_ideas = MGU_stability_and_unity
+			remove_ideas = MGU_separatism_idea
+		}
+	}
+
+	focus = {
+		id = MGU_end_military_interference
+		icon = GFX_focus_NOR_broken_gun_policies
+		x = -2
+		y = 1
+		relative_position_id = MGU_implement_a_national_guard
+		prerequisite = { focus = MGU_implement_a_national_guard }
+		cost = 10
+		available = {
+			#neutrality < 0.21
+		}
+		cancel_if_invalid = no
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+
+		completion_reward = {
+			remove_dynamic_modifier = {
+				modifier = MGU_weak_government
+			}
+			#hidden_effect = {
+			#	set_temp_variable = {
+			#		var = ban_ideology_var
+			#		value = party_popularity@neutrality
+			#	}
+			#	multiply_temp_variable = {
+			#		var = ban_ideology_var
+			#		value = -1
+			#	}
+			#	add_popularity = {
+			#		ideology = neutrality
+			#		popularity = ban_ideology_var
+			#	}
+			#	multiply_temp_variable = {
+			#		var = ban_ideology_var
+			#		value = 0.66
+			#	}
+			#	set_country_flag = banned_neutrality_flag
+			#}
+			#custom_effect_tooltip = MGU_end_military_interference_tt
+			#add_stability = ban_ideology_var
+		}
+	}
+
+	focus = {
+		id = MGU_free_speech
+		icon = GFX_focus_BRA_democratic_socialism
+		x = 0
+		y = 2
+		relative_position_id = MGU_end_military_interference
+		prerequisite = { focus = MGU_end_military_interference }
+		cost = 10
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_POLITICAL_CHARACTER}
+
+		completion_reward = {
+			add_political_power = 100
+			remove_ideas = MGU_separatism_idea
+			custom_effect_tooltip = MGU_free_speech_tt
+			show_ideas_tooltip = MGU_lindolfo_collor
+			show_ideas_tooltip = MGU_jose_americo_de_almeida
+			show_ideas_tooltip = MGU_armando_de_sales_oliveira
+			show_ideas_tooltip = MGU_anisio_teixeira
+		}
+	}
+
+	focus = {
+		id = MGU_united_states_of_brazil
+		icon = GFX_focus_BRA_us_of_south_america
+		x = 0
+		y = 1
+		relative_position_id = MGU_free_speech
+		prerequisite = { focus = MGU_free_speech }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			num_of_factories > 25
+			has_stability > 0.7
+			has_government = democratic
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			set_cosmetic_tag = MGU_united_states_of_brazil_cos_tag
+			add_ideas = MGU_us_of_brazil
+		}
+	}
+
+	focus = {
+		id = MGU_united_states_of_south_america
+		icon = GFX_focus_BRA_us_of_brazil
+		x = 2
+		y = 1
+		relative_position_id = MGU_us_brazil_technology_exchange
+		prerequisite = { focus = MGU_us_brazil_technology_exchange focus = MGU_south_american_research_cooperation }
+		cost = 5
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			OR = {
+				has_government = democratic
+				has_government = neutrality
+			}
+			is_in_faction = yes
+			any_other_country = {
+				is_in_faction_with = ROOT
+				capital_scope = {
+					is_on_continent = south_america
+					#is_core_of = PREV
+				}
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			set_cosmetic_tag = MGU_united_states_of_south_america_cos_tag
+			custom_effect_tooltip = MGU_united_states_of_south_america_tt
+		}	
+	}
+
+	focus = {
+		id = MGU_address_labor_disputes
+		icon = GFX_focus_generic_workers
+		x = 0
+		y = 1
+		relative_position_id = MGU_tech_slot_2
+		prerequisite = { focus = MGU_free_speech focus = MGU_posts_for_generals }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			OR = {
+				AND = {
+					democratic > 0.6
+					has_stability > 0.4
+				}
+				has_war = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			country_event = {
+				id = JUNO_brazil_events.163
+				hours = 1
+			}
+			custom_effect_tooltip = MGU_address_labor_disputes_tt_1
+			event_option_tooltip = JUNO_brazil_events.163.a
+			custom_effect_tooltip = MGU_address_labor_disputes_tt_2
+			event_option_tooltip = JUNO_brazil_events.163.b
+
+		}
+	}
+
+	focus = {
+		id = MGU_combat_separatism
+		icon = GFX_goal_generic_national_unity
+		x = -2
+		y = 2
+		relative_position_id = MGU_address_labor_disputes
+		prerequisite = { focus = MGU_address_labor_disputes }
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+			has_idea = MGU_separatism_idea
+			has_civil_war = no
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			remove_ideas = MGU_separatism_idea
+			add_political_power = 100
+		}
+	}
+
+	focus = {
+		id = MGU_war_bonds
+		icon = GFX_focus_SWI_issue_war_bonds
+		x = 2
+		y = 2
+		relative_position_id = MGU_address_labor_disputes
+		prerequisite = { focus = MGU_address_labor_disputes }
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		#available = {
+		#	has_idea = MGU_separatism_idea
+		#}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_ideas = MGU_war_bonds
+		}
+	}
+
+	focus = {
+		id = MGU_invite_foreign_companies
+		icon = GFX_focus_generic_american_investments
+		allow_branch = {
+			has_dlc = "Arms Against Tyranny"
+			IF = {
+				limit = {
+					has_game_rule = {
+						rule = obsolete_focus_branches_visibility
+						option = HIDE
+					}
+				}
+				NOT = { has_completed_focus = MGU_tribunal_de_seguranca_nacional }
+				NOT = { has_completed_focus = MGU_prepare_for_second_intentona }
+			}
+		}
+		x = 1
+		y = 1
+		relative_position_id = MGU_address_labor_disputes
+		prerequisite = { focus = MGU_address_labor_disputes }
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+			OR = {
+				USA = {
+					exists = yes
+					has_government = democratic
+				}
+				ENG = {
+					exists = yes
+					has_government = democratic
+				}
+				FRA = {
+					exists = yes
+					has_government = democratic
+				}
+				SWE = {
+					exists = yes
+					has_government = democratic
+				}
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_invite_foreign_companies_tt
+			#USA
+			show_mio_tooltip = USA_marmon_herrington_organization
+			show_mio_tooltip = USA_north_american_aviation_organization
+			show_mio_tooltip = USA_newport_news_shipbuilding_organization
+			# UK
+			show_mio_tooltip = ENG_vauxhall_organization
+			show_mio_tooltip = ENG_cammell_laird_organization
+			show_mio_tooltip = ENG_avro_organization
+			# France
+			show_mio_tooltip = FRA_acf_organization
+			show_mio_tooltip = FRA_bloch_organization
+			show_mio_tooltip = FRA_renault_organization
+			# Sweden
+			show_mio_tooltip = SWE_saab_organization			
+			show_mio_tooltip = SWE_landsverk_organization
+			show_mio_tooltip = SWE_gotaverken_organization
+			show_mio_tooltip = SWE_scania_vabis_organization
+		}
+	}
+
+	focus = {
+		id = MGU_the_international_crisis
+		icon = GFX_focus_BRA_international_crisis
+		x = 0
+		y = 4
+		relative_position_id = MGU_tech_slot_2
+		prerequisite = { focus = MGU_address_labor_disputes }
+		##mutually_exclusive = { focus = MGU_secure_our_borders }
+		cost = 10
+		ai_will_do = {
+			factor = 30
+		}
+		available = {
+			OR = {
+				has_war_support > 0.6
+				has_War = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_ideas = MGU_international_crisis 
+			set_rule = {
+				can_send_volunteers = yes
+			}
+			#set_rule = {
+			#	can_join_factions = yes 
+			#}
+		}
+	}
+
+	##############################################
+
+	##### Communist Branch #####
+
+	focus = {
+		id = MGU_prepare_for_second_intentona
+		icon = GFX_focus_por_workers_of_iberia
+		x = -17
+		y = 0
+		relative_position_id = MGU_end_the_state_of_emergency
+
+		cost = 5
+		available = {
+		    has_government = communism
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		search_filters = { }
+		allow_branch = {
+			IF = {
+				limit = {
+					has_game_rule = {
+						rule = obsolete_focus_branches_visibility
+						option = HIDE
+					}
+				}
+				NOT = { has_completed_focus = MGU_end_the_state_of_emergency }
+				NOT = { has_completed_focus = MGU_tribunal_de_seguranca_nacional }
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = MGU_modify_aotci_ns_intro
+			add_to_variable = {
+				MGU_coup_communism_factor = 0.05
+				tooltip = communism_drift_factor_tt
+			}
+			add_to_variable = {
+				MGU_coup_stability_factor = -0.05
+				tooltip = stability_factor_tt
+			}
+			add_political_power = 120
+
+			if = {
+				limit = {
+					has_game_rule = {
+						rule = obsolete_focus_branches_visibility
+						option = HIDE
+					}
+				}
+				mark_focus_tree_layout_dirty = yes
+			}
+		}
+	}
+
+	#focus = {
+	#	id = MGU_seek_international_support
+	#	icon = GFX_focus_ETH_callout_to_the_world
+	#	x = 0
+	#	y = 1
+	#	relative_position_id = MGU_revive_the_anl
+	#	prerequisite = { focus = MGU_revive_the_anl }
+	#	##mutually_exclusive = { focus = MGU_seek_soviet_support }
+	#	cost = 5
+	#	available = {
+	#		NOT = { has_completed_focus = MGU_launch_the_revolution }
+	#	}
+	#	search_filters = { }
+	#	completion_reward = {
+	#	}
+	#}
+
+	focus = {
+		id = MGU_infilitrate_the_military
+		icon = GFX_focus_SOV_military_purge
+		x = -1
+		y = 1
+		relative_position_id = MGU_prepare_for_second_intentona
+		prerequisite = { focus = MGU_prepare_for_second_intentona }
+		cost = 10
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+			communism > 0.30
+			NOT = { has_completed_focus = MGU_launch_the_revolution }
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_infilitrate_the_military_tt
+			add_stability = 0.05
+		}
+	}
+
+	focus = {
+		id = MGU_radicalize_the_proletariat
+		icon = GFX_focus_SWE_refuge_for_revolutionaries
+		x = 1
+		y = 1
+		relative_position_id = MGU_prepare_for_second_intentona
+		prerequisite = { focus = MGU_prepare_for_second_intentona }
+		cost = 5
+		ai_will_do = {
+			factor = 30
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = MGU_radicalized_proletariat
+				days = 365
+			}			
+		}
+	}
+
+	focus = {
+		id = MGU_free_prestes
+		icon = GFX_goal_SOV_Naeha_clubs
+		x = 0
+		y = 1
+		relative_position_id = MGU_infilitrate_the_military
+		prerequisite = { focus = MGU_infilitrate_the_military focus = MGU_radicalize_the_proletariat }
+		#mutually_exclusive = { focus = MGU_revive_the_anl }
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+			has_country_leader = {
+			    character = MGU_Tamaki_Iroha
+			    ruling_only = yes
+			}
+			NOT = {
+				has_war_with = SOU
+				has_completed_focus = MGU_launch_the_revolution
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL}
+
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.1
+			}
+			custom_effect_tooltip = MGU_revive_the_anl_tt
+			custom_effect_tooltip = MGU_free_prestes_tt
+			hidden_effect = {
+				add_ai_strategy = {
+					type = befriend
+					id = SOV
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_revive_the_anl
+		icon = GFX_focus_spr_masters_of_our_own_fate
+		x = 0
+		y = 1
+		relative_position_id = MGU_radicalize_the_proletariat
+		prerequisite = { focus = MGU_radicalize_the_proletariat focus = MGU_infilitrate_the_military }
+		#mutually_exclusive = { focus = MGU_free_prestes }
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+			has_country_leader = {
+			    character = MGU_Izumi_Kanagi
+			    ruling_only = yes
+			}
+			NOT = { has_completed_focus = MGU_launch_the_revolution }
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+			add_stability = 0.05
+			custom_effect_tooltip = MGU_revive_the_anl_tt
+			#custom_effect_tooltip = MGU_revive_the_anl_tt_2
+		}
+	}
+
+	focus = {
+		id = MGU_sway_the_cangaco
+		icon = GFX_focus_BRA_deal_with_the_cangaco
+		x = 1
+		y = 1
+		relative_position_id = MGU_revive_the_anl
+		prerequisite = { focus = MGU_revive_the_anl }
+		##mutually_exclusive = { focus = MGU_seek_international_support }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			NOT = {
+				has_completed_focus = MGU_deal_with_the_cangaceiro
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL}
+		completion_reward = {
+			army_experience = 50
+			custom_effect_tooltip = MGU_sway_the_cangaco_tt
+		}
+	}
+
+	focus = {
+		id = MGU_seek_soviet_support
+		icon = GFX_focus_BRA_seek_soviet_support
+		x = 0
+		y = 1
+		relative_position_id = MGU_free_prestes
+		prerequisite = { focus = MGU_free_prestes }
+		##mutually_exclusive = { focus = MGU_seek_international_support }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			NOT = {
+				OR = {
+					has_war_with = SOU
+					has_government = communism
+				}
+			}
+			communism > 0.3
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL}
+		completion_reward = {
+			add_political_power = 150
+			SOU = { 
+				country_event = {
+					id = JUNO_brazil_events.86
+					hours = 6
+				}
+			}
+			custom_effect_tooltip = MGU_acceptance_tt
+			event_option_tooltip = JUNO_brazil_events.86.a 
+		}
+	}
+
+	focus = {
+		id = MGU_launch_the_revolution
+		icon = GFX_focus_SOV_builder_of_the_red_army
+		x = 0
+		y = 4
+		relative_position_id = MGU_prepare_for_second_intentona
+		prerequisite = { focus = MGU_free_prestes focus = MGU_revive_the_anl }
+		cost = 10
+		available = {
+			communism > 0.35
+		}
+
+		bypass = {
+			has_government = communism
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+
+			custom_effect_tooltip = MGU_launch_the_revolution_tt
+			remove_dynamic_modifier = {
+				modifier = MGU_aftermath_of_the_coup
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_align_with_moscow
+		icon = GFX_focus_chi_mission_to_the_soviet_union
+		x = -2
+		y = 1
+		relative_position_id = MGU_launch_the_revolution
+		prerequisite = { focus = MGU_launch_the_revolution }
+		prerequisite = { focus = MGU_free_prestes }
+		#mutually_exclusive = { focus = MGU_oust_prestes focus = MGU_cangaco_coup }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			has_civil_war = no
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_political_power = 50
+			#MGU_luis_carlos_prestes = {
+			#	promote_leader = yes
+			#}
+			effect_tooltip = {
+				retire_country_leader = yes
+			}
+			add_country_leader_role = {
+				character = MGU_luis_carlos_prestes
+				promote_leader = yes
+				country_leader = {
+					ideology=marxism
+					expire="1965.1.1.1"
+					id=-1
+					traits = {
+						JUNO_aligned_with_stalin
+					}
+				}
+			}
+			#retire_country_leader = yes
+			remove_dynamic_modifier = {
+				modifier = MGU_weak_government
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_oust_prestes
+		icon = GFX_focus_ICE_embrace_the_workers_revolution
+		x = 0
+		y = 1
+		relative_position_id = MGU_launch_the_revolution
+		prerequisite = { focus = MGU_launch_the_revolution }
+		prerequisite = { focus = MGU_revive_the_anl }
+		#mutually_exclusive = { focus = MGU_align_with_moscow focus = MGU_cangaco_coup }
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+			has_civil_war = no
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_country_leader_role = {
+				character =  MGU_alianca_nacional_libertadora_council
+				promote_leader = yes
+				country_leader = {
+					ideology = marxism
+					expire="1965.1.1.1"
+					id=-1
+					traits = { JUNO_alianca_nacional_libertadora_council } 
+				}
+			}
+			remove_dynamic_modifier = {
+				modifier = MGU_weak_government
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_cangaco_coup
+		icon = GFX_focus_BRA_deal_with_the_cangaco
+		x = 2
+		y = 1
+		relative_position_id = MGU_launch_the_revolution
+		prerequisite = { focus = MGU_launch_the_revolution }
+		prerequisite = { focus = MGU_sway_the_cangaco }
+		#mutually_exclusive = { focus = MGU_align_with_moscow focus = MGU_oust_prestes }
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+			has_civil_war = no
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_country_leader_role = {
+				character =  MGU_lampiao
+				promote_leader = yes
+				country_leader = {
+					ideology = anarchist_communism
+					expire="1965.1.1.1"
+					id=-1
+					traits = {MGU_bandit_revolutionary} 
+				}
+			}
+			set_party_name = {
+				ideology = communism
+				name = MGU_cangaco_party_long
+				long_name = MGU_cangaco_party
+			}
+			remove_dynamic_modifier = {
+				modifier = MGU_weak_government
+			}
+			every_owned_state = {
+				limit = {
+					has_dynamic_modifier = {
+						modifier = MGU_cangaceiro_state
+					}
+				}
+				remove_dynamic_modifier = {
+					modifier = MGU_cangaceiro_state
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_nationalization_of_industry
+		icon = GFX_goal_generic_soviet_construction
+		x = 6
+		y = 1
+		relative_position_id = MGU_align_with_moscow
+		prerequisite = { focus = MGU_align_with_moscow focus = MGU_oust_prestes focus = MGU_cangaco_coup }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+
+		completion_reward = {
+			ETH_add_random_civ_factory_effect = yes
+		}
+	}
+
+	focus = {
+		id = MGU_collectivization_of_agriculture
+		icon = GFX_focus_prc_agrarian_socialism
+		x = 1
+		y = 1
+		relative_position_id = MGU_nationalization_of_industry
+		prerequisite = { focus = MGU_nationalization_of_industry }
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			add_ideas = MGU_collectivized_agriculture
+		}
+	}
+
+	focus = {
+		id = MGU_collectivization_of_transport
+		icon = GFX_focus_generic_railroad
+		x = 0
+		y = 1
+		relative_position_id = MGU_collectivization_of_agriculture
+		prerequisite = { focus = MGU_collectivization_of_agriculture }
+		cost = 5
+		ai_will_do = {
+			factor = 3
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = train_equipment
+				amount = 30
+				producer = BRA
+			}
+			add_tech_bonus = {
+				name = ETH_mass_transit
+				bonus = 1
+				uses = 1
+				category = train_tech
+			}
+			add_ideas = ETH_mass_transit_idea
+		}
+	}
+
+	focus = {
+		id = MGU_rapid_industrialization
+		icon = GFX_focus_ITA_corpo_volontari_della_liberta
+		x = -2
+		y = 1
+		relative_position_id = MGU_nationalization_of_industry
+		prerequisite = { focus = MGU_nationalization_of_industry }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				limit = {
+					is_fully_controlled_by = ROOT
+					NOT = {
+						OR = {
+							has_state_flag = rapid_industrialization_happened
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}	
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = rapid_industrialization_happened
+			}
+
+			random_owned_controlled_state = {
+				limit = {
+					is_fully_controlled_by = ROOT
+					NOT = {
+						OR = {
+							has_state_flag = rapid_industrialization_happened
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}	
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				set_state_flag = rapid_industrialization_happened
+			}
+			
+		}
+	}
+
+	focus = {
+		id = MGU_state_atheism
+		icon = GFX_focus_BRA_state_atheism
+		x = -1
+		y = 1
+		relative_position_id = MGU_rapid_industrialization
+		prerequisite = { focus = MGU_rapid_industrialization }
+		cost = 5
+		ai_will_do = {
+			factor = 2
+		}
+		available = {
+		}
+		#mutually_exclusive = { focus = MGU_allow_the_church_to_operate }
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_ideas = MGU_atheist_state
+		}
+	}
+
+	focus = {
+		id = MGU_allow_the_church_to_operate
+		icon = GFX_focus_BRA_socialist_theologians
+		x = 1
+		y = 1
+		relative_position_id = MGU_rapid_industrialization
+		prerequisite = { focus = MGU_rapid_industrialization }
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+		#mutually_exclusive = { focus = MGU_state_atheism }
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_ideas = MGU_collaboration_with_the_church
+		}
+	}
+
+	focus = {
+		id = MGU_equality_for_women
+		icon = GFX_focus_ARG_women_in_industry
+		x = 0
+		y = 2
+		relative_position_id = MGU_rapid_industrialization
+		prerequisite = { focus = MGU_state_atheism focus = MGU_allow_the_church_to_operate }
+		cost = 5
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER }
+
+		completion_reward = {
+			add_ideas = MGU_proletarian_equality
+			custom_effect_tooltip = MGU_equality_for_women_tt
+		}
+	}
+
+	focus = {
+		id = MGU_soviet_economic_aid
+		icon = GFX_focus_BRA_purchase_soviet_equipment
+		x = -2
+		y = 1
+		relative_position_id = MGU_align_with_moscow
+		prerequisite = { focus = MGU_align_with_moscow }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			NOT = {
+				has_war_with = SOU
+			}
+			SOU = {
+				exists = yes
+				has_government = communism
+				has_opinion = {
+					target = ROOT
+					value > 49
+				}
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+
+		completion_reward = {
+
+			add_offsite_building = {
+				type = industrial_complex
+				level = 2
+			}
+
+			add_opinion_modifier = {
+				target = SOU
+				modifier = large_increase
+			}
+
+			SOU = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = large_increase
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_international_brigades
+		icon = GFX_focus_ETH_peacekeeping_forces
+		x = 0
+		y = 1
+		relative_position_id = MGU_align_with_moscow
+		prerequisite = { focus = MGU_align_with_moscow focus = MGU_oust_prestes focus = MGU_cangaco_coup }
+		cost = 5
+		ai_will_do = {
+			factor = 3
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			set_rule = { can_send_volunteers = yes }
+
+			add_ideas = MGU_international_brigades
+		
+		}
+	}
+
+	focus = {
+		id = MGU_tech_slot_3
+		icon = GFX_focus_generic_socialist_science
+		x = 4
+		y = 1
+		relative_position_id = MGU_align_with_moscow
+		prerequisite = { focus = MGU_align_with_moscow focus = MGU_oust_prestes focus = MGU_cangaco_coup }
+		cost = 10
+		ai_will_do = {
+			factor = 30
+		}
+		available = {
+		amount_research_slots < 5
+		}
+
+		search_filters = { FOCUS_FILTER_RESEARCH }
+
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = MGU_purchase_soviet_equipment
+		icon = GFX_focus_SOV_the_glory_of_the_red_army_communism
+		x = 0
+		y = 2
+		relative_position_id = MGU_soviet_economic_aid
+		prerequisite = { focus = MGU_soviet_economic_aid }
+		#mutually_exclusive = { focus = MGU_license_soviet_designs }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			SOU = {
+				has_opinion = {
+					target = ROOT
+					value > 49
+				}
+			}
+			NOT = {
+				has_war_with = SOU
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+				add_equipment_subsidy = {
+					cic = 1000
+					equipment_type = infantry_equipment
+					seller_tags = { SOU } 
+				}
+				add_equipment_subsidy = {
+					cic = 1000
+					equipment_type = artillery_equipment
+					seller_tags = { SOU } 
+				}
+				add_equipment_subsidy = {
+					cic = 1000
+					equipment_type = support_equipment
+					seller_tags = { SOU } 
+				}
+			}
+			ELSE = {
+				add_equipment_to_stockpile = { 
+					type = infantry_equipment
+					amount = 2000
+					producer = SOU
+				}
+				add_equipment_to_stockpile = { 
+					type = artillery_equipment
+					amount = 500
+					producer = SOU
+				}
+			}
+		
+		}
+	}
+
+	focus = {
+		id = MGU_license_soviet_designs
+		icon = GFX_focus_generic_license_production
+		x = 2
+		y = 2
+		relative_position_id = MGU_soviet_economic_aid
+		prerequisite = { focus = MGU_soviet_economic_aid }
+		#mutually_exclusive = { focus = MGU_purchase_soviet_equipment }
+		cost = 5
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			NOT = {
+				has_war_with = SOU
+			}
+			SOU = {
+				has_opinion = {
+					target = ROOT
+					value > 49
+				}
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			hidden_effect = {
+				SOU = {
+					country_event = {
+						id = JUNO_brazil_events.134
+						hours = 6
+					}
+				}
+			}
+
+			custom_effect_tooltip = MGU_license_soviet_designs_tt
+		}
+	}
+
+	focus = {
+		id = MGU_soviet_arms_industry
+		icon = GFX_focus_generic_combined_arms
+		x = -1
+		y = 1
+		relative_position_id = MGU_license_soviet_designs
+		prerequisite = { focus = MGU_license_soviet_designs focus = MGU_purchase_soviet_equipment }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			SOU = {
+				has_opinion = {
+					target = ROOT
+					value > 49
+				}
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			IF = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}	
+				custom_effect_tooltip = invites_mio_tt
+
+				show_mio_tooltip = SOV_rubin_design_bureau_organization
+				mio:SOV_rubin_design_bureau_organization = {
+					add_mio_size = 3
+				}
+
+				show_mio_tooltip = SOV_mig_design_bureau_organization
+				mio:SOV_mig_design_bureau_organization = {
+					add_mio_size = 3
+				}
+
+				show_mio_tooltip = SOV_gaz_organization
+				mio:SOV_gaz_organization = {
+					add_mio_size = 3
+				}
+
+			}
+			ELSE = {
+				custom_effect_tooltip = available_designer
+				show_ideas_tooltip = SOV_rubin_design_bureau
+				show_ideas_tooltip = SOV_mig_design_bureau
+				show_ideas_tooltip = SOV_gaz
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_kgbrazil
+		icon = GFX_focus_BRA_kgbrazil
+		x = 2
+		y = 1
+		relative_position_id = MGU_align_with_moscow
+		prerequisite = { focus = MGU_align_with_moscow focus = MGU_oust_prestes focus = MGU_cangaco_coup }
+		cost = 5
+		ai_will_do = {
+			factor = 3
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					has_dlc = "La Resistance" 
+					has_intelligence_agency = no
+				}
+				create_intelligence_agency = { 
+					name = "EICI"
+					icon = GFX_intelligence_agency_logo_MGU_communist
+				}
+	
+				create_operative_leader = {
+					name = MGU_robert_ivanov 
+					traits = { operative_tough }
+					female = no
+					bypass_recruitment = yes
+					nationalities = { SOU }
+					GFX = GFX_portrait_europe_generic_operative_male_5
+				}
+				create_operative_leader = {
+					name = MGU_nadiya_morozova 
+					traits = { operative_escape_artist }
+					female = yes
+					bypass_recruitment = yes
+					nationalities = { SOU }
+					GFX = GFX_portrait_europe_generic_operative_female_7
+				}
+				
+			}
+			ELSE_IF = {
+				limit = {
+					has_dlc = "La Resistance" 
+					has_intelligence_agency = yes
+				}
+
+				create_operative_leader = {
+					name = MGU_robert_ivanov 
+					traits = { operative_tough }
+					female = no
+					bypass_recruitment = yes
+					nationalities = { SOU }
+					GFX = GFX_portrait_europe_generic_operative_male_5
+				}
+
+				create_operative_leader = {
+					name = MGU_nadiya_morozova 
+					traits = { operative_escape_artist }
+					female = yes
+					bypass_recruitment = yes
+					nationalities = { SOU }
+					GFX = GFX_portrait_europe_generic_operative_female_7
+				}
+			}
+			ELSE = {
+				add_tech_bonus = {
+					name = MGU_kgbrazil_tech_bonus
+					bonus = 1
+					uses = 2
+					category = electronics
+				}
+			}
+
+			IF = {
+				limit = { 
+					has_dlc = "By Blood Alone" 
+					has_dlc = "La Resistance"
+				}
+				set_technology = { photo_reconnaisance = 1 }
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_spread_the_revolution
+
+		icon = GFX_focus_SOV_builder_of_the_red_army
+		x = 0
+		y = 6
+		relative_position_id = MGU_launch_the_revolution
+		prerequisite = { focus = MGU_soviet_arms_industry focus = MGU_equality_for_women }
+		##mutually_exclusive = { focus = MGU_the_international_crisis }
+		cost = 10
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+			has_government = communism
+			has_war_support > 0.6
+			has_army_manpower = { size > 199999 }
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = MGU_expanding_the_revolution
+				days = 1460
+		}
+	}
+	}
+
+	focus = {
+		id = MGU_join_the_comintern
+		icon = GFX_focus_generic_join_comintern
+		x = -2
+		y = 1
+		relative_position_id = MGU_spread_the_revolution
+		prerequisite = { focus = MGU_spread_the_revolution }
+		mutually_exclusive = { focus = MGU_create_faction }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		bypass = {
+			is_in_faction_with = SOU
+		}
+		available = {
+			is_subject = no
+			is_in_faction = no
+			SOV_comintern_joinable = yes 
+			has_government = communism	
+			SOU = {
+				has_opinion = {
+					target = ROOT
+					value > 49
+				}
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			SOU = {
+				country_event = { id = generic.2 hours = 4 }
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_smash_fascism
+		icon = GFX_focus_generic_anti_fascist_diplomacy
+		prerequisite = { focus = MGU_join_the_comintern focus = MGU_create_faction }
+		x = -1
+		y = 1
+		relative_position_id = MGU_join_the_comintern
+		cost = 10
+		ai_will_do = {
+			factor = 3
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		available = {
+			any_country = {
+				capital_scope = {
+					is_on_continent = south_america
+				}
+				has_government = fascism
+				NOT = {
+					OR = {
+						original_tag = ELS
+						original_tag = MEX
+						original_tag = DOM
+						original_tag = PAN
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			hidden_effect = {
+				every_other_country = {
+					limit = {
+						capital_scope = {
+							is_on_continent = south_america
+						}
+						has_government = fascism
+						NOT = {
+							OR = {
+								original_tag = ELS
+								original_tag = MEX
+								original_tag = DOM
+								original_tag = PAN
+							}
+						}
+					}
+					ROOT = {
+						create_wargoal = {
+							type = puppet_wargoal_focus
+							target = PREV
+							expire = 0
+						}
+					}
+				}
+			}
+			custom_effect_tooltip = MGU_no_fascism_in_south_america_tt
+		} 
+	}
+
+	focus = {
+		id = MGU_create_faction
+		icon = GFX_focus_BRA_create_faction
+		x = 2
+		y = 1
+		relative_position_id = MGU_spread_the_revolution
+		prerequisite = { focus = MGU_spread_the_revolution }
+		mutually_exclusive = { focus = MGU_join_the_comintern }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			is_subject = no
+		}
+
+		bypass = {
+			is_in_faction = yes
+			has_government = communism
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			set_rule = { can_create_factions = yes }
+			create_faction = MGU_socialist_latin_american_cooperative
+		}
+	}
+
+	focus = {
+		id = MGU_anti_imperialism
+		icon = GFX_focus_ETH_freedom_at_gunpoint
+		x = 1
+		y = 1
+		relative_position_id = MGU_join_the_comintern
+		prerequisite = { focus = MGU_join_the_comintern focus = MGU_create_faction }
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_anti_imperialism_tt
+			MGU_setup_colonized_countries_to_liberate_array = yes #setting up the array with a scripted effect
+		}
+	}
+
+	focus = {
+		id = MGU_jaguar_diplomacy
+		icon = GFX_focus_BRA_jaguar_diplomacy
+		x = -1
+		y = 1
+		relative_position_id = MGU_create_faction
+		prerequisite = { focus = MGU_create_faction focus = MGU_join_the_comintern }
+		cost = 5
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_jaguar_diplomacy_tt
+		}
+	}
+
+	focus = {
+		id = MGU_sway_the_neighbors
+		icon = GFX_focus_BRA_sway_the_neighbors
+		x = 0
+		y = 1
+		relative_position_id = MGU_kgbrazil
+		prerequisite = { focus = MGU_kgbrazil }
+		cost = 5
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					NOT = {
+						has_dlc = "La Resistance"
+					}
+				}
+				custom_effect_tooltip = MGU_sway_the_neighbors_tt
+				set_country_flag = MGU_sway_the_neighbors_no_lar
+			}
+			ELSE = {
+				# Add extra operative slot
+				# Add character with propaganda bonus
+				add_ideas = MGU_sway_the_neighbors_lar
+				create_operative_leader = {
+					name = MGU_julieta_soria
+					traits = { operative_double_agent operative_natural_orator }
+					female = yes
+					bypass_recruitment = yes
+					nationalities = { BRA ARG CHL}
+					GFX = GFX_portrait_europe_generic_operative_female_9
+				}
+			}
+			
+		}
+	}	
+
+	focus = {
+		id = MGU_union_of_latin_american_socialist_republics
+		icon = GFX_focus_BRA_ulasr
+		x = -2
+		y = 2
+		relative_position_id = MGU_create_faction
+		prerequisite = { focus = MGU_create_faction focus = MGU_join_the_comintern }
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			set_cosmetic_tag = MGU_union_of_latin_american_socialist_republics_cos_tag
+			every_state = {
+				limit = {
+					is_on_continent = south_america
+				}
+				add_core_of = ROOT
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_smash_democracy
+		icon = GFX_focus_generic_strike_at_democracy2
+		prerequisite = { focus = MGU_join_the_comintern focus = MGU_create_faction }
+		x = 1
+		y = 1
+		relative_position_id = MGU_create_faction
+		cost = 10
+		ai_will_do = {
+			factor = 3
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		available = {
+			any_country = {
+				capital_scope = {
+					is_on_continent = south_america
+				}
+				has_government = democratic
+				NOT = {
+					OR = {
+						original_tag = ELS
+						original_tag = MEX
+						original_tag = DOM
+						original_tag = PAN
+					}
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			hidden_effect = {
+				every_other_country = {
+					limit = {
+						capital_scope = {
+							is_on_continent = south_america
+						}
+						OR = {
+							has_government = democratic
+							has_government = neutrality
+						}
+						NOT = {
+							OR = {
+								original_tag = ELS
+								original_tag = MEX
+								original_tag = DOM
+								original_tag = PAN
+							}
+						}
+					}
+					ROOT = {
+						create_wargoal = {
+							type = puppet_wargoal_focus
+							target = PREV
+							expire = 0
+						}
+					}
+				}
+			}
+			custom_effect_tooltip = MGU_anti_democracy_in_south_america_tt
+		} 
+	}
+
+	#############################
+	##### Monarchist Branch #####
+
+	focus = {
+		id = MGU_romanticize_the_old_empire
+		icon = GFX_focus_por_reclaim_crown_jewel
+		x = 4
+		y = 1
+		relative_position_id = MGU_end_the_state_of_emergency
+		prerequisite = { focus = MGU_end_the_state_of_emergency }
+		#mutually_exclusive = { focus = MGU_repeal_the_national_security_law }
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+					has_country_leader = {
+						ruling_only = yes
+						character = MGU_Kureha_Yuna
+					}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			set_party_name = {
+				ideology = neutrality
+				name = "誓约之血"
+				long_name = "誓约之血"
+			}
+			add_timed_idea = {
+				idea = MGU_romanticize_the_old_empire_idea
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_vassouras_line
+		icon = GFX_focus_BRA_pedro_henrique
+		x = 2
+		y = 1
+		relative_position_id = MGU_romanticize_the_old_empire
+		prerequisite = { focus = MGU_romanticize_the_old_empire }
+		mutually_exclusive = { focus = MGU_petropolis_line }
+		cost = 5
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_political_power = 100
+			custom_effect_tooltip = MGU_monarch_choice_2_tt
+			show_ideas_tooltip = MGU_king_vassouras
+		}
+	}
+
+	focus = {
+		id = MGU_petropolis_line
+		icon = GFX_focus_BRA_pedro_de_alcantara
+		x = -2
+		y = 1
+		relative_position_id = MGU_romanticize_the_old_empire
+		prerequisite = { focus = MGU_romanticize_the_old_empire }
+		mutually_exclusive = { focus = MGU_vassouras_line }
+		cost = 5
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_political_power = 100
+			custom_effect_tooltip = MGU_monarch_choice_1_tt
+			show_ideas_tooltip = MGU_king_petropolis
+		}
+	}
+
+	focus = {
+		id = MGU_restore_the_coffee_barons
+		icon = GFX_focus_BRA_cafe_com_leite_politics
+		x = 2
+		y = 1
+		relative_position_id = MGU_petropolis_line
+		prerequisite = { focus = MGU_vassouras_line focus = MGU_petropolis_line }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+					has_country_leader = {
+						ruling_only = yes
+						character = MGU_Kureha_Yuna
+					}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			hidden_effect = {
+			    add_country_leader_trait = staunch_monarchist
+			}
+            custom_effect_tooltip = MGU_restore_the_coffee_barons_txt
+		}
+	}
+
+	focus = {
+		id = MGU_constitutional_monarchy
+		icon = GFX_focus_BRA_constitutional_monarchy
+		x = 0
+		y = 1
+		relative_position_id = MGU_restore_the_coffee_barons
+		prerequisite = { focus = MGU_restore_the_coffee_barons }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			neutrality > 0.3
+					has_country_leader = {
+						ruling_only = yes
+						character = MGU_Kureha_Yuna
+					}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			IF = {
+				limit = {
+					has_completed_focus = MGU_vassouras_line
+				}
+				add_ideas = MGU_king_vassouras
+			}
+			ELSE_IF = {
+				limit = {
+					has_completed_focus = MGU_petropolis_line
+				}
+				add_ideas = MGU_king_petropolis
+			}
+			ELSE = {
+				custom_effect_tooltip = MGU_constitutional_monarchy_tt
+				show_ideas_tooltip = MGU_king_vassouras
+				custom_effect_tooltip = MGU_constitutional_monarchy_tt_2
+				show_ideas_tooltip = MGU_king_petropolis
+			}
+			set_cosmetic_tag = MGU_const_kingdom
+			add_political_power = 120
+			hidden_effect = {
+				news_event = { hours = 12 id =JUNO_brazil_news.2 }
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_undermine_democracy
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 0
+		y = 1
+		relative_position_id = MGU_constitutional_monarchy
+		prerequisite = { focus = MGU_constitutional_monarchy }
+		#prerequisite = { focus = MGU_court_the_military }
+		##mutually_exclusive = { focus = MGU_bicarmel_legislature }
+		cost = 10
+		cancel_if_invalid = no
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			neutrality > 0.30
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = MGU_undermine_democracy_idea
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_invest_in_the_armed_forces
+		icon = GFX_goal_generic_military_deal
+		x = -2
+		y = 1
+		relative_position_id = MGU_constitutional_monarchy
+		prerequisite = { focus = MGU_constitutional_monarchy }
+		
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available = {
+		
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			remove_dynamic_modifier = {
+				modifier = MGU_weak_government
+			}
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0 
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = {
+						has_dynamic_modifier = { 
+							modifier = MGU_neglected_state_dynamic_modifier
+						}
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				} 
+			}
+			random_owned_controlled_state = {
+				limit = { 
+					is_coastal = yes 
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+				
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_royal_colleges
+		icon = GFX_focus_research
+		x = 0
+		y = 1
+		relative_position_id = MGU_invest_in_the_armed_forces
+		prerequisite = { focus = MGU_invest_in_the_armed_forces }
+		#prerequisite = { focus = MGU_court_the_military }
+		##mutually_exclusive = { focus = MGU_undermine_democracy }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		amount_research_slots < 5
+		}
+
+		search_filters = { FOCUS_FILTER_RESEARCH }
+
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = MGU_issue_lordships
+		icon = GFX_focus_generic_monarchy_2
+		x = 2
+		y = 1
+		relative_position_id = MGU_constitutional_monarchy
+		prerequisite = { focus = MGU_constitutional_monarchy }
+		#prerequisite = { focus = MGU_court_the_military }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_issue_lordships_tt
+			every_army_leader = {
+				limit = {
+					NOT = {
+						has_trait = politically_connected
+					}
+				}
+				add_trait = { trait = politically_connected }
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_promote_agriculture
+		icon = GFX_focus_generic_coffee
+		x = 0
+		y = 1
+		relative_position_id = MGU_issue_lordships
+		prerequisite = { focus = MGU_issue_lordships }
+		#prerequisite = { focus = MGU_court_the_military }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			add_political_power = 100
+			custom_effect_tooltip = MGU_promote_agriculture_tt
+			show_ideas_tooltip = MGU_geremia_lunarelli
+		}
+	}
+
+	focus = {
+		id = MGU_use_the_national_security_law
+		icon = GFX_focus_BRA_utilize_security_law
+		x = 0
+		y = 1
+		relative_position_id = MGU_undermine_democracy
+		prerequisite = { focus = MGU_undermine_democracy }
+		#prerequisite = { focus = MGU_court_the_military }
+		cost = 5
+		cancel_if_invalid = no
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			neutrality > 0.5
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			#drop_cosmetic_tag = yes
+			add_ideas = MGU_unwilling_subjects
+		}
+	}
+
+	focus = {
+		id = MGU_united_kingdom_of_brazil_and_portugal
+		icon = GFX_focus_NPT_arfoire_light_comes_from_infinite_place
+		x = -2
+		y = 1
+		relative_position_id = MGU_use_the_national_security_law
+		prerequisite = { focus = MGU_use_the_national_security_law }
+		
+		cost = 5
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with_major = yes
+					is_in_faction_with = POR
+				}
+			}
+		}
+		available = {
+			any_other_country = {
+				original_tag = ARF
+				exists = yes
+				is_subject = no
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_united_kingdom_of_brazil_and_portugal_tt
+			ARF = {
+				country_event = generic.2002
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_penal_battalions
+		icon = GFX_focus_SOV_penal_battalions
+		x = 2
+		y = 1
+		relative_position_id = MGU_use_the_national_security_law
+		prerequisite = { focus = MGU_use_the_national_security_law }
+		#prerequisite = { focus = MGU_court_the_military }
+		cost = 10
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER }
+
+		completion_reward = {
+			custom_effect_tooltip = MGU_penal_battalions_tt
+			hidden_effect = {
+				division_template = {
+					name = "Batalhões de Presos"
+					#division_names_group = 
+					is_locked = yes
+					force_allow_recruiting = yes
+					override_model = MGU_militia_alt_0_entity
+					division_cap = 6
+	
+					regiments = {
+						penal_battalion = { x = 0 y = 0 }
+						penal_battalion = { x = 0 y = 1 }
+						penal_battalion = { x = 0 y = 2 }
+						penal_battalion = { x = 1 y = 0 }
+						penal_battalion = { x = 1 y = 1 }
+						penal_battalion = { x = 1 y = 2 }
+					}
+					support = {
+						artillery = { x = 0 y = 0 }
+					}
+				}
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Batalhões de Presos\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Batalhões de Presos\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Batalhões de Presos\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Batalhões de Presos\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Batalhões de Presos\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+					create_unit = {
+						division = "division_template = \"Batalhões de Presos\" start_experience_factor = 0 start_equipment_factor = 1.0"
+						OWNER = ROOT
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_amazonian_settlement
+		icon = GFX_focus_BRA_amazon_colonization 
+		x = 0
+		y = 1
+		relative_position_id = MGU_penal_battalions
+		prerequisite = { focus = MGU_penal_battalions }
+		#prerequisite = { focus = MGU_court_the_military }
+		cost = 5
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			#custom_effect_tooltip = "TODO: Add decision system for amazon state modifierers and maybe war goals against VEN, BOL etc."
+			custom_effect_tooltip = MGU_amazonian_settlement_tt
+		}
+	}
+
+	focus = {
+		id = MGU_empire_of_brazil
+		icon = GFX_focus_BRA_empire_of_brazil
+		x = 0
+		y = 2
+		relative_position_id = MGU_use_the_national_security_law
+		prerequisite = { focus = MGU_use_the_national_security_law }
+		cost = 10
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+			    has_country_leader = {
+					ruling_only = yes
+					character = MGU_Kureha_Yuna
+				}
+		}
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+
+		completion_reward = {
+			hidden_effect = {
+			}
+			add_country_leader_trait = MGU_emperor_trait
+		}
+	}
+
+	focus = {
+		id = MGU_reclaim_territory_in_south_america
+		icon = GFX_focus_generic_attack_uruguay
+		x = -2
+		y = 1
+		relative_position_id = MGU_empire_of_brazil
+		prerequisite = { focus = MGU_empire_of_brazil }
+		cost = 5
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		}
+		bypass = {
+			URG = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			create_wargoal = {
+				target = URG
+				type = annex_everything
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_spirit_of_acre_war
+		icon = GFX_focus_generic_attack_bolivia
+		x = 0
+		y = 1
+		relative_position_id = MGU_reclaim_territory_in_south_america
+		prerequisite = { focus = MGU_demand_portugese_territory focus = MGU_demand_portugese_submission focus = MGU_reclaim_territory_in_south_america }
+		cost = 5
+		ai_will_do = {
+			factor = 15
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with_major = yes
+					is_in_faction_with = BOL
+				}
+			}
+		}
+		available = {
+			any_other_country = {
+				original_tag = BOL
+				exists = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			create_wargoal = {
+				target = BOL
+				type = annex_everything
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_demand_portugese_territory
+		icon = GFX_focus_por_luso_tropicalism
+		x = 0
+		y = 1
+		relative_position_id = MGU_empire_of_brazil
+		prerequisite = { focus = MGU_empire_of_brazil }
+		#mutually_exclusive = { focus = MGU_demand_portugese_submission }
+		cost = 5
+		ai_will_do = {
+			factor = 13
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with_major = yes
+					is_in_faction_with = POR
+				}
+			}
+		}
+		bypass = {
+			POR = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+		will_lead_to_war_with = POR
+		available = {
+			any_other_country = {
+				original_tag = POR
+				exists = yes
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			POR = {
+				country_event = {
+					id = JUNO_brazil_events.70
+					hours = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_demand_portugese_submission
+		icon = GFX_focus_generic_attack_portugal
+		x = 2
+		y = 1
+		relative_position_id = MGU_empire_of_brazil
+		prerequisite = { focus = MGU_empire_of_brazil }
+		#mutually_exclusive = { focus = MGU_demand_portugese_territory }
+		cost = 10
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with_major = yes
+					is_in_faction_with = POR
+				}
+			}
+		}
+		bypass = {
+			POR = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+		will_lead_to_war_with = POR
+		available = {
+			any_other_country = {
+				original_tag = POR
+				exists = yes
+				OR = {
+					is_subject = no
+					is_subject_of = ROOT
+				}				
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			POR = {
+				country_event = {
+					id = JUNO_brazil_events.73
+					hours = 1
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_restoration_of_honor
+		icon = GFX_focus_BRA_restore_brazilian_honor
+		x = 0
+		y = 1
+		relative_position_id = MGU_demand_portugese_territory
+		prerequisite = { focus = MGU_demand_portugese_territory focus = MGU_demand_portugese_submission focus = MGU_reclaim_territory_in_south_america }
+		cost = 10
+		ai_will_do = {
+			factor = 30
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+
+		completion_reward = {
+			remove_ideas = MGU_unwilling_subjects
+			remove_ideas = MGU_separatism_idea
+		}
+	}
+
+	focus = {
+		id = MGU_expand_colonial_empire
+		icon = GFX_focus_generic_africa_factory
+		x = 2
+		y = 1
+		relative_position_id = MGU_demand_portugese_territory
+		prerequisite = { focus = MGU_demand_portugese_territory focus = MGU_demand_portugese_submission focus = MGU_reclaim_territory_in_south_america }
+		cost = 10
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_war_with_major = yes
+				}
+			}
+		}
+		available = {
+			any_other_country = {
+				capital_scope = {
+					is_on_continent = africa
+				}
+				is_subject = no
+			}
+		}
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		completion_reward = {
+			every_other_country	= {
+				limit = {
+					capital_scope = {
+						is_on_continent = africa
+					}
+					is_subject = no
+				}
+				ROOT = {
+					create_wargoal = {
+						target = PREV
+						type = annex_everything
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_support_the_landowners
+		icon = GFX_focus_BRA_support_sugar_barons
+		prerequisite = { focus = MGU_reward_army_loyalty focus = MGU_reinvigorate_the_navy }
+		x = 4
+		y = 1
+		relative_position_id = MGU_reward_army_loyalty
+		#mutually_exclusive = { focus = MGU_support_rural_folk }
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			add_country_leader_trait = { 
+				#character = MGU_getulio_vargas
+				#ideology = despotism
+				trait = MGU_sugar_king
+			}
+			ETH_add_random_civ_factory_effect = yes
+		}
+	}
+
+	focus = {
+		id = MGU_support_rural_folk
+		icon = GFX_focus_BRA_father_of_the_poor
+		prerequisite = { focus = MGU_reward_army_loyalty focus = MGU_reinvigorate_the_navy }
+		#mutually_exclusive = { focus = MGU_support_the_landowners }
+		x = -3
+		y = 1
+		relative_position_id = MGU_reinvigorate_the_navy
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+
+		completion_reward = {
+			add_country_leader_trait = { 
+				#character = MGU_getulio_vargas
+				#ideology = despotism
+				trait = MGU_father_of_the_poor 
+			}
+			every_owned_state = {
+				limit = {
+					is_controlled_by = ROOT
+					OR = {
+						has_state_category = wasteland
+						has_state_category = pastoral
+						has_state_category = rural
+					}
+					NOT = {
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_support_industrialists
+		icon = GFX_focus_generic_industrialists
+		prerequisite = { focus = MGU_support_the_landowners focus = MGU_support_rural_folk }
+		x = 2
+		y = 1
+		relative_position_id = MGU_support_the_landowners
+		#mutually_exclusive = { focus = MGU_consolidation_of_labor_laws }
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+		available = {
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = { 
+						OR = {
+							has_dynamic_modifier = {
+								modifier = MGU_neglected_state_dynamic_modifier
+							}
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+						OR = {
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_consolidation_of_labor_laws
+		icon = GFX_focus_generic_workers
+		prerequisite = { focus = MGU_support_the_landowners focus = MGU_support_rural_folk }
+		x = 0
+		y = 1
+		relative_position_id = MGU_support_the_landowners
+		#mutually_exclusive = { focus = MGU_support_industrialists }
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		}
+	
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+	
+		completion_reward = {
+			IF = {
+				limit = {
+					has_dynamic_modifier = {
+						modifier = MGU_estado_novo_modifier
+					}
+				}
+				custom_effect_tooltip = MGU_modify_estado_novo_ns_intro
+				add_to_variable = {
+					MGU_estado_novo_consumer_goods_factor = 0.05
+					tooltip = consumer_goods_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_novo_stability_factor = 0.03
+					tooltip = stability_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_novo_production_speed_buildings_factor = 0.1
+					tooltip = production_speed_buildings_factor_tt
+				}
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = {
+						modifier = MGU_estado_moderno_modifier
+					}
+				}
+				custom_effect_tooltip = MGU_modify_estado_moderno_ns_intro
+				add_to_variable = {
+					MGU_estado_moderno_consumer_goods_factor = -0.05
+					tooltip = consumer_goods_factor_tt
+				}
+				add_to_variable = {
+					MGU_estado_moderno_stability_factor = 0.03
+					tooltip = stability_factor_tt
+
+				}
+				add_to_variable = {
+					MGU_estado_moderno_production_speed_buildings_factor = 0.1
+					tooltip = production_speed_buildings_factor_tt
+				}
+			}
+			ELSE = {
+				custom_effect_tooltip = MGU_consolidation_of_labor_laws_fallback_tt
+				effect_tooltip = {
+					add_to_variable = {
+						MGU_estado_moderno_consumer_goods_factor = -0.05
+						tooltip = consumer_goods_factor_tt
+					}
+					add_to_variable = {
+						MGU_estado_moderno_stability_factor = 0.03
+						tooltip = stability_factor_tt
+
+					}
+					add_to_variable = {
+						MGU_estado_moderno_production_speed_buildings_factor = 0.1
+						tooltip = production_speed_buildings_factor_tt
+					}
+				}
+			}
+		}
+	}
+
+
+	focus = {
+		id = MGU_establish_caloi
+		icon = GFX_focus_SWE_bicycle
+		x = 2
+		y = 1
+		prerequisite = { focus = MGU_promote_resource_extraction focus = MGU_companhia_siderurgica_nacional }
+		relative_position_id = MGU_promote_resource_extraction
+		cost = 5
+		available = {
+		}
+	
+		search_filters = { FOCUS_FILTER_HISTORICAL }
+	
+		completion_reward = {
+			set_technology = { bicycle_infantry = 1 popup = no }
+			random_core_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					is_owned_and_controlled_by = ROOT
+					NOT = { 
+						OR = {
+							has_dynamic_modifier = {
+								modifier = MGU_neglected_state_dynamic_modifier
+							}
+							state = 961
+							state = 962
+							state = 963
+							state = 964
+							state = 965
+							state = 966
+							state = 967
+							state = 968
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = MGU_unify_south_america
+		icon = GFX_focus_generic_south_america
+		prerequisite = { 
+			focus = MGU_german_cooperation
+			focus = MGU_italian_cooperation
+			focus = MGU_panama_push
+		}
+		x = 0
+		y = 1
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+		relative_position_id = MGU_italian_cooperation
+		cost = 10
+		ai_will_do = {
+			factor = 20
+		}
+		available = {
+			any_state = {
+				is_on_continent = south_america
+				NOT = {
+					is_core_of = ROOT
+				}
+			}
+		}
+
+		search_filters = { }
+
+		completion_reward = {
+			set_cosmetic_tag = MGU_america_do_sul
+			custom_effect_tooltip = MGU_unify_south_america_tt
+		}
+	}
+}
