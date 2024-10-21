@@ -5787,6 +5787,7 @@ country_event = {
 	is_triggered_only = no
 	fire_only_once = yes
 		trigger = {
+		    has_completed_focus = PAN_71
 		    date > 1940.6.1
 		    tag = PAN
 		    PAN = { is_ai = yes }
@@ -5820,7 +5821,8 @@ country_event = {
 	is_triggered_only = no
 	fire_only_once = yes
 		trigger = {
-		    date > 1941.1.1
+		    has_completed_focus = PAN_71
+		    date > 1940.6.1
 		    tag = PAN
 		    PAN = { is_ai = yes }
             NOT = { has_war_with = PAM }
@@ -5853,7 +5855,8 @@ country_event = {
 	is_triggered_only = no
 	fire_only_once = yes
 		trigger = {
-		    date > 1941.6.1
+		    has_completed_focus = PAN_71
+		    date > 1941.1.1
 		    tag = PAN
 		    PAN = { is_ai = yes }
             NOT = { has_war_with = PAQ }
@@ -5886,7 +5889,8 @@ country_event = {
 	is_triggered_only = no
 	fire_only_once = yes
 		trigger = {
-		    date > 1942.1.1
+		    has_completed_focus = PAN_71
+		    date > 1941.6.1
 		    tag = PAN
 		    PAN = { is_ai = yes }
             NOT = { has_war_with = PAU }
@@ -5919,7 +5923,8 @@ country_event = {
 	is_triggered_only = no
 	fire_only_once = yes
 		trigger = {
-		    date > 1941.9.1
+		    has_completed_focus = PAN_71
+		    date > 1941.6.1
 		    tag = PAN
 		    PAN = { is_ai = yes }
             NOT = { has_war_with = BRA }
@@ -5944,7 +5949,7 @@ country_event = {
 }
 
 country_event = {
-	# 南美局势-结束战争？
+	# 南美局势-结束战争？ 和谈
 	id = magicunion.1110
 	title = magicunion.1110.t
 	desc = magicunion.1110.desc
@@ -5952,12 +5957,33 @@ country_event = {
 	is_triggered_only = yes
 	fire_only_once = no
 
-	option = {#欣然接受
+	option = {#只能接受
 		name = magicunion.1110.a
-			white_peace = {
-			tag = MGU
-			message = MGU_PAN_war_peace
+			every_enemy_country = {
+				limit = {
+					is_valid_peace_target = yes
+                        capital_scope = {
+                            is_on_continent = south_america
+                        }
+				}
+				white_peace = {
+					tag = PAN
+					message = MGU_PAN_war_peace
+				}
 			}
+	remove_from_faction = CHL
+	remove_from_faction = PA1
+    MGU = {
+        set_autonomy = {
+            target = CHL
+            autonomy_state = autonomy_puppet
+        }
+        set_autonomy = {
+            target = PA1
+            autonomy_state = autonomy_puppet
+        }
+    }
+
 		ai_chance = {
 			factor = 10
 		}
@@ -6322,6 +6348,10 @@ country_event = {
 				magic_artillery1 = 1
 				popup = no
 			}
+			set_technology = {
+				special_forces_paratroopers = 1
+				popup = no
+			}
 				add_equipment_to_stockpile = {
 					type = 	strike_witches_equipment_1
 					amount = 300
@@ -6365,6 +6395,10 @@ country_event = {
 					magic_artillery2 = 1
 					popup = no
 				}
+			set_technology = {
+				paras_combat_drop = 1
+				popup = no
+			}
 				add_equipment_to_stockpile = {
 					type = 	strike_witches_equipment_2
 					amount = 300
@@ -6410,6 +6444,7 @@ country_event = {
 					type = 	strike_witches_equipment_2
 					amount = 300
 				}
+				set_technology = { paras_airborne_light_armor = 1 popup = no }
 			}
 	}
 	option = {#a
@@ -6453,6 +6488,9 @@ country_event = {
 					type = 	strike_witches_equipment_3
 					amount = 300
 				}
+				set_technology = { paras_combat_2 = 1 popup = no }
+				set_technology = { paras_bonus_2 = 1 popup = no }
+				set_technology = { paras_keystone_2 = 1 popup = no }
 			}
 	}
 	option = {#a
@@ -6463,6 +6501,179 @@ country_event = {
 		}
 	}
 }
+
+country_event = {
+	# 南美局势-要求调停
+	id = magicunion.1123
+	title = magicunion.1123.t
+	desc = magicunion.1123.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {#让我们介入
+		name = magicunion.1123.a
+             PAN = { country_event = magicunion.1124 }
+		ai_chance = {
+			factor = 10
+		}
+	}
+
+	option = {#别管南美了
+		name = magicunion.1123.b
+
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
+country_event = {
+	# 南美局势-圣杯调停
+	id = magicunion.1124
+	title = magicunion.1124.t
+	desc = magicunion.1124.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {#同意停战
+		name = magicunion.1124.a
+		    #判定首都沦陷与投降倾向
+			if = {
+				limit = {
+					PAU = { has_capitulated = yes }
+					278 = { controller = { has_war_with = MGU } }
+				}
+				set_global_flag = PAU_is_defeat_flag
+			}
+			if = {
+				limit = {
+					PAM = { has_capitulated = yes }
+					845 = { controller = { has_war_with = MGU } }
+				}
+				set_global_flag = PAM_is_defeat_flag
+			}
+			if = {
+				limit = {
+					BRA = { has_capitulated = yes }
+					898 = { controller = { has_war_with = MGU } }
+				}
+				set_global_flag = BRA_is_defeat_flag
+			}
+			if = {
+				limit = {
+					PAQ = { has_capitulated = yes }
+					1036 = { controller = { has_war_with = MGU } }
+				}
+				set_global_flag = PAQ_is_defeat_flag
+			}
+			if = {
+				limit = {
+					PAO = { has_capitulated = yes }
+					301 = { controller = { has_war_with = MGU } }
+				}
+				set_global_flag = PAO_is_defeat_flag
+			}
+
+
+			every_enemy_country = {
+				limit = {
+					is_valid_peace_target = yes
+                        capital_scope = {
+                            is_on_continent = south_america
+                        }
+				}
+				white_peace = {
+					tag = PAN
+					message = MGU_PAN_war_peace_2
+				}
+			}
+			#傀儡战败国家
+			if = {
+				limit = {
+                    has_global_flag = PAU_is_defeat_flag
+				}
+                set_autonomy = {
+                    target = PAU
+                    autonomy_state = autonomy_puppet
+                }
+			}
+			if = {
+				limit = {
+                    has_global_flag = PAM_is_defeat_flag
+				}
+                set_autonomy = {
+                    target = PAM
+                    autonomy_state = autonomy_puppet
+                }
+			}
+			if = {
+				limit = {
+                    has_global_flag = PAQ_is_defeat_flag
+				}
+                set_autonomy = {
+                    target = PAQ
+                    autonomy_state = autonomy_puppet
+                }
+			}
+			if = {
+				limit = {
+                    has_global_flag = PAO_is_defeat_flag
+				}
+                set_autonomy = {
+                    target = PAO
+                    autonomy_state = autonomy_puppet
+                }
+			}
+			if = {
+				limit = {
+                    has_global_flag = BRA_is_defeat_flag
+				}
+                set_autonomy = {
+                    target = BRA
+                    autonomy_state = autonomy_puppet
+                }
+			}
+		ai_chance = {
+			factor = 10
+		}
+	}
+
+	option = {#圣杯？他有几个师
+		name = magicunion.1124.b
+            ENG = { country_event = magicunion.1125 }
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+country_event = {
+	# 南美局势-圣杯调停
+	id = magicunion.1125
+	title = magicunion.1125.t
+	desc = magicunion.1125.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {#战争
+		name = magicunion.1125.a
+            declare_war_on = { target = PAN type = take_state }
+            diplomatic_relation = {
+                country = MGU
+                relation = military_access
+                active = yes
+            }
+            MGU = {
+                diplomatic_relation = {
+                    country = ENG
+                    relation = military_access
+                    active = yes
+                }
+            }
+		ai_chance = {
+			factor = 10
+		}
+	}
 
 
 
