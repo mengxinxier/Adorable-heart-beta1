@@ -6348,14 +6348,19 @@ country_event = {
 				magic_artillery1 = 1
 				popup = no
 			}
-			set_technology = {
-				special_forces_paratroopers = 1
-				popup = no
-			}
+            if = {
+                limit = {
+                    NOT = { has_country_flag = MGU_We_are_mahoshaojiu_flag }
+                }
 				add_equipment_to_stockpile = {
 					type = 	strike_witches_equipment_1
 					amount = 300
 				}
+                set_technology = {
+                    special_forces_paratroopers = 1
+                    popup = no
+                }
+            }
 		}
 	}
 	option = {#a
@@ -6395,15 +6400,20 @@ country_event = {
 					magic_artillery2 = 1
 					popup = no
 				}
-			set_technology = {
-				paras_combat_drop = 1
-				popup = no
-			}
+            if = {
+                limit = {
+                    NOT = { has_country_flag = MGU_We_are_mahoshaojiu_flag }
+                }
 				add_equipment_to_stockpile = {
 					type = 	strike_witches_equipment_2
 					amount = 300
 				}
-			}
+                set_technology = {
+                    paras_combat_drop = 1
+                    popup = no
+                }
+            }
+		}
 	}
 	option = {#a
 		name = magicunion.1120.a
@@ -6444,7 +6454,18 @@ country_event = {
 					type = 	strike_witches_equipment_2
 					amount = 300
 				}
+            if = {
+                limit = {
+                    NOT = { has_country_flag = MGU_We_are_mahoshaojiu_flag }
+                }
+				add_equipment_to_stockpile = {
+					type = 	strike_witches_equipment_2
+					amount = 300
+				}
 				set_technology = { paras_airborne_light_armor = 1 popup = no }
+            }
+
+
 			}
 	}
 	option = {#a
@@ -6484,6 +6505,10 @@ country_event = {
 					magic_artillery4 = 1
 					popup = no
 				}
+            if = {
+                limit = {
+                    NOT = { has_country_flag = MGU_We_are_mahoshaojiu_flag }
+                }
 				add_equipment_to_stockpile = {
 					type = 	strike_witches_equipment_3
 					amount = 300
@@ -6491,7 +6516,8 @@ country_event = {
 				set_technology = { paras_combat_2 = 1 popup = no }
 				set_technology = { paras_bonus_2 = 1 popup = no }
 				set_technology = { paras_keystone_2 = 1 popup = no }
-			}
+            }
+		}
 	}
 	option = {#a
 		name = magicunion.1121.a
@@ -6633,6 +6659,7 @@ country_event = {
                     autonomy_state = autonomy_puppet
                 }
 			}
+			ENG = { give_guarantee = MGU }
 		ai_chance = {
 			factor = 10
 		}
@@ -6648,7 +6675,7 @@ country_event = {
 }
 
 country_event = {
-	# 南美局势-圣杯调停
+	# 南美局势-圣杯调停失败 介入！
 	id = magicunion.1125
 	title = magicunion.1125.t
 	desc = magicunion.1125.desc
@@ -6674,6 +6701,135 @@ country_event = {
 			factor = 10
 		}
 	}
+
+#[MGU.Getname]提议加入民主国家同盟
+country_event = {
+	id = magicunion.1126
+	title = magicunion.1126.t
+	desc = magicunion.1126.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = magicunion.1126.a
+		#set_faction_name = Pacific_Revolutionary_Alliance
+		MGU = {
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = FROM
+					}
+					ROOT = {
+						add_to_faction = PREV
+					}
+				}
+			}
+		}
+		add_to_faction = MGU
+		hidden_effect = {
+			news_event = {
+				id = generic.2007
+				days = 1
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = magicunion.1126.b
+		FROM = {
+			country_event = {
+				id = generic.2009
+			}
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+news_event = {
+	#南美战争-开始！！！
+	id = magicunion.1127
+	title = magicunion.1127.t
+	desc = magicunion.1127.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = no
+	fire_only_once = yes
+	hidden = yes
+		trigger = {
+            MGU = { has_war_with = PAN }
+            NOT = { is_in_faction_with = BRA }
+        }
+	immediate = {
+		hidden_effect = {
+			news_event = { id = magicunion.1128 }
+			MGU = { country_event = { days = 730 id = magicunion.1129 } }
+		}
+	}
+
+	option = {
+		name = magicunion.1127.a
+	}
+}
+
+news_event = {
+	#南美战争-新闻！！！
+	id = magicunion.1128
+	title = magicunion.1128.t
+	desc = magicunion.1128.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = magicunion.1128.a
+		trigger = {
+			has_government = communism
+		}
+	}
+	option = {
+		name = magicunion.1128.b
+		trigger = {
+		    NOT = {	has_government = communism }
+            NOT = { capital_scope = { is_on_continent = south_america } }
+		}
+	}
+	option = {
+		name = magicunion.1128.c
+		trigger = {
+             NOT = { has_government = communism }
+             capital_scope = { is_on_continent = south_america }
+		}
+	}
+}
+
+news_event = {
+	#南美战争-4年
+	id = magicunion.1129
+	title = magicunion.1129.t
+	desc = magicunion.1129.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	immediate = {
+        set_global_flag = SA_war_4_years_flag
+	}
+	option = {
+		name = magicunion.1129.a
+	}
+}
+
+
+
+
+
+
+
+
 
 
 
