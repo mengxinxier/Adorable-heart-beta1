@@ -1,0 +1,48 @@
+on_actions = {
+	on_offer_join_faction = {
+		effect = {
+			save_global_event_target_as = Adorable_heart_faction_leader
+			FROM = {
+				save_global_event_target_as = Adorable_heart_faction_member
+			}
+			set_global_flag = faction_joining_window_visible
+			sound_effect = "peace_summary_message"
+		}
+	}
+	on_state_control_changed = {
+		effect = {
+			### Integration Check
+			FROM.FROM = {
+				if = {
+					limit = {
+						has_variable = can_integrate_@ROOT
+						NOT = { is_core_of = ROOT }
+						impassable = no
+					}
+					start_state_integration_resistance = yes
+				}
+				else = {
+					clear_state_integration_resistance = yes
+				}
+			}
+		}
+	}
+	on_annex = {
+		effect = {
+			FROM = {
+				for_each_loop = {
+					array = state_integration_alerts
+					clear_variable = integration_alert_timer_@var:v
+					clear_variable = integration_progressbar_value_@var:v
+				}
+				for_each_loop = {
+					array = country_integration_alerts
+					clear_variable = integration_alert_timer_@var:v
+					clear_variable = integration_progressbar_value_@var:v
+				}
+				clear_array = state_integration_alerts
+				clear_array = country_integration_alerts
+			}
+		}
+	}
+}

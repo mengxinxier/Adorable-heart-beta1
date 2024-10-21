@@ -27,6 +27,7 @@ SOV_faction_management_category = {
 				add_dynamic_modifier = {
 					modifier = SOV_comecon_leader
 				}
+				add_to_array = { global.comecon_member = ROOT }
 			}
 		}
 	}
@@ -673,6 +674,54 @@ SOV_faction_management_category = {
 			POL = { country_event = SOV_dip.38 }
 		}
 	}
+
+	SOV_integrate_Kiev_region = {
+		icon = GFX_decision_infiltrate_state
+		visible = {
+			tag = SOV
+			UKR = {
+				exists = no
+			}
+			any_state = {
+				is_core_of = UKR
+				NOT = { is_core_of = ROOT }
+			}
+		}
+		available = {
+			any_state = {
+				is_core_of = UKR
+				is_controlled_by = ROOT
+			}
+		}
+		ai_will_do = {
+			factor = 100000
+		}
+		cost = 10
+		days_remove = 90
+		fire_only_once = yes
+		complete_effect = {
+			every_state = {
+				limit = { is_core_of = UKR }
+				add_claim_by = ROOT
+			}
+		}
+		remove_effect = {
+			every_state = {
+				limit = {
+					is_core_of = UKR
+					is_controlled_by = ROOT
+				}
+				add_compliance = 0.20
+			}
+			hidden_effect = {
+				country_event = ukr_politics.45
+			}
+			add_to_variable = { ubs_save = 300 }
+			custom_effect_tooltip = SOV_get_300_add_to_reserve
+			SOV_allowance_of_peasants = yes
+		}
+	}
+
 
 }
 
@@ -2027,227 +2076,6 @@ SOV_development_of_industry_category = {
 
 SOV_territorial_affairs = {
 
-	SOV_integrate_Kiev_region = {
-		icon = GFX_decision_infiltrate_state
-		visible = {
-			tag = SOV
-			UKR = {
-				exists = no
-			}
-			any_state = {
-				is_core_of = UKR
-				NOT = { is_core_of = ROOT }
-			}
-		}
-		available = {
-			any_state = {
-				is_core_of = UKR
-				is_controlled_by = ROOT
-			}
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 50
-		days_remove = 90
-		fire_only_once = yes
-		complete_effect = {
-			every_state = {
-				limit = { is_core_of = UKR }
-				add_claim_by = ROOT
-			}
-		}
-		remove_effect = {
-			every_state = {
-				limit = { is_core_of = UKR }
-				remove_claim_by = ROOT
-				add_core_of = ROOT
-			}
-			hidden_effect = {
-				country_event = ukr_politics.45
-			}
-			add_to_variable = { ubs_save = 300 }
-			custom_effect_tooltip = SOV_get_300_add_to_reserve
-			SOV_allowance_of_peasants = yes
-		}
-	}
-
-	SOV_integrate_Minsk_region = {
-		icon = GFX_decision_infiltrate_state
-		visible = {
-			OR = {
-				tag = SOV
-				tag = UKR
-			}
-			OR = {
-				any_owned_state = {
-					is_Minsk_region = yes
-					NOT = { is_core_of = ROOT }
-				}
-				any_subject_country = {
-					any_owned_state = {
-						is_Minsk_region = yes
-					}
-				}
-			}
-		}
-		available = {
-
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 50
-		days_remove = 90
-		fire_only_once = yes
-		complete_effect = {
-			every_owned_state = {
-				limit = {
-					is_Minsk_region = yes
-					NOT = { is_core_of = ROOT }
-				}
-				add_claim_by = ROOT
-			}
-		}
-		remove_effect = {
-
-			if = {
-				limit = {
-					any_subject_country = {
-						any_owned_state = {
-							is_Minsk_region = yes
-							NOT = { is_core_of = ROOT }
-						}
-					}
-				}
-				every_subject_country = {
-					every_owned_state = {
-						limit = {
-							is_Minsk_region = yes
-						}
-						transfer_state_to = ROOT
-					}
-				}
-			}
-			every_owned_state = {
-				limit = {
-					is_Minsk_region = yes
-					NOT = { is_core_of = ROOT }
-				}
-				remove_claim_by = ROOT
-				add_core_of = ROOT
-			}
-		}
-	}
-
-	SOV_integrate_Karelia_region = {
-		icon = GFX_decision_infiltrate_state
-		visible = {
-			tag = SOV
-			OR = {
-				owns_state = 146
-				any_subject_country = {
-					NOT = { tag = FIN }
-					owns_state = 146
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 5
-		days_remove = 90
-		fire_only_once = yes
-		complete_effect = {
-			146 = {
-				add_claim_by = ROOT
-			}
-		}
-		remove_effect = {
-			if = {
-				limit = {
-					any_subject_country = {
-						owns_state = 146
-					}
-				}
-				transfer_state = 146
-			}
-			146 = {
-				remove_claim_by = ROOT
-				add_core_of = ROOT
-			}
-		}
-	}
-
-	SOV_integrate_Armenia_and_Georgia_region = {
-		icon = GFX_decision_infiltrate_state
-		visible = {
-			tag = SOV
-			OR = {
-				any_owned_state = {
-					is_Armenia_and_Georgia_state = yes
-					NOT = { is_core_of = ROOT }
-				}
-				any_subject_country = {
-					any_owned_state = {
-						is_Armenia_and_Georgia_state = yes
-						NOT = { is_core_of = ROOT }
-					}
-				}
-			}
-		}
-		available = {
-			
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 5
-		days_remove = 90
-		fire_only_once = no
-		complete_effect = {
-			every_owned_state = {
-				limit = {
-					is_Armenia_and_Georgia_state = yes
-					NOT = { is_core_of = ROOT }
-				}
-				add_claim_by = ROOT
-			}
-		}
-		remove_effect = {
-
-			if = {
-				limit = {
-					any_subject_country = {
-						any_owned_state = {
-							is_Armenia_and_Georgia_state = yes
-							NOT = { is_core_of = ROOT }
-						}
-					}
-				}
-				every_subject_country = {
-					every_owned_state = {
-						limit = {
-							is_Armenia_and_Georgia_state = yes
-						}
-						transfer_state_to = ROOT
-					}
-				}
-			}
-			every_owned_state = {
-				limit = {
-					is_Armenia_and_Georgia_state = yes
-					NOT = { is_core_of = ROOT }
-				}
-				remove_claim_by = ROOT
-				add_core_of = ROOT
-			}
-		}
-	}
-
 	SOV_rename_Kaliningrad = {
 		icon = GFX_decision_hol_draw_up_staff_plans
 		allowed = {
@@ -2575,9 +2403,9 @@ SOV_special_military_operations_category = {
 		}
 		timeout_effect = {
 			SOV = {
-				every_core_state = {
-					remove_core_of = UKR
-				}
+				# every_core_state = {
+				# 	remove_core_of = UKR
+				# }
 				ROOT = { country_event = ukr_politics.8 }
 			}
 			remove_mission = UKR_constant_supply_mission
@@ -4433,7 +4261,10 @@ SOV_dip_agitprop_category = {
 					has_government = communism
 				}
 			}
-			FROM = { communism > 0.3 } 
+			FROM = {
+				communism > 0.6
+				has_war = no
+			} 
 		}
 		cost = 50
 		days_remove = 21
@@ -5405,7 +5236,7 @@ SOV_comecon_category = {
 				set_variable = { comecon_military_vehicles_seller = SOV }
 				country_event = SOV_cmea.6
 			}
-			FROM = {
+			SOV = {
 				add_offsite_building = {
 					type = industrial_complex
 					level = 1
@@ -5884,8 +5715,16 @@ The_comintern_international_aid_category = {
 		cost = 0
 		fire_only_once = yes
 		complete_effect = {
-			country_event = { days = 1 id = SOV_news.4 }
-			SOV = { add_to_faction = FROM }
+			news_event = { days = 1 id = SOV_news.4 }
+			FROM = {
+				faction_leader = {
+					every_other_country = {
+						limit = { is_in_faction_with = PREV }
+						SOV = { add_to_faction = PREV }
+					}
+					SOV = { add_to_faction = PREV }
+				}
+			}
 		}
 	}
 
@@ -6362,15 +6201,23 @@ SOV_operation_forgotten_cards_category = {
 #小樱的衣柜
 SOV_Sakura_clothes = {
 	Sakura_clothes_1 = {
-		allowed = {
-		}
 		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		cost = 0
 		ai_will_do = {
-			factor = 100
+			factor = 0
 		}
 		complete_effect = {
 			custom_effect_tooltip = SOV_Sakura_01
@@ -6383,15 +6230,23 @@ SOV_Sakura_clothes = {
 		}
 	}
 	Sakura_clothes_2 = {
-		allowed = {
-		}
 		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		cost = 0
 		ai_will_do = {
-			factor = 100
+			factor = 0
 		}
 		complete_effect = {
 			custom_effect_tooltip = SOV_Sakura_02
@@ -6404,15 +6259,23 @@ SOV_Sakura_clothes = {
 		}
 	}
 	Sakura_clothes_3 = {
-		allowed = {
-		}
 		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		cost = 0
 		ai_will_do = {
-			factor = 100
+			factor = 0
 		}
 		complete_effect = {
 			custom_effect_tooltip = SOV_Sakura_03
@@ -6425,15 +6288,23 @@ SOV_Sakura_clothes = {
 		}
 	}
 	Sakura_clothes_4 = {
-		allowed = {
-		}
 		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		cost = 0
 		ai_will_do = {
-			factor = 100
+			factor = 0
 		}
 		complete_effect = {
 			custom_effect_tooltip = SOV_Sakura_04
@@ -6446,15 +6317,23 @@ SOV_Sakura_clothes = {
 		}
 	}
 	Sakura_clothes_5 = {
-		allowed = {
-		}
 		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		cost = 0
 		ai_will_do = {
-			factor = 100
+			factor = 0
 		}
 		complete_effect = {
 			custom_effect_tooltip = SOV_Sakura_05
@@ -6467,15 +6346,23 @@ SOV_Sakura_clothes = {
 		}
 	}
 	Sakura_clothes_6 = {
-		allowed = {
-		}
 		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		cost = 0
 		ai_will_do = {
-			factor = 100
+			factor = 0
 		}
 		complete_effect = {
 			custom_effect_tooltip = SOV_Sakura_06
@@ -6488,15 +6375,23 @@ SOV_Sakura_clothes = {
 		}
 	}
 	Sakura_clothes_7 = {
-		allowed = {
-		}
 		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		cost = 0
 		ai_will_do = {
-			factor = 100
+			factor = 0
 		}
 		complete_effect = {
 			custom_effect_tooltip = SOV_Sakura_07
@@ -6509,15 +6404,23 @@ SOV_Sakura_clothes = {
 		}
 	}
 	Sakura_clothes_8 = {
-		allowed = {
-		}
 		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
 		}
 		cost = 0
 		ai_will_do = {
-			factor = 100
+			factor = 0
 		}
 		complete_effect = {
 			custom_effect_tooltip = SOV_Sakura_08
@@ -6654,3 +6557,497 @@ SOV_World_Soviets = {
 	}
 }
 
+Reunit_Russia_decision_cate = {
+	Reunit_Russia_decision = {
+		allowed = {
+			is_russia_uniter_tag = yes
+			NOT = {
+				or = {
+					tag = SOV
+					tag = UKR
+				}
+			}
+		}
+		visible = {
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_all_russia_state
+				NOT = {
+					any_state = {
+						has_state_flag = is_RUS_state_area
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			has_war = no
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			if = {
+				limit = { has_government = communism }
+				set_cosmetic_tag = Soviet_Russian
+			}
+			else = {
+				set_cosmetic_tag = Russian
+				if = {
+					limit = { controlled_states = 195 }
+					set_province_name = {
+						id = 6174
+						name = "彼得格勒"
+					}
+					195 = { set_state_name = "彼得格勒" }
+				}
+				if = {
+					limit = { controlled_states = 217 }
+					set_province_name = {
+						id = 3529
+						name = "察里津"
+					}
+					217 = { set_state_name = "察里津" }
+				}
+			}
+			if = {
+				limit = { amount_research_slots < 4 }
+				set_research_slots = 4
+			}
+			every_controlled_state = {
+				limit = { has_state_flag = is_RUS_state_area }
+				add_core_of_ROOT = yes
+			}
+			every_state = {
+				limit = {
+					has_state_flag = is_RUS_state_area
+					NOT = {
+						or = {
+							is_core_of = ROOT
+							is_claimed_by = ROOT
+						}
+					}
+				}
+				add_claim_by = ROOT
+			}
+			set_country_flag = Reunit_Russia_country
+			if = {
+				limit = { controlled_states = 219 }
+				set_capital = {
+					state = 219
+					remember_old_capital = no
+				}
+			}
+		}
+	}
+	Rebuild_CCCP_decision = {
+		allowed = {
+			is_russia_uniter_tag = yes
+			NOT = {
+				or = {
+					tag = SOV
+					tag = UKR
+				}
+			}
+		}
+		visible = { has_government = communism }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_all_russia_state
+				NOT = {
+					any_state = {
+						has_state_flag = is_RUS_state_area
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			count_triggers = {
+				amount = 5
+				custom_trigger_tooltip = {
+					tooltip = control_all_UKR_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_UKR_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_BLR_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_BLR_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_TAM_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_TAM_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_GEO_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_GEO_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_AZR_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_AZR_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_KUB_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_KUB_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_KAR_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_KAR_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = control_all_CRI_state
+					NOT = {
+						any_state = {
+							has_state_flag = is_CRI_state_area
+							NOT = { is_controlled_by = ROOT }
+						}
+					}
+				}
+			}
+			has_war = no
+			has_government = communism
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_cosmetic_tag = EAM_Soviet_union
+			if = {
+				limit = { amount_research_slots < 5 }
+				set_research_slots = 5
+			}
+			every_controlled_state = {
+				limit = { has_state_flag = Soviet_union_state_area }
+				add_core_of_ROOT = yes
+			}
+			if = {
+				limit = { controlled_states = 219 }
+				set_capital = {
+					state = 219
+					remember_old_capital = no
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						tag = EAM
+						is_in_faction_with = PRC
+						PRC = { is_faction_leader = yes }
+					}
+					news_event = { id = PRC_news.03 }
+				}
+			}
+		}
+	}
+	RUS_target_decision_core = {
+		icon = generic_nationalism
+		allowed = {
+			is_russia_uniter_tag = yes
+			NOT = {
+				or = {
+					tag = SOV
+					tag = UKR
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				NOT = { is_core_of = ROOT }
+				has_state_flag = is_RUS_state_area
+			}
+			ROOT = { has_country_flag = Reunit_Russia_country }
+		}
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_array = controlled_states
+		cost = 25
+		days_remove = 30
+		ai_will_do = {
+			factor = 100
+		}
+		remove_effect = {
+			FROM = { add_core_of_ROOT = yes }
+		}
+	}
+}
+
+
+Reunit_Tresen_decision_cate = {
+	Reunit_Tresen_decision = {
+		allowed = {
+			is_Tresen_tag = yes
+		}
+		visible = {
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_all_Tresen_state
+				NOT = {
+					any_state = {
+						or = {
+							is_core_of = TAM
+							is_core_of = PER
+							is_core_of = AFG
+						}
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			has_war = no
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_cosmetic_tag = Tresen_Federation
+			if = {
+				limit = { amount_research_slots < 4 }
+				set_research_slots = 4
+			}
+			every_controlled_state = {
+				limit = { has_state_flag = is_RUS_state_area }
+				add_core_of_ROOT = yes
+			}
+			if = {
+				limit = {
+					is_in_third_international = yes
+				}
+				every_state = {
+					limit = { has_state_flag = is_Tresen_state_area }
+					add_core_of_ROOT = yes
+				}
+			}
+			else = {
+				every_state = {
+					limit = { has_state_flag = is_whole_Tresen_state_area }
+					add_core_of_ROOT = yes
+				}
+			}
+			set_country_flag = Reunit_Tresen_country
+		}
+	}
+}
+
+SOV_Debug = {
+	UKR_become_great = {
+		allowed = { tag = UKR }
+		complete_effect = {
+			annex_country = { target = SOV transfer_troops = no }
+			UKR_become_great = yes
+		}
+	}
+	UKR_become_great_end = {
+		allowed = { tag = UKR }
+		complete_effect = {
+			UKR_become_great_end = yes
+			add_ideas = partial_economic_mobilisation
+			load_focus_tree = { tree = RUS_focus_from_UKR keep_completed = yes }
+			custom_effect_tooltip = UKR_Russia_back_tt
+		}
+	}
+	RUS_constitutional_monarchy_win = {
+		allowed = { tag = UKR }
+		complete_effect = {
+			clr_country_flag = RUS_republican_win
+			clr_country_flag = RUS_fxs_win
+			clr_country_flag = RUS_royalist_win
+			clr_country_flag = UKR_bingbian
+			clr_country_flag = RUS_pujingnadangxuan
+			clr_country_flag = RUS_huilinai_dead
+			set_country_flag = RUS_constitutional_monarchy_win
+			set_country_flag = RUS_royalist_win_effect
+			RUS_constitutional_monarchy_win_effect = yes
+			hidden_effect = {
+				remove_power_balance = {
+					id = UKR_power_balance
+				}
+			}
+		}
+	}
+	RUS_fxs_win = {
+		allowed = { tag = UKR }
+		complete_effect = {
+			clr_country_flag = RUS_republican_win
+			clr_country_flag = RUS_fxs_win
+			clr_country_flag = RUS_royalist_win
+			clr_country_flag = UKR_bingbian
+			clr_country_flag = RUS_pujingnadangxuan
+			clr_country_flag = RUS_huilinai_dead
+			clr_country_flag = RUS_constitutional_monarchy_win
+			set_country_flag = RUS_fxs_win
+			RUS_fxs_win_effect = yes
+			hidden_effect = {
+				remove_power_balance = {
+					id = UKR_power_balance
+				}
+			}
+		}
+	}
+	RUS_royalist_win = {
+		allowed = { tag = UKR }
+		complete_effect = {
+			clr_country_flag = RUS_republican_win
+			clr_country_flag = RUS_fxs_win
+			clr_country_flag = RUS_royalist_win
+			clr_country_flag = UKR_bingbian
+			clr_country_flag = RUS_pujingnadangxuan
+			clr_country_flag = RUS_huilinai_dead
+			clr_country_flag = RUS_constitutional_monarchy_win
+			set_country_flag = RUS_royalist_win
+			RUS_royalist_win_effect = yes
+			hidden_effect = {
+				remove_power_balance = {
+					id = UKR_power_balance
+				}
+			}
+		}
+	}
+	UKR_bingbian = {
+		allowed = { tag = UKR }
+		complete_effect = {
+			clr_country_flag = RUS_republican_win
+			clr_country_flag = RUS_fxs_win
+			clr_country_flag = RUS_royalist_win
+			clr_country_flag = UKR_bingbian
+			clr_country_flag = RUS_pujingnadangxuan
+			clr_country_flag = RUS_huilinai_dead
+			clr_country_flag = RUS_constitutional_monarchy_win
+			set_country_flag = UKR_bingbian
+			mark_focus_tree_layout_dirty = yes
+			SOV_Anastasia = { retire = yes }
+			UKR_huilinai = {
+				if = {
+					limit = {
+						NOT = {
+							has_ideology = military_politicism
+						}
+					}
+					add_country_leader_role = {
+						country_leader = {
+							ideology = military_politicism
+							traits = { hardened_officer }
+							expire = "1965.1.1"
+						}
+						promote_leader = yes
+					}
+				}
+				else = {
+					promote_character = yes
+				}
+			}
+			if = {
+				limit = { has_idea = UKR_waerjili }
+				swap_ideas = {
+					remove_idea = UKR_waerjili
+					add_idea = UKR_waerjili_3
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = UKR_waerjili_2
+					add_idea = UKR_waerjili_3
+				}
+			}
+			set_cosmetic_tag = UK2
+			country_event = { id = ukr_politics.16 days = 1 }
+			hidden_effect = {
+				remove_power_balance = {
+					id = UKR_power_balance
+				}
+			}
+		}
+	}
+	RUS_pujingnadangxuan = {
+		allowed = { tag = UKR }
+		complete_effect = {
+			clr_country_flag = RUS_fxs_win
+			clr_country_flag = RUS_royalist_win
+			clr_country_flag = UKR_bingbian
+			clr_country_flag = RUS_pujingnadangxuan
+			clr_country_flag = RUS_constitutional_monarchy_win
+			clr_country_flag = RUS_huilinai_dead
+			set_country_flag = RUS_pujingnadangxuan
+			mark_focus_tree_layout_dirty = yes
+			complete_national_focus = UKR_hainengyoushui
+		}
+	}
+	RUS_huilinai_dead = {
+		allowed = { tag = UKR }
+		complete_effect = {
+			clr_country_flag = RUS_republican_win
+			clr_country_flag = RUS_fxs_win
+			clr_country_flag = RUS_royalist_win
+			clr_country_flag = RUS_pujingnadangxuan
+			clr_country_flag = RUS_constitutional_monarchy_win
+			clr_country_flag = RUS_huilinai_dead
+			UKR_huilinai = { retire = yes }
+			UKR_wagena = {
+				if = {
+					limit = {
+						NOT = {
+							has_ideology = oligarchism
+						}
+					}
+					add_country_leader_role = {
+						country_leader = {
+							ideology = oligarchism
+							traits = {  }
+							expire = "1965.1.1"
+						}
+						promote_leader = yes
+					}
+				}
+				else = {
+					promote_character = yes
+				}
+			}
+			set_country_flag = RUS_huilinai_dead
+			mark_focus_tree_layout_dirty = yes
+		}
+	}	
+	SOV_disintegration_of_the_Soviet_Union = {
+		allowed = { tag = UKR }
+		complete_effect = {
+		SOV = {
+			SOV_disintegration_of_the_Soviet_Union = yes
+			}
+		}
+	}
+}

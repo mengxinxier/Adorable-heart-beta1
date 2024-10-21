@@ -85,102 +85,6 @@ UBS_bank_icon_frames = {
 	round_variable = ubs_save
 }
 
-####总体出口数量/出口收入####
-chukou_zongliang_jisuan = {
-	if = {
-		limit = {
-			steel > 0
-		}
-		set_variable = {
-			chukou_1 = resource_exported@steel
-		}
-	}
-	if = {
-		limit = {
-			aluminium > 0
-		}
-		set_variable = {
-			chukou_2 = resource_exported@aluminium
-		}
-	}
-	if = {
-		limit = {
-			tungsten > 0
-		}
-		set_variable = {
-			chukou_3 = resource_exported@tungsten
-		}
-	}
-	if = {
-		limit = {
-			oil > 0
-		}
-		set_variable = {
-			chukou_4 = resource_exported@oil
-		}
-	}
-	if = {
-		limit = {
-			rubber > 0
-		}
-		set_variable = {
-			chukou_5 = resource_exported@rubber
-		}
-	}
-	if = {
-		limit = {
-			chromium > 0
-		}
-		set_variable = {
-			chukou_6 = resource_exported@chromium
-		}
-	}
-	if = {
-		limit = {
-			originium > 0
-		}
-		set_variable = {
-			chukou_7 = resource_exported@originium
-		}
-	}
-	set_variable = {
-		var = chukou_zongliang
-		value = resource_exported@steel
-	}
-	add_to_variable = {
-		var = chukou_zongliang
-		value = resource_exported@aluminium
-	}
-	add_to_variable = {
-		var = chukou_zongliang
-		value = resource_exported@oil
-	}
-	add_to_variable = {
-		var = chukou_zongliang
-		value = resource_exported@rubber
-	}
-	add_to_variable = {
-		var = chukou_zongliang
-		value = resource_exported@chromium
-	}
-	add_to_variable = {
-		var = chukou_zongliang
-		value = resource_exported@tungsten
-	}
-	add_to_variable = {
-		var = chukou_zongliang
-		value = resource_exported@originium
-	}
-	set_variable = {
-		var = ziyuan_lirun
-		value = chukou_zongliang
-	}
-	divide_variable = {
-		var = ziyuan_lirun
-		value = 50		#20
-	}
-}
-
 ####民用工厂计算税收####
 mingong_jisuan_shuishou = {
 	set_variable = {
@@ -215,7 +119,7 @@ mingong_jisuan_shuishou = {
 	}
 	multiply_variable = {
 		var = gongyeshui
-		value = 1
+		value = 1.5
 	}
 }
 
@@ -380,9 +284,7 @@ econmic_debuff_jisuan = {
 		}
 	}
 	else = {
-		set_variable = {
-			this_country_GDP = 1
-		}
+		set_variable = { this_country_GDP = 1 }
 	}
 	multiply_variable = {
 		var = this_country_GDP
@@ -396,11 +298,7 @@ econmic_debuff_jisuan = {
 		value = this_country_GDP
 	}
 	if = {
-		limit = {
-			check_variable = {
-				Debt_ratio > 1
-			}
-		}
+		limit = { check_variable = { Debt_ratio > 1 } }
 		set_variable = {
 			Debt_ratio_2 = Debt_ratio
 		}
@@ -439,6 +337,11 @@ econmic_debuff_jisuan = {
 			min = -0.8
 			max = 0
 		}
+	}
+	else = {
+		set_variable = { UBS_debuff_production_speed_buildings_factor = 0 }
+		set_variable = { UBS_debuff_industrial_capacity_factory = 0 }
+		set_variable = { UBS_debuff_stability_factor = 0 }
 	}
 	#force_update_dynamic_modifier = yes
 }
@@ -604,8 +507,6 @@ jiesuanjingji = {
 			value = kaizhi_modifer_jisuan
 		}
 		#######计算收入########
-		#出口税
-		#chukou_zongliang_jisuan = yes
 		#消费税及工业税
 		if = {
 			limit = {
@@ -618,7 +519,7 @@ jiesuanjingji = {
 		}
 		##把收入加起来
 		set_variable = {
-			lirun_meiyue = ziyuan_lirun
+			lirun_meiyue = 0
 		}
 		add_to_variable = {
 			lirun_meiyue = shui_shouru
@@ -715,13 +616,29 @@ save_and_load_jisuan = {
 			value = lirun_meiyue
 		}
 	}
-	#####利息结算####
-	set_variable = {
-		ubs_load_lixi = 1.005
+	###自动还款###
+	if = {
+		limit = {
+			check_variable = { ubs_save > 0 }
+			check_variable = { ubs_load > 0 }
+			check_variable = { adorable_heart_automatic_repayment_var = 2 }
+		}
+		if = {
+			limit = {
+				not = { check_variable = { ubs_load > ubs_save } }
+			}
+			subtract_from_variable = { ubs_save = ubs_load }
+			set_variable = { ubs_load = 0 }
+		}
+		else = {
+			subtract_from_variable = { ubs_load = ubs_save }
+			set_variable = { ubs_save = 0 }
+		}
 	}
+	#####利息结算####
 	multiply_variable = {
 		var = ubs_load
-		value = ubs_load_lixi
+		value = 1.005
 	}
 	###图标变化
 		if = {
@@ -792,7 +709,7 @@ generate_econ_rankings = {
 	}
 	clear_variable = global.indu_countries_index
 	#
-	CORE_STATE_check_every_month_effect = yes
+	#CORE_STATE_check_every_month_effect = yes
 }
 
 #教育经费

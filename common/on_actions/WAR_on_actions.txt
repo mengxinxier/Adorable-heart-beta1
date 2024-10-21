@@ -96,7 +96,7 @@ on_actions = {
 				hidden_effect = {
 					news_event = {
 						###大雷雨行动
-						id = ah_germany.63
+						id = germany_news.06
 					}
 				}
 			}
@@ -115,7 +115,7 @@ on_actions = {
 				}
 				hidden_effect = {
 					news_event = {
-						id = austria.2010
+						id = austria_news.05
 					}
 				}
 				set_global_flag = Axis_powers_intervened_in_the_war
@@ -134,10 +134,80 @@ on_actions = {
 				}
 				hidden_effect = {
 					news_event = {
-						id = austria.2010
+						id = austria_news.05
 					}
 				}
 				set_global_flag = Axis_powers_intervened_in_the_war
+			}
+			#苏樱战争
+			if = {
+				limit = {
+					ROOT = {
+						tag = SOV
+						is_faction_leader = yes
+					}
+					FROM = {
+						tag = JAP
+						is_faction_leader = yes
+					}
+					not = { has_global_flag = SOV_JAP_WAR }
+					any_country = {
+						has_country_flag = Participate_in_the_competition_for_China_reunification
+						is_subject = no
+						is_chinese_country = yes
+					}
+				}
+				hidden_effect = {
+					news_event = {
+						id = SOV_news.10
+					}
+				}
+				set_global_flag = SOV_JAP_WAR
+			}
+			if = {
+				limit = {
+					ROOT = {
+						tag = SOV
+						is_faction_leader = yes
+					}
+					FROM = {
+						tag = JAP
+						is_faction_leader = yes
+					}
+					not = { has_global_flag = SOV_JAP_WAR }
+					not = {
+						any_country = {
+							has_country_flag = Participate_in_the_competition_for_China_reunification
+							is_subject = no
+							is_chinese_country = yes
+						}
+					}
+				}
+				hidden_effect = {
+					news_event = {
+						id = SOV_news.11
+					}
+				}
+				set_global_flag = SOV_JAP_WAR
+			}
+			if = {
+				limit = {
+					ROOT = {
+						tag = JAP
+						is_faction_leader = yes
+					}
+					FROM = {
+						tag = SOV
+						is_faction_leader = yes
+					}
+					not = { has_global_flag = SOV_JAP_WAR }
+				}
+				hidden_effect = {
+					news_event = {
+						id = SOV_news.12
+					}
+				}
+				set_global_flag = SOV_JAP_WAR
 			}
 			#第二次伟大战争
 			if = {
@@ -149,7 +219,10 @@ on_actions = {
 						or = {
 							tag = FRA
 							tag = KMK
+							tag = POL
+							tag = GER
 						}
+						save_event_target_as = second_weltkrieg_invaded
 					}
 					not = {
 						has_global_flag = second_weltkrieg_has_started
@@ -173,6 +246,7 @@ on_actions = {
 					}
 					FROM = {
 						tag = DVL
+						save_event_target_as = second_weltkrieg_invaded
 					}
 					not = {
 						has_global_flag = second_weltkrieg_has_started
@@ -225,16 +299,6 @@ on_actions = {
 				}
 			}
 			if = {
-				#幻想乡投降
-				limit = {
-					ROOT = {
-						tag = FRA
-					}
-					has_global_flag = ENG_great_peace
-				}
-				DVL_ENG_GUAFEN_FRA = yes
-			}
-			if = {
 				#超次元投降
 				limit = {
 					ROOT = {
@@ -253,6 +317,28 @@ on_actions = {
 				}
 				FROM = {
 					white_peace = USA
+				}
+			}
+			if = {
+				#樱花岛统一战争-樱花国胜利
+				limit = {
+					ROOT = {
+						tag = RJE
+						is_subject = no
+						is_in_faction = no
+						any_enemy_country = { tag = JAP }
+					}
+					FROM = { tag = JAP }
+				}
+				JAP = {
+					white_peace = {
+						tag = RJE
+						message = JAP_WIN_RJE
+					}
+					annex_country = {
+						target = RJE
+						transfer_troops = no
+					}
 				}
 			}
 			if = {
@@ -315,66 +401,6 @@ on_actions = {
 					}
 				}
 			}
-			#梨斗胜利
-			if = {
-				limit = {
-					ROOT = {
-						tag = DV2
-						is_subject = no
-						is_in_faction = no
-						NOT = {
-							any_enemy_country = {
-								NOT = {
-									tag = DV1
-								}
-							}
-						}
-					}
-					FROM = {
-						tag = DV1
-					}
-				}
-				DV1 = {
-					white_peace = {
-						tag = DV2
-						message = DV1_WIN_DV2
-					}
-					annex_country = {
-						target = DV2
-						transfer_troops = no
-					}
-				}
-			}
-			#奇多胜利
-			if = {
-				limit = {
-					ROOT = {
-						tag = DV1
-						is_subject = no
-						is_in_faction = no
-						NOT = {
-							any_enemy_country = {
-								NOT = {
-									tag = DV2
-								}
-							}
-						}
-					}
-					FROM = {
-						tag = DV2
-					}
-				}
-				DV2 = {
-					white_peace = {
-						tag = DV1
-						message = DV2_WIN_DV1
-					}
-					annex_country = {
-						target = DV1
-						transfer_troops = no
-					}
-				}
-			}
 			if = {
 				#轴心国
 				limit = {
@@ -386,7 +412,6 @@ on_actions = {
 					}
 					ROOT = {
 						is_in_faction_with = GER
-						is_subject = no
 						not = {
 							any_allied_country = {
 								has_capitulated = no
@@ -431,6 +456,43 @@ on_actions = {
 					}
 				}
 				ROOT = { leave_faction = yes }
+			}
+		}
+	}
+	on_capitulation_immediate = {
+		effect = {
+			if = {
+				#多瑙河冲突
+				limit = {
+					NOT = { has_global_flag = GER_Danube_Conflict_End }
+					ROOT = {
+						tag = HUN
+						is_subject = no
+						is_in_faction = no
+						any_enemy_country = { tag = GER }
+						any_enemy_country = { tag = SLO }
+					}
+				}
+				set_global_flag = GER_Danube_Conflict_End
+				SLO = {
+					transfer_state = 1090
+					transfer_state = 71
+					transfer_state = 664
+					country_event = {
+						id = ah_germany.116
+						days = 7
+					}
+				}
+				GER = {
+					white_peace = {
+						tag = HUN
+						message = GER_win_HUN
+					}
+					annex_country = {
+						target = HUN
+						transfer_troops = no
+					}
+				}
 			}
 		}
 	}

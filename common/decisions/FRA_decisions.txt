@@ -157,9 +157,15 @@ FRA_govern_of_Kasen = {
 FRA_foreign_ministry = {
 	FRA_attck_FROM = {
 		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
 		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
+			has_global_flag = second_weltkrieg_has_started
 			FROM = {
-				has_country_flag = can_be_attack_by_FRA
 				not = {
 					or = {
 						has_war_with = ROOT
@@ -168,15 +174,8 @@ FRA_foreign_ministry = {
 					}
 				}
 			}
-			ROOT = { is_subject = no }
-		}
-		available = {
-			has_global_flag = second_weltkrieg_has_started
 			not = {
 				has_country_flag = FRA_war_plan_going_on
-			}
-			not = {
-				is_in_faction_with = FROM
 			}
 			any_home_area_neighbor_country = {
 				tag = FROM
@@ -187,18 +186,19 @@ FRA_foreign_ministry = {
 		war_with_target_on_remove = yes
 		complete_effect = {
 			set_country_flag = FRA_war_plan_going_on
-			FROM = {
-				country_event = {
-					id = generic.2010
-				}
-			}
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+			setup_decision_attack_AI = yes
 		}
 		remove_effect = {
 			clr_country_flag = FRA_war_plan_going_on
+			clear_decision_attack_AI = yes
 			declare_war_on = {
 				target = FROM
 				type = annex_everything
 			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
 		}
 		ai_will_do = {
 			base = 1000
@@ -300,11 +300,8 @@ FRA_foreign_ministry = {
 	}
 	FRA_Expand_collaboration_with_ENG_research = {
 		icon = GFX_decision_generic_political_discourse
-		target_trigger = {
-			FROM = {
-				or = {
-					tag = ENG
-				}
+		visible = {
+			ENG = {
 				is_faction_leader = yes
 				is_subject = no
 				has_government = democratic
@@ -313,7 +310,7 @@ FRA_foreign_ministry = {
 				has_completed_focus = FRA_Expand_collaboration_with_ENG
 				is_subject = no
 				has_government = democratic
-				is_in_faction_with = FROM
+				is_in_faction_with = ENG
 				NOT = { has_idea = FRA_Agreements_on_mutual_assistance_in_scientific_research_idea }
 			}
 		}
@@ -330,11 +327,8 @@ FRA_foreign_ministry = {
 	}
 	FRA_Expand_collaboration_with_ENG_Trade = {
 		icon = GFX_decision_generic_political_discourse
-		target_trigger = {
-			FROM = {
-				or = {
-					tag = ENG
-				}
+		visible = {
+			ENG = {
 				is_faction_leader = yes
 				is_subject = no
 				has_government = democratic
@@ -343,7 +337,7 @@ FRA_foreign_ministry = {
 				has_completed_focus = FRA_Expand_collaboration_with_ENG
 				is_subject = no
 				has_government = democratic
-				is_in_faction_with = FROM
+				is_in_faction_with = ENG
 				NOT = { has_idea = FRA_Mutual_Trade_Assistance_Agreement_idea }
 			}
 		}
@@ -481,11 +475,19 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				create_country_leader = {
+					name = FRA_Suwako
+					desc = ""
+					picture = "gfx/leaders/FRA/FRA_Suwako.dds"
+					expire = "1985.1.1"
+					ideology = Sanaeism_subideology
+					traits = {}
+				}
 			}
 			every_state = {
 				limit = {
 					is_on_continent = europe
-					has_state_flag = ENGZDQ
+					has_state_flag = Britain_Reichskommissariat
 					not = { is_core_of = ROOT }
 					not = { is_claimed_by = ROOT }
 				}
@@ -572,7 +574,7 @@ FRA_foreign_ministry = {
 		}
 		complete_effect = {
 			FNT = {
-				transfer_state = 165
+				transfer_state = 41
 				set_politics = {
 					ruling_party = neutrality
 					last_election = "1936.1.1"
@@ -707,6 +709,14 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				create_country_leader = {
+					name = FRA_Kanako
+					desc = ""
+					picture = "gfx/leaders/FRA/FRA_Kanako.dds"
+					expire = "1985.1.1"
+					ideology = Sanaeism_subideology
+					traits = {}
+				}
 			}
 			every_state = {
 				limit = {
@@ -836,6 +846,28 @@ FRA_foreign_ministry = {
 				}
 				TRB = { transfer_state = PREV }
 			}
+			TRB = {
+				drop_cosmetic_tag = yes
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "电车公主"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "电车公主"
+						desc = ""
+						picture = "gfx/leaders/TRB/Portrait_TRB_Dianchugongzhu.png"
+						expire = "1965.1.1"
+						ideology = despotism
+						traits = {
+						}
+					}
+				}
+			}
 			if = {
 				limit = {
 					TRB = {
@@ -891,6 +923,14 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				create_country_leader = {
+					name = FRA_Alice_Margatroid
+					desc = ""
+					picture = "gfx/leaders/FRA/FRA_Alice_Margatroid.dds"
+					expire = "1985.1.1"
+					ideology = military_politicism
+					traits = {}
+				}
 			}
 			every_state = {
 				limit = {
@@ -905,6 +945,8 @@ FRA_foreign_ministry = {
 							state = 68
 							state = 66
 							state = 67
+							state = 781
+							state = 42
 						}
 					}
 					not = { is_core_of = ROOT }
@@ -1050,7 +1092,29 @@ FRA_foreign_ministry = {
 						}
 					}
 				}
-				AUS = { transfer_state = PREV }
+				AUS = { drop_cosmetic_tag = yes }
+			}
+			AUS = {
+				drop_cosmetic_tag = yes
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "奥特菲涅一世"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "奥特菲涅一世"
+						desc = ""
+						picture = "gfx/leaders/ELP/Portrait_ELP_Feinie.dds"
+						expire = "1965.1.1"
+						ideology = Absolute_monarchy
+						traits = {
+						}
+					}
+				}
 			}
 			if = {
 				limit = {
@@ -1125,6 +1189,28 @@ FRA_foreign_ministry = {
 				}
 				CZE = { transfer_state = PREV }
 			}
+			CZE = {
+				drop_cosmetic_tag = yes
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "东风谷早苗"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "东风谷早苗"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Sanae.dds"
+						expire = "1965.1.1"
+						ideology = Sanaeism_subideology
+						traits = {
+						}
+					}
+				}
+			}
 			if = {
 				limit = {
 					CZE = {
@@ -1186,6 +1272,28 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				set_variable = { another_country_leader_group = 1 }
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = POL_FRA_flag
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "魂魄妖梦"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "魂魄妖梦"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Youmu.dds"
+						expire = "1965.1.1"
+						ideology = military_politicism
+						traits = {
+						}
+					}
+				}
 			}
 			every_state = {
 				limit = {
@@ -1344,6 +1452,29 @@ FRA_foreign_ministry = {
 				}
 				BLR = { transfer_state = PREV }
 			}
+			BLR = {
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = BLR_FRA_flag
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "东风谷早苗"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "东风谷早苗"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Sanae.dds"
+						expire = "1965.1.1"
+						ideology = Sanaeism_subideology
+						traits = {
+						}
+					}
+				}
+			}
 			if = {
 				limit = {
 					BLR = {
@@ -1425,6 +1556,29 @@ FRA_foreign_ministry = {
 				}
 				BAL = { transfer_state = PREV }
 			}
+			BAL = {
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = BAL_FRA_flag
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "东风谷早苗"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "东风谷早苗"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Sanae.dds"
+						expire = "1965.1.1"
+						ideology = Sanaeism_subideology
+						traits = {
+						}
+					}
+				}
+			}
 			if = {
 				limit = {
 					BAL = {
@@ -1481,6 +1635,27 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = UKR_FRA_flag
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "阿纳斯塔西娅"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "阿纳斯塔西娅"
+						desc = ""
+						picture = "gfx/leaders/UKR/Anastasia.dds"
+						expire = "1965.1.1"
+						ideology = Absolute_monarchy
+						traits = {
+						}
+					}
+				}
 			}
 			every_state = {
 				limit = {
@@ -1593,6 +1768,15 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				create_country_leader = {
+					name = "安德烈·弗拉索夫"
+					desc = ""
+					picture = "gfx/leaders/SOV/Vlasov.png"
+					expire = "1965.1.1"
+					ideology = military_politicism
+					traits = {
+					}
+				}
 			}
 			every_state = {
 				limit = {
@@ -1763,7 +1947,31 @@ FRA_foreign_ministry = {
 				}
 			}
 			puppet = NFA
-			NFA = { add_ideas = FRA_Expand_economic_control_idea }
+			NFA = {
+				add_ideas = FRA_Expand_economic_control_idea
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = NFA_FRA_flag
+				set_variable = { another_country_leader_group = 1 }
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "纯狐"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "纯狐"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Junko.dds"
+						expire = "1965.1.1"
+						ideology = military_politicism
+						traits = {
+						}
+					}
+				}
+			}
 		}
 	}
 	FRA_Keine_puppet_FRG = {

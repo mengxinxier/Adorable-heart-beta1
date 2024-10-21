@@ -1,4 +1,278 @@
 KMK_unit_FRA = {
+	gcvisible = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			recruit_character = KMK_Beatrice
+			recruit_character = KMK_Bernkastel
+			recruit_character = KMK_Lambdadelta
+		}
+	}
+	gc = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			load_focus_tree = homo_Patchouli_focus
+		}
+	}
+	sss = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			load_focus_tree = homo_Remiria_focus
+			create_country_leader = {
+				name = "蕾米莉亚·斯卡蕾特"
+				desc = "KMK_Remilia_desc"
+				picture = "gfx/leaders/KMK/KMK_remilia.png"
+				expire = "1965.1.1"
+				ideology = enlightened_despotism
+				traits = { 
+					weiyan
+					scarlet_moon 
+				}
+			}
+		}
+	}
+	gc_1 = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			load_focus_tree = homo_Remiria_focus
+			create_country_leader = {
+				name = "芙兰朵露·斯卡蕾特"
+				desc = "KMK_Flandre_desc"
+				picture = "gfx/leaders/KMK/KMK_Flandre.png"
+				expire = "1965.1.1"
+				ideology = despotism
+				traits = {
+					destoryer_power 
+				}
+			}
+			set_party_name = {
+				ideology = Absolute_monarchy
+				long_name = KMK_Flandre_party
+				name = KMK_Flandre_party
+			}
+		}
+	}
+	gc_2 = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			load_focus_tree = homo_Daiyousei_focus
+		}
+	}
+	KMK_decision_united_fra_kmk = { #全部地块造顺从度
+		fire_only_once = no		
+		days_remove = 30
+		state_target = yes
+		on_map_mode = map_only
+		visible = {
+			has_extra_state_shared_building_slots
+			or = {
+				has_completed_focus = KMK_flandre_Huairou_Policy
+				has_completed_focus = KMK_Remiria_03
+			}
+		}	
+		ai_will_do = {
+			factor = 0
+		}
+		target_trigger = {
+			FROM = {
+				is_core_of = FRA	
+				is_controlled_by = KMK
+				not = {is_core_of = KMK }
+			}
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 0
+			FROM = {compliance < 50}
+		}
+		modifier = {
+			civilian_factory_use = 1
+	   	}
+		remove_effect = {
+			hidden_effect = {add_political_power = 5}
+			FROM = {add_compliance = 10}
+		}
+		cost = 10
+	}
+	KMK_swe_friend = {
+		visible = {
+			has_completed_focus = KMK_Remilia_2
+		}
+		available = {
+			is_subject = no
+			any_state = {
+				is_core_of = SWE
+				is_controlled_by = ROOT
+			}
+			SWE = {
+				OR = {
+					exists = no
+					has_capitulated = yes
+				}
+			}
+		}
+		complete_effect = {
+			every_state = {
+				limit = {
+					is_core_of = SWE
+					is_owned_or_subject_trigger = yes
+					CONTROLLER = {
+						NOT = {
+							tag = SWE
+						}
+					}
+				}
+				SWE = {
+					transfer_state = PREV
+					add_state_core = PREV
+				}
+			}
+			if = {
+				limit = {
+					country_exists = SWE
+				}
+				puppet = SWE
+			}
+			SWE = {
+				add_ideas = KMK_cost_victory
+			}
+			SWE = {
+				set_country_flag = SWE_Political_struggle_is_over
+				set_country_leader_ideology = interim_government_subtype
+				complete_national_focus = SWE_Nationalist_Cabinet
+				remove_ideas = {
+					SWE_Hinamori_Amu_idea
+					SWE_Karene_Eluvitias_idea
+					SWE_Cecilia_idea
+				}
+				add_ideas = SWE_Karene_Eluvitias_idea
+				GER = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = SWE_Ideologically_friendly
+					}
+				}
+				add_opinion_modifier = {
+					target = GER
+					modifier = SWE_Ideologically_friendly
+				}
+				DVL = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = SWE_Ideologically_friendly
+					}
+				}
+				add_opinion_modifier = {
+					target = DVL
+					modifier = SWE_Ideologically_friendly
+				}
+				SWE_Form_a_new_government = yes
+			}
+		}
+	}
+	KMK_CHI_CREATE = {
+		icon = GFX_decision_generic_form_nation
+		ai_will_do = {
+			factor = 1
+		}
+		fire_only_once = yes
+		available = {
+			608 = {
+				or = {
+					is_controlled_by = KMK
+					any_other_country = {
+						is_subject_of = KMK
+						controls_state = PREV
+					}
+				}
+			}
+		}
+		visible = {
+			has_completed_focus = KMK_Rebuilding_old_rituals
+		}
+		complete_effect = {
+			Puppet = KCH
+			KCH = {
+				set_capital = {
+					state = 607
+				}
+				create_country_leader = {
+					name = "纯狐"
+					desc = ""
+					picture = "gfx/leaders/FRA/FRA_Junko.dds"
+					expire = "1999.1.1"
+					ideology = enlightened_despotism
+					traits = {
+					}
+				}
+				transfer_state = 608
+				set_politics = {
+					ruling_party = neutrality
+					last_election = "1936.1.1"
+					elections_allowed = no
+				}
+				set_party_name = {
+					ideology = neutrality
+					long_name = "夏朝皇室"
+					name = "夏朝皇室"
+				}
+				set_popularities = {
+					neutrality = 100
+				}
+				add_equipment_to_stockpile = {
+					type = infantry_equipment_1
+					amount = 4000
+				}
+				add_equipment_to_stockpile = {
+					type = support_equipment
+					amount = 100
+				}
+				add_manpower = 40000
+				inherit_technology = KMK
+			}
+			every_state = {
+				limit = {
+					is_core_of = CHI
+				}
+				add_core_of = KCH
+			}
+			KCH = {
+				KCH = {
+					KMK_get_a_governor_to_PREV = yes
+				}
+			}
+		}
+	}
+	qiandu = {
+		fire_only_once = yes
+		cost = 1
+		visible = {
+			AND = {
+				has_country_leader = {
+					character = KMK_Daiyousei
+				}
+				has_full_control_of_state = 16
+			}
+		}
+		complete_effect = {
+			set_capital = {
+				state = 16
+				remember_old_capital = no
+			}
+			set_province_name = {
+				id = 11506
+				name = "妖精之乡"
+			}
+		}
+	}
 	KMK_unit_FRA_war = {
 		icon = GFX_decision_hol_draw_up_staff_plans
 		available = {
@@ -18,13 +292,21 @@ KMK_unit_FRA = {
 		selectable_mission = yes
 		cancel_trigger = {
 			or = {
-				KMK = { controls_state = 16 }
-				FRA = { controls_state = 925 }
+				KMK = {
+					controls_state = 16
+				}
+				FRA = {
+					controls_state = 925
+				}
 			}
 		}
 		cancel_effect = {
 			if = {
-				limit = { KMK = { controls_state = 16 } }
+				limit = {
+					KMK = {
+						controls_state = 16
+					}
+				}
 				if = {
 					limit = {
 						KMK = {
@@ -52,17 +334,14 @@ KMK_unit_FRA = {
 					}
 				}
 				KMK = {
-					hidden_effect = {
-						if = {
-							LIB = { is_subject_of = FRA }
-							COG = { is_subject_of = FRA }
-						}
-						country_event = { id = KMK.0030 }
-					}
 					annex_country = {
 						target = FRA
 						transfer_troops = no
 					}
+					set_temp_variable = { tag_to_release = LIB }
+					puppet_released_tag_and_old_govern = yes
+					set_temp_variable = { tag_to_release = COG }
+					puppet_released_tag_and_old_govern = yes
 				}
 			}
 			else = {
@@ -96,16 +375,80 @@ KMK_unit_FRA = {
 			}
 		}
 	}
-	KMK_build_empire = {
+	KMK_flandre_empire = {
 		icon = GFX_decision_generic_monarchy
 		visible = {
+			has_country_leader = {
+				ruling_only = yes
+				name = "芙兰朵露·斯卡蕾特"
+			}
 		}
 		available = {
+			has_country_leader = {
+				ruling_only = yes
+				name = "芙兰朵露·斯卡蕾特"
+			}
 			not = {
 				country_exists = FRA
 			}
 			16 = {
 				is_owned_by = ROOT
+			}
+		}
+		complete_effect = {
+			add_ideas =KMK_Cruel_rule
+			add_ideas = KMK_bad_econmic_state
+			set_cosmetic_tag = flandre_sca
+			925 = {
+				set_state_name = "红雾始源地"
+			}
+			load_focus_tree = homo_Remiria_focus
+			add_research_slot = 1
+			set_country_flag = reunit_huanxiangxiang
+			hidden_effect = {
+				if = {
+					limit = {
+						has_country_leader = {
+							ruling_only = yes
+							character = KMK_Remilia
+						}
+					}
+					news_event = {
+						id = KMK_news.0003
+						days = 1
+					}
+				}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	KMK_build_empire = {
+		icon = GFX_decision_generic_monarchy
+		visible = {
+			has_country_leader = {
+				ruling_only = yes
+				name = "蕾米莉亚·斯卡蕾特"
+			}
+		}
+		available = {
+			has_country_leader = {
+				ruling_only = yes
+				name = "蕾米莉亚·斯卡蕾特"
+			}
+			not = {
+				country_exists = FRA
+			}
+			16 = {
+				is_owned_by = ROOT
+			}
+			limit = {
+				has_country_leader = {
+					ruling_only = yes
+					character = KMK_Remilia
+				}
 			}
 		}
 		complete_effect = {
@@ -118,19 +461,18 @@ KMK_unit_FRA = {
 				set_cosmetic_tag = DEEP_BLACK
 			}
 			else = {
-				set_cosmetic_tag = KMK_FRA_Gensokyo
+				set_cosmetic_tag = KMK_FRA
 			}
-			add_research_slot = 1
-			every_state = {
-				limit = {
-					is_core_of = FRA
-					not = { is_core_of = ROOT }
-				}
-				add_core_of = ROOT
+			925 = {
+				set_state_name = "红雾始源地"
 			}
+			load_focus_tree = homo_Remiria_focus
 			set_country_flag = reunit_huanxiangxiang
 			add_ideas = KMK_bad_governmet_state
 			add_ideas = KMK_bad_econmic_state
+			remove_ideas = KMK_nongye_jieshe_1
+			remove_ideas = KMK_kaiming_zhuangzhi
+			add_ideas = civilian_economy
 			hidden_effect = {
 				if = {
 					limit = {
@@ -188,54 +530,56 @@ KMK_unit_FRA = {
 			}
 		}
 	}
-	KMK_mobilization_fairies = {
-		icon = GFX_decision_generic_military
+	KMK_hejsy = {
 		visible = {
+			has_completed_focus = KMK_Daiyousei_01
 		}
 		available = {
-			or = {
-				has_idea = KMK_Cirno
-				has_country_leader = {
-					ruling_only = yes
-					name = "琪露诺"
-				}
-			}
 		}
 		complete_effect = {
 		}
-		cost = 50
-		days_remove = 7
-		days_re_enable = 100
+		cost = 100
 		remove_effect = {
-			7 = {
-				create_unit = {
-					division = "name = \"妖精动员部队\" division_template = \"妖精动员部队\" start_experience_factor = 0"
-					owner = ROOT
-				}
-				create_unit = {
-					division = "name = \"妖精动员部队\" division_template = \"妖精动员部队\" start_experience_factor = 0"
-					owner = ROOT
-				}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+			remove_dynamic_modifier = {
+				modifier = KMK_Panic
 			}
 		}
+		fire_only_once = yes
 		ai_will_do = {
-			factor = 1
+			factor = 0
 		}
 	}
-	KMK_dismiss_yaojingbudui = {
+	KMK_xy = {
 		visible = {
+			and = {
+				has_completed_focus = KMK_rc
+				SOV = {
+					is_subject_of = KMK
+				}
+				not = {
+					SOV = {
+						has_country_leader = {
+							ruling_only = yes
+							character = SOV_Sakura
+						}
+					}
+				}
+			}
 		}
 		available = {
 		}
 		complete_effect = {
 		}
-		cost = 0
 		remove_effect = {
-			delete_units = {
-				division_template = "妖精动员部队"
-				disband = no				#will refund equipment and manpower
+			SOV = {
+				retire_country_leader = yes
 			}
 		}
+		fire_only_once = NO
 		ai_will_do = {
 			factor = 0
 		}
@@ -276,122 +620,1523 @@ KMK_unit_FRA = {
 			factor = 1
 		}
 	}
-}
-
-KMK_unit_HRR = {
-	KMK_build_empire_HRR = {
-		icon = GFX_decision_generic_monarchy
-		visible = {
+	KMK_dismantle_Hakurei_Great_Barrier = {
+		icon = generic_construction
+		allowed = {
 		}
+		cost = 50
+		fire_only_once = yes
+		days_remove = 120
 		available = {
-			is_subject = no
-			custom_trigger_tooltip = {
-				tooltip = ALL_CONTROL_need_state
-				NOT = {
-					any_state = {
-						has_state_flag = HRR
-						NOT = {
-							is_controlled_by = ROOT
-						}
+			controls_state = 28
+		}
+		visible = {
+			controls_state = 28
+			NOT = { is_in_faction_with = FRA }
+		}
+		modifier = {
+			production_speed_coastal_bunker_factor = 0.2
+			production_speed_bunker_factor = 0.2
+			civilian_factory_use = 5
+		}
+		complete_effect = {
+			28 = {
+				set_building_level = {
+					type = bunker
+					level = 2
+					province = {
+						all_provinces = yes
+						level > 2
 					}
 				}
 			}
+		}
+	}
+}
+
+KMK_the_world_academy = {
+	sakuya_more_time_tank = {
+		fire_only_once = yes
+		visible = {
+		}
+		available = {has_completed_focus = KMK_What_do_we_want_the_Air_Force_for}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			custom_effect_tooltip = sakuya_more_time_tank_tt
+			hidden_effect = {
+				country_event = {
+					id = KMK.0059
+				}
+				add_to_variable = { KMK_the_world_tank = 12 }
+				set_division_template_cap = {  division_template = "时停实验师" division_cap = KMK_the_world_tank }
+			}
+		}
+		remove_effect = {
+			set_country_flag = KMK_sakuya_more_time_tank
+		}
+		days_remove = 10
+		cost = 25
+	}
+	sakuya_more_time_tank1 = {
+		fire_only_once = yes
+		visible = {has_country_flag = KMK_sakuya_more_time_tank
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			custom_effect_tooltip = sakuya_more_time_tank_tt
+			hidden_effect = {
+				country_event = {
+					id = KMK.0059
+				}
+				add_to_variable = { KMK_the_world_tank = 12 }
+				set_division_template_cap = {  division_template = "时停实验师" division_cap = KMK_the_world_tank }
+			}
+		}
+		remove_effect = {
+			set_country_flag = KMK_sakuya_more_time_tank1
+			clr_country_flag = KMK_sakuya_more_time_tank
+		}
+		days_remove = 10
+		cost = 50
+	}
+	sakuya_more_time_tank2 = {
+		fire_only_once = yes
+		visible = {has_country_flag = KMK_sakuya_more_time_tank1
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			custom_effect_tooltip = sakuya_more_time_tank_tt
+			hidden_effect = {
+				country_event = {
+					id = KMK.0059
+				}
+				add_to_variable = { KMK_the_world_tank = 12 }
+				set_division_template_cap = {  division_template = "时停实验师" division_cap = KMK_the_world_tank }
+			}
+		}
+		remove_effect = {
+			set_country_flag = KMK_sakuya_more_time_tank2
+			clr_country_flag = KMK_sakuya_more_time_tank1
+		}
+		days_remove = 10
+		cost = 75
+	}
+	sakuya_more_time_tank3 = {
+		fire_only_once = yes
+		visible = {has_country_flag = KMK_sakuya_more_time_tank2
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			custom_effect_tooltip = sakuya_more_time_tank_tt
+			hidden_effect = {
+				country_event = {
+					id = KMK.0059
+				}
+				add_to_variable = { KMK_the_world_tank = 12 }
+				set_division_template_cap = {  division_template = "时停实验师" division_cap = KMK_the_world_tank }
+			}
+		}
+		remove_effect = {
+			set_country_flag = KMK_sakuya_more_time_tank3
+			clr_country_flag = KMK_sakuya_more_time_tank2
+		}
+		cost = 100
+		days_remove = 10
+	}
+	sakuya_more_time_tank4 = {
+		fire_only_once = yes
+		visible = {has_country_flag = KMK_sakuya_more_time_tank3
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			custom_effect_tooltip = sakuya_more_time_tank_1_tt
+			hidden_effect = {
+				country_event = {
+					id = KMK.0060
+				}
+				add_to_variable = { KMK_the_world_tank = 24 }
+				clr_country_flag = KMK_sakuya_more_time_tank3
+				set_division_template_cap = {  division_template = "时停实验师" division_cap = KMK_the_world_tank }
+			}
+		}
+		remove_effect = {
+		}
+		cost = 150
+	}
+	sakuya_time_into_equipment = {
+		fire_only_once = yes
+		visible = {
+		}
+		available = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -80
+			set_technology = {
+				infantry_warfare_into_time = 1
+			}
+		}
+		custom_cost_trigger = {
+			has_army_experience > 79
+		}
+		custom_cost_text = KMK_cost_xp_army_80	
+		remove_effect = {
+		}
+	}
+	sakuya_time_into_equipment1 = {
+		fire_only_once = yes
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -80
+			set_technology = {
+				armor_warfare_into_time = 1
+			}
+		}
+		custom_cost_trigger = {
+			has_army_experience > 79
+		}
+		custom_cost_text = KMK_cost_xp_army_80	
+		remove_effect = {
+		}
+	}
+	sakuya_time_into_equipment2 = {
+		fire_only_once = yes
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -80
+			set_technology = {
+				mechanized_warfare_into_time = 1
+			}
+		}
+		remove_effect = {
+		}
+		custom_cost_trigger = {
+			has_army_experience > 79
+		}
+		custom_cost_text = KMK_cost_xp_army_80
+	}
+	sakuya_time_into_equipment3 = {
+		fire_only_once = yes
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -50
+			set_technology = {
+				mountain_warfare_into_time = 1
+			}
+		}
+		remove_effect = {
+		}
+		custom_cost_trigger = {
+			has_army_experience > 49
+		}
+		custom_cost_text = KMK_cost_xp_army_50	
+	}
+	sakuya_time_into_equipment4 = {
+		fire_only_once = yes
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -50
+			set_technology = {
+				desert_warfare_into_time = 1
+			}
+		}
+		remove_effect = {
+		}
+		custom_cost_trigger = {
+			has_army_experience > 49
+		}
+		custom_cost_text = KMK_cost_xp_army_50	
+	}
+	sakuya_time_into_equipment5 = {
+		fire_only_once = yes
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -50
+			set_technology = {
+				forest_warfare_into_time = 1
+			}
+		}
+		remove_effect = {
+		}
+		custom_cost_trigger = {
+			has_army_experience > 49
+		}
+		custom_cost_text = KMK_cost_xp_army_50
+	}
+	sakuya_time_into_equipment6 = {
+		fire_only_once = yes
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -50
+			set_technology = {
+				hills_warfare_into_time = 1
+			}
+		}
+		remove_effect = {
+		}
+		custom_cost_trigger = {
+			has_army_experience > 49
+		}
+		custom_cost_text = KMK_cost_xp_army_50
+	}
+	sakuya_time_into_equipment7 = {
+		fire_only_once = yes
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -100
+			set_technology = {
+				amphibious_warfare_into_time = 1
+			}
+		}
+		remove_effect = {
+		}
+		custom_cost_trigger = {
+			has_army_experience > 99
+		}
+		custom_cost_text = KMK_cost_xp_army_100
+	}
+	sakuya_time_into_equipment8 = {
+		fire_only_once = yes
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			army_experience = -50
+			set_technology = {
+				urban_warfare_into_time = 1
+			}
+		}
+		remove_effect = {
+		}
+		custom_cost_trigger = {
+			has_army_experience > 49
+		}
+		custom_cost_text = KMK_cost_xp_army_50
+	}
+	sakuya_time_into_equipment9 = {
+		fire_only_once = no
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			add_tech_bonus = {
+				bonus = 0.5
+				uses = 1
+				category = armor
+			}
+		}
+		remove_effect = {
+		}
+		days_remove = 150
+		cost = 50
+	}
+	sakuya_time_into_equipment10 = {
+		fire_only_once = no
+		visible = {
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		modifier = {
+		}
+		complete_effect = {
+			add_tech_bonus = {
+				bonus = 0.5
+				uses = 1
+				category = artillery
+			}
+		}
+		remove_effect = {
+		}
+		days_remove = 150
+		cost = 50
+	}
+}
+
+KMK_ukr_taowang = {
+	UKR_taowang_KMK = {
+		fire_only_once = yes
+		visible = {
+			and = {
+				is_ai = yes
+				or = {
+					surrender_progress > 0.1
+					has_government = communism
+				}
+				not = {
+					KMK = {
+						has_government = communism
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1215752192
+		}
+		modifier = {
+		}
+		complete_effect = {
+			country_event = {
+				id = KMK.0054
+				days = 1
+			}
+		}
+		remove_effect = {
+		}
+	}
+}
+
+KMK_balance_of_power_category = {
+	KMK_decision_influence_10 = {
+		icon = GFX_decision_generic_decision
+		cost = 1
+		days_remove = 1
+		fire_only_once = no
+		ai_will_do = {
+			factor = 0
+		}
+		visible = {
+			is_debug = yes
+		}
+		remove_effect = {
+			add_power_balance_value = {
+				id = KMK_balance
+				value = 1
+			}
+		}
+	}
+	KMK_decision_bop_right_cygdzc = {
+		#加强与圣杯的经济联系
+		icon = GFX_decision_generic_decision
+		cost = 50
+		days_remove = 20
+		fire_only_once = no
+		ai_will_do = {
+			factor = 0
+		}
+		visible = {
+			has_completed_focus = KMK_Patchouli_unified_process
+		}
+		available = {
+		}
+		remove_effect = {
+			add_power_balance_value = {
+				id = KMK_balance
+				value = 0.05
+			}
+		}
+	}
+	KMK_decision_bop_left_yszblc = {
+		#威胁议员
+		icon = GFX_decision_generic_decision
+		cost = 10
+		fire_only_once = no
+		days_remove = 30
+		ai_will_do = {
+			factor = 0
+		}
+		visible = {
+			has_completed_focus = KMK_Patchouli_unified_process
+		}
+		available = {
+		}
+		remove_effect = {
+			add_power_balance_value = {
+				id = KMK_balance
+				value = 0.1
+			}
+		}
+	}
+	KMK_decision_bop_right_zcwd = {
+		#请求圣杯进行政治胁迫
+		icon = GFX_decision_generic_decision
+		cost = 10
+		days_remove = 90
+		fire_only_once = no
+		ai_will_do = {
+			factor = 0
+		}
+		visible = {
+			has_completed_focus = KMK_Patchouli_unified_process
+		}
+		remove_effect = {
+			add_power_balance_value = {
+				id = KMK_balance
+				value = 0.2
+			}
+		}
+	}
+	KMK_decision_bop_right_xbsdtx = {
+		#举行反政府游行	
+		icon = GFX_decision_generic_decision
+		cost = 20
+		days_remove = 30
+		fire_only_once = no
+		ai_will_do = {
+			factor = 0
+		}
+		visible = {
+			has_completed_focus = KMK_Patchouli_unified_process
+		}
+		remove_effect = {
+			add_power_balance_value = {
+				id = KMK_balance
+				value = 0.1
+			}
+		}
+	}
+	KMK_ai_fra_annex = {
+		fire_only_once = yes
+		visible = {
+			is_ai = yes
+		}
+		ai_will_do = {
+			factor = 1215752192
+		}
+		modifier = {
+		}
+		complete_effect = {
+			FRA = {
+				every_state = {
+					limit = {
+						is_core_of = KMK
+						not = {
+							is_core_of = ROOT
+						}
+					}
+					add_core_of = ROOT
+				}
+				annex_country = {
+					target = KMK
+				}
+			}
+			remove_power_balance = {
+				id = KMK_balance
+			}
+		}
+		remove_effect = {
+		}
+	}
+}
+
+KMK_pl_cat = {
+	debug = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			set_variable = {
+				KMK_pub_slot_A = 0
+			}
+			set_variable = {
+				KMK_pub_slot_B = 0
+			}
+			set_variable = {
+				KMK_pub_slot_C = 0
+			}
+		}
+	}
+	KMK_publicity_B = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
+		}
+		days_remove = 60
+		cost = 30
+		days_re_enable = 60
+		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 2
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			consumer_goods_factor = 0.15
+			stability_weekly = 0.015
+		}
+		remove_effect = {
+			add_manpower = 20000
+			set_variable = {
+				KMK_pub_temp = 2
+			}
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	KMK_publicity_C = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
+		}
+		days_remove = 50
+		cost = 50
+		days_re_enable = 50
+		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 3
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			supply_consumption_factor = -0.15
+			no_supply_grace = 72
+			army_fuel_consumption_factor = -0.15
+			production_oil_factor = 0.25
+		}
+		remove_effect = {
+			set_variable = {
+				KMK_pub_temp = 3
+			}
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	KMK_publicity_D = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
+		}
+		days_remove = 50
+		cost = 50
+		days_re_enable = 50
+		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 4
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			industrial_capacity_factory = 0.1
+			production_speed_arms_factory_factor = 0.05
+			production_speed_industrial_complex_factor = 0.1
+		}
+		remove_effect = {
+			set_variable = {
+				KMK_pub_temp = 4
+			}
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	KMK_publicity_E = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
+		}
+		days_remove = 50
+		cost = 50
+		days_re_enable = 50
+		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 5
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			experience_gain_army_factor = 0.1
+			breakthrough_factor = 0.05
+			army_attack_factor = 0.05
+		}
+		remove_effect = {
+			set_variable = {
+				KMK_pub_temp = 5
+			}
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	KMK_publicity_F = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
+		}
+		days_remove = 50
+		cost = 50
+		days_re_enable = 50
+		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 6
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			out_of_supply_factor = -0.25
+			terrain_penalty_reduction = 0.05
+			army_org_factor = 0.1
+		}
+		remove_effect = {
+			set_variable = {
+				KMK_pub_temp = 6
+			}
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	KMK_publicity_G = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
+		}
+		days_remove = 50
+		cost = 50
+		days_re_enable = 50
+		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 7
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			naval_speed_factor = 0.2
+			air_weather_penalty = -0.1
+			air_fuel_consumption_factor = -0.1
+			naval_coordination = 0.1
+		}
+		remove_effect = {
+			set_variable = {
+				KMK_pub_temp = 7
+			}
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	KMK_publicity_A = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			has_war = yes
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
 			has_country_leader = {
 				ruling_only = yes
 				name = "蕾米莉亚·斯卡蕾特"
 			}
 		}
+		days_remove = 100
+		cost = 50
+		days_re_enable = 60
 		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 1
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			command_power_gain = 2
+			max_command_power = 50
+			army_morale_factor = 0.05
+			recon_factor = 0.02
+			war_support_weekly = 0.015
 		}
 		remove_effect = {
-			set_cosmetic_tag = FRA_Remiria
-			every_state = {
-				limit = {
-					has_state_flag = HRR
-				}
-				add_core_of = ROOT
+			set_variable = {
+				KMK_pub_temp = 1
 			}
-			add_country_leader_trait = FRA_Remiria_Sukaretto_traits
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	KMK_publicity_H = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			has_country_flag = Anastasia
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
+			has_country_leader = {
+				ruling_only = yes
+				name = "蕾米莉亚·斯卡蕾特"
+			}
+		}
+		days_remove = 100
+		cost = 50
+		days_re_enable = 100
+		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 8
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			political_power_gain = 0.25
+			army_attack_against_major_factor = 0.05
+		}
+		remove_effect = {
+			set_variable = {
+				KMK_pub_temp = 8
+			}
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+	KMK_publicity_I = {
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			has_country_flag = Anastasia
+			custom_trigger_tooltip = {
+				tooltip = EMPTY_SPARE
+				KMK_propaganda_poster_slot_available = yes
+			}
+		}
+		visible = {
+			has_country_leader = {
+				ruling_only = yes
+				name = "芙兰朵露·斯卡蕾特"
+			}
+		}
+		days_remove = 100
+		cost = 50
+		days_re_enable = 100
+		complete_effect = {
+			set_variable = {
+				KMK_pub_temp = 8
+			}
+			KMK_set_pubilcity_slot = yes
+		}
+		modifier = {
+			political_power_gain = 0.25
+			army_attack_against_major_factor = 0.05
+		}
+		remove_effect = {
+			set_variable = {
+				KMK_pub_temp = 8
+			}
+			KMK_clr_pubilcity_slot = yes
+		}
+		ai_will_do = {
+			base = 1
+		}
+	}
+}
+
+KMK_construction_cat = {
+	KMK_decision_united_mgu_mst = { #联合魔法少女
+		fire_only_once = no		
+		days_remove = 45
+		state_target = yes
+		on_map_mode =  map_and_decisions_view
+		visible = {
+			FROM = {
+				free_building_slots = { 
+					building = industrial_complex 
+					size > 1
+					include_locked = no
+				} 
+			}
+			not = {is_core_of = KMK }
+			has_completed_focus = KMK_flandre_sa
+		}	
+		ai_will_do = {
+			factor = 0
+		}
+		target_trigger = {
+			FROM = {
+				or = {
+				is_core_of = MGU	
+				is_core_of = MST
+				is_core_of = MGS	
+				}
+			}
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 4
+			FROM = {
+				free_building_slots = { 
+					building = industrial_complex 
+					size > 1
+					include_locked = no
+				} 
+			}
+		}
+		modifier = {
+			civilian_factory_use = 5
+	   	}
+		remove_effect = {
+			hidden_effect = {add_political_power = 5}
+			FROM = {								
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}
+			controller = {add_popularity = { ideology = communism popularity = 0.1 }}
+			}
+		}
+		cost = 10
+	}
+}
+
+KMK_XEM = {
+	KMK_FACTORY_1 = {
+		visible = {
+		}
+		available = {
+		}
+		complete_effect = {
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 25
+		days_remove = 150
+		remove_effect = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 		fire_only_once = yes
 		ai_will_do = {
 			factor = 1
 		}
 	}
-	KMK_transfer_state_HRR = {
-		target_trigger = {
-			any_country = {
-				AND = {
-					is_subject_of = ROOT
-					FROM = {
-						has_state_flag = HRR
-						NOT = {
-							is_owned_and_controlled_by = ROOT
-						}
-						is_owned_and_controlled_by = PREV
-					}
+	KMK_FACTORY_2 = {
+		visible = {
+		}
+		available = {
+		}
+		complete_effect = {
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 25
+		days_remove = 150
+		remove_effect = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
 				}
 			}
 		}
-		state_target = yes
-		on_map_mode = map_and_decisions_view
-		#name = L_DVL_GER_target_decision_2
-		icon = decision_infiltrate_state
-		cost = 5
-		days_remove = 7
+		fire_only_once = yes
 		ai_will_do = {
-			factor = 10
-		}
-		remove_effect = {
-			ROOT = {
-				transfer_state = FROM
-			}
+			factor = 1
 		}
 	}
-	KMK_declare_war_HRR_country = {
-		icon = GFX_decision_generic_prepare_civil_war
+	KMK_FACTORY_3 = {
+		visible = {
+		}
 		available = {
-			has_global_flag = second_weltkrieg_has_started
 		}
-		target_trigger = {
-			FROM = {
-				any_controlled_state = {
-					has_state_flag = HRR
-				}
-				NOT = {
-					is_in_faction_with = ROOT
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		cost = 10
-		days_remove = 30
-		ai_will_do = {
-			base = 0
-			modifier = {
-				NOT = {
-					any_home_area_neighbor_country = {
-						has_war_with = ROOT
-					}
-				}
-				add = 30
-			}
-		}
-		war_with_target_on_remove = yes
 		complete_effect = {
-			FROM = {
-				country_event = {
-					id = generic.2010
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 25
+		days_remove = 150
+		remove_effect = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
 				}
 			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	KMK_FACTORY_4 = {
+		visible = {
+		}
+		available = {
+		}
+		complete_effect = {
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 25
+		days_remove = 150
+		remove_effect = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	KMK_FACTORY_5 = {
+		visible = {
+		}
+		available = {
+		}
+		complete_effect = {
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 50
+		days_remove = 150
+		remove_effect = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	KMK_FACTORY_6 = {
+		visible = {
+		}
+		available = {
+		}
+		complete_effect = {
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 25
+		days_remove = 150
+		remove_effect = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	KMK_FACTORY_7 = {
+		visible = {
+		}
+		available = {
+		}
+		complete_effect = {
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 25
+		days_remove = 150
+		remove_effect = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	KMK_FACTORY_8 = {
+		visible = {
+		}
+		available = {
+		}
+		complete_effect = {
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		cost = 50
+		days_remove = 150
+		remove_effect = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	KMK_MODIFIER_1 = {
+		visible = {
+			not = {
+				has_country_flag = KMK_armaments_production
+			}
+		}
+		available = {
+			num_of_civilian_factories > 150
+		}
+		complete_effect = {
+			set_country_flag = KMK_heavy_industry
 		}
 		remove_effect = {
-			declare_war_on = {
-				target = FROM
-				type = take_state
+			add_to_variable = {
+				KMK_fyp_production_speed_arms_factory_factor = 0.1
 			}
+			add_to_variable = {
+				KMK_production_speed_buildings_factor = 0.05
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	KMK_MODIFIER_2 = {
+		visible = {
+			not = {
+				has_country_flag = KMK_heavy_industry
+			}
+		}
+		available = {
+			num_of_civilian_factories > 150
+		}
+		complete_effect = {
+			set_country_flag = KMK_armaments_production
+		}
+		remove_effect = {
+			add_to_variable = {
+				KMK_fyp_industry_repair_factor = 0.1
+			}
+			add_to_variable = {
+				KMK_fyp_production_factory_max_efficiency_factor = 0.05
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+}
+
+KMK_foreign_experts_decision = {
+	KMK_gosproyektstroy_bring_foreign_experts = {
+		priority = 50
+		icon = hol_attract_foreign_investors
+		ai_will_do = {
+			base = 10
+		}
+		targets = {
+			SOV
+		}
+		allowed = {
+			original_tag = KMK
+		}
+		available = {
+			has_idea = KMK_Heavy_Industries_industrial_1
+			FROM = {
+				has_opinion = {
+					target = ROOT
+					value > 29
+				}
+				SOV_is_valid_subject = yes
+				NOT = {
+					has_war_with = ROOT
+				}
+			}
+		}
+		days_remove = 25
+		visible = {
+			has_idea = KMK_Heavy_Industries_industrial_1
+		}
+		cost = 25
+		modifier = {
+			civilian_factory_use = 3
+		}
+		remove_effect = {
+			set_country_flag = KMK_foreign_experts
+			swap_ideas = {
+				remove_idea = KMK_Heavy_Industries_industrial_1
+				add_idea = KMK_Heavy_Industries_industrial_2
+			}
+		}
+		fire_only_once = yes
+	}
+}
+
+# KMK_unit_HRR = {
+# 	KMK_build_empire_HRR = {
+# 		icon = GFX_decision_generic_monarchy
+# 		visible = {
+# 		}
+# 		available = {
+# 			is_subject = no
+# 			custom_trigger_tooltip = {
+# 				tooltip = ALL_CONTROL_need_state
+# 				NOT = {
+# 					any_state = {
+# 						has_state_flag = HRR
+# 						NOT = {
+# 							is_controlled_by = ROOT
+# 						}
+# 					}
+# 				}
+# 			}
+# 		}
+# 		complete_effect = {
+# 		}
+# 		remove_effect = {
+# 			set_cosmetic_tag = FRA_Remiria
+# 			every_state = {
+# 				limit = {
+# 					has_state_flag = HRR
+# 				}
+# 				add_core_of = ROOT
+# 			}
+# 			add_country_leader_trait = FRA_Remiria_Sukaretto_traits
+# 		}
+# 		fire_only_once = yes
+# 		ai_will_do = {
+# 			factor = 1
+# 		}
+# 	}
+# 	KMK_transfer_state_HRR = {
+# 		target_trigger = {
+# 			any_country = {
+# 				AND = {
+# 					is_subject_of = ROOT
+# 					FROM = {
+# 						has_state_flag = HRR
+# 						NOT = {
+# 							is_owned_and_controlled_by = ROOT
+# 						}
+# 						is_owned_and_controlled_by = PREV
+# 					}
+# 				}
+# 			}
+# 		}
+# 		state_target = yes
+# 		on_map_mode = map_and_decisions_view
+# 		#name = L_DVL_GER_target_decision_2
+# 		icon = decision_infiltrate_state
+# 		cost = 5
+# 		days_remove = 7
+# 		ai_will_do = {
+# 			factor = 10
+# 		}
+# 		remove_effect = {
+# 			ROOT = {
+# 				transfer_state = FROM
+# 			}
+# 		}
+# 	}
+# 	KMK_declare_war_HRR_country = {
+# 		icon = GFX_decision_generic_prepare_civil_war
+# 		available = {
+# 			has_global_flag = second_weltkrieg_has_started
+# 		}
+# 		target_trigger = {
+# 			FROM = {
+# 				any_controlled_state = {
+# 					has_state_flag = HRR
+# 				}
+# 				NOT = {
+# 					is_in_faction_with = ROOT
+# 				}
+# 			}
+# 			ROOT = {
+# 				is_subject = no
+# 			}
+# 		}
+# 		cost = 10
+# 		days_remove = 30
+# 		ai_will_do = {
+# 			base = 0
+# 			modifier = {
+# 				NOT = {
+# 					any_home_area_neighbor_country = {
+# 						has_war_with = ROOT
+# 					}
+# 				}
+# 				add = 30
+# 			}
+# 		}
+# 		war_with_target_on_remove = yes
+# 		complete_effect = {
+# 			FROM = {
+# 				country_event = {
+# 					id = generic.2010
+# 				}
+# 			}
+# 		}
+# 		remove_effect = {
+# 			declare_war_on = {
+# 				target = FROM
+# 				type = take_state
+# 			}
+# 		}
+# 	}
+# }
+
+form_european_union_category = {
+	form_european_union_category = {
+		icon = GFX_decision_generic_monarchy
+		allowed = {
+			original_tag = KMK
+		}
+		visible = {
+			has_government = communism
+			has_country_leader = {
+				ruling_only = yes
+				name = "芙兰朵露·斯卡蕾特"
+			}
+		}
+		available = {
+			925 = {
+				is_owned_by = ROOT
+			}
+			not = {
+				country_exists = DVL
+			}
+			not = {
+				country_exists = ALS
+			}
+			not = {
+				country_exists = TRB
+			}
+			not = {
+				country_exists = ITA
+			}
+			not = {
+				country_exists = GER
+			}
+			not = {
+				country_exists = NPT
+			}
+		}
+		complete_effect = {
+		}
+		complete_effect = {
+			set_cosmetic_tag = FRA_Remiria
+			add_research_slot = 1
+			every_state = {
+				limit = {
+					is_core_of = DVL
+					not = {
+						is_core_of = ROOT
+					}
+				}
+				add_core_of = ROOT
+			}
+			every_state = {
+				limit = {
+					is_core_of = GER
+					not = {
+						is_core_of = ROOT
+					}
+				}
+				add_core_of = ROOT
+			}
+			every_state = {
+				limit = {
+					is_core_of = ITA
+					not = {
+						is_core_of = ROOT
+					}
+				}
+				add_core_of = ROOT
+			}
+			every_state = {
+				limit = {
+					is_core_of = TRB
+					not = {
+						is_core_of = ROOT
+					}
+				}
+				add_core_of = ROOT
+			}
+			every_state = {
+				limit = {
+					is_core_of = NPT
+					not = {
+						is_core_of = ROOT
+					}
+				}
+				add_core_of = ROOT
+			}
+			every_state = {
+				limit = {
+					is_core_of = ALS
+					not = {
+						is_core_of = ROOT
+					}
+				}
+				add_core_of = ROOT
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			base = 1000
 		}
 	}
 }
