@@ -1092,6 +1092,50 @@ PRC_Revolutionary_issues = {
 			}
 		}
 	}
+	##围剿反党叛匪
+	PRC_Eliminate_base_areas = {
+		icon = GFX_decision_generic_assassination
+		allowed = {
+			tag = PRC
+		}
+		#cost = 20
+		days_remove = 15
+		custom_cost_trigger = {
+			command_power > 9
+			has_equipment = { infantry_equipment > 499  }
+		}
+		available = {
+		}
+		visible = {
+			or = {
+				has_idea = PRC_Anti_party_forces
+				has_idea = PRC_Anti_party_forces_1
+				has_idea = PRC_Anti_party_forces_2
+				has_idea = PRC_Anti_party_forces_3
+			}
+		}
+		custom_cost_text = decision_cost_CP_10_and_500_gun
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				has_equipment = { infantry_equipment > 2000  }
+				factor = 100
+			}
+		}
+		remove_effect = {
+			custom_effect_tooltip = PRC_Eliminate_base_areas_TT
+			PRC_down_Anti_party_forces = yes
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -10
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -500
+				}
+			}
+		}
+	}
 }
 
 PRC_rebuild_SOV = {
@@ -1961,8 +2005,21 @@ PRC_Diplomatic_matters = {
 			not = {
 				has_country_flag = PRC_war_plan_going_on
 			}
-			any_home_area_neighbor_country = {
-				tag = FROM
+			or = {
+				any_home_area_neighbor_country = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				any_allied_country = {
+					any_home_area_neighbor_country = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+				}
 			}
 		}
 		cost = 10
@@ -2639,7 +2696,7 @@ PRC_Chi_Soviet_friendship = {
 		}
 		complete_effect = {
 			set_country_flag = PRC_Joined_the_Soviet_Union
-			SOV = { change_tag_from = ROOT }
+			SOV = { change_tag_from_ROOT = yes }
 			every_state = {
 				limit = { has_state_flag = is_whole_chinese_state_area }
 				add_core_of = SOV
@@ -3393,6 +3450,204 @@ Build_chinese_united_font = {
 	}
 }
 
+PRC_Great_Revival_bop_decision = {
+	PRC_Tokyo_Trial = {  ##东京大审判
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			or = {
+				controls_state = 282
+				any_subject_country = { controls_state = 282 }
+			}
+		}
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		cancel_if_invalid = yes
+		remove_effect = {
+			effect_tooltip = {
+				282 = { add_manpower = -600000 }
+				add_war_support = 0.01
+				add_named_threat = { threat = 5 name = Tokyo_Trial }
+				add_power_balance_value = {
+					id = PRC_Great_Revival_bop
+					value = 0.1
+				}
+			}
+			hidden_effect = {
+				country_event = { id = PRC_add.130 }
+			}
+		}
+	}
+	PRC_London_Trial = {  ##伦敦大审判
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			or = {
+				controls_state = 126
+				any_subject_country = { controls_state = 126 }
+			}
+		}
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		cancel_if_invalid = yes
+		remove_effect = {
+			effect_tooltip = {
+				126 = { add_manpower = -2000000 }
+				add_victory_points = {
+					province = 6103
+					value = -40
+				}
+				add_war_support = 0.01
+				add_named_threat = { threat = 20 name = London_Trial }
+				add_power_balance_value = {
+					id = PRC_Great_Revival_bop
+					value = 0.1
+				}
+			}
+			hidden_effect = {
+				country_event = { id = PRC_add.132 }
+			}
+		}
+	}
+	PRC_Moscow_Trial = {  ##莫斯科大审判
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			or = {
+				controls_state = 219
+				any_subject_country = { controls_state = 219 }
+			}
+		}
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		cancel_if_invalid = yes
+		remove_effect = {
+			effect_tooltip = {
+				219 = { add_manpower = -1000000 }
+				add_victory_points = {
+					province = 6380
+					value = -15
+				}
+				add_war_support = 0.01
+				add_named_threat = { threat = 15 name = Moscow_Trial }
+				add_power_balance_value = {
+					id = PRC_Great_Revival_bop
+					value = 0.1
+				}
+			}
+			hidden_effect = {
+				country_event = { id = PRC_add.131 }
+			}
+		}
+	}
+	PRC_Call_to_join_army = {  ##号召参军
+		icon = GFX_decision_generic_military
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			has_completed_focus = PRC_army_first
+		}
+		cost = 50
+		days_remove = 60
+		days_re_enable = 60
+		ai_will_do = {
+			factor = 1
+		}
+		modifier = {
+			training_time_army_factor = -0.1
+			conscription_factor = 0.1
+		}
+		complete_effect = {
+			add_power_balance_value = {
+				id = PRC_Great_Revival_bop
+				value = 0.02
+			}
+		}
+		cancel_if_invalid = yes
+	}
+	PRC_Hats_off_to_Fuhrer_decision = {  ##向元首致敬
+		icon = GFX_decision_eng_propaganda_campaigns
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			has_completed_focus = PRC_Hats_off_to_Fuhrer
+		}
+		cost = 50
+		days_remove = 60
+		days_re_enable = 60
+		ai_will_do = {
+			factor = 1
+		}
+		modifier = {
+		}
+		complete_effect = {
+			add_power_balance_value = {
+				id = PRC_Great_Revival_bop
+				value = 0.05
+			}
+		}
+		cancel_if_invalid = yes
+	}
+	PRC_Smuggl_drugs_to_colonists = {  ##向殖民者走私毒品
+		icon = GFX_decision_gre_investment_decisions
+		allowed = { tag = PRC }
+		visible = {
+			has_completed_focus = PRC_Expulsion_of_colonists
+		}
+		available = {
+			has_completed_focus = PRC_Expulsion_of_colonists
+		}
+		cost = 50
+		days_remove = 100
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 0
+		}
+		modifier = {
+		}
+		remove_effect = {
+			add_to_variable = { ubs_save = 50 }
+			custom_effect_tooltip = SOV_get_50_add_to_reserve
+			ENG = { add_ideas = PRC_Drug_abuse }
+			RAJ = {
+				limit = { is_in_ally = yes }
+				add_ideas = PRC_Drug_abuse
+			}
+			MAL = {
+				limit = { is_in_ally = yes }
+				add_ideas = PRC_Drug_abuse
+			}
+		}
+		cancel_if_invalid = yes
+	}
+}
+
 CHI_Debug = {
 	PRC_Unit_CHI_Mao = {
 		allowed = { tag = PRC }
@@ -3510,6 +3765,12 @@ CHI_Debug = {
 			set_country_flag = PRC_complete_PRC_Capital_question
 			complete_national_focus = PRC_Chairman_Zhang_set_things_right
 			remove_power_balance = { id = PRC_Line_struggle_bop }
+			set_power_balance = {
+				id = PRC_Great_Revival_bop
+				left_side = PRC_Great_Revival_bop_left_side
+				right_side = PRC_Great_Revival_bop_right_side
+				set_default = yes
+			}
 			set_politics = { ruling_party = fascism }
 			add_popularity = { ideology = fascism popularity = 0.6 }
 			set_party_name = { ideology = fascism long_name = PRC_CCP_party_Zhang name = PRC_communism_party }
@@ -3553,7 +3814,7 @@ CHI_Debug = {
 			}
 			hidden_effect = {
 				news_event = {
-					id = PRC_news.05
+					id = PRC_news.07
 					days = 1
 				}
 				country_event = {
