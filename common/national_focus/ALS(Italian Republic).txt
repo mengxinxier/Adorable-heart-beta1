@@ -534,7 +534,16 @@ focus_tree = {
 			}
 			set_party_name = { ideology = democratic long_name = "意大利复兴党" name = "意大利复兴党" }
 			hidden_effect = {
+				if = {
+				limit = {
+					has_country_flag = ALS_yiwaifasheng_faguan
+				}
+					add_political_power = -25
+				}else = {
 				news_event = { id = als.79 days = 2 }
+				country_event = { id = als.88 days = 3 }
+				country_event = { id = als.93 days = 365 }
+				}
 			}
 		}
 	}
@@ -599,6 +608,9 @@ focus_tree = {
 				scope = ALS
 				}
 			}
+			hidden_effect = {
+				country_event = { id = als.89 days = 3 }
+			}
 			}
 		}
 	}
@@ -646,6 +658,14 @@ focus_tree = {
 			factor = 100
 		}
 		completion_reward = {
+			if = {
+				limit = {
+					has_country_flag = ALS_yiwaifasheng_faguan
+				}
+				custom_effect_tooltip = ALS_bugeiqidongjueyi
+			}else = {
+				country_event = { id = als.92 days = 3 }
+			}
 			add_country_leader_trait = trait_als_pmzzj
 		}
 	}
@@ -3535,7 +3555,7 @@ focus_tree = {
 	
 	focus = {
 		id = ALS_115
-		icon = GFX_focus_ITA_italian_hegemony
+		icon = GFX_focus_ITA_a_colonial_empire
 		x = -1
 		y = 1
 		cost = 5
@@ -3668,8 +3688,8 @@ focus_tree = {
 	focus = {
 		id = ALS_119
 		icon = GFX_goal_generic_army_purges
-		x = 2
-		y = 1
+		x = 0
+		y = 2
 		cost = 2
 		available = {
 			has_completed_focus = ALS_20
@@ -3904,4 +3924,403 @@ focus_tree = {
 			
 		}
 	}
+	
+	focus = {
+		id = ALS_131
+		icon = GFX_goal_ITA_reunited
+		x = -2
+		y = 2
+		cost = 10
+		available = {
+			is_major = yes
+			OR = {
+			not = { country_exists = DVL }
+			DVL = { is_subject = yes }
+			if = {
+			is_in_faction_with = DVL
+			or = {
+			not = { country_exists = ENG }
+			ENG = { is_subject = yes }
+			}
+			or = {
+			not = { country_exists = SOV }
+			SOV = { is_subject = yes }
+			}
+			}
+			}
+		}
+		relative_position_id = ALS_118
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			custom_effect_tooltip = ALS_dydlcore_get
+			add_ideas = ITA_italian_hegemony_subjects_3
+			hidden_effect = {
+			add_state_core = 783
+			add_state_core = 39
+			add_state_core = 735 #SAVOY
+			add_state_core = 1 #CORSICA
+			add_state_core = 761 #TICINO
+			add_state_core = 44
+			add_state_core = 106
+			add_state_core = 488
+			add_state_core = 102
+			add_state_core = 683
+			add_state_core = 736
+			add_state_core = 103
+			add_state_core = 1138
+			add_state_core = 163
+			add_state_core = 841
+			add_state_core = 1093
+			add_state_core = 1137
+			add_state_core = 1139
+			add_state_core = 1094
+			add_state_core = 105
+			}
+		}
+	}
+	
+	focus = {
+		id = ALS_132
+		icon = GFX_focus_generic_diplomatic_treaty
+		x = -1
+		y = 1
+		cost = 5
+		available = {
+			is_faction_leader = no
+			is_in_faction = yes
+		}
+		prerequisite = { focus = ALS_131 }
+		relative_position_id = ALS_131
+		mutually_exclusive = { focus = ALS_133 }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			add_political_power = 200
+			add_stability = 0.2
+		}
+	}
+	
+	focus = {
+		id = ALS_133
+		icon = GFX_focus_ITA_italian_hegemony
+		x = 1
+		y = 1
+		cost = 5
+		available = {
+			is_major = yes
+		}
+		bypass = {
+			is_faction_leader = yes
+		}
+		prerequisite = { focus = ALS_131 }
+		relative_position_id = ALS_131
+		mutually_exclusive = { focus = ALS_132 }
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			set_rule = {
+				can_create_factions = yes
+			}
+			if = {
+				limit = {
+				has_government = fascism
+			}
+				create_faction = "地中海霸权"
+			}else = {
+				create_faction = "地中海联盟"
+			}
+			add_war_support = 0.3
+		}
+	}
+	
+	focus = {
+		id = ALS_134
+		icon = GFX_goal_attack_FRA
+		x = -4
+		y = 2
+		prerequisite = { focus = ALS_132 focus = ALS_133 }
+		relative_position_id = ALS_131
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			if = {
+			not = { country_exists = FRA }
+			not = { country_exists = KMK }
+			}
+			is_in_faction_with = FRA
+			if = {
+			is_in_faction_with = NFA
+			NFA = { controls_state = 16 }
+			}
+			is_in_faction_with = KMK
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			if = {
+			limit = {
+			country_exists = FRA
+			}
+			create_wargoal = { target = FRA type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = KMK
+			}
+			create_wargoal = { target = KMK type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = NFA
+			NFA = { controls_state = 16 }
+			}
+			create_wargoal = { target = NFA type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = LIB
+			}
+			create_wargoal = { target = LIB type = take_state_focus }
+			}
+			custom_effect_tooltip = ITA_war_with_france_claims_tt
+			every_state = {
+			limit = {
+				is_core_of = LIB
+			}
+			add_claim_by = ROOT
+			}
+			every_state = {
+				limit = {
+					is_owned_by = FRA
+					is_owned_by = LIB
+					is_owned_by = COG
+					OR = {
+						region = 182 #WESTERN MAGHREB
+						region = 126 #EASTERN MAGHREB
+						#region = 17 #EAST AFRICA #MM: TUrned into Ethiopian Highlands and no longer including Djibouti or British Somalia
+						region = 273 #DANAKIL (new region including Djibouti)
+						region = 274 #OGADEN (new region including British Somalia)
+						region = 128 #EGYPT (just in case)
+						region = 28 #MIDDLE EAST (Syria) #MM:No longer all of Syria, just Eastern part now
+						region = 232 #LEVANT (including Western part of Syria now)
+						region = 216 #UPPER NILE (Just in case)
+						AND = {
+							is_island_state = yes
+							state_is_in_the_mediterranean_sea = yes
+						}
+					}
+					NOT = { is_core_of = FRA }
+					NOT = { is_claimed_by = ROOT }
+				}
+				hidden_effect ={
+					ROOT = { add_state_claim = PREV }
+				}
+				custom_effect_tooltip = generic_ROOT_gains_claim_tt
+			}
+		}
+	}
+	
+	focus = {
+		id = ALS_135
+		icon = GFX_goal_attack_ENG
+		x = -2
+		y = 2
+		prerequisite = { focus = ALS_132 focus = ALS_133 }
+		relative_position_id = ALS_131
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			not = { country_exists = ENG }
+			is_in_faction_with = ENG
+			ENG = { is_subject = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			create_wargoal = { target = ENG type = take_state_focus }
+			custom_effect_tooltip = ITA_war_with_the_uk_claims_tt
+			every_state = {
+				limit = {
+					or = {
+					is_owned_by = ENG
+					is_owned_by = EGY
+					is_owned_by = ZIM
+					is_owned_by = SAF
+					}
+					OR = {
+						region = 182 #WESTERN MAGHREB
+						region = 126 #EASTERN MAGHREB
+						region = 753 #EAST AFRICA #MM: TUrned into Ethiopian Highlands and no longer including Djibouti or British Somalia
+						region = 273 #DANAKIL (new region including Djibouti)
+						region = 274 #OGADEN (new region including British Somalia)
+						region = 128 #EGYPT (just in case)
+						region = 28 #MIDDLE EAST (Syria) #MM:No longer all of Syria, just Eastern part now
+						region = 232 #LEVANT (including Western part of Syria now)
+						region = 216 #UPPER NILE (Just in case)
+						AND = {
+							is_island_state = yes
+							state_is_in_the_mediterranean_sea = yes
+						}
+					}
+					NOT = { is_core_of = ENG }
+					NOT = { is_claimed_by = ROOT }
+				}
+				hidden_effect ={
+					ROOT = { add_state_claim = PREV }
+				}
+				custom_effect_tooltip = generic_ROOT_gains_claim_tt
+			}
+		}
+	}
+	
+	focus = {
+		id = ALS_136
+		icon = GFX_goal_attack_GER
+		x = 2
+		y = 2
+		prerequisite = { focus = ALS_132 focus = ALS_133 }
+		relative_position_id = ALS_131
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			not = { country_exists = GER }
+			is_in_faction_with = GER
+			GER = { is_subject = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 0.1
+		}
+		completion_reward = {
+			create_wargoal = { target = GER type = take_state_focus }
+		}
+	}
+	
+	focus = {
+		id = ALS_137
+		icon = GFX_focus_generic_attack_romania
+		x = 4
+		y = 2
+		prerequisite = { focus = ALS_132 focus = ALS_133 }
+		relative_position_id = ALS_131
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			not = { country_exists = ROM }
+			is_in_faction_with = ROM
+			ROM = { is_subject = yes }
+			}
+			or = {
+			not = { country_exists = BUL }
+			is_in_faction_with = BUL
+			BUL = { is_subject = yes }
+			}
+			or = {
+			not = { country_exists = HUN }
+			is_in_faction_with = HUN
+			HUN = { is_subject = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 0.1
+		}
+		completion_reward = {
+			if = {
+			limit = {
+			country_exists = ROM
+			}
+			create_wargoal = { target = ROM type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = BUL
+			}
+			create_wargoal = { target = BUL type = take_state_focus }
+			}
+			if = {
+			limit = {
+			country_exists = HUN
+			}
+			create_wargoal = { target = HUN type = take_state_focus }
+			}
+		}
+	}
+	
+	focus = {
+		id = ALS_138
+		icon = GFX_focus_attack_soviet
+		x = 0
+		y = 2
+		prerequisite = { focus = ALS_132 focus = ALS_133 }
+		relative_position_id = ALS_131
+		cost = 5
+		available = {
+			is_puppet = no
+		}
+		bypass = {
+			or = {
+			not = { country_exists = SOV }
+			is_in_faction_with = SOV
+			SOV = { is_subject = yes }
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			create_wargoal = { target = SOV type = take_state_focus }
+		}
+	}
+	
+	focus = {
+		id = ALS_139
+		icon = GFX_focus_ITA_by_blood_alone
+		x = 0
+		y = 2
+		prerequisite = { focus = ALS_134 focus = ALS_135 focus = ALS_136 focus = ALS_137 focus = ALS_138 }
+		relative_position_id = ALS_138
+		cost = 10
+		available = {
+			is_puppet = no
+			or = {
+			not = { country_exists = ENG }
+			ENG =  { is_subject_of = ROOT }
+			}
+			or = {
+			not = { country_exists = DVL }
+			DVL =  { is_subject_of = ROOT }
+			}
+			or = {
+			not = { country_exists = SOV }
+			SOV =  { is_subject_of = ROOT }
+			}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			add_country_leader_trait = trait_ita_wyyx
+		}
+	}
+	
 }
