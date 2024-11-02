@@ -2254,12 +2254,17 @@ country_event = {
 		}
 		608 = {
 			transfer_state_to = ROOT
-			add_core_of_ROOT = yes
 			set_demilitarized_zone = yes
 			create_unit = {
 				division = "name = \"北京投诚整编第一师\" division_template = \"北京投诚部队\" start_experience_factor = 0.2"
 				amount = 3
 				owner = ROOT
+			}
+		}
+		608 = {
+			if = {
+				limit = { not = { is_core_of = ROOT } }
+				add_compliance = 30
 			}
 		}
 		hidden_effect = {
@@ -4122,43 +4127,118 @@ country_event = {
 	option = {
 		name = PRC_add.140.a
 		hidden_effect = {
-			if = { 
-				limit = {
-					power_balance_value = {
-						id = PRC_Line_struggle_bop
-						value < -0.2
-					}
-				}
-				country_event = {
-					id = PRC_add.141
-					days = 2
-				}
-			}
-			else_if = { 
-				limit = {
-					power_balance_value = {
-						id = PRC_Line_struggle_bop
-						value > 0.2
-					}
-				}
+			if = {
+				limit = { is_ai = yes }
 				if = {
-					limit = { has_country_flag = Chen_duxiu_is_Representatives_of_Moscow }
+					limit = {
+						has_game_rule = {
+							rule = AH_PRC_ai_behavior_SELECTION
+							option = PRC_GAME_RULE_1
+						}
+					}
+					if = {
+						limit = { has_country_flag = Chen_duxiu_is_Representatives_of_Moscow }
+						country_event = {
+							id = PRC_add.144
+							days = 2
+						}
+					}
+					else = {
+						country_event = {
+							id = PRC_add.146
+							days = 2
+						}
+					}
+				}
+				else_if = { 
+					limit = {
+						has_game_rule = {
+							rule = AH_PRC_ai_behavior_SELECTION
+							option = PRC_GAME_RULE_2
+						}
+					}
 					country_event = {
-						id = PRC_add.144
+						id = PRC_add.141
+						days = 2
+					}
+				}
+				else_if = { 
+					limit = {
+						has_game_rule = {
+							rule = AH_PRC_ai_behavior_SELECTION
+							option = PRC_GAME_RULE_3
+						}
+					}
+					country_event = {
+						id = PRC_add.81
 						days = 2
 					}
 				}
 				else = {
-					country_event = {
-						id = PRC_add.146
-						days = 2
+					random_list = {
+						50 = {
+							if = {
+								limit = { has_country_flag = Chen_duxiu_is_Representatives_of_Moscow }
+								country_event = {
+									id = PRC_add.144
+									days = 2
+								}
+							}
+							else = {
+								country_event = {
+									id = PRC_add.146
+									days = 2
+								}
+							}
+						}
+						50 = {
+							country_event = {
+								id = PRC_add.141
+								days = 2
+							}
+						}
 					}
 				}
 			}
 			else = {
-				country_event = {
-					id = PRC_add.81
-					days = 2
+				if = { 
+					limit = {
+						power_balance_value = {
+							id = PRC_Line_struggle_bop
+							value < -0.2
+						}
+					}
+					country_event = {
+						id = PRC_add.141
+						days = 2
+					}
+				}
+				else_if = { 
+					limit = {
+						power_balance_value = {
+							id = PRC_Line_struggle_bop
+							value > 0.2
+						}
+					}
+					if = {
+						limit = { has_country_flag = Chen_duxiu_is_Representatives_of_Moscow }
+						country_event = {
+							id = PRC_add.144
+							days = 2
+						}
+					}
+					else = {
+						country_event = {
+							id = PRC_add.146
+							days = 2
+						}
+					}
+				}
+				else = {
+					country_event = {
+						id = PRC_add.81
+						days = 2
+					}
 				}
 			}
 		}
