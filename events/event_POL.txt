@@ -272,3 +272,324 @@ add_namespace = poland_news
 			}
 		}
 	}
+				
+	#经济危机来袭
+	country_event = {
+		id = polish.014
+		title = polish.014.t
+		desc = polish.014.d
+		is_triggered_only = yes
+		option = {
+			name = polish.014.a
+			add_political_power = -25
+			add_to_variable = { ubs_load = 200 }
+			custom_effect_tooltip = DEN_increase_200_debt
+			add_timed_idea = {
+				idea = POL_economic_crisis_idea
+				days = 485
+			}
+			hidden_effect = {
+				country_event = { id = polish.015 days = 3 }
+			}
+		}
+	}
+			
+	#粮食问题
+	country_event = {
+		id = polish.015
+		title = polish.015.t
+		desc = polish.015.d
+		is_triggered_only = yes
+		option = {
+			name = polish.015.a
+			add_to_variable = { ubs_load = 400 }
+			custom_effect_tooltip = DEN_increase_400_debt
+			hidden_effect = {
+				country_event = { id = polish.016 days = 3 }
+			}
+		}
+	}
+						
+	#外贸订单无法兑现
+	country_event = {
+		id = polish.016
+		title = polish.016.t
+		desc = polish.016.d
+		is_triggered_only = yes
+		option = {
+			name = polish.016.a
+			complete_national_focus = POL_economic_crisis_strikes
+			add_ideas = POL_lack_of_investment
+			custom_effect_tooltip = decrease_monthly_income_by_20_per
+		}
+	}
+					
+	#购买粮食的问题
+	country_event = {
+		id = polish.017
+		title = polish.017.t
+		desc = polish.017.d
+		is_triggered_only = yes
+		option = {
+			name = polish.017.a
+			activate_targeted_decision = { target = UKR decision = POL_purchase_grain_from_dec_country }
+			activate_targeted_decision = { target = ROM decision = POL_purchase_grain_from_dec_country }
+		}
+		option = {
+			name = polish.017.b
+			activate_targeted_decision = { target = SOV decision = POL_purchase_grain_from_dec_country }
+			activate_targeted_decision = { target = DVL decision = POL_purchase_grain_from_dec_country }
+		}
+		option = {
+			name = polish.017.c
+			ai_chance = {
+				base = 1
+			}
+			activate_targeted_decision = { target = DVL decision = POL_purchase_grain_from_dec_country }
+			activate_targeted_decision = { target = ROM decision = POL_purchase_grain_from_dec_country }
+		}
+	}
+				
+	#执念要求购买粮食
+	country_event = {
+		id = polish.018
+		title = polish.018.t
+		desc = polish.018.d
+		is_triggered_only = yes
+		option = {
+			name = polish.018.a
+			ai_chance = {
+				base = 1
+			}
+			add_political_power = 20
+			hidden_effect = {
+				FROM = { country_event = { id = polish.019 days = 1 } }
+			}
+		}
+		option = {
+			name = polish.018.b
+			ai_chance = {
+				base = 0
+			}
+			hidden_effect = {
+				FROM = { country_event = { id = polish.020 days = 1 } }
+			}
+		}
+	}
+				
+	#答应
+	country_event = {
+		id = polish.019
+		title = polish.019.t
+		desc = polish.019.d
+		is_triggered_only = yes
+		option = {
+			name = polish.019.a
+			add_political_power = 25
+			hidden_effect = {
+				modify_timed_idea = {
+					idea = POL_economic_crisis_idea
+					days = -30
+				}
+			}
+			custom_effect_tooltip = POL_economic_crisis_reduced_by_30_days
+		}
+	}
+							
+	#不答应
+	country_event = {
+		id = polish.020
+		title = polish.020.t
+		desc = polish.020.d
+		is_triggered_only = yes
+		option = {
+			name = polish.020.a
+			add_political_power = -5
+		}
+	}
+					
+	#向圣杯银行贷款？
+	country_event = {
+		id = polish.021
+		title = polish.021.t
+		desc = polish.021.d
+		is_triggered_only = yes
+		option = {
+			name = polish.021.a
+			add_to_variable = { ubs_load = 100 }
+			add_political_power = 50
+		}
+		option = {
+			name = polish.021.b
+		}
+	}
+				
+	#执念愿意给钱，以确保贸易稳定
+	country_event = {
+		id = polish.022
+		title = polish.022.t
+		desc = polish.022.d
+		is_triggered_only = yes
+		option = {
+			name = polish.022.a
+			ai_chance = {
+				base = 1
+			}
+			add_to_variable = { ubs_save = 100 }
+			custom_effect_tooltip = SOV_get_100_add_to_reserve
+			hidden_effect = {
+				FROM = { country_event = { id = polish.023 days = 1 } }
+			}
+		}
+		option = {
+			name = polish.022.b
+			ai_chance = {
+				base = 0
+			}
+			hidden_effect = {
+				FROM = { country_event = { id = polish.024 days = 1 } }
+			}
+		}
+	}
+					
+	#答应
+	country_event = {
+		id = polish.023
+		title = polish.023.t
+		desc = polish.023.d
+		is_triggered_only = yes
+		option = {
+			name = polish.023.a
+			add_political_power = 25
+			hidden_effect = {
+				modify_timed_idea = {
+					idea = POL_economic_crisis_idea
+					days = -60
+				}
+			}
+			if = {
+				limit = {
+					has_idea = POL_lack_of_investment
+				}
+				remove_ideas = POL_lack_of_investment
+			}
+			custom_effect_tooltip = POL_economic_crisis_reduced_by_60_days
+			if = {
+				limit = { FROM = { tag = DEN } }
+				add_tech_bonus = {
+					name = POL_negotiate_the_trade_of_DEN
+					category = cat_mechanized_equipment
+					ahead_reduction = 0.5
+					bonus = 0.5
+					uses = 1.0
+				}
+			}
+			if = {
+				limit = { FROM = { tag = KVO } }
+				add_tech_bonus = {
+					name = POL_ensure_order_of_Kivotos
+					category = artillery
+					ahead_reduction = 0.5
+					bonus = 0.5
+					uses = 1.0
+				}
+			}
+		}
+	}
+				
+	#不答应
+	country_event = {
+		id = polish.024
+		title = polish.024.t
+		desc = polish.024.d
+		is_triggered_only = yes
+		option = {
+			name = polish.024.a
+			add_political_power = -5
+		}
+	}
+					
+	#卡人资本家要求从轻发落
+	country_event = {
+		id = polish.025
+		title = polish.025.t
+		desc = polish.025.d
+		is_triggered_only = yes
+		option = {
+			name = polish.025.a
+			add_political_power = -15
+			hidden_effect = {
+				modify_timed_idea = {
+					idea = POL_economic_crisis_idea
+					days = -30
+				}
+			}
+			custom_effect_tooltip = POL_economic_crisis_reduced_by_30_days
+		}
+		option = {
+			name = polish.025.b
+			add_stability = -0.05
+			hidden_effect = {
+				modify_timed_idea = {
+					idea = POL_economic_crisis_idea
+					days = -60
+				}
+			}
+			custom_effect_tooltip = POL_economic_crisis_reduced_by_60_days
+		}
+	}
+			
+	#执人要求卡人交出源石
+	country_event = {
+		id = polish.026
+		title = polish.026.t
+		desc = polish.026.d
+		is_triggered_only = yes
+		option = {
+			name = polish.026.a
+			add_political_power = -15
+			hidden_effect = {
+				modify_timed_idea = {
+					idea = POL_economic_crisis_idea
+					days = -30
+				}
+			}
+			custom_effect_tooltip = POL_economic_crisis_reduced_by_30_days
+		}
+		option = {
+			name = polish.026.b
+			add_stability = -0.05
+			hidden_effect = {
+				modify_timed_idea = {
+					idea = POL_economic_crisis_idea
+					days = -60
+				}
+			}
+			custom_effect_tooltip = POL_economic_crisis_reduced_by_60_days
+			add_days_mission_timeout = {
+				mission = POL_release_new_currency_mission
+				days = -30
+			}
+		}
+	}
+
+	#对贵族重拳出击？
+	country_event = {
+		id = polish.027
+		title = polish.027.t
+		desc = polish.027.d
+		is_triggered_only = yes
+		option = {
+			name = polish.027.a
+			add_stability = -0.05
+			add_to_variable = {
+				ubs_save = 200
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+		}
+		option = {
+			name = polish.027.b
+			add_political_power = -5
+			
+		}
+	}
