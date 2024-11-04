@@ -4,13 +4,42 @@ country_event = {
 	title = "制作组测试事件"
 	desc = "测试的内容是什么呢？"
 	is_triggered_only = yes
+	immediate = {
+		set_variable = { DEN.DEN_strait_influence_from_ENG = 30 }
+		set_variable = { DEN.DEN_strait_influence_from_DVL = 30 }
+		set_variable = { DEN.DEN_strait_influence_from_ENG_var = DEN.DEN_strait_influence_from_ENG }
+		set_variable = { DEN.DEN_strait_influence_from_DVL_var = DEN.DEN_strait_influence_from_DVL }
+		subtract_from_variable = {
+			var = DEN.DEN_strait_influence_from_ENG_var
+			value = DEN.DEN_strait_influence_from_DVL_var
+		}
+		set_variable = { DEN.DEN_strait_influence_difference_var = DEN.DEN_strait_influence_from_ENG_var }
+		clear_variable = DEN.DEN_strait_influence_from_ENG_var
+		clear_variable = DEN.DEN_strait_influence_from_DVL_var
+	}
 	option = {
 		name = "转意识形态"
 		country_event = test.2
 	}
 	option = {
 		name = "2"
-		
+		if = {
+			limit = {
+				check_variable = { DEN.DEN_strait_influence_difference_var > -20 }
+				check_variable = { DEN.DEN_strait_influence_difference_var < 20 }
+			}
+			country_event = den_strait.010
+		}
+		else_if = {
+			limit = {
+				check_variable = { DEN.DEN_strait_influence_difference_var > 20 }
+			}
+			country_event = { id = den_strait.008 days = 3 }
+		}
+		else = {
+			country_event = { id = den_strait.009 days = 3 }
+		}
+		custom_effect_tooltip = DEN_strait_influence_difference_dsadjio
 	}
 }
 
