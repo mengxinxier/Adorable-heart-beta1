@@ -12,7 +12,199 @@ focus_tree = {
 	
 	default = no
 
-	focus = { #北方的传闻
+	focus = { #发往南方的信件
+		id = MGU_H_001
+		icon = GFX_focus_generic_treaty
+		x = 13
+		y = 0
+		cost = 1
+		ai_will_do = {
+			factor = 15
+		}
+		available = {
+		    MGU = { is_ai = no }
+		    MGS = { is_ai = yes }
+		    MST = { is_ai = yes }
+		    NOT = { MST = { has_completed_focus = MST_A005 } }
+		    NOT = { MGS = { has_war_with = MGU } }
+		}
+        mutually_exclusive = { focus = MGU_Start }
+		bypass = {
+
+		}
+		cancelable = no
+		completion_reward = {
+            hidden_effect = {
+                MST = { load_focus_tree = MST_generic_homura_focus }
+                MGS = { load_focus_tree = generic_focus }
+                set_global_flag = MGU_H_001_flag
+			}
+		}
+	}
+
+	focus = { #只需等待
+		id = MGU_H_002
+		icon = GFX_goal_changing_times
+		x = 13
+		y = 1
+		cost = 6
+		ai_will_do = {
+			factor = 15
+		}
+		prerequisite = {
+			focus = MGU_H_001
+		}
+		available = {
+		    MST = { is_ai = yes }
+		    MGS = { is_ai = yes }
+		    NOT = { MST = { has_completed_focus = MST_A005 } }
+		    NOT = { MGS = { has_war_with = MGU } }
+		}
+        mutually_exclusive = { focus = MGU_Start }
+		bypass = {
+
+		}
+		cancelable = no
+		completion_reward = {
+		}
+	}
+
+	focus = { #晓美焰盟主
+		id = MGU_H_003
+		icon = GFX_focus_MGU_HOMURA
+		x = 13
+		y = 2
+		cost = 1
+		ai_will_do = {
+			factor = 15
+		}
+		prerequisite = {
+			focus = MGU_H_002
+		}
+		available = {
+		    MST = { is_ai = yes }
+		    MGS = { is_ai = yes }
+		    NOT = { MST = { has_completed_focus = MST_A005 } }
+		    NOT = { MGS = { has_war_with = MGU } }
+		}
+        mutually_exclusive = { focus = MGU_Start }
+		bypass = {
+
+		}
+		cancelable = no
+		completion_reward = {
+		set_global_flag = MGU_Homura_COUP
+		MST = {
+			MGU_Akemi_Homura = { set_nationality = MGU }
+			MGU_Kaname_Madoka = { set_nationality = MGU }
+			MGU_Miki_Sayaka = { set_nationality = MGU }
+			clr_country_flag = MST_SL_Kaname_Madoka
+			hidden_effect = {
+                remove_ideas = MGU_hidden_idea_007
+                delete_units = {
+                    division_template = "魔联特遣队"
+                    disband = no				#will refund equipment and manpower
+                }
+			}
+		}
+		MGU = {
+        IF = {
+            limit = { MGR = { exists = yes } }
+            annex_country = { target = MGR transfer_troops = yes }
+            country_event = { id = MGU_event.8 days = 3 }
+           }
+        IF = {
+            limit = { MGS = { exists = yes } }
+            annex_country = { target = MGS transfer_troops = yes }
+           }
+        hidden_effect = {
+            set_politics = {
+                ruling_party = neutrality
+             }
+			promote_character = {
+				character = MGU_Akemi_Homura
+				ideology = military_politicism
+			}
+		}
+		clr_country_flag = MGU_SL_Nanami_Yachiyo
+		set_country_flag = MST_SL_Kaname_Madoka
+		load_focus_tree = MGU_COUP_focus
+        hidden_effect = { add_ideas = MGU_chuanxiao }
+			}
+		hidden_effect = {
+		    497 = { remove_core_of = MST add_core_of = MGU }
+            498 = { remove_core_of = MST add_core_of = MGU }
+            896 = { remove_core_of = MST add_core_of = MGU }
+	    MGU = {
+        country_event = { id = magicunion.1054_MGU days = 5 }
+		add_political_power = 200
+            add_ideas = MGU_hidden_idea_007
+			}
+		MST = {
+			load_focus_tree = generic_focus
+			remove_ideas = MGU_hidden_idea_007
+			MGU_Oba_Juri = {
+				set_nationality = MRB
+			}
+			MGU_Chizu_Ranka = {
+				set_nationality = MRB
+			}
+			MGU_Kasane_Ao = {
+				set_nationality = MGC
+			}
+            add_country_leader_role = {
+                character = "MST_maomao_noob"
+                country_leader = {
+                    desc = ""
+                    ideology = military_politicism
+                    traits = { MST_maomao_noob_Leader }
+                    expire = "1965.1.1.1"
+                    id = -1
+                }
+                promote_leader = yes
+            }
+            hidden_effect = { load_focus_tree = generic_focus }
+		}
+        		##赤党
+        		MGC = {
+        			transfer_state = 1041
+        			promote_character = {
+        				character = MGU_Kasane_Ao
+        				ideology = marxism
+        			}
+                remove_ideas = disordered_army_0
+        		add_ideas = MGU_new_age_army_JJ
+        		}
+        		1041 = {
+        				remove_core_of = MST
+        				add_core_of = MGC
+        		}
+        		##叛军
+        		MRB = {
+        			transfer_state = 1164
+        			promote_character = {
+        				character = MGU_Oba_Juri
+        				ideology = militarism_subtype
+        			}
+        			promote_character = {
+        				character = MGU_Chizu_Ranka
+        				ideology = Guided_democracy
+        			}
+        			set_country_flag = MRB_SL_Chizu_Ranka
+        		remove_ideas = disordered_army_0
+        		add_ideas = MGU_new_age_army_JJ
+        		}
+        		1164 = {
+        				remove_core_of = MST
+        				add_core_of = MRB
+        		}
+
+		}
+
+		}
+	}
+
+	focus = { #处理北方的传闻
 		id = MGU_Start
 		icon = GFX_goal_generic_construct_infrastructure
 		x = 5
@@ -22,8 +214,9 @@ focus_tree = {
 			factor = 15
 		}
 		available = {
+		    MGU = { is_ai = yes }
 		}
-
+        mutually_exclusive = { focus = MGU_H_001 }
 		bypass = {
 			MGS = {
 				OR = {
