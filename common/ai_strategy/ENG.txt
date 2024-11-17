@@ -52,12 +52,12 @@
 		ai_strategy = { #步兵
 			type = role_ratio
 			id = ENG_infantry
-			value = 100
+			value = 80
 		}
 		ai_strategy = { #装甲
 			type = role_ratio
 			id = ENG_armor
-			value = 10
+			value = 20
 		}
 		ai_strategy = { #机步
 			type = role_ratio
@@ -66,7 +66,33 @@
 		}
 	}
 
-	ENG_unit_production_2 = { #大后期单位倾向
+	ENG_unit_production_2 = { #后期单位倾向
+		allowed = {
+			original_tag = ENG
+		}
+		enable = {
+			date > 1942.1.1
+		}
+		abort = {
+			date > 1944.1.1
+		}
+		ai_strategy = { #步兵
+			type = role_ratio
+			id = ENG_infantry
+			value = 50
+		}
+		ai_strategy = { #装甲
+			type = role_ratio
+			id = ENG_armor
+			value = 50
+		}
+		ai_strategy = { #机步
+			type = role_ratio
+			id = ENG_jb
+			value = 0
+		}
+	}
+	ENG_unit_production_3 = { #大后期单位倾向
 		allowed = {
 			original_tag = ENG
 		}
@@ -758,39 +784,39 @@
 
 
 #空军任务
-	ENG_fly_bwbt = { #保卫本土空域
-		allowed = { 
-			original_tag = ENG 
-		}
-		enable = {
-			has_war_with = DVL
-			not = {
-				country_exists = FRA
-			}
-			DVL = {
-				not = {
-					has_war_with = SOV
-				}
-			}
-		}
-		abort_when_not_enabled = yes
-
-		ai_strategy = {
-			type = strategic_air_importance
-			id = 1
-			value = 50000
-		}
-		ai_strategy = {
-			type = strategic_air_importance
-			id = 2
-			value = 5000
-		}
-		ai_strategy = {
-			type = strategic_air_importance
-			id = 18
-			value = 50000
-		}
-	}
+	#ENG_fly_bwbt = { #保卫本土空域
+	#	allowed = { 
+	#		original_tag = ENG 
+	#	}
+	#	enable = {
+	#		has_war_with = DVL
+	#		not = {
+	#			country_exists = FRA
+	#		}
+	#		DVL = {
+	#			not = {
+	#				has_war_with = SOV
+	#			}
+	#		}
+	#	}
+	#	abort_when_not_enabled = yes
+	#
+	#	ai_strategy = {
+	#		type = strategic_air_importance
+	#		id = 1
+	#		value = 50000
+	#	}
+	#	ai_strategy = {
+	#		type = strategic_air_importance
+	#		id = 2
+	#		value = 5000
+	#	}
+	#	ai_strategy = {
+	#		type = strategic_air_importance
+	#		id = 18
+	#		value = 50000
+	#	}
+	#}
 	
 #军队调动
 	EAI_ENG_last_stand = { #保卫本土
@@ -896,10 +922,6 @@
 	}
 	
 	careful_with_early_invasions = { #不提前海上入侵戴比
-		allowed = {
-			original_tag = ENG
-			is_subject_of = ENG
-		}
 		enable = {
 			has_war_with = DVL
 			or = {
@@ -912,84 +934,214 @@
 						NOT = {
 							has_war_with = SOV
 						}
-						surrender_progress < 0.1
+						surrender_progress < 0.2
 					}
-					date < 1943.6.1
+					date < 1944.1.1
 				}
 				AND = {
 					DVL = {
 						has_war_with = SOV
 						surrender_progress < 0.1
 					}
-					date < 1942.6.1
+					date < 1943.1.1
 				}								
 			}
 		}
 		abort_when_not_enabled = yes
 		ai_strategy = {
 			type = invade
-			id = "POL"
-			value = 0
+			id = "DVL"
+			value = -200
 		}
 		ai_strategy = {
 			type = invade
-			id = "DVL"
-			value = 0
+			id = "POL"
+			value = -200
+		}
+		ai_strategy = {
+			type = invade
+			id = "KMK"
+			value = -200
+		}
+		ai_strategy = { #幻想乡民族国
+			type = invade
+			id = "GOG"
+			value = -200
 		}
 		ai_strategy = {
 			type = invade
 			id = "NPT"
-			value = 0
+			value = -200
+		}
+		ai_strategy = { #犯罪神
+			type = invade
+			id = "ARF"
+			value = -200
+		}
+		ai_strategy = {
+			type = invade
+			id = "ITA"
+			value = -200
+		}
+		ai_strategy = {
+			type = invade
+			id = "ALS"
+			value = -200
 		}
 	}
-	#
-		#careful_with_late_invasions = { #戴比与苏联开打时海上入侵
-		#	allowed = {
-		#		original_tag = ENG
-		#	}
-		#	enable = {
-		#		has_war_with = DVL		
-		#		date > 1942.9.1
-		#		DVL = {
-		#			has_war_with = SOV
-		#		}
-		#	}
-		#	abort_when_not_enabled = yes
-		#	ai_strategy = {
-		#		type = invade
-		#		id = "DVL"
-		#	}
-		#}
-		#careful_with_late_invasions2 = { #戴比快寄的时候登陆
-		#	allowed = {
-		#		original_tag = ENG
-		#	}
-		#	enable = {
-		#		has_war_with = DVL
-		#		DVL = {
-		#			surrender_progress > 0.15
-		#		}
-		#	}
-		#	abort_when_not_enabled = yes
-		#	ai_strategy = {
-		#		type = invade
-		#		id = "DVL"
-		#		value = 400
-		#	}
-		#}
-		
-	careful_with_ita_invasions = { #海上入侵意大利
+	ENG_war_with_DVL = { #到时间后对戴比战略
 		allowed = {
 			original_tag = ENG
 		}
 		enable = {
-			has_war_with = ITA
+			has_war_with = DVL
+			or = {
+				AND = {
+					DVL = {
+						NOT = {
+							has_war_with = SOV
+						}
+					}
+					date > 1944.1.1
+				}
+				AND = {
+					DVL = {
+						has_war_with = SOV
+					}
+					date > 1943.1.1
+				}
+				DVL = {
+					surrender_progress > 0.2
+				}
+				
+			}
 		}
 		abort_when_not_enabled = yes
 		ai_strategy = {
-			type = invade
+			type = invade		#入侵
+			id = "DVL"
+			value = 200
+		}
+		ai_strategy = {
+			type = conquer		#征服
+			id = "DVL"
+			value = 200
+		}
+		ai_strategy = {
+			type = invasion_unit_request
+			tag = DVL
+			value = 10
+		}
+		ai_strategy = {
+			type = front_unit_request		#前线部队
+			tag = DVL
+			value = 120		# lets put more units, should be safe
+		}
+
+		ai_strategy = { #进攻前线
+			type = front_control
+			priority = 10
+			tag = DVL
+			ratio > 0.3
+			execution_type = rush
+			execute_order = yes
+		}
+
+	}
+	ENG_war_with_ITA = { #到时间后对意大利战略
+		allowed = {
+			original_tag = ENG
+		}
+		enable = {
+			has_war_with = DVL
+			or = {
+				has_war_with = ITA
+				has_war_with = ALS
+			}
+			or = {
+				ITA = {
+					is_in_faction_with = DVL
+				}
+				ALS = {
+					is_in_faction_with = DVL
+				}
+			}
+			or = {
+				AND = {
+					DVL = {
+						NOT = {
+							has_war_with = SOV
+						}
+					}
+					date > 1944.1.1
+				}
+				AND = {
+					DVL = {
+						has_war_with = SOV
+					}
+					date > 1943.1.1
+				}
+				DVL = {
+					surrender_progress > 0.2
+				}
+				
+			}
+		}
+		abort_when_not_enabled = yes
+		ai_strategy = {
+			type = invade		#入侵
 			id = "ITA"
+			value = 50
+		}
+		ai_strategy = {
+			type = conquer		#征服
+			id = "ITA"
+			value = 50
+		}
+		ai_strategy = {
+			type = front_unit_request		#前线部队
+			tag = ITA
+			value = 30		
+		}
+
+		ai_strategy = {
+			type = invade		#入侵
+			id = "ALS"
+			value = 50
+		}
+		ai_strategy = {
+			type = conquer		#征服
+			id = "ALS"
+			value = 50
+		}
+		ai_strategy = {
+			type = front_unit_request		#前线部队
+			tag = ALS
+			value = 30		
+		}
+	}
+	ENG_war_with_MOR = { #对摩洛哥出重拳
+		allowed = {
+			original_tag = ENG
+		}
+		enable = {
+			has_war_with = MOR	
+		}
+		abort_when_not_enabled = yes
+		ai_strategy = {
+			type = invade		#入侵
+			id = "MOR"
+			value = 50
+		}
+		ai_strategy = {
+			type = conquer		#征服
+			id = "MOR"
 			value = 100
+		}
+		ai_strategy = {
+			type = front_unit_request		#前线部队
+			tag = MOR
+			value = 60		
 		}
 	}
 
@@ -1222,17 +1374,17 @@
 		ai_strategy = {
 			type = invade		#入侵
 			id = "JAP"
-			value = 0
+			value = -200
 		}
 		ai_strategy = {
 			type = conquer		#征服
 			id = "JAP"
-			value = 0
+			value = -200
 		}
 		ai_strategy = {
 			type = invasion_unit_request     #用于登陆的部队比例
 			tag = JAP
-			value = 0
+			value = -200
 		}
 		ai_strategy = {
 			type = front_unit_request		#前线部队
@@ -1250,7 +1402,7 @@
 		ai_strategy = { #帮印度填线
 			type = force_defend_ally_borders
 			id = "RAj"
-			value = 50
+			value = 20
 		}
 	}
 
@@ -1343,7 +1495,7 @@
 		ai_strategy = {
 			type = area_priority
 			id = africa
-			value = -500
+			value = 100
 		}
 		ai_strategy = {
 			type = area_priority
@@ -1423,56 +1575,7 @@
 		}
 	}
 
-	ENG_war_with_DVL = { #到时间后对戴比战略
-		allowed = {
-			original_tag = ENG
-		}
-		enable = {
-			has_war_with = DVL
-			or = {
-				AND = {
-					date > 1943.6.1
-					DVL = {
-						has_war_with = SOV
-					}
-				}
-				date > 1942.6.1
-				DVL = {
-					surrender_progress > 0.1
-				}
-			}
-		}
-		abort_when_not_enabled = yes
-		ai_strategy = {
-			type = invade		#入侵
-			id = "DVL"
-			value = 200
-		}
-		ai_strategy = {
-			type = conquer		#征服
-			id = "DVL"
-			value = 200
-		}
-		ai_strategy = {
-			type = invasion_unit_request
-			tag = DVL
-			value = 10
-		}
-		ai_strategy = {
-			type = front_unit_request		#前线部队
-			tag = DVL
-			value = 120		# lets put more units, should be safe
-		}
-
-		ai_strategy = { #进攻前线
-			type = front_control
-			priority = 10
-			tag = DVL
-			ratio > 0.3
-			execution_type = rush
-			execute_order = yes
-		}
-	}
+	
 
 	ENG_war_with_SOV = {
 		allowed = {
@@ -1834,6 +1937,9 @@
 
 #研究
 	ENG_ai_research = { #研究方向
+		allowed = {
+			original_tag = ENG
+		}
 		enable = {
 			original_tag = ENG
 		}
@@ -1917,6 +2023,9 @@
 		}	
 	#机械化
 		ENG_ai_research_mechanised = { #机械化1
+			allowed = {
+				original_tag = ENG
+			}
 			enable = {
 				has_completed_focus = ENG_112_jdzz
 			}
@@ -1930,6 +2039,9 @@
 			}
 		}
 		ENG_ai_research_mechanised_2 = { #机械化2
+			allowed = {
+				original_tag = ENG
+			}
 			enable = {
 				date > 1942.1.1
 			}
@@ -1943,6 +2055,9 @@
 			}
 		}
 		ENG_ai_research_mechanised_3 = { #机械化3
+			allowed = {
+				original_tag = ENG
+			}
 			enable = {
 				date > 1944.6.1
 			}
@@ -1958,6 +2073,9 @@
 
 	#1938
 		ENG_ai_research_38 = { #38年科技
+			allowed = {
+				original_tag = ENG
+			}
 			enable = {
 				date > 1938.1.1
 			}
@@ -1987,6 +2105,9 @@
 		}
 	#1938.9
 		ENG_ai_research_39 = { #39年科技
+			allowed = {
+				original_tag = ENG
+			}
 			enable = {
 				date > 1938.9.1
 			}
@@ -2032,6 +2153,9 @@
 		}
 	#1939.6
 		ENG_ai_research_40 = { #40年科技
+			allowed = {
+				original_tag = ENG
+			}
 			enable = {
 				date > 1939.6.1
 			}
@@ -2127,49 +2251,3 @@
 	}
 
 
-#南美志愿军
-	CHL_send_volunteers_desire_BOL = {	#智利志愿军支援BOL
-		allowed = {
-			original_tag = CHL
-		}
-		enable = {
-			country_exists = BOL
-		}
-		abort_when_not_enabled = yes
-
-		ai_strategy = {
-			type = send_volunteers_desire
-			id = "BOL"
-			value = 100
-		}
-	}
-	ARG_send_volunteers_desire_BOL = {	#阿根廷志愿军支援BOL
-		allowed = {
-			original_tag = ARG
-		}
-		enable = {
-			country_exists = BOL
-		}
-		abort_when_not_enabled = yes
-
-		ai_strategy = {
-			type = send_volunteers_desire
-			id = "BOL"
-			value = 100
-		}
-	}
-	PAR_send_volunteers_desire_BOL = {	#巴拉圭志愿军支援BOL
-		allowed = {
-			original_tag = PAR
-		}
-		enable = {
-			country_exists = BOL
-		}
-		abort_when_not_enabled = yes
-
-		ai_strategy = {
-			type = send_volunteers_desire
-			id = "BOL"
-			value = 100
-		}
-	}
