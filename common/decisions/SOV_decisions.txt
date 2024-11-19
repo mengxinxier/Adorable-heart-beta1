@@ -675,6 +675,34 @@ SOV_faction_management_category = {
 		}
 	}
 
+	
+	SOV_invite_DEN_to_join_us = {
+		icon = decision_generic_nationalism
+		visible = {
+			is_subject = no
+			has_government = communism
+			is_faction_leader = yes
+			DEN = {
+				has_government = communism
+			}
+			OR = {
+				any_country = {
+					is_in_faction_with = ROOT
+					is_neighbor_of = DEN
+				}
+				DEN = { is_neighbor_of = ROOT }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		cost = 0
+		fire_only_once = yes
+		complete_effect = {
+			DEN = { country_event = SOV_dip.33 }
+		}
+	}
+
 	SOV_integrate_Kiev_region = {
 		icon = GFX_decision_infiltrate_state
 		visible = {
@@ -1275,7 +1303,6 @@ SOV_gain_profit_in_risk = {
 				NOT = { has_country_flag = SOV_refuse_to_invest }
 				NOT = { original_tag = DVL }
 				NOT = { 
-					is_NPT_state = yes
 					has_country_leader = {
 						character = NPT_Arfoire
 						ruling_only = yes
@@ -1409,7 +1436,7 @@ SOV_gain_profit_in_risk = {
 		custom_cost_trigger = {
 			check_variable = { ubs_save > 200 }
 		}
-		days_re_enable = 90
+		days_re_enable = 30
 		fire_only_once = no
 		complete_effect = {
 			add_to_variable = { ubs_save = -200 }
@@ -2328,7 +2355,7 @@ SOV_special_military_operations_category = {
 				}
 				hidden_effect = {
 					country_event = { days = 3 id = SOV_flavor.24 }
-					country_event = SOV_news.6
+					news_event = SOV_news.6
 					set_country_flag = SOV_special_operation_failure_decsison
 					set_country_flag = SOV_special_operation_failure_flag
 				}
@@ -3031,7 +3058,7 @@ SOV_propaganda_campaigns = {
 							amount > 0
 						}
 					}
-					capital_scope = { add_to_variable = { SOV_steel_bonus = 1 } }
+					add_to_variable = { SOV_steel_bonus = 1 }
 				}
 
 				every_controlled_state = {
@@ -3041,7 +3068,7 @@ SOV_propaganda_campaigns = {
 							amount > 0
 						}
 					}
-					capital_scope = { add_to_variable = { SOV_aluminium_bonus = 1 } }
+					add_to_variable = { SOV_aluminium_bonus = 1 }
 				}
 
 				every_controlled_state = {
@@ -3051,7 +3078,7 @@ SOV_propaganda_campaigns = {
 							amount > 0
 						}
 					}
-					capital_scope = { add_to_variable = { SOV_chromium_bonus = 1 } }
+					add_to_variable = { SOV_chromium_bonus = 1 }
 				}
 
 				every_controlled_state = {
@@ -3061,7 +3088,7 @@ SOV_propaganda_campaigns = {
 							amount > 0
 						}
 					}
-					capital_scope = { add_to_variable = { SOV_tungsten_bonus = 1 } }
+					add_to_variable = { SOV_tungsten_bonus = 1 }
 				}
 			}
 
@@ -4415,7 +4442,6 @@ SOV_expelling_alien_forces = {
 		}
 		visible = {
 			is_subject = no
-			is_major = yes
 			country_exists = FROM
 			NOT = {
 				has_war_with = FROM
@@ -4437,449 +4463,143 @@ SOV_expelling_alien_forces = {
 			}
 		}
 	}
-
-	SOV_dec_earthlings_embargo_aliens = {
-		icon = GFX_decision_generic_political_rally
-		priority = 98
-		visible = {
-			has_idea = SOV_earth_defense_consensus
-			NOT = { is_embargoing = FROM }
-			if = {
-				limit = { is_subject = yes }
-				OVERLORD = {
-					NOT = {
-						tag = DVL
-						is_in_faction_with = DVL
-						AND = {
-							tag = POL
-							OR = {
-								has_government = fascism
-								has_government = neutrality
-							}
-						}
-					}
-				}
-			}
-		}
-		available = {
-			threat > 0.85
-		}
-		target_trigger = {
-			FROM = {
-				is_in_Imperial_Front = yes
-			}
-		}
-		ai_will_do = {
-			base = 0.5
-			modifier = {
-				factor = 10
-				DVL = { has_added_tension_amount > 10 }
-			}
-			modifier = {
-				factor = 10
-				DVL = { has_added_tension_amount > 50 }
-			}
-		}
-		cost = 0
-		fire_only_once = yes
-		complete_effect = {
-			send_embargo = FROM
-			hidden_effect = { 
-				activate_targeted_decision = { target = FROM decision = SOV_dec_earthlings_stop_embargo_aliens } 
-			}
-		}
-	}
-
-	SOV_dec_earthlings_stop_embargo_aliens = {
-		icon = GFX_decision_generic_break_treaty
-		priority = 97
-		allowed = {
-			always = no
-		}
-		visible = {
-			is_embargoing = FROM 
-		}
-		available = {
-			if = {
-				limit = { 
-					is_subject = yes 
-					OVERLORD = {
-						OR = {
-							tag = DVL
-							is_in_faction_with = DVL
-							AND = {
-								tag = POL
-								OR = {
-									has_government = fascism
-									has_government = neutrality
-								}
-							}
-						}
-					}
-				}
-				always = yes
-			}
-			else = {
-				threat < 0.5
-			}
-			NOT = { has_war_with = FROM }
-		}
-		ai_will_do = {
-			base = 0
-			modifier = {
-				factor = 0
-				FROM = { has_wargoal_against = ROOT }
-			}
-			modifier = {
-				add = 20
-				has_opinion = {
-					target = FROM
-					value > 9
-				}
-				FROM = { has_added_tension_amount < 20 }
-			}
-			modifier = {
-				add = 20
-				is_subject = yes
-				OVERLORD = {
-					NOT = {
-						tag = DVL
-						is_in_faction_with = DVL
-						AND = {
-							tag = POL
-							OR = {
-								has_government = fascism
-								has_government = neutrality
-							}
-						}
-					}
-				}
-			}
-		}
-		cost = 0
-		fire_only_once = yes
-		complete_effect = {
-			break_embargo = FROM
-		}
-	}
-
-	SOV_dec_earthlings_contain_aliens = {
-		icon = GFX_decision_generic_intelligence_operation
-		priority = 97
-		visible = {
-			has_idea = SOV_earth_defense_consensus
-			is_major = yes
-			is_subject = no
-		}
-		available = {
-			is_subject = no
-			FROM = { has_added_tension_amount > 30 }
-			OR = {
-				is_neighbor_of = FROM 
-				any_allied_country = { is_neighbor_of = FROM }
-				any_country = {
-					is_in_faction_with = FROM
-					is_neighbor_of = ROOT
-				}
-			}
-		}
-		target_trigger = {
-			FROM = {
-				OR = {
-					AND = {
-						tag = POL
-						has_government = fascism
-						is_faction_leader = yes
-					}
-					AND = {
-						tag = NPT
-						has_government = fascism
-						is_faction_leader = yes
-					}
-				}
-			}
-		}
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 1
-				NOT = { country_exists = DVL }
-			}
-			modifier = {
-				add = 1
-				tag = SOV
-				FROM = {
-					tag = POL
-					has_government = fascism
-					NOT = { is_in_faction_with = DVL }
-				}
-			}
-			modifier = {
-				factor = 100
-				FROM = { is_stronger_than_ROOT_and_not_vulnerable = no }
-			}
-		}
-		days_remove = 30
-		cost = 0
-		war_with_target_on_remove = yes
-		complete_effect = {
-			FROM = { country_event = SOV_flavor.30 }
-		}
-		fire_only_once = yes
-		remove_effect = {
-			declare_war_on = {
-				target = FROM
-				type = annex_everything
-			}
-		}
-	}
-	
-	SOV_end_of_cooperation_foralien = {
-		visible = {
-			has_idea = SOV_earth_defense_consensus
-			is_major = yes
-			is_subject = no
-		}
-		available = {
-			NOT = { country_exists = DVL }
-		}
-		fire_only_once = yes
-		complete_effect = {
-			remove_ideas = SOV_earth_defense_consensus
-		}
-	}
 }
+#经互会
+	SOV_comecon_category = {
+		
+	#领导国决议
 
-SOV_comecon_category = {
-	
-#领导国决议
+		SOV_invite_dec_to_join_comecon = {
+			icon = GFX_decision_hol_exchange_intelligence_data
+			priority = 98
+			visible = {
+				has_dynamic_modifier = {
+					modifier = SOV_comecon_leader
+				}
+				FROM = { NOT = { has_country_flag = had_invited_comecon } }
+			}
+			available = {
+				is_subject = no
+				FROM = { NOT = { has_country_flag = had_invited_comecon } }
+			}
+			target_trigger = {
+				FROM = {
+					NOT = { has_country_flag = had_invited_comecon }
+					is_faction_leader = no
+					is_in_faction_with = ROOT
+					NOT = { has_idea = SOV_comecon_buff }
+				}
+			}
+			days_remove = 7
+			ai_will_do = {
+				base = 1000
+			}
+			cancel_trigger = {
+				FROM = { has_idea = SOV_comecon_buff }
+			}
+			cost = 10
+			days_re_enable = 30
+			fire_only_once = no
+			cancel_effect = {
+				add_political_power = 10
+			}
+			remove_effect = {
+				FROM = {
+					if = {
+						limit = { NOT = { has_country_flag = had_invited_comecon } }
+						set_country_flag = { flag = had_invited_comecon days = 90 }
+					}
+					country_event = { id = SOV_cmea.1 days = 2 }
+				}
+			}
+		}
 
-	SOV_invite_dec_to_join_comecon = {
-		icon = GFX_decision_hol_exchange_intelligence_data
-		priority = 98
-		visible = {
-			has_dynamic_modifier = {
-				modifier = SOV_comecon_leader
+		SOV_invite_dec_to_join_comecon_outside_allies = {
+			icon = GFX_decision_hol_exchange_intelligence_data
+			priority = 97
+			allowed = {
+				always = no
 			}
-			FROM = { NOT = { has_country_flag = had_invited_comecon } }
-		}
-		available = {
-			is_subject = no
-			FROM = { NOT = { has_country_flag = had_invited_comecon } }
-		}
-		target_trigger = {
-			FROM = {
-				NOT = { has_country_flag = had_invited_comecon }
-				is_faction_leader = no
-				is_in_faction_with = ROOT
-				NOT = { has_idea = SOV_comecon_buff }
+			visible = {
+				has_dynamic_modifier = {
+					modifier = SOV_comecon_leader
+				}
+				FROM = { 
+					NOT = { 
+						has_country_flag = had_invited_comecon 
+						has_idea = SOV_comecon_buff
+					} 
+				}
 			}
-		}
-		days_remove = 7
-		ai_will_do = {
-			base = 1000
-		}
-		cancel_trigger = {
-			FROM = { has_idea = SOV_comecon_buff }
-		}
-		cost = 10
-		days_re_enable = 30
-		fire_only_once = no
-		cancel_effect = {
-			add_political_power = 10
-		}
-		remove_effect = {
-			FROM = {
-				if = {
-					limit = { NOT = { has_country_flag = had_invited_comecon } }
+			available = {
+				is_subject = no
+				FROM = { 
+					NOT = { 
+						has_country_flag = had_invited_comecon 
+						has_idea = SOV_comecon_buff
+					} 
+				}
+			}
+			days_remove = 7
+			ai_will_do = {
+				base = 1000
+			}
+			cancel_trigger = {
+				FROM = { has_idea = SOV_comecon_buff }
+			}
+			cost = 10
+			days_re_enable = 30
+			fire_only_once = no
+			cancel_effect = {
+				add_political_power = 10
+			}
+			remove_effect = {
+				FROM = {
 					set_country_flag = { flag = had_invited_comecon days = 90 }
-				}
-				country_event = { id = SOV_cmea.1 days = 2 }
-			}
-		}
-	}
-
-	SOV_invite_dec_to_join_comecon_outside_allies = {
-		icon = GFX_decision_hol_exchange_intelligence_data
-		priority = 97
-		allowed = {
-			always = no
-		}
-		visible = {
-			has_dynamic_modifier = {
-				modifier = SOV_comecon_leader
-			}
-			FROM = { 
-				NOT = { 
-					has_country_flag = had_invited_comecon 
-					has_idea = SOV_comecon_buff
-				} 
-			}
-		}
-		available = {
-			is_subject = no
-			FROM = { 
-				NOT = { 
-					has_country_flag = had_invited_comecon 
-					has_idea = SOV_comecon_buff
-				} 
-			}
-		}
-		days_remove = 7
-		ai_will_do = {
-			base = 1000
-		}
-		cancel_trigger = {
-			FROM = { has_idea = SOV_comecon_buff }
-		}
-		cost = 10
-		days_re_enable = 30
-		fire_only_once = no
-		cancel_effect = {
-			add_political_power = 10
-		}
-		remove_effect = {
-			FROM = {
-				set_country_flag = { flag = had_invited_comecon days = 90 }
-				country_event = { id = SOV_cmea.1 days = 2 }
-			}
-		}
-	}
-
-	SOV_establish_research_organization = {
-		priority = 96
-		visible = {
-			has_dynamic_modifier = {
-				modifier = SOV_comecon_leader
-			}
-		}
-		available = {
-			custom_trigger_tooltip = {
-				tooltip = SOV_establish_research_organization_tt
-				check_variable = {
-					global.num_comecon_member > 4
+					country_event = { id = SOV_cmea.1 days = 2 }
 				}
 			}
 		}
-		days_remove = 14
-		ai_will_do = {
-			base = 100
-		}
-		cost = 100
-		fire_only_once = yes
-		remove_effect = {
-			add_research_slot = 1
-			add_to_tech_sharing_group = comecon_research_organization
-			every_other_country = {
-				limit = {
-					is_in_faction_with = SOV
-					has_idea = SOV_comecon_buff
-				}
-				add_to_tech_sharing_group = comecon_research_organization
-			}
-		}
-	}
 
-#经济援助
-	comecon_apply_for_financial_aid = {
-		icon = GFX_decision_ger_mefo_bills
-		priority = 12
-		visible = {
-			OR = {
+		SOV_establish_research_organization = {
+			priority = 96
+			visible = {
 				has_dynamic_modifier = {
 					modifier = SOV_comecon_leader
 				}
-				has_idea = SOV_comecon_buff
 			}
-		}
-		available = {
-			custom_trigger_tooltip = {
-				tooltip = comecon_apply_for_financial_aid_tt
-				check_variable = {
-					ubs_load > 199
-				}
-			}
-			custom_trigger_tooltip = {
-				tooltip = comecon_apply_for_financial_ubs_save_tt
-				NOT = {
+			available = {
+				custom_trigger_tooltip = {
+					tooltip = SOV_establish_research_organization_tt
 					check_variable = {
-						ubs_save > 0
+						global.num_comecon_member > 4
 					}
 				}
 			}
-		}
-		days_remove = 7
-		ai_will_do = {
-			base = 1000
-		}
-		cost = 10
-		days_re_enable = 180
-		fire_only_once = no
-		complete_effect = {
-			hidden_effect = {
-				set_variable = {
-					ROOT.sov_ea = 0
-				}
+			days_remove = 14
+			ai_will_do = {
+				base = 100
 			}
-			set_country_flag = comecon_apply_for_financial_aid_flag
-			custom_effect_tooltip = effect_apply_for_financial_aid_tt
-			activate_mission = comecon_economic_aid_arrives
-		}
-	}
-
-	comecon_economic_aid_arrives = {
-		icon = GFX_decision_ger_mefo_bills
-		priority = 11
-		activation = {
-			always = no
-		}
-		available = {
-			always = no
-		}
-		fire_only_once = no
-		days_mission_timeout = 30
-		timeout_effect = {
-			hidden_effect = {
-				if = {
+			cost = 100
+			fire_only_once = yes
+			remove_effect = {
+				add_research_slot = 1
+				add_to_tech_sharing_group = comecon_research_organization
+				every_other_country = {
 					limit = {
-						check_variable = { ubs_load > ROOT.sov_ea }
+						is_in_faction_with = SOV
+						has_idea = SOV_comecon_buff
 					}
-					subtract_from_variable = {
-						ubs_load = ROOT.sov_ea
-					}
+					add_to_tech_sharing_group = comecon_research_organization
 				}
-				else = {
-					subtract_from_variable = {
-						ROOT.sov_ea = ubs_load
-					}
-					set_variable = {
-						ubs_load = 0
-					}
-					add_to_variable = {
-						ubs_save = ROOT.sov_ea
-					}
-				}
-				clear_variable = ROOT.sov_ea
-				clr_country_flag = comecon_apply_for_financial_aid_flag
 			}
-			custom_effect_tooltip = comecon_economic_aid_arrives_tt
 		}
-	}
 
-	comecon_provide_dec_economic_assistance = {
-		priority = 10
-		visible = {
-			OR = {
-				has_dynamic_modifier = {
-					modifier = SOV_comecon_leader
-				}
-				has_idea = SOV_comecon_buff
-			}
-		}
-		target_trigger = {
-			FROM = {
-				NOT = { tag = ROOT }
-				has_country_flag = comecon_apply_for_financial_aid_flag
+	#经济援助
+		comecon_apply_for_financial_aid = {
+			icon = GFX_decision_ger_mefo_bills
+			priority = 12
+			visible = {
 				OR = {
 					has_dynamic_modifier = {
 						modifier = SOV_comecon_leader
@@ -4887,798 +4607,893 @@ SOV_comecon_category = {
 					has_idea = SOV_comecon_buff
 				}
 			}
-		}
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 50 }
-		}
-		custom_cost_text = RUS_50_ubs_save_cost
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 2.5
-				check_variable = {
-					ubs_save > 100
+			available = {
+				custom_trigger_tooltip = {
+					tooltip = comecon_apply_for_financial_aid_tt
+					check_variable = {
+						ubs_load > 199
+					}
+				}
+				custom_trigger_tooltip = {
+					tooltip = comecon_apply_for_financial_ubs_save_tt
+					NOT = {
+						check_variable = {
+							ubs_save > 0
+						}
+					}
 				}
 			}
-			modifier = {
+			days_remove = 7
+			ai_will_do = {
+				base = 1000
+			}
+			cost = 10
+			days_re_enable = 180
+			fire_only_once = no
+			complete_effect = {
+				hidden_effect = {
+					set_variable = {
+						ROOT.sov_ea = 0
+					}
+				}
+				set_country_flag = comecon_apply_for_financial_aid_flag
+				custom_effect_tooltip = effect_apply_for_financial_aid_tt
+				activate_mission = comecon_economic_aid_arrives
+			}
+		}
+
+		comecon_economic_aid_arrives = {
+			icon = GFX_decision_ger_mefo_bills
+			priority = 11
+			activation = {
+				always = no
+			}
+			available = {
+				always = no
+			}
+			fire_only_once = no
+			days_mission_timeout = 30
+			timeout_effect = {
+				hidden_effect = {
+					if = {
+						limit = {
+							check_variable = { ubs_load > ROOT.sov_ea }
+						}
+						subtract_from_variable = {
+							ubs_load = ROOT.sov_ea
+						}
+					}
+					else = {
+						subtract_from_variable = {
+							ROOT.sov_ea = ubs_load
+						}
+						set_variable = {
+							ubs_load = 0
+						}
+						add_to_variable = {
+							ubs_save = ROOT.sov_ea
+						}
+					}
+					clear_variable = ROOT.sov_ea
+					clr_country_flag = comecon_apply_for_financial_aid_flag
+				}
+				custom_effect_tooltip = comecon_economic_aid_arrives_tt
+			}
+		}
+
+		comecon_provide_dec_economic_assistance = {
+			priority = 10
+			visible = {
+				OR = {
+					has_dynamic_modifier = {
+						modifier = SOV_comecon_leader
+					}
+					has_idea = SOV_comecon_buff
+				}
+			}
+			target_trigger = {
+				FROM = {
+					NOT = { tag = ROOT }
+					has_country_flag = comecon_apply_for_financial_aid_flag
+					OR = {
+						has_dynamic_modifier = {
+							modifier = SOV_comecon_leader
+						}
+						has_idea = SOV_comecon_buff
+					}
+				}
+			}
+			custom_cost_trigger = {
+				check_variable = { ubs_save > 50 }
+			}
+			custom_cost_text = RUS_50_ubs_save_cost
+			ai_will_do = {
+				base = 0
+				modifier = {
+					add = 2.5
+					check_variable = {
+						ubs_save > 100
+					}
+				}
+				modifier = {
+					factor = 10
+					check_variable = {
+						ubs_save > 100
+					}
+					is_major = yes
+				}
+			}
+			days_re_enable = 90
+			fire_only_once = no
+			complete_effect = {
+				add_to_variable = {
+					ubs_save = -50
+				}
+				FROM = { country_event = SOV_cmea.4 }
+				add_political_power = 10
+			}
+		}
+
+	#工业援助
+
+		comecon_learn_production_technology = {
+			priority = 8
+			icon = GFX_decision_eng_trade_unions_support
+			visible = {
+				has_idea = SOV_comecon_buff
+			}
+			custom_cost_trigger = {
+				check_variable = { ubs_save > 150 }
+			}
+			custom_cost_text = RUS_150_ubs_save_cost
+			days_remove = 90
+			ai_will_do = {
+				base = 10
+			}
+			days_re_enable = 30
+			fire_only_once = no
+			complete_effect = {
+				add_to_variable = {
+					ubs_save = -150
+				}
+			}
+			remove_effect = {
+				random_list = {
+					40 = {
+						add_tech_bonus = {
+							name = comecon_learn_production_technology
+							bonus = 0.25
+							uses = 1
+							category = industry
+						}
+					}
+					30 = {
+						add_tech_bonus = {
+							name = comecon_learn_production_technology
+							bonus = 0.25
+							uses = 1
+							category = armor
+						}
+					}
+					30 = {
+						add_tech_bonus = {
+							name = comecon_learn_production_technology
+							bonus = 0.25
+							uses = 1
+							category = artillery
+						}
+					}
+				}
+			}
+		}
+
+		comecon_development_fund = {
+			icon = GFX_decision_generic_fundraising
+			priority = 7
+			visible = {
+				has_idea = SOV_comecon_buff
+				industrial_complex < 45
+			}
+			cost = 10
+			ai_will_do = {
+				base = 100
+			}
+			days_re_enable = 180
+			fire_only_once = no
+			complete_effect = {
+				add_to_variable = {
+					ubs_save = 200
+				}
+				custom_effect_tooltip = comecon_development_fund_tt
+			}
+		}
+
+	#武器装备采购
+
+		comecon_purchase_infantry_equipment = {
+
+			priority = 6
+
+			icon = generic_industry
+
+			visible = {
+				has_idea = SOV_comecon_buff
+			}
+
+			available = {
+				NOT = { has_country_flag = comecon_purchasing_infantry_equipment_flag }
+				NOT = { has_war_with = SOV }
+				NOT = { is_justifying_wargoal_against = SOV }
+			}
+
+			custom_cost_trigger = {
+				check_variable = { ubs_save > 50 }
+			}
+			custom_cost_text = RUS_50_ubs_save_cost
+			cancel_if_not_visible = yes
+
+			days_remove = 90
+			days_re_enable = 30
+			fire_only_once = no
+
+			ai_will_do = {
 				factor = 10
-				check_variable = {
-					ubs_save > 100
-				}
-				is_major = yes
-			}
-		}
-		days_re_enable = 90
-		fire_only_once = no
-		complete_effect = {
-			add_to_variable = {
-				ubs_save = -50
-			}
-			FROM = { country_event = SOV_cmea.4 }
-			add_political_power = 10
-		}
-	}
-
-#工业援助
-
-	comecon_learn_production_technology = {
-		priority = 8
-		icon = GFX_decision_eng_trade_unions_support
-		visible = {
-			has_idea = SOV_comecon_buff
-		}
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 150 }
-		}
-		custom_cost_text = RUS_150_ubs_save_cost
-		days_remove = 90
-		ai_will_do = {
-			base = 10
-		}
-		days_re_enable = 30
-		fire_only_once = no
-		complete_effect = {
-			add_to_variable = {
-				ubs_save = -150
-			}
-		}
-		remove_effect = {
-			random_list = {
-				40 = {
-					add_tech_bonus = {
-						name = comecon_learn_production_technology
-						bonus = 0.25
-						uses = 1
-						category = industry
-					}
-				}
-				30 = {
-					add_tech_bonus = {
-						name = comecon_learn_production_technology
-						bonus = 0.25
-						uses = 1
-						category = armor
-					}
-				}
-				30 = {
-					add_tech_bonus = {
-						name = comecon_learn_production_technology
-						bonus = 0.25
-						uses = 1
-						category = artillery
-					}
-				}
-			}
-		}
-	}
-
-	comecon_development_fund = {
-		icon = GFX_decision_generic_fundraising
-		priority = 7
-		visible = {
-			has_idea = SOV_comecon_buff
-			industrial_complex < 45
-		}
-		cost = 10
-		ai_will_do = {
-			base = 100
-		}
-		days_re_enable = 180
-		fire_only_once = no
-		complete_effect = {
-			add_to_variable = {
-				ubs_save = 200
-			}
-			custom_effect_tooltip = comecon_development_fund_tt
-		}
-	}
-
-#武器装备采购
-
-	comecon_purchase_infantry_equipment = {
-
-		priority = 6
-
-		icon = generic_industry
-
-		visible = {
-			has_idea = SOV_comecon_buff
-		}
-
-		available = {
-			NOT = { has_country_flag = comecon_purchasing_infantry_equipment_flag }
-			NOT = { has_war_with = SOV }
-			NOT = { is_justifying_wargoal_against = SOV }
-		}
-
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 50 }
-		}
-		custom_cost_text = RUS_50_ubs_save_cost
-		cancel_if_not_visible = yes
-
-		days_remove = 90
-		days_re_enable = 30
-		fire_only_once = no
-
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 0
-				OR = {
-					num_of_civilian_factories < 2
-					has_equipment = {
-						infantry_equipment > 1500
-					}
-				}
-			}
-		}
-		modifier = {
-			civilian_factory_use = 1
-		}
-		
-		complete_effect = {
-			set_country_flag = comecon_purchasing_infantry_equipment_flag
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = 1
-				}
-			}
-			hidden_effect = {
-				add_to_variable = {
-					ubs_save = -50
-				}
-			}
-		}
-		cancel_effect = {
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clear_variable = comecon_vehicle_type
-			clr_country_flag = comecon_purchasing_infantry_equipment_flag
-		}
-		remove_effect = {
-			add_equipment_to_stockpile = {
-				type = infantry_equipment
-				amount = 1500
-				producer = SOV
-			}
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clr_country_flag = comecon_purchasing_infantry_equipment_flag
-		}
-	}
-
-	comecon_purchase_artillery = {
-
-		priority = 5
-
-		icon = ger_military_buildup
-
-		visible = {
-			has_idea = SOV_comecon_buff
-		}	
-		
-		available = {
-			has_tech = gw_artillery
-			NOT = { has_country_flag = comecon_purchasing_artillery_flag }
-			NOT = { has_war_with = SOV }
-			NOT = { is_justifying_wargoal_against = SOV }
-		}
-
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 50 }
-		}
-		custom_cost_text = RUS_50_ubs_save_cost
-		cancel_if_not_visible = yes
-
-		days_remove = 90
-		days_re_enable = 30
-		fire_only_once = no
-
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 0
-				OR = {
-					num_of_civilian_factories < 2
-					AND = {
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
 						has_equipment = {
-							artillery_equipment > 100
-						}
-						if = {
-							limit = {
-								has_tech = interwar_antiair
-							}
-							has_equipment = {
-								anti_air_equipment > 100
-							}
-						}
-						if = {
-							limit = {
-								has_tech = interwar_antitank
-							}
-							has_equipment = {
-								anti_tank_equipment > 100
-							}
+							infantry_equipment > 1500
 						}
 					}
 				}
 			}
-		}
-
-		modifier = {
-			civilian_factory_use = 1
-		}
-		
-		complete_effect = {
-			hidden_effect = {
-				add_to_variable = {
-					ubs_save = -50
-				}
-			}
-			set_country_flag = comecon_purchasing_artillery_flag
-			hidden_effect = {
-				country_event = SOV_cmea.5
-			}
-
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = 1
-				}
-
-			}
-			custom_effect_tooltip = comecon_purchase_artillery_tt
-		}
-		cancel_effect = {
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clear_variable = comecon_vehicle_type
-			clr_country_flag = comecon_purchasing_artillery_flag
-		}
-		remove_effect = {
-			add_equipment_to_stockpile = {
-				type = var:comecon_artillery_type
-				amount = 200
-				producer = SOV
-			}
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clear_variable = comecon_artillery_type
-			clr_country_flag = comecon_purchasing_artillery_flag
-		}
-	}
-
-	comecon_purchase_military_vehicles = {
-
-		priority = 4
-
-		icon = generic_decision
-
-		visible = {
-			has_idea = SOV_comecon_buff
-		}		
-
-		available = {
-			has_tech = motorised_infantry
-			NOT = { has_country_flag = comecon_purchasing_military_vehicles_flag }
-			NOT = { has_war_with = SOV }
-			NOT = { is_justifying_wargoal_against = SOV }
-		}
-
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 50 }
-		}
-		custom_cost_text = RUS_50_ubs_save_cost
-		cancel_if_not_visible = yes
-
-		days_remove = 90
-		days_re_enable = 30
-		fire_only_once = no
-
-		ai_will_do = {
-			factor = 10
 			modifier = {
-				factor = 0
-				OR = {
-					num_of_civilian_factories < 2
-					has_equipment = {
-						mechanized_equipment > 100
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = comecon_purchasing_infantry_equipment_flag
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				hidden_effect = {
+					add_to_variable = {
+						ubs_save = -50
 					}
 				}
 			}
+			cancel_effect = {
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = comecon_vehicle_type
+				clr_country_flag = comecon_purchasing_infantry_equipment_flag
+			}
+			remove_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 1500
+					producer = SOV
+				}
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clr_country_flag = comecon_purchasing_infantry_equipment_flag
+			}
 		}
 
-		modifier = {
-			civilian_factory_use = 1
-		}
-		
-		complete_effect = {
-			set_country_flag = comecon_purchasing_military_vehicles_flag
-			hidden_effect = {
-				set_variable = { comecon_military_vehicles_seller = SOV }
-				country_event = SOV_cmea.6
+		comecon_purchase_artillery = {
+
+			priority = 5
+
+			icon = ger_military_buildup
+
+			visible = {
+				has_idea = SOV_comecon_buff
+			}	
+			
+			available = {
+				has_tech = gw_artillery
+				NOT = { has_country_flag = comecon_purchasing_artillery_flag }
+				NOT = { has_war_with = SOV }
+				NOT = { is_justifying_wargoal_against = SOV }
 			}
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = 1
+
+			custom_cost_trigger = {
+				check_variable = { ubs_save > 50 }
+			}
+			custom_cost_text = RUS_50_ubs_save_cost
+			cancel_if_not_visible = yes
+
+			days_remove = 90
+			days_re_enable = 30
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						AND = {
+							has_equipment = {
+								artillery_equipment > 100
+							}
+							if = {
+								limit = {
+									has_tech = interwar_antiair
+								}
+								has_equipment = {
+									anti_air_equipment > 100
+								}
+							}
+							if = {
+								limit = {
+									has_tech = interwar_antitank
+								}
+								has_equipment = {
+									anti_tank_equipment > 100
+								}
+							}
+						}
+					}
 				}
 			}
-			hidden_effect = {
-				add_to_variable = {
-					ubs_save = -50
-				}
+
+			modifier = {
+				civilian_factory_use = 1
 			}
-			custom_effect_tooltip = comecon_purchase_vehicles_tt
-		}
-		cancel_effect = {
-			FROM = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
+			
+			complete_effect = {
+				hidden_effect = {
+					add_to_variable = {
+						ubs_save = -50
+					}
 				}
+				set_country_flag = comecon_purchasing_artillery_flag
+				hidden_effect = {
+					country_event = SOV_cmea.5
+				}
+
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+
+				}
+				custom_effect_tooltip = comecon_purchase_artillery_tt
 			}
-			clear_variable = comecon_vehicle_type
-			clr_country_flag = comecon_purchasing_military_vehicles_flag
-			clr_country_flag = comecon_producing_motorized_for_member_flag
-			clr_country_flag = comecon_producing_mechanized_for_member_flag
-		}
-		remove_effect = {
-			if = {
-				limit = {
-					has_country_flag = comecon_producing_motorized_for_member_flag
+			cancel_effect = {
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
 				}
+				clear_variable = comecon_vehicle_type
+				clr_country_flag = comecon_purchasing_artillery_flag
+			}
+			remove_effect = {
 				add_equipment_to_stockpile = {
-					type = motorized_equipment
+					type = var:comecon_artillery_type
 					amount = 200
-					producer = FROM
+					producer = SOV
 				}
-				clr_country_flag = comecon_producing_motorized_for_member_flag
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = comecon_artillery_type
+				clr_country_flag = comecon_purchasing_artillery_flag
 			}
-			else_if = {
-				limit = {
-					has_country_flag = comecon_producing_mechanized_for_member_flag
+		}
+
+		comecon_purchase_military_vehicles = {
+
+			priority = 4
+
+			icon = generic_decision
+
+			visible = {
+				has_idea = SOV_comecon_buff
+			}		
+
+			available = {
+				has_tech = motorised_infantry
+				NOT = { has_country_flag = comecon_purchasing_military_vehicles_flag }
+				NOT = { has_war_with = SOV }
+				NOT = { is_justifying_wargoal_against = SOV }
+			}
+
+			custom_cost_trigger = {
+				check_variable = { ubs_save > 50 }
+			}
+			custom_cost_text = RUS_50_ubs_save_cost
+			cancel_if_not_visible = yes
+
+			days_remove = 90
+			days_re_enable = 30
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						has_equipment = {
+							mechanized_equipment > 100
+						}
+					}
 				}
-				add_equipment_to_stockpile = {
-					type = mechanized_equipment
-					amount = 100
-					producer = FROM
+			}
+
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = comecon_purchasing_military_vehicles_flag
+				hidden_effect = {
+					set_variable = { comecon_military_vehicles_seller = SOV }
+					country_event = SOV_cmea.6
 				}
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				hidden_effect = {
+					add_to_variable = {
+						ubs_save = -50
+					}
+				}
+				custom_effect_tooltip = comecon_purchase_vehicles_tt
+			}
+			cancel_effect = {
+				FROM = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = comecon_vehicle_type
+				clr_country_flag = comecon_purchasing_military_vehicles_flag
+				clr_country_flag = comecon_producing_motorized_for_member_flag
 				clr_country_flag = comecon_producing_mechanized_for_member_flag
 			}
-			FROM = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clear_variable = comecon_vehicle_type
-			clr_country_flag = comecon_purchasing_military_vehicles_flag
-		}
-	}
-
-	comecon_purchase_armor = {
-
-		priority = 3
-
-		icon = generic_tank
-
-		visible = {
-			has_idea = SOV_comecon_buff
-		}
-
-		available = {
-			has_tech = gwtank_chassis 
-			NOT = { has_country_flag = comecon_purchasing_armor_flag }
-			NOT = { has_war_with = SOV }
-			NOT = { is_justifying_wargoal_against = SOV }
-		}
-
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 50 }
-		}
-		custom_cost_text = RUS_50_ubs_save_cost
-		cancel_if_not_visible = yes
-
-		days_remove = 90
-		days_re_enable = 30
-		fire_only_once = no
-
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 0
-				OR = {
-					num_of_civilian_factories < 2
-					AND = {
-						has_equipment = {
-							light_tank_chassis > 10
-						}
-						has_equipment = {
-							medium_tank_chassis > 10
-						}
-					}
-				}
-			}
-		}
-
-		modifier = {
-			civilian_factory_use = 1
-		}
-		
-		complete_effect = {
-			set_country_flag = comecon_purchasing_armor_flag
-			hidden_effect = {
-				country_event = SOV_cmea.7
-			}
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = 1
-				}
-			}
-			hidden_effect = {
-				add_to_variable = {
-					ubs_save = -50
-				}
-			}
-			custom_effect_tooltip = comecon_purchase_armor_tt
-		}
-		cancel_effect = {
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clear_variable = comecon_vehicle_type
-			clr_country_flag = comecon_purchasing_armor_flag
-			clr_country_flag = comecon_producing_light_armor_for_member_flag
-			clr_country_flag = comecon_producing_medium_armor_for_member_flag
-		}
-		remove_effect = {
-			if = {
-				limit = {
-					has_country_flag = comecon_producing_light_armor_for_member_flag
-				}
-				add_equipment_to_stockpile = {
-					type = var:comecon_armor_type
-					amount = 80
-					producer = SOV
-				}
-				clr_country_flag = comecon_producing_light_armor_for_member_flag 
-			}
-			else_if = {
-				limit = {
-					has_country_flag = comecon_producing_medium_armor_for_member_flag 
-				}
-				add_equipment_to_stockpile = {
-					type = var:comecon_armor_type
-					amount = 40
-					producer = SOV
-				}
-				clr_country_flag = comecon_producing_medium_armor_for_member_flag 
-			}
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clear_variable = comecon_vehicle_type
-			clr_country_flag = comecon_purchasing_armor_flag
-		}
-	}
-
-	comecon_purchase_aircraft = {
-
-		priority = 2
-
-		icon = generic_air
-
-		visible = {
-			has_idea = SOV_comecon_buff
-		}
-
-		available = {
-			OR = { 
-				has_tech = early_fighter 
-				has_tech = iw_small_airframe 
-			}
-			NOT = { has_country_flag = comecon_purchasing_aircraft_flag }
-			NOT = { has_war_with = SOV }
-			NOT = { is_justifying_wargoal_against = SOV }
-		}
-
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 50 }
-		}
-		custom_cost_text = RUS_50_ubs_save_cost
-		cancel_if_not_visible = yes
-
-		days_remove = 90
-		days_re_enable = 30
-		fire_only_once = no
-
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 0
-				OR = {
-					num_of_civilian_factories < 2
-					AND = {
-						stockpile_ratio = { 
-							archetype = small_plane_airframe
-							ratio > 0.75
-						}
-						stockpile_ratio = { 
-							archetype = small_plane_naval_bomber_airframe
-							ratio > 0.75
-						}
-						stockpile_ratio = { 
-							archetype = medium_plane_airframe
-							ratio > 0.75
-						}
-					}
-				}
-			}
-		}
-
-		modifier = {
-			civilian_factory_use = 1
-		}
-		
-		complete_effect = {
-			set_country_flag = comecon_purchasing_aircraft_flag
-			hidden_effect = {
-				country_event = SOV_cmea.8
-			}
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = 1
-				}
-
-			}
-			hidden_effect = {
-				add_to_variable = {
-					ubs_save = -50
-				}
-			}
-			custom_effect_tooltip = comecon_purchase_aircraft_tt
-		}
-		cancel_effect = {
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clear_variable = comecon_vehicle_type
-			clr_country_flag = comecon_purchasing_aircraft_flag
-			clr_country_flag = comecon_producing_fighters_for_member_flag
-			clr_country_flag = comecon_producing_naval_bombers_for_member_flag
-			clr_country_flag = comecon_producing_tactical_bombers_for_member_flag
-		}
-		remove_effect = {
-			if = {
-				limit = {
-					has_country_flag = comecon_producing_fighters_for_member_flag
-				}
-				effect_tooltip = {
-					add_equipment_to_stockpile = {
-						type = small_plane_airframe_1
-						amount = 80
-						version_name = "SU I-21F trade"
-						producer = SOV
-					}
-				}
-				clr_country_flag = comecon_producing_fighters_for_member_flag
-			}
-			else_if = {
-				limit = {
-					has_country_flag = comecon_producing_naval_bombers_for_member_flag
-				}
-				add_equipment_to_stockpile = {
-					type = small_plane_naval_bomber_airframe_1
-					amount = 80
-					version_name = "SU I-21N trade"
-					producer = SOV
-				}
-				clr_country_flag = comecon_producing_naval_bombers_for_member_flag
-			}
-			else = {
-				add_equipment_to_stockpile = {
-					type = medium_plane_airframe_1
-					amount = 80
-					version_name = "SU ANT-40 trade"
-					producer = SOV
-				}
-				clr_country_flag = comecon_producing_tactical_bombers_for_member_flag
-			}
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-			}
-			clear_variable = comecon_vehicle_type
-			clr_country_flag = comecon_purchasing_aircraft_flag
-		}
-	}
-
-	comecon_purchase_ships = {
-
-		priority = 1
-
-		icon = GFX_decision_generic_naval
-
-		visible = {
-			has_idea = SOV_comecon_buff
-		}
-
-		available = {
-			OR = {
-				has_tech = early_ship_hull_submarine
-				has_tech = early_ship_hull_light
-				has_tech = early_ship_hull_cruiser
-			}
-			NOT = { has_country_flag = comecon_producing_bulgarian_ships_flag }
-			NOT = { has_country_flag = comecon_ships_purchase_rejected_flag }
-			NOT = { has_war_with = SOV }
-			NOT = { is_justifying_wargoal_against = SOV }
-
-		}
-		cancel_if_not_visible = yes
-
-		cancel_effect = {
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-				clr_country_flag = comecon_producing_bulgarian_ships_flag
-			}
-			hidden_effect = {
+			remove_effect = {
 				if = {
 					limit = {
-						OR = {
-							has_country_flag = comecon_building_submarines_flag
-							has_country_flag = comecon_building_destroyers_flag
-							has_country_flag = comecon_building_light_cruiser_flag
+						has_country_flag = comecon_producing_motorized_for_member_flag
+					}
+					add_equipment_to_stockpile = {
+						type = motorized_equipment
+						amount = 200
+						producer = FROM
+					}
+					clr_country_flag = comecon_producing_motorized_for_member_flag
+				}
+				else_if = {
+					limit = {
+						has_country_flag = comecon_producing_mechanized_for_member_flag
+					}
+					add_equipment_to_stockpile = {
+						type = mechanized_equipment
+						amount = 100
+						producer = FROM
+					}
+					clr_country_flag = comecon_producing_mechanized_for_member_flag
+				}
+				FROM = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = comecon_vehicle_type
+				clr_country_flag = comecon_purchasing_military_vehicles_flag
+			}
+		}
+
+		comecon_purchase_armor = {
+
+			priority = 3
+
+			icon = generic_tank
+
+			visible = {
+				has_idea = SOV_comecon_buff
+			}
+
+			available = {
+				has_tech = gwtank_chassis 
+				NOT = { has_country_flag = comecon_purchasing_armor_flag }
+				NOT = { has_war_with = SOV }
+				NOT = { is_justifying_wargoal_against = SOV }
+			}
+
+			custom_cost_trigger = {
+				check_variable = { ubs_save > 50 }
+			}
+			custom_cost_text = RUS_50_ubs_save_cost
+			cancel_if_not_visible = yes
+
+			days_remove = 90
+			days_re_enable = 30
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						AND = {
+							has_equipment = {
+								light_tank_chassis > 10
+							}
+							has_equipment = {
+								medium_tank_chassis > 10
+							}
 						}
 					}
-					country_event = SOV_cmea.11
+				}
+			}
+
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = comecon_purchasing_armor_flag
+				hidden_effect = {
+					country_event = SOV_cmea.7
+				}
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				hidden_effect = {
+					add_to_variable = {
+						ubs_save = -50
+					}
+				}
+				custom_effect_tooltip = comecon_purchase_armor_tt
+			}
+			cancel_effect = {
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = comecon_vehicle_type
+				clr_country_flag = comecon_purchasing_armor_flag
+				clr_country_flag = comecon_producing_light_armor_for_member_flag
+				clr_country_flag = comecon_producing_medium_armor_for_member_flag
+			}
+			remove_effect = {
+				if = {
+					limit = {
+						has_country_flag = comecon_producing_light_armor_for_member_flag
+					}
+					add_equipment_to_stockpile = {
+						type = var:comecon_armor_type
+						amount = 80
+						producer = SOV
+					}
+					clr_country_flag = comecon_producing_light_armor_for_member_flag 
+				}
+				else_if = {
+					limit = {
+						has_country_flag = comecon_producing_medium_armor_for_member_flag 
+					}
+					add_equipment_to_stockpile = {
+						type = var:comecon_armor_type
+						amount = 40
+						producer = SOV
+					}
+					clr_country_flag = comecon_producing_medium_armor_for_member_flag 
+				}
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = comecon_vehicle_type
+				clr_country_flag = comecon_purchasing_armor_flag
+			}
+		}
+
+		comecon_purchase_aircraft = {
+
+			priority = 2
+
+			icon = generic_air
+
+			visible = {
+				has_idea = SOV_comecon_buff
+			}
+
+			available = {
+				OR = { 
+					has_tech = early_fighter 
+					has_tech = iw_small_airframe 
+				}
+				NOT = { has_country_flag = comecon_purchasing_aircraft_flag }
+				NOT = { has_war_with = SOV }
+				NOT = { is_justifying_wargoal_against = SOV }
+			}
+
+			custom_cost_trigger = {
+				check_variable = { ubs_save > 50 }
+			}
+			custom_cost_text = RUS_50_ubs_save_cost
+			cancel_if_not_visible = yes
+
+			days_remove = 90
+			days_re_enable = 30
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						AND = {
+							stockpile_ratio = { 
+								archetype = small_plane_airframe
+								ratio > 0.75
+							}
+							stockpile_ratio = { 
+								archetype = small_plane_naval_bomber_airframe
+								ratio > 0.75
+							}
+							stockpile_ratio = { 
+								archetype = medium_plane_airframe
+								ratio > 0.75
+							}
+						}
+					}
+				}
+			}
+
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = comecon_purchasing_aircraft_flag
+				hidden_effect = {
+					country_event = SOV_cmea.8
+				}
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+
+				}
+				hidden_effect = {
+					add_to_variable = {
+						ubs_save = -50
+					}
+				}
+				custom_effect_tooltip = comecon_purchase_aircraft_tt
+			}
+			cancel_effect = {
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = comecon_vehicle_type
+				clr_country_flag = comecon_purchasing_aircraft_flag
+				clr_country_flag = comecon_producing_fighters_for_member_flag
+				clr_country_flag = comecon_producing_naval_bombers_for_member_flag
+				clr_country_flag = comecon_producing_tactical_bombers_for_member_flag
+			}
+			remove_effect = {
+				if = {
+					limit = {
+						has_country_flag = comecon_producing_fighters_for_member_flag
+					}
+					effect_tooltip = {
+						add_equipment_to_stockpile = {
+							type = small_plane_airframe_1
+							amount = 80
+							version_name = "SU I-21F trade"
+							producer = SOV
+						}
+					}
+					clr_country_flag = comecon_producing_fighters_for_member_flag
+				}
+				else_if = {
+					limit = {
+						has_country_flag = comecon_producing_naval_bombers_for_member_flag
+					}
+					add_equipment_to_stockpile = {
+						type = small_plane_naval_bomber_airframe_1
+						amount = 80
+						version_name = "SU I-21N trade"
+						producer = SOV
+					}
+					clr_country_flag = comecon_producing_naval_bombers_for_member_flag
+				}
+				else = {
+					add_equipment_to_stockpile = {
+						type = medium_plane_airframe_1
+						amount = 80
+						version_name = "SU ANT-40 trade"
+						producer = SOV
+					}
+					clr_country_flag = comecon_producing_tactical_bombers_for_member_flag
+				}
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = comecon_vehicle_type
+				clr_country_flag = comecon_purchasing_aircraft_flag
+			}
+		}
+
+		comecon_purchase_ships = {
+
+			priority = 1
+
+			icon = GFX_decision_generic_naval
+
+			visible = {
+				has_idea = SOV_comecon_buff
+			}
+
+			available = {
+				OR = {
+					has_tech = early_ship_hull_submarine
+					has_tech = early_ship_hull_light
+					has_tech = early_ship_hull_cruiser
+				}
+				NOT = { has_country_flag = comecon_producing_bulgarian_ships_flag }
+				NOT = { has_country_flag = comecon_ships_purchase_rejected_flag }
+				NOT = { has_war_with = SOV }
+				NOT = { is_justifying_wargoal_against = SOV }
+
+			}
+			cancel_if_not_visible = yes
+
+			cancel_effect = {
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+					clr_country_flag = comecon_producing_bulgarian_ships_flag
+				}
+				hidden_effect = {
+					if = {
+						limit = {
+							OR = {
+								has_country_flag = comecon_building_submarines_flag
+								has_country_flag = comecon_building_destroyers_flag
+								has_country_flag = comecon_building_light_cruiser_flag
+							}
+						}
+						country_event = SOV_cmea.11
+						clr_country_flag = comecon_building_submarines_flag
+						clr_country_flag = comecon_building_destroyers_flag
+						clr_country_flag = comecon_building_light_cruiser_flag
+					}
+				}
+			}
+
+			custom_cost_trigger = {
+				check_variable = { ubs_save > 100 }
+			}
+			custom_cost_text = RUS_100_ubs_save_cost
+
+			days_remove = 90
+			days_re_enable = 30
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					num_of_naval_factories < 1
+				}
+				modifier = {
+					factor = 10
+					num_of_naval_factories > 0
+					num_of_civilian_factories > 16
+				}
+			}
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				SOV = {
+					set_country_flag = comecon_producing_bulgarian_ships_flag
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+					country_event = { id = SOV_cmea.9 hours = 1 }
+				}
+				hidden_effect = {
+					add_to_variable = {
+						ubs_save = -100
+					}
+				}
+			}
+
+			remove_effect = {
+				SOV = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+					clr_country_flag = comecon_producing_bulgarian_ships_flag
+				}
+				if = {
+					limit = {
+						has_country_flag = comecon_building_submarines_flag
+					}
+					hidden_effect = {
+						country_event = SOV_cmea.12
+					}
+					custom_effect_tooltip = comecon_purchase_ships_submarines_tt
 					clr_country_flag = comecon_building_submarines_flag
+				}
+				else_if = {
+					limit = {
+						has_country_flag = comecon_building_destroyers_flag
+					}
+					hidden_effect = {
+						country_event = SOV_cmea.13
+					}
+					custom_effect_tooltip = comecon_purchase_ships_destroyers_tt
 					clr_country_flag = comecon_building_destroyers_flag
+				}
+				else_if = {
+					limit = {
+						has_country_flag = comecon_building_light_cruiser_flag
+					}
+					hidden_effect = {
+						country_event = SOV_cmea.14
+					}
+					custom_effect_tooltip = comecon_purchase_ships_light_cruiser_tt
 					clr_country_flag = comecon_building_light_cruiser_flag
 				}
-			}
-		}
-
-		custom_cost_trigger = {
-			check_variable = { ubs_save > 100 }
-		}
-		custom_cost_text = RUS_100_ubs_save_cost
-
-		days_remove = 90
-		days_re_enable = 30
-		fire_only_once = no
-
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 0
-				num_of_naval_factories < 1
-			}
-			modifier = {
-				factor = 10
-				num_of_naval_factories > 0
-				num_of_civilian_factories > 16
-			}
-		}
-		modifier = {
-			civilian_factory_use = 1
-		}
-		
-		complete_effect = {
-			SOV = {
-				set_country_flag = comecon_producing_bulgarian_ships_flag
-				add_offsite_building = {
-					type = industrial_complex
-					level = 1
+				else = {
+					custom_effect_tooltip = comecon_purchase_ships_undetermined_tt
 				}
-				country_event = { id = SOV_cmea.9 hours = 1 }
-			}
-			hidden_effect = {
-				add_to_variable = {
-					ubs_save = -100
-				}
-			}
-		}
-
-		remove_effect = {
-			SOV = {
-				add_offsite_building = {
-					type = industrial_complex
-					level = -1
-				}
-				clr_country_flag = comecon_producing_bulgarian_ships_flag
-			}
-			if = {
-				limit = {
-					has_country_flag = comecon_building_submarines_flag
-				}
-				hidden_effect = {
-					country_event = SOV_cmea.12
-				}
-				custom_effect_tooltip = comecon_purchase_ships_submarines_tt
-				clr_country_flag = comecon_building_submarines_flag
-			}
-			else_if = {
-				limit = {
-					has_country_flag = comecon_building_destroyers_flag
-				}
-				hidden_effect = {
-					country_event = SOV_cmea.13
-				}
-				custom_effect_tooltip = comecon_purchase_ships_destroyers_tt
-				clr_country_flag = comecon_building_destroyers_flag
-			}
-			else_if = {
-				limit = {
-					has_country_flag = comecon_building_light_cruiser_flag
-				}
-				hidden_effect = {
-					country_event = SOV_cmea.14
-				}
-				custom_effect_tooltip = comecon_purchase_ships_light_cruiser_tt
-				clr_country_flag = comecon_building_light_cruiser_flag
-			}
-			else = {
-				custom_effect_tooltip = comecon_purchase_ships_undetermined_tt
 			}
 		}
 	}
-}
 
 The_comintern_international_aid_category = {
 	
@@ -6432,6 +6247,35 @@ SOV_Sakura_clothes = {
 			}
 		}
 	}
+	Sakura_clothes_9 = {
+		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+			custom_effect_tooltip = SOV_Sakura_09
+			set_portraits = {
+				character = SOV_Sakura
+				civilian = {
+					large = "gfx/leaders/SOV/SOV_Sakura_09.png"
+				}
+			}
+		}
+	}
 }
 
 SOV_war_against_Soviet_category = {
@@ -6595,7 +6439,7 @@ Reunit_Russia_decision_cate = {
 			else = {
 				set_cosmetic_tag = Russian
 				if = {
-					limit = { controlled_states = 195 }
+					limit = { controls_state = 195 }
 					set_province_name = {
 						id = 6174
 						name = "彼得格勒"
@@ -6603,7 +6447,7 @@ Reunit_Russia_decision_cate = {
 					195 = { set_state_name = "彼得格勒" }
 				}
 				if = {
-					limit = { controlled_states = 217 }
+					limit = { controls_state = 217 }
 					set_province_name = {
 						id = 3529
 						name = "察里津"
@@ -6633,7 +6477,7 @@ Reunit_Russia_decision_cate = {
 			}
 			set_country_flag = Reunit_Russia_country
 			if = {
-				limit = { controlled_states = 219 }
+				limit = { controls_state = 219 }
 				set_capital = {
 					state = 219
 					remember_old_capital = no
@@ -6756,7 +6600,7 @@ Reunit_Russia_decision_cate = {
 				add_core_of_ROOT = yes
 			}
 			if = {
-				limit = { controlled_states = 219 }
+				limit = { controls_state = 219 }
 				set_capital = {
 					state = 219
 					remember_old_capital = no
@@ -6794,7 +6638,7 @@ Reunit_Russia_decision_cate = {
 		}
 		state_target = yes
 		on_map_mode = map_and_decisions_view
-		target_array = controlled_states
+		target_array = controls_state
 		cost = 25
 		days_remove = 30
 		ai_will_do = {
@@ -6805,7 +6649,6 @@ Reunit_Russia_decision_cate = {
 		}
 	}
 }
-
 
 Reunit_Tresen_decision_cate = {
 	Reunit_Tresen_decision = {
@@ -7037,3 +6880,437 @@ SOV_Debug = {
 		}
 	}
 }
+
+SOV_great_patriotic_war_category = {
+
+	SOV_building_urban_fortresses = {
+		icon = GFX_decision_generic_fortification
+		visible = {
+			FROM = {
+				is_owned_by = ROOT
+			}
+		}
+		available = {
+			has_war = no
+			FROM = {
+				is_fully_controlled_by = ROOT
+			}
+		}
+		cancel_trigger = {
+			FROM = {
+				NOT = { is_fully_controlled_by = ROOT }
+			}
+		}
+		fire_only_once = yes
+		target_trigger = {
+			FROM = {
+				is_owned_by = ROOT
+			}
+		}
+		targets = { 195 217 219 202 206 }
+		state_target = yes
+		cost = 10
+		modifier = {
+			civilian_factory_use = 5
+			production_speed_bunker_factor = -0.25
+		}
+		days_remove = 90
+		remove_effect = {
+			FROM = {
+				add_dynamic_modifier = {
+					modifier = SOV_defend_main_city
+					scope = ROOT
+				}
+			}
+		}
+	}
+
+	SOV_relocate_industries_from_major_cities = {
+		icon = GFX_decision_generic_construction
+		visible = {
+			FROM = {
+				is_owned_by = ROOT
+			}
+			has_completed_focus = SOV_migration_of_industries
+		}
+		available = {
+			has_war = no
+			FROM = {
+				is_fully_controlled_by = ROOT
+			}
+		}
+		cancel_trigger = {
+			FROM = {
+				NOT = { is_fully_controlled_by = ROOT }
+			}
+		}
+		fire_only_once = yes
+		target_trigger = {
+			FROM = {
+				is_owned_by = ROOT
+			}
+		}
+		targets = { 195 217 219 202 206 }
+		state_target = yes
+		cost = 10
+		modifier = {
+			civilian_factory_use = 5
+		}
+		days_remove = 90
+		remove_effect = {
+			FROM = {
+				if = {
+					limit = {
+						arms_factory > 3
+					}
+					remove_building = {
+						type = arms_factory
+						level = 4
+					}
+				}
+				else_if = {
+					limit = {
+						arms_factory > 2
+					}
+					remove_building = {
+						type = arms_factory
+						level = 3
+					}
+					remove_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				else_if = {
+					limit = {
+						arms_factory > 1
+					}
+					remove_building = {
+						type = arms_factory
+						level = 2
+					}
+					remove_building = {
+						type = industrial_complex
+						level = 2
+					}
+				}
+				else_if = {
+					limit = {
+						arms_factory > 0
+					}
+					remove_building = {
+						type = arms_factory
+						level = 1
+					}
+					remove_building = {
+						type = industrial_complex
+						level = 3
+					}
+				}
+				else = {
+					remove_building = {
+						type = industrial_complex
+						level = 4
+					}
+				}
+			}
+			if = {
+				limit = { FROM = { state = 195 } }
+				582 = {
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = arms_factory
+						level = 4
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { state = 217 } }
+				572 = {
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = arms_factory
+						level = 4
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { state = 219 } }
+				653 = {
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = arms_factory
+						level = 4
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { state = 202 } }
+				583 = {
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = arms_factory
+						level = 4
+					}
+				}
+			}
+			else_if = {
+				limit = { FROM = { state = 206 } }
+				651 = {
+					add_extra_state_shared_building_slots = 4
+					add_building_construction = {
+						type = arms_factory
+						level = 4
+					}
+				}
+			}
+		}
+	}
+
+	SOV_blizzard_magic_in_214_city = {
+		icon = GFX_decision_generic_coastal_fortification
+		visible = {
+			#has_war_with_major = yes
+			owns_state = 214
+		}
+		available = {
+			has_war_with_major = yes
+			214 = { is_fully_controlled_by = ROOT }
+		}
+		fire_only_once = no
+		days_remove = 7
+		cost = 5
+		ai_will_do = {
+			base = 1000
+		}
+		remove_effect = {
+			set_country_flag = SOV_blizzard_magic_in_214_city_flag
+			214 = {
+				set_demilitarized_zone = yes
+			}
+		}
+
+	}
+	
+	SOV_stop_blizzard_magic_in_214_city = {
+		icon = GFX_decision_generic_coastal_fortification
+		visible = {
+			has_country_flag = SOV_blizzard_magic_in_214_city_flag
+			owns_state = 214
+		}
+		fire_only_once = no
+		days_remove = 7
+		cost = 5
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				factor = 0
+				has_war_with_major = yes
+			}
+		}
+		remove_effect = {
+			clr_country_flag = SOV_blizzard_magic_in_214_city_flag
+			214 = {
+				set_demilitarized_zone = no
+			}
+		}
+
+	}
+
+	SOV_recruiting_punitive_army = {
+		icon = GFX_decision_generic_arrest
+		visible = {
+			has_completed_focus = SOV_superintendant_of_war
+			has_war_with_major = yes
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = SOV_recruiting_punitive_army_flag }
+				custom_trigger_tooltip = {
+					tooltip = SOV_recruiting_punitive_army_tt
+					has_country_flag = {
+						flag = SOV_recruiting_punitive_army_flag
+						days > 180
+					}
+				}
+			}
+		}
+		cancel_trigger = {
+			NOT = {
+				has_template = "Punitive divisiont"
+			}
+		}
+		days_remove = 30
+		cost = 50
+		ai_will_do = {
+			base = 1000
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_template = "Punitive divisiont"
+					}
+				}
+				set_country_flag = SOV_punitive_army_template
+				division_template = {
+					name = "Punitive division"
+					is_locked = yes
+					regiments = {
+						penal_battalion = { x = 0 y = 0 }
+						penal_battalion = { x = 0 y = 1 }
+						penal_battalion = { x = 0 y = 2 }
+						penal_battalion = { x = 1 y = 0 }
+						penal_battalion = { x = 1 y = 1 }
+						penal_battalion = { x = 1 y = 2 }
+						penal_battalion = { x = 2 y = 0 }
+						penal_battalion = { x = 2 y = 1 }
+						penal_battalion = { x = 2 y = 2 }
+						artillery_brigade = { x = 3 y = 0 }
+						artillery_brigade = { x = 3 y = 1 }
+						artillery_brigade = { x = 3 y = 2 }
+					}
+					support = {
+						engineer = { x = 0 y = 0 }
+						recon = { x = 0 y = 1 }
+						anti_air = { x = 0 y = 2 }
+						anti_tank  = { x = 0 y = 3 }
+						artillery = { x = 0 y = 4 }
+					}
+				}
+			}
+			hidden_effect = {
+				capital_scope = {
+					create_unit = {
+						division = "division_template = \"Punitive divisiont\" start_experience_factor = 0.5 start_equipment_factor = 1.0"
+						owner = ROOT
+						count = 4
+					}
+				}
+				clr_country_flag = SOV_recruiting_punitive_army_flag
+				set_country_flag = SOV_recruiting_punitive_army_flag
+			}
+		}
+	}
+
+	SOV_disband_the_punitive_army = {
+		icon = GFX_decision_generic_military
+		visible = {
+			has_completed_focus = SOV_superintendant_of_war
+			has_war = no
+			has_country_flag = SOV_punitive_army_template
+		}
+		available = {
+			has_war = no
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		cost = 20
+		days_remove = 30
+		remove_effect = {
+			add_stability = -0.05
+			delete_unit_template_and_units = {
+				division_template = "Punitive divisiont"
+			}
+			clr_country_flag = SOV_punitive_army_template
+		}
+	}
+
+	SOV_Sakura_personally_commands_the_troops = {
+		icon = GFX_decision_generic_intelligence_operation
+		visible = {
+			has_war_with_major = yes
+			SOV_Sakura = {
+				is_advisor = no
+			}
+		}
+		available = {
+			has_war_with_major = yes
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		cost = 50
+		fire_only_once = yes
+		days_remove = 7
+		remove_effect = {
+			add_field_marshal_role = {
+				character = SOV_Sakura
+				skill = 4
+				attack_skill = 6
+				defense_skill = 3
+				planning_skill = 3
+				logistics_skill = 4
+				traits = { trait_engineer order_mahoushojo career_officer logistics_wizard adaptable }
+			}
+			add_advisor_role = {
+				character = SOV_Sakura
+				advisor = {
+					slot = theorist
+					traits = { SOV_magical_warfare }
+					idea_token = SOV_Sakura
+					cost = 100
+				}
+			}
+		}
+	}
+
+	SOV_full_production_in_the_rear_area = {
+		icon = GFX_decision_generic_merge_plant_tank
+		visible = {
+			has_war_with_major = yes
+			has_completed_focus = SOV_emergency_arms_production
+		}
+		available = {
+			has_war_with_major = yes
+			arms_factory < 150
+		}
+		cancel_trigger = {
+			has_war = no
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		cost = 200
+		fire_only_once = no
+		days_remove = 180
+		modifier = {
+			military_factory_donations = 10
+			industrial_capacity_factory = 0.30
+		}
+	}
+
+	SOV_self_sufficiency_movement = {
+		icon = GFX_decision_generic_nationalism
+		visible = {
+			has_war_with_major = yes
+		}
+		available = {
+			surrender_progress > 0.5
+			has_war_with_major = yes
+			PRC = {
+				OR = {
+					is_neighbor_of = SOV
+					any_allied_country = {
+						is_neighbor_of = SOV
+					}
+				}
+			}
+		}
+		cost = 200
+		days_remove = 180
+		fire_only_once = no
+		modifier = {
+			consumer_goods_factor = -0.30
+			max_training = -0.25
+			training_time_army_factor = -0.20
+			industrial_capacity_factory = 0.20
+		}
+	}
+}
+
+#242  219  192 137 842
+
+
+
