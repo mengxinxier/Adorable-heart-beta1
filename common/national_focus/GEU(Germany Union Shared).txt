@@ -10,7 +10,7 @@
 		#从废墟中崛起！
 		id = GEU_economic_09
 		icon = GFX_goal_generic_dictatorship_of_proletariat
-		x = 48
+		x = 65
 		y = 0
 		offset = {
 			x = -8
@@ -503,10 +503,10 @@
 				}
 			}
 			add_to_variable = {
-				GEU_New_Economic_Policy_var_1 = 0.05
+				GEU_New_Economic_Policy_var_1 = 0.1
 			}
 			add_to_variable = {
-				GEU_New_Economic_Policy_var_2 = 0.05
+				GEU_New_Economic_Policy_var_2 = 0.1
 			}
 			add_to_variable = {
 				GEU_New_Economic_Policy_var_4 = 0.1
@@ -592,7 +592,7 @@
 				}
 			}
 			add_to_variable = {
-				GEU_New_Economic_Policy_var_7 = -0.05
+				GEU_New_Economic_Policy_var_7 = -0.1
 			}
 			add_to_variable = {
 				GEU_New_Economic_Policy_var_15 = 0.1
@@ -629,7 +629,7 @@
 			}
 			custom_effect_tooltip = UBS_out_modifier_15_monthly_money
 			add_to_variable = {
-				GEU_New_Economic_Policy_var_7 = -0.1
+				GEU_New_Economic_Policy_var_7 = -0.2
 			}
 			add_to_variable = {
 				GEU_New_Economic_Policy_var_15 = 0.1
@@ -724,7 +724,7 @@
 				}
 			}
 			add_to_variable = {
-				GEU_New_Economic_Policy_var_7 = -0.05
+				GEU_New_Economic_Policy_var_7 = -0.1
 			}
 			add_to_variable = {
 				GEU_New_Economic_Policy_var_8 = 0.1
@@ -870,8 +870,8 @@
 		#我们的外交政策
 		id = GEU_diplomacy_01
 		icon = GFX_goal_communist_revolt
-		x = 13
-		y = 4
+		x = 48
+		y = 0
 		cost = 1
 		ai_will_do = {
 			base = 10
@@ -908,7 +908,22 @@
 		bypass = {
 		}
 		available = {
-			always = no
+			is_subject = no
+			not = { is_in_faction_with = SOV }
+			SOV = {
+				has_government = ROOT
+				is_subject = no
+			}
+			POL = {
+				not = {
+					or = {
+						is_in_faction_with = SOV
+						is_subject_of = SOV
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
 		}
 		available_if_capitulated = no
 		bypass = {
@@ -935,7 +950,10 @@
 			base = 10
 		}
 		bypass = {
-			is_in_faction = yes
+			custom_trigger_tooltip = {
+				tooltip = is_in_third_international
+				is_in_third_international = yes
+			}
 		}
 		available = {
 			if = {
@@ -945,6 +963,7 @@
 			NOT = {
 				has_completed_focus = GEU_diplomacy_03
 			}
+			is_in_faction = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -977,6 +996,8 @@
 				limit = { tag = GER }
 				has_country_flag = GEU_4th_lianmeng
 			}
+			is_in_faction = no
+			is_subject = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -998,6 +1019,50 @@
 			}
 			create_faction = Fourth_International
 			hidden_effect = {
+				every_country = {
+					limit = {
+						has_government = ROOT
+						is_in_faction = no
+						is_subject = no
+						not = {
+							or = {
+								has_war_with = ROOT
+								is_in_faction_with = ROOT
+							}
+						}
+						not = { tag = AHM }
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = GEU_diplo_invite_FROM
+						}
+					}
+				}
+				every_country = {
+					limit = {
+						has_government = ROOT
+						custom_trigger_tooltip = {
+							tooltip = is_in_third_international
+							is_in_third_international = yes
+						}
+						is_subject = no
+						not = {
+							or = {
+								has_war_with = ROOT
+								is_in_faction_with = ROOT
+							}
+						}
+						not = { tag = AHM }
+						not = { tag = SOV }
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = GEU_Discord_sov
+						}
+					}
+				}
 				news_event = {
 					id = generic.2007
 					days = 1
@@ -1071,14 +1136,16 @@
 		bypass = {
 		}
 		available = {
-			always = no
+			custom_trigger_tooltip = {
+				tooltip = is_in_third_international
+				is_in_third_international = yes
+			}
 		}
 		available_if_capitulated = no
 		bypass = {
 		}
 		cancel_if_invalid = yes
 		completion_reward = {
-			custom_effect_tooltip = GER_To_be_completed
 		}
 	}
 	shared_focus = {
@@ -1100,6 +1167,10 @@
 		bypass = {
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = is_in_third_international
+				is_in_third_international = yes
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -1125,6 +1196,10 @@
 		bypass = {
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = is_in_third_international
+				is_in_third_international = yes
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -1153,6 +1228,10 @@
 		bypass = {
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = is_in_third_international
+				is_in_third_international = yes
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -1171,16 +1250,12 @@
 						capital_scope = {
 							or = {
 								has_state_flag = L_GER   ##德意志
-								has_state_flag = SWE_state_area   ##瑞典
-								has_state_flag = DEN_state_area   ##杜伦布
-								has_state_flag = NOR_state_area   ##挪威
 								region = 131   ##火车国
 								region = 22   ##JK
 								region = 181   ##意大利
 								region = 23
 								state = 762
 								state = 114
-								state = 124
 							}
 						}
 					}
@@ -1194,16 +1269,12 @@
 					limit = {
 						or = {
 							has_state_flag = L_GER   ##德意志
-							has_state_flag = SWE_state_area   ##瑞典
-							has_state_flag = DEN_state_area   ##杜伦布
-							has_state_flag = NOR_state_area   ##挪威
 							region = 131   ##火车国
 							region = 22   ##JK
 							region = 181   ##意大利
 							region = 23
 							state = 762
 							state = 114
-							state = 124
 						}
 					}
 					add_claim_by_ROOT_if_has_no_core = yes
@@ -1260,10 +1331,23 @@
 		bypass = {
 		}
 		available = {
+			is_subject = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = DEN
+				decision = GEU_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = NOR
+				decision = GEU_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = SWE
+				decision = GEU_diplo_attck_FROM
+			}
 		}
 	}
 	shared_focus = {
@@ -1287,10 +1371,19 @@
 		bypass = {
 		}
 		available = {
+			is_subject = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = ITA
+				decision = GEU_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = ALS
+				decision = GEU_diplo_attck_FROM
+			}
 		}
 	}
 	shared_focus = {
@@ -1317,14 +1410,13 @@
 		bypass = {
 		}
 		available = {
-			always = no
 		}
 		available_if_capitulated = no
 		bypass = {
 		}
 		cancel_if_invalid = yes
 		completion_reward = {
-			custom_effect_tooltip = GER_To_be_completed
+			add_country_leader_trait = GEU_The_German_Revolution_Mentor
 		}
 	}
 	shared_focus = {
@@ -1429,6 +1521,7 @@
 		cancel_if_invalid = yes
 		completion_reward = {
 			unlock_decision_category_tooltip = GEU_Grobdeutschland_Plan
+			custom_effect_tooltip = GEU_The_Great_German_Ideology_TT
 			hidden_effect = {
 				every_state = {
 					limit = {
@@ -1462,10 +1555,31 @@
 		bypass = {
 		}
 		available = {
+			is_subject = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = ROM
+				decision = GEU_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = KVO
+				decision = GEU_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = BUL
+				decision = GEU_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = HUN
+				decision = GEU_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = GRE
+				decision = GEU_diplo_attck_FROM
+			}
 		}
 	}
 	shared_focus = {
@@ -1489,10 +1603,19 @@
 		bypass = {
 		}
 		available = {
+			is_subject = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = ENG
+				decision = GEU_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = FRA
+				decision = GEU_diplo_attck_FROM
+			}
 		}
 	}
 	shared_focus = {
@@ -1518,20 +1641,19 @@
 		bypass = {
 		}
 		available = {
-			always = no
 		}
 		available_if_capitulated = no
 		bypass = {
 		}
 		cancel_if_invalid = yes
 		completion_reward = {
-			custom_effect_tooltip = GER_To_be_completed
+			add_country_leader_trait = GEU_permanent_revolutionary
 		}
 	}
 	shared_focus = {
 		#鲁道夫经济计划
 		id = GEU_Rudolph_Economic_Plan
-		icon = GFX_goal_generic_communist_industries
+		icon = GFX_GEU_Rudolph_Economic_Plan
 		prerequisite = {
 			focus = GEU_Seek_world_revolution
 		}
@@ -1547,10 +1669,45 @@
 		bypass = {
 		}
 		available = {
+			is_faction_leader = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			set_variable = { global.num_of_Rose_International = 0 }
+			clear_array = global.Rose_International_member
+			add_ideas = GEU_Rose_International_idea
+			unlock_decision_category_tooltip = GEU_Rose_International
+			custom_effect_tooltip = GEU_Rudolph_Economic_Plan_tt
+			hidden_effect = {
+				add_dynamic_modifier = {
+					modifier = GEU_Rose_International_leader
+				}
+				every_country = {
+					limit = {
+						or = {
+							has_government = communism
+							has_country_leader_ideology = socialism
+						}
+						not_in_any_economy_faction = yes
+						is_subject = no
+						not = { has_idea = GEU_Rose_International_idea }
+						not = {
+							or = {
+								has_war_with = ROOT
+								is_in_faction_with = ROOT
+							}
+						}
+						not = { tag = AHM }
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = GEU_invite_FROM_add_to_Rose_International_neutral
+						}
+					}
+				}
+			}
 		}
 	}
 	shared_focus = {
@@ -1572,10 +1729,19 @@
 		bypass = {
 		}
 		available = {
+			is_faction_leader = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_to_tech_sharing_group = GEU_World_Society_of_Workers_Science_and_Technology
+			every_other_country = {
+				limit = {
+					is_in_faction_with = ROOT
+					not = { is_in_tech_sharing_group = GEU_World_Society_of_Workers_Science_and_Technology }
+				}
+				add_to_tech_sharing_group = GEU_World_Society_of_Workers_Science_and_Technology
+			}
 		}
 	}
 	shared_focus = {
@@ -1655,10 +1821,15 @@
 		bypass = {
 		}
 		available = {
+			is_subject = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = SOV
+				decision = GEU_diplo_attck_FROM
+			}
 		}
 	}
 ##################################           文 化                ###########################################
@@ -1666,8 +1837,9 @@
 		#工人文化
 		id = GEU_culture_01
 		icon = GFX_goal_generic_marxist_enlightenment
-		x = 20
-		y = 0
+		relative_position_id = GEU_country_people_army
+		x = 0
+		y = 6
 		cost = 5
 		ai_will_do = {
 			base = 10
@@ -1856,41 +2028,16 @@
 	}
 ##################################           军 事                 ###########################################
 	shared_focus = {
-		#国家安全委员会
-		id = GEU_country_safe_concil
-		icon = GFX_goal_generic_communist_officer
-		x = 8
-		y = 0
-		cost = 5
-		ai_will_do = {
-			base = 5
-		}
-		select_effect = {
-		}
-		available = {
-			if = {
-				limit = { tag = GER }
-				has_completed_focus = GEU_laborer_conference
-			}
-			#else = { has_country_flag = Reunit_germany_country }
-		}
-		completion_reward = {
-			army_experience = 100
-			navy_experience = 100
-			air_experience = 100
-		}
-	}
-	shared_focus = {
 		#成立德意志民主共和国国家安全部
 		id = GEU_information_01
 		icon = GFX_GEU_STAXI
 		prerequisite = {
-			focus = GEU_country_safe_concil
+			focus = GEU_country_people_army
 		}
-		relative_position_id = GEU_country_safe_concil
-		x = 5
+		relative_position_id = GEU_country_people_army
+		x = 6
 		y = 1
-		cost = 5
+		cost = 3
 		allow_branch = {
 		}
 		ai_will_do = {
@@ -1905,29 +2052,14 @@
 				limit = {
 					has_intelligence_agency = no
 				}
-				create_intelligence_agency = yes
+				create_intelligence_agency = {
+					name = "史塔西"
+					icon = GFX_GEU_SITASI_LOGO
+				}
 			}
-			upgrade_intelligence_agency = upgrade_economy_civilian
-			upgrade_intelligence_agency = upgrade_army_department
-			upgrade_intelligence_agency = upgrade_naval_department
-			upgrade_intelligence_agency = upgrade_airforce_department
-			upgrade_intelligence_agency = upgrade_passive_defense
 			upgrade_intelligence_agency = upgrade_anti_partisan
-			upgrade_intelligence_agency = upgrade_blueprint_stealing
-			upgrade_intelligence_agency = upgrade_portable_radios
-			upgrade_intelligence_agency = upgrade_invisible_ink
-			upgrade_intelligence_agency = upgrade_plastic_explosives
-			upgrade_intelligence_agency = upgrade_suicide_pills
-			upgrade_intelligence_agency = upgrade_training_centers
-			upgrade_intelligence_agency = upgrade_commando_training
-			upgrade_intelligence_agency = upgrade_interrogation_techniques
-			upgrade_intelligence_agency = upgrade_diplo_training
 			upgrade_intelligence_agency = upgrade_psycho_warfare
-			upgrade_intelligence_agency = upgrade_form_department
 			upgrade_intelligence_agency = upgrade_decryption_boost
-			upgrade_intelligence_agency = upgrade_decryption_boost_2
-			upgrade_intelligence_agency = upgrade_crypto_strength
-			upgrade_intelligence_agency = upgrade_crypto_strength_2
 		}
 	}
 	shared_focus = {
@@ -1982,12 +2114,8 @@
 		#国家人民军
 		id = GEU_country_people_army
 		icon = GFX_GRU_RED_PATRIOT
-		prerequisite = {
-			focus = GEU_country_safe_concil
-		}
-		relative_position_id = GEU_country_safe_concil
-		x = -5
-		y = 1
+		x = 6
+		y = 0
 		cost = 5
 		allow_branch = {
 		}
@@ -2047,7 +2175,7 @@
 			focus = GEU_army_01
 		}
 		relative_position_id = GEU_army_01
-		x = -3
+		x = -1
 		y = 1
 		cost = 5
 		mutually_exclusive = {
@@ -2088,7 +2216,7 @@
 			focus = GEU_army_01
 		}
 		relative_position_id = GEU_army_01
-		x = 3
+		x = 1
 		y = 1
 		cost = 5
 		mutually_exclusive = {
@@ -2126,10 +2254,10 @@
 		id = GEU_army_04
 		icon = GFX_goal_generic_revolutionary_guards
 		prerequisite = {
-			focus = GEU_army_02
+			focus = GEU_army_01
 		}
-		relative_position_id = GEU_army_02
-		x = -1
+		relative_position_id = GEU_army_01
+		x = -3
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2143,16 +2271,16 @@
 		cancel_if_invalid = yes
 		completion_reward = {
 			add_to_variable = {
-				GEU_army_attack_factor = 0.07
+				GEU_army_attack_factor = 0.05
 			}
 			add_to_variable = {
-				GEU_army_defence_factor = 0.07
+				GEU_army_defence_factor = 0.05
 			}
 			add_to_variable = {
 				GEU_max_planning = 0.05
 			}
 			add_to_variable = {
-				GEU_supply_consumption_factor = 0.05
+				GEU_supply_consumption_factor = -0.05
 			}
 			force_update_dynamic_modifier = yes
 			custom_effect_tooltip = GEU_army_04_tt
@@ -2163,10 +2291,10 @@
 		id = GEU_army_05
 		icon = GFX_goal_generic_red_commando
 		prerequisite = {
-			focus = GEU_army_04
+			focus = GEU_army_10
 		}
-		relative_position_id = GEU_army_04
-		x = 0
+		relative_position_id = GEU_army_10
+		x = 2
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2180,19 +2308,62 @@
 		cancel_if_invalid = yes
 		completion_reward = {
 			add_to_variable = {
-				GEU_army_attack_factor = 0.08
+				GEU_army_attack_factor = 0.05
 			}
 			add_to_variable = {
-				GEU_army_defence_factor = 0.08
+				GEU_army_defence_factor = 0.05
 			}
 			add_to_variable = {
-				GEU_army_org_factor = -0.05
-			}
-			add_to_variable = {
-				GEU_conscription_factor = -0.1
+				GEU_army_org_factor = 0.1
 			}
 			force_update_dynamic_modifier = yes
 			custom_effect_tooltip = GEU_army_05_tt
+		}
+	}
+	#装甲掷弹兵
+	shared_focus = {
+		id = GEU_panzergrenadier
+		icon = GFX_focus_generic_mechanized
+		prerequisite = { focus = GEU_army_04 }
+		x = 0
+		y = 1
+		relative_position_id = GEU_army_04
+		cost = 5
+		available = {
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = GER_panzergrenadier
+				ahead_reduction = 1
+				bonus = 1
+				uses = 1
+				category = cat_mechanized_equipment
+			}
+			add_ideas = GEU_panzergrenadier_idea
+		}
+	}
+	shared_focus = {
+		#现代装甲战术
+		id = GEU_Modern_armor_tactics
+		icon = GFX_generic_tank_cogs
+		prerequisite = {
+			focus = GEU_army_04
+		}
+		relative_position_id = GEU_army_04
+		x = -2
+		y = 1
+		cost = 5
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 5
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = GEU_Modern_armor_tactics_idea
 		}
 	}
 	shared_focus = {
@@ -2203,7 +2374,7 @@
 			focus = GEU_army_02
 		}
 		relative_position_id = GEU_army_02
-		x = 1
+		x = 0
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2268,7 +2439,7 @@
 			focus = GEU_army_03
 		}
 		relative_position_id = GEU_army_03
-		x = -1
+		x = 0
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2313,13 +2484,7 @@
 		cancel_if_invalid = yes
 		completion_reward = {
 			add_to_variable = {
-				GEU_planning_speed = -0.05
-			}
-			add_to_variable = {
-				GEU_max_planning = -0.05
-			}
-			add_to_variable = {
-				GEU_army_morale_factor = 0.12
+				GEU_army_morale_factor = 0.15
 			}
 			force_update_dynamic_modifier = yes
 			custom_effect_tooltip = GEU_army_09_tt
@@ -2330,10 +2495,10 @@
 		id = GEU_army_10
 		icon = GFX_goal_generic_secret_police
 		prerequisite = {
-			focus = GEU_army_03
+			focus = GEU_army_01
 		}
-		relative_position_id = GEU_army_03
-		x = 1
+		relative_position_id = GEU_army_01
+		x = 3
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2374,68 +2539,13 @@
 				GEU_conscription = 0.02
 			}
 			add_to_variable = {
-				GEU_army_attack_factor = -0.05
+				GEU_army_attack_factor = 0.05
 			}
 			add_to_variable = {
-				GEU_army_defence_factor = -0.05
+				GEU_army_defence_factor = 0.05
 			}
 			force_update_dynamic_modifier = yes
 			custom_effect_tooltip = GEU_army_11_tt
-		}
-	}
-	shared_focus = {
-		#改组黑森峰
-		id = GEU_army_12
-		icon = GFX_focus_HSF2
-		prerequisite = {
-			focus = GEU_army_01
-		}
-		relative_position_id = GEU_army_01
-		x = 0
-		y = 2
-		cost = 5
-		allow_branch = {
-		}
-		ai_will_do = {
-			base = 5
-		}
-		available = {
-			if = {
-				limit = { not = { tag = GER } }
-				has_country_flag = Reunit_germany_country
-			}
-		}
-		available_if_capitulated = no
-		cancel_if_invalid = yes
-		completion_reward = {
-			custom_effect_tooltip = GEU_army_12_tt
-		}
-	}
-	shared_focus = {
-		#去纳粹化
-		id = GEU_army_13
-		icon = GFX_GEU_QUNACUI
-		prerequisite = {
-			focus = GEU_army_12
-		}
-		relative_position_id = GEU_army_12
-		x = 0
-		y = 1
-		cost = 5
-		allow_branch = {
-		}
-		ai_will_do = {
-			base = 5
-		}
-		available = {
-		}
-		available_if_capitulated = no
-		cancel_if_invalid = yes
-		completion_reward = {
-			add_popularity = {
-				ideology = fascism
-				popularity = -0.1
-			}
 		}
 	}
 	shared_focus = {
@@ -2443,10 +2553,10 @@
 		id = GEU_army_14
 		icon = GFX_GRU_panzergrenadiere
 		prerequisite = {
-			focus = GEU_army_13
+			focus = GEU_country_people_army
 		}
-		relative_position_id = GEU_army_13
-		x = 1
+		relative_position_id = GEU_country_people_army
+		x = -6
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2462,7 +2572,7 @@
 			add_tech_bonus = {
 				bonus = 1
 				ahead_reduction = 1
-				uses = 1
+				uses = 2
 				category = armor
 			}
 		}
@@ -2472,10 +2582,10 @@
 		id = GEU_army_15
 		icon = GFX_GEU_better_chanxian
 		prerequisite = {
-			focus = GEU_army_13
+			focus = GEU_army_14
 		}
-		relative_position_id = GEU_army_13
-		x = -1
+		relative_position_id = GEU_army_14
+		x = 1
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2497,9 +2607,6 @@
 		icon = GFX_GRU_ground_support_focu
 		prerequisite = {
 			focus = GEU_army_14
-		}
-		prerequisite = {
-			focus = GEU_army_15
 		}
 		relative_position_id = GEU_army_14
 		x = -1
@@ -2526,7 +2633,7 @@
 			focus = GEU_country_people_army
 		}
 		relative_position_id = GEU_country_people_army
-		x = -6
+		x = -10
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2549,12 +2656,12 @@
 	shared_focus = {
 		#重建造船厂
 		id = GEU_navy_02
-		icon = GFX_GRU_submarine_focus
+		icon = GFX_goal_generic_expand_the_naval_industry
 		prerequisite = {
 			focus = GEU_navy_01
 		}
 		relative_position_id = GEU_navy_01
-		x = 0
+		x = -1
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2563,6 +2670,9 @@
 			base = 5
 		}
 		available = {
+			any_controlled_state = {
+				is_coastal = yes
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
@@ -2611,12 +2721,12 @@
 	shared_focus = {
 		#海军军校
 		id = GEU_navy_03
-		icon = GFX_GRU_submarine_focus
+		icon = GFX_goal_generic_naval_academy
 		prerequisite = {
-			focus = GEU_navy_02
+			focus = GEU_navy_01
 		}
-		relative_position_id = GEU_navy_02
-		x = 0
+		relative_position_id = GEU_navy_01
+		x = 1
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2635,12 +2745,15 @@
 	shared_focus = {
 		#新时代海军
 		id = GEU_navy_04
-		icon = GFX_GRU_submarine_focus
+		icon = GFX_goal_generic_design_equipment_standards
+		prerequisite = {
+			focus = GEU_navy_02
+		}
 		prerequisite = {
 			focus = GEU_navy_03
 		}
-		relative_position_id = GEU_navy_03
-		x = 0
+		relative_position_id = GEU_navy_02
+		x = 1
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2662,6 +2775,75 @@
 		}
 	}
 	shared_focus = {
+		#深海幽狼
+		id = GEU_Deep_Sea_Wolves
+		icon = GFX_goal_generic_submarine
+		prerequisite = {
+			focus = GEU_navy_04
+		}
+		relative_position_id = GEU_navy_04
+		x = -2
+		y = 1
+		cost = 5
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 5
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	shared_focus = {
+		#重炮巨舰
+		id = GEU_Heavy_artillery_giants
+		icon = GFX_generic_multiple_ships
+		prerequisite = {
+			focus = GEU_navy_04
+		}
+		relative_position_id = GEU_navy_04
+		x = 0
+		y = 1
+		cost = 5
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 5
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	shared_focus = {
+		#航空母舰
+		id = GEU_aircraft_carrier
+		icon = GFX_goal_carrier
+		prerequisite = {
+			focus = GEU_navy_04
+		}
+		relative_position_id = GEU_navy_04
+		x = 2
+		y = 1
+		cost = 5
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 5
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	shared_focus = {
 		#德意志空军
 		id = GEU_air_01
 		icon = GFX_GRU_fighter_focus
@@ -2669,7 +2851,7 @@
 			focus = GEU_country_people_army
 		}
 		relative_position_id = GEU_country_people_army
-		x = 6
+		x = 10
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2688,12 +2870,12 @@
 	shared_focus = {
 		#保卫我们的天空
 		id = GEU_air_02
-		icon = GFX_GRU_fighter_focus
+		icon = GFX_focus_eng_special_air_service
 		prerequisite = {
 			focus = GEU_air_01
 		}
 		relative_position_id = GEU_air_01
-		x = 0
+		x = -1
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2713,43 +2895,14 @@
 		}
 	}
 	shared_focus = {
-		#喷气式引擎研发
-		id = GEU_air_03
-		icon = GFX_GRU_fighter_focus
-		prerequisite = {
-			focus = GEU_air_02
-		}
-		relative_position_id = GEU_air_02
-		x = 0
-		y = 1
-		cost = 5
-		allow_branch = {
-		}
-		ai_will_do = {
-			base = 5
-		}
-		available = {
-		}
-		available_if_capitulated = no
-		cancel_if_invalid = yes
-		completion_reward = {
-			add_tech_bonus = {
-				bonus = 3
-				ahead_reduction = 1
-				uses = 1
-				category = jet_technology
-			}
-		}
-	}
-	shared_focus = {
 		#新一代飞行器
 		id = GEU_air_04
-		icon = GFX_GRU_fighter_focus
+		icon = GFX_focus_generic_air_research_boost
 		prerequisite = {
-			focus = GEU_air_03
+			focus = GEU_air_01
 		}
-		relative_position_id = GEU_air_03
-		x = 0
+		relative_position_id = GEU_air_01
+		x = 1
 		y = 1
 		cost = 5
 		allow_branch = {
@@ -2766,8 +2919,105 @@
 				bonus = 1
 				ahead_reduction = 1
 				uses = 3
-				category = jet_technology
+				category = air_equipment
 			}
 		}
 	}
+	#德意志空军荣耀
+	shared_focus = {
+		id = GEU_Glory_to_German_Air_Force
+		icon = GFX_goal_generic_air_wing
+		prerequisite = {
+			focus = GEU_air_02
+		}
+		prerequisite = {
+			focus = GEU_air_04
+		}
+		relative_position_id = GEU_air_02
+		x = 1
+		y = 1
+		cost = 5
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 5
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#辅助陆军
+	shared_focus = {
+		id = GEU_Auxiliary_Army
+		icon = GFX_goal_generic_air_CAS_new
+		prerequisite = {
+			focus = GEU_Glory_to_German_Air_Force
+		}
+		relative_position_id = GEU_Glory_to_German_Air_Force
+		x = 2
+		y = 1
+		cost = 5
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 5
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#空中决战
+	shared_focus = {
+		id = GEU_Aerial_showdown
+		icon = GFX_goal_generic_air_fighter_new
+		prerequisite = {
+			focus = GEU_Glory_to_German_Air_Force
+		}
+		relative_position_id = GEU_Glory_to_German_Air_Force
+		x = 0
+		y = 1
+		cost = 5
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 5
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+	#辅助海军
+	shared_focus = {
+		id = GEU_Auxiliary_Navy
+		icon = GFX_goal_generic_air_naval_bomber_new
+		prerequisite = {
+			focus = GEU_Glory_to_German_Air_Force
+		}
+		relative_position_id = GEU_Glory_to_German_Air_Force
+		x = -2
+		y = 1
+		cost = 5
+		allow_branch = {
+		}
+		ai_will_do = {
+			base = 5
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+		}
+	}
+
+
 
