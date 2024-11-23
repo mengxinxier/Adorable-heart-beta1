@@ -867,32 +867,8 @@ focus_tree = {
 		}
 		search_filters = {FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH}
 		completion_reward = {
-			
-			if = {
-				limit = {
-					num_subjects > 0
-				}
-				add_ideas = SOV_comecon_sov_default
-				custom_effect_tooltip = SOV_found_the_comecon_subjects_tt
-				every_other_country = {
-					limit = {
-						is_subject_of = ROOT
-					}
-					add_ideas = SOV_comecon_puppet_default
-				}
-			}
-			else = { #Early tooltip for when Soviets have no subjects
-				effect_tooltip = {
-					add_ideas = SOV_comecon_sov_default
-				}
-				custom_effect_tooltip = SOV_found_the_comecon_subjects_tt
-				effect_tooltip = {
-					add_ideas = SOV_comecon_puppet_default
-				}
-				custom_effect_tooltip = SOV_found_the_comecon_program_tt
-			}
-
-			unlock_decision_category_tooltip = SOV_comecon_dec_cat
+			add_ideas = SOV_comecon_sov_default
+			custom_effect_tooltip = KMK_decision_puppet_kmk_join
 		}
 	}
 	focus = {
@@ -1823,11 +1799,6 @@ focus_tree = {
 				target = SOV
 				type = annex_everything
 			}
-			SOV = {
-				SOV_Sakura = {
-					set_nationality = KMK
-				}
-			}
 		}
 		will_lead_to_war_with = SOV
 	}
@@ -1841,27 +1812,39 @@ focus_tree = {
 		relative_position_id = KMK_r
 		cost = 5
 		available = {
-			SOV = {
-			is_subject_of = ROOT
-		}
+			or = {
+				not= {country_exists = SOV}
+				SOV = {is_puppet_of = KMK}
+				SOV = {surrender_progress > 0.8}
+			}
 		}
 		completion_reward = {
-			SOV_Sakura = {
-					set_nationality = SOV
-			}
-			SOV_Sakura= {
-				add_country_leader_role = {
-					country_leader = {
-						desc = "SOV_Sakura_desc"
-						ideology = leninism
-						traits = {
-							Sakura_cards
-						}
-						expire = "1999.1.1.1"
-					}
+			SOV = {
+				create_country_leader = {
+					name = SOV_Sakura
+					picture = "gfx/leaders/SOV/Sakura.dds"
+					desc = SOV_Sakura_country_leader_desc
+					ideology = leninism
+					traits = { Sakura_cards }
+					expire = "1965.1.1"
 				}
 			}
-			SOV = {retire_country_leader = yes}
+			if = {
+				limit = {
+					not= {country_exists = SOV}
+				}
+				every_state = {
+					limit = {is_core_of = SOV}
+					SOV = {
+						transfer_state = PREV
+					}
+				}
+				puppet = SOV
+				else = {
+					white_peace = SOV
+					puppet = SOV
+				}
+			}
 		}
 	}
 	focus = {
