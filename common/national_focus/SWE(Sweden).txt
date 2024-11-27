@@ -1,3 +1,10 @@
+#!gfx:interface\generic_goals.gfx
+#!gfx:interface\ICON_SOV.gfx
+#!gfx:interface\ICON_UKR.gfx
+#!gfx:interface\ICON_GEU.gfx
+#!gfx:interface\ICON_GER.gfx
+#!gfx:interface\ICON_FRA.gfx
+#!gfx:interface\ICON_SWE.gfx
 focus_tree = {
 	id = SWE_focus_tree
 	country = {
@@ -5670,6 +5677,8 @@ focus_tree = {
 			base = 20
 		}
 		available = {
+			is_subject = no
+			has_war = no
 		}
 		bypass = {
 		}
@@ -5943,15 +5952,16 @@ focus_tree = {
 		}
 		relative_position_id = SWE_government_weapons_contract
 		ai_will_do = {
-			base = 0
+			base = 10
 		}
 		allow_branch = {
-			always = no
+			#always = no
 		}
 		mutually_exclusive = {
 			focus = SWE_Tear_up_treaty
 		}
 		available = {
+			has_idea = GER_Treaty_of_Gotland_for_SWE
 		}
 		bypass = {
 		}
@@ -5959,12 +5969,13 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			unlock_decision_category_tooltip = SWE_GER_Communication
 		}
 	}
 	###成立瑞德友谊大学
 	focus = {
 		id = SWE_Establish_Friendship_University_of_GER_SWE
-		icon = GFX_focus_SWE_landsve
+		icon = GFX_goal_research_silver_cooperation
 		x = -2
 		y = 1
 		cost = 5
@@ -5976,6 +5987,7 @@ focus_tree = {
 			base = 0
 		}
 		available = {
+			has_idea = GER_Treaty_of_Gotland_for_SWE
 		}
 		bypass = {
 		}
@@ -5983,12 +5995,13 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			add_research_slot = 1
 		}
 	}
 	##收留德国难民
 	focus = {
 		id = SWE_Reception_of_Germany_refugees
-		icon = GFX_focus_SWE_landsve
+		icon = GFX_goal_generic_destruction_civil_war
 		x = 0
 		y = 1
 		cost = 5
@@ -6000,6 +6013,7 @@ focus_tree = {
 			base = 0
 		}
 		available = {
+			has_idea = GER_Treaty_of_Gotland_for_SWE
 		}
 		bypass = {
 		}
@@ -6007,12 +6021,16 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			add_timed_idea = {
+				idea = SWE_Reception_of_Germany_refugees_idea
+				days = 365
+			}
 		}
 	}
 	##邀请德国技工
 	focus = {
 		id = SWE_invite_Germany_mechanics
-		icon = GFX_focus_SWE_landsve
+		icon = GFX_focus_GER_the_four_year_plan
 		x = 0
 		y = 1
 		cost = 5
@@ -6027,6 +6045,7 @@ focus_tree = {
 			base = 0
 		}
 		available = {
+			has_idea = GER_Treaty_of_Gotland_for_SWE
 		}
 		bypass = {
 		}
@@ -6034,12 +6053,16 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = GER_Treaty_of_Gotland_for_SWE
+				add_idea = GER_Treaty_of_Gotland_for_SWE_1
+			}
 		}
 	}
 	##加入轴心国
 	focus = {
 		id = SWE_add_to_AXIS
-		icon = GFX_focus_SWE_landsve
+		icon = GFX_befriend_GER
 		x = 0
 		y = 1
 		cost = 5
@@ -6051,6 +6074,21 @@ focus_tree = {
 			base = 0
 		}
 		available = {
+			not = { has_government = communism }
+			is_subject = no
+			is_in_faction = no
+			custom_trigger_tooltip = {
+				tooltip = DEN_SWE_war_has_end
+				or = {
+					has_completed_focus = SWE_The_mighty_man_triumphed
+					has_completed_focus = SWE_Defeat_Karma_again
+				}
+			}
+			GER = {
+				is_faction_leader = yes
+				has_government = fascism
+			}
+			not = { has_war_with = GER }
 		}
 		bypass = {
 		}
@@ -6058,6 +6096,9 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			GER = {
+				country_event = generic.2002
+			}
 		}
 	}
 	##撕毁条约
@@ -6075,15 +6116,14 @@ focus_tree = {
 			base = 0
 		}
 		allow_branch = {
-			always = no
+			#always = no
 		}
 		mutually_exclusive = {
 			focus = SWE_Deepening_German_Swiss_relations
 		}
 		available = {
-			NOT = {
-				has_war_with = GER
-			}
+			NOT = { has_war_with = GER }
+			NOT = { has_war_with = KMS }
 		}
 		bypass = {
 		}
@@ -6091,12 +6131,36 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			add_war_support = 0.1
+			remove_ideas = GER_Treaty_of_Gotland_for_SWE
+			remove_from_tech_sharing_group = AXIS_Vienna_Society
+			remove_opinion_modifier = {
+				target = GER
+				modifier = Treaty_of_Germany_and_Sweden
+			}
+			KMS = {
+				add_opinion_modifier = {
+					target = SWE
+					modifier = SWE_Tear_up_treaty
+				}
+			}
+			GER = {
+				remove_opinion_modifier = {
+					target = SWE
+					modifier = Treaty_of_Germany_and_Sweden
+				}
+				add_opinion_modifier = {
+					target = SWE
+					modifier = SWE_Tear_up_treaty
+				}
+				remove_ideas = GER_Treaty_of_Gotland
+			}
 		}
 	}
 	##封锁哥得兰
 	focus = {
 		id = SWE_Blockade_of_Gotland
-		icon = GFX_focus_generic_annex_countr
+		icon = GFX_focus_SWE_coastal_support
 		x = 2
 		y = 1
 		cost = 5
@@ -6108,9 +6172,8 @@ focus_tree = {
 			base = 0
 		}
 		available = {
-			NOT = {
-				has_war_with = GER
-			}
+			NOT = { has_war_with = GER }
+			NOT = { has_war_with = KMS }
 		}
 		bypass = {
 		}
@@ -6118,12 +6181,14 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			add_war_support = 0.1
+			KMS = { add_ideas = SWE_Blockade_of_Swedish_Navy }
 		}
 	}
 	##准备登陆作战
 	focus = {
 		id = SWE_Prepare_for_landing_operations
-		icon = GFX_focus_generic_annex_countr
+		icon = GFX_goal_generic_landing_craft
 		x = 0
 		y = 1
 		cost = 5
@@ -6135,9 +6200,8 @@ focus_tree = {
 			base = 0
 		}
 		available = {
-			NOT = {
-				has_war_with = GER
-			}
+			NOT = { has_war_with = GER }
+			NOT = { has_war_with = KMS }
 		}
 		bypass = {
 		}
@@ -6145,12 +6209,23 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			add_tech_bonus = {
+				name = SWE_Prepare_for_landing_operations
+				bonus = 1.0
+				ahead_reduction = 1
+				uses = 1
+				category = tp_tech
+			}
+			add_timed_idea = {
+				idea = SWE_Prepare_for_landing_operations_idea
+				days = 365
+			}
 		}
 	}
 	##启动哥得兰冲突
 	focus = {
 		id = SWE_Initiating_conflict_in_Gotland
-		icon = GFX_focus_generic_annex_countr
+		icon = GFX_goal_SWE_expand_livgardet
 		x = 0
 		y = 1
 		cost = 5
@@ -6165,9 +6240,8 @@ focus_tree = {
 			base = 0
 		}
 		available = {
-			NOT = {
-				has_war_with = GER
-			}
+			NOT = { has_war_with = GER }
+			NOT = { has_war_with = KMS }
 		}
 		bypass = {
 		}
@@ -6175,12 +6249,17 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			add_timed_idea = {
+				idea = SWE_Initiating_conflict_in_Gotland_idea
+				days = 100
+			}
+			declare_war_on = { target = KMS type = annex_everything }
 		}
 	}
 	##组建瑞典科学院
 	focus = {
 		id = SWE_Establish_Sweden_Academy_of_Sciences
-		icon = GFX_focus_generic_annex_countr
+		icon = GFX_goal_SWE_cvm
 		x = 0
 		y = 1
 		cost = 5
@@ -6192,9 +6271,7 @@ focus_tree = {
 			base = 0
 		}
 		available = {
-			NOT = {
-				has_war_with = GER
-			}
+			has_war = no
 		}
 		bypass = {
 		}
@@ -6202,6 +6279,7 @@ focus_tree = {
 		continue_if_invalid = no
 		available_if_capitulated = no
 		completion_reward = {
+			add_research_slot = 1
 		}
 	}
 	focus = {
