@@ -521,46 +521,136 @@ GEU_special_weapon = {
 	}
 }
 
-GEU_fourth_international = {
-	GEU_invite_new_firend = {
+GEU_Diplomatic_matters = {
+	GEU_diplo_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
 		target_trigger = {
+			ROOT = { is_subject = no }
 			FROM = {
-				has_government = communism
-				is_in_faction = no
 				not = {
-					has_country_flag = GEU_invite_new_firend_already
-				}
-				not = {
-					is_in_faction_with = ROOT
-				}
-				not = {
-					has_war_with = ROOT
-				}
-				is_subject = no
-				not = {
-					tag = AHM
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
 				}
 			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = GEU_war_plan_going_on
+			}
+			or = {
+				any_home_area_neighbor_country = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				any_allied_country = {
+					any_home_area_neighbor_country = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = GEU_war_plan_going_on
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		remove_effect = {
+			clr_country_flag = GEU_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	GEU_diplo_invite_FROM = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			always = no
+		}
+		target_trigger = {
 			ROOT = {
 				is_subject = no
 				is_faction_leader = yes
 			}
-		}
-		cost = 10
-		days_remove = 7
-		remove_effect = {
 			FROM = {
-				set_country_flag = GEU_invite_new_firend_already
-				country_event = {
-					id = germany_union.0016
+				not = { has_country_flag = GEU_diplo_invite_FROM }
+			}
+		}
+		available = {
+			is_faction_leader = yes
+			has_government = communism
+			FROM = {
+				has_government = communism
+				is_in_faction = no
+			}
+			not = {
+				or = {
+					has_war_with = FROM
+					is_in_faction_with = FROM
 				}
 			}
 		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = {
+				set_country_flag = GEU_diplo_invite_FROM
+				country_event = {
+					id = generic.2008
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
 	}
-	GEU_guli_sov = {
+	GEU_Discord_sov = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			always = no
+		}
 		target_trigger = {
 			SOV = {
 				is_faction_leader = yes
+				has_government = communism
 			}
 			FROM = {
 				has_government = communism
@@ -584,8 +674,26 @@ GEU_fourth_international = {
 				is_faction_leader = yes
 			}
 		}
+		available = {
+			is_faction_leader = yes
+			has_government = communism
+			FROM = {
+				has_government = communism
+				custom_trigger_tooltip = {
+					tooltip = is_in_third_international
+					is_in_third_international = yes
+				}
+			}
+			not = {
+				or = {
+					has_war_with = FROM
+					is_in_faction_with = FROM
+				}
+			}
+		}
 		cost = 10
-		days_remove = 7
+		days_remove = 15
+		war_with_target_on_remove = yes
 		remove_effect = {
 			FROM = {
 				set_country_flag = GEU_invite_new_firend_already
@@ -594,18 +702,119 @@ GEU_fourth_international = {
 				}
 			}
 		}
+		ai_will_do = {
+			base = 1000
+		}
 	}
 }
 
-GEU_lingtuwanzheng = {
-	GEU_lingtutanpan = {
+GEU_Rose_International = {
+	GEU_invite_FROM_add_to_Rose_International = {
+		icon = GFX_GEU_Rose_International_decision
+		allowed = {
+			is_germany_tag = yes
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				not_in_any_economy_faction = yes
+				or = {
+					has_government = communism
+					has_country_leader_ideology = socialism
+				}
+				not = { has_country_flag = GEU_invite_FROM_add_to_Rose_International }
+				not = { has_idea = GEU_Rose_International_idea }
+			}
+		}
+		target_array = allies
+		available = {
+			FROM = {
+				custom_trigger_tooltip = {
+					tooltip = has_left_government
+					or = {
+						has_government = communism
+						has_country_leader_ideology = socialism
+					}
+				}
+			}
+			not = { has_war_with = FROM }
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = {
+				set_country_flag = GEU_invite_FROM_add_to_Rose_International
+				country_event = {
+					id = germany_union.0038
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	GEU_invite_FROM_add_to_Rose_International_neutral = {
+		icon = GFX_GEU_Rose_International_decision
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				not_in_any_economy_faction = yes
+				or = {
+					has_government = communism
+					has_country_leader_ideology = socialism
+				}
+				not = { has_country_flag = GEU_invite_FROM_add_to_Rose_International }
+				not = { has_idea = GEU_Rose_International_idea }
+			}
+		}
+		available = {
+			FROM = {
+				custom_trigger_tooltip = {
+					tooltip = has_left_government
+					or = {
+						has_government = communism
+						has_country_leader_ideology = socialism
+					}
+				}
+			}
+			not = { has_war_with = FROM }
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = {
+				set_country_flag = GEU_invite_FROM_add_to_Rose_International
+				country_event = {
+					id = germany_union.0038
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
+GEU_Territorial_issues = {
+	GEU_Territorial_negotiations = {
 		target_trigger = {
 			FROM = {
 				any_controlled_state = {
 					has_state_flag = L_GER
 				}
 				not = {
-					has_country_flag = GEU_lingtutanpan_already
+					has_country_flag = GEU_Territorial_negotiations_already
 				}
 			}
 			ROOT = {
@@ -616,6 +825,7 @@ GEU_lingtuwanzheng = {
 		days_remove = 7
 		remove_effect = {
 			FROM = {
+				set_country_flag = GEU_Territorial_negotiations_already
 				country_event = {
 					id = germany_union.0021
 					days = 1
@@ -641,7 +851,7 @@ GEU_Spread_the_revolution = {
 				is_subject = no
 			}
 		}
-		cost = 100
+		cost = 30
 		days_remove = 30
 		remove_effect = {
 			if = {
@@ -677,4 +887,211 @@ GEU_Spread_the_revolution = {
 			}
 		}
 	}
+
+	GER_volkskommissariat_industrial_effort_decision = {
+		icon = GFX_decision_generic_construction
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = GER_industrialize_volkskommissariats
+			NOT = { has_country_flag = GER_currently_improving_volkskommissariat_flag }
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 2
+		}
+		cost = 15
+		modifier = {
+			civilian_factory_use = 3
+		}
+		days_remove = 30
+		fire_only_once = yes
+		target_array = ROOT.subjects
+		target_trigger = {
+			FROM = {
+				has_autonomy_state = autonomy_volkskommissariat
+			}
+		}
+		complete_effect = {
+			set_country_flag = GER_currently_improving_volkskommissariat_flag
+		}
+		remove_effect = {
+			clr_country_flag = GER_currently_improving_volkskommissariat_flag
+			FROM = {
+				random_owned_controlled_state = {
+					limit = {
+						is_capital = yes
+					}
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+					add_extra_state_shared_building_slots = 2
+				}
+				country_event = {
+					id = germany_union.0040
+					hours = 6
+				}
+			}
+		}
+	}
 }
+
+War_against_DVL_decision = {
+	The_war_escalated = {
+		icon = GFX_decision_generic_ignite_civil_war
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				has_war = no
+			}
+		}
+		cancel_effect = {
+			hidden_effect = {
+				if = {
+					limit = {
+						not = { check_variable = { global.War_against_DVL_Var < 2 } }
+					}
+					GER = {
+						dismantle_faction = yes
+						create_faction = Axis
+						add_to_faction = ITA
+						add_to_faction = KMS
+					}
+					BAY = { drop_cosmetic_tag = yes }
+					RHI = { drop_cosmetic_tag = yes }
+				}
+			}
+		}
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = The_war_escalated
+			}
+			add_to_variable = { global.War_against_DVL_Var = 1 }
+			if = {
+				limit = {
+					not = { check_variable = { global.War_against_DVL_Var < 2 } }
+					not = { has_global_flag = The_war_escalated_level_2 }
+				}
+				set_global_flag = The_war_escalated_level_2
+				GER = {
+					set_faction_name = Second_Alliance_against_DVL
+					if = {
+						limit = {
+							RHI = { is_subject = no }
+						}
+						add_to_faction = RHI
+					}
+					if = {
+						limit = {
+							BAY = { is_subject = no }
+						}
+						add_to_faction = BAY
+					}
+				}
+				every_state = {
+					limit = {
+						has_state_flag = Weimar_GER
+						NOT = {
+							or = {
+								is_core_of = BAY
+								is_claimed_by = BAY
+							}
+						}
+					}
+					add_claim_by = BAY
+				}
+				every_state = {
+					limit = {
+						has_state_flag = Weimar_GER
+						NOT = {
+							or = {
+								is_core_of = RHI
+								is_claimed_by = RHI
+							}
+						}
+					}
+					add_claim_by = RHI
+				}
+				DVL = { add_ideas = DVL_Morale_is_low }
+			}
+			if = {
+				limit = {
+					not = { check_variable = { global.War_against_DVL_Var < 3 } }
+					not = { has_global_flag = The_war_escalated_level_3 }
+				}
+				set_global_flag = The_war_escalated_level_3
+				GER = {
+					if = {
+						limit = {
+							CZE = { is_subject = no }
+						}
+						add_to_faction = CZE
+					}
+					if = {
+						limit = {
+							DEN = { is_subject = no }
+						}
+						add_to_faction = DEN
+					}
+				}
+			}
+			if = {
+				limit = {
+					not = { check_variable = { global.War_against_DVL_Var < 4 } }
+					not = { has_global_flag = The_war_escalated_level_4 }
+				}
+				set_global_flag = The_war_escalated_level_4
+				GER = {
+					if = {
+						limit = {
+							POL = { is_subject = no }
+						}
+						add_to_faction = POL
+					}
+				}
+			}
+			if = {
+				limit = {
+					not = { check_variable = { global.War_against_DVL_Var < 5 } }
+					not = { has_global_flag = The_war_escalated_level_5 }
+				}
+				set_global_flag = The_war_escalated_level_5
+				GER = {
+					if = {
+						limit = {
+							FRA = { is_subject = no }
+						}
+						add_to_faction = FRA
+					}
+					if = {
+						limit = {
+							KMK = { is_subject = no }
+						}
+						add_to_faction = KMK
+					}
+				}
+			}
+		}
+	}
+}
+
+
