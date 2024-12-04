@@ -1,0 +1,425 @@
+focus_tree = {
+	id = Free_france_focus
+	country = {
+		factor = 0
+		#modifier = {
+		#	add = 10
+		#	tag = LIB
+		#}
+	}
+	default = no
+
+	continuous_focus_position = { x = 900 y = 800 }
+
+	### Politics ###
+
+	focus = {#向贤者妥协
+		id = LIB_election
+		icon = GFX_goal_LIB_tuc
+		cost = 5
+		x = 3
+		y = 0
+		cancelable = no
+		ai_will_do = { factor = 10 }
+		select_effect = {
+			country_event = { id = LIB.2 days = 10 }
+		}
+		completion_reward = {
+			custom_effect_tooltip = LIB_start
+			hidden_effect = {
+				country_event = { id = LIB.1 days = 1 }
+			}
+		}
+	}
+
+	focus = {#探女的计划
+		id = LIB_sagume_plan
+		icon = GFX_socialist_constitution
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = -2
+		y = 1
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_election
+		}
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			add_ideas = LIB_sagume_plan_idea
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# Dissolve the TUC
+		id = LIB_dissolve_tuc
+		icon = GFX_goal_DEI_focus_disband_volksraad
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = -3
+		y = 2
+
+		available = {
+			has_government = radical_socialist
+		}
+		prerequisite = {
+			focus = LIB_sagume_plan
+		}
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				add = 15
+				has_game_rule = { rule = LIB_path option = LIB_PATH_EDWARDS_SYNDIE }
+			}
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus LIB_dissolve_tuc"
+			add_stability = -0.10
+			custom_effect_tooltip = LIB_dissolve_tuc_tp
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# A New Capital
+		id = LIB_new_capital
+		icon = GFX_focus_prc_agrarian_socialism
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = -1
+		y = 2
+
+		available = {
+			has_government = radical_socialist
+		}
+		prerequisite = {
+			focus = LIB_sagume_plan
+		}
+		prerequisite = {
+			focus = LIB_yokari_builing
+		}
+		ai_will_do = {
+			factor = 15
+			modifier = {
+				factor = 0
+				has_game_rule = { rule = LIB_path option = LIB_PATH_EDWARDS_SYNDIE }
+			}
+		}
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus LIB_new_capital"
+			set_capital = { state = 128 }
+			custom_effect_tooltip = LIB_new_capital_tp
+		}
+	}
+
+	focus = {# 探女
+		id = LIB_sagume
+		icon = GFX_goal_ideology_radical_socialist
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = -2
+		y = 4
+
+		prerequisite = {
+			focus = LIB_election2
+		}
+		mutually_exclusive = {
+			focus = LIB_yukari
+			focus = LIB_okina
+		}
+		available = {
+			has_government = radical_socialist
+			has_war = no
+			OR = {
+				NOT = { country_exists = GER }
+				NOT = { country_exists = FRA }
+			}
+		}
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus LIB_sagume"
+			hidden_effect = {
+				SCO = {
+					add_state_core = 133
+					add_state_core = 121
+					add_state_core = 136
+					add_state_core = 120
+					add_state_core = 938
+				}
+				WLS = {
+					add_state_core = 122
+					add_state_core = 957
+				}
+				release = WLS
+				release = SCO
+				LIB_niclas_y_glais = { set_nationality = WLS }
+				WLS = {
+					promote_character = LIB_niclas_y_glais
+					set_country_leader_description = { ideology = radical_socialist desc = LIB_niclas_y_glais_WLS_leader_desc }
+				}
+				LIB_willie_gallacher = { set_nationality = SCO }
+				SCO = {
+					promote_character = LIB_willie_gallacher
+					set_country_leader_description = { ideology = syndicalist desc = SCO_william_gallacher_leader_desc }
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_completed_focus = LIB_dissolve_tuc }
+				}
+				set_autonomy = {
+					target = WLS
+					autonomy_state = autonomous_territory
+					freedom_level = 0.3
+					end_wars = no
+				}
+				set_autonomy = {
+					target = SCO
+					autonomy_state = autonomous_territory
+					freedom_level = 0.3
+					end_wars = no
+				}
+				hidden_effect = {
+					LIB = { create_communal_government = yes }
+				}
+			}
+			else = {
+				effect_tooltip = {
+					release = WLS
+					release = SCO
+				}
+				set_cosmetic_tag = LIB_LIBland
+				set_politics = {
+					ruling_party = syndicalist
+					elections_allowed = no
+				}
+				promote_character = LIB_ebby_edwards
+			}
+			if = {
+				limit = { is_faction_leader = yes }
+				add_to_faction = WLS
+				add_to_faction = SCO
+			}
+			else_if = {
+				limit = {
+					is_in_faction = yes
+					is_faction_leader = no
+				}
+				faction_leader = {
+					add_to_faction = WLS
+					add_to_faction = SCO
+				}
+			}
+			hidden_effect = {
+				add_opinion_modifier = { target = SCO modifier = KR_close_allies }
+				reverse_add_opinion_modifier = { target = SCO modifier = KR_LIBerated_us }
+				add_opinion_modifier = { target = WLS modifier = KR_close_allies }
+				reverse_add_opinion_modifier = { target = WLS modifier = KR_LIBerated_us }
+				send_equipment_fraction = { target = WLS value = 0.25 }
+				send_equipment_fraction = { target = SCO value = 0.25 }
+				WLS = {
+					WLS_create_radical_socialist_government = yes
+					transfer_technology = yes
+					load_oob = WLS_three_armies
+				}
+				SCO = {
+					SCO_create_syndicalist_government = yes
+					transfer_technology = yes
+					load_oob = SCO_three_armies
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION FOCUS_FILTER_TFV_AUTONOMY }
+	}
+
+	focus = {# 八云紫重组内阁
+		id = LIB_yokari_builing
+		icon = GFX_goal_LIB_marxism_macdonaldism
+		cost = 5
+
+		relative_position_id = LIB_election
+		x = 0
+		y = 1
+
+		available = {
+			has_government = syndicalist
+		}
+		prerequisite = {
+			focus = LIB_election
+		}
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			add_political_power = 50
+			add_stability = 0.05
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {# 紫
+		id = LIB_yukari
+		icon = GFX_goal_ideology_syndicalist
+		cost = 6
+
+		relative_position_id = LIB_election
+		x = 0
+		y = 4
+
+		available = {
+			has_government = syndicalist
+		}
+		prerequisite = {
+			focus = LIB_election2
+		}
+		mutually_exclusive = {
+			focus = LIB_sagume
+			focus = LIB_okina
+		}
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus LIB_yukari"
+			add_stability = 0.1
+		}
+		search_filters = { FOCUS_FILTER_STABILITY }
+	}
+
+	focus = {#摩多罗重返幻想乡
+		id = LIB_okina_return
+		icon = GFX_goal_NOR_secret_police
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = 2
+		y = 1
+
+		available = {
+			has_government = totalist
+		}
+		prerequisite = {
+			focus = LIB_election
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			add_political_power = -100
+			add_popularity = { ideology = totalist popularity = 0.05 }
+			add_ideas = LIB_okina_return_idea
+		}
+		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {# 联合幻想乡
+		id = LIB_united_fra
+		icon = GFX_focus_hol_united_netherlands
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = 1
+		y = 2
+
+		available = {
+			has_government = totalist
+		}
+		prerequisite = {
+			focus = LIB_yokari_builing
+		}
+		prerequisite = {
+			focus = LIB_okina_return
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus LIB_united_fra"
+			add_war_support = 0.1
+			add_popularity = { ideology = totalist popularity = 0.05 }
+		}
+		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
+	}
+
+	focus = {# The Grand Protector
+		id = LIB_merge
+		icon = GFX_goal_authoritarian
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = 3
+		y = 2
+
+		available = {
+			has_government = totalist
+		}
+		prerequisite = {
+			focus = LIB_okina_return
+		}
+		ai_will_do = { factor = 50 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus LIB_merge"
+			add_popularity = { ideology = totalist popularity = 0.10 }
+			add_trait = {
+				character = LIB_oswald_mosley
+				ideology = totalist_subtype
+				trait = LIB_grand_protector
+			}
+		}
+	}
+
+	focus = {# 摩多罗
+		id = LIB_okina
+		icon = GFX_goal_ideology_totalist
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = 2
+		y = 4
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_election2
+		}
+		mutually_exclusive = {
+			focus = LIB_yukari
+			focus = LIB_sagume
+		}
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+			log = "[GetDateText]: [Root.GetName]: Focus LIB_okina_return"
+			add_political_power = -150
+			add_popularity = { ideology = totalist popularity = 0.05 }
+			custom_effect_tooltip = LIB_okina_return_tp
+			hidden_effect = { country_event = uob.201 }
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+
+	focus = {#稳定政局
+		id = LIB_election2
+		icon = GFX_goal_HOL_council_communism
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = 0
+		y = 3
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_united_fra
+		}
+		prerequisite = {
+			focus = LIB_new_capital
+		}
+		prerequisite = {
+			focus = LIB_merge
+		}
+		prerequisite = {
+			focus = LIB_dissolve_tuc
+		}
+		ai_will_do = { factor = 1000 }
+		select_effect = {
+		}
+		completion_reward = {
+		}
+	}
+}
