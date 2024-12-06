@@ -615,7 +615,7 @@ JAP_peace_with_unit_font = {
 						}
 					}
 				}
-				#附庸国独立（中国区）
+				#附庸国独立（中国及朝鲜）
 				if = {
 					limit = { exists = yes }
 					every_country = {
@@ -627,7 +627,10 @@ JAP_peace_with_unit_font = {
 								has_military_access_to = PREV
 								gives_military_access_to = PREV
 							}
-							is_chinese_country = yes
+							or = {
+								is_chinese_country = yes
+								tag = KOR
+							}
 						}
 						diplomatic_relation = {
 							country = JAP
@@ -667,56 +670,95 @@ JAP_peace_with_unit_font = {
 				remove_core_of = JAP
 				remove_claim_by = JAP
 			}
-			#日本条约领
-			create_dynamic_country = {
-				original_tag = JAP
-				copy_tag = JAP
-				save_global_event_target_as = JAP_peace_conference_tag
-				set_country_flag = { flag = disabled_annexations days = 15 value = 1 }
-				set_politics = { ruling_party = neutrality }
-				set_political_party = { ideology = neutrality popularity = 100 }
-				ROOT = {
-					every_enemy_country = {
-						limit = { is_chinese_country = yes }
-						event_target:JAP_peace_conference_tag = {
-							add_to_war = {
-								targeted_alliance = ROOT
-								enemy = PREV
-							}
-						}
+			# #日本条约领
+			# create_dynamic_country = {
+			# 	original_tag = JAP
+			# 	copy_tag = JAP
+			# 	save_global_event_target_as = JAP_peace_conference_tag
+			# 	set_country_flag = { flag = disabled_annexations days = 15 value = 1 }
+			# 	set_politics = { ruling_party = neutrality }
+			# 	set_political_party = { ideology = neutrality popularity = 100 }
+			# 	ROOT = {
+			# 		every_enemy_country = {
+			# 			limit = { is_chinese_country = yes }
+			# 			event_target:JAP_peace_conference_tag = {
+			# 				add_to_war = {
+			# 					targeted_alliance = ROOT
+			# 					enemy = PREV
+			# 				}
+			# 			}
+			# 		}
+			# 		every_owned_state = {
+			# 			limit = {
+			# 				or = {
+			# 					has_state_flag = is_whole_chinese_state_area
+			# 					region = 191
+			# 				}
+			# 			}
+			# 			add_core_of = event_target:JAP_peace_conference_tag
+			# 			if = {
+			# 				limit = {
+			# 					OR = {
+			# 						is_fully_controlled_by = ROOT
+			# 						state = 745
+			# 					}
+			# 				}
+			# 				event_target:JAP_peace_conference_tag = { transfer_state = PREV }
+			# 			}
+			# 			else = {
+			# 				event_target:JAP_peace_conference_tag = { set_state_owner = PREV }
+			# 			}
+			# 		}
+			# 	}
+			# 	add_timed_idea = {
+			# 		idea = ready_to_surrender
+			# 		days = 15
+			# 	}
+			# 	set_cosmetic_tag = JAP_treaty
+			# 	every_enemy_country = {
+			# 		limit = { is_chinese_country = no }
+			# 		white_peace = { 
+			# 			tag = PREV
+			# 		}
+			# 	}
+			# }
+			#地块转移
+			every_state = {
+				limit = {
+					owner = { is_ally_with = ROOT }
+					or = {
+						has_state_flag = is_whole_chinese_state_area
+						region = 191
 					}
-					every_owned_state = {
-						limit = {
-							or = {
-								has_state_flag = is_whole_chinese_state_area
-								region = 191
-							}
-						}
-						add_core_of = event_target:JAP_peace_conference_tag
-						if = {
-							limit = {
-								OR = {
-									is_fully_controlled_by = ROOT
-									state = 745
-								}
-							}
-							event_target:JAP_peace_conference_tag = { transfer_state = PREV }
-						}
-						else = {
-							event_target:JAP_peace_conference_tag = { set_state_owner = PREV }
-						}
+					controller = {
+						is_chinese_country = yes
+						has_war_with = ROOT
 					}
 				}
-				add_timed_idea = {
-					idea = ready_to_surrender
-					days = 15
+				controller = {
+					if = {
+						limit = { is_subject = yes }
+						overlord = { transfer_state = PREV.PREV }
+					}
+					else = {
+						transfer_state = PREV
+					}
 				}
-				set_cosmetic_tag = JAP_treaty
+			}
+			every_state = {
+				limit = {
+					owner = { is_ally_with = ROOT }
+					or = {
+						has_state_flag = is_whole_chinese_state_area
+						region = 191
+					}
+				}
 				every_enemy_country = {
-					limit = { is_chinese_country = no }
-					white_peace = { 
-						tag = PREV
+					limit = {
+						is_chinese_country = yes
+						is_faction_leader = yes
 					}
+					transfer_state = PREV
 				}
 			}
 			#中国盟友-离开阵营
@@ -737,6 +779,10 @@ JAP_peace_with_unit_font = {
 					is_in_faction_with = JAP
 					is_chinese_country = no
 					has_capitulated = yes
+				}
+				if = {
+					limit = { is_subject = yes }
+					end_puppet_this = yes
 				}
 				leave_faction = yes
 			}
