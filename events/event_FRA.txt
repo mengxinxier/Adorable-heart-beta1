@@ -3249,7 +3249,6 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = FRA_Gensokyo.072.a
-		set_cosmetic_tag = FREE_FRA
 		FRA = {
 			FRA_Marisa = { set_nationality = ROOT }
 			FRA_Kamishirasawa_Keine = { set_nationality = ROOT }
@@ -3298,10 +3297,6 @@ country_event = {
 			custom_effect_tooltip = election_five_yeas_later
 			add_popularity = { ideology = democratic popularity = 0.5 }
 			set_variable = { ROOT.FRA_Ruling_Party_VAR = 5 }
-		}
-		every_state = {
-			limit = { has_state_flag = FRA_mainland_state }
-			add_core_of = ROOT
 		}
 		set_party_name = {
 			ideology = democratic
@@ -3398,14 +3393,51 @@ country_event = {
 	option = {
 		name = FRA_Gensokyo.077.a
 		set_global_flag = FRA_has_fallen
-		LIB = {
-			change_tag_from_ROOT = yes
-			end_puppet_this = yes
-			country_event = {
-				id = FRA_Gensokyo.072
-				hours = 1
+		transfer_navy = {
+			target = LIB
+		}
+		if = {
+			limit = {
+				DVL = { has_war_with = LIB } 
 			}
 		}
+		else = {
+			LIB = {
+				add_to_war = { targeted_alliance = FRA enemy = DVL }
+			}
+		}
+		add_victory_points = {
+			province = 11506
+			value = -50
+		}
+		add_victory_points = {
+			province = 1145
+			value = 50
+		}
+		add_victory_points = {
+			province = 7132
+			value = 25
+		}
+		LIB = {
+			add_ideas = LIB_never_surrunder
+			set_cosmetic_tag = FREE_FRA
+			annex_country = {
+				target = FRA
+				transfer_troops = yes
+			}
+			load_focus_tree = Free_france_focus
+			country_event = {
+				id = FRA_Gensokyo.072
+				days = 3
+			}
+			every_state = {
+				limit = { has_state_flag = FRA_mainland_state }
+				add_core_of = LIB
+			}
+			end_puppet_this = yes
+			change_tag_from_ROOT = yes
+		}
+		
 		hidden_effect = {
 			add_timed_idea = {
 				idea = ready_to_surrender
