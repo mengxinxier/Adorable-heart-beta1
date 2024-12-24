@@ -60,6 +60,7 @@ focus_tree = {
                         has_global_flag = MGU_COUP_AI_super_flag
                     }
                     add_ideas = MGU_COUP_AI_BUFF
+                    set_country_leader_ideology = Homura_subideology
                     add_popularity = { ideology = neutrality popularity = 0.25 }
                 }
                 IF = {
@@ -72,12 +73,14 @@ focus_tree = {
                     random_list = {
                         50 = { #傲慢
                             set_country_flag = MGU_We_are_mahoshaojiu_flag
+                            add_ideas = MGU_COUP_AI_BUFF_3
                         }
                         30 = { #谦逊
                             add_ideas = MGU_COUP_AI_BUFF_2
                         }
                         20 = { #强而有力呀
                             add_ideas = MGU_COUP_AI_BUFF
+                            set_country_leader_ideology = Homura_subideology
                         }
                     }
                 }
@@ -577,7 +580,7 @@ focus_tree = {
         			add_offsite_building = { type = arms_factory level = 2 }
         		}
 	}
-	focus = { #橡胶种植 重整工业资源
+	focus = { #橡胶种植 重整工业资源 开发镜界资源
 		id = TBMGU_11
 		icon = GFX_focus_generic_steel
 		x = 4
@@ -598,21 +601,25 @@ focus_tree = {
 			add_resource = {
                         	type = aluminium
                         	amount = 20
-                        	state = 501
+                        	state = 496
                         	}
 			add_resource = {
 							type = steel
 							amount = 20
-							state = 502
+							state = 496
 						}
 			add_resource = {
                         	type = originium
                         	amount = 20
-                        	state = 501
+                        	state = 496
             }
 
 			# news_event = { id = magicunion.1020_MGU days = 1000 }
-
+                496 = {
+                    add_dynamic_modifier = {
+                        modifier = MGU_Mirror_world_local
+                    }
+                }
 			}
 		}
 	focus = { #总结我们的经验（复合式军工基地）
@@ -1307,7 +1314,7 @@ focus_tree = {
 		completion_reward = {
 		    custom_effect_tooltip = TBMGU_121_1_txt
 				add_equipment_to_stockpile = {
-					type = 	strike_witches_equipment_1
+					type = 	strike_witches_equipment
 					amount = 115
 				}
             501 = {
@@ -2028,6 +2035,7 @@ focus_tree = {
 					remove_idea = MGU_Magic_Doll_army
 					add_idea = MGU_Magic_Doll_army_2
 				}
+			upgrade_intelligence_agency = upgrade_passive_defense
 		}
 	}
 	focus = { #宪法修正案：猫猫杀人权
@@ -2400,7 +2408,7 @@ focus_tree = {
             }
             if = {
                 limit = {
-                    CHL = {
+                    PAU = {
                         is_subject = no
                         exists = yes
                     }
@@ -2614,6 +2622,7 @@ focus_tree = {
 			}
 			is_subject = no
 			is_ai = no
+			NOT = { is_in_faction_with = PAQ }
             BRA = { is_ai = yes }
             custom_trigger_tooltip = {
                 tooltip = TBMGU_Jungle_fire_ally_BUG_trigger_tooltip
@@ -2736,7 +2745,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_tech_bonus = {
-				name = MGU_47_bonus
+				name = TBMGU_47
 				ahead_reduction = 5
 				bonus = 2
 				uses = 2
@@ -3389,12 +3398,12 @@ focus_tree = {
 		icon = GFX_focus_generic_railroad
 		x = 32
 		y = 7
-		cost = 4
+		cost = 2
 		ai_will_do = {
-			factor = 5
+			base = 50
 		}
 		prerequisite = {
-			focus = TBMGU_Jungle_fire_1_1
+		#	focus = TBMGU_Jungle_fire_1_1
 		}
 		available = {
             custom_trigger_tooltip = {
@@ -3407,6 +3416,11 @@ focus_tree = {
                         is_subject = no
                     }
                 }
+            }
+            OR = {
+                is_in_faction_with = PAQ
+                NOT = { country_exists = PAQ }
+                PAQ = { is_subject = yes }
             }
         }
 		completion_reward = {
@@ -3523,12 +3537,12 @@ focus_tree = {
 		icon = GFX_new_treaty
 		x = 37
 		y = 6
-		cost = 4
+		cost = 2
 		ai_will_do = {
-			factor = 5
+			base = 50
 		}
 		prerequisite = {
-			focus = TBMGU_Jungle_fire_2
+		#	focus = TBMGU_Jungle_fire_2
 		}
 		available = {
 		    is_faction_leader = yes
@@ -3536,8 +3550,8 @@ focus_tree = {
                 NOT = { has_war_with = MGU }
                 NOT = { has_war_with = BRA }
                 surrender_progress > 0.3
+                is_in_faction = no
                 is_subject = no
-                exists = yes
             }
 		}
 		completion_reward = {
@@ -3637,6 +3651,9 @@ focus_tree = {
             has_completed_focus = TBMGU_Jungle_fire_1_3
             has_completed_focus = TBMGU_Jungle_fire_2_2
             has_completed_focus = TBMGU_38_1
+            any_enemy_country = {
+                is_major = yes
+            }
             }
 		}
 		completion_reward = {
@@ -3822,7 +3839,7 @@ focus_tree = {
 		icon = GFX_goal_generic_major_war
 		x = 32
 		y = 12
-		cost = 4
+		cost = 2
 		ai_will_do = {
 			factor = 30
 		}
@@ -3849,15 +3866,12 @@ focus_tree = {
 		icon = GFX_goal_generic_major_war
 		x = 30
 		y = 13
-		cost = 4
+		cost = 2
 		ai_will_do = {
-			factor = 0
+			base = 0
 		    modifier = {
-		        OR = {
-		        has_war_with = ARG
-		        has_war_with = CHL
-		        }
-		    	factor = 50
+		        has_war_with = PAQ
+		    	add = 50
 		    }
 		}
 		prerequisite = {
@@ -3881,12 +3895,12 @@ focus_tree = {
 		icon = GFX_goal_generic_major_war
 		x = 32
 		y = 13
-		cost = 4
+		cost = 2
 		ai_will_do = {
-			factor = 0
+			base = 0
 		    modifier = {
-		    	has_war_with = BRA
-		    	factor = 50
+		        has_war_with = BRA
+		    	add = 50
 		    }
 		}
 		prerequisite = {
@@ -3910,16 +3924,12 @@ focus_tree = {
 		icon = GFX_goal_generic_major_war
 		x = 34
 		y = 13
-		cost = 4
+		cost = 2
 		ai_will_do = {
-			factor = 0
+			base = 0
 		    modifier = {
-		        OR = {
-		        has_war_with = PAQ
-		        has_war_with = PA1
-		        has_war_with = PAM
-		        }
-		    	factor = 50
+		        has_war_with = PAN
+		    	add = 50
 		    }
 		}
 		prerequisite = {
@@ -4100,6 +4110,10 @@ focus_tree = {
 		focus = TBMGU_Walpurgis_Night_05
 		}
 		available = {
+			    has_country_leader = {
+					ruling_only = yes
+					character = MGU_akemi_homura
+				}
 		}
 		mutually_exclusive = {
 		}
@@ -4376,7 +4390,7 @@ focus_tree = {
 		focus = TBMGU_Ode_and_Prayer_07
 		}
 		available = {
-		has_tech = rdf1
+		has_tech = advanced_radio
 		has_done_agency_upgrade = upgrade_anti_partisan
 		}
 		mutually_exclusive = {
@@ -5079,7 +5093,12 @@ focus_tree = {
 		}
 		completion_reward = {
             country_event = magicunion.1136
-            PAO = { remove_ideas = PAO_Resentful_deceased }
+            PAO = {
+                swap_ideas = {
+                    remove_idea = PAO_Resentful_deceased
+                    add_idea = PAO_Resentful_deceased_2
+                }
+             }
             hidden_effect = {
                 country_event = { id = magicunion.1145 days = 360 }
             }
@@ -5106,7 +5125,12 @@ focus_tree = {
 
 		completion_reward = {
             country_event = magicunion.1141
-            PAO = { remove_ideas = PAO_Resentful_deceased }
+            PAO = {
+                swap_ideas = {
+                    remove_idea = PAO_Resentful_deceased
+                    add_idea = PAO_Resentful_deceased_2
+                }
+             }
 		}
 	}
 

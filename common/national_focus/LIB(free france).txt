@@ -9,7 +9,7 @@ focus_tree = {
 	}
 	default = no
 
-	continuous_focus_position = { x = 900 y = 800 }
+	continuous_focus_position = { x = 1200 y = 2100 }
 
 	### Politics ###
 
@@ -17,13 +17,10 @@ focus_tree = {
 		id = LIB_election
 		icon = GFX_goal_LIB_tuc
 		cost = 5
-		x = 3
+		x = 5
 		y = 0
 		cancelable = no
 		ai_will_do = { factor = 10 }
-		select_effect = {
-			country_event = { id = LIB.2 days = 10 }
-		}
 		completion_reward = {
 			custom_effect_tooltip = LIB_start
 			hidden_effect = {
@@ -53,7 +50,7 @@ focus_tree = {
 		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
 
-	focus = {# Dissolve the TUC
+	focus = {#联系幻想乡
 		id = LIB_dissolve_tuc
 		icon = GFX_goal_DEI_focus_disband_volksraad
 		cost = 8
@@ -63,27 +60,31 @@ focus_tree = {
 		y = 2
 
 		available = {
-			has_government = radical_socialist
 		}
 		prerequisite = {
 			focus = LIB_sagume_plan
 		}
 		ai_will_do = {
-			factor = 0
-			modifier = {
-				add = 15
-				has_game_rule = { rule = LIB_path option = LIB_PATH_EDWARDS_SYNDIE }
-			}
+			factor = 15
 		}
 		completion_reward = {
-			log = "[GetDateText]: [Root.GetName]: Focus LIB_dissolve_tuc"
-			add_stability = -0.10
-			custom_effect_tooltip = LIB_dissolve_tuc_tp
+			custom_effect_tooltip = LIB_we_will_return
+			add_stability = -0.05
+			every_state = {
+				limit = {
+					OR = {
+						is_core_of = KMK 
+						is_core_of = FRA
+					}
+				}
+				add_resistance_target = 25
+				add_resistance = 40
+			}
 		}
 		search_filters = { FOCUS_FILTER_STABILITY }
 	}
 
-	focus = {# A New Capital
+	focus = {#新都当定
 		id = LIB_new_capital
 		icon = GFX_focus_prc_agrarian_socialism
 		cost = 8
@@ -93,7 +94,6 @@ focus_tree = {
 		y = 2
 
 		available = {
-			has_government = radical_socialist
 		}
 		prerequisite = {
 			focus = LIB_sagume_plan
@@ -103,15 +103,23 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 15
-			modifier = {
-				factor = 0
-				has_game_rule = { rule = LIB_path option = LIB_PATH_EDWARDS_SYNDIE }
-			}
 		}
 		completion_reward = {
-			log = "[GetDateText]: [Root.GetName]: Focus LIB_new_capital"
-			set_capital = { state = 128 }
-			custom_effect_tooltip = LIB_new_capital_tp
+			add_stability = 0.25
+			add_war_support = 0.15
+			if = {
+				limit = {
+					has_intelligence_agency = no
+				}
+				create_intelligence_agency = yes
+			}
+			upgrade_intelligence_agency = upgrade_army_department
+			upgrade_intelligence_agency = upgrade_anti_partisan
+			set_province_name = {
+				id = 1145
+				name = "贤者议会"
+			}
+			custom_effect_tooltip = lib_free_france_tt
 		}
 	}
 
@@ -132,106 +140,10 @@ focus_tree = {
 			focus = LIB_okina
 		}
 		available = {
-			has_government = radical_socialist
-			has_war = no
-			OR = {
-				NOT = { country_exists = GER }
-				NOT = { country_exists = FRA }
-			}
 		}
 		ai_will_do = { factor = 25 }
 		completion_reward = {
-			log = "[GetDateText]: [Root.GetName]: Focus LIB_sagume"
-			hidden_effect = {
-				SCO = {
-					add_state_core = 133
-					add_state_core = 121
-					add_state_core = 136
-					add_state_core = 120
-					add_state_core = 938
-				}
-				WLS = {
-					add_state_core = 122
-					add_state_core = 957
-				}
-				release = WLS
-				release = SCO
-				LIB_niclas_y_glais = { set_nationality = WLS }
-				WLS = {
-					promote_character = LIB_niclas_y_glais
-					set_country_leader_description = { ideology = radical_socialist desc = LIB_niclas_y_glais_WLS_leader_desc }
-				}
-				LIB_willie_gallacher = { set_nationality = SCO }
-				SCO = {
-					promote_character = LIB_willie_gallacher
-					set_country_leader_description = { ideology = syndicalist desc = SCO_william_gallacher_leader_desc }
-				}
-			}
-			if = {
-				limit = {
-					NOT = { has_completed_focus = LIB_dissolve_tuc }
-				}
-				set_autonomy = {
-					target = WLS
-					autonomy_state = autonomous_territory
-					freedom_level = 0.3
-					end_wars = no
-				}
-				set_autonomy = {
-					target = SCO
-					autonomy_state = autonomous_territory
-					freedom_level = 0.3
-					end_wars = no
-				}
-				hidden_effect = {
-					LIB = { create_communal_government = yes }
-				}
-			}
-			else = {
-				effect_tooltip = {
-					release = WLS
-					release = SCO
-				}
-				set_cosmetic_tag = LIB_LIBland
-				set_politics = {
-					ruling_party = syndicalist
-					elections_allowed = no
-				}
-				promote_character = LIB_ebby_edwards
-			}
-			if = {
-				limit = { is_faction_leader = yes }
-				add_to_faction = WLS
-				add_to_faction = SCO
-			}
-			else_if = {
-				limit = {
-					is_in_faction = yes
-					is_faction_leader = no
-				}
-				faction_leader = {
-					add_to_faction = WLS
-					add_to_faction = SCO
-				}
-			}
-			hidden_effect = {
-				add_opinion_modifier = { target = SCO modifier = KR_close_allies }
-				reverse_add_opinion_modifier = { target = SCO modifier = KR_LIBerated_us }
-				add_opinion_modifier = { target = WLS modifier = KR_close_allies }
-				reverse_add_opinion_modifier = { target = WLS modifier = KR_LIBerated_us }
-				send_equipment_fraction = { target = WLS value = 0.25 }
-				send_equipment_fraction = { target = SCO value = 0.25 }
-				WLS = {
-					WLS_create_radical_socialist_government = yes
-					transfer_technology = yes
-					load_oob = WLS_three_armies
-				}
-				SCO = {
-					SCO_create_syndicalist_government = yes
-					transfer_technology = yes
-					load_oob = SCO_three_armies
-				}
-			}
+			custom_effect_tooltip = will_be_bypass
 		}
 		search_filters = { FOCUS_FILTER_ANNEXATION FOCUS_FILTER_TFV_AUTONOMY }
 	}
@@ -246,17 +158,18 @@ focus_tree = {
 		y = 1
 
 		available = {
-			has_government = syndicalist
 		}
 		prerequisite = {
 			focus = LIB_election
 		}
 		ai_will_do = { factor = 10 }
 		completion_reward = {
-			add_political_power = 50
-			add_stability = 0.05
+			add_ideas = LIB_bba_building
+			set_variable = { var = bba_factory value = 0 }
+			set_variable = { var = bba_arms_factory value = 0 }
+			set_variable = { var = bba_civilian_factory value = 0 }
+			custom_effect_tooltip = bba_factory
 		}
-		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
 	}
 
 	focus = {# 紫
@@ -269,7 +182,6 @@ focus_tree = {
 		y = 4
 
 		available = {
-			has_government = syndicalist
 		}
 		prerequisite = {
 			focus = LIB_election2
@@ -280,7 +192,7 @@ focus_tree = {
 		}
 		ai_will_do = { factor = 25 }
 		completion_reward = {
-			log = "[GetDateText]: [Root.GetName]: Focus LIB_yukari"
+			custom_effect_tooltip = will_be_bypass
 			add_stability = 0.1
 		}
 		search_filters = { FOCUS_FILTER_STABILITY }
@@ -296,7 +208,6 @@ focus_tree = {
 		y = 1
 
 		available = {
-			has_government = totalist
 		}
 		prerequisite = {
 			focus = LIB_election
@@ -304,7 +215,7 @@ focus_tree = {
 		ai_will_do = { factor = 50 }
 		completion_reward = {
 			add_political_power = -100
-			add_popularity = { ideology = totalist popularity = 0.05 }
+			add_popularity = { ideology = neutrality popularity = 0.05 }
 			add_ideas = LIB_okina_return_idea
 		}
 		search_filters = { FOCUS_FILTER_ARMY_BONUS FOCUS_FILTER_POLITICAL }
@@ -320,7 +231,6 @@ focus_tree = {
 		y = 2
 
 		available = {
-			has_government = totalist
 		}
 		prerequisite = {
 			focus = LIB_yokari_builing
@@ -330,14 +240,44 @@ focus_tree = {
 		}
 		ai_will_do = { factor = 50 }
 		completion_reward = {
-			log = "[GetDateText]: [Root.GetName]: Focus LIB_united_fra"
+			LIB = {
+				set_technology = {
+					improved_medium_tank_chassis = 1
+				}
+				create_equipment_variant = {
+       				name = "幻想乡流亡坦克装备"
+       				type = medium_tank_chassis_2
+       				parent_version = 0
+       				modules = {
+       				    main_armament_slot = tank_medium_cannon_2
+						turret_type_slot = tank_medium_three_man_tank_turret
+						suspension_type_slot = tank_interleaved_suspension
+						armor_type_slot = tank_riveted_armor
+						engine_type_slot = tank_diesel_engine
+						special_type_slot_1 = tank_radio_2
+						special_type_slot_2 = secondary_turret_small_cannon
+						special_type_slot_3 = secondary_turret_small_cannon
+						special_type_slot_4 = expanded_fuel_tank
+       				}
+       				upgrades = {
+       				    tank_nsb_engine_upgrade = 0
+       				    tank_nsb_armor_upgrade = 4
+       				}
+       				obsolete = yes
+   				}
+			add_equipment_to_stockpile = {
+				type = medium_tank_chassis_2
+				amount = 1000
+				producer = LIB
+			}
+			}
 			add_war_support = 0.1
-			add_popularity = { ideology = totalist popularity = 0.05 }
+			custom_effect_tooltip = lib_forgin_support_tt
 		}
 		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
 	}
 
-	focus = {# The Grand Protector
+	focus = {#许诺西非独立换取支持
 		id = LIB_merge
 		icon = GFX_goal_authoritarian
 		cost = 8
@@ -347,20 +287,21 @@ focus_tree = {
 		y = 2
 
 		available = {
-			has_government = totalist
 		}
 		prerequisite = {
 			focus = LIB_okina_return
 		}
 		ai_will_do = { factor = 50 }
 		completion_reward = {
-			log = "[GetDateText]: [Root.GetName]: Focus LIB_merge"
-			add_popularity = { ideology = totalist popularity = 0.10 }
-			add_trait = {
-				character = LIB_oswald_mosley
-				ideology = totalist_subtype
-				trait = LIB_grand_protector
+			add_stability = 0.05
+			COG = {
+				add_stability = 0.25
+				add_manpower = -600000
 			}
+			LIB = {
+				add_manpower = 600000
+			}
+			custom_effect_tooltip = they_will_be_indepent
 		}
 	}
 
@@ -384,11 +325,7 @@ focus_tree = {
 		}
 		ai_will_do = { factor = 25 }
 		completion_reward = {
-			log = "[GetDateText]: [Root.GetName]: Focus LIB_okina_return"
-			add_political_power = -150
-			add_popularity = { ideology = totalist popularity = 0.05 }
-			custom_effect_tooltip = LIB_okina_return_tp
-			hidden_effect = { country_event = uob.201 }
+			custom_effect_tooltip = will_be_bypass
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
@@ -396,7 +333,7 @@ focus_tree = {
 	focus = {#稳定政局
 		id = LIB_election2
 		icon = GFX_goal_HOL_council_communism
-		cost = 8
+		cost = 5
 
 		relative_position_id = LIB_election
 		x = 0
@@ -418,8 +355,412 @@ focus_tree = {
 		}
 		ai_will_do = { factor = 1000 }
 		select_effect = {
+			country_event = {
+				id = LIB.5
+				days = 5
+			}
 		}
 		completion_reward = {
+			add_stability = 0.1
+		}
+	}
+	focus = {#返乡之路
+		id = LIB_back_to_home
+		icon = GFX_goal_ideology_totalist
+		cost = 8
+		relative_position_id = LIB_the_nation
+		x = 0
+		y = 1
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_the_nation
+		}
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {#南部登陆
+		id = LIB_south_invasion
+		icon = GFX_goal_ideology_totalist
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = -1
+		y = 1
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_back_to_home
+		}
+		relative_position_id = LIB_back_to_home
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {#彼岸登陆
+		id = LIB_island_invasion
+		icon = GFX_goal_ideology_totalist
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = 1
+		y = 1
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_back_to_home
+		}
+		relative_position_id = LIB_back_to_home
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {#白玉楼登陆
+		id = LIB_southwest_invasion
+		icon = GFX_goal_ideology_totalist
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = -3
+		y = 1
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_back_to_home
+		}
+		relative_position_id = LIB_back_to_home
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {#彼岸登陆
+		id = LIB_northwest_invasion
+		icon = GFX_goal_ideology_totalist
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = 3
+		y = 1
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_back_to_home
+		}
+		relative_position_id = LIB_back_to_home
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {#决不后退
+		id = LIB_no_step_back
+		icon = GFX_goal_ideology_totalist
+		cost = 8
+
+		relative_position_id = LIB_election
+		x = 0
+		y = 2
+
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_south_invasion
+			focus = LIB_island_invasion
+			focus = LIB_northwest_invasion
+			focus = LIB_southwest_invasion
+		}
+		relative_position_id = LIB_back_to_home
+		ai_will_do = { factor = 25 }
+		completion_reward = {
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL }
+	}
+	focus = {# 北非建设计划
+		id = LIB_builing_north_africa
+		icon = GFX_goal_LIB_marxism_macdonaldism
+		cost = 5
+		relative_position_id = LIB_election
+		x = 0
+		y = 1
+		available = {
+		}
+		prerequisite = {
+			focus = LIB_yukari
+			focus = LIB_sagume
+			focus = LIB_okina
+		}
+		relative_position_id = LIB_yukari
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+	focus = {# 北非建设计划
+		id = LIB_builing_factory_north_africa
+		icon = GFX_goal_LIB_marxism_macdonaldism
+		cost = 5
+		prerequisite = {
+			focus = LIB_builing_north_africa
+		}
+		relative_position_id = LIB_builing_north_africa
+		x = 1
+		y = 1
+		available = {
+		}
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+	focus = {# 北非建设计划
+		id = LIB_builing_factory_north_africa1
+		icon = GFX_goal_LIB_marxism_macdonaldism
+		cost = 5
+		prerequisite = {
+			focus = LIB_builing_north_africa
+		}
+		relative_position_id = LIB_builing_north_africa
+		x = -1
+		y = 1
+		available = {
+		}
+		ai_will_do = { factor = 10 }
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	}
+	focus = {# 联络工会
+		id = LIB_reach_out_to_trade_unions
+		icon = GFX_goal_generic_major_alliance
+		x = -1
+		y = 1
+		prerequisite = { 
+			focus = LIB_builing_factory_north_africa1
+		}
+		prerequisite = { 
+			focus = LIB_builing_factory_north_africa
+		}
+		relative_position_id = LIB_builing_factory_north_africa
+		
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+			
+		}
+		
+		bypass = {
+
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = FRA_connections_to_trade_unions
+		}
+	}
+	focus = {# 重塑幻想乡计划
+		id = LIB_reshape_gensokyo
+		icon = GFX_goal_generic_major_alliance
+		x = 0
+		y = 1
+		relative_position_id = LIB_reach_out_to_trade_unions
+		prerequisite = { 
+			focus = LIB_reach_out_to_trade_unions
+		}
+		mutually_exclusive = {
+			focus = LIB_the_plan_of_lunar_capital
+			focus = LIB_hidden_gensokyo
+		}
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+			has_completed_focus = LIB_yukari
+		}
+		
+		bypass = {
+
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = FRA_connections_to_trade_unions
+		}
+	}
+	focus = {# 月都迁都计划
+		id = LIB_the_plan_of_lunar_capital
+		icon = GFX_goal_generic_major_alliance
+		x = -2
+		y = 1
+		relative_position_id = LIB_reach_out_to_trade_unions
+		prerequisite = { 
+			focus = LIB_reach_out_to_trade_unions
+		}
+		mutually_exclusive = {
+			focus = LIB_reshape_gensokyo
+			focus = LIB_hidden_gensokyo
+		}
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+			has_completed_focus = LIB_sagume
+		}
+		
+		bypass = {
+
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = FRA_connections_to_trade_unions
+		}
+	}
+	focus = {#隐匿幻想乡
+		id = LIB_hidden_gensokyo
+		icon = GFX_goal_generic_major_alliance
+		x = 2
+		y = 1
+		relative_position_id = LIB_reach_out_to_trade_unions
+		prerequisite = { 
+			focus = LIB_reach_out_to_trade_unions
+		}
+		mutually_exclusive = {
+			focus = LIB_the_plan_of_lunar_capital
+			focus = LIB_reshape_gensokyo
+		}
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+			has_completed_focus = LIB_okina
+		}
+		
+		bypass = {
+
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = FRA_connections_to_trade_unions
+		}
+	}
+	focus = {#贤者之国
+		id = LIB_the_nation
+		icon = GFX_goal_generic_major_alliance
+		x = 0
+		y = 2
+		relative_position_id = LIB_reach_out_to_trade_unions
+		prerequisite = { 
+			focus = LIB_reshape_gensokyo
+			focus = LIB_the_plan_of_lunar_capital
+			focus = LIB_hidden_gensokyo
+		}
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+			
+		}
+		
+		bypass = {
+
+		}
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = FRA_connections_to_trade_unions
 		}
 	}
 }
