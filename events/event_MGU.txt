@@ -6079,6 +6079,65 @@ country_event = {
 		}
 	}
 }
+country_event = {
+	# 南美局势-瓦社进攻魔联
+	id = magicunion.11095
+	title = magicunion.11095.t
+	desc = magicunion.11095.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = no
+	fire_only_once = yes
+		trigger = {
+		    has_completed_focus = PAN_71
+		    date > 1942.1.1
+		    tag = PAN
+		    is_subject = no
+		    PAN = { is_ai = yes }
+            NOT = { has_war_with = MGU }
+            NOT = { is_in_faction_with = MGU }
+            NOT = { has_global_flag = SA_war_STOP_flag }
+        #   PAM = { is_subject = NO }
+        #   PAM = { is_in_faction = no }
+        }
+	option = {#进攻！
+		name = magicunion.11095.a
+	    declare_war_on = { target = MGU type = puppet_wargoal_focus }
+		if = {
+			limit = {
+				country_exists = MGU
+				NOT = { has_war_with = MGU }
+				NOT = { is_in_faction_with = MGU }
+			}
+			declare_war_on = { target = MGU type = puppet_wargoal_focus }
+		}
+		if = {
+			limit = {
+				country_exists = MST
+				NOT = { has_war_with = MST }
+				NOT = { is_in_faction_with = MST }
+			}
+			declare_war_on = { target = MST type = puppet_wargoal_focus }
+		}
+		if = {
+			limit = {
+				country_exists = MGS
+				NOT = { has_war_with = MGS }
+				NOT = { is_in_faction_with = MGS }
+			}
+			declare_war_on = { target = MGS type = puppet_wargoal_focus }
+		}
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#还不到时候
+		name = magicunion.11095.b
+		add_war_support = -0.02
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
 
 country_event = {
 	# 南美局势-结束战争？ 和谈
@@ -6928,15 +6987,24 @@ country_event = {
 				}
 			}
 		ai_chance = {
-			factor = 10
+			base = 10
+		    modifier = {
+		        is_in_faction_with = SOV
+		    	add = -10
+		    }
 		}
 	}
 
 	option = {#圣杯？他有几个师
 		name = magicunion.1124.b
+		    set_global_flag = SA_war_not_STOP_flag
             ENG = { country_event = magicunion.1125 }
 		ai_chance = {
-			factor = 0
+			base = 0
+		    modifier = {
+		        is_in_faction_with = SOV
+		    	add = 50
+		    }
 		}
 	}
 }
@@ -7840,11 +7908,11 @@ country_event = {
 			MGU_st_Mami = {
             	add_corps_commander_role = {
 				traits = { chaos_mahoushojo MAGIC_MASTER_st_mami brilliant_strategist infantry_leader infantry_expert }
-				skill = 8
-				attack_skill = 8
-				defense_skill = 8
-				planning_skill = 8
-				logistics_skill = 5
+                skill = 6
+                attack_skill = 7
+                defense_skill = 7
+                planning_skill = 7
+                logistics_skill = 4
         	    }
 				add_advisor_role = {
 					advisor = {
@@ -8298,6 +8366,7 @@ news_event = {
 			controls_state = 500
 		}
 		set_country_flag = MGU_TBMGUprisoner_owner
+		remove_unit_leader_role = MGU_Akemi_Homura
 
 	}
 	option = {
@@ -8495,13 +8564,14 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = TBMGUprisoner.83.a
+		set_country_flag = MGU_prisoner_owner_emohomura
 		clr_country_flag = MGU_prisoner_owner
 		clr_country_flag = MGU_PRISON_RUNNING
 		#recruit_character = MGU_emohomura
             MST = {	MGU_emohomura = { set_nationality = ROOT } }
                 add_field_marshal_role = {
                     character = "MGU_emohomura"
-                    traits = { demon organizer logistics_wizard thorough_planner brilliant_strategist offensive_doctrine aggressive_assaulter }
+                    traits = { MGU_emodemon organizer logistics_wizard thorough_planner brilliant_strategist offensive_doctrine aggressive_assaulter }
                     skill = 6
                     attack_skill = 6
                     defense_skill = 6
@@ -8523,6 +8593,7 @@ country_event = {
 		# recruit_character = MGU_DEMO_homura
 		hidden_effect = {
             MGU = {	MGU_DEMO_homura = { set_nationality = ROOT } }
+            ROOT = { MGU_emohomura = { set_nationality = MS1 } }
 		}
             MST = {	MGU_DEMO_homura = { set_nationality = ROOT } }
                 add_field_marshal_role = {
@@ -8534,5 +8605,30 @@ country_event = {
                     planning_skill = 9
                     logistics_skill = 9
                 }
+	}
+}
+country_event = {
+	id = TBMGUprisoner.90
+	title = TBMGUprisoner.90.t
+	desc = TBMGUprisoner.90.d
+	picture = GFX_event_PRISONER_xingxun
+	is_triggered_only = yes
+	option = {
+		name = TBMGUprisoner.90.a
+        clr_country_flag = MGU_PRISON_RUNNING
+	}
+}
+country_event = {
+	id = TBMGUprisoner.91
+	title = TBMGUprisoner.91.t
+	desc = TBMGUprisoner.91.d
+	picture = GFX_event_PRISONER_xingxun
+	is_triggered_only = yes
+	option = {
+		name = TBMGUprisoner.91.a
+        clr_country_flag = MGU_PRISON_RUNNING
+        clr_country_flag = MGU_prisoner_owner
+        MGU = {	MGU_Akemi_Homura = { set_nationality = ROOT } }
+		hidden_effect = { MST = { MGU_Akemi_Homura = { set_nationality = ROOT } } }
 	}
 }
