@@ -2,7 +2,7 @@
 #!gfx:interface\UKR.gfx
 	shared_focus = {
 		id = UKR_aftermath_of_the_war
-		icon = GFX_goal_TRM_freedom
+		icon = GFX_goal_RUS_russian_supremacy
 		x = 5
 		y = 1
 		cost = 10
@@ -58,25 +58,6 @@
 			add_popularity = {
 				ideology = communism
 				popularity = 0.25
-			}
-			RUS_Talulah = {
-				add_country_leader_role = {
-					country_leader = {
-						ideology = anarchist_communism
-						traits = {
-							anarchist_zeal
-						}
-					}
-					promote_leader = yes
-				}
-				add_field_marshal_role = {
-					traits = { brilliant_strategist winter_expert career_officer commando war_hero trickster SOV_ore_disease }
-					skill = 4
-					attack_skill = 5
-					defense_skill = 4
-					planning_skill = 3
-					logistics_skill = 4
-				}
 			}
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
@@ -337,11 +318,11 @@
 	}
 	
 	shared_focus = {
-		id = UKR_eluosiyanfu
-		icon = GFX_goal_RUS_regency
+		id = UKR_huangnvchongdengdawei
+		icon = GFX_focus_RUS_Anastasia_Romanov_with_Flags
 		x = 0
 		y = 1
-		cost = 5
+		cost = 2
 		relative_position_id = UKR_restore_order
 		allow_branch = { has_country_flag = RUS_royalist_win }
 		prerequisite = {
@@ -353,16 +334,40 @@
 
 		completion_reward = {
 		add_political_power = 100
-		add_stability = 0.05
-		add_popularity = { ideology = neutrality popularity = 0.1 }
 		}
 
 	}
 	
 	shared_focus = {
+		id = UKR_eluosiyanfu
+		icon = GFX_goal_RUS_regency
+		x = -6
+		y = 1
+		cost = 1
+		relative_position_id = UKR_huangnvchongdengdawei
+		mutually_exclusive = { focus = UKR_eluosicimu }
+		prerequisite = {
+			focus = UKR_huangnvchongdengdawei
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		NOT = { has_country_flag = RUS_constitutional_monarchy_win }
+		}
+		completion_reward = {
+		add_stability = 0.05
+		add_popularity = { ideology = neutrality popularity = 0.1 }
+		hidden_effect = {
+		news_event = { hours = 6 id = rus_news.4 }
+		}
+		}
+
+	}	
+	shared_focus = {
 		id = UKR_mendixuanguan
 		icon = GFX_goal_RUS_Appease_Senate
-		x = -1
+		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = UKR_eluosiyanfu
@@ -380,20 +385,89 @@
 	}	
 	
 	shared_focus = {
-		id = UKR_xinniantiebi
-		icon = GFX_goal_generic_army_tanks
-		x = -1
+		id = UKR_eluosicimu
+		icon = GFX_focus_RUS_Imperial_Duma
+		x = 6
 		y = 1
-		cost = 5
-		relative_position_id = UKR_mendixuanguan
+		cost = 1
+		relative_position_id = UKR_huangnvchongdengdawei
+		mutually_exclusive = { focus = UKR_eluosiyanfu }
 		prerequisite = {
-			focus = UKR_mendixuanguan
+			focus = UKR_huangnvchongdengdawei
 		}
 		ai_will_do = {
 			factor = 10
 		}
 
 		completion_reward = {
+		if = {
+		limit = { has_country_flag = RUS_royalist_win }
+		custom_effect_tooltip = huangnvlanxian_tip
+		country_event = rus_na.54
+		}
+		add_stability = 0.05
+		SOV_Anastasia = {
+			if = {
+				limit = {
+					NOT = { has_ideology = liberalism }
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = liberalism
+						traits = { UKR_bingzhihuangnv_trait }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_leader = liberalism
+			}
+		}
+		set_politics = {
+			ruling_party = democratic
+			elections_allowed = yes
+		}
+		add_popularity = { ideology = democratic popularity = 0.2 }
+		set_party_name = {
+			ideology = democratic
+			long_name = RUS_CM_democratic_party_long
+			name = RUS_CM_democratic_party
+		}
+		set_party_name = {
+			ideology = neutrality
+			long_name = RUS_CM_neutrality_party_long
+			name = RUS_CM_neutrality_party
+		}
+		hidden_effect = {
+		news_event = { hours = 6 id = rus_news.5 }
+		}		
+		}
+
+	}	
+	
+	shared_focus = {
+		id = UKR_xinniantiebi
+		icon = GFX_goal_generic_army_tanks
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = UKR_chulisulianguoqi
+		prerequisite = {
+			focus = UKR_chulisulianguoqi
+		}
+		ai_will_do = {
+			factor = 10
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = SOV_the_iron_wall_of_russian_resolve
+				ahead_reduction = 2
+				bonus = 1.0
+				uses = 1
+				category = cat_heavy_armor
+			}
 		add_ideas = SOV_the_iron_wall_of_russian_resolve
 		}
 
@@ -402,12 +476,12 @@
 	shared_focus = {
 		id = UKR_rebuild_church
 		icon = GFX_focus_rus_orthodoxy
-		x = 1
-		y = 1
+		x = 3
+		y = 2
 		cost = 5
-		relative_position_id = UKR_eluosiyanfu
+		relative_position_id = UKR_huangnvchongdengdawei
 		prerequisite = {
-			focus = UKR_eluosiyanfu
+			focus = UKR_huangnvchongdengdawei
 		}
 		ai_will_do = {
 			factor = 10
@@ -445,12 +519,12 @@
 	shared_focus = {
 		id = UKR_caichanwenti
 		icon = GFX_goal_KSV_highest_bidder
-		x = 1
+		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = UKR_rebuild_church
+		relative_position_id = UKR_pingfanxiandi
 		prerequisite = {
-			focus = UKR_rebuild_church
+			focus = UKR_pingfanxiandi
 		}
 		ai_will_do = {
 			factor = 10
@@ -465,12 +539,12 @@
 	shared_focus = {
 		id = UKR_chulisulianguoqi
 		icon = GFX_focus_SOV_merge_plants
-		x = 0
+		x = -3
 		y = 2
 		cost = 5
-		relative_position_id = UKR_eluosiyanfu
+		relative_position_id = UKR_huangnvchongdengdawei
 		prerequisite = {
-			focus = UKR_eluosiyanfu
+			focus = UKR_huangnvchongdengdawei
 		}
 		ai_will_do = {
 			factor = 10
@@ -524,7 +598,7 @@
 	shared_focus = {
 		id = UKR_jiaohuihouxuanren
 		icon = GFX_focus_rus_for_faith
-		x = -1
+		x = 0
 		y = 1
 		cost = 5
 		relative_position_id = UKR_xinniantiebi
@@ -544,12 +618,12 @@
 	shared_focus = {
 		id = UKR_centralization
 		icon = GFX_focus_generic_improve_the_administration
-		x = 0
-		y = 2
+		x = -1
+		y = 1
 		cost = 5
-		relative_position_id = UKR_xinniantiebi
+		relative_position_id = UKR_mendixuanguan
 		prerequisite = {
-			focus = UKR_xinniantiebi
+			focus = UKR_mendixuanguan
 		}
 		ai_will_do = {
 			factor = 10
@@ -565,7 +639,7 @@
 		id = UKR_divine_right_of_kings
 		icon = GFX_focus_rus_tsar
 		x = 0
-		y = 2
+		y = 1
 		cost = 5
 		relative_position_id = UKR_jiaohuihouxuanren
 		prerequisite = {
@@ -589,14 +663,11 @@
 		id = UKR_new_code
 		icon = GFX_goal_RUS_Adjust_Constitution
 		x = 0
-		y = 2
+		y = 1
 		cost = 5
 		relative_position_id = UKR_centralization
 		prerequisite = {
 			focus = UKR_centralization
-		}		
-		prerequisite = {
-			focus = UKR_divine_right_of_kings
 		}
 		ai_will_do = {
 			factor = 10
@@ -610,16 +681,35 @@
 		}
 
 	}	
+	shared_focus = {
+		id = UKR_shahuangzhiyin
+		icon = GFX_focus_rus_voice_tsar
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = UKR_new_code
+		prerequisite = {
+			focus = UKR_new_code
+		}
+		ai_will_do = {
+			factor = 10
+		}
+
+		completion_reward = {
+		add_ideas = RUS_shahuangzhiyin_idea	
+		}
+
+	}	
 	
 	shared_focus = {
 		id = UKR_bidegele
 		icon = GFX_focus_SOV_patriarch_of_all_russia
 		x = -1
-		y = 1
+		y = 2
 		cost = 5
-		relative_position_id = UKR_chulisulianguoqi
+		relative_position_id = UKR_huangnvchongdengdawei
 		prerequisite = {
-			focus = UKR_chulisulianguoqi
+			focus = UKR_huangnvchongdengdawei
 		}	
 		mutually_exclusive = { focus = UKR_mosike }
 		ai_will_do = {
@@ -646,7 +736,9 @@
 					instant_build = yes
 				}
 			}
-			set_capital = 195
+			set_capital = {
+				state = 195
+			}
 		}
 
 	}	
@@ -655,11 +747,11 @@
 		id = UKR_mosike
 		icon = GFX_focus_SOV_third_rome
 		x = 1
-		y = 1
+		y = 2
 		cost = 5
-		relative_position_id = UKR_chulisulianguoqi
+		relative_position_id = UKR_huangnvchongdengdawei
 		prerequisite = {
-			focus = UKR_chulisulianguoqi
+			focus = UKR_huangnvchongdengdawei
 		}	
 		mutually_exclusive = { focus = UKR_bidegele }
 		ai_will_do = {
@@ -709,13 +801,12 @@
 	shared_focus = {
 		id = UKR_chaihuigulage
 		icon = GFX_focus_generic_total_war
-		x = -1
+		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = UKR_pingfanxiandi
-		mutually_exclusive = { focus = UKR_chongqigulage }
+		relative_position_id = UKR_rebuild_the_bureaucracy
 		prerequisite = {
-			focus = UKR_pingfanxiandi
+			focus = UKR_rebuild_the_bureaucracy
 		}		
 		ai_will_do = {
 			factor = 10
@@ -754,20 +845,19 @@
 	shared_focus = {
 		id = UKR_chongqigulage
 		icon = GFX_focus_generic_public_works
-		x = 1
+		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = UKR_pingfanxiandi
-		mutually_exclusive = { focus = UKR_chaihuigulage }
+		relative_position_id = UKR_juebuchongdaofuzhe
 		prerequisite = {
-			focus = UKR_pingfanxiandi
+			focus = UKR_juebuchongdaofuzhe
 		}		
 		ai_will_do = {
 			factor = 10
 		}
 
 		completion_reward = {
-		add_ideas = RUS_gulage
+		country_event = rus_na.49
 		}
 
 	}
@@ -775,13 +865,12 @@
 	shared_focus = {
 		id = UKR_eluosikexueyuan
 		icon = GFX_goal_TRM_Scientific_Investment
-		x = 1
+		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = UKR_chaihuigulage
+		relative_position_id = UKR_caichanwenti
 		prerequisite = {
-			focus = UKR_chaihuigulage
-			focus = UKR_chongqigulage
+			focus = UKR_caichanwenti
 		}		
 		ai_will_do = {
 			factor = 10
@@ -797,11 +886,11 @@
 		id = UKR_jienaouyazhuyi
 		icon = GFX_goal_RUS_eurasian
 		x = 0
-		y = 2
+		y = 1
 		cost = 5
-		relative_position_id = UKR_caichanwenti
+		relative_position_id = UKR_rebuild_church
 		prerequisite = {
-			focus = UKR_caichanwenti
+			focus = UKR_rebuild_church
 		}		
 		ai_will_do = {
 			factor = 10
@@ -816,20 +905,19 @@
 	shared_focus = {
 		id = UKR_lalongminzuzhuyizhe
 		icon = GFX_goal_RUS_black_hundred
-		x = 1
+		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = UKR_caichanwenti
+		relative_position_id = UKR_jienaouyazhuyi
 		prerequisite = {
-			focus = UKR_caichanwenti
+			focus = UKR_jienaouyazhuyi
 		}		
 		ai_will_do = {
 			factor = 10
 		}
 
 		completion_reward = {
-		add_war_support = 0.1
-		add_popularity = { ideology = fascism popularity = 0.05 }
+		country_event = rus_na.47
 		}
 
 	}	
@@ -838,7 +926,7 @@
 		id = UKR_qingnianeluosiyundong
 		icon = GFX_goal_TRM_mlad_focus_first
 		x = 0
-		y = 2
+		y = 1
 		cost = 5
 		relative_position_id = UKR_lalongminzuzhuyizhe
 		prerequisite = {
@@ -849,8 +937,7 @@
 		}
 
 		completion_reward = {
-		add_stability = 0.1
-		add_popularity = { ideology = communism popularity = 0.05 }
+		country_event = rus_na.48
 		}
 
 	}	
@@ -859,42 +946,18 @@
 		id = UKR_quebaojunduizhongcheng
 		icon = GFX_focus_rus_for_republic
 		x = 0
-		y = 2
+		y = 1
 		cost = 5
-		relative_position_id = UKR_jienaouyazhuyi
+		relative_position_id = UKR_divine_right_of_kings
 		prerequisite = {
-			focus = UKR_jienaouyazhuyi
-		}		
-		prerequisite = {
-			focus = UKR_qingnianeluosiyundong
-		}		
+			focus = UKR_divine_right_of_kings
+		}	
 		ai_will_do = {
 			factor = 10
 		}
 
 		completion_reward = {
 		add_ideas = RUS_zhongchengdejundui
-		}
-
-	}	
-	
-	shared_focus = {
-		id = UKR_jiesanduma
-		icon = GFX_goal_RUS_Dissolve_Duma
-		x = -1
-		y = 1
-		cost = 5
-		relative_position_id = UKR_new_code
-		mutually_exclusive = { focus = UKR_house_of_lords }
-		prerequisite = {
-			focus = UKR_new_code
-		}		
-		ai_will_do = {
-			factor = 10
-		}
-
-		completion_reward = {
-		add_political_power = 100
 		}
 
 	}
@@ -905,10 +968,9 @@
 		x = 1
 		y = 1
 		cost = 5
-		relative_position_id = UKR_new_code
-		mutually_exclusive = { focus = UKR_jiesanduma }
+		relative_position_id = UKR_mendixuanguan
 		prerequisite = {
-			focus = UKR_new_code
+			focus = UKR_mendixuanguan
 		}		
 		ai_will_do = {
 			factor = 10
@@ -927,10 +989,12 @@
 		x = 1
 		y = 1
 		cost = 5
-		relative_position_id = UKR_jiesanduma
+		relative_position_id = UKR_shahuangzhiyin
 		prerequisite = {
-			focus = UKR_jiesanduma
-			focus = UKR_house_of_lords
+			focus = UKR_shahuangzhiyin
+		}		
+		prerequisite = {
+			focus = UKR_chongqigulage
 		}		
 		ai_will_do = {
 			factor = 10
@@ -946,36 +1010,14 @@
 	}	
 	
 	shared_focus = {
-		id = UKR_youxiandeziyou
-		icon = GFX_goal_RUS_Recreate_OSVAG
-		x = -1
-		y = 1
-		cost = 5
-		relative_position_id = UKR_quebaojunduizhongcheng
-		mutually_exclusive = { focus = UKR_juebuchongdaofuzhe }
-		prerequisite = {
-			focus = UKR_quebaojunduizhongcheng
-		}		
-		ai_will_do = {
-			factor = 10
-		}
-
-		completion_reward = {
-		add_ideas = RUS_youxiandeziyhou
-		}
-
-	}	
-	
-	shared_focus = {
 		id = UKR_juebuchongdaofuzhe
 		icon = GFX_goal_RUS_Destroy_Democracy
-		x = 1
+		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = UKR_quebaojunduizhongcheng
-		mutually_exclusive = { focus = UKR_youxiandeziyou }
+		relative_position_id = UKR_house_of_lords
 		prerequisite = {
-			focus = UKR_quebaojunduizhongcheng
+			focus = UKR_house_of_lords
 		}		
 		ai_will_do = {
 			factor = 10
@@ -990,13 +1032,12 @@
 	shared_focus = {
 		id = UKR_qiangyingwaijiao
 		icon = GFX_goal_RUS_State_Revanchism
-		x = 1
+		x = 0
 		y = 1
 		cost = 5
-		relative_position_id = UKR_youxiandeziyou
+		relative_position_id = UKR_qingnianeluosiyundong
 		prerequisite = {
-			focus = UKR_youxiandeziyou
-			focus = UKR_juebuchongdaofuzhe
+			focus = UKR_qingnianeluosiyundong
 		}		
 		ai_will_do = {
 			factor = 10
@@ -1014,12 +1055,12 @@
 	shared_focus = {
 		id = UKR_dangdaiyekajielinna
 		icon = GFX_focus_rus_imperial
-		x = 2
+		x = 3
 		y = 1
 		cost = 5
-		relative_position_id = UKR_wuxianreaishahaung
+		relative_position_id = UKR_quebaojunduizhongcheng
 		prerequisite = {
-			focus = UKR_wuxianreaishahaung
+			focus = UKR_quebaojunduizhongcheng
 		}		
 		prerequisite = {
 			focus = UKR_eluosikexueyuan
@@ -1030,16 +1071,210 @@
 		ai_will_do = {
 			factor = 10
 		}
-
+		available = {
+		owns_state = 408
+		64 = {
+				is_owned_by_ROOT_or_subject = yes
+			}		
+		10 = {
+				is_owned_by_ROOT_or_subject = yes
+			}		
+		206 = {
+				is_owned_by_ROOT_or_subject = yes
+			}		
+		842 = {
+				is_owned_by_ROOT_or_subject = yes
+			}
+		}
 		completion_reward = {
-		add_country_leader_trait = emperor_and_autocrat_of_all_the_russias
-		add_country_leader_trait = empire_builder
+		country_event = rus_na.51
 		}
 
 	}
 
+	shared_focus = {
+		id = UKR_amend_the_constitution
+		icon = GFX_goal_RUS_New_Constitution
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = UKR_eluosicimu
+		prerequisite = {
+			focus = UKR_eluosicimu
+		}
+		ai_will_do = {
+			factor = 20
+		}
 
+		completion_reward = {
+			add_ideas = RUS_democratic_constitution
+			add_political_power = 15
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.05
+			}
+		}
+	}
+	shared_focus = {
+		id = UKR_rebuild_the_bureaucracy
+		icon = GFX_focus_RUS_generic_controlled_board
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = UKR_amend_the_constitution
+		prerequisite = {
+			focus = UKR_amend_the_constitution
+		}
+		ai_will_do = {
+			factor = 20
+		}
 
+		available = {
+			
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RUS_democratic_constitution
+				add_idea = RUS_democratic_constitution2
+			}
+		}
+
+	}	
+	shared_focus = {
+		id = UKR_jiesanmimijingcha
+		icon = GFX_goal_TRM_former_allies
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = UKR_chaihuigulage
+		prerequisite = {
+			focus = UKR_chaihuigulage
+		}
+		ai_will_do = {
+			factor = 20
+		}
+
+		available = {
+			
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RUS_democratic_constitution2
+				add_idea = RUS_democratic_constitution3
+			}			
+		}
+
+	}	
+	shared_focus = {
+		id = UKR_dalijiuji
+		icon = GFX_goal_focus_feed_the_peasants
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = UKR_amend_the_constitution
+		prerequisite = {
+			focus = UKR_amend_the_constitution
+		}
+		ai_will_do = {
+			factor = 20
+		}
+
+		available = {
+			
+		}
+
+		completion_reward = {
+		country_event = rus_na.50
+		add_ideas = RUS_liberal_thought	
+		}
+
+	}	
+	shared_focus = {
+		id = UKR_xuejianguizutequan
+		icon = GFX_goal_RUS_fight_clericalism
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = UKR_dalijiuji
+		prerequisite = {
+			focus = UKR_dalijiuji
+		}
+		ai_will_do = {
+			factor = 20
+		}
+
+		available = {
+			
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RUS_liberal_thought
+				add_idea = RUS_liberal_thought2
+			}			
+		}
+
+	}
+	shared_focus = {
+		id = UKR_cooperative_capitalism
+		icon = GFX_focus_mex_privatisation
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = UKR_xuejianguizutequan
+		prerequisite = {
+			focus = UKR_xuejianguizutequan
+		}
+		ai_will_do = {
+			factor = 20
+		}
+
+		completion_reward = {
+			random_core_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			random_core_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			add_ideas = RUS_jiejihezuo
+		}
+
+	}	
+	shared_focus = {
+		id = UKR_jiasuodepohuaizhe
+		icon = GFX_goal_TRM_freedom
+		x = 1
+		y = 1
+		cost = 5
+		relative_position_id = UKR_jiesanmimijingcha
+		prerequisite = {
+			focus = UKR_cooperative_capitalism
+		}		
+		prerequisite = {
+			focus = UKR_jiesanmimijingcha
+		}
+		ai_will_do = {
+			factor = 20
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RUS_liberal_thought2
+				add_idea = RUS_liberal_thought3
+			}
+		}
+
+	}	
 	#外交1
 
 	shared_focus = {
@@ -1072,7 +1307,7 @@
 						} 
 					}
 				}
-				activate_targeted_decision = { target = SIB decision = RUS_dec_attack }
+				SIB = { country_event = rus_for.24 }
 			}
 			if = {
 				limit = {
@@ -1084,7 +1319,7 @@
 						} 
 					}
 				}
-				activate_targeted_decision = { target = EAM decision = RUS_dec_attack }
+				EAM = { country_event = rus_for.24 }
 			}
 			add_political_power = 15
 			add_war_support = 0.05
@@ -1194,10 +1429,6 @@
 		}
 
 		completion_reward = {
-			add_state_claim = 1087
-			add_state_claim = 206
-			add_state_claim = 194
-			add_state_claim = 207
 			194 = {
 				controller = { country_event = rus_for.1 }
 			}
@@ -1397,6 +1628,9 @@
 				}
 				set_faction_name = Moscow_treaty
 			}
+		hidden_effect = {
+		news_event = { hours = 6 id = rus_news.9 }
+		}
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
 	}
@@ -1625,7 +1859,13 @@
 		}
 		
 		completion_reward = {
-		add_state_claim = 78
+			add_state_claim = 78
+			hidden_effect = {
+				78 = {
+					add_claim_by_ROOT_if_has_no_core = yes
+					enable_state_integration_80_compliance = yes
+				}
+			}
 		activate_targeted_decision = { target = ROM decision = RUS_dec_attack }			
 		}
 
@@ -1692,11 +1932,6 @@
 		}
 
 		completion_reward = {
-			POL = {
-				every_owned_state = {
-					add_claim_by = ROOT
-				}
-			}
 			if = {
 				limit = {
 					POL = { is_subject_of = ROOT }
@@ -1767,7 +2002,8 @@
 		}
 
 		available = {
-		is_subject = no
+			is_subject = no
+			has_global_flag = second_weltkrieg_has_started
 		}
 		
 		bypass = {
@@ -1813,6 +2049,7 @@
 		add_political_power = 50
 		add_ideas = RUS_zhongdongboyi_for
 		custom_effect_tooltip = RUS_mubiaoshiyong
+		add_state_claim = 773
 		}
 
 	}
@@ -1920,6 +2157,39 @@
 
 		completion_reward = {
 			activate_targeted_decision = { target = AFG decision = RUS_dec_attack }
+		}
+
+	}	
+	shared_focus = {
+		id = UKR_disanluoma
+		icon = GFX_focus_SOV_third_rome
+		x = 0
+		y = 1
+		cost = 2
+		relative_position_id = UKR_afuhanzhanzheng
+		prerequisite = {
+			focus = UKR_afuhanzhanzheng
+		}
+		ai_will_do = {
+			factor = 15
+		}
+
+		available = {
+		is_subject = no
+		has_country_leader = { character = SOV_Anastasia }
+		owns_state = 773
+		}
+
+		completion_reward = {
+			set_cosmetic_tag = SOV_ROME
+			add_country_leader_trait = driver_of_the_faithful
+			773 = {
+				set_state_name = "沙皇格勒"
+				set_province_name = {
+					id = 9833
+					name = "沙皇格勒"
+				}
+			}
 		}
 
 	}	
@@ -2070,7 +2340,8 @@
 		}
 
 		available = {
-		is_subject = no
+			is_subject = no
+			has_global_flag = second_weltkrieg_has_started
 		}
 
 		bypass = {
@@ -4067,6 +4338,7 @@
 				uses = 2
 				category = infantry_tech
 			}
+			add_ideas = FRG_xinshibuqiang_idea_2
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 	}
@@ -4096,6 +4368,7 @@
 				uses = 2
 				category = artillery
 			}
+			add_ideas = FRG_diancipao_idea
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 	}
@@ -4288,6 +4561,7 @@
 				ahead_reduction = 2
 				uses = 2
 			}
+			add_ideas = SOV_veritas_university
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 	}
@@ -4297,7 +4571,7 @@
 		icon = GFX_goal_RUS_The_Might_Of_Russian_Army
 		x = 1
 		y = 1
-		cost = 8	
+		cost = 5	
 		relative_position_id = UKR_veritas_military_university
 		prerequisite = {
 			focus = UKR_veritas_military_university
@@ -4311,7 +4585,10 @@
 		}
 
 		completion_reward = {
-			add_ideas = RUS_armor_modernization
+			swap_ideas = {
+				remove_idea = SOV_veritas_university
+				add_idea = SOV_veritas_university2
+			}
 			add_tech_bonus = {
 				name = UKR_armor_modernization
 				bonus = 0.5
@@ -4408,14 +4685,21 @@
 		icon = GFX_goal_RUS_Long_Live_Tsar
 		x = -6
 		y = 1
-		cost = 5
+		cost = 2
 		relative_position_id = UKR_minzufuxing
 		mutually_exclusive = { focus = UKR_eluosixinweilai }
 		prerequisite = {
 			focus = UKR_minzufuxing
 		}
 		ai_will_do = {
-			factor = 10
+				base = 5
+				modifier = {
+					factor = 0
+					has_game_rule = {
+						rule = AH_UKR_ai_behavior_SELECTION_b
+						option = UKR_GAME_RULE_b_4
+					}
+				}
 		}
 		available = { 
 		has_country_leader = { character = SOV_Anastasia }
@@ -4423,6 +4707,9 @@
 		}
 		completion_reward = {
 		add_country_leader_trait = fascist_orchestrator
+		hidden_effect = {
+		news_event = { hours = 6 id = rus_news.6 }
+		}
 		}
 
 	}	
@@ -4591,14 +4878,21 @@
 		icon = GFX_goal_RUS_A_New_Generation
 		x = 6
 		y = 1
-		cost = 5
+		cost = 2
 		relative_position_id = UKR_minzufuxing
 		mutually_exclusive = { focus = UKR_tuanjiezaishahuangdelingdaoxia }
 		prerequisite = {
 			focus = UKR_minzufuxing
 		}
 		ai_will_do = {
-			factor = 10
+				base = 5
+				modifier = {
+					factor = 0
+					has_game_rule = {
+						rule = AH_UKR_ai_behavior_SELECTION_b
+						option = UKR_GAME_RULE_b_2
+					}
+				}
 		}
 
 		completion_reward = {
@@ -4608,6 +4902,9 @@
 			ideology = fascism
 			long_name = RUS_JUN_fascism_party_long
 			name = RUS_JUN_fascism_party
+		}
+		hidden_effect = {
+		news_event = { hours = 6 id = rus_news.7 }
 		}
 		}
 
@@ -5518,6 +5815,9 @@
 		completion_reward = {
 			RUS_fight_bolsheviks_effect = yes
 			add_political_power = 15
+		hidden_effect = {
+		news_event = { hours = 6 id = rus_news.8 }
+		}
 		}
 
 	}	
@@ -5790,7 +6090,7 @@
 		}
 		
 		completion_reward = {
-		add_ideas = RUS_lingxiumeili	
+		country_event = rus_na.53	
 		}
 
 	}	
@@ -6122,13 +6422,23 @@
 			factor = 10
 		}
 		relative_position_id = UKR_niandudayanxi
-
+		available = {
+		owns_state = 206
+		owns_state = 842
+		owns_state = 408
+		64 = {
+				is_owned_by_ROOT_or_subject = yes
+			}		
+		10 = {
+				is_owned_by_ROOT_or_subject = yes
+			}
+		}
 		prerequisite = {
 			focus = UKR_niandudayanxi
 		}
 		
 		completion_reward = {
-		add_ideas = RUS_tadeyichan	
+		country_event = rus_na.40		
 		}
 
 	}	
@@ -6264,7 +6574,17 @@
 			factor = 10
 		}
 		relative_position_id = UKR_yanjiudiqiumofa
-
+		available = {
+		owns_state = 206
+		owns_state = 842
+		owns_state = 408
+		64 = {
+				is_owned_by_ROOT_or_subject = yes
+			}		
+		10 = {
+				is_owned_by_ROOT_or_subject = yes
+			}
+		}
 		prerequisite = {
 			focus = UKR_yanjiudiqiumofa
 		}
@@ -6273,10 +6593,7 @@
 		}
 		
 		completion_reward = {
-			swap_ideas = {
-				remove_idea = RUS_gangtiezhilong2
-				add_idea = RUS_gangtiezhilong3
-			}			
+			country_event = rus_na.41
 		}
 
 	}	
@@ -6377,16 +6694,23 @@
 			factor = 10
 		}
 		relative_position_id = UKR_daobiaoyandeshikele
-
+		available = {
+		owns_state = 206
+		owns_state = 842
+		owns_state = 408
+		64 = {
+				is_owned_by_ROOT_or_subject = yes
+			}		
+		10 = {
+				is_owned_by_ROOT_or_subject = yes
+			}
+		}
 		prerequisite = {
 			focus = UKR_daobiaoyandeshikele
 		}
 		
 		completion_reward = {
-			swap_ideas = {
-				remove_idea = RUS_wuxudezhixu3
-				add_idea = RUS_wuxudezhixu4
-			}			
+		country_event = rus_na.42
 		}
 
 	}	
@@ -6466,16 +6790,23 @@
 			factor = 10
 		}
 		relative_position_id = UKR_shanliangdemofa
-
+		available = {
+		owns_state = 206
+		owns_state = 842
+		owns_state = 408
+		64 = {
+				is_owned_by_ROOT_or_subject = yes
+			}		
+		10 = {
+				is_owned_by_ROOT_or_subject = yes
+			}
+		}
 		prerequisite = {
 			focus = UKR_shanliangdemofa
 		}
 		
 		completion_reward = {
-			swap_ideas = {
-				remove_idea = RUS_shanliangmofa3
-				add_idea = RUS_shanliangmofa4
-			}			
+		country_event = rus_na.43
 		}
 
 	}	
@@ -6629,16 +6960,23 @@
 			factor = 10
 		}
 		relative_position_id = UKR_jiaotadadi
-
+		available = {
+		owns_state = 206
+		owns_state = 842
+		owns_state = 408
+		64 = {
+				is_owned_by_ROOT_or_subject = yes
+			}		
+		10 = {
+				is_owned_by_ROOT_or_subject = yes
+			}
+		}
 		prerequisite = {
 			focus = UKR_jiaotadadi
 		}
 		
 		completion_reward = {
-			swap_ideas = {
-				remove_idea = RUS_yuanshizhuyi3
-				add_idea = RUS_yuanshizhuyi4
-			}			
+		country_event = rus_na.44
 		}
 
 	}	
@@ -6781,7 +7119,13 @@
 			factor = 10
 		}
 		relative_position_id = UKR_youxianfazhanhaijun
-
+		available = {
+		owns_state = 408
+		has_navy_size = {
+			type = capital_ship
+			size > 49
+		}
+		}
 		prerequisite = {
 			focus = UKR_youxianfazhanhaijun
 		}
@@ -6790,10 +7134,7 @@
 		}
 		
 		completion_reward = {
-		swap_ideas = {
-				remove_idea = RUS_yongyoudahai4
-				add_idea = RUS_yongyoudahai5
-			}			
+		country_event = rus_na.45
 		}
 
 	}	
@@ -7042,7 +7383,6 @@
 			 ideology = democratic
 			 popularity = 0.5
 			}
-		set_cosmetic_tag = russia_green
 		}
 
 	}

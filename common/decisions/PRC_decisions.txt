@@ -482,11 +482,8 @@ PRC_Industrialization_of_China = {
 					limit = { not = { is_core_of = ROOT } }
 					add_compliance = 10
 				}
-				add_state_modifier = {
-					modifier = {
-						local_resources_factor = 0.1
-						local_building_slots_factor = 0.1
-					}
+				add_dynamic_modifier = {
+					modifier = PRC_Northwest_Construction_Program_modifier
 				}
 			}
 			add_to_variable = {
@@ -507,6 +504,11 @@ PRC_Industrialization_of_China = {
 		visible = {
 			has_completed_focus = PRC_China_Soviet_Railway
 			check_variable = { PRC_ask_for_SOV_equipment < 5 }
+			SOV = {
+				has_government = communism
+				is_faction_leader = yes
+				exists = yes
+			}
 		}
 		available = {
 		}
@@ -537,6 +539,11 @@ PRC_Industrialization_of_China = {
 		visible = {
 			has_completed_focus = PRC_China_Soviet_Railway
 			check_variable = { PRC_ask_for_SOV_industrial < 5 }
+			SOV = {
+				has_government = communism
+				is_faction_leader = yes
+				exists = yes
+			}
 		}
 		available = {
 		}
@@ -682,7 +689,10 @@ PRC_Revolutionary_issues = {
 				has_country_flag = PRC_war_plan_going_on
 			}
 			any_home_area_neighbor_country = {
-				tag = FROM
+				or = {
+					tag = FROM
+					is_subject_of = FROM
+				}
 			}
 		}
 		cost = 10
@@ -711,6 +721,10 @@ PRC_Revolutionary_issues = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
 				}
+				factor = 0
+			}
+			modifier = {
+				FROM = { is_subject_of = JAP }
 				factor = 0
 			}
 		}
@@ -747,7 +761,10 @@ PRC_Revolutionary_issues = {
 				has_country_flag = PRC_war_plan_going_on
 			}
 			any_home_area_neighbor_country = {
-				tag = FROM
+				or = {
+					tag = FROM
+					is_subject_of = FROM
+				}
 			}
 		}
 		cost = 10
@@ -801,6 +818,10 @@ PRC_Revolutionary_issues = {
 				}
 				factor = 0
 			}
+			modifier = {
+				FROM = { is_subject_of = JAP }
+				factor = 0
+			}
 		}
 	}
 	##谋求合作
@@ -823,6 +844,7 @@ PRC_Revolutionary_issues = {
 		}
 		available = {
 			FROM = {
+				is_subject = no
 				not = {
 					or = {
 						has_war_with = ROOT
@@ -832,7 +854,10 @@ PRC_Revolutionary_issues = {
 				}
 			}
 			any_home_area_neighbor_country = {
-				tag = FROM
+				or = {
+					tag = FROM
+					is_subject_of = FROM
+				}
 			}
 		}
 		cost = 10
@@ -1064,6 +1089,50 @@ PRC_Revolutionary_issues = {
 			}
 		}
 	}
+	##围剿反党叛匪
+	PRC_Eliminate_base_areas = {
+		icon = GFX_decision_generic_assassination
+		allowed = {
+			tag = PRC
+		}
+		#cost = 20
+		days_remove = 15
+		custom_cost_trigger = {
+			command_power > 9
+			has_equipment = { infantry_equipment > 499  }
+		}
+		available = {
+		}
+		visible = {
+			or = {
+				has_idea = PRC_Anti_party_forces
+				has_idea = PRC_Anti_party_forces_1
+				has_idea = PRC_Anti_party_forces_2
+				has_idea = PRC_Anti_party_forces_3
+			}
+		}
+		custom_cost_text = decision_cost_CP_10_and_500_gun
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				has_equipment = { infantry_equipment > 2000  }
+				factor = 100
+			}
+		}
+		remove_effect = {
+			custom_effect_tooltip = PRC_Eliminate_base_areas_TT
+			PRC_down_Anti_party_forces = yes
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -10
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -500
+				}
+			}
+		}
+	}
 }
 
 PRC_rebuild_SOV = {
@@ -1078,7 +1147,9 @@ PRC_rebuild_SOV = {
 				is_subject = no
 				has_war = no
 				is_in_faction_with = ROOT
-				has_cosmetic_tag = EAM_Soviet_union
+				controls_state = 195
+				controls_state = 219
+				controls_state = 217
 				controls_state = 561
 				controls_state = 657
 				controls_state = 560
@@ -1093,18 +1164,21 @@ PRC_rebuild_SOV = {
 			factor = 1
 		}
 		complete_effect = {
-			transfer_state = 561
-			transfer_state = 657
-			transfer_state = 560
-			transfer_state = 409
-			transfer_state = 408
-			if = {
+			every_state = {
 				limit = {
-					EAM = {
-						controls_state = 537
+					is_owned_by = EAM
+					or = {
+						state = 561
+						state = 657
+						state = 560
+						state = 409
+						state = 408
+						state = 537
 					}
 				}
-				transfer_state = 537
+				transfer_state_to = PRC
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
 			}
 			set_country_flag = PRC_declare_rebuil_SOV
 		}
@@ -1933,8 +2007,21 @@ PRC_Diplomatic_matters = {
 			not = {
 				has_country_flag = PRC_war_plan_going_on
 			}
-			any_home_area_neighbor_country = {
-				tag = FROM
+			or = {
+				any_home_area_neighbor_country = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				any_allied_country = {
+					any_home_area_neighbor_country = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+				}
 			}
 		}
 		cost = 10
@@ -1977,6 +2064,9 @@ PRC_Diplomatic_matters = {
 				is_subject = no
 				is_faction_leader = yes
 			}
+			FROM = {
+				not = { has_country_flag = PRC_diplo_invite_FROM }
+			}
 		}
 		available = {
 			is_faction_leader = yes
@@ -1984,7 +2074,6 @@ PRC_Diplomatic_matters = {
 			FROM = {
 				has_government = communism
 				is_in_faction = no
-				not = { has_country_flag = PRC_diplo_invite_FROM }
 			}
 			not = {
 				or = {
@@ -2000,7 +2089,7 @@ PRC_Diplomatic_matters = {
 			FROM = {
 				set_country_flag = PRC_diplo_invite_FROM
 				country_event = {
-					id = germany_union.0016
+					id = generic.2008
 				}
 			}
 		}
@@ -2103,6 +2192,7 @@ PRC_Guerrilla_warfare = {
 			}
 		}
 		available = {
+			has_completed_focus = PRC_guerrilla_warfare
 			has_global_flag = The_Great_War_Against_Sakura
 			has_war_with = JAP
 			FROM = {
@@ -2608,7 +2698,7 @@ PRC_Chi_Soviet_friendship = {
 		}
 		complete_effect = {
 			set_country_flag = PRC_Joined_the_Soviet_Union
-			SOV = { change_tag_from = ROOT }
+			SOV = { change_tag_from_ROOT = yes }
 			every_state = {
 				limit = { has_state_flag = is_whole_chinese_state_area }
 				add_core_of = SOV
@@ -2684,7 +2774,7 @@ PRC_red_army_reform_decision = {
 		available = {
 			has_completed_focus = PRC_red_army_reform
 		}
-		days_remove = 90
+		days_remove = 150
 		visible = {
 			or = {
 				has_idea = PRC_Tired_Red_Army_1
@@ -3352,19 +3442,220 @@ Build_chinese_united_font = {
 		complete_effect = {
 		}
 		remove_effect = {
-			SOV = { country_event = { id = PRC_add.86 } }
+			ENG = { country_event = { id = PRC_add.86 } }
 			custom_effect_tooltip = if_ENG_accept
 			effect_tooltip = {
 				add_political_power = 15
-				gain_comintern_arms_aid = yes
+				gain_comintern_arms_aid_from_ENG = yes
 			}
 		}
+	}
+}
+
+PRC_Great_Revival_bop_decision = {
+	PRC_Tokyo_Trial = {  ##东京大审判
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			or = {
+				controls_state = 282
+				any_subject_country = { controls_state = 282 }
+			}
+		}
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		cancel_if_invalid = yes
+		remove_effect = {
+			effect_tooltip = {
+				282 = { add_manpower = -600000 }
+				add_war_support = 0.01
+				add_named_threat = { threat = 5 name = Tokyo_Trial }
+				add_power_balance_value = {
+					id = PRC_Great_Revival_bop
+					value = 0.1
+				}
+			}
+			hidden_effect = {
+				country_event = { id = PRC_add.130 }
+			}
+		}
+	}
+	PRC_London_Trial = {  ##伦敦大审判
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			or = {
+				controls_state = 126
+				any_subject_country = { controls_state = 126 }
+			}
+		}
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		cancel_if_invalid = yes
+		remove_effect = {
+			effect_tooltip = {
+				126 = { add_manpower = -2000000 }
+				add_victory_points = {
+					province = 6103
+					value = -40
+				}
+				add_war_support = 0.01
+				add_named_threat = { threat = 20 name = London_Trial }
+				add_power_balance_value = {
+					id = PRC_Great_Revival_bop
+					value = 0.1
+				}
+			}
+			hidden_effect = {
+				country_event = { id = PRC_add.132 }
+			}
+		}
+	}
+	PRC_Moscow_Trial = {  ##莫斯科大审判
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			or = {
+				controls_state = 219
+				any_subject_country = { controls_state = 219 }
+			}
+		}
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		cancel_if_invalid = yes
+		remove_effect = {
+			effect_tooltip = {
+				219 = { add_manpower = -1000000 }
+				add_victory_points = {
+					province = 6380
+					value = -15
+				}
+				add_war_support = 0.01
+				add_named_threat = { threat = 15 name = Moscow_Trial }
+				add_power_balance_value = {
+					id = PRC_Great_Revival_bop
+					value = 0.1
+				}
+			}
+			hidden_effect = {
+				country_event = { id = PRC_add.131 }
+			}
+		}
+	}
+	PRC_Call_to_join_army = {  ##号召参军
+		icon = GFX_decision_generic_military
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			has_completed_focus = PRC_army_first
+		}
+		cost = 50
+		days_remove = 60
+		days_re_enable = 60
+		ai_will_do = {
+			factor = 1
+		}
+		modifier = {
+			training_time_army_factor = -0.1
+			conscription_factor = 0.1
+		}
+		complete_effect = {
+			add_power_balance_value = {
+				id = PRC_Great_Revival_bop
+				value = 0.02
+			}
+		}
+		cancel_if_invalid = yes
+	}
+	PRC_Hats_off_to_Fuhrer_decision = {  ##向元首致敬
+		icon = GFX_decision_eng_propaganda_campaigns
+		allowed = { tag = PRC }
+		visible = {
+		}
+		available = {
+			has_completed_focus = PRC_Hats_off_to_Fuhrer
+		}
+		cost = 50
+		days_remove = 60
+		days_re_enable = 60
+		ai_will_do = {
+			factor = 1
+		}
+		modifier = {
+		}
+		complete_effect = {
+			add_power_balance_value = {
+				id = PRC_Great_Revival_bop
+				value = 0.05
+			}
+		}
+		cancel_if_invalid = yes
+	}
+	PRC_Smuggl_drugs_to_colonists = {  ##向殖民者走私毒品
+		icon = GFX_decision_gre_investment_decisions
+		allowed = { tag = PRC }
+		visible = {
+			has_completed_focus = PRC_Expulsion_of_colonists
+		}
+		available = {
+			has_completed_focus = PRC_Expulsion_of_colonists
+		}
+		cost = 50
+		days_remove = 100
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 0
+		}
+		modifier = {
+		}
+		remove_effect = {
+			add_to_variable = { ubs_save = 50 }
+			custom_effect_tooltip = SOV_get_50_add_to_reserve
+			ENG = { add_ideas = PRC_Drug_abuse }
+			RAJ = {
+				limit = { is_in_ally = yes }
+				add_ideas = PRC_Drug_abuse
+			}
+			MAL = {
+				limit = { is_in_ally = yes }
+				add_ideas = PRC_Drug_abuse
+			}
+		}
+		cancel_if_invalid = yes
 	}
 }
 
 CHI_Debug = {
 	PRC_Unit_CHI_Mao = {
 		allowed = { tag = PRC }
+		visible = {
+			is_debug = yes
+		}
 		complete_effect = {
 			ROOT_get_in_the_competition_for_China_reunification = yes
 			every_state = {
@@ -3453,6 +3744,110 @@ CHI_Debug = {
 			}
 			complete_national_focus = PRC_founding_of_country_is_over
 			complete_national_focus = PRC_The_red_sun_of_the_people
+		}
+	}
+	PRC_Unit_CHI_Zhang_guo_tao = {
+		allowed = { tag = PRC }
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			ROOT_get_in_the_competition_for_China_reunification = yes
+			every_state = {
+				limit = {
+					has_state_flag = is_whole_chinese_state_area
+				}
+				add_core_of_ROOT = yes
+				transfer_state_to = ROOT
+			}
+			set_capital = {
+				state = 608
+				remember_old_capital = no
+			}
+			set_country_flag = PRC_complete_PRC_Capital_question
+			complete_national_focus = PRC_Chairman_Zhang_set_things_right
+			remove_power_balance = { id = PRC_Line_struggle_bop }
+			set_power_balance = {
+				id = PRC_Great_Revival_bop
+				left_side = PRC_Great_Revival_bop_left_side
+				right_side = PRC_Great_Revival_bop_right_side
+				set_default = yes
+			}
+			set_politics = { ruling_party = fascism }
+			add_popularity = { ideology = fascism popularity = 0.6 }
+			set_party_name = { ideology = fascism long_name = PRC_CCP_party_Zhang name = PRC_communism_party }
+			set_cosmetic_tag = China_woker_empire
+			set_portraits = {
+				character = PRC_Chen_shi_tao
+				civilian = {
+					large = "gfx/leaders/PRC/PRC_Chen_shi_tao2.dds"
+				}
+			}
+			PRC_Chen_shi_tao = {
+				add_country_leader_role = {
+					country_leader = {
+						desc = ""
+						ideology = Strasserism
+						traits = {
+						}
+						expire = "1999.1.1.1"
+						id = -1
+					}
+					promote_leader = yes
+				}
+			}
+			hidden_effect = {
+				PRC_remove_all_ideas = yes
+			}
+			custom_effect_tooltip = PRC_Founding_Ceremony_tt
+			add_ideas = ROC_crushed_country_1
+			if = {
+				limit = { has_idea = PRC_Government_of_Defense_of_NorthWest_idea }
+				swap_ideas = {
+					remove_idea = PRC_Government_of_Defense_of_NorthWest_idea
+					add_idea = PRC_New_China
+				}
+			}
+			else = {
+				swap_ideas = {
+					remove_idea = PRC_last_hope_of_Chinese_revolution_2
+					add_idea = PRC_New_China
+				}
+			}
+			hidden_effect = {
+				news_event = {
+					id = PRC_news.07
+					days = 1
+				}
+				country_event = {
+					id = PRC_add.48
+					days = 2
+				}
+				country_event = {
+					id = PRC_add.45
+					days = 100
+				}
+			}
+			delete_units = {
+				division_template = "华东游击队"
+				disband = yes
+			}
+			delete_units = {
+				division_template = "华北游击队"
+				disband = yes
+			}
+			delete_units = {
+				division_template = "西北游击队"
+				disband = yes
+			}
+			delete_units = {
+				division_template = "中原游击队"
+				disband = yes
+			}
+			delete_units = {
+				division_template = "东北游击队"
+				disband = yes
+			}
 		}
 	}
 }

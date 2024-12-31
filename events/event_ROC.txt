@@ -458,7 +458,7 @@ country_event = {
 			}
 			hidden_effect = {
 				ROC_remove_all_ideas = yes
-				add_ideas = ROC_ChIang_Kaishek_idea
+				add_ideas = ROC_Chiang_Kaishek_idea
 				ROOT = { news_event = { id = roc_news.005 } }
 			}
 			else = {
@@ -494,7 +494,7 @@ country_event = {
 				}
 			}
 		}
-		retire_character = ROC_ChIang_Kaishek
+		retire_character = ROC_Chiang_Kaishek
 		remove_ideas = ROC_blue_shirts
 		add_popularity = {
 			ideology = fascism
@@ -531,7 +531,7 @@ country_event = {
 		ai_chance = {
 			base = 0
 		}
-		retire_character = ROC_ChIang_Kaishek
+		retire_character = ROC_Chiang_Kaishek
 		hidden_effect = {
 			ROC_remove_all_ideas = yes
 			add_ideas = ROC_Provisional_Senate_idea
@@ -576,7 +576,7 @@ country_event = {
 		ai_chance = {
 			factor = 10
 		}
-		retire_character = ROC_ChIang_Kaishek
+		retire_character = ROC_Chiang_Kaishek
 		add_stability = -0.1
 		add_political_power = -100
 		add_manpower = -100
@@ -639,7 +639,7 @@ country_event = {
 			popularity = 0.4
 		}
 		ROC = {
-			activate_mission = ROC_blue_shirtp_ressure
+			activate_mission = ROC_blue_shirt_pressure
 			set_variable = {
 				roc_blue_pressure = 30
 			}
@@ -675,7 +675,7 @@ country_event = {
 			retire_character = ROC_81
 			retire_character = ROC_92
 			retire_character = ROC_nz75
-			retire_character = ROC_xuechu
+			retire_character = ROC_Snowsant
 			retire_character = ROC_zi
 			retire_character = ROC_zhaogang
 		}
@@ -701,7 +701,7 @@ country_event = {
 			ROC_nz75 = {
 				set_nationality = AHM
 			}
-			ROC_xuechu = {
+			ROC_Snowsant = {
 				set_nationality = AHM
 			}
 			ROC_zi = {
@@ -2221,7 +2221,7 @@ country_event = {
 		}
 		activate_targeted_decision = {
 			target = MAN
-			decision = CHI_attck_FROM
+			decision = ROC_attck_FROM
 		}
 	}
 }
@@ -2540,19 +2540,32 @@ country_event = {
 	option = {
 		name = roc.60.a
 		end_puppet_this = yes
+		leave_faction = yes
 		drop_cosmetic_tag = yes
 		remove_ideas = ROC_Covert_contact_with_KMT
 		add_ideas = ROC_blue_shirts
 		add_ideas = ROC_NRA_1
 		promote_character = {
-			character = ROC_ChIang_Kaishek
+			character = ROC_Chiang_Kaishek
 			ideology = Three_Principles_of_the_People_n
 		}
 		hidden_effect = {
+			every_state = {
+				teleport_armies = {
+					limit = {
+						tag = ROC
+					}
+					to_state_array = owned_controlled_states
+				}
+			}
 			CHI = {
 				country_event = {
-					id = chi.60
+					id = chi.7
+					days = 1
 				}
+				# country_event = {
+				# 	id = chi.60
+				# }
 			}
 			ROC_remove_all_ideas = yes
 			add_ideas = ROC_Wang_Jingwei_idea
@@ -2595,14 +2608,6 @@ country_event = {
 		add_ideas = ROC_Second_Northern_Expedition
 		declare_war_on = { target = WUH type = annex_everything }
 		declare_war_on = { target = FUJ type = annex_everything }
-		hidden_effect = {
-			PRC = {
-				country_event = {
-					id = PRC_add.40
-					days = 2
-				}
-			}
-		}
 		ai_chance = {
 			factor = 10
 		}
@@ -2620,7 +2625,7 @@ country_event = {
 	option = {
 		name = roc.62.a
 		608 = {
-			set_state_name = "北平特别市"
+			set_state_name = "北平"
 			set_state_flag = has_change_name_to_beiping
 		}
 		set_province_name = {
@@ -2682,6 +2687,9 @@ country_event = {
 	option = {
 		name = roc.64.a
 		set_country_flag = Cooperation_between_KMT_and_CCP
+		hidden_effect = {
+			news_event = { id = roc_news.008 }
+		}
 		ai_chance = {
 			base = 25
 		}
@@ -2712,6 +2720,8 @@ country_event = {
 	fire_only_once = no
 	option = {
 		name = roc.66.a
+		custom_effect_tooltip = change_tag_to_ROC
+		ROC = { change_tag_from_ROOT = yes }
 		ROC = {
 			country_event = {
 				id = roc.67
@@ -2778,6 +2788,9 @@ country_event = {
 			}
 			every_character = { set_nationality = ROOT }
 			ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+		}
+		hidden_effect = {
+			news_event = { id = roc_news.009 }
 		}
 		ai_chance = {
 			base = 25
@@ -3319,6 +3332,116 @@ news_event = {
 		name = roc_news.007.f
 		trigger = {
 			tag = SOV
+		}
+	}
+}
+
+##国共联合北伐
+news_event = {
+	id = roc_news.008
+	title = roc_news.008.t
+	picture = GFX_news_event_chinese_soldiers_mountain
+	desc =  roc_news.008.desc
+	major = no
+	is_triggered_only = yes
+	option = {
+		name = roc_news.008.a
+		hidden_effect = {
+			if = {
+				limit = { ROOT = { tag = FROM } }
+				every_other_country = {
+					limit = {
+						OR = {
+							check_variable = { THIS.Chinese_Secondary_News_button_var = 2 }
+							is_chinese_country = yes
+							tag = ENG
+							tag = SOV
+						}
+					}
+					news_event = { id = roc_news.008 }
+				}
+			}
+		}
+		trigger = {
+			tag = ROC
+		}
+	}
+	option = {
+		name = roc_news.008.a
+		trigger = {
+			tag = PRC
+		}
+	}
+	option = {
+		name = roc_news.008.b
+		trigger = {
+			tag = CHI
+		}
+	}
+	option = {
+		name = roc_news.008.c
+		trigger = {
+			tag = JAP
+		}
+	}
+	option = {
+		name = roc_news.008.d
+		trigger = {
+			not = { tag = ROC }
+			not = { tag = PRC }
+			not = { tag = CHI }
+			not = { tag = JAP }
+		}
+	}
+}
+
+##国共联合政府成立
+news_event = {
+	id = roc_news.009
+	title = roc_news.009.t
+	picture = GFX_news_event_chinese_soldiers_mountain
+	desc =  roc_news.009.desc
+	major = no
+	is_triggered_only = yes
+	option = {
+		name = roc_news.009.a
+		hidden_effect = {
+			if = {
+				limit = { ROOT = { tag = FROM } }
+				every_other_country = {
+					limit = {
+						OR = {
+							check_variable = { THIS.Chinese_Secondary_News_button_var = 2 }
+							is_chinese_country = yes
+							tag = ENG
+							tag = SOV
+						}
+					}
+					news_event = { id = roc_news.009 }
+				}
+			}
+		}
+		trigger = {
+			tag = ROC
+		}
+	}
+	option = {
+		name = roc_news.009.a
+		trigger = {
+			tag = PRC
+		}
+	}
+	option = {
+		name = roc_news.009.b
+		trigger = {
+			tag = JAP
+		}
+	}
+	option = {
+		name = roc_news.009.c
+		trigger = {
+			not = { tag = ROC }
+			not = { tag = JAP }
 		}
 	}
 }
