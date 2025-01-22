@@ -16,6 +16,51 @@ LIB_debug = {
 		}
 	}
 }
+FREE_FRA_Return_from_Hell = {
+	FREE_FRA_Rebuild_Gensokyo = {
+		allowed = {
+			tag = LIB
+		}
+		visible = {
+		}
+		available = {
+			controls_state = 16
+			# custom_trigger_tooltip = {
+			# 	tooltip = unm_of_control_france_state_bigger_20
+			# 	check_variable = { unm_of_control_france_state > 20 }
+			# }
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_capital = {
+				state = 16
+				remember_old_capital = no
+			}
+			FRA_set_rule_party_name = yes
+			set_cosmetic_tag = FRA
+			every_state = {
+				limit = {
+					ROOT = {
+						or = {
+							any_allied_country = {
+								controls_state = PREV.PREV
+								PREV.PREV = { not = { is_core_of = PREV.PREV } }
+							}
+							controls_state = PREV
+						}
+					}
+					has_state_flag = FRA_mainland_state
+					owner = { NOT = { tag = ROOT } }
+				}
+				set_state_owner_to = ROOT
+			}
+		}
+	}
+}
 LIB_bba_industery_decisions = {
 	steal_civilian_factory_from_fra = {
 		days_remove = 10
@@ -143,7 +188,7 @@ LIB_ENG_equipment_decisions = {
 					target = ROOT
 					value > 29
 				}
-				SOV_is_valid_subject = yes
+				country_exists = SOV
 				NOT = {
 					has_war_with = ROOT
 				}
@@ -186,7 +231,7 @@ LIB_ENG_equipment_decisions = {
 					target = ROOT
 					value > 29
 				}
-				ENG_is_valid_subject = yes
+				country_exists = ENG
 				NOT = {
 					has_war_with = ROOT
 				}
@@ -206,6 +251,608 @@ LIB_ENG_equipment_decisions = {
 					days = 1
 				}
 			}
+		}
+	}
+}
+LIB_back_to_home = {
+	LIB_south_invasion = {
+		icon = GFX_decision_hol_draw_up_staff_plans	
+		cost = 10	
+		fire_only_once = yes
+		days_remove = 3
+		visible = {
+			has_completed_focus = LIB_south_invasion
+		}
+		available = {
+			not = {
+				22 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+				19 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+				31 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000			
+		}	
+		highlight_states = {
+			highlight_state_targets = {
+				state = 19
+				state = 22
+				state = 31
+			}
+			highlight_color_while_active = 3
+			highlight_color_before_active = 2
+		}
+		complete_effect = {  		
+		}		
+		modifier = {
+	   	}
+		remove_effect = {
+			activate_mission = LIB_mission_south_invasion	
+			custom_effect_tooltip = LIB_south_invasion
+			LIB = {
+				19 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_south_invasion
+						scope = LIB		
+						days = 180		
+					}
+				}
+				22 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_south_invasion
+						scope = LIB		
+						days = 180				
+					}
+				}
+				31 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_south_invasion
+						scope = LIB	
+						days = 180					
+					}
+				}
+			}	
+			custom_effect_tooltip = LIB_tooltip_news_1
+		}	
+	}
+	LIB_mission_south_invasion = {   #南部登录
+		priority = 100
+		name = LIB_mission_south_invasion
+		icon = eng_trade_unions_support		
+		days_mission_timeout = 180
+		fire_only_once = no
+		visible = {
+			tag = LIB			
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 19
+				state = 22
+				state = 31
+			}
+			highlight_color_while_active = 3
+			highlight_color_before_active = 2
+		}
+		cancel_if_not_visible = yes
+		is_good = no
+		available = { #完成任务的条件
+			22 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+			19 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+			31 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+		}
+		activation = { #触发任务的条件（满足这个条件就开始任务）
+			always = no
+		}
+		timeout_effect = {
+			add_political_power = -25
+			add_stability = -0.1
+			add_war_support = -0.1
+		}
+		complete_effect = {    
+			army_experience = 50
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 50
+			add_stability = 0.1
+			add_war_support = 0.1
+		}
+	}
+	LIB_southeast_invasion = {
+		icon = GFX_decision_hol_draw_up_staff_plans	
+		cost = 10	
+		fire_only_once = yes
+		days_remove = 3
+		visible = {
+			has_completed_focus = LIB_southeast_invasion
+		}
+		available = {
+			not = {
+				21 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+				763 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+				735 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000			
+		}	
+		highlight_states = {
+			highlight_state_targets = {
+				state = 763
+				state = 21
+				state = 735
+			}
+			highlight_color_while_active = 3
+			highlight_color_before_active = 2
+		}
+		complete_effect = {  		
+		}		
+		modifier = {
+	   	}
+		remove_effect = {
+			activate_mission = LIB_mission_southeast_invasion	
+			custom_effect_tooltip = LIB_south_invasion
+			LIB = {
+				21 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_southeast_invasion
+						scope = LIB	
+						days = 180					
+					}
+				}
+				763 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_southeast_invasion
+						scope = LIB	
+						days = 180					
+					}
+				}
+				735 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_southeast_invasion
+						scope = LIB	
+						days = 180					
+					}
+				}
+			}	
+			custom_effect_tooltip = LIB_tooltip_news_1
+		}	
+	}
+	LIB_mission_southeast_invasion = {   #妖怪山登录
+		priority = 100
+		name = LIB_mission_southeast_invasion
+		icon = eng_trade_unions_support		
+		days_mission_timeout = 180
+		fire_only_once = no
+		visible = {
+			tag = LIB			
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 763
+				state = 21
+				state = 735
+			}
+			highlight_color_while_active = 3
+			highlight_color_before_active = 2
+		}
+		cancel_if_not_visible = yes
+		is_good = no
+		available = { #完成任务的条件
+			21 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+			763 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+			735 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+		}
+		activation = { #触发任务的条件（满足这个条件就开始任务）
+			always = no
+		}
+		timeout_effect = {
+			add_political_power = -25
+			add_stability = -0.1
+			add_war_support = -0.1
+		}
+		complete_effect = {
+			army_experience = 50
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 50
+			add_stability = 0.1
+			add_war_support = 0.1
+		}
+	}
+	LIB_northwest_invasion = {
+		icon = GFX_decision_hol_draw_up_staff_plans	
+		cost = 10	
+		fire_only_once = yes
+		days_remove = 3
+		visible = {
+			has_completed_focus = LIB_northwest_invasion
+		}
+		available = {
+			not = {
+				14 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+				15 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+				983 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000			
+		}	
+		highlight_states = {
+			highlight_state_targets = {
+				state = 14
+				state = 15
+				state = 983
+			}
+			highlight_color_while_active = 3
+			highlight_color_before_active = 2
+		}
+		complete_effect = {  		
+		}		
+		modifier = {
+	   	}
+		remove_effect = {
+			activate_mission = LIB_mission_northwest_invasion	
+			custom_effect_tooltip = LIB_northwest_invasion
+			LIB = {
+				14 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_northwest_invasion
+						scope = LIB	
+						days = 180				
+					}
+				}
+				15 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_northwest_invasion
+						scope = LIB	
+						days = 180				
+					}
+				}
+				983 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_northwest_invasion
+						scope = LIB	
+						days = 180				
+					}
+				}
+			}	
+			custom_effect_tooltip = LIB_tooltip_news_1
+		}	
+	}
+	LIB_mission_northwest_invasion = {   #白玉楼登录
+		priority = 100
+		name = LIB_mission_northwest_invasion
+		icon = eng_trade_unions_support		
+		days_mission_timeout = 180
+		fire_only_once = no
+		visible = {
+			tag = LIB			
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 15
+				state = 14
+				state = 983
+			}
+			highlight_color_while_active = 3
+			highlight_color_before_active = 2
+		}
+		cancel_if_not_visible = yes
+		is_good = no
+		available = { #完成任务的条件
+			14 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+			15 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+			983 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+		}
+		activation = { #触发任务的条件（满足这个条件就开始任务）
+			always = no
+		}
+		timeout_effect = {
+			add_political_power = -25
+			add_stability = -0.1
+			add_war_support = -0.1
+		}
+		complete_effect = {
+			army_experience = 50
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 50
+			add_stability = 0.1
+			add_war_support = 0.1
+		}
+	}
+	LIB_koumakan_invasion = {
+		icon = GFX_decision_hol_draw_up_staff_plans	
+		cost = 10	
+		fire_only_once = yes
+		days_remove = 3
+		visible = {
+			has_completed_focus = LIB_koumakan_invasion
+		}
+		available = {
+			not = {
+				6 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+				35 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+				925 = {
+					controller = {
+						OR = {
+							tag = LIB
+							is_in_faction_with = LIB
+							is_subject_of = LIB
+						}
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000			
+		}	
+		highlight_states = {
+			highlight_state_targets = {
+				state = 6
+				state = 35
+				state = 925
+			}
+			highlight_color_while_active = 3
+			highlight_color_before_active = 2
+		}
+		complete_effect = {  		
+		}		
+		modifier = {
+	   	}
+		remove_effect = {
+			activate_mission = LIB_mission_koumakan_invasion 
+			custom_effect_tooltip = LIB_northwest_invasion
+			LIB = {
+				6 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_koumakan_invasion 
+						scope = LIB		
+						days = 180			
+					}
+				}
+				35 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_koumakan_invasion 
+						scope = LIB		
+						days = 180			
+					}
+				}
+				925 = {
+					add_dynamic_modifier = {
+						modifier = LIB_dynamic_modifier_koumakan_invasion 
+						scope = LIB		
+						days = 180			
+					}
+				}
+			}	
+			custom_effect_tooltip = LIB_tooltip_news_1
+		}	
+	}
+	LIB_mission_koumakan_invasion = {   #红魔馆登录
+		priority = 100
+		name = LIB_mission_koumakan_invasion
+		icon = eng_trade_unions_support		
+		days_mission_timeout = 180
+		fire_only_once = no
+		visible = {
+			tag = LIB			
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 6
+				state = 35
+				state = 925
+			}
+			highlight_color_while_active = 3
+			highlight_color_before_active = 2
+		}
+		cancel_if_not_visible = yes
+		is_good = no
+		available = { #完成任务的条件
+			6 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+			35 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+			925 = {
+				controller = {
+					OR = {
+						tag = LIB
+						is_in_faction_with = LIB
+						is_subject_of = LIB
+					}
+				}
+			}
+		}
+		activation = { #触发任务的条件（满足这个条件就开始任务）
+			always = no
+		}
+		timeout_effect = {
+			add_political_power = -25
+			add_stability = -0.1
+			add_war_support = -0.1
+		}
+		complete_effect = { 
+			army_experience = 50
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 50
+			add_stability = 0.1
+			add_war_support = 0.1
 		}
 	}
 }
