@@ -393,6 +393,231 @@ add_namespace = PAL_news
 		}
 	}
 
+	#冲突爆发！
+	country_event = {
+		id = PAL.015
+		title = PAL.015.titile
+		desc = PAL.015.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.015.a
+			set_country_flag = PAL_Civil_war_in_royal_court_start
+			hidden_effect = {
+				if = {
+					limit = { is_ai = yes }
+					country_event = {
+						id = PAL.016
+					}
+				}
+				else = {
+					country_event = {
+						id = PAL.017
+					}
+				}
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#我的回合
+	country_event = {
+		id = PAL.016
+		title = PAL.016.titile
+		desc = PAL.016.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.016.a
+			PAL_Gacha_Blackjack = yes
+			ai_chance = {
+				base = 10
+				modifier = {
+					check_variable = { RCIW_hands_total_point > 16 }
+					factor = 0
+				}
+			}
+			trigger = {
+				check_variable = { RCIW_hands_total_point < 22 }
+			}
+			hidden_effect = {
+				country_event = {
+					id = PAL.016
+					hours = 1
+				}
+			}
+		}
+		option = {
+			name = PAL.016.b
+			set_country_flag = ready_for_RCIW_settlement
+			PAL_settle_Blackjack = yes
+			ai_chance = {
+				base = 0
+				modifier = {
+					check_variable = { RCIW_hands_total_point > 16 }
+					add = 10
+				}
+			}
+		}
+	}
+
+	#游玩指南
+	country_event = {
+		id = PAL.017
+		title = PAL.017.titile
+		desc = PAL.017.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.017.a
+			hidden_effect = {
+				country_event = {
+					id = PAL.016
+				}
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#我方胜利
+	country_event = {
+		id = PAL.018
+		title = PAL.018.titile
+		desc = PAL.018.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.018.a
+			if = {
+				limit = { check_variable = { ROOT.RCIW_point = 2 } }
+				if = {
+					limit = { tag = PAL }
+					country_event = { id = PAL.023 }
+				}
+				if = {
+					limit = { tag = RIS }
+					country_event = { id = ris.9 }
+				}
+			}
+			else = {
+				PAL = { country_event = { id = PAL.022 } }
+				RIS = { country_event = { id = PAL.022 } }
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#平局
+	country_event = {
+		id = PAL.019
+		title = PAL.019.titile
+		desc = PAL.019.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.019.a
+			hidden_effect = {
+				country_event = { id = PAL.022 }
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#对方胜利-PAL
+	country_event = {
+		id = PAL.020
+		title = PAL.020.titile
+		desc = PAL.020.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.020.a
+			if = {
+				limit = { check_variable = { PAL.RCIW_point = 2 } }
+				country_event = { id = ris.10 }
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#对方胜利-RIS
+	country_event = {
+		id = PAL.021
+		title = PAL.021.titile
+		desc = PAL.021.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.021.a
+			if = {
+				limit = { check_variable = { RIS.RCIW_point = 2 } }
+				country_event = { id = PAL.024 }
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#新的一轮！
+	country_event = {
+		id = PAL.022
+		title = PAL.022.titile
+		desc = PAL.022.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.022.a
+			PAL_load_in_Blackjack = yes
+			country_event = {
+				id = PAL.017
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#胜利！（PAL）
+	country_event = {
+		id = PAL.023
+		title = PAL.023.titile
+		desc = PAL.023.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.023.a
+			clr_country_flag = PAL_Civil_war_in_royal_court_start
+			transfer_state = 553
+			has_completed_focus = PAL_Civil_war_in_royal_court
+			has_completed_focus = PAL_MCC_win
+			add_political_power = 30
+			add_stability = 0.1
+			add_war_support = 0.1
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#失败！（PAL）
+	country_event = {
+		id = PAL.024
+		title = PAL.024.titile
+		desc = PAL.024.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL.024.a
+			clr_country_flag = PAL_Civil_war_in_royal_court_start
+			has_completed_focus = PAL_Civil_war_in_royal_court
+			has_completed_focus = PAL_Government_Reorganization
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
 
 
 
@@ -475,6 +700,26 @@ add_namespace = PAL_news
 				}
 			}
 			PAL_remove_all_ideas = yes
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+	country_event = {
+		id = PAL.2001
+		title = PAL.2000.titile
+		desc = PAL.2000.desc
+		is_triggered_only = yes
+		option = {
+			name = PAL_load_in_Blackjack
+			PAL_load_in_Blackjack = yes
+			ai_chance = {
+				base = 10
+			}
+		}
+		option = {
+			name = PAL_Gacha_Blackjack
+			PAL_Gacha_Blackjack = yes
 			ai_chance = {
 				base = 10
 			}
