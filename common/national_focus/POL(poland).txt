@@ -21,7 +21,7 @@ focus_tree = {
 
 	continuous_focus_position = { x = 100 y = 1000 }
 
-#��ҵ���˼ƻ�
+#工业
 	focus = {
 		id = POL_industrial_plan
 		icon = GFX_goal_SOV_bulgar_history
@@ -154,22 +154,46 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		bypass = {
+			NOT = { has_idea = POL_apartheid_policy }
+			OR = {
+				NOT = { country_exists = PRE }
+				PRE = {
+					all_core_state = {
+						is_owned_by = ROOT
+					}
+				}
+			}
+		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		will_lead_to_war_with = PRE
 		cancelable = no
-		completion_reward = {
-			remove_ideas = POL_apartheid_policy
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
+		select_effect = {
+			if = {
+				limit = { has_idea = POL_apartheid_policy }
+				country_event = polish.042
 			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = POL_local_autonomy_tt
 			PRE = { country_event = polish.010 }
 			custom_effect_tooltip = if_they_accept
 			effect_tooltip = {
 				annex_country = {
 					target = PRE
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_idea = POL_apartheid_policy }
+					country_event = { id = polish.045 days = 14 }
+					country_event = { id = polish.045 days = 21 }
+					country_event = { id = polish.045 days = 35 }
+					remove_ideas = POL_apartheid_policy
+					add_timed_idea = {
+						idea = POL_apartheid_policy_fack
+						days = var:POL_apartheid_policy_days
+					}
 				}
 			}
 		}
@@ -1331,7 +1355,7 @@ focus_tree = {
 		}
 	}
 
-#�﷫��
+#海军
 
 	focus = {
 		id = POL_make_sail
@@ -1652,7 +1676,7 @@ focus_tree = {
 		}
 	}
 
-#���Ҷ�Ա�ƻ�
+#陆军
 
 	focus = {
 		id = POL_national_mobilization_plan
@@ -1712,6 +1736,23 @@ focus_tree = {
 				modifier = POL_per_capita_horsepower_theory
 			}
 			set_country_flag = POL_per_capita_horsepower_flag
+			set_technology = { tech_silverspear_pegasus = 1 }
+			division_template = {
+				name = "Silverspear Pegasus"
+				regiments = {
+					silverspear_pegasus = { x = 0 y = 0 }
+					silverspear_pegasus = { x = 0 y = 1 }
+					silverspear_pegasus = { x = 0 y = 2 }
+					silverspear_pegasus = { x = 1 y = 0 }
+					silverspear_pegasus = { x = 1 y = 1 }
+					silverspear_pegasus = { x = 1 y = 2 }
+				}
+				support = {
+					recon = { x = 0 y = 0 }
+					engineer = { x = 0 y = 1 }
+					artillery = { x = 0 y = 2 }
+				}
+			}
 		}
 	}
 						
@@ -2291,24 +2332,7 @@ focus_tree = {
 			hidden_effect = {
 				add_to_variable = { POL_horsepower_army_org_factor = 0.10 }
 			}
-			set_technology = { tech_silverspear_pegasus = 1 }
 			set_technology = { tech_magic_silverspear_pegasus = 1 }
-			division_template = {
-				name = "Silverspear Pegasus"
-				regiments = {
-					silverspear_pegasus = { x = 0 y = 0 }
-					silverspear_pegasus = { x = 0 y = 1 }
-					silverspear_pegasus = { x = 0 y = 2 }
-					silverspear_pegasus = { x = 1 y = 0 }
-					silverspear_pegasus = { x = 1 y = 1 }
-					silverspear_pegasus = { x = 1 y = 2 }
-				}
-				support = {
-					recon = { x = 0 y = 0 }
-					engineer = { x = 0 y = 1 }
-					artillery = { x = 0 y = 2 }
-				}
-			}
 			mio:POL_me_organization = {
 				add_mio_funds_gain_factor = 0.15
 				add_mio_size = 1
@@ -2373,7 +2397,7 @@ focus_tree = {
 		}
 	}
 
-#�վ����෨��
+#空军
 
 	focus = {
 		id = POL_air_force_expansion
@@ -2752,7 +2776,8 @@ focus_tree = {
 			}
 		}
 	}
-										
+				
+#经济
 	focus = {
 		id = POL_economic_crisis_strikes
 		icon = GFX_goal_generic_bankruptcy
@@ -2893,7 +2918,7 @@ focus_tree = {
 		completion_reward = {
 			add_political_power = 15
 			activate_mission = POL_release_new_currency_mission
-			POL_cohesiveness_decrease = yes
+			POL_cohesiveness_decrease_effect = yes
 		}
 	}
 
@@ -3053,7 +3078,8 @@ focus_tree = {
 			custom_effect_tooltip = POL_economic_crisis_reduced_by_30_days
 		}
 	}
-									
+				
+#政治
 	focus = {
 		id = POL_reorganize_national_committee
 		icon = GFX_PAN_focu_430
@@ -3102,12 +3128,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_political_power = 50
-			POL_cohesiveness_decrease = yes
-			clamp_variable = { var = DEN_sparks_progress_var min = 0 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_decrease
-				cohesion = -5
-			}
+			POL_cohesiveness_decrease_effect = yes
 		}
 	}
 											
@@ -4312,6 +4333,7 @@ focus_tree = {
 		}
 	}
 					
+#内战
 	focus = {
 		id = POL_fluttering_about_in_the_storm
 		icon = GFX_focus_SWE_organize_a_putsch
