@@ -25,7 +25,7 @@ focus_tree = {
 		id = HEB_AH_rebuild_country
 		icon = GFX_goal_consolidating_coalitionv2
 		x = 27
-		y = 15
+		y = 13
 		cost = 5
 		ai_will_do = {
 			base = 10
@@ -996,6 +996,8 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_research_slot = 1
+			custom_effect_tooltip = available_industrial_concern
+			show_ideas_tooltip = PAL_Kazdale_university
 		}
 	}
 	
@@ -1319,8 +1321,8 @@ focus_tree = {
 	focus = {
 		id = HEB_AH_national_defence
 		icon = GFX_goal_generic_multinational_army
-		x = 65
-		y = 15
+		x = 58
+		y = 13
 		cost = 5
 		ai_will_do = {
 			base = 10
@@ -1331,12 +1333,33 @@ focus_tree = {
 			army_experience = 25
 			navy_experience = 25
 			air_experience = 25
-			hidden_effect = {
-				if = {
-					limit = { NOT = { has_dynamic_modifier = { modifier = HEB_AH_NDF } } }
-					add_dynamic_modifier = { modifier = HEB_AH_NDF }
-				}
+			add_doctrine_cost_reduction = {
+				name = HEB_AH_national_defence
+				cost_reduction = 0.15
+				uses = 1
+				category = land_doctrine
 			}
+			add_doctrine_cost_reduction = {
+				name = HEB_AH_national_defence
+				cost_reduction = 0.15
+				uses = 1
+				category = naval_doctrine
+			}
+			add_doctrine_cost_reduction = {
+				name = HEB_AH_national_defence
+				cost_reduction = 0.15
+				uses = 1
+				category = air_doctrine
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1345,7 +1368,7 @@ focus_tree = {
 		icon = GFX_goal_generic_officers
 		prerequisite = { focus = HEB_AH_national_defence }
 		relative_position_id = HEB_AH_national_defence
-		x = -7
+		x = 0
 		y = 1
 		cost = 5
 		ai_will_do = {
@@ -1355,6 +1378,15 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_ideas = HEB_AH_general_staff
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1378,6 +1410,15 @@ focus_tree = {
 				uses = 2
 				category = land_doctrine
 			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1395,12 +1436,7 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			add_tech_bonus = {
-				name = HEB_AH_power_of_tank
-				bonus = 1.5
-				uses = 1
-				category = armor
-			}
+			add_ideas = PAL_Armored_tactics
 		}
 	}
 	
@@ -1419,7 +1455,16 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			custom_effect_tooltip = available_tank_manufacturer
+			add_tech_bonus = {
+				name = HEB_AH_our_tank
+				bonus = 1.5
+				uses = 2
+				category = armor
+			}
+			swap_ideas = {
+				remove_idea = PAL_Armored_tactics
+				add_idea = PAL_Armored_tactics_1
+			}
 		}
 	}
 	
@@ -1438,7 +1483,10 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			
+			swap_ideas = {
+				remove_idea = PAL_Armored_tactics
+				add_idea = PAL_Armored_tactics_2
+			}
 		}
 	}
 	
@@ -1458,10 +1506,7 @@ focus_tree = {
 		completion_reward = {
 			if = {
 				limit = { has_intelligence_agency = no }
-				create_intelligence_agency = {
-					name = "Hebraic Intelligence Agency"
-					icon = GFX_intelligence_agency_logo_generic_3
-				}
+				create_intelligence_agency = yes
 			}
 			else = { gain_random_agency_upgrade = yes }
 			add_ideas = HEB_AH_intelligence_agency_1
@@ -1484,27 +1529,6 @@ focus_tree = {
 		completion_reward = {
 			swap_ideas = {
 				remove_idea = HEB_AH_intelligence_agency_1
-				add_idea = HEB_AH_intelligence_agency_2
-			}
-		}
-	}
-	
-	focus = {
-		id = HEB_AH_clues_hidden_in_information
-		icon = GFX_goal_generic_major_diplo
-		prerequisite = { focus = HEB_AH_mystery_behind_numbers }
-		relative_position_id = HEB_AH_mystery_behind_numbers
-		x = 0
-		y = 1
-		cost = 5
-		ai_will_do = {
-			base = 10
-		}
-		available = {
-		}
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = HEB_AH_intelligence_agency_2
 				add_idea = HEB_AH_intelligence_agency_3
 			}
 		}
@@ -1512,7 +1536,7 @@ focus_tree = {
 	
 	focus = {
 		id = HEB_AH_restructuring_NDF
-		icon = GFX_goal_morale_bonus
+		icon = GFX_HEB_AH_restructuring_NDF
 		prerequisite = { focus = HEB_AH_general_staff }
 		relative_position_id = HEB_AH_general_staff
 		x = 3
@@ -1531,11 +1555,24 @@ focus_tree = {
 			effect_tooltip = { add_ideas = HEB_AH_military_reorganization }
 			custom_effect_tooltip = HEB_AH_restructuring_NDF_tt_2
 			remove_ideas = HEB_AH_military_reorganization
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_AAF_var = 0.05 tooltip = HEB_AH_restructuring_ND_tt_3 }
-			add_to_variable = { HEB_NDF_ADF_var = 0.05 tooltip = HEB_AH_restructuring_ND_tt_4 }
-			add_to_variable = { HEB_NDF_AOF_var = 0.10 tooltip = HEB_AH_restructuring_ND_tt_5 }
-			add_to_variable = { HEB_NDF_AMF_var = 0.10 tooltip = HEB_AH_restructuring_ND_tt_6 }
+			add_ideas = PAL_Modernized_army
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1553,10 +1590,19 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_AAF_var = 0.05 tooltip = HEB_AH_normative_training_tt }
-			add_to_variable = { HEB_NDF_ADF_var = 0.05 tooltip = HEB_AH_normative_training_tt_2 }
-			add_to_variable = { HEB_NDF_TTF_var = 0.10 tooltip = HEB_AH_normative_training_tt_3 }
+			swap_ideas = {
+				remove_idea = PAL_Modernized_army
+				add_idea = PAL_Modernized_army_1
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1574,8 +1620,16 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_IF_var = 0.10 tooltip = HEB_AH_independent_thinking_tt }
+			add_ideas = PAL_Flexible_organization
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1593,10 +1647,19 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_EGAF_var = 0.15 tooltip = HEB_AH_soldier_committee_tt }
-			add_to_variable = { HEB_NDF_PS_var = 0.10 tooltip = HEB_AH_soldier_committee_tt_2 }
-			add_to_variable = { HEB_NDF_DSF_var = 0.05 tooltip = HEB_AH_soldier_committee_tt_3 }
+			swap_ideas = {
+				remove_idea = PAL_Flexible_organization
+				add_idea = PAL_Soldiers_Council
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1614,7 +1677,19 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			
+			swap_ideas = {
+				remove_idea = PAL_Modernized_army_1
+				add_idea = PAL_Modernized_army_2
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1623,7 +1698,7 @@ focus_tree = {
 		icon = GFX_goal_generic_national_arsenal
 		prerequisite = { focus = HEB_AH_restructuring_NDF }
 		relative_position_id = HEB_AH_restructuring_NDF
-		x = 1
+		x = 2
 		y = 1
 		cost = 5
 		ai_will_do = {
@@ -1632,9 +1707,16 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_SCF_var = -0.10 tooltip = HEB_AH_experience_of_war_tt }
-			add_to_variable = { HEB_NDF_EC_var = 0.03 tooltip = HEB_AH_experience_of_war_tt_2 }
+			add_ideas = PAL_Desert_Wars
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1643,7 +1725,7 @@ focus_tree = {
 		icon = GFX_focus_prc_infiltration
 		prerequisite = { focus = HEB_AH_experience_of_war }
 		relative_position_id = HEB_AH_experience_of_war
-		x = 0
+		x = -1
 		y = 1
 		cost = 5
 		ai_will_do = {
@@ -1652,19 +1734,29 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_TPR_var = 0.10 tooltip = HEB_AH_guerrilla_warfare_tt }
-			add_to_variable = { HEB_NDF_CDR_var = -0.10 tooltip = HEB_AH_guerrilla_warfare_tt_2 }
+			swap_ideas = {
+				remove_idea = PAL_Desert_Wars
+				add_idea = PAL_guerrilla_warfare
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
 	focus = {
 		id = HEB_AH_integrate_militia
 		icon = GFX_goal_generic_recruitment
-		prerequisite = { focus = HEB_AH_restructuring_NDF }
-		relative_position_id = HEB_AH_restructuring_NDF
-		x = 3
-		y = 1
+		prerequisite = { focus = HEB_AH_experience_of_war }
+		relative_position_id = HEB_AH_experience_of_war
+		x = 0
+		y = 2
 		cost = 5
 		ai_will_do = {
 			base = 10
@@ -1672,57 +1764,18 @@ focus_tree = {
 		available = {
 		}
 		select_effect = {
-			add_ideas = HEB_AH_integrate_militia
 		}
 		completion_reward = {
-			custom_effect_tooltip = HEB_AH_integrate_militia_tt
-			effect_tooltip = { add_ideas = HEB_AH_integrate_militia }
-			custom_effect_tooltip = HEB_AH_integrate_militia_tt_2
-			remove_ideas = HEB_AH_integrate_militia
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_AOF_var = 0.05 tooltip = HEB_AH_integrate_militia_tt_3 }
-			add_to_variable = { HEB_NDF_AMF_var = 0.05 tooltip = HEB_AH_integrate_militia_tt_4 }
-			add_to_variable = { HEB_NDF_ELF_var = 0.10 tooltip = HEB_AH_integrate_militia_tt_5 }
-		}
-	}
-	
-	focus = {
-		id = HEB_AH_reserve_duty
-		icon = GFX_goal_class_a_reservists
-		prerequisite = { focus = HEB_AH_integrate_militia }
-		relative_position_id = HEB_AH_integrate_militia
-		x = 0
-		y = 1
-		cost = 5
-		ai_will_do = {
-			base = 10
-		}
-		available = {
-		}
-		completion_reward = {
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_CF_var = 0.10 tooltip = HEB_AH_reserve_duty_tt }
-			add_to_variable = { HEB_NDF_MLCF_var = -0.15 tooltip = HEB_AH_reserve_duty_tt_2 }
-		}
-	}
-	
-	focus = {
-		id = HEB_AH_everybody_the_soldier
-		icon = GFX_goal_generic_martial_law
-		prerequisite = { focus = HEB_AH_reserve_duty }
-		relative_position_id = HEB_AH_reserve_duty
-		x = 0
-		y = 1
-		cost = 5
-		ai_will_do = {
-			base = 10
-		}
-		available = {
-		}
-		completion_reward = {
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_C_var = 0.015 tooltip = HEB_AH_everybody_the_soldier_tt }
-			custom_effect_tooltip = HEB_AH_everybody_the_soldier_tt_2
+			add_ideas = PAL_Integrate_militias
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1741,7 +1794,19 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			
+			swap_ideas = {
+				remove_idea = PAL_Modernized_army_2
+				add_idea = PAL_Modernized_army_3
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	
@@ -1750,7 +1815,7 @@ focus_tree = {
 		icon = GFX_goal_generic_military_sphere
 		prerequisite = { focus = HEB_AH_soldier_committee }
 		prerequisite = { focus = HEB_AH_our_tactic }
-		prerequisite = { focus = HEB_AH_everybody_the_soldier }
+		prerequisite = { focus = HEB_AH_integrate_militia }
 		relative_position_id = HEB_AH_our_tactic
 		x = 0
 		y = 1
@@ -1761,13 +1826,27 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			custom_effect_tooltip = HEB_upgrade_army_idea
-			add_to_variable = { HEB_NDF_C_var = 0.015 tooltip = HEB_AH_ssss_tt }
-			add_to_variable = { HEB_NDF_C_var = 0.015 tooltip = HEB_AH_ssss_tt_2 }
-			add_to_variable = { HEB_NDF_C_var = 0.015 tooltip = HEB_AH_ssss_tt_3 }
-			add_to_variable = { HEB_NDF_C_var = 0.015 tooltip = HEB_AH_ssss_tt_4 }
-			add_to_variable = { HEB_NDF_C_var = 0.015 tooltip = HEB_AH_ssss_tt_5 }
-			add_to_variable = { HEB_NDF_C_var = 0.015 tooltip = HEB_AH_ssss_tt_6 }
+			swap_ideas = {
+				remove_idea = PAL_Modernized_army_3
+				add_idea = PAL_Modernized_army_4
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 ##政治线
@@ -1793,12 +1872,15 @@ focus_tree = {
 	focus = {
 		id = PAL_MCC_win
 		icon = GFX_PAL_MCC_win
-		x = -14
+		x = 0
 		y = 1
 		prerequisite = {
 			focus = PAL_Civil_war_in_royal_court
 		}
 		relative_position_id = PAL_Civil_war_in_royal_court
+		allow_branch = {
+			not = { has_completed_focus = PAL_Government_Reorganization }
+		}
 		cost = 5
 		ai_will_do = {
 			base = 10
@@ -1810,6 +1892,12 @@ focus_tree = {
 		cancel_if_invalid = yes
 		completion_reward = {
 			custom_effect_tooltip = will_be_bypass
+			hidden_effect = {
+				country_event = {
+					id = PAL.029
+					days = 1
+				}
+			}
 		}
 	}
 	#“摄政王”
@@ -1854,14 +1942,18 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			always = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			set_politics = { ruling_party = democratic }
-			add_popularity = { ideology = democratic popularity = 0.15 }
-			PAL_remove_all_ideas = yes
-			promote_character = PAL_theresia
+			custom_effect_tooltip = will_be_bypass
+			hidden_effect = {
+				country_event = {
+					id = PAL.025
+					days = 1
+				}
+			}
 		}
 	}
 	#朋友与敌人
@@ -1884,6 +1976,8 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			set_country_flag = faction_available
+			unlock_decision_category_tooltip = PAL_Diplomatic_matters
 		}
 	}
 	#与罗德岛的关系
@@ -1896,7 +1990,7 @@ focus_tree = {
 			focus = PAL_Friends_and_foes
 		}
 		relative_position_id = PAL_Friends_and_foes
-		cost = 5
+		cost = 1
 		ai_will_do = {
 			base = 10
 		}
@@ -1905,6 +1999,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_political_power = 10
 		}
 	}
 	#保持威慑
@@ -1925,10 +2020,32 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_country_leader = {
+				ruling_only = yes
+				character = PAL_Theresis
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = PAL_Maintain_deterrence_idea
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#斩草除根
@@ -1950,6 +2067,27 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = RIS
+				decision = PAL_diplo_attck_FROM
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#和解的信号
@@ -1970,10 +2108,19 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_country_leader = {
+				ruling_only = yes
+				character = PAL_theresia
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			RIS = {
+				country_event = {
+					id = PAL.031
+				}
+			}
 		}
 	}
 	#促进合并
@@ -1991,10 +2138,58 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			RIS = { is_subject_of = ROOT }
+			has_country_flag = RIS_agree_consolidation
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			effect_tooltip = {
+				annex_country = { target = RIS transfer_troops = yes }
+				RIS = {
+					every_character = { set_nationality = ROOT }
+					every_core_state = { add_core_of_ROOT = yes }
+					disable_country_integration = yes
+				}
+			}
+			hidden_effect = {
+				country_event = {
+					id = PAL.002
+				}
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = -15
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_15_red
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = -15
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_15_red
+				CHARACTER = situation_of_War_council_var
+			}
+			add_to_variable = {
+				var = Old_Babel_Ministry_power_var
+				value = 20
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_20_green
+				CHARACTER = Old_Babel_Ministry_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Old_Babel_Ministry_var
+				value = 20
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_20_green
+				CHARACTER = situation_of_Old_Babel_Ministry_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#向东看
@@ -2007,7 +2202,7 @@ focus_tree = {
 			focus = PAL_Friends_and_foes
 		}
 		relative_position_id = PAL_Friends_and_foes
-		cost = 5
+		cost = 1
 		ai_will_do = {
 			base = 10
 		}
@@ -2016,12 +2211,13 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_political_power = 10
 		}
 	}
 	#应许之地
 	focus = {
 		id = PAL_The_Promised_Land
-		icon = GFX_PAL_Tale_of_Two_Kings_Ther
+		icon = GFX_goal_generic_seize_arabia
 		x = -1
 		y = 1
 		prerequisite = {
@@ -2037,12 +2233,60 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = SYR
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = LAN
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = IRQ
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = YEM
+				decision = PAL_diplo_attck_FROM
+			}
+			every_state = {
+				limit = {
+					or = {
+						region = 187
+						region = 28
+						state = 676
+						state = 819
+						state = 349
+						state = 291
+						state = 812
+						state = 183
+					}
+				}
+				enable_state_integration_80_compliance = yes
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#往日荣光
 	focus = {
 		id = PAL_The_glory_of_past
-		icon = GFX_PAL_Tale_of_Two_Kings_Ther
+		icon = GFX_PAL_The_glory_of_past
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2054,16 +2298,38 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			controls_state = 679
+			controls_state = 291
+			controls_state = 554
+			controls_state = 677
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = PAL_The_glory_of_past_idea
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#奎隆之路
 	focus = {
 		id = PAL_The_Way_of_Quellon
-		icon = GFX_PAL_Tale_of_Two_Kings_Ther
+		icon = GFX_goal_generic_into_fire
 		x = 1
 		y = 1
 		prerequisite = {
@@ -2079,12 +2345,41 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = PER
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = AFG
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = RAJ
+				decision = PAL_diplo_attck_FROM
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#二次东征
 	focus = {
 		id = PAL_Second_Crusade
-		icon = GFX_PAL_Tale_of_Two_Kings_Ther
+		icon = GFX_goal_generic_eagle
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2100,6 +2395,71 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = TIB
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = YUN
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = CHI
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = PRC
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = ROC
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = SIC
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = WUH
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = FUJ
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = JSZ
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = MAN
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = KOR
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = JAP
+				decision = PAL_diplo_attck_FROM
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#向西看
@@ -2112,21 +2472,22 @@ focus_tree = {
 			focus = PAL_Friends_and_foes
 		}
 		relative_position_id = PAL_Friends_and_foes
-		cost = 5
+		cost = 1
 		ai_will_do = {
-			base = 10
+			base = 0
 		}
 		available = {
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_political_power = 10
 		}
 	}
 	#跨过海峡
 	focus = {
 		id = PAL_Across_strait
-		icon = GFX_PAL_Tale_of_Two_Kings_Ther
+		icon = GFX_focus_TUR_the_montreux_convention
 		x = -1
 		y = 1
 		prerequisite = {
@@ -2142,12 +2503,37 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = GRE
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = TUR
+				decision = PAL_diplo_attck_FROM
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#入主巴尔干
 	focus = {
 		id = PAL_Entered_Balkans
-		icon = GFX_PAL_Tale_of_Two_Kings_Ther
+		icon = GFX_focus_generic_balkan_diplomacy
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2163,12 +2549,58 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = ROM
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = BUL
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = KVO
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = MAC
+				decision = PAL_diplo_attck_FROM
+			}
+			activate_targeted_decision = {
+				target = ALB
+				decision = PAL_diplo_attck_FROM
+			}
+			hidden_effect = {
+				if = {
+					limit = { YUG = { exists = yes } }
+					activate_targeted_decision = {
+						target = YUG
+						decision = PAL_diplo_attck_FROM
+					}
+				}
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#西奈冲突
 	focus = {
 		id = PAL_Sinai_conflict
-		icon = GFX_PAL_Tale_of_Two_Kings_Ther
+		icon = GFX_PAL_Sinai_conflict
 		x = 1
 		y = 1
 		prerequisite = {
@@ -2180,16 +2612,54 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			controls_state = 1170
+			not = { controls_state = 453 }
+			453 = {
+				controller = { not = { has_war_with = ROOT } }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			start_border_war = {
+				change_state_after_war = no
+				attacker = {
+					state = 1170
+					num_provinces = 3
+					on_win = PAL.033
+					on_lose = PAL.034
+					modifier = 0.1
+				}	
+				defender = {
+					state = 453
+					num_provinces = 3
+					on_win = PAL.035
+					on_lose = PAL.036
+				}
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#掌控尼罗河
 	focus = {
 		id = PAL_Take_control_of_Nile
-		icon = GFX_PAL_Tale_of_Two_Kings_Ther
+		icon = GFX_PAL_Take_control_of_Nile
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2205,6 +2675,35 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			activate_targeted_decision = {
+				target = EGY
+				decision = PAL_diplo_attck_FROM
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
+			EGY = {
+				every_core_state = { add_claim_by_ROOT_if_has_no_core = yes }
+				enable_country_integration_80_compliance = yes
+			}
+			LBA = {
+				every_core_state = { add_claim_by_ROOT_if_has_no_core = yes }
+				enable_country_integration_80_compliance = yes
+			}
 		}
 	}
 	#新王庭
@@ -2453,7 +2952,7 @@ focus_tree = {
 	#促进多民族交流
 	focus = {
 		id = PAL_Promote_multi_ethnic_exchanges
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_risky_deal
 		x = 6
 		y = 1
 		prerequisite = {
@@ -2466,10 +2965,67 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_60
+				check_variable = { Reform_support_var > 59 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_timed_idea = {
+				idea = PAL_Multi_ethnic_integration
+				days = 200
+			}
+			add_to_variable = {
+				var = Kazdel_Royal_Court_power_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = Kazdel_Royal_Court_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = situation_of_Kazdel_Royal_Court_var
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = -10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_10_red
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = -10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_10_red
+				CHARACTER = situation_of_War_council_var
+			}
+			add_to_variable = {
+				var = Old_Babel_Ministry_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = Old_Babel_Ministry_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Old_Babel_Ministry_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_Old_Babel_Ministry_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#一个梦想
@@ -2487,16 +3043,55 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			not = { has_idea = PAL_Multi_ethnic_integration }
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_60
+				check_variable = { Reform_support_var > 59 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = PAL_dream_of_global_solidarity
+			add_to_variable = {
+				var = Kazdel_Royal_Court_power_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = Kazdel_Royal_Court_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = situation_of_Kazdel_Royal_Court_var
+			}
+			add_to_variable = {
+				var = War_council_power_var
+				value = -10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_10_red
+				CHARACTER = War_council_power_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = -10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_10_red
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
-	#多民族的[ROOT.Getname]
+	#多民族的卡兹戴尔
 	focus = {
 		id = PAL_Kazdale_of_multiethnicity
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_freedom
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2512,6 +3107,26 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_dream_of_global_solidarity
+				add_idea = PAL_dream_of_global_solidarity_1
+			}
+			add_to_variable = {
+				var = Old_Babel_Ministry_power_var
+				value = 10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_10_green
+				CHARACTER = Old_Babel_Ministry_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Old_Babel_Ministry_var
+				value = 10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_10_green
+				CHARACTER = situation_of_Old_Babel_Ministry_var
+			}
 		}
 	}
 	#特蕾西娅的愿景
@@ -2536,9 +3151,16 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			set_cosmetic_tag = Babel
-			set_party_name = { ideology = democratic long_name = Babel_Central_Committee name = Babel_Central_Committee }
-			set_party_name = { ideology = communism long_name = Babel_Central_Committee name = Babel_Central_Committee }
+			add_popularity = { ideology = democratic popularity = 0.1 }
+			add_to_variable = {
+				var = situation_of_Old_Babel_Ministry_var
+				value = 10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_10_green
+				CHARACTER = situation_of_Old_Babel_Ministry_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#重拾巴别塔遗产
@@ -2556,16 +3178,36 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			has_completed_focus = PAL_Eliminate_old_system
+			has_completed_focus = PAL_Kazdale_of_multiethnicity
+			has_country_flag = consolidation_with_RIS
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_90
+				check_variable = { Reform_support_var > 89 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			set_country_flag = end_PAL_Kazdel_clique
+			set_cosmetic_tag = Babel
+			set_party_name = { ideology = democratic long_name = Babel_Central_Committee name = Babel_Central_Committee }
+			set_party_name = { ideology = communism long_name = Babel_Central_Committee name = Babel_Central_Committee }
+			swap_ideas = {
+				remove_idea = PAL_modernization_Kazdale
+				add_idea = PAL_Babel_idea
+			}
+			hidden_effect = {
+				country_event = {
+					id = PAL.003
+				}
+			}
 		}
 	}
 	#团结所有人
 	focus = {
 		id = PAL_Unite_all
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_PAL_Unite_all
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2581,6 +3223,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_dream_of_global_solidarity_1
+				add_idea = PAL_dream_of_global_solidarity_2
+			}
 		}
 	}
 	#未来制度的创想
@@ -2602,12 +3248,15 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			country_event = {
+				id = PAL.004
+			}
 		}
 	}
 	#王庭改造
 	focus = {
 		id = PAL_Renovation_of_royal_court
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_PAL_Renovation_of_royal_court
 		x = -3
 		y = 1
 		prerequisite = {
@@ -2619,16 +3268,57 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_60
+				check_variable = { Reform_support_var > 59 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_to_variable = {
+				var = Kazdel_Royal_Court_power_var
+				value = -10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_10_red
+				CHARACTER = Kazdel_Royal_Court_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = -10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_10_red
+				CHARACTER = situation_of_Kazdel_Royal_Court_var
+			}
+			add_to_variable = {
+				var = Old_Babel_Ministry_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = Old_Babel_Ministry_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Old_Babel_Ministry_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_Old_Babel_Ministry_var
+			}
+			PAL_compute_Kazdel_clique = yes
+			swap_ideas = {
+				remove_idea = PAL_Covenant_of_Royal_Court
+				add_idea = PAL_Renovation_of_royal_court_idea
+			}
 		}
 	}
 	#组织现代化政党
 	focus = {
 		id = PAL_Organize_modern_political_party
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_socialist_democracy
 		x = -1
 		y = 1
 		prerequisite = {
@@ -2640,16 +3330,42 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_70
+				check_variable = { Reform_support_var > 69 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_to_variable = {
+				var = Kazdel_Royal_Court_power_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = Kazdel_Royal_Court_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = situation_of_Kazdel_Royal_Court_var
+			}
+			PAL_compute_Kazdel_clique = yes
+			swap_ideas = {
+				remove_idea = PAL_Renovation_of_royal_court_idea
+				add_idea = PAL_Renovation_of_royal_court_idea_1
+			}
+			set_party_name = { ideology = democratic long_name = PAL_Kazdale_Progressive_Alliance_party name = PAL_Kazdale_Progressive_Alliance_party }
 		}
 	}
 	#制宪会议
 	focus = {
 		id = PAL_Constituent_assembly
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_parliament
 		x = 1
 		y = 1
 		prerequisite = {
@@ -2661,16 +3377,40 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_80
+				check_variable = { Reform_support_var > 79 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_to_variable = {
+				var = Kazdel_Royal_Court_power_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = Kazdel_Royal_Court_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = situation_of_Kazdel_Royal_Court_var
+			}
+			PAL_compute_Kazdel_clique = yes
+			country_event = {
+				id = PAL.028
+			}
 		}
 	}
 	#消弭旧制
 	focus = {
 		id = PAL_Eliminate_old_system
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_PAL_Eliminate_old_system
 		x = 1
 		y = 1
 		prerequisite = {
@@ -2685,10 +3425,35 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_90
+				check_variable = { Reform_support_var > 89 }
+			}
+			custom_trigger_tooltip = {
+				tooltip = Kazdel_Royal_Court_power_var_samller_than_15
+				check_variable = { Kazdel_Royal_Court_power_var < 15 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_stability = 0.1
+			set_variable = {
+				var = Kazdel_Royal_Court_power_var
+				value = 0
+				tooltip = Kazdel_Royal_Court_power_var_be_0
+			}
+			set_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = 0
+				tooltip = situation_of_Kazdel_Royal_Court_var_be_0
+			}
+			PAL_compute_Kazdel_clique = yes
+			swap_ideas = {
+				remove_idea = PAL_Renovation_of_royal_court_idea_1
+				add_idea = PAL_modernization_Kazdale
+			}
+			swap_ruler_traits = { remove = PAL_Civilight_Eterna_trait add = PAL_Mother_of_Nation_of_Kazdale }
 		}
 	}
 	#消灭战火
@@ -2716,6 +3481,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_war_support = 0.2
+			swap_ideas = {
+				remove_idea = PAL_Babel_idea
+				add_idea = PAL_Babel_idea_1
+			}
 		}
 	}
 	#爱与和平
@@ -2737,6 +3507,10 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_dream_of_global_solidarity_2
+				add_idea = PAL_dream_of_global_solidarity_3
+			}
 		}
 	}
 	#为了泰拉的明天
@@ -2758,6 +3532,14 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_dream_of_global_solidarity_3
+				add_idea = PAL_dream_of_global_solidarity_4
+			}
+			swap_ideas = {
+				remove_idea = PAL_Babel_idea_1
+				add_idea = PAL_Babel_idea_2
+			}
 		}
 	}
 
@@ -2766,8 +3548,16 @@ focus_tree = {
 	focus = {
 		id = PAL_Government_Reorganization
 		icon = GFX_PAL_Government_Reorganization
-		x = 14
+		x = 3
 		y = 1
+		allow_branch = {
+			not = { has_completed_focus = PAL_MCC_win }
+		}
+		offset = {
+			x = -3
+			y = 0
+			trigger = { has_completed_focus = PAL_Government_Reorganization }
+		}
 		prerequisite = {
 			focus = PAL_Civil_war_in_royal_court
 		}
@@ -2782,7 +3572,13 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			set_country_flag = end_PAL_Kazdel_clique
 			custom_effect_tooltip = will_be_bypass
+			hidden_effect = {
+				country_event = {
+					id = PAL.005
+				}
+			}
 		}
 	}
 }
