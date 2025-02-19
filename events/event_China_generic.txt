@@ -1,0 +1,573 @@
+﻿add_namespace = china_generic
+add_namespace = china_ai
+
+#[FROM.Getname]邀请我们组建统一战线
+country_event = {
+	id = china_generic.001
+	title = china_generic.001.t
+	desc = china_generic.001.desc
+	#picture = GFX_event_lindisi
+	is_triggered_only = yes
+	option = {
+		name = china_generic.001.a
+		if = {
+			limit = {
+				is_faction_leader = yes
+			}
+			set_country_flag = has_faction_before
+			#set_faction_name = chinese_united_font
+		}
+		if = {
+			limit = {
+				any_country = {
+					is_in_faction_with = FROM
+					has_war_with = ROOT
+				}
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = FROM
+					has_war_with = ROOT
+				}
+				# every_controlled_state = {
+				# 	limit = { is_owned_by = PREV }
+				# 	transfer_state_to = ROOT
+				# }
+				# every_owned_state = {
+				# 	limit = { is_controlled_by = PREV }
+				# 	transfer_state_to = PREV
+				# }
+				white_peace = {
+					tag = ROOT
+					message = china_united_font_whit_peace
+				}
+			}
+		}
+		FROM = {
+			add_to_faction = ROOT
+		}
+		if = {
+			limit = {
+				NOT = {
+					has_idea = CHI_protect_our_motherland
+				}
+			}
+			add_ideas = CHI_protect_our_motherland
+		}
+		country_event = {
+			id = china_generic.002
+			days = 60
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				and = {
+					is_faction_leader = no
+					is_in_faction = yes
+				}
+				add = -10
+			}
+		}
+	}
+	option = {
+		name = china_generic.001.b
+		FROM = {
+			country_event = {
+				id = generic.2009
+			}
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				and = {
+					is_faction_leader = no
+					is_in_faction = yes
+				}
+				add = 10
+			}
+		}
+	}
+}
+
+country_event = {
+	id = china_generic.002
+	title = china_generic.002.t
+	desc = china_generic.002.desc
+	is_triggered_only = yes
+	hidden = yes
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CHINA_united_font_leader
+		}
+	}
+}
+
+##[FROM.Getname]要求我们和谈
+country_event = {
+	id = china_generic.003
+	title = china_generic.003.t
+	desc = china_generic.003.desc
+	is_triggered_only = yes
+	option = {
+		name = china_generic.003.a
+		JAP_peace_with_unit_font = yes
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = china_generic.003.b
+		add_stability = -0.2
+		add_war_support = -0.2
+		FROM = {
+			country_event = { id = china_generic.004 }
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+##[JAP.Getname]拒绝了
+country_event = {
+	id = china_generic.004
+	title = china_generic.004.t
+	desc = china_generic.004.desc
+	is_triggered_only = yes
+	option = {
+		name = china_generic.004.a
+		add_war_support = 0.2
+	}
+}
+
+#[FROM.Getname]与我们谋求合作
+country_event = {
+	id = china_generic.005
+	title = PRC_add.52.title
+	desc = PRC_add.49.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = PRC_add.49.a   ##同意
+		FROM = { country_event = { id = china_generic.006 } }
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				CHI_warlords_are_willing_to_submit = yes
+			}
+		}
+	}
+	option = {
+		name = PRC_add.49.b   ##拒绝
+		FROM = { country_event = { id = china_generic.007 } }
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				CHI_warlords_are_willing_to_submit = yes
+			}
+		}
+	}
+}
+
+#[FROM.Getname]愿意臣服
+country_event = {
+	id = china_generic.006
+	title = PRC_add.50.title
+	desc = PRC_add.50.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = PRC_add.50.a
+		set_temp_variable = { tag_to_release = FROM }
+		CHI_puppet_released_tag_and_old_govern = yes
+		clr_country_flag = CHI_war_plan_going_on
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#[FROM.Getname]拒绝臣服
+country_event = {
+	id = china_generic.007
+	title = PRC_add.51.title
+	desc = PRC_add.51.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = PRC_add.51.a
+		add_war_support = 0.01
+		activate_targeted_decision = {
+			target = FROM
+			decision = CHI_attck_FROM
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+#[FROM.Getname]要求我们臣服
+country_event = {
+	id = china_generic.008
+	title = PRC_add.49.title
+	desc = PRC_add.49.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = PRC_add.49.a   ##同意
+		FROM = {
+			country_event = {
+				id = china_generic.006
+				days = 5
+			}
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 100
+				CHI_warlords_are_willing_to_submit = yes
+			}
+		}
+	}
+	option = {
+		name = PRC_add.49.b   ##拒绝
+		FROM = {
+			country_event = {
+				id = china_generic.007
+				days = 5
+			}
+		}
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				CHI_warlords_are_willing_to_submit = yes
+			}
+		}
+	}
+}
+
+##统一全中国
+country_event = {
+	id = china_generic.009
+	title = china_generic.009.t
+	desc = china_generic.009.desc
+	picture = GFX_report_event_chinese_officers
+	is_triggered_only = yes
+	#Accept puppet
+	option = {
+		name = china_generic.009.a
+		ai_chance = {
+			base = 0
+			modifier = {
+				factor = 0
+				FROM = {
+					has_government = fascism
+				}
+			}
+			modifier = {
+				add = 100
+				FROM = {
+					has_government = ROOT
+				}
+			}
+			modifier = {
+				add = 100
+				CHI_warlords_are_willing_to_submit = yes
+			}
+		}
+		FROM = {
+			annex_country = {
+				target = ROOT
+				transfer_troops = yes
+			}
+			country_event = {
+				id = china_generic.010
+			}
+		}
+	}
+	#Never
+	option = {
+		name = china_generic.009.b
+		ai_chance = {
+			base = 35
+			modifier = {
+				add = 50
+				FROM = {
+					has_war = yes
+				}
+			}
+			modifier = {
+				factor = 0
+				CHI_warlords_are_willing_to_submit = yes
+			}
+		}
+		FROM = {
+			country_event = {
+				id = china_generic.011
+			}
+		}
+	}
+}
+
+country_event = {
+	id = china_generic.010
+	title = china_generic.010.t
+	desc = china_generic.010.desc
+	picture = GFX_report_event_chinese_japanese_handshake
+	is_triggered_only = yes
+	option = {
+		name = china_generic.010.a
+	}
+}
+
+# Answer from warlord china.1 - No
+country_event = {
+	id = china_generic.011
+	title = china_generic.011.t
+	desc = china_generic.011.desc
+	picture = GFX_report_event_chinese_soldiers_01
+	is_triggered_only = yes
+	option = {
+		name = china_generic.011.a
+		create_wargoal = {
+			type = annex_everything
+			target = FROM
+		}
+	}
+}
+
+##载入核心
+country_event = {
+	id = china_generic.012
+	title = china_generic.002.t
+	desc = china_generic.002.desc
+	is_triggered_only = yes
+	hidden = yes
+	immediate = {
+		hidden_effect = { ROOT_get_in_the_competition_for_China_reunification = yes }
+	}
+}
+
+
+###  AI
+
+#ai作弊-军改
+country_event = {
+	id = china_ai.01
+	title = china_ai.01.t
+	desc = china_ai.01.desc
+	is_triggered_only = yes
+	option = {
+		name = china_ai.01.a
+		if = {
+			limit = {
+				has_idea = CHI_Corrupt_and_incompetent_army_1
+			}
+			swap_ideas = {
+				remove_idea = CHI_Corrupt_and_incompetent_army_1
+				add_idea = CHI_Corrupt_and_incompetent_army_2
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = CHI_Corrupt_and_incompetent_army_2
+			}
+			swap_ideas = {
+				remove_idea = CHI_Corrupt_and_incompetent_army_2
+				add_idea = CHI_Corrupt_and_incompetent_army_3
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = CHI_Corrupt_and_incompetent_army_3
+			}
+			swap_ideas = {
+				remove_idea = CHI_Corrupt_and_incompetent_army_3
+				add_idea = CHI_Corrupt_and_incompetent_army_4
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = CHI_Corrupt_and_incompetent_army_4
+			}
+			swap_ideas = {
+				remove_idea = CHI_Corrupt_and_incompetent_army_4
+				add_idea = CHI_Corrupt_and_incompetent_army_5
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = CHI_Corrupt_and_incompetent_army_5
+			}
+			remove_ideas = CHI_Corrupt_and_incompetent_army_5
+			set_country_flag = army_reform_done
+		}
+		if = {
+			limit = {
+				not = {
+					has_country_flag = army_reform_done
+				}
+				exists = yes
+			}
+			country_event = {
+				id = china_ai.01
+				days = 365
+			}
+		}
+	}
+}
+
+country_event = {
+	id = china_ai.02
+	title = china_ai.02.t
+	desc = china_ai.02.desc
+	is_triggered_only = yes
+	option = {
+		name = china_ai.02.a
+		if = {
+			limit = {
+				has_idea = ROC_NRA_1
+			}
+			swap_ideas = {
+				remove_idea = ROC_NRA_1
+				add_idea = ROC_NRA_2
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = ROC_NRA_2
+			}
+			swap_ideas = {
+				remove_idea = ROC_NRA_2
+				add_idea = ROC_NRA_3
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = ROC_NRA_3
+			}
+			swap_ideas = {
+				remove_idea = ROC_NRA_3
+				add_idea = ROC_NRA_4
+			}
+			set_country_flag = ROC_army_reform_done
+		}
+		if = {
+			limit = {
+				not = {
+					has_country_flag = ROC_army_reform_done
+				}
+				exists = yes
+			}
+			country_event = {
+				id = china_ai.02
+				days = 365
+			}
+		}
+	}
+}
+
+country_event = {
+	id = china_ai.03
+	title = china_ai.03.t
+	desc = china_ai.03.desc
+	is_triggered_only = yes
+	option = {
+		name = china_ai.03.a
+		if = {
+			limit = {
+				has_idea = PRC_Tired_Red_Army_3
+			}
+			remove_ideas = PRC_Tired_Red_Army_3
+		}
+		else_if = {
+			limit = {
+				has_idea = PRC_Tired_Red_Army_2
+			}
+			swap_ideas = {
+				remove_idea = PRC_Tired_Red_Army_2
+				add_idea = PRC_Tired_Red_Army_3
+			}
+		}
+		else_if = {
+			limit = {
+				has_idea = PRC_Tired_Red_Army_1
+			}
+			swap_ideas = {
+				remove_idea = PRC_Tired_Red_Army_1
+				add_idea = PRC_Tired_Red_Army_2
+			}
+		}
+		if = {
+			limit = {
+				or = {
+					has_idea = PRC_Tired_Red_Army_3
+					has_idea = PRC_Tired_Red_Army_2
+					has_idea = PRC_Tired_Red_Army_1
+				}
+				exists = yes
+			}
+			country_event = {
+				id = china_ai.03
+				days = 365
+			}
+		}
+	}
+}
+
+country_event = {
+	id = china_ai.04
+	title = china_ai.04.t
+	desc = china_ai.04.desc
+	is_triggered_only = yes
+	hidden = yes
+	immediate = {
+		every_country = {
+			limit = {
+				is_chinese_country = yes
+			}
+			set_country_flag = The_country_with_customized_AI
+		}
+		# CHI = {
+		# 	if = {
+		# 		limit = {
+		# 			is_ai = yes
+		# 		}
+		# 		country_event = {
+		# 			id = china_ai.01
+		# 			days = 365
+		# 		}
+		# 	}
+		# }
+		# ROC = {
+		# 	if = {
+		# 		limit = {
+		# 			is_ai = yes
+		# 		}
+		# 		country_event = {
+		# 			id = china_ai.02
+		# 			days = 365
+		# 		}
+		# 	}
+		# }
+		# PRC = {
+		# 	if = {
+		# 		limit = {
+		# 			is_ai = yes
+		# 		}
+		# 		country_event = {
+		# 			id = china_ai.03
+		# 			days = 365
+		# 		}
+		# 	}
+		# }
+	}
+}
+
+
+
+
