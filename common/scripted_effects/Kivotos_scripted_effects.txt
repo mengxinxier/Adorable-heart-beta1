@@ -597,313 +597,313 @@ Kivotos_union_leader_vote_result_num_check = {
 		}
 	}
 }
-Kivotos_union_leader_vote_end_result_effect = {
-	IF = {
-		limit = {
-			NOT = {
-				has_global_flag = Kivotos_union_leader_vote_result_effect_end
-			}
-		}
-		IF = {
-			limit = {
-				OR = {
-					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DISSOLVE }
-					AND = {
-						NOT = { has_game_rule = { rule = Kivotos_union_leader_vote_effect option = CIVIL_WAR } }
-						check_variable = { global.union_leader_vote_result_num = 0 } #解散
-						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
-					}
-				}
-			}
-			random_country = {
-				limit = {
-					Kivotos_is_kivotos_country = yes
-					is_faction_leader = yes
-					any_other_country = {
-						is_in_faction_with = PREV
-						has_country_flag = Kivotos_vote_yes
-					}
-				}
-				dismantle_faction = yes
-			}
-		}
-		ELSE_IF = {
-			limit = {
-				OR = {
-					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = CIVIL_WAR }
-					AND = {
-						check_variable = { global.union_leader_vote_result_num = 1 } #内战
-						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
-					}
-				}
-			}
-			random_country = {
-				limit = {
-					Kivotos_is_kivotos_country = yes
-					is_faction_leader = yes
-					any_other_country = {
-						is_in_faction_with = PREV
-						has_country_flag = Kivotos_vote_yes
-					}
-				}
-				dismantle_faction = yes
-			}
-			every_country = {
-				limit = {
-					has_country_flag = Kivotos_vote_yes
-				}
-				every_country = {
-					limit = {
-						has_country_flag = Kivotos_vote_yes
-						NOT = { original_tag = PREV }
-					}
-					declare_war_on = {
-						target = PREV
-						type = civil_war
-					}
-				}
-			}
-		}
-		ELSE_IF = {
-			limit = {
-				OR = {
-					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = PERFECT }
-					AND = {
-						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
-						check_variable = { global.union_leader_vote_result_num = 2 } #完美
-						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
-					}
-				}
-			}
-			random_country = {
-				limit = {
-					has_country_flag = Kivotos_union_leader_token
-				}
-				every_country = {
-					limit = {
-						has_country_flag = Kivotos_vote_yes
-						NOT = { original_tag = PREV }
-					}
-					every_core_state = {
-						add_core_of = PREV.PREV
-					}
-					random_country = {
-						limit = {
-							has_country_flag = Kivotos_union_leader_token
-						}
-						annex_country = {
-							target = PREV
-						}
-					}
-				}
-				every_state = {
-					limit = {
-						is_core_of = KVO
-						NOT = { is_core_of = SCH }
-					}
-					transfer_state_to = PREV
-				}
-			}
-		}
-		ELSE_IF = {
-			limit = {
-				OR = {
-					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = VERY_GOOD }
-					AND = {
-						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
-						check_variable = { global.union_leader_vote_result_num = 3 } #好
-						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
-					}
-				}
-			}
-			random_country = {
-				limit = {
-					has_country_flag = Kivotos_union_leader_token
-				}
-				every_country = {
-					limit = {
-						has_country_flag = Kivotos_vote_yes
-						NOT = { original_tag = PREV }
-					}
-					every_core_state = {
-						add_core_of = PREV.PREV
-						add_dynamic_modifier = {
-							modifier = Kivotos_state_autonomy_modifier
-						}
-					}
-					random_country = {
-						limit = {
-							has_country_flag = Kivotos_union_leader_token
-						}
-						annex_country = {
-							target = PREV
-						}
-					}
-				}
-				every_state = {
-					limit = {
-						is_core_of = KVO
-						NOT = { is_core_of = SCH }
-					}
-					transfer_state_to = PREV
-				}
-			}
-		}
-		ELSE_IF = {
-			limit = {
-				OR = {
-					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = GOOD }
-					AND = {
-						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
-						check_variable = { global.union_leader_vote_result_num = 4 } #一般
-						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
-					}
-				}
-			}
-			random_country = {
-				limit = {
-					Kivotos_is_kivotos_country = yes
-					is_faction_leader = yes
-					any_other_country = {
-						is_in_faction_with = PREV
-						has_country_flag = Kivotos_vote_yes
-					}
-				}
-				dismantle_faction = yes
-			}
-			random_country = {
-				limit = {
-					has_country_flag = Kivotos_union_leader_token
-				}
-				create_faction = Kivotos_Union
-				every_country = {
-					limit = {
-						has_country_flag = Kivotos_vote_yes
-						NOT = { original_tag = PREV }
-					}
-					random_country = {
-						limit = {
-							has_country_flag = Kivotos_union_leader_token
-						}
-						add_to_faction = PREV
-						set_autonomy = {
-							target = PREV
-							autonomy_state = Kivotos_integrated_school #提醒自己后续记得做一下傀儡类型
-						}
-					}
-				}
-				every_state = {
-					limit = {
-						is_core_of = KVO
-						NOT = { is_core_of = SCH }
-					}
-					transfer_state_to = PREV
-				}
-			}
-		}
-		ELSE_IF = {
-			limit = {
-				OR = {
-					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = BAD }
-					AND = {
-						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
-						check_variable = { global.union_leader_vote_result_num = 5 } #差
-						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
-					}
-				}
-			}
-			random_country = {
-				limit = {
-					Kivotos_is_kivotos_country = yes
-					is_faction_leader = yes
-					any_other_country = {
-						is_in_faction_with = PREV
-						has_country_flag = Kivotos_vote_yes
-					}
-				}
-				dismantle_faction = yes
-			}
-			random_country = {
-				limit = {
-					has_country_flag = Kivotos_union_leader_token
-				}
-				create_faction = Kivotos_Union
-				every_country = {
-					limit = {
-						has_country_flag = Kivotos_vote_yes
-						NOT = { original_tag = PREV }
-					}
-					random_country = {
-						limit = {
-							has_country_flag = Kivotos_union_leader_token
-						}
-						add_to_faction = PREV
-						set_autonomy = {
-							target = PREV
-							autonomy_state = Kivotos_autonomy_school #提醒自己后续记得做一下傀儡类型
-						}
-					}
-				}
-				every_state = {
-					limit = {
-						is_core_of = KVO
-						NOT = { is_core_of = SCH }
-					}
-					transfer_state_to = PREV
-				}
-			}
-		}
-		ELSE_IF = {
-			limit = {
-				OR = {
-					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = VERY_BAD }
-					AND = {
-						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
-						check_variable = { global.union_leader_vote_result_num = 6 } #很差
-						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
-					}
-				}
-			}
-			random_country = {
-				limit = {
-					Kivotos_is_kivotos_country = yes
-					is_faction_leader = yes
-					any_other_country = {
-						is_in_faction_with = PREV
-						has_country_flag = Kivotos_vote_yes
-					}
-				}
-				dismantle_faction = yes
-			}
-			random_country = {
-				limit = {
-					has_country_flag = Kivotos_union_leader_token
-				}
-				create_faction = Kivotos_Union
-				every_country = {
-					limit = {
-						has_country_flag = Kivotos_vote_yes
-						NOT = { original_tag = PREV }
-					}
-					random_country = {
-						limit = {
-							has_country_flag = Kivotos_union_leader_token
-						}
-						add_to_faction = PREV
-					}
-				}
-				every_state = {
-					limit = {
-						is_core_of = KVO
-						NOT = { is_core_of = SCH }
-					}
-					transfer_state_to = PREV
-				}
-			}
-		}
-		set_global_flag = Kivotos_union_leader_vote_result_effect_end
-	}
-}
+# Kivotos_union_leader_vote_end_result_effect = {
+# 	IF = {
+# 		limit = {
+# 			NOT = {
+# 				has_global_flag = Kivotos_union_leader_vote_result_effect_end
+# 			}
+# 		}
+# 		IF = {
+# 			limit = {
+# 				OR = {
+# 					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DISSOLVE }
+# 					AND = {
+# 						NOT = { has_game_rule = { rule = Kivotos_union_leader_vote_effect option = CIVIL_WAR } }
+# 						check_variable = { global.union_leader_vote_result_num = 0 } #解散
+# 						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
+# 					}
+# 				}
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					Kivotos_is_kivotos_country = yes
+# 					is_faction_leader = yes
+# 					any_other_country = {
+# 						is_in_faction_with = PREV
+# 						has_country_flag = Kivotos_vote_yes
+# 					}
+# 				}
+# 				dismantle_faction = yes
+# 			}
+# 		}
+# 		ELSE_IF = {
+# 			limit = {
+# 				OR = {
+# 					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = CIVIL_WAR }
+# 					AND = {
+# 						check_variable = { global.union_leader_vote_result_num = 1 } #内战
+# 						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
+# 					}
+# 				}
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					Kivotos_is_kivotos_country = yes
+# 					is_faction_leader = yes
+# 					any_other_country = {
+# 						is_in_faction_with = PREV
+# 						has_country_flag = Kivotos_vote_yes
+# 					}
+# 				}
+# 				dismantle_faction = yes
+# 			}
+# 			every_country = {
+# 				limit = {
+# 					has_country_flag = Kivotos_vote_yes
+# 				}
+# 				every_country = {
+# 					limit = {
+# 						has_country_flag = Kivotos_vote_yes
+# 						NOT = { original_tag = PREV }
+# 					}
+# 					declare_war_on = {
+# 						target = PREV
+# 						type = civil_war
+# 					}
+# 				}
+# 			}
+# 		}
+# 		ELSE_IF = {
+# 			limit = {
+# 				OR = {
+# 					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = PERFECT }
+# 					AND = {
+# 						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
+# 						check_variable = { global.union_leader_vote_result_num = 2 } #完美
+# 						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
+# 					}
+# 				}
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					has_country_flag = Kivotos_union_leader_token
+# 				}
+# 				every_country = {
+# 					limit = {
+# 						has_country_flag = Kivotos_vote_yes
+# 						NOT = { original_tag = PREV }
+# 					}
+# 					every_core_state = {
+# 						add_core_of = PREV.PREV
+# 					}
+# 					random_country = {
+# 						limit = {
+# 							has_country_flag = Kivotos_union_leader_token
+# 						}
+# 						annex_country = {
+# 							target = PREV
+# 						}
+# 					}
+# 				}
+# 				every_state = {
+# 					limit = {
+# 						is_core_of = KVO
+# 						NOT = { is_core_of = SCH }
+# 					}
+# 					transfer_state_to = PREV
+# 				}
+# 			}
+# 		}
+# 		ELSE_IF = {
+# 			limit = {
+# 				OR = {
+# 					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = VERY_GOOD }
+# 					AND = {
+# 						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
+# 						check_variable = { global.union_leader_vote_result_num = 3 } #好
+# 						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
+# 					}
+# 				}
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					has_country_flag = Kivotos_union_leader_token
+# 				}
+# 				every_country = {
+# 					limit = {
+# 						has_country_flag = Kivotos_vote_yes
+# 						NOT = { original_tag = PREV }
+# 					}
+# 					every_core_state = {
+# 						add_core_of = PREV.PREV
+# 						add_dynamic_modifier = {
+# 							modifier = Kivotos_state_autonomy_modifier
+# 						}
+# 					}
+# 					random_country = {
+# 						limit = {
+# 							has_country_flag = Kivotos_union_leader_token
+# 						}
+# 						annex_country = {
+# 							target = PREV
+# 						}
+# 					}
+# 				}
+# 				every_state = {
+# 					limit = {
+# 						is_core_of = KVO
+# 						NOT = { is_core_of = SCH }
+# 					}
+# 					transfer_state_to = PREV
+# 				}
+# 			}
+# 		}
+# 		ELSE_IF = {
+# 			limit = {
+# 				OR = {
+# 					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = GOOD }
+# 					AND = {
+# 						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
+# 						check_variable = { global.union_leader_vote_result_num = 4 } #一般
+# 						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
+# 					}
+# 				}
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					Kivotos_is_kivotos_country = yes
+# 					is_faction_leader = yes
+# 					any_other_country = {
+# 						is_in_faction_with = PREV
+# 						has_country_flag = Kivotos_vote_yes
+# 					}
+# 				}
+# 				dismantle_faction = yes
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					has_country_flag = Kivotos_union_leader_token
+# 				}
+# 				create_faction = Kivotos_Union
+# 				every_country = {
+# 					limit = {
+# 						has_country_flag = Kivotos_vote_yes
+# 						NOT = { original_tag = PREV }
+# 					}
+# 					random_country = {
+# 						limit = {
+# 							has_country_flag = Kivotos_union_leader_token
+# 						}
+# 						add_to_faction = PREV
+# 						set_autonomy = {
+# 							target = PREV
+# 							autonomy_state = Kivotos_integrated_school #提醒自己后续记得做一下傀儡类型
+# 						}
+# 					}
+# 				}
+# 				every_state = {
+# 					limit = {
+# 						is_core_of = KVO
+# 						NOT = { is_core_of = SCH }
+# 					}
+# 					transfer_state_to = PREV
+# 				}
+# 			}
+# 		}
+# 		ELSE_IF = {
+# 			limit = {
+# 				OR = {
+# 					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = BAD }
+# 					AND = {
+# 						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
+# 						check_variable = { global.union_leader_vote_result_num = 5 } #差
+# 						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
+# 					}
+# 				}
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					Kivotos_is_kivotos_country = yes
+# 					is_faction_leader = yes
+# 					any_other_country = {
+# 						is_in_faction_with = PREV
+# 						has_country_flag = Kivotos_vote_yes
+# 					}
+# 				}
+# 				dismantle_faction = yes
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					has_country_flag = Kivotos_union_leader_token
+# 				}
+# 				create_faction = Kivotos_Union
+# 				every_country = {
+# 					limit = {
+# 						has_country_flag = Kivotos_vote_yes
+# 						NOT = { original_tag = PREV }
+# 					}
+# 					random_country = {
+# 						limit = {
+# 							has_country_flag = Kivotos_union_leader_token
+# 						}
+# 						add_to_faction = PREV
+# 						set_autonomy = {
+# 							target = PREV
+# 							autonomy_state = Kivotos_autonomy_school #提醒自己后续记得做一下傀儡类型
+# 						}
+# 					}
+# 				}
+# 				every_state = {
+# 					limit = {
+# 						is_core_of = KVO
+# 						NOT = { is_core_of = SCH }
+# 					}
+# 					transfer_state_to = PREV
+# 				}
+# 			}
+# 		}
+# 		ELSE_IF = {
+# 			limit = {
+# 				OR = {
+# 					has_game_rule = { rule = Kivotos_union_leader_vote_effect option = VERY_BAD }
+# 					AND = {
+# 						has_game_rule = { rule = Kivotos_union_leader_vote_effect option = DEFAULT }
+# 						check_variable = { global.union_leader_vote_result_num = 6 } #很差
+# 						NOT = { has_global_flag = Kivotos_union_leader_vote_end_flag }
+# 					}
+# 				}
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					Kivotos_is_kivotos_country = yes
+# 					is_faction_leader = yes
+# 					any_other_country = {
+# 						is_in_faction_with = PREV
+# 						has_country_flag = Kivotos_vote_yes
+# 					}
+# 				}
+# 				dismantle_faction = yes
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					has_country_flag = Kivotos_union_leader_token
+# 				}
+# 				create_faction = Kivotos_Union
+# 				every_country = {
+# 					limit = {
+# 						has_country_flag = Kivotos_vote_yes
+# 						NOT = { original_tag = PREV }
+# 					}
+# 					random_country = {
+# 						limit = {
+# 							has_country_flag = Kivotos_union_leader_token
+# 						}
+# 						add_to_faction = PREV
+# 					}
+# 				}
+# 				every_state = {
+# 					limit = {
+# 						is_core_of = KVO
+# 						NOT = { is_core_of = SCH }
+# 					}
+# 					transfer_state_to = PREV
+# 				}
+# 			}
+# 		}
+# 		set_global_flag = Kivotos_union_leader_vote_result_effect_end
+# 	}
+# }
 
 TRY_Factions_ideas_end = {
 	IF = {

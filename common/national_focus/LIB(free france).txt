@@ -8,8 +8,6 @@ focus_tree = {
 		#}
 	}
 	default = no
-	shared_focus = FRA_Gensokyo_Navy
-	shared_focus = FRA_Gensokyo_Air
 	continuous_focus_position = { x = 1900 y = 1500 }
 
 	### Politics ###
@@ -21,7 +19,7 @@ focus_tree = {
 		x = 6
 		y = 0
 		cancelable = no
-		ai_will_do = { factor = 10 }
+		ai_will_do = { factor = 20 }
 		completion_reward = {
 			custom_effect_tooltip = LIB_start
 			hidden_effect = {
@@ -78,7 +76,7 @@ focus_tree = {
 						is_core_of = FRA
 					}
 				}
-				add_resistance_target = 15
+				add_resistance_target = 10
 				add_resistance = 25
 			}
 		}
@@ -141,6 +139,7 @@ focus_tree = {
 			focus = LIB_okina
 		}
 		available = {
+			has_country_flag = will_be_bypass
 		}
 		ai_will_do = { factor = 25 }
 		completion_reward = {
@@ -184,6 +183,7 @@ focus_tree = {
 		y = 4
 
 		available = {
+			has_country_flag = will_be_bypass
 		}
 		prerequisite = {
 			focus = LIB_election2
@@ -267,16 +267,15 @@ focus_tree = {
        				}
        				obsolete = yes
    				}
-			add_equipment_to_stockpile = {
-				type = medium_tank_chassis_2
-				amount = 1000
-				producer = LIB
-			}
+				add_equipment_to_stockpile = {
+					type = medium_tank_chassis_2
+					amount = 800
+					producer = LIB
+				}
 			}
 			add_war_support = 0.1
-			custom_effect_tooltip = lib_forgin_support_tt
+			unlock_decision_category_tooltip = LIB_ENG_equipment_decisions
 		}
-		search_filters = { FOCUS_FILTER_WAR_SUPPORT }
 	}
 
 	focus = {#许诺西非独立换取支持
@@ -317,6 +316,7 @@ focus_tree = {
 		y = 4
 
 		available = {
+			has_country_flag = will_be_bypass
 		}
 		prerequisite = {
 			focus = LIB_election2
@@ -357,17 +357,12 @@ focus_tree = {
 		}
 		ai_will_do = { factor = 1000 }
 		select_effect = {
-			country_event = {
-				id = LIB.5
-				days = 5
-			}
 		}
 		completion_reward = {
 			add_stability = 0.05
-			effect_tooltip = {
-				country_event = {
-					id = LIB.5
-				}
+			country_event = {
+				id = LIB.5
+				days = 5
 			}
 		}
 	}
@@ -651,11 +646,21 @@ focus_tree = {
 			add_ideas = LIB_the_nation
 			if = {
 				limit = {
-					has_completed_focus = LIB_sagume
+					and = {
+						has_completed_focus = LIB_sagume
+						not = {
+							has_cosmetic_tag = FRA
+						}
+					}
 				}
 				set_cosmetic_tag = Lunar_capital
 			}
-			else = {
+			else_if = {
+				limit = {
+					not = {
+						has_cosmetic_tag = FRA
+					}
+				}
 				set_cosmetic_tag = gensokyo_nation
 			}
 		}
@@ -670,7 +675,7 @@ focus_tree = {
 		available = {
 			has_completed_focus = LIB_election2
 		}
-		ai_will_do = { factor = 25 }
+		ai_will_do = { factor = 5 }
 		completion_reward = {
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
@@ -795,7 +800,12 @@ focus_tree = {
 		}
 		ai_will_do = { factor = 25 }
 		bypass = {
-			is_in_faction_with = ENG
+			or = {
+				is_in_faction_with = ENG
+				ENG = {
+					is_in_faction_with = NFA
+				}
+			}
 		}
 		completion_reward = {
 			
@@ -819,7 +829,6 @@ focus_tree = {
 					
 				}
 			}
-			custom_effect_tooltip = LIB_join_eng_TT
 		}
 	}
 	focus = {#与圣杯瓜分新叶界
@@ -927,6 +936,9 @@ focus_tree = {
 
 		available = {
 			has_completed_focus = LIB_merge
+			not = {
+				has_completed_focus = LIB_First_term
+			}
 		}
 		prerequisite = {
 			focus = LIB_claim_with_eng
@@ -980,16 +992,21 @@ focus_tree = {
 		}
 		select_effect = {
 		}
+		allow_branch = {
+			has_cosmetic_tag = FRA
+		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			custom_effect_tooltip = will_be_bypass
+			remove_ideas = LIB_never_surrunder
 			every_state = {
 				limit = {
 					is_core_of = COG
 				}
-				remove_state_core = root
+			LIB = {	
+				remove_state_core = PREV
+			}
 			}
 		}
 		
@@ -1011,17 +1028,17 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			COG = {
-				every_state = {
-					limit = {
-						is_core_of = COG
-					}
-					transfer_state = ROOT
+			every_state = {
+				limit = {
+					is_core_of = COG
 				}
-				add_ideas = LIB_Liberation_ransom 
+				COG = {
+					transfer_state = PREV
+					add_ideas = LIB_Liberation_ransom 
+				}
 			}
 		}
 	}
@@ -1042,7 +1059,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			add_resource = {
@@ -1146,7 +1163,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			
@@ -1178,14 +1195,9 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			custom_effect_tooltip = LIB_Remilia_05_tt
-			add_to_variable = { LIB_ruin_stability_factor = 0.2 }
-			add_to_variable = { LIB_ruin_war_support_factor = 0.15 }
-			add_to_variable = { LIB_ruin_industrial_capacity_factory = 0.2 }
-			add_to_variable = { LIB_ruin_industrial_capacity_dockyard = 0.05 }
 			random_owned_controlled_state = {
 				limit = {
 					free_building_slots = {
@@ -1241,14 +1253,9 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			custom_effect_tooltip = LIB_Remilia_03_tt
-			add_to_variable = { LIB_ruin_production_factory_max_efficiency_factor = 0.2 }
-			add_to_variable = { LIB_ruin_consumer_goods_factor = -0.2 }
-			add_to_variable = { LIB_ruin_stability_factor = 0.2 }
-			add_to_variable = { LIB_ruin_war_support_factor = 0.15 }
 			random_owned_controlled_state = {
 				limit = {
 					free_building_slots = {
@@ -1307,7 +1314,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			custom_effect_tooltip = LIB_GYH_tt
@@ -1330,10 +1337,15 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			custom_effect_tooltip = LIB_reshape_KMK
+			mio:KMK_arsenal_organization = {
+				add_mio_size = 7
+				add_mio_funds_gain_factor = 0.35
+				add_mio_research_bonus = 0.05
+			}
 		}
 	}
 	focus = {
@@ -1356,7 +1368,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			add_ideas = KMK_tanks_idea 
@@ -1382,10 +1394,15 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			custom_effect_tooltip = LIB_reshape_KMK1
+			mio:KMK_messerschmitt_organization = {
+				add_mio_size = 7
+				add_mio_funds_gain_factor = 0.35
+				add_mio_research_bonus = 0.05
+			}
 		}
 	}
 	focus = {
@@ -1406,10 +1423,10 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			add_ideas = KMK_prepare_for_the_inevitable_idea
+			add_ideas = FRA_Increase_degree_of_mechanization_idea
 		}
 	}
 	focus = {
@@ -1429,7 +1446,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			add_ideas = LIB_steady_as_she_goes_idea
@@ -1438,7 +1455,7 @@ focus_tree = {
 	focus = {
 		#开明专制
 		id = LIB_Enlightened_dictatorship
-		icon = GFX_goal_leimiliya
+		icon = GFX_FRA_Research_on_new_types_of_aircraft
 		prerequisite = {
 			focus = LIB_Imperial_inclination
 		}
@@ -1452,7 +1469,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			add_ideas = LIB_air_attack_idea
@@ -1479,7 +1496,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			add_ideas = LIB_Enlightened_imperialism
@@ -1502,10 +1519,18 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			custom_effect_tooltip = LIB_industrial_concern_tt
+			983 = { increase_state_category_by_one_level = yes }
+			30 = { increase_state_category_by_one_level = yes }
+			26 = { increase_state_category_by_one_level = yes }
+			25 = { increase_state_category_by_one_level = yes }
+			779 = { increase_state_category_by_one_level = yes }
+			984 = { increase_state_category_by_one_level = yes }
+			817 = { increase_state_category_by_one_level = yes }
+			735 = { increase_state_category_by_one_level = yes }
+			763 = { increase_state_category_by_one_level = yes }
 		}
 	}
 	focus = {
@@ -1525,7 +1550,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			add_research_slot = 1
@@ -1534,7 +1559,7 @@ focus_tree = {
 	focus = {
 		#时停实验师
 		id = LIB_theworld
-		icon = GFX_focus_theworld
+		icon = GFX_goal_generic_parliament
 		prerequisite = {
 			focus = LIB_Academy_of_Sciences
 		}
@@ -1548,72 +1573,51 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			set_technology = {
-				the_maid_0 = 1
-			}
-			division_template = {
-				name = "时停实验师"
-				is_locked = yes
-				priority = 2
-				division_names_group = POL_INF_01
-				regiments = {
-					the_worldtank = {
-						x = 0
-						y = 0
-					}
-					the_worldtank = {
-						x = 0
-						y = 1
-					}
-					the_worldtank = {
-						x = 0
-						y = 2
-					}
-					the_worldtank = {
-						x = 1
-						y = 0
-					}
-					the_worldtank = {
-						x = 1
-						y = 1
-					}
-					the_worldtank = {
-						x = 1
-						y = 2
-					}
-					the_worldtank = {
-						x = 2
-						y = 0
-					}
-					the_worldtank = {
-						x = 2
-						y = 1
-					}
-					the_worldtank = {
-						x = 2
-						y = 2
-					}
+			16 = {
+				add_dynamic_modifier = {
+					modifier = FRA_Model_Free_State_modifier
 				}
-				support = {
-					support_sakuya = {
-						x = 0
-						y = 0
-					}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
 				}
 			}
-			random_owned_controlled_state = {
-				925 = {
-					create_unit = {
-						division = "name = \"时停实验师\" division_template = \"时停实验师\" start_experience_factor = 1 start_equipment_factor = 1.0"
-						owner = ROOT
-					}
-					create_unit = {
-						division = "name = \"时停实验师\" division_template = \"时停实验师\" start_experience_factor = 1 start_equipment_factor = 1.0"
-						owner = ROOT
-					}
+			23 = {
+				add_dynamic_modifier = {
+					modifier = FRA_Model_Free_State_modifier
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			14 = {
+				add_dynamic_modifier = {
+					modifier = FRA_Model_Free_State_modifier
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			20 = {
+				add_dynamic_modifier = {
+					modifier = FRA_Model_Free_State_modifier
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
 				}
 			}
 		}
@@ -1635,7 +1639,7 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
 			20 = {
@@ -1674,7 +1678,10 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
-			add_ideas = LIB_attack_plan
+			swap_ideas = {
+				remove_idea = FRA_Increase_degree_of_mechanization_idea
+				add_idea = FRA_Mechanized_warfare_idea
+			}
 		}
 	}
 	focus = {
@@ -1694,16 +1701,15 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			add_ideas = LIB_defense_plan
+			add_ideas = FRA_New_production_lines_idea
 		}
 	}
 	focus = {
-		#献给已逝王女的七重奏
 		id = LIB_ensemble_dedicated_to_deceased_princess
-		icon = GFX_focus_goal_remilia
+		icon = GFX_FRA_Deepen_political_reform
 		prerequisite = {
 			focus = LIB_attack
 		}
@@ -1723,16 +1729,10 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			custom_effect_tooltip = GRE_mountain_training_effect
-			hidden_effect = {
-				set_technology = {
-					mountain_warfare = 1
-				}
-			}
-			add_ideas = LIB_Red_mist_mutation
+			add_ideas = LIB_GENSOKYO_SSS
 		}
 	}
 	focus = {
@@ -1752,10 +1752,10 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
-			unlock_decision_category_tooltip = LIB_bba_eye
+			custom_effect_tooltip = LIB_bba_eye1
 		}
 	}
 	focus = {
@@ -1775,9 +1775,10 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
+			add_ideas = FRA_Armor_tactics_refined_idea
 		}
 	}
 	focus = {
@@ -1797,9 +1798,10 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
+			add_ideas = FRA_Gensokyo_features_military_system_idea_2
 		}
 	}
 	focus = {
@@ -1819,9 +1821,13 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = FRA_Armor_tactics_refined_idea
+				add_idea = FRA_Armor_tactics_refined_idea_1
+			}
 		}
 	}
 	focus = {
@@ -1843,9 +1849,34 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
+			if = {
+				limit = {
+					has_idea = FRA_Ran_idea
+				}
+				remove_ideas = FRA_Ran_idea
+			} 
+			else_if = {
+				limit = {
+					has_idea = FRA_Doremy_Sweet_idea
+				}
+				remove_ideas = FRA_Doremy_Sweet_idea
+			}
+			else_if = {
+				limit = {
+					has_idea = FRA_Teireida_Mai_idea
+				}
+				remove_ideas = FRA_Teireida_Mai_idea
+			}
+			else_if = {
+				limit = {
+					has_idea = FRA_Nishida_Satono_idea
+				}
+				remove_ideas = FRA_Nishida_Satono_idea
+			}
+			add_ideas = LIB_Reimu_idea
 		}
 	}
 	focus = {
@@ -1865,8 +1896,26 @@ focus_tree = {
 		select_effect = {
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = LIB_Destruction_of_the_Enemy_f_Democracy
+				is_ai = no
+			}
 		}
 		completion_reward = {
+			41 = {
+				OWNER = {
+					ROOT = {
+						create_wargoal = {
+							type = take_state
+							target = PREV
+							expire = 0
+							generator = {
+								41
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	focus = {
@@ -1883,13 +1932,15 @@ focus_tree = {
 		ai_will_do = {
 			base = 10
 		}
+		bypass = {
+			NOT = {country_exists = GER}
+		}
 		select_effect = {
 		}
 		available = {
-			has_completed_focus = LIB_critical_voting
-			is_subject = no
 		}
 		completion_reward = {
+			declare_war_on = { target = GER type = annex_everything }
 		}
 	}
 	focus = {
@@ -1908,11 +1959,19 @@ focus_tree = {
 		}
 		select_effect = {
 		}
+		bypass = {
+			NOT = {
+				country_exists = ITA
+				country_exists = ALS
+			}
+		}
 		available = {
 			is_subject = no
-			has_completed_focus = LIB_critical_voting
+			
 		}
 		completion_reward = {
+			declare_war_on = { target = ALS type = annex_everything }
+			declare_war_on = { target = ITA type = annex_everything }
 		}
 	}
 	focus = {
@@ -1920,6 +1979,11 @@ focus_tree = {
 		icon = GFX_USA_when_that_day_come
 		prerequisite = {
 			focus = LIB_Crush_fantasy
+		}
+		bypass = {
+			NOT = {
+				country_exists = NFA
+			}
 		}
 		relative_position_id = LIB_Crush_fantasy
 		x = 0
@@ -1933,6 +1997,7 @@ focus_tree = {
 		available = {
 		}
 		completion_reward = {
+			declare_war_on = { target = NFA type = annex_everything }
 		}
 	}
 	#幻想乡海军
@@ -1944,6 +2009,9 @@ focus_tree = {
 		cost = 5
 		ai_will_do = {
 			base = 5
+		}
+		allow_branch = {
+			has_cosmetic_tag = FRA
 		}
 		available = {
 		}
@@ -2365,6 +2433,9 @@ focus_tree = {
 			base = 5
 		}
 		available = {
+		}
+		allow_branch = {
+			has_cosmetic_tag = FRA
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes

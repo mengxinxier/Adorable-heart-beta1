@@ -7,24 +7,19 @@
 #!gfx:interface\ICON_PAL.gfx
 focus_tree = {
 	id = hebrew_AH_focus
-
 	country = {
 		factor = 0
-		
 		modifier = {
 			add = 10
 			tag = PAL
 		}
 	}
-	
 	default = no
-
 	continuous_focus_position = { x = 50 y = 2500 }
-	
 	focus = {
 		id = HEB_AH_rebuild_country
 		icon = GFX_goal_consolidating_coalitionv2
-		x = 27
+		x = 16
 		y = 13
 		cost = 5
 		ai_will_do = {
@@ -408,6 +403,8 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			unlock_decision_category_tooltip = LAN_change_desert_decision_category
+			custom_effect_tooltip = PAL_Desert_control_project_TT
 		}
 	}
 	
@@ -430,6 +427,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			custom_effect_tooltip = PAL_Fertile_Ground_Project_TT
 		}
 	}
 	
@@ -618,7 +616,7 @@ focus_tree = {
 					free_building_slots = {
 						building = infrastructure
 						size > 1
-						include_locked = yes
+	#					include_locked = yes
 					}	
 				}
 				add_building_construction = {
@@ -942,25 +940,25 @@ focus_tree = {
 			custom_effect_tooltip = HEB_upgrade_economy_idea
 			add_to_variable = { HEB_SEF_CGF_var = 0.02 tooltip = HEB_AH_research_input_tt_1 }
 			add_to_variable = { HEB_SEF_RSF_var = 0.08 tooltip = HEB_AH_research_input_tt_2 }
-			1170 = {
-				if = {
-					limit = {
-						any_province_building_level = {
-							province = {
-								id = 4088
-							}
-							building = land_facility
-							level < 1
-						}
-					}
-					add_building_construction = {
-						type = land_facility
-						level = 1
-						instant_build = yes
-						province = 4088
-					}
-				}
-			}
+			# 1170 = {
+			# 	if = {
+			# 		limit = {
+			# 			any_province_building_level = {
+			# 				province = {
+			# 					id = 4088
+			# 				}
+			# 				building = land_facility
+			# 				level < 1
+			# 			}
+			# 		}
+			# 		add_building_construction = {
+			# 			type = land_facility
+			# 			level = 1
+			# 			instant_build = yes
+			# 			province = 4088
+			# 		}
+			# 	}
+			# }
 		}
 	}
 	
@@ -1321,7 +1319,7 @@ focus_tree = {
 	focus = {
 		id = HEB_AH_national_defence
 		icon = GFX_goal_generic_multinational_army
-		x = 58
+		x = 47
 		y = 13
 		cost = 5
 		ai_will_do = {
@@ -1395,7 +1393,7 @@ focus_tree = {
 		icon = GFX_goal_plan
 		prerequisite = { focus = HEB_AH_general_staff }
 		relative_position_id = HEB_AH_general_staff
-		x = -3
+		x = 3
 		y = 1
 		cost = 5
 		ai_will_do = {
@@ -1427,7 +1425,7 @@ focus_tree = {
 		icon = GFX_goal_generic_heavy_armour_canadian
 		prerequisite = { focus = HEB_AH_army_new_era }
 		relative_position_id = HEB_AH_army_new_era
-		x = -2
+		x = 1
 		y = 1
 		cost = 5
 		ai_will_do = {
@@ -1495,7 +1493,7 @@ focus_tree = {
 		icon = GFX_goal_anti_comintern_pact
 		prerequisite = { focus = HEB_AH_army_new_era }
 		relative_position_id = HEB_AH_army_new_era
-		x = 1
+		x = -2
 		y = 1
 		cost = 5
 		ai_will_do = {
@@ -1539,7 +1537,7 @@ focus_tree = {
 		icon = GFX_HEB_AH_restructuring_NDF
 		prerequisite = { focus = HEB_AH_general_staff }
 		relative_position_id = HEB_AH_general_staff
-		x = 3
+		x = -3
 		y = 1
 		cost = 5
 		ai_will_do = {
@@ -1849,13 +1847,850 @@ focus_tree = {
 			PAL_compute_Kazdel_clique = yes
 		}
 	}
+	focus = {	
+		id = PAL_Naval_Effort
+		icon = GFX_goal_generic_large_fleet
+		prerequisite = {
+			focus = HEB_AH_national_defence
+		}
+		x = 9
+		y = 1
+		available = { 
+			any_state = {
+				is_coastal = yes
+				is_controlled_by = ROOT
+			}
+			is_subject = no
+		}
+		cost = 5
+		relative_position_id = HEB_AH_national_defence
+		completion_reward = { 
+			navy_experience = 25
+			random_owned_controlled_state = {
+				limit = {
+					is_coastal = yes
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+	focus = {
+		id = PAL_Small_Navy
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		prerequisite = { focus = PAL_Naval_Effort }
+		mutually_exclusive = { focus = PAL_Sea_Dominance }
+		x = -1
+		y = 1
+		relative_position_id = PAL_Naval_Effort
+		cost = 5
+		available_if_capitulated = yes
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_doctrine_cost_reduction = {
+				name = GER_trade_interdiction
+				cost_reduction = 0.5
+				uses = 2
+				category = trade_interdiction_tree
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+
+	focus = {
+		id = PAL_Submarine
+		icon = GFX_goal_generic_navy_submarine
+		prerequisite = { focus = PAL_Small_Navy }
+
+		x = -1
+		y = 1
+		relative_position_id = PAL_Small_Navy
+
+		cost = 5
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = ss_bonus
+				bonus = 1
+				uses = 1
+				category = ss_tech
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = PAL_stealth_upgrades
+		icon = GFX_goal_navy_schematics
+		prerequisite = { focus = PAL_Submarine  }
+		relative_position_id = PAL_Submarine
+		x = 0
+		y = 1
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = ss_bonus
+				bonus = 1
+				uses = 1
+				technology = basic_submarine_snorkel
+				technology = improved_submarine_snorkel
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+	focus = {
+		id = PAL_Sea_Dominance
+		icon = GFX_goal_sea_navy
+		prerequisite = { focus = PAL_Naval_Effort }
+		mutually_exclusive = { focus = PAL_Small_Navy }
+
+		x = 1
+		y = 1
+		relative_position_id = PAL_Naval_Effort
+
+		cost = 5
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_doctrine_cost_reduction = {
+				name = fleet_in_being_bonus
+				cost_reduction = 0.5
+				uses = 2
+				category = fleet_in_being_tree
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+
+	focus = {
+		id = PAL_Study_Ships
+		icon = GFX_goal_generic_intelligence_exchange
+		prerequisite = { focus = PAL_Sea_Dominance }
+		x = 2
+		y = 1
+		relative_position_id = PAL_Sea_Dominance
+
+		cost = 5
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			navy_experience = 100
+			add_tech_bonus = {
+				name = ships_bonus
+				bonus = 0.25
+				uses = 1
+				category = cv_tech
+			}
+			add_tech_bonus = {
+				name = ships_bonus
+				bonus = 0.25
+				uses = 1
+				category = bb_tech
+			}
+			add_tech_bonus = {
+				name = ships_bonus
+				bonus = 0.25
+				uses = 1
+				category = bc_tech
+			}
+			add_tech_bonus = {
+				name = ships_bonus
+				bonus = 0.25
+				uses = 1
+				category = ca_tech
+			}
+			add_tech_bonus = {
+				name = ships_bonus
+				bonus = 0.25
+				uses = 1
+				category = cl_tech
+			}
+			add_tech_bonus = {
+				name = ships_bonus
+				bonus = 0.25
+				uses = 1
+				category = dd_tech
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+
+	focus = {
+		id = PAL_Ships_American
+		icon = GFX_focus_chi_mission_to_the_soviet_union
+		prerequisite = { focus = PAL_Study_Ships }
+
+		x = -1
+		y = 1
+		relative_position_id = PAL_Study_Ships
+
+		cost = 5
+
+		available_if_capitulated = yes
+
+		available = {
+			SOV = {
+				exists = yes
+				has_capitulated = no
+				has_opinion = { target = ROOT value > 49 }
+			}
+			OR = {
+				has_government = democratic
+				has_government = neutrality
+				SOV = { has_government = ROOT }
+			}
+			not = {
+				has_War_with = SOV
+			}
+		}
+
+
+
+		completion_reward = {
+			SOV = {
+				add_ai_strategy = {
+					type = support
+					id = ROOT
+					value = 25
+				}
+			}
+			add_ideas = PAL_american_ship_production_methods
+		}
+		#search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+
+	focus = {
+		id = PAL_Ships_England
+		icon = GFX_focus_chi_british_cooperation
+		prerequisite = { focus = PAL_Study_Ships }
+		x = 1
+		y = 1
+		relative_position_id = PAL_Study_Ships
+
+		cost = 5
+
+		available_if_capitulated = yes
+
+		available = {
+			ENG = {
+				exists = yes
+				has_capitulated = no
+				has_opinion = { target = ROOT value > 49 }
+			}
+			OR = {
+				has_government = democratic
+				has_government = neutrality
+				ENG = { has_government = ROOT }
+			}
+			not = {
+				has_War_with = ENG
+			}
+		}
+
+		completion_reward = {
+			ENG = {
+				add_ai_strategy = {
+					type = support
+					id = ROOT
+					value = 25
+				}
+			}
+			add_ideas = ENG_escort_effort_focus
+		}
+		#search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+
+	focus = {
+		id = PAL_Dockyards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		prerequisite = { focus = PAL_Small_Navy focus = PAL_Sea_Dominance }
+		x = -1
+		y = 2
+		relative_position_id = PAL_Sea_Dominance
+
+		cost = 5
+
+		available_if_capitulated = yes
+
+		available = {
+			has_tech = construction2
+		}
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				limit = {
+					dockyard > 0
+					is_core_of = ROOT
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = dockyard
+					level = 3
+					instant_build = yes
+				}
+			}
+		}
+		#search_filters = { FOCUS_FILTER_INDUSTRY }
+	}
+
+
+	focus = {
+		id = PAL_Carrier
+		icon = GFX_goal_generic_navy_carrier
+		prerequisite = { focus = PAL_Dockyards }
+		x = 1
+		y = 1
+		relative_position_id = PAL_Dockyards
+		cost = 5
+		available_if_capitulated = yes
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = capital_ships_bonus
+				bonus = 1
+				uses = 1
+				category = cv_tech
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+
+	focus = {
+		id = PAL_Navy_Aircrafts
+		icon = GFX_goal_generic_air_naval_bomber
+		prerequisite = { focus = PAL_Carrier }
+
+		x = 0
+		y = 2
+		relative_position_id = PAL_Carrier
+
+		cost = 5
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = nav_bomber_bonus
+				bonus = 0.5
+				uses = 2
+				category = naval_air
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+
+	focus = {
+		id = PAL_Battleship
+		icon = GFX_goal_generic_navy_battleship
+		prerequisite = { focus = PAL_Dockyards }
+		x = -1
+		y = 1
+		relative_position_id = PAL_Dockyards
+		cost = 5
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = capital_ships_bonus
+				bonus = 1
+				uses = 1
+				category = bb_tech
+
+			}
+			add_tech_bonus = {
+				name = capital_ships_bonus
+				bonus = 1
+				uses = 1
+				category = bc_tech
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+
+	focus = {
+		id = PAL_Destroyer
+		icon = GFX_goal_generic_wolf_pack
+		prerequisite = { focus = PAL_Battleship focus = PAL_Carrier }
+		x = -1
+		y = 1
+		relative_position_id = PAL_Battleship
+		cost = 3.6
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = dd_bonus
+				bonus = 1
+				uses = 1
+				category = dd_tech
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+
+	focus = {
+		id = PAL_Cruisers
+		icon = GFX_goal_generic_navy_cruiser
+		prerequisite = { focus = PAL_Battleship focus = PAL_Carrier }
+		x = 1
+		y = 1
+		relative_position_id = PAL_Battleship
+		cost = 5
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = cr_bonus
+				bonus = 1
+				uses = 1
+				category = ca_tech
+
+			}
+			add_tech_bonus = {
+				name = cr_bonus
+				bonus = 1
+				uses = 1
+				category = cl_tech
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+
+	focus = {
+		id = PAL_Naval_Doctrine
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		prerequisite = { focus = PAL_Cruisers focus = PAL_Destroyer focus = PAL_Battleship }
+		x = 0
+		y = 2
+		relative_position_id = PAL_Battleship
+
+		cost = 5
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				all_owned_state = {
+					OR = {
+						is_coastal = no
+						dockyard < 1
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			add_doctrine_cost_reduction = {
+				name = fleet_in_being_bonus
+				cost_reduction = 0.5
+				uses = 1
+				category = fleet_in_being_tree
+			}
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH }
+	}
+	
+    focus = {
+        id = ISR_plane_imports
+        icon = GFX_goal_generic_air_bomber_new
+        prerequisite = {focus = HEB_AH_national_defence }
+        relative_position_id = HEB_AH_national_defence
+        x = -9
+        y = 1
+        cost = 5
+        available_if_capitulated = yes
+        #search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIR_XP }
+        ai_will_do = {
+            base = 100
+        }
+        completion_reward = {
+			air_experience = 20
+			if = {
+				limit = {
+					has_dlc = "By Blood Alone"
+				}
+				create_equipment_variant = {
+					name = "Gloster Gladiator" 
+					type = small_plane_airframe_0
+					modules = {
+						fixed_main_weapon_slot = light_mg_4x
+						fixed_auxiliary_weapon_slot_1 = bomb_locks
+						engine_type_slot = engine_1_1x
+						special_type_slot_1 = empty
+					}
+				}
+				add_equipment_to_stockpile = {
+					type = small_plane_airframe_0
+					amount = 50
+					variant_name = "Gloster Gladiator" 
+					producer = ENG
+				}
+				set_technology = {
+					iw_medium_airframe = 1
+					iw_large_airframe = 1
+					basic_small_airframe = 1
+				}
+			}
+			else = {
+				add_equipment_to_stockpile = {
+					type = fighter_equipment_0
+					amount = 40
+					producer = ENG
+				}
+				set_technology = {
+					fighter1 = 1
+					early_bomber = 1
+				}
+			}
+		}
+    }
+    focus = {
+        id = ISR_volunteer_pilots
+        icon = GFX_goal_generic_air_wing
+        prerequisite = {focus = ISR_plane_imports }
+        relative_position_id = ISR_plane_imports
+        x = -2
+        y = 1
+        cost = 5
+        available_if_capitulated = yes
+        #search_filters = {FOCUS_FILTER_MILITARY_IMPROVEMENT FOCUS_FILTER_AIR_XP }
+        ai_will_do = {
+            base = 100
+        }
+
+		completion_reward = {
+			add_ideas = PAL_further_pilots_training
+            air_experience = 50
+        }    
+    }               
+    focus = {
+		id = ISR_israeli_air_school
+		icon = GFX_goal_generic_build_airforce
+        prerequisite = {focus = ISR_plane_imports }
+        relative_position_id = ISR_plane_imports        
+		x = 0
+		y = 1
+		cost = 5
+
+		available_if_capitulated = yes
+
+		ai_will_do = {
+			base = 10
+		}
+
+		completion_reward = {
+			air_experience = 25
+
+			if = {
+				limit = {
+					capital_scope = {
+						NOT = {
+							free_building_slots = {
+								building = air_base
+								size > 1
+							}
+						}
+					}
+				}
+				random_owned_controlled_state = {
+					limit = {
+						is_core_of = ISR
+						free_building_slots = {
+							building = air_base
+							size > 1
+						}
+					}
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+					ROOT = { set_country_flag = aviation_effort_AB }
+				}
+			}
+			if = {
+				limit = {
+					capital_scope = {
+						free_building_slots = {
+							building = air_base
+							size > 1
+						}
+					}
+				}
+				capital_scope = {
+					add_building_construction = {
+						type = air_base
+						level = 2
+						instant_build = yes
+					}
+					ROOT = { set_country_flag = aviation_effort_AB }
+				}
+			}
+			add_doctrine_cost_reduction = {
+				name = air_doc_bonus
+				cost_reduction = 0.5
+				uses = 1
+				category = air_doctrine
+			}
+		}
+		#search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIR_XP }
+	}
+	focus = {
+		id = ISR_form_the_techni
+		icon = GFX_goal_generic_air_production
+		relative_position_id = ISR_israeli_air_school
+		x = -3
+		y = 1
+		prerequisite = {
+			focus = ISR_israeli_air_school
+		}
+		cost = 5
+		completion_reward = {
+			add_ideas = PAL_form_the_techni
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+	focus = {
+		id = ISR_build_trainer_aircrafts
+		icon = GFX_goal_generic_air_fighter
+		prerequisite = { focus = ISR_israeli_air_school }
+		mutually_exclusive = { focus = ISR_bimotor_aircrafts}
+		relative_position_id = ISR_israeli_air_school		
+		x = -1
+		y = 1
+		cost = 5
+		available_if_capitulated = yes
+		ai_will_do = {
+			base = 10
+		}
+		completion_reward = {
+			air_experience = 5
+			if = {
+				limit = {
+					has_dlc = "By Blood Alone"
+				}
+				add_tech_bonus = {
+					name = ISR_build_trainer_aircrafts
+					category = light_air
+					bonus = 1
+					uses = 1
+				}
+			}	
+			else = {
+				add_tech_bonus = {
+					name = fighter_bonus
+					bonus = 1
+					uses = 1
+					technology = fighter1
+					technology = fighter2
+					technology = fighter3
+				}
+			}		
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIR_XP }
+	}
+	focus = {
+		id = ISR_bimotor_aircrafts
+		icon = GFX_goal_generic_air_heavy_fighter_new
+		prerequisite = { focus = ISR_israeli_air_school }
+		mutually_exclusive = { focus = ISR_build_trainer_aircrafts}
+		relative_position_id = ISR_israeli_air_school		
+		x = 1
+		y = 1
+		cost = 5
+
+		available_if_capitulated = yes
+
+		ai_will_do = {
+			base = 10
+		}
+
+		completion_reward = {
+			air_experience = 5
+			if = {
+				limit = {
+					has_dlc = "By Blood Alone"
+				}
+				add_tech_bonus = {
+					name = ISR_bimotor_aircrafts
+					category = medium_air
+					bonus = 1
+				}
+				add_tech_bonus = {
+					name = ISR_bimotor_aircrafts
+					category = heavy_air
+					bonus = 1
+				}
+			}				
+			else = {
+				add_tech_bonus = {
+					name = fighter_bonus
+					bonus = 1
+					uses = 1
+					category = cat_heavy_fighter
+				}
+				add_tech_bonus = {
+					name = bomber_bonus
+					bonus = 1
+					uses = 1
+					category = tactical_bomber
+				}
+			}		
+		}
+		#search_filters = { FOCUS_FILTER_RESEARCH FOCUS_FILTER_AIR_XP }
+	}
 ##政治线
 	#王庭内战
 	focus = {
 		id = PAL_Civil_war_in_royal_court
 		icon = GFX_PAL_Civil_war_in_royal_court
-		x = 27
-		y = 0
+		x = 16
+		y = 1
 		cost = 5
 		ai_will_do = {
 			base = 10
@@ -1918,10 +2753,529 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			always = no
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			custom_effect_tooltip = will_be_bypass
+			hidden_effect = {
+				country_event = {
+					id = PAL.046
+					days = 3
+				}
+				PAL_remove_all_ideas = yes
+				add_ideas = PAL_Civilight_Eterna_idea
+			}
+		}
+	}
+	#济国派
+	focus = {
+		id = PAL_Jiguk_Faction
+		icon = GFX_PAL_Jiguk_Faction
+		x = -9
+		y = 1
+		prerequisite = {
+			focus = PAL_Tale_of_Two_Kings_Theresis
+		}
+		relative_position_id = PAL_Tale_of_Two_Kings_Theresis
+		cost = 4
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_stability = 0.1
+			add_popularity = { ideology = neutrality popularity = 0.1 }
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	#建设“圣城”
+	focus = {
+		id = PAL_Build_Holy_City
+		icon = GFX_goal_generic_railroad
+		x = 2
+		y = 1
+		prerequisite = {
+			focus = PAL_Jiguk_Faction
+		}
+		relative_position_id = PAL_Jiguk_Faction
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			1170 = {
+				increase_state_category_by_one_level = yes
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	#为了祖国
+	focus = {
+		id = PAL_For_Motherlands
+		icon = GFX_goal_generic_munitions_factories
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = PAL_Solidarity_Sakaz
+		}
+		prerequisite = {
+			focus = PAL_Build_Holy_City
+		}
+		relative_position_id = PAL_Build_Holy_City
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = PAL_For_Motherlands_idea
+		}
+	}
+	#圣城之心
+	focus = {
+		id = PAL_Heart_of_Holy_City
+		icon = GFX_PAL_Heart_of_Holy_City
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = PAL_For_Motherlands
+		}
+		relative_position_id = PAL_For_Motherlands
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			1170 = { increase_state_category_by_one_level = yes }
+			1170 = { add_dynamic_modifier = { modifier = PAL_Heart_of_Holy_City_modifier } }
+			hidden_effect = {
+				country_event = {
+					id = PAL.054
+				}
+			}
+		}
+	}
+	#发行国债
+	focus = {
+		id = PAL_Issuance_of_government_bonds
+		icon = GFX_goal_generic_new_deal
+		x = 1
+		y = 1
+		prerequisite = {
+			focus = PAL_Build_Holy_City
+		}
+		relative_position_id = PAL_Build_Holy_City
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = PAL_Issuance_of_government_bonds_idea
+		}
+	}
+	#扩大国有投资
+	focus = {
+		id = PAL_Expand_state_owned_investment
+		icon = GFX_goal_generic_Controlled_Economy
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = PAL_Issuance_of_government_bonds
+		}
+		relative_position_id = PAL_Issuance_of_government_bonds
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_ideas = PAL_Expand_state_owned_investment_idea
+		}
+	}
+	#卡兹戴尔新时代
+	focus = {
+		id = PAL_new_era_in_Kazdale
+		icon = GFX_PAL_new_era_in_Kazdale
+		x = -2
+		y = 1
+		prerequisite = {
+			focus = PAL_Heart_of_Holy_City
+		}
+		prerequisite = {
+			focus = PAL_Expand_state_owned_investment
+		}
+		relative_position_id = PAL_Expand_state_owned_investment
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_For_Motherlands_idea
+				add_idea = PAL_new_era_in_Kazdale_idea
+			}
+		}
+	}
+	#团结萨卡兹
+	focus = {
+		id = PAL_Solidarity_Sakaz
+		icon = GFX_goal_morale_bonus
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = PAL_Jiguk_Faction
+		}
+		relative_position_id = PAL_Jiguk_Faction
+		mutually_exclusive = {
+			focus = PAL_Revanchist_fanaticism
+		}
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			has_government = neutrality
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_Covenant_of_Royal_Court
+				add_idea = PAL_Covenant_of_Royal_Court_1
+			}
+		}
+	}
+	#强化王庭盟约
+	focus = {
+		id = PAL_Strengthen_Royal_Covenant
+		icon = GFX_goal_generic_peaceful_diplomacy
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = PAL_Solidarity_Sakaz
+		}
+		relative_position_id = PAL_Solidarity_Sakaz
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_Covenant_of_Royal_Court_1
+				add_idea = PAL_Covenant_of_Royal_Court_2
+			}
+		}
+	}
+	#救世派
+	focus = {
+		id = PAL_Salvationian
+		icon = GFX_PAL_Salvationian
+		x = -13
+		y = 1
+		prerequisite = {
+			focus = PAL_Tale_of_Two_Kings_Theresis
+		}
+		relative_position_id = PAL_Tale_of_Two_Kings_Theresis
+		cost = 4
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_war_support = 0.1
+			add_popularity = { ideology = fascism popularity = 0.1 }
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	#复仇主义狂热
+	focus = {
+		id = PAL_Revanchist_fanaticism
+		icon = GFX_goal_generic_destroy_socdem
+		x = 1
+		y = 1
+		prerequisite = {
+			focus = PAL_Salvationian
+		}
+		relative_position_id = PAL_Salvationian
+		mutually_exclusive = {
+			focus = PAL_Solidarity_Sakaz
+		}
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			has_government = fascism
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_Covenant_of_Royal_Court
+				add_idea = PAL_Covenant_of_Royal_Court_3
+			}
+		}
+	}
+	#卡兹戴尔民族主义
+	focus = {
+		id = PAL_Kazdale_nationalism
+		icon = GFX_goal_generic_eagle
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = PAL_Revanchist_fanaticism
+		}
+		relative_position_id = PAL_Revanchist_fanaticism
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_Covenant_of_Royal_Court_3
+				add_idea = PAL_Covenant_of_Royal_Court_4
+			}
+		}
+	}
+	#扩张军备
+	focus = {
+		id = PAL_Expand_armaments
+		icon = GFX_goal_generic_combined_arms_artillery_antiair_antitank
+		x = -2
+		y = 1
+		prerequisite = {
+			focus = PAL_Salvationian
+		}
+		relative_position_id = PAL_Salvationian
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_ideas = PAL_Expand_armaments_idea
+		}
+	}
+	#强化军纪
+	focus = {
+		id = PAL_Strengthen_military_discipline
+		icon = GFX_generic_army_professionalism
+		x = 1
+		y = 1
+		prerequisite = {
+			focus = PAL_Expand_armaments
+		}
+		prerequisite = {
+			focus = PAL_Revanchist_fanaticism
+		}
+		relative_position_id = PAL_Expand_armaments
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			add_ideas = PAL_Strengthen_military_discipline_idea
+		}
+	}
+	#中东普鲁士
+	focus = {
+		id = PAL_Middle_East_Prussia
+		icon = GFX_PAL_Middle_East_Prussia
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = PAL_Strengthen_military_discipline
+		}
+		relative_position_id = PAL_Strengthen_military_discipline
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_Strengthen_military_discipline_idea
+				add_idea = PAL_Middle_East_Prussia_idea
+			}
+		}
+	}
+	#发动机器
+	focus = {
+		id = PAL_Engine
+		icon = GFX_goal_generic_light_industry
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = PAL_Expand_armaments
+		}
+		relative_position_id = PAL_Expand_armaments
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_Expand_armaments_idea
+				add_idea = PAL_Expand_armaments_idea_1
+			}
+		}
+	}
+	#流水线全开
+	focus = {
+		id = PAL_assembly_line_fully_open
+		icon = GFX_goal_generic_expanded_production
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = PAL_Engine
+		}
+		relative_position_id = PAL_Engine
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_Expand_armaments_idea_1
+				add_idea = PAL_Expand_armaments_idea_2
+			}
+		}
+	}
+	#天选种族
+	focus = {
+		id = PAL_The_Chosen_Race
+		icon = GFX_PAL_The_Chosen_Race
+		x = 2
+		y = 1
+		prerequisite = {
+			focus = PAL_assembly_line_fully_open
+		}
+		prerequisite = {
+			focus = PAL_Middle_East_Prussia
+		}
+		relative_position_id = PAL_assembly_line_fully_open
+		cost = 5
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+		}
+		available_if_capitulated = no
+		cancel_if_invalid = yes
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_Middle_East_Prussia_idea
+				add_idea = PAL_The_Chosen_Race_idea
+			}
+			hidden_effect = {
+				country_event = {
+					id = PAL.053
+				}
+			}
 		}
 	}
 	#“魔王”
@@ -1952,6 +3306,10 @@ focus_tree = {
 				country_event = {
 					id = PAL.025
 					days = 1
+				}
+				country_event = {
+					id = PAL.047
+					days = 400
 				}
 			}
 		}
@@ -2204,7 +3562,7 @@ focus_tree = {
 		relative_position_id = PAL_Friends_and_foes
 		cost = 1
 		ai_will_do = {
-			base = 10
+			base = 0
 		}
 		available = {
 		}
@@ -2262,7 +3620,7 @@ focus_tree = {
 						state = 183
 					}
 				}
-				enable_state_integration_80_compliance = yes
+				enable_state_integration_50_compliance = yes
 			}
 			add_to_variable = {
 				var = War_council_power_var
@@ -2709,7 +4067,7 @@ focus_tree = {
 	#新王庭
 	focus = {
 		id = PAL_New_Royal_Court
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_internal_democracy
 		x = 6
 		y = 1
 		prerequisite = {
@@ -2728,12 +4086,31 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = democratic popularity = 0.1 }
+			add_popularity = { ideology = neutrality popularity = 0.1 }
+			add_to_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = 10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_10_green
+				CHARACTER = situation_of_Kazdel_Royal_Court_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = 10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_10_green
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#向西方学习
 	focus = {
 		id = PAL_Learn_from_the_West
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_focus_chi_british_cooperation
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2745,16 +4122,38 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_40
+				check_variable = { Reform_support_var > 39 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = democratic popularity = 0.1 }
+			add_to_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = situation_of_Kazdel_Royal_Court_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#组织上下议院
 	focus = {
 		id = PAL_Organize_House_of_Commons
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_multipartism
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2766,16 +4165,48 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_50
+				check_variable = { Reform_support_var > 49 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			if = {
+				limit = { has_idea = PAL_new_Kazdel_2 }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel_2
+					add_idea = PAL_new_Kazdel_3
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAL_new_Kazdel_1 }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel_1
+					add_idea = PAL_new_Kazdel_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAL_new_Kazdel }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel
+					add_idea = PAL_new_Kazdel_1
+				}
+			}
+			else = { add_ideas = PAL_new_Kazdel }
+			hidden_effect = {
+				country_event = {
+					id = PAL.050
+					days = 3
+				}
+			}
 		}
 	}
 	#首相选举
 	focus = {
 		id = PAL_Prime_Minister_election
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_election
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2787,16 +4218,40 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_60
+				check_variable = { Reform_support_var > 59 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			country_event = {
+				id = PAL.042
+			}
+			add_to_variable = {
+				var = Old_Babel_Ministry_power_var
+				value = 10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_10_green
+				CHARACTER = Old_Babel_Ministry_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Old_Babel_Ministry_var
+				value = 10
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_10_green
+				CHARACTER = situation_of_Old_Babel_Ministry_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#改革之风
 	focus = {
 		id = PAL_Wind_of_reform
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_liberty
 		x = 3
 		y = 1
 		prerequisite = {
@@ -2808,16 +4263,41 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_60
+				check_variable = { Reform_support_var > 59 }
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_timed_idea = {
+				idea = PAL_Democratic_reforms
+				days = 200
+			}
+			add_to_variable = {
+				var = situation_of_Kazdel_Royal_Court_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = situation_of_Kazdel_Royal_Court_var
+			}
+			add_to_variable = {
+				var = situation_of_War_council_var
+				value = -5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_down_5_red
+				CHARACTER = situation_of_War_council_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#组织魔王内阁
 	focus = {
 		id = PAL_Organize_Civilight_Eterna_Cabinet
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_peaceful_diplomacy
 		x = -1
 		y = 1
 		prerequisite = {
@@ -2833,12 +4313,51 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			if = {
+				limit = { has_idea = PAL_new_Kazdel_2 }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel_2
+					add_idea = PAL_new_Kazdel_3
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAL_new_Kazdel_1 }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel_1
+					add_idea = PAL_new_Kazdel_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAL_new_Kazdel }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel
+					add_idea = PAL_new_Kazdel_1
+				}
+			}
+			else = { add_ideas = PAL_new_Kazdel }
+			add_to_variable = {
+				var = Old_Babel_Ministry_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = Old_Babel_Ministry_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Old_Babel_Ministry_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_Old_Babel_Ministry_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#弱化王庭权力
 	focus = {
 		id = PAL_Weaken_power_of_royal_court
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_generic_trial
 		x = 1
 		y = 1
 		prerequisite = {
@@ -2854,12 +4373,51 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			if = {
+				limit = { has_idea = PAL_new_Kazdel_2 }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel_2
+					add_idea = PAL_new_Kazdel_3
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAL_new_Kazdel_1 }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel_1
+					add_idea = PAL_new_Kazdel_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAL_new_Kazdel }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel
+					add_idea = PAL_new_Kazdel_1
+				}
+			}
+			else = { add_ideas = PAL_new_Kazdel }
+			add_to_variable = {
+				var = Old_Babel_Ministry_power_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = Old_Babel_Ministry_power_var
+			}
+			add_to_variable = {
+				var = situation_of_Old_Babel_Ministry_var
+				value = 5
+			}
+			custom_effect_tooltip = {
+				localization_key = var_up_5_green
+				CHARACTER = situation_of_Old_Babel_Ministry_var
+			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#联邦化
 	focus = {
 		id = PAL_federalization
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_democracy
 		x = 1
 		y = 1
 		prerequisite = {
@@ -2874,16 +4432,45 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			custom_trigger_tooltip = {
+				tooltip = Reform_support_var_up_to_80
+				check_variable = { Reform_support_var > 79 }
+			}
+			has_completed_focus = PAL_Prime_Minister_election
+			has_completed_focus = PAL_Kazdale_of_multiethnicity
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			set_country_flag = end_PAL_Kazdel_clique
+			if = {
+				limit = { has_idea = PAL_new_Kazdel_2 }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel_2
+					add_idea = PAL_new_Kazdel_3
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAL_new_Kazdel_1 }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel_1
+					add_idea = PAL_new_Kazdel_2
+				}
+			}
+			else_if = {
+				limit = { has_idea = PAL_new_Kazdel }
+				swap_ideas = {
+					remove_idea = PAL_new_Kazdel
+					add_idea = PAL_new_Kazdel_1
+				}
+			}
+			else = { add_ideas = PAL_new_Kazdel }
 		}
 	}
 	#自由的堡垒
 	focus = {
 		id = PAL_Fortress_of_freedom
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_generic_political
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2905,12 +4492,16 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_new_Kazdel_3
+				add_idea = PAL_new_Kazdel_4
+			}
 		}
 	}
 	#民主十字军
 	focus = {
 		id = PAL_Democratic_crusade
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_goal_generic_freedom
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2926,12 +4517,16 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_new_Kazdel_4
+				add_idea = PAL_new_Kazdel_5
+			}
 		}
 	}
 	#救世之行
 	focus = {
 		id = PAL_journey_of_salvation
-		icon = GFX_PAL_Tale_of_Two_Kings_There
+		icon = GFX_generic_army_professionalism
 		x = 0
 		y = 1
 		prerequisite = {
@@ -2947,6 +4542,16 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			swap_ideas = {
+				remove_idea = PAL_new_Kazdel_5
+				add_idea = PAL_new_Kazdel_6
+			}
+			hidden_effect = {
+				country_event = {
+					id = PAL.051
+					days = 3
+				}
+			}
 		}
 	}
 	#促进多民族交流
@@ -3127,6 +4732,7 @@ focus_tree = {
 				localization_key = var_up_10_green
 				CHARACTER = situation_of_Old_Babel_Ministry_var
 			}
+			PAL_compute_Kazdel_clique = yes
 		}
 	}
 	#特蕾西娅的愿景
@@ -3190,9 +4796,6 @@ focus_tree = {
 		cancel_if_invalid = yes
 		completion_reward = {
 			set_country_flag = end_PAL_Kazdel_clique
-			set_cosmetic_tag = Babel
-			set_party_name = { ideology = democratic long_name = Babel_Central_Committee name = Babel_Central_Committee }
-			set_party_name = { ideology = communism long_name = Babel_Central_Committee name = Babel_Central_Committee }
 			swap_ideas = {
 				remove_idea = PAL_modernization_Kazdale
 				add_idea = PAL_Babel_idea
@@ -3200,6 +4803,10 @@ focus_tree = {
 			hidden_effect = {
 				country_event = {
 					id = PAL.003
+				}
+				country_event = {
+					id = PAL.049
+					days = 3
 				}
 			}
 		}
@@ -3454,6 +5061,12 @@ focus_tree = {
 				add_idea = PAL_modernization_Kazdale
 			}
 			swap_ruler_traits = { remove = PAL_Civilight_Eterna_trait add = PAL_Mother_of_Nation_of_Kazdale }
+			hidden_effect = {
+				country_event = {
+					id = PAL.048
+					days = 3
+				}
+			}
 		}
 	}
 	#消灭战火
@@ -3532,6 +5145,9 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			set_cosmetic_tag = Babel
+			set_party_name = { ideology = democratic long_name = Babel_Central_Committee name = Babel_Central_Committee }
+			set_party_name = { ideology = communism long_name = Babel_Central_Committee name = Babel_Central_Committee }
 			swap_ideas = {
 				remove_idea = PAL_dream_of_global_solidarity_3
 				add_idea = PAL_dream_of_global_solidarity_4
@@ -3539,6 +5155,11 @@ focus_tree = {
 			swap_ideas = {
 				remove_idea = PAL_Babel_idea_1
 				add_idea = PAL_Babel_idea_2
+			}
+			hidden_effect = {
+				country_event = {
+					id = PAL.052
+				}
 			}
 		}
 	}
