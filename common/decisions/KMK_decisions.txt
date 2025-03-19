@@ -893,6 +893,41 @@ KMK_puppet_special = {
 		remove_effect = {
 			declare_war_on = { target = SWE type = annex_everything }
 		}
+		fire_only_once = yes
+	}
+	war_asia_kmk = {
+		name = "KMK_Remilia_114515"
+		icon = hol_attract_foreign_investors
+		visible = {
+			has_completed_focus = KMK_Remilia_114515
+		}
+		available = {
+			has_completed_focus = KMK_Remilia_114515
+			has_global_flag = second_weltkrieg_has_started
+		}
+		target_trigger = {
+			FROM = {
+				any_controlled_state = {
+					or = {
+						state = 750
+						state = 856
+						state = 826
+						state = 286
+						state = 827
+						state = 670
+						state = 671
+						state = 857
+					}
+				}
+				NOT = {
+					is_in_faction_with = ROOT
+				}
+			}
+		}
+		remove_effect = {
+			declare_war_on = { target = FROM type = annex_everything }
+		}
+		fire_only_once = yes
 	}
 	Back_to_ROM_home = {
 		fire_only_once = yes
@@ -2497,6 +2532,7 @@ KMK_unit_HRR_sakuya = {
 							state = 736
 							state = 39
 							state = 783
+							state = 784
 						}
  						NOT = {
  							is_owned_and_controlled_by = ROOT
@@ -2521,7 +2557,384 @@ KMK_unit_HRR_sakuya = {
  			}
  		}
  	}
+	KMK_declare_war_HRR_country = {
+ 		icon = GFX_decision_generic_prepare_civil_war
+ 		available = {
+ 		}
+		state_target = yes
+ 		target_trigger = {
+ 			any_country = {
+ 				AND = {
+					not = {
+						or = {
+							is_in_faction_with = ROOT
+ 							is_subject_of = ROOT
+						}
+					}
+ 					FROM = {
+						or = {
+							state = 784
+							state = 56 
+							state = 57 
+							state = 51
+							state = 55
+							state = 780
+							state = 50
+							state = 59
+							state = 60
+							state = 54
+							state = 7
+							state = 866
+							state = 36
+							state = 58
+							state = 147
+							state = 61
+							state = 1163
+							state = 64
+							state = 63
+							state = 68
+							state = 62
+							state = 52
+							state = 1158
+							state = 65
+							state = 53
+							state = 66
+							state = 67
+							state = 924
+							state = 69
+							state = 9
+							state = 75
+							state = 74
+							state = 786
+							state = 4
+							state = 152
+							state = 775
+							state = 836
+							state = 835
+							state = 153
+							state = 942
+							state = 102
+							state = 103
+							state = 488
+							state = 683
+							state = 736
+							state = 39
+							state = 783
+						}
+ 						NOT = {
+ 							is_owned_and_controlled_by = ROOT
+ 						}
+ 						is_owned_and_controlled_by = PREV
+ 					}
+ 				}
+ 			}
+ 		}
+ 		cost = 10
+ 		days_remove = 30
+ 		ai_will_do = {
+ 			base = 0
+ 			modifier = {
+ 				NOT = {
+ 					any_home_area_neighbor_country = {
+ 						has_war_with = ROOT
+ 					}
+ 				}
+ 				add = 30
+ 			}
+ 		}
+ 		war_with_target_on_remove = yes
+ 		complete_effect = {
+ 			FROM = {
+ 				country_event = {
+ 					id = generic.2010
+ 				}
+ 			}
+ 		}
+ 		remove_effect = {
+ 			declare_war_on = {
+ 				target = FROM
+ 				type = take_state
+ 			}
+ 		}
+	}
 }
+
+HRR_KMK_country_integration = {
+	KMK_GER_prebellion = {   #德意志叛乱
+		priority = 100
+		name = KMK_GER_prebellion
+		icon = generic_civil_support	
+		days_mission_timeout = 35
+		fire_only_once = no
+		visible = {
+			tag = KMK			
+		}
+		highlight_states = {
+			highlight_state_targets = {
+				state = 54 
+				state = 55 
+				state = 50 
+				state = 780
+				state = 64
+				state = 61 
+				state = 62
+				state = 1163
+				state = 1158
+				state = 56
+				state = 57
+				state = 59
+				state = 51
+				state = 52 
+				state = 152
+				state = 4
+				state = 784
+			}
+		}
+		cancel_if_not_visible = yes
+		is_good = no
+		available = { #完成任务的条件
+			NOT = {
+				AND = {
+					has_country_flag = Berlin_prebellion
+					has_country_flag = Frankfurt_prebellion
+					has_country_flag = Westphalia_prebellion
+					has_country_flag = Wien_prebellion
+				}
+			}
+		}
+		activation = { #触发任务的条件（满足这个条件就开始任务）
+			always = no
+		}
+		timeout_effect = {
+			activate_mission = KMK_GER_prebellion
+			if = {
+				limit = {
+					64 = {
+						is_owned_and_controlled_by = ROOT
+					}
+					has_country_flag = Berlin_prebellion
+				}
+				country_event = {
+					id = KMK.0084
+				}
+			}
+			#Frankfurt
+			if = {
+				limit = {
+					54 = {
+						is_owned_and_controlled_by = ROOT
+					}
+					has_country_flag = Frankfurt_prebellion
+				}
+				country_event = {
+					id = KMK.0087
+				}
+			}
+			#Westphalia
+			if = {
+				limit = {
+					56 = {
+						is_owned_and_controlled_by = ROOT
+					}
+					has_country_flag = Westphalia_prebellion 
+				}
+				country_event = {
+					id = KMK.0086
+				}
+			}
+			#Wien
+			if = {
+				limit = {
+					4 = {
+						is_owned_and_controlled_by = ROOT
+					}
+					has_country_flag = Wien_prebellion 
+				}
+				country_event = {
+					id = KMK.0085  
+				}
+			}
+		}
+		complete_effect = {    
+			army_experience = 50
+			air_experience = 25
+			navy_experience = 25
+			add_political_power = 50
+			add_stability = 0.1
+			add_war_support = 0.1
+		}
+	}
+	KMK_cooperation_with_nazism_berlin = {
+		state_target = yes
+		map_and_decisions_view = yes
+		visible = {
+			has_country_flag = Berlin_prebellion
+			has_completed_focus = KMK_HRR_reunited
+		}
+		available = { 
+			not = {
+				has_country_flag = KMK_is_cooperating
+			} 
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				or = {
+					state = 64
+					state = 61 
+					state = 62
+					state = 1163
+					state = 1158
+				}
+			}
+		}
+		fire_only_once = yes
+		days_remove = 10
+		complete_effect = {
+			FROM = {
+				add_compliance = 10
+			}
+			add_to_variable = { cooperation_with_nazism_kmk_berlin_var = 1 }
+			set_country_flag = KMK_is_cooperating
+		}
+		remove_effect = {
+			clr_country_flag = KMK_is_cooperating
+			if = {
+				limit = {
+					check_variable = { cooperation_with_nazism_kmk_berlin_var = 5 }
+				}
+				clr_country_flag = Berlin_prebellion
+			}
+		}
+	}
+	KMK_cooperation_with_nazism_wien = {
+		state_target = yes
+		map_and_decisions_view = yes
+		visible = {
+			has_country_flag = Wien_prebellion
+			has_completed_focus = KMK_HRR_reunited
+		}
+		available = { 
+			not = {
+				has_country_flag = KMK_is_cooperating
+			} 
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				or = {
+					state = 784
+					state = 152 
+					state = 52
+					state = 4
+				}
+			}
+		}
+		fire_only_once = yes
+		days_remove = 10
+		complete_effect = {
+			FROM = {
+				add_compliance = 10
+			}
+			add_to_variable = { cooperation_with_nazism_kmk_wien_var = 1 }
+			set_country_flag = KMK_is_cooperating
+		}
+		remove_effect = {
+			clr_country_flag = KMK_is_cooperating
+			if = {
+				limit = {
+					check_variable = { cooperation_with_nazism_kmk_wien_var = 4 }
+				}
+				clr_country_flag = Wien_prebellion
+			}
+		}
+	}
+	KMK_cooperation_with_nazism_Westphalia = {
+		state_target = yes
+		map_and_decisions_view = yes
+		visible = {
+			has_country_flag = Westphalia_prebellion
+			has_completed_focus = KMK_HRR_reunited
+		}
+		available = { 
+			not = {
+				has_country_flag = KMK_is_cooperating
+			} 
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				or = {
+					state = 51
+					state = 59 
+					state = 56
+					state = 57
+				}
+			}
+		}
+		fire_only_once = yes
+		days_remove = 10
+		complete_effect = {
+			FROM = {
+				add_compliance = 10
+			}
+			add_to_variable = { cooperation_with_nazism_kmk_westphalia_var = 1 }
+			set_country_flag = KMK_is_cooperating
+		}
+		remove_effect = {
+			clr_country_flag = KMK_is_cooperating
+			if = {
+				limit = {
+					check_variable = { cooperation_with_nazism_kmk_westphalia_var = 4 }
+				}
+				clr_country_flag = Westphalia_prebellion
+			}
+		}
+	}
+	KMK_cooperation_with_nazism_Frankfurt = {
+		state_target = yes
+		map_and_decisions_view = yes
+		visible = {
+			has_country_flag = Frankfurt_prebellion
+			has_completed_focus = KMK_HRR_reunited
+		}
+		available = { 
+			not = {
+				has_country_flag = KMK_is_cooperating
+			} 
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				or = {
+					state = 54
+					state = 55
+					state = 50
+					state = 780
+				}
+			}
+		}
+		fire_only_once = yes
+		days_remove = 10
+		complete_effect = {
+			set_country_flag = KMK_is_cooperating
+			FROM = {
+				add_compliance = 10
+			}
+			add_to_variable = { cooperation_with_nazism_kmk_frankfurt_var = 1 }
+		}
+		remove_effect = {
+			clr_country_flag = KMK_is_cooperating
+			if = {
+				limit = {
+					check_variable = { cooperation_with_nazism_kmk_frankfurt_var = 4 }
+				}
+				clr_country_flag = Frankfurt_prebellion
+			}
+		}
+	}
+}
+
 # KMK_unit_HRR = {
 # 	KMK_build_empire_HRR = {
 # 		icon = GFX_decision_generic_monarchy
