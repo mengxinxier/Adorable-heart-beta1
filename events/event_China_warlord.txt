@@ -28,6 +28,21 @@ add_namespace = china_warlord_news
 		}
 		option = {
 			name = china_warlord.001.b
+			if = {
+				limit = { tag = WUH }
+				FUJ = {
+					country_event = {
+						id = china_warlord.003
+						hours = 6
+					}
+				}
+			}
+			hidden_effect = {
+				country_event = {
+					id = china_warlord.004
+					days = 5
+				}
+			}
 			hidden_effect = {
 				news_event = {
 					id = china_warlord_news.002
@@ -52,9 +67,87 @@ add_namespace = china_warlord_news
 		fire_only_once = no
 		option = {
 			name = china_warlord.002.a
-			set_temp_variable = { tag_to_release = FROM }
+			every_state = {
+				limit = {
+					owner = {
+						or = {
+							tag = ROOT
+							is_subject_of = ROOT
+						}
+					}
+				}
+				if = {
+					limit = { is_core_of = WUH }
+					transfer_state_to = WUH
+				}
+				if = {
+					limit = { is_core_of = FUJ }
+					transfer_state_to = FUJ
+				}
+				if = {
+					limit = { has_country_flag = liangguang_state_area }
+					add_core_of = GXC
+					transfer_state_to = GXC
+				}
+			}
+			set_temp_variable = { tag_to_release = WUH }
 			CHI_puppet_released_tag_and_old_govern = yes
 			clr_country_flag = CHI_war_plan_going_on
+			set_temp_variable = { tag_to_release = FUJ }
+			CHI_puppet_released_tag_and_old_govern = yes
+			clr_country_flag = CHI_war_plan_going_on
+			set_temp_variable = { tag_to_release = GXC }
+			CHI_puppet_released_tag_and_old_govern = yes
+			clr_country_flag = CHI_war_plan_going_on
+			add_to_variable = {
+				var = Crisis_of_CHI_Dynasty_Var
+				value = -20
+				tooltip = Crisis_of_CHI_Dynasty_Var_down_20
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#[FROM.Getname]邀请我们加入
+	country_event = {
+		id = china_warlord.003
+		title = china_warlord.003.title
+		desc = china_warlord.003.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		option = {
+			name = china_warlord.003.a
+			every_core_state = { add_core_of = FROM }
+			every_character = { set_nationality = FROM }
+			FROM = { annex_country = { target = ROOT transfer_troops = yes } }
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
+	#组织政府
+	country_event = {
+		id = china_warlord.004
+		title = china_warlord.004.title
+		desc = china_warlord.004.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		option = {
+			name = china_warlord.004.a
+			set_cosmetic_tag = Patriotic_Army
+			set_party_name = {
+				ideology = neutrality
+				long_name = WUH_Patriotic_Army_party
+				name = WUH_Patriotic_Army_party
+			}
+			ROOT_get_in_the_competition_for_China_reunification = yes
+			every_controlled_state = {
+				limit = { not = { is_core_of = ROOT } }
+				add_compliance = 5
+			}
 			ai_chance = {
 				base = 10
 			}
