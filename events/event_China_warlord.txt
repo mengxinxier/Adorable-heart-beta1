@@ -3,6 +3,64 @@ add_namespace = china_warlord_news
 
 ##  事件
 
+	#清算时刻
+	country_event = {
+		id = china_warlord.001
+		title = china_warlord.001.title
+		desc = china_warlord.001.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		option = {
+			name = china_warlord.001.a
+			set_country_flag = CHI_country
+			CHI = {
+				country_event = {
+					id = china_warlord.002
+				}
+			}
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 0
+					has_idea = CHI_yuankeding_idea
+				}
+			}
+		}
+		option = {
+			name = china_warlord.001.b
+			hidden_effect = {
+				news_event = {
+					id = china_warlord_news.002
+				}
+			}
+			ai_chance = {
+				base = 10
+				modifier = {
+					factor = 0
+					not = { has_idea = CHI_yuankeding_idea }
+				}
+			}
+		}
+	}
+
+	#[FROM.Getname]愿意臣服
+	country_event = {
+		id = china_warlord.002
+		title = china_warlord.002.title
+		desc = china_warlord.002.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		option = {
+			name = china_warlord.002.a
+			set_temp_variable = { tag_to_release = FROM }
+			CHI_puppet_released_tag_and_old_govern = yes
+			clr_country_flag = CHI_war_plan_going_on
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
 
 ###  新闻
 
@@ -63,6 +121,74 @@ add_namespace = china_warlord_news
 			name = china_warlord_news.001.d
 			trigger = {
 				tag = ENG
+			}
+		}
+	}
+
+	#[FROM.Getname]宣告“清君侧”
+	news_event = {
+		id = china_warlord_news.002
+		title = china_warlord_news.002.title
+		picture = GFX_news_event_001
+		desc =  china_warlord_news.002.desc
+		major = no
+		is_triggered_only = yes
+		option = {
+			name = china_warlord_news.002.a
+			hidden_effect = {
+				if = {
+					limit = { ROOT = { tag = FROM } }
+					every_other_country = {
+						limit = {
+							OR = {
+								check_variable = { THIS.Chinese_Secondary_News_button_var = 2 }
+								is_chinese_country = yes
+							}
+						}
+						news_event = { id = china_warlord_news.002 }
+					}
+				}
+			}
+			trigger = {
+				tag = FROM
+			}
+		}
+		option = {
+			name = china_warlord_news.002.b
+			trigger = {
+				or = {
+					tag = CHI
+					has_country_flag = CHI_country
+				}
+				not = { tag = FROM }
+			}
+		}
+		option = {
+			name = china_warlord_news.002.c
+			trigger = {
+				or = {
+					tag = PRC
+					has_country_flag = PRC_country
+					tag = ROC
+					has_country_flag = KMT_country
+				}
+				not = { tag = FROM }
+			}
+		}
+		option = {
+			name = china_warlord_news.002.d
+			trigger = {
+				not = {
+					or = {
+						tag = FROM
+						tag = CHI
+						has_country_flag = CHI_country
+						tag = PRC
+						has_country_flag = PRC_country
+						tag = ROC
+						has_country_flag = KMT_country
+					}
+				}
 			}
 		}
 	}
