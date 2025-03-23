@@ -21,7 +21,7 @@ focus_tree = {
 
 	continuous_focus_position = { x = 100 y = 1000 }
 
-#��ҵ���˼ƻ�
+#工业
 	focus = {
 		id = POL_industrial_plan
 		icon = GFX_goal_SOV_bulgar_history
@@ -30,6 +30,9 @@ focus_tree = {
 		cost = 5
 		ai_will_do = {
 			factor = 10
+		}
+		allow_branch = {
+			NOT = { has_country_flag = POL_cw_unavoidable_flag }
 		}
 		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
 		completion_reward = {
@@ -94,11 +97,7 @@ focus_tree = {
 				remove_idea = POL_spectre_government2
 				add_idea = POL_spectre_government3
 			}
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
-			}
+			POL_cohesiveness_increase_effect = yes
 		}
 	}
 				
@@ -129,12 +128,7 @@ focus_tree = {
 					level = 1
 				}
 			}
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
-			}
+			POL_cohesiveness_increase_effect = yes
 		}
 	}
 	
@@ -143,7 +137,7 @@ focus_tree = {
 		icon = GFX_goal_democracy_people
 		x = 1
 		y = 1
-		cost = 5
+		cost = 8
 		relative_position_id = POL_government_reform
 		prerequisite = {
 			focus = POL_government_reform
@@ -151,21 +145,46 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		bypass = {
+			NOT = { has_idea = POL_apartheid_policy }
+			OR = {
+				NOT = { country_exists = PRE }
+				PRE = {
+					all_core_state = {
+						is_owned_by = ROOT
+					}
+				}
+			}
+		}
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		will_lead_to_war_with = PRE
-		completion_reward = {
-			remove_ideas = POL_apartheid_policy
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
+		cancelable = no
+		select_effect = {
+			if = {
+				limit = { has_idea = POL_apartheid_policy }
+				country_event = polish.042
 			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = POL_local_autonomy_tt
 			PRE = { country_event = polish.010 }
 			custom_effect_tooltip = if_they_accept
 			effect_tooltip = {
 				annex_country = {
 					target = PRE
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_idea = POL_apartheid_policy }
+					country_event = { id = polish.045 days = 14 }
+					country_event = { id = polish.045 days = 21 }
+					country_event = { id = polish.045 days = 35 }
+					remove_ideas = POL_apartheid_policy
+					add_timed_idea = {
+						idea = POL_apartheid_policy_fack
+						days = var:POL_apartheid_policy_days
+					}
 				}
 			}
 		}
@@ -190,19 +209,14 @@ focus_tree = {
 		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INDUSTRY }
 		completion_reward = {
 			create_intelligence_agency = {
-				name = "������ʿ��"
+				name = "骑士审判庭"
 				icon = GFX_intelligence_agency_logo_pol
 			}
 			swap_ideas = {
 				remove_idea = POL_spectre_government3
 				add_idea = POL_spectre_government4
 			}
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
-			}
+			POL_cohesiveness_increase_effect = yes
 		}
 	}
 			
@@ -240,12 +254,7 @@ focus_tree = {
 				type = arms_factory
 				level = 1
 			}
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
-			}
+			POL_cohesiveness_increase_effect = yes
 		}
 	}
 
@@ -279,12 +288,7 @@ focus_tree = {
 				remove_idea = POL_spectre_government5
 				add_idea = POL_spectre_government6
 			}
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
-			}
+			POL_cohesiveness_increase_effect = yes
 		}
 	}
 
@@ -832,22 +836,6 @@ focus_tree = {
 					level = 1
 				}
 			}
-			random_owned_controlled_state = {
-				prioritize = { 997 }
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
-			}
-			random_owned_controlled_state = {
-				prioritize = { 1088 }
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
-			}
 			activate_targeted_decision = { target = 98 decision = POL_duild_dec_thermal_station }
 			activate_targeted_decision = { target = 777 decision = POL_duild_dec_thermal_station }
 			activate_targeted_decision = { target = 97 decision = POL_duild_dec_thermal_station }
@@ -878,22 +866,6 @@ focus_tree = {
 				bonus = 0.5
 				uses = 2
 				category = industry
-			}
-			random_owned_controlled_state = {
-				prioritize = { 95 }
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
-			}
-			random_owned_controlled_state = {
-				prioritize = { 93 }
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-				}
 			}
 			random_owned_controlled_state = {
 				prioritize = { 997 }
@@ -1104,22 +1076,6 @@ focus_tree = {
 				add_mio_funds_gain_factor = 0.10
 			}
 			random_owned_controlled_state = {
-				prioritize = { 94 }
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-				}
-			}
-			random_owned_controlled_state = {
-				prioritize = { 997 }
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-				}
-			}
-			random_owned_controlled_state = {
 				prioritize = { 95 }
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
@@ -1327,7 +1283,7 @@ focus_tree = {
 		}
 	}
 
-#�﷫��
+#海军
 
 	focus = {
 		id = POL_make_sail
@@ -1342,6 +1298,9 @@ focus_tree = {
 				factor = 2.0
 				owns_state = 5
 			}
+		}
+		allow_branch = {
+			NOT = { has_country_flag = POL_cw_unavoidable_flag }
 		}
 		search_filters = { FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
 		completion_reward = {
@@ -1645,7 +1604,7 @@ focus_tree = {
 		}
 	}
 
-#���Ҷ�Ա�ƻ�
+#陆军
 
 	focus = {
 		id = POL_national_mobilization_plan
@@ -1664,6 +1623,9 @@ focus_tree = {
 				factor = 50
 				date > 1938.6.1
 			}
+		}
+		allow_branch = {
+			NOT = { has_country_flag = POL_cw_unavoidable_flag }
 		}
 		search_filters = { FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_SWI_MILITARY_READINESS }
 		completion_reward = {
@@ -1702,6 +1664,23 @@ focus_tree = {
 				modifier = POL_per_capita_horsepower_theory
 			}
 			set_country_flag = POL_per_capita_horsepower_flag
+			set_technology = { tech_silverspear_pegasus = 1 }
+			division_template = {
+				name = "Silverspear Pegasus"
+				regiments = {
+					silverspear_pegasus = { x = 0 y = 0 }
+					silverspear_pegasus = { x = 0 y = 1 }
+					silverspear_pegasus = { x = 0 y = 2 }
+					silverspear_pegasus = { x = 1 y = 0 }
+					silverspear_pegasus = { x = 1 y = 1 }
+					silverspear_pegasus = { x = 1 y = 2 }
+				}
+				support = {
+					recon = { x = 0 y = 0 }
+					engineer = { x = 0 y = 1 }
+					artillery = { x = 0 y = 2 }
+				}
+			}
 		}
 	}
 						
@@ -2281,24 +2260,7 @@ focus_tree = {
 			hidden_effect = {
 				add_to_variable = { POL_horsepower_army_org_factor = 0.10 }
 			}
-			set_technology = { tech_silverspear_pegasus = 1 }
 			set_technology = { tech_magic_silverspear_pegasus = 1 }
-			division_template = {
-				name = "Silverspear Pegasus"
-				regiments = {
-					silverspear_pegasus = { x = 0 y = 0 }
-					silverspear_pegasus = { x = 0 y = 1 }
-					silverspear_pegasus = { x = 0 y = 2 }
-					silverspear_pegasus = { x = 1 y = 0 }
-					silverspear_pegasus = { x = 1 y = 1 }
-					silverspear_pegasus = { x = 1 y = 2 }
-				}
-				support = {
-					recon = { x = 0 y = 0 }
-					engineer = { x = 0 y = 1 }
-					artillery = { x = 0 y = 2 }
-				}
-			}
 			mio:POL_me_organization = {
 				add_mio_funds_gain_factor = 0.15
 				add_mio_size = 1
@@ -2363,7 +2325,7 @@ focus_tree = {
 		}
 	}
 
-#�վ����෨��
+#空军
 
 	focus = {
 		id = POL_air_force_expansion
@@ -2377,6 +2339,9 @@ focus_tree = {
 		}
 		available = {
 			NOT = { has_idea = POL_loose_army }
+		}
+		allow_branch = {
+			NOT = { has_country_flag = POL_cw_unavoidable_flag }
 		}
 		search_filters = { FOCUS_FILTER_AIR_XP FOCUS_FILTER_RESEARCH }
 		completion_reward = {
@@ -2739,7 +2704,8 @@ focus_tree = {
 			}
 		}
 	}
-										
+				
+#经济
 	focus = {
 		id = POL_economic_crisis_strikes
 		icon = GFX_goal_generic_bankruptcy
@@ -2749,6 +2715,13 @@ focus_tree = {
 		relative_position_id = POL_agricultural_reform
 		available = {
 			always = no
+		}
+		allow_branch = {
+			NOT = { 
+				has_country_flag = POL_cw_unavoidable_flag 
+				has_government = communism
+				has_government = fascism
+			}
 		}
 		ai_will_do = {
 			factor = 1
@@ -2774,6 +2747,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
+			unlock_decision_tooltip = POL_political_mediation
 			hidden_effect = {
 				modify_timed_idea = {
 					idea = POL_economic_crisis_idea
@@ -2872,6 +2846,7 @@ focus_tree = {
 		completion_reward = {
 			add_political_power = 15
 			activate_mission = POL_release_new_currency_mission
+			POL_cohesiveness_decrease_effect = yes
 		}
 	}
 
@@ -3031,7 +3006,8 @@ focus_tree = {
 			custom_effect_tooltip = POL_economic_crisis_reduced_by_30_days
 		}
 	}
-									
+				
+#政治
 	focus = {
 		id = POL_reorganize_national_committee
 		icon = GFX_PAN_focu_430
@@ -3048,17 +3024,15 @@ focus_tree = {
 				exists = no
 			}
 		}
+		allow_branch = {
+			NOT = { has_country_flag = POL_cw_unavoidable_flag }
+		}
 		completion_reward = {
 			add_offsite_building = {
 				type = industrial_complex
 				level = 1
 			}
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
-			}
+			POL_cohesiveness_increase_effect = yes
 		}
 	}
 										
@@ -3077,16 +3051,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_political_power = 50
-			add_to_variable = {
-				ubs_save = 200
-			}
-			custom_effect_tooltip = SOV_get_200_add_to_reserve
-			add_to_variable = { DEN_sparks_progress_var = -5 }
-			clamp_variable = { var = DEN_sparks_progress_var min = 0 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_decrease
-				cohesion = -5
-			}
+			POL_cohesiveness_decrease_effect = yes
 		}
 	}
 											
@@ -3105,12 +3070,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_war_support = 0.05
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
-			}
+			POL_cohesiveness_increase_effect = yes
 			add_advisor_role = {
 				character = PRE_zilchak
 				advisor = {
@@ -3146,12 +3106,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_stability = 0.05
-			add_to_variable = { DEN_sparks_progress_var = 5 }
-			clamp_variable = { var = DEN_sparks_progress_var max = 100 }
-			custom_effect_tooltip = {
-				localization_key = POL_cohesiveness_increase
-				cohesion = 5
-			}
+			POL_cohesiveness_increase_effect = yes
 			add_advisor_role = {
 				character = PRE_brigham
 				advisor = {
@@ -4291,11 +4246,19 @@ focus_tree = {
 		}
 	}
 					
+#内战
 	focus = {
 		id = POL_fluttering_about_in_the_storm
 		icon = GFX_focus_SWE_organize_a_putsch
 		x = 2
 		y = 8
+		offset = {
+			x = -18
+			y = -8
+			trigger = {
+				has_country_flag = POL_cw_unavoidable_flag
+			}
+		}
 		cost = 5
 		relative_position_id = POL_national_mobilization_plan
 		available = {
@@ -4304,8 +4267,11 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		allow_branch = {
+			has_country_flag = POL_cw_unavoidable_flag
+		}
 		completion_reward = {
-
+			
 		}
 	}
 						
@@ -4322,8 +4288,15 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			always = no
+		}
 		completion_reward = {
-
+			clr_country_flag = POL_cohesion_effective
+			custom_effect_tooltip = POL_Euclywood_decision_tt
+			effect_tooltip = {
+				retire_country_leader = yes
+			}
 		}
 	}
 							
@@ -4340,8 +4313,12 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			always = no
+		}
 		completion_reward = {
-
+			country_lock_all_division_template = yes
+			add_war_support = -0.05
 		}
 	}
 								
@@ -4358,6 +4335,9 @@ focus_tree = {
 		prerequisite = {
 			focus = POL_gather_the_defeated_soldiers
 		}
+		available = {
+			always = no
+		}
 		mutually_exclusive = {
 			focus = POL_authorize_Maynar
 		}
@@ -4368,7 +4348,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
 									
@@ -4385,6 +4365,9 @@ focus_tree = {
 		prerequisite = {
 			focus = POL_gather_the_defeated_soldiers
 		}
+		available = {
+			always = no
+		}
 		mutually_exclusive = {
 			focus = POL_support_the_Royalist_party
 		}
@@ -4395,7 +4378,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
 										
@@ -4412,6 +4395,9 @@ focus_tree = {
 		prerequisite = {
 			focus = POL_gather_the_defeated_soldiers
 		}
+		available = {
+			always = no
+		}
 		mutually_exclusive = {
 			focus = POL_authorize_Maynar
 		}
@@ -4422,7 +4408,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
 											
@@ -4440,7 +4426,18 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.10
+			}
+			POL_obtain_small_scale_troops_support_effect = yes
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 												
@@ -4458,7 +4455,19 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.10
+			}
+			POL_obtain_medium_scale_troops_support_effect = yes
+			POL_obtain_support_for_medium_weapons = yes
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 													
@@ -4476,8 +4485,25 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			any_other_country = {
+				NOT = { has_completed_focus = POL_start_broadcasting_promotion }
+			}
+		}
 		completion_reward = {
-
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.05
+			}
+			POL_obtain_support_for_medium_weapons = yes
+			add_ideas = POL_start_broadcasting_promotion_focus
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 														
@@ -4498,7 +4524,18 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.10
+			}
+			add_ideas = POL_political_commitment_focus
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 															
@@ -4516,7 +4553,19 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.15
+			}
+			POL_obtain_large_scale_troops_support_effect = yes
+			POL_obtain_support_for_large_weapons = yes
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 															
@@ -4534,7 +4583,15 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			POL_obtain_medium_scale_troops_support_effect = yes
+			POL_obtain_support_for_medium_weapons = yes
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 
@@ -4552,8 +4609,22 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			any_other_country = {
+				NOT = { has_completed_focus = POL_ensure_order_of_Knights }
+			}
+		}
 		completion_reward = {
-
+			POL_obtain_medium_scale_troops_support_effect = yes
+			POL_obtain_support_for_medium_weapons = yes
+			add_ideas = POL_knights_support
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 	
@@ -4571,7 +4642,15 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			POL_obtain_medium_scale_troops_support_effect = yes
+			POL_obtain_support_for_medium_weapons = yes
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 		
@@ -4589,7 +4668,19 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			add_popularity = {
+				ideology = communism
+				popularity = 0.15
+			}
+			POL_obtain_large_scale_troops_support_effect = yes
+			POL_obtain_support_for_large_weapons = yes
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 			
@@ -4607,7 +4698,40 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			10 = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 3544
+				}
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 5908
+				}
+			}
+			88 = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 9427
+				}
+			}
+			91 = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 11479
+				}
+			}
+			POL_obtain_support_for_medium_weapons = yes
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 				
@@ -4625,7 +4749,22 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			add_popularity = {
+				ideology = fascism
+				popularity = -0.20
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = -0.20
+			}
+			add_ideas = POL_mass_arrests_focus
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 					
@@ -4643,7 +4782,22 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			add_popularity = {
+				ideology = fascism
+				popularity = -0.20
+			}
+			add_popularity = {
+				ideology = neutrality
+				popularity = -0.20
+			}
+			add_ideas = POL_inheritance_of_Euclywood_focus
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 						
@@ -4661,7 +4815,43 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-
+			division_template = {
+				name = "Soviet Armored Mixed Brigade"		
+				division_names_group = POL_ARM_BRIGADE_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 0 y = 3 }
+					light_armor = { x = 1 y = 0 }
+					light_armor = { x = 1 y = 1 }
+					light_armor = { x = 1 y = 2 }
+				}
+				support = {
+					recon = { x = 0 y = 0 }
+					engineer = { x = 0 y = 1 }
+				}
+			}
+			capital_scope = {
+				create_unit = {
+					division = "name = \"Soviet Armored Mixed Brigade\" division_template = \"Soviet Armored Mixed Brigade\" start_experience_factor = 1.0"  
+					owner = ROOT
+					count = 2
+					allow_spawning_on_enemy_provs = yes
+				}
+			}
+			add_equipment_to_stockpile = {
+				type = light_tank_chassis
+				amount = 800
+				producer = SOV
+			}
+			if = {
+				limit = { has_active_mission = POL_civil_war_is_coming }
+				add_days_mission_timeout = {
+					mission = POL_civil_war_is_coming
+					days = -30
+				}
+			}
 		}
 	}
 }
