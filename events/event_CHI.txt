@@ -31,6 +31,10 @@ add_namespace = China_news
 		picture = GFX_CHI_Jianglihua_event_02
 		option = {
 			name = China.002.a
+			CHI_remove_all_ideas = yes
+			add_ideas = CHI_yuankeding_idea
+			set_variable = { CHI_ascended_advisor_2 = 2 }
+			add_stability = -0.1
 			hidden_effect = {
 				country_event = {
 					id = China.003
@@ -53,6 +57,7 @@ add_namespace = China_news
 		picture = GFX_CHI_Lixingke_event
 		option = {
 			name = China.003.a
+			add_political_power = -25
 			hidden_effect = {
 				country_event = {
 					id = China.004
@@ -103,6 +108,10 @@ add_namespace = China_news
 		picture = GFX_CHI_Lixingke_event_03
 		option = {
 			name = China.005.a
+			CHI_remove_all_ideas = yes
+			add_ideas = CHI_lixingke_idea
+			set_variable = { CHI_ascended_advisor_2 = 0 }
+			CHI_yuankeding = { retire = yes }
 			ai_chance = {
 				base = 10
 			}
@@ -119,6 +128,19 @@ add_namespace = China_news
 		picture = GFX_CHI_Yuankeding_event
 		option = {
 			name = China.006.a
+			CHI_lixingke = { retire = yes }
+			CHI_kangyouwei = { retire = yes }
+			every_state = {
+				limit = {
+					has_dynamic_modifier = {
+						modifier = CHI_Taiyuan_Pacification_Office
+					}
+				}
+				set_demilitarized_zone = yes
+			}
+			hidden_effect = {
+				country_event = { id = China.021 days = 5 }
+			}
 			ai_chance = {
 				base = 10
 			}
@@ -202,6 +224,12 @@ add_namespace = China_news
 				CHI_wupeifu = { set_nationality = ROOT }
 				CHI_zhangxun = { set_nationality = ROOT }
 			}
+			add_to_variable = {
+				var = Crisis_of_CHI_Dynasty_Var
+				value = 5
+				tooltip = Crisis_of_CHI_Dynasty_Var_up_5
+			}
+			Crisis_of_CHI_Dynasty_Var_effect = yes
 			add_manpower = 2000
 			ai_chance = {
 				base = 10
@@ -221,6 +249,12 @@ add_namespace = China_news
 			WUH = {
 				CHI_sunchuanfang = { set_nationality = ROOT }
 			}
+			add_to_variable = {
+				var = Crisis_of_CHI_Dynasty_Var
+				value = 5
+				tooltip = Crisis_of_CHI_Dynasty_Var_up_5
+			}
+			Crisis_of_CHI_Dynasty_Var_effect = yes
 			add_manpower = 2000
 			ai_chance = {
 				base = 10
@@ -491,7 +525,7 @@ add_namespace = China_news
 			hidden_effect = {
 				country_lock_all_division_template = no
 				news_event = {
-					id = China_news.014
+					id = China_news.001
 					days = 3
 				}
 				country_event = {
@@ -502,598 +536,62 @@ add_namespace = China_news
 		}
 	}
 
+	#清算时刻
+	country_event = {
+		id = China.021
+		title = China.021.title
+		desc = China.021.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		option = {
+			name = China.021.a
+			CHI_lixingke = { retire = yes }
+			CHI_kangyouwei = { retire = yes }
+			every_state = {
+				limit = {
+					has_dynamic_modifier = {
+						modifier = CHI_Taiyuan_Pacification_Office
+					}
+				}
+				set_demilitarized_zone = no
+				remove_dynamic_modifier = {
+					modifier = CHI_Taiyuan_Pacification_Office
+				}
+				add_core_of = SHX
+				transfer_state_to = SHX
+			}
+			CHI_chongyue = { set_nationality = SHX }
+			SHX = {
+				CHI_chongyue = {
+					add_country_leader_role = {
+						country_leader = {
+							desc = ""
+							ideology = military_politicism
+							traits = {}
+							expire = "1999.1.1.1"
+							id = -1
+						}
+						promote_leader = yes
+					}
+				}
+				load_oob = SHX_1936
+			}
+			declare_war_on = { target = SHX type = annex_everything }
+			ai_chance = {
+				base = 10
+			}
+		}
+	}
+
 
 ###  新闻
-	#中华苏维埃成立
-	news_event = {
-		id = China_news.001
-		title = China_news.001.t
-		desc = China_news.001.d
-		picture = GFX_news_event_chinese_soldiers_mountain
-		major = yes
-		is_triggered_only = yes
-		option = {
-			name = China_news.001.a
-			trigger = {
-				TAG = YUN
-			}
-		}
-		option = {
-			name = China_news.001.b
-			trigger = {
-				NOT = {
-					TAG = YUN
-					TAG = ROC
-					TAG = CHI
-				}
-			}
-		}
-		option = {
-			name = China_news.001.c
-			trigger = {
-				TAG = ROC
-			}
-		}
-		option = {
-			name = China_news.001.e
-			trigger = {
-				TAG = CHI
-			}
-		}
-	}
-
-	#北伐宣言
-	news_event = {
-		id = China_news.002
-		title = China_news.002.t
-		desc = China_news.002.d
-		picture = GFX_news_event_chinese_soldiers_mountain
-		major = yes
-		is_triggered_only = yes
-		option = {
-			name = China_news.002.a
-			trigger = {
-				TAG = ROC
-			}
-		}
-		option = {
-			name = China_news.002.b
-			trigger = {
-				NOT = {
-					TAG = ROC
-					TAG = CHI
-				}
-			}
-		}
-		option = {
-			name = China_news.002.c
-			trigger = {
-				TAG = CHI
-			}
-		}
-	}
-
-	#中华民国成立
-	news_event = {
-		id = China_news.003
-		title = China_news.003.t
-		desc = China_news.003.d
-		picture = GFX_news_event_chinese_soldiers_mountain
-		major = yes
-		is_triggered_only = yes
-		option = {
-			name = China_news.003.a
-			trigger = {
-				TAG = ROC
-			}
-		}
-		option = {
-			name = China_news.003.b
-			trigger = {
-				is_chinese_country = no
-			}
-		}
-		option = {
-			name = China_news.003.c
-			trigger = {
-				NOT = { TAG = ROC }
-				is_chinese_country = yes
-			}
-		}
-	}
-
-	#中华民国成立（蓝衣社）
-	news_event = {
-		id = China_news.004
-		title = China_news.004.t
-		desc = China_news.004.d
-		picture = GFX_news_event_chinese_soldiers_mountain
-		major = yes
-		is_triggered_only = yes
-		option = {
-			name = China_news.004.a
-			trigger = {
-				TAG = ROC
-			}
-		}
-		option = {
-			name = China_news.004.b
-			trigger = {
-				is_chinese_country = no
-			}
-		}
-		option = {
-			name = China_news.004.c
-			trigger = {
-				NOT = { TAG = ROC }
-				is_chinese_country = yes
-			}
-		}
-	}
-
-	#中华民国成立（奉天）
-	news_event = {
-		id = China_news.005
-		title = China_news.005.t
-		desc = China_news.005.d
-		picture = GFX_news_event_fengtian_victory
-		major = yes
-		is_triggered_only = yes
-		option = {
-			name = China_news.005.a
-			trigger = {
-				TAG = MAN
-			}
-		}
-		option = {
-			name = China_news.005.b
-			trigger = {
-				NOT = {
-					TAG = MAN
-				}
-			}
-		}
-	}
-
-	#张作玲独揽大权
-	news_event = {
-		id = China_news.006
-		title = China_news.006.t
-		desc = China_news.006.d
-		picture = GFX_news_event_CHI_northern_expedition
-		major = yes
-		is_triggered_only = yes
-		immediate = {
-			set_global_flag = CHI_REUNIT
-		}
-		option = {
-			name = China_news.006.a
-			set_country_flag = super_event_MAN_dashuai
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				TAG = MAN
-			}
-		}
-		option = {
-			name = China_news.006.b
-			set_country_flag = super_event_MAN_dashuai
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				NOT = {
-					TAG = MAN
-					has_government = fascism
-				}
-			}
-		}
-		option = {
-			name = China_news.006.c
-			set_country_flag = super_event_MAN_dashuai
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				NOT = {
-					TAG = MAN
-				}
-				has_government = fascism
-			}
-		}
-	}
-
-	#中国走向民主化
-	news_event = {
-		id = China_news.007
-		title = China_news.007.t
-		desc = China_news.007.d
-		picture = GFX_news_event_fengtian_minzhu
-		major = yes
-		is_triggered_only = yes
-		immediate = {
-			set_global_flag = CHI_REUNIT
-		}
-		option = {
-			name = China_news.007.a
-			set_country_flag = super_event_MAN_shaoshuai
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				TAG = MAN
-			}
-		}
-		option = {
-			name = China_news.007.b
-			set_country_flag = super_event_MAN_shaoshuai
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				NOT = {
-					TAG = MAN
-				}
-				OR = {
-					has_government = democratic
-					has_government = neutrality
-				}
-			}
-		}
-		option = {
-			name = China_news.007.c
-			set_country_flag = super_event_MAN_shaoshuai
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				NOT = {
-					TAG = MAN
-				}
-				has_government = fascism
-			}
-		}
-		option = {
-			name = China_news.007.e
-			set_country_flag = super_event_MAN_shaoshuai
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				NOT = {
-					TAG = MAN
-				}
-				has_government = communism
-			}
-		}
-	}
-
-	#虎妞统一中国
-	news_event = {
-		id = China_news.008
-		title = China_news.008.t
-		desc = China_news.008.desc
-		picture = GFX_MAN_unit_china
-		major = yes
-		is_triggered_only = yes
-		immediate = {
-			set_global_flag = CHI_REUNIT
-		}
-		option = {
-			name = China_news.008.a
-			set_country_flag = super_event_MAN_huniu
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = MAN
-			}
-		}
-		option = {
-			name = China_news.008.b
-			set_country_flag = super_event_MAN_huniu
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = ENG
-			}
-		}
-		option = {
-			name = China_news.008.c
-			set_country_flag = super_event_MAN_huniu
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				has_government = communism
-			}
-		}
-		option = {
-			name = China_news.008.d
-			set_country_flag = super_event_MAN_huniu
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = DVL
-			}
-		}
-		option = {
-			name = China_news.008.e
-			set_country_flag = super_event_MAN_huniu
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				not = {
-					or = {
-						tag = MAN
-						tag = ENG
-						tag = DVL
-						has_government = communism
-					}
-				}
-			}
-		}
-	}
-
-	#杀马特团长统一中国
-	news_event = {
-		id = China_news.009
-		title = China_news.009.t
-		desc = China_news.009.desc
-		picture = GFX_MAN_unit_china
-		major = yes
-		is_triggered_only = yes
-		immediate = {
-			set_global_flag = CHI_REUNIT
-		}
-		option = {
-			name = China_news.009.a
-			set_country_flag = super_event_MAN_shamate
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = MAN
-			}
-		}
-		option = {
-			name = China_news.009.b
-			set_country_flag = super_event_MAN_shamate
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = ENG
-			}
-		}
-		option = {
-			name = China_news.009.c
-			set_country_flag = super_event_MAN_shamate
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				has_government = communism
-			}
-		}
-		option = {
-			name = China_news.009.d
-			set_country_flag = super_event_MAN_shamate
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = DVL
-			}
-		}
-		option = {
-			name = China_news.009.e
-			set_country_flag = super_event_MAN_shamate
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				not = {
-					or = {
-						tag = MAN
-						tag = ENG
-						tag = DVL
-						has_government = communism
-					}
-				}
-			}
-		}
-	}
-
-	#东北国民党
-	news_event = {
-		id = China_news.010
-		title = China_news.010.t
-		desc = China_news.010.desc
-		picture = GFX_MAN_unit_china
-		major = yes
-		is_triggered_only = yes
-		immediate = {
-			set_global_flag = CHI_REUNIT
-		}
-		option = {
-			name = China_news.010.a
-			set_country_flag = super_event_MAN_KMT
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = MAN
-			}
-		}
-		option = {
-			name = China_news.010.b
-			set_country_flag = super_event_MAN_KMT
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = ENG
-			}
-		}
-		option = {
-			name = China_news.010.c
-			set_country_flag = super_event_MAN_KMT
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				has_government = communism
-			}
-		}
-		option = {
-			name = China_news.010.d
-			set_country_flag = super_event_MAN_KMT
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = DVL
-			}
-		}
-		option = {
-			name = China_news.010.e
-			set_country_flag = super_event_MAN_KMT
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				not = {
-					or = {
-						tag = MAN
-						tag = ENG
-						tag = DVL
-						has_government = communism
-					}
-				}
-			}
-		}
-	}
-
-	#中国统一战线
-	news_event = {
-		id = China_news.011
-		title = China_news.011.t
-		desc = China_news.011.desc
-		picture = GFX_news_event_001
-		major = yes
-		is_triggered_only = yes
-		option = {
-			name = China_news.011.a
-			set_global_flag = CHI_war_again
-			set_country_flag = super_event_China_unit_font
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				is_subject = no
-				is_chinese_country = yes
-			}
-		}
-		option = {
-			name = China_news.011.b
-			set_global_flag = CHI_war_again
-			set_country_flag = super_event_China_unit_font
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				has_war_with = FROM
-				NOT = {
-					is_subject = no
-					is_chinese_country = yes
-				}
-			}
-		}
-		option = {
-			name = China_news.011.c
-			set_global_flag = CHI_war_again
-			set_country_flag = super_event_China_unit_font
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				NOT = {
-					OR = {
-						has_war_with = FROM
-						AND = {
-							is_subject = no
-							is_chinese_country = yes
-						}
-					}
-				}
-			}
-		}
-	}
-
-
-	#中华维新政府
-	news_event = {
-		id = China_news.012
-		title = China_news.012.t
-		desc = China_news.012.desc
-		picture = GFX_event_MAN_Mother_of_the_United_Province_of_China
-		major = yes
-		is_triggered_only = yes
-		option = {
-			name = China_news.012.a
-			set_country_flag = super_event_CHI_GRCR
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = MAN
-			}
-		}
-		option = {
-			name = China_news.012.b
-			set_country_flag = super_event_CHI_GRCR
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				tag = JAP
-			}
-		}
-		option = {
-			name = China_news.012.c
-			set_country_flag = super_event_CHI_GRCR
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-			trigger = {
-				not = {
-					or = {
-						tag = MAN
-						tag = JAP
-					}
-				}
-			}
-		}
-	}
-
-	#東雪蓮退位
-	news_event = {
-		id = China_news.013
-		title = China_news.013.t
-		desc = China_news.013.desc
-		picture = GFX_event_MAN_Mother_of_the_United_Province_of_China
-		major = yes
-		is_triggered_only = yes
-		option = {
-			name = China_news.013.a
-			trigger = {
-				tag = MAN
-			}
-		}
-		option = {
-			name = China_news.013.b
-			trigger = {
-				tag = JAP
-			}
-		}
-		option = {
-			name = China_news.013.c
-			trigger = {
-				not = {
-					or = {
-						tag = MAN
-						tag = JAP
-					}
-				}
-			}
-		}
-	}
 
 	#神州崩溃
 	news_event = {
-		id = China_news.014
-		title = China_news.014.t
+		id = China_news.001
+		title = China_news.001.title
 		picture = GFX_news_event_CHI_1
-		desc = {
-			text = China_news.014.1
-		}
+		desc = China_news.001.desc
 		trigger = {
 			wants_world_news = yes
 		}
@@ -1103,7 +601,7 @@ add_namespace = China_news
 		is_triggered_only = yes
 		major = yes
 		option = {
-			name = China_news.014.a
+			name = China_news.001.a
 			set_country_flag = super_event_CHI_1
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
@@ -1112,7 +610,7 @@ add_namespace = China_news
 			}
 		}
 		option = {
-			name = China_news.014.b
+			name = China_news.001.b
 			set_country_flag = super_event_CHI_1
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
@@ -1124,7 +622,7 @@ add_namespace = China_news
 			}
 		}
 		option = {
-			name = China_news.014.c
+			name = China_news.001.c
 			set_country_flag = super_event_CHI_1
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
@@ -1136,7 +634,7 @@ add_namespace = China_news
 			}
 		}
 		option = {
-			name = China_news.014.d
+			name = China_news.001.d
 			set_country_flag = super_event_CHI_1
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
@@ -1148,19 +646,17 @@ add_namespace = China_news
 
 	#袁克定政府统一中国
 	news_event = {
-		id = China_news.015
-		title = China_news.015.t
+		id = China_news.002
+		title = China_news.002.title
 		picture = GFX_news_event_YKD
-		desc = {
-			text = China_news.015.1
-		}
+		desc = China_news.002.desc
 		trigger = {
 			wants_world_news = yes
 		}
 		major = yes
 		is_triggered_only = yes
 		option = {
-			name = China_news.015.a
+			name = China_news.002.a
 			set_country_flag = super_event_YKD_1
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
@@ -1169,7 +665,7 @@ add_namespace = China_news
 			}
 		}
 		option = {
-			name = China_news.015.b
+			name = China_news.002.b
 			set_country_flag = super_event_YKD_1
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
@@ -1183,19 +679,17 @@ add_namespace = China_news
 
 	#帝国革新派
 	news_event = {
-		id = China_news.016
-		title = China_news.015.t
+		id = China_news.003
+		title = China_news.003.title
 		picture = GFX_news_event_YKD
-		desc = {
-			text = China_news.015.2
-		}
+		desc = China_news.003.desc
 		trigger = {
 			wants_world_news = yes
 		}
 		major = yes
 		is_triggered_only = yes
 		option = {
-			name = China_news.015.c
+			name = China_news.003.a
 			set_country_flag = super_event_CHI_2
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
@@ -1204,107 +698,44 @@ add_namespace = China_news
 
 	#帝国改良派
 	news_event = {
-		id = China_news.017
-		title = China_news.015.t
+		id = China_news.004
+		title = China_news.004.title
 		picture = GFX_news_event_YKD
-		desc = {
-			text = China_news.015.3
-		}
+		desc = China_news.004.desc
 		trigger = {
 			wants_world_news = yes
 		}
 		major = yes
 		is_triggered_only = yes
 		option = {
-			name = China_news.015.d
+			name = China_news.004.a
 			set_country_flag = super_event_CHI_3
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
 		}
 	}
 
-	##雪山事变
-	news_event = {
-		id = China_news.018
-		title = China_news.018.t
-		picture = GFX_news_The_Snow_Mountain_Incident
-		desc =  China_news.018.desc
-		major = no
-		is_triggered_only = yes
-		immediate = {
-			hidden_effect = {
-				TIB = {
-					remove_ideas = TIB_Tri_Trinity_Council_idea
-					add_ideas = TIB_Enciodes_Silverash_idea
-					set_party_name = { ideology = neutrality long_name = TIB_democratic_party name = TIB_democratic_party }
-				}
-			}
-		}
-		option = {
-			name = China_news.018.a
-			hidden_effect = {
-				if = {
-					limit = { ROOT = { tag = FROM } }
-					every_other_country = {
-						limit = {
-							OR = {
-								check_variable = { THIS.Chinese_Secondary_News_button_var = 2 }
-								is_chinese_country = yes
-								tag = ENG
-							}
-						}
-						news_event = { id = China_news.018 }
-					}
-				}
-			}
-			trigger = {
-				tag = TIB
-			}
-		}
-		option = {
-			name = China_news.018.b
-			trigger = {
-				is_chinese_country = yes
-				not = { tag = TIB }
-			}
-		}
-		option = {
-			name = China_news.018.c
-			trigger = {
-				is_chinese_country = no
-				not = { tag = ENG }
-				not = { tag = TIB }
-			}
-		}
-		option = {
-			name = China_news.018.d
-			trigger = {
-				tag = ENG
-			}
-		}
-	}
-
 	# 袁克定称帝
 	news_event = { 
-		id = China_news.019
-		title = China_news.019.t
-		desc = China_news.019.desc
+		id = China_news.005
+		title = China_news.005.title
+		desc = China_news.005.desc
 		picture = GFX_news_Hongxian_Empire
 		major = yes
 		is_triggered_only = yes
 		option = {
-			name = China_news.019.a
+			name = China_news.005.a
 			trigger = { TAG = CHI }
 		}
 		option = {
-			name = China_news.019.b
+			name = China_news.005.b
 			trigger = { 
 				NOT = { TAG = CHI }
 				has_government = fascism
 			}
 		}
 		option = {
-			name = China_news.019.c
+			name = China_news.005.c
 			trigger = { 			 		 
 				NOT = {
 					or = {
