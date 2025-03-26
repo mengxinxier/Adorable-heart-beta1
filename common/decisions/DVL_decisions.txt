@@ -1,41 +1,4 @@
 DVL_Unit_Germany = {
-	Threat_of_Germany_Unit_Font = {
-		icon = GFX_decision_generic_brainwash
-		available = {
-			hidden_trigger = {
-				always = no
-			}
-		}
-		priority = 20
-		days_mission_timeout = 35
-		activation = {
-			always = no
-		}
-		visible = {
-		}
-		cancel_if_not_visible = yes
-		cancel_trigger = {
-			SHL = { exists = no }
-			BAY = { exists = no }
-			RHI = { exists = no }
-			GER = { is_faction_leader = no }
-		}
-		timeout_effect = {
-			if = {
-				limit = { SHL = { is_subject = no } }
-				GER = { add_to_faction = SHL }
-			}
-			if = {
-				limit = { BAY = { is_subject = no } }
-				GER = { add_to_faction = BAY }
-			}
-			if = {
-				limit = { RHI = { is_subject = no } }
-				GER = { add_to_faction = RHI }
-			}
-			GER  = { set_faction_name = Germany_Unit_Font }
-		}
-	}
  ###基尔公社
 	DVL_War_to_Target_Country_SHL = {
 		icon = GFX_decision_generic_ignite_civil_war
@@ -75,6 +38,10 @@ DVL_Unit_Germany = {
 				target = SHL
 				type = annex_everything
 			}
+			add_power_balance_value = {
+				id = Anzi_human_nature_bop
+				value = -0.1
+			}
 		}
 		ai_will_do = {
 			base = 1000
@@ -109,6 +76,10 @@ DVL_Unit_Germany = {
 				value = 0.2
 			}
 			annex_country = { target = SHL transfer_troops = no }
+			add_power_balance_value = {
+				id = Anzi_human_nature_bop
+				value = 0.1
+			}
 		}
 		ai_will_do = {
 			base = 1000
@@ -343,6 +314,10 @@ DVL_Unit_Germany = {
 					}
 				}
 			}
+			add_power_balance_value = {
+				id = Anzi_human_nature_bop
+				value = -0.1
+			}
 		}
 		ai_will_do = {
 			base = 1000
@@ -377,6 +352,10 @@ DVL_Unit_Germany = {
 				value = 0.2
 			}
 			annex_country = { target = BAY transfer_troops = no }
+			add_power_balance_value = {
+				id = Anzi_human_nature_bop
+				value = 0.1
+			}
 		}
 		ai_will_do = {
 			base = 1000
@@ -613,6 +592,10 @@ DVL_Unit_Germany = {
 					}
 				}
 			}
+			add_power_balance_value = {
+				id = Anzi_human_nature_bop
+				value = -0.1
+			}
 		}
 		ai_will_do = {
 			base = 1000
@@ -647,6 +630,10 @@ DVL_Unit_Germany = {
 				value = 0.2
 			}
 			annex_country = { target = RHI transfer_troops = no }
+			add_power_balance_value = {
+				id = Anzi_human_nature_bop
+				value = 0.1
+			}
 		}
 		ai_will_do = {
 			base = 1000
@@ -1015,6 +1002,29 @@ DVL_catch_RHI = {
 }
 
 DVL_National_Economic_Policy = {
+	DVL_National_Economic_Policy_debug = { 
+		visible = {
+			is_debug = yes
+		}
+		available = {
+		}
+		complete_effect = {
+			hidden_effect = {
+				set_variable = {
+					var = jobless_rate
+					value = 2
+				}
+				set_variable = {
+					var = undead_substitution_rate
+					value = 100
+				}
+				DVL_Calculate_Undead_Economy = yes
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
 	##培养高级军官
 	DVL_Train_senior_officers = { 
 		icon = GFX_decision_category_army_reform
@@ -1261,6 +1271,176 @@ DVL_National_Economic_Policy = {
 			base = 10
 		}
 	}
+	##分配亡灵
+	DVL_Assign_undead_decision = {
+		icon = GFX_decision_POL_looming_peasants_strike
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_array = owned_states
+		highlight_states = { highlight_color_while_active = 1 }
+		ai_will_do = {
+			base = 50
+		}
+		visible = {
+			has_completed_focus = DVL_Assign_undead
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				is_owned_by = ROOT
+				or = {
+					region = 6
+					region = 7
+					region = 8
+				}
+				not = {
+					has_dynamic_modifier = {
+						modifier = DVL_Undead_assembly_line_modifier
+					}
+				}
+			}
+		}
+		modifier = {
+			civilian_factory_use = 2
+		}
+		days_remove = 30
+		cost = 10
+		remove_effect = {
+			add_to_variable = {
+				var = jobless_rate
+				value = 0.5
+				tooltip = jobless_rate_up_05_tt
+			}
+			add_to_variable = {
+				var = undead_substitution_rate
+				value = 1
+				tooltip = undead_substitution_rate_up_1_tt
+			}
+			DVL_Calculate_Undead_Economy = yes
+			FROM = {
+				add_dynamic_modifier = { modifier = DVL_Undead_assembly_line_modifier }
+			}
+		}
+	}
+	##调配工作
+	DVL_Unified_deployment_work_decision = {
+		icon = GFX_decision_POL_looming_peasants_strike
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_array = owned_states
+		highlight_states = { highlight_color_while_active = 1 }
+		ai_will_do = {
+			base = 50
+		}
+		visible = {
+			has_completed_focus = DVL_Unified_deployment_work
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				is_owned_by = ROOT
+				or = {
+					region = 6
+					region = 7
+					region = 8
+				}
+				not = {
+					has_state_flag = DVL_Unified_deployment_work_decision
+				}
+			}
+		}
+		modifier = {
+			civilian_factory_use = 2
+			weekly_manpower = -200
+			political_power_cost = 0.05
+		}
+		days_remove = 100
+		cost = 5
+		remove_effect = {
+			add_to_variable = {
+				var = jobless_rate
+				value = 0.5
+				tooltip = jobless_rate_up_05_tt
+			}
+			add_to_variable = {
+				var = undead_substitution_rate
+				value = 1
+				tooltip = undead_substitution_rate_up_1_tt
+			}
+			DVL_Calculate_Undead_Economy = yes
+			FROM = { set_state_flag = DVL_Unified_deployment_work_decision }
+			effect_tooltip = {
+				swap_ideas = {
+					remove_idea = DVL_Unified_deployment_work_0
+					add_idea = DVL_Unified_deployment_work_1
+				}
+			}
+			add_to_variable = {
+				var = DVL_Unified_deployment_work_var
+				value = 0.005
+			}
+		}
+	}
+	##扩大国企规模
+	DVL_Expand_scale_of_state_owned_enterprises_decision = {
+		icon = GFX_decision_POL_looming_peasants_strike
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_array = owned_states
+		highlight_states = { highlight_color_while_active = 1 }
+		ai_will_do = {
+			base = 50
+		}
+		visible = {
+			has_completed_focus = DVL_Expand_scale_of_state_owned_enterprises
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 1
+		}
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				is_owned_by = ROOT
+				or = {
+					region = 6
+					region = 7
+					region = 8
+				}
+				not = {
+					has_state_flag = DVL_Expand_scale_of_state_owned_enterprises_decision
+				}
+			}
+		}
+		modifier = {
+			civilian_factory_use = 2
+			political_power_cost = 0.05
+		}
+		days_remove = 100
+		cost = 30
+		remove_effect = {
+			add_to_variable = {
+				var = jobless_rate
+				value = 0.5
+				tooltip = jobless_rate_up_05_tt
+			}
+			add_to_variable = {
+				var = undead_substitution_rate
+				value = 1
+				tooltip = undead_substitution_rate_up_1_tt
+			}
+			DVL_Calculate_Undead_Economy = yes
+			FROM = {
+				set_state_flag = DVL_Expand_scale_of_state_owned_enterprises_decision
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+	}
 }
 
 DVL_foreign_ministry = {
@@ -1296,6 +1476,13 @@ DVL_foreign_ministry = {
 				has_country_flag = DVL_war_plan_going_on
 			}
 			or = {
+				if = {
+					limit = { FROM = { tag = TUR } }
+					or = {  ##君宝
+						controls_state = 773
+						any_allied_country = { controls_state = 773 }
+					}
+				}
 				any_home_area_neighbor_country = {
 					or = {
 						tag = FROM
@@ -1377,12 +1564,142 @@ DVL_foreign_ministry = {
 			FROM = {
 				set_country_flag = DVL_diplo_invite_FROM
 				country_event = {
-					id = generic.2008
+					id = WizardCountry.061
 				}
 			}
 		}
 		ai_will_do = {
 			base = 1000
+		}
+	}
+	##邀请中国国家
+	DVL_diplo_invite_Chinese_country = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			always = no
+		}
+		available = {
+			has_global_flag = CHI_REUNIT
+			FROM = {
+				not = { is_in_faction_with = ROOT }
+				is_subject = no
+			}
+			not = {
+				has_war_with = FROM
+			}
+			not = {
+				any_allied_country = {
+					has_war_with = FROM
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				is_chinese_country = yes
+				not = {
+					has_country_flag = DVL_diplo_invite_FROM
+				}
+				has_country_flag = Participate_in_the_competition_for_China_reunification
+				or = {
+					has_government = fascism
+					has_government = neutrality
+				}
+			}
+			ROOT = {
+				is_faction_leader = yes
+				is_subject = no
+			}
+		}
+		cost = 10
+		days_remove = 10
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				any_country = {
+					or = {
+						is_in_faction_with = ROOT
+						tag = ROOT
+					}
+					FROM = {
+						or = {
+							any_allied_country = {
+								is_neighbor_of = PREV.PREV
+							}
+							is_neighbor_of = PREV
+						}
+					}
+				}
+				add = 30
+			}
+		}
+		remove_effect = {
+			FROM = {
+				set_country_flag = DVL_diplo_invite_FROM
+				country_event = {
+					id = WizardCountry.061
+				}
+			}
+		}
+	}
+	##支援中国国家
+	DVL_diplo_support_Chinese_country = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			always = no
+		}
+		available = {
+			not = { has_global_flag = CHI_REUNIT }
+			FROM = {
+				not = { is_in_faction_with = ROOT }
+				is_subject = no
+				has_war = yes
+			}
+			not = {
+				has_war_with = FROM
+			}
+			not = {
+				any_allied_country = {
+					has_war_with = FROM
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				is_chinese_country = yes
+				has_country_flag = Participate_in_the_competition_for_China_reunification
+				or = {
+					has_government = fascism
+					has_government = neutrality
+				}
+			}
+			ROOT = {
+				is_faction_leader = yes
+				is_subject = no
+			}
+		}
+		custom_cost_trigger = {
+			has_equipment = { infantry_equipment > 999  }
+		}
+		custom_cost_text = decision_cost_CP_1000_gun
+		complete_effect = {
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -1000
+				}
+			}
+		}
+		days_remove = 30
+		days_re_enable = 30
+		ai_will_do = {
+			factor = 10
+		}
+		remove_effect = {
+			FROM = {
+				country_event = {
+					id = WizardCountry.062
+				}
+			}
 		}
 	}
 	##整合
@@ -8223,6 +8540,67 @@ DVL_foreign_ministry = {
 					long_name = DVL_fascism_party_long
 					name = DVL_fascism_party
 				}
+			}
+		}
+	}
+}
+
+Anzi_human_nature = {
+	DVL_slaughter_London = {  ##伦敦大屠杀
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = DVL }
+		visible = {
+			has_country_flag = DVL_slaughter_London_flag
+		}
+		available = {
+			or = {
+				controls_state = 126
+				any_subject_country = { controls_state = 126 }
+			}
+			126 = { owner = { tag = ENG } }
+		}
+		custom_cost_trigger = {
+			has_equipment = { infantry_equipment > 999  }
+		}
+		custom_cost_text = decision_cost_CP_1000_gun
+		complete_effect = {
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -1000
+				}
+			}
+		}
+		cost = 0
+		days_remove = 30
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		cancel_if_invalid = yes
+		remove_effect = {
+			effect_tooltip = {
+				126 = { add_manpower = -2000000 }
+				add_victory_points = {
+					province = 6103
+					value = -40
+				}
+				add_war_support = 0.01
+				add_named_threat = { threat = 20 name = DVL_slaughter_London }
+				add_power_balance_value = {
+					id = Anzi_human_nature_bop
+					value = -0.1
+				}
+				ENG = {
+					add_timed_idea = {
+						idea = DVL_slaughter_London_idea
+						days = 100
+					}
+				}
+			}
+			hidden_effect = {
+				country_event = { id = WizardCountry.059 }
+				ENG = { country_event = { id = WizardCountry.060 } }
 			}
 		}
 	}
