@@ -1424,12 +1424,11 @@ POL_civil_war_resolution_category = {
 		cancel_trigger = {
 			always = no
 		}
-		days_mission_timeout = 180
+		days_mission_timeout = 100
 		timeout_effect = {
 			custom_effect_tooltip = POL_civil_war_is_coming_tt
 			hidden_effect = {
-				POL_civil_war_has_begun = yes
-				country_lock_all_division_template = no
+				country_event = pol_cw.032
 			}
 		}
 	}
@@ -1528,12 +1527,12 @@ POL_civil_war_resolution_category = {
 			add_equipment_to_stockpile = {
 				type = infantry_equipment
 				amount = 200
-				producer = DVL
+				producer = SOV
 			}
 			add_equipment_to_stockpile = {
 				type = artillery_equipment
 				amount = 25
-				producer = DVL
+				producer = SOV
 			}
 			hidden_effect = {
 				activate_mission = POL_defend_Minsk_mission
@@ -1592,41 +1591,6 @@ POL_civil_war_resolution_category = {
 	}
   
 	#保卫工业中心
-	POL_defend_Warsaw_mission = {
-		icon = GFX_decision_generic_fortification
-		is_good = no
-		activation = {
-			always = no
-		}
-		available = {
-			NOT = { controls_state = 10 }
-		}
-		cancel_trigger = {
-			hidden_trigger = { NOT = { has_global_flag = POL_civil_war_has_begun_flag } }
-		}
-		days_mission_timeout = 30
-		complete_effect = {
-			hidden_effect = {
-				country_event = pol_cw.027
-				10 = { clr_state_flag = POL_established_wartime_order }
-			}
-		}
-		timeout_effect = {
-			add_equipment_to_stockpile = {
-				type = infantry_equipment
-				amount = 500
-				producer = POL
-			}
-			add_equipment_to_stockpile = {
-				type = artillery_equipment
-				amount = 75
-				producer = POL
-			}
-			hidden_effect = {
-				activate_mission = POL_defend_Warsaw_mission
-			}
-		}
-	}
 	POL_defend_Lviv_mission = {
 		icon = GFX_decision_generic_prepare_civil_war
 		is_good = no
@@ -1642,7 +1606,7 @@ POL_civil_war_resolution_category = {
 		days_mission_timeout = 30
 		complete_effect = {
 			hidden_effect = {
-				country_event = pol_cw.028
+				country_event = pol_cw.027
 				91 = { clr_state_flag = POL_established_wartime_order }
 			}
 		}
@@ -1677,7 +1641,7 @@ POL_civil_war_resolution_category = {
 		days_mission_timeout = 30
 		complete_effect = {
 			hidden_effect = {
-				country_event = pol_cw.029
+				country_event = pol_cw.028
 				93 = { clr_state_flag = POL_established_wartime_order }
 			}
 		}
@@ -1700,6 +1664,9 @@ POL_civil_war_resolution_category = {
 
 	POL_establish_wartime_order_in_state = {
 		icon = GFX_decision_generic_police_action
+		allowed = {
+			original_tag = POL
+		}
 		visible = {
 			has_global_flag = POL_civil_war_has_begun_flag
 			original_tag = POL
@@ -1709,7 +1676,7 @@ POL_civil_war_resolution_category = {
 			FROM = { is_controlled_by = ROOT }
 		}
 		state_target = yes
-		targets = { 776 206 86 88 10 91 93 }
+		targets = { 776 206 86 88 91 93 }
 		on_map_mode = map_and_decisions_view
 		ai_will_do = {
 			base = 100
@@ -1793,6 +1760,275 @@ POL_civil_war_resolution_category = {
 				}
 			}
 			custom_effect_tooltip = POL_obtain_small_scale_troops_support_tt
+		}
+	}
+
+	POL_support_civil_war_faction = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+			is_ai = yes
+			has_global_flag = POL_civil_war_has_begun_flag
+			tag = POL
+			owns_state = 10
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = POL_support_civil_war_faction_flag }
+				custom_trigger_tooltip = {
+					tooltip = POL_support_civil_war_faction_trigger_tooltip
+					has_country_flag = { flag = POL_support_civil_war_faction_flag days > 59 }
+				}
+			}
+		}
+		cancel_trigger = {
+			hidden_trigger = { NOT = { has_global_flag = POL_civil_war_has_begun_flag } }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		fire_only_once = no
+		days_re_enable = 0
+		days_remove = 7
+		complete_effect = {
+			hidden_effect = {
+				clr_country_flag = POL_support_civil_war_faction_flag
+				set_country_flag = POL_support_civil_war_faction_flag
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = { has_completed_focus = POL_shinda_sekai_sensen }
+				every_other_country = {
+					limit = {
+						original_tag = POL
+						has_country_flag = POL_SSS_organization_flag
+					}
+					country_event = pol_cw.029
+				}
+			}
+			else_if = {
+				limit = { has_completed_focus = POL_authorize_Maynar }
+				every_other_country  = {
+					limit = {
+						original_tag = POL
+						has_country_flag = POL_orthodox_organization_flag
+					}
+					country_event = pol_cw.029
+				}
+			}
+			else = {
+				every_other_country = {
+					limit = {
+						original_tag = POL
+						has_country_flag = POL_royalist_organization_flag
+					}
+					country_event = pol_cw.029
+				}
+			}
+		}
+	}
+
+	SOV_support_civil_war_faction = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+			has_global_flag = POL_civil_war_has_begun_flag
+			tag = SOV
+			owns_state = 206
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = POL_support_civil_war_faction_flag }
+				custom_trigger_tooltip = {
+					tooltip = SOV_support_civil_war_faction_trigger_tooltip
+					has_country_flag = { flag = POL_support_civil_war_faction_flag days > 89 }
+				}
+			}
+		}
+		cancel_trigger = {
+			hidden_trigger = { NOT = { has_global_flag = POL_civil_war_has_begun_flag } }
+		}
+		fire_only_once = no
+		days_re_enable = 0
+		days_remove = 7
+		ai_will_do = {
+			base = 1000
+		}
+		complete_effect = {
+			hidden_effect = {
+				clr_country_flag = POL_support_civil_war_faction_flag
+				set_country_flag = POL_support_civil_war_faction_flag
+			}
+		}
+		remove_effect = {
+			every_other_country = {
+				limit = {
+					original_tag = POL
+					has_country_flag = POL_SSS_organization_flag
+				}
+				country_event = pol_cw.030
+			}
+		}
+	}
+	
+	DVL_support_civil_war_faction = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+			has_global_flag = POL_civil_war_has_begun_flag
+			tag = DVL
+		}
+		available = {
+			if = {
+				limit = { has_country_flag = POL_support_civil_war_faction_flag }
+				custom_trigger_tooltip = {
+					tooltip = DVL_support_civil_war_faction_trigger_tooltip
+					has_country_flag = { flag = POL_support_civil_war_faction_flag days > 89 }
+				}
+			}
+		}
+		cancel_trigger = {
+			hidden_trigger = { NOT = { has_global_flag = POL_civil_war_has_begun_flag } }
+		}
+		fire_only_once = no
+		days_re_enable = 0
+		days_remove = 7
+		ai_will_do = {
+			base = 1000
+		}
+		complete_effect = {
+			hidden_effect = {
+				clr_country_flag = POL_support_civil_war_faction_flag
+				set_country_flag = POL_support_civil_war_faction_flag
+			}
+		}
+		remove_effect = {
+			every_other_country = {
+				limit = {
+					original_tag = POL
+					has_country_flag = POL_royalist_organization_flag
+				}
+				country_event = pol_cw.031
+			}
+		}
+	}
+
+	POL_consolidated_wartime_government = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+			has_global_flag = POL_civil_war_has_begun_flag
+			tag = POL
+		}
+		available = {
+			hidden_trigger = {
+				has_global_flag = { flag = POL_civil_war_has_begun_flag days > 7 }
+				any_other_country = {
+					original_tag = POL
+					OR = {
+						has_country_flag = POL_SSS_organization_flag
+						has_country_flag = POL_orthodox_organization_flag
+						has_country_flag = POL_royalist_organization_flag
+					}
+					has_civil_war = no
+				}
+			}
+		}
+		fire_only_once = yes
+		ai_will_do = {
+			base = 1000
+		}
+		days_remove = 14
+		remove_effect = {
+			hidden_effect = {
+				clr_global_flag = POL_civil_war_has_begun_flag
+				clr_country_flag = POL_cw_unavoidable_flag
+				mark_focus_tree_layout_dirty = yes
+				every_other_country = {
+					limit = { original_tag = POL }
+					send_equipment_fraction = {
+						target = ROOT
+						value = 1.0
+					}
+					ROOT = {
+						annex_country = {
+							target = PREV
+							transfer_troops = yes
+						}
+					}
+				}
+				set_division_template_lock = {
+					division_template = "Militia Troops"	
+					is_locked = no
+				}
+				if = {
+					limit = { has_country_flag = POL_orthodox_organization_CW_win }
+					set_politics = {
+						ruling_party = neutrality
+					}
+					set_popularities = {
+						communism = 5
+						democratic = 45
+						neutrality = 40
+						fascism = 10
+					}
+					every_character = {
+						limit = { has_character_flag = POL_SSS_organization_character }
+						set_nationality = AHM
+					}
+					every_character = {
+						limit = { has_character_flag = POL_royalists_character }
+						set_nationality = AHM
+					}
+					POL_remove_all_head_of_government = yes
+					set_country_flag = POL_Ereshkigal_head_of_government
+				}
+				else_if = {
+					limit = { has_country_flag = POL_SSS_organization_CW_win }
+					set_politics = {
+						ruling_party = communism
+					}
+					set_popularities = {
+						communism = 79
+						democratic = 11
+						neutrality = 5
+						fascism = 5
+					}
+					every_character = {
+						limit = { has_character_flag = POL_Nearl_family_character }
+						set_nationality = AHM
+					}
+					every_character = {
+						limit = { has_character_flag = POL_royalists_character }
+						set_nationality = AHM
+					}
+					POL_remove_all_head_of_government = yes
+					set_country_flag = POL_yuri_head_of_government
+				}
+				else = {
+					set_politics = {
+						ruling_party = fascism
+					}
+					set_popularities = {
+						communism = 1
+						democratic = 7
+						neutrality = 12
+						fascism = 80
+					}
+					every_character = {
+						limit = { has_character_flag = POL_republicans_character }
+						set_nationality = AHM
+					}
+					every_character = {
+						limit = { has_character_flag = POL_royalists_character }
+						set_nationality = AHM
+					}
+					POL_remove_all_head_of_government = yes
+					set_country_flag = POL_Riddle_head_of_government
+				}
+				army_experience = 100
+				every_unit_leader = {
+					add_skill_level = 1
+					add_attack = 1
+				}
+			}
 		}
 	}
 }
