@@ -4,18 +4,39 @@ KMK_arsenal_organization = {
 	include = generic_tank_organization
 	icon = GFX_idea_generic_industrial_concern_1
 	allowed = {	
-		tag = KMK
+		or = {
+			tag = KMK
+			tag = LIB
+			tag = FRA
+		}
 	}
 	available = {
+		FROM = {
+			if = {
+				limit = {
+					tag = LIB
+				}
+				LIB  = {
+					has_completed_focus = LIB_constitutional_monarchy
+				}
+				has_full_control_of_state = 925
+			}
+			if = {
+				limit = {
+					tag = FRA
+				}
+				925 = { is_core_of = FRA }
+			}
+		}
 	}
-
+	equipment_type = { armor }
 	initial_trait = {
 		name = USA_mio_trait_dedicated_tank_factory
 		
 		equipment_bonus = {
-			armor_value = -0.05
-			defense =-0.05
-			build_cost_ic = -0.05
+			armor_value = 0.05
+			defense = -0.05
+			build_cost_ic = -0.03
 		}
 
 		production_bonus = {
@@ -46,13 +67,15 @@ KMK_arsenal_organization = {
 
 		position = { x=1 y=1 }
 		relative_position_id = generic_mio_trait_standardized_components
-
+		available = {
+			has_global_flag = second_weltkrieg_has_started
+		}
 		all_parents = { generic_mio_trait_standardized_components }
 		equipment_bonus = {
-			soft_attack = 0.08
+			soft_attack = 0.1
 			defense = 0.1
 			hardness = 0.05
-			hard_attack = 0.1
+			hard_attack = 0.05
 		}
 	}
 
@@ -63,6 +86,9 @@ KMK_arsenal_organization = {
 		special_trait_background = yes
 		position = { x=6 y=1 }
 		relative_position_id = generic_mio_trait_standardized_components
+		available = {
+			has_global_flag = second_weltkrieg_has_started
+		}
 		equipment_bonus = {
 			soft_attack = 0.1
 			hard_attack = 0.1
@@ -150,7 +176,24 @@ KMK_messerschmitt_organization = {
 	icon = GFX_idea_messerschmitt
 	
 	allowed = {	
-		tag = KMK
+		or = {
+			tag = KMK
+			tag = LIB
+		}
+	}
+
+	available = {
+		FROM = {
+			if = {
+				limit = {
+					tag = LIB
+				}
+				LIB = {
+					has_completed_focus = LIB_Imperial_inclination
+				}
+				has_full_control_of_state = 925
+			}
+		}
 	}
 
 	equipment_type = {
@@ -172,7 +215,7 @@ KMK_messerschmitt_organization = {
 
 		equipment_bonus = {
 			build_cost_ic = -0.05
-			reliability = 0.05
+			air_attack = 0.1
 		}
 	}
 
@@ -210,8 +253,9 @@ KMK_messerschmitt_organization = {
 		any_parent = { generic_mio_trait_heavier_airframe generic_mio_trait_maximum_wing_loads generic_mio_trait_gun_pods }
 
 		equipment_bonus = {
-			air_attack = 0.05
-			air_agility = 0.05
+			air_attack = 0.1
+			air_agility = 0.1
+			air_defence = 0.1
 		} 
 	}
 	add_trait = { 
@@ -229,7 +273,7 @@ KMK_messerschmitt_organization = {
 			air_defence = 0.1	
 		}
 		production_bonus = {
-			production_cost_factor = -0.15
+			production_cost_factor = -0.05
 		}
 	}
 
@@ -251,101 +295,82 @@ KMK_messerschmitt_organization = {
 	}
 }
 
-KMK_supermarine_organization = {
+BEL_renard_organization = {
+	name = renard
 	include = generic_high_agility_fighter_aircraft_organization
-	icon = GFX_idea_supermarine
-	
-	allowed = {	
-		tag = KMK
-		has_dlc = "Arms Against Tyranny"
+	icon = GFX_idea_BEL_renard_organization
+	allowed = {
+		original_tag = KMK
+		has_dlc = "Gotterdammerung"
 	}
 
 	available = {
-		KMK = { not = { has_war_with = ENG } }
-	}
-
-	equipment_type = {
-		mio_cat_eq_all_small_plane
-		maritime_patrol_plane
-	}	
-
-	research_categories = {	
-		mio_cat_all_light_fighter_and_modules 
-#		mio_cat_all_naval_bomber_and_modules 
-			#Could be used to allow Supermarine to research naval bombs, but this could overpower English fighter MIO trait gain early on.
-	}
-
-	override_trait = {
-		token = generic_mio_trait_fuel_injection_engines
-		
-		position = { x=0 y=2 }
-		relative_position_id = generic_mio_trait_bigger_engines
-	}
-
-	override_trait = {
-		token = generic_mio_trait_high_octane_fuels
-		
-		position = { x=1 y=1 }
-		relative_position_id = generic_mio_trait_bigger_engines
-	}
-
-	override_trait = {
-		token = generic_mio_trait_subsidiary_suppliers
-		
-		position = { x=0 y=2 }
-		relative_position_id = generic_mio_trait_fuel_injection_engines
 	}
 
 	add_trait = { 
-		token = ENG_mio_trait_seaplane_origins
-		name = ENG_mio_trait_seaplane_origins
-		icon = GFX_generic_mio_trait_icon_detection
+		token = BEL_mio_trait_all_metal_expertise
+		name = BEL_mio_trait_all_metal_expertise
+		icon = GFX_generic_mio_trait_icon_armor_value
 		special_trait_background = yes
+		
+		position = { x=2 y=1 }  
 
-		position = { x=2 y=0 }
-		relative_position_id = generic_mio_trait_minimum_weapon_requirements
-
-		#any_parent = { generic_mio_trait_super_heavy_shells generic_mio_trait_semi_armor_piercing_shells generic_mio_trait_high_velocity_guns }
-
-		limit_to_equipment_type = { mio_cat_eq_all_small_plane mio_cat_eq_all_large_plane }
+		any_parent = { generic_mio_trait_metal_skin }		
 
 		equipment_bonus = {
-			sub_detection = 0.05
-			surface_detection = 0.05
-			naval_strike_targetting = 0.1
+			air_defence = 0.10
 		}
+
 	}
 
 	add_trait = { 
-		token = ENG_mio_trait_elliptical_wings
-		name = ENG_mio_trait_elliptical_wings
-		icon = GFX_generic_mio_trait_icon_defense
-		special_trait_background = yes
+		token = BEL_mio_trait_browning_collaboration
+		name = BEL_mio_trait_browning_collaboration
+		icon = GFX_generic_mio_trait_icon_anti_air_attack
+		special_trait_background = yes		
+		
+		position = { x=7 y=1 }  
 
-		position = { x=0 y=1 }
-		relative_position_id = generic_mio_trait_cantilever_wing_structure
-
-		any_parent = { generic_mio_trait_cantilever_wing_structure }
+		any_parent = { generic_mio_trait_minimum_weapon_requirements }		
 
 		equipment_bonus = {
-			air_defence = 0.1	
+			air_attack = 0.1
 		}
+
 	}
 
 	add_trait = { 
-		token = ENG_mio_trait_supercharger
-		name = ENG_mio_trait_supercharger
-		icon = GFX_generic_mio_trait_icon_defense
+		token = BEL_mio_trait_stampe_et_vertrongen
+		name = BEL_mio_trait_stampe_et_vertrongen
+		icon = GFX_generic_mio_trait_icon_naval_range
 		special_trait_background = yes
 
-		position = { x=1 y=1 }
-		relative_position_id = generic_mio_trait_fuel_injection_engines
-
-		all_parents = { generic_mio_trait_fuel_injection_engines generic_mio_trait_high_octane_fuels }
+		position = { x=9 y=0 }  
 
 		equipment_bonus = {
-			air_defence = 0.1	
+			air_agility = 0.1
+			air_range = 0.1
 		}
+
 	}
+
+	add_trait = { 
+		token = BEL_mio_trait_stampe_et_renard
+		name = BEL_mio_trait_stampe_et_renard
+		icon = GFX_generic_mio_department_icon_plane_fighter_combat
+		special_trait_background = yes
+		
+		position = { x=9 y=1 }  
+
+		any_parent = { BEL_mio_trait_stampe_et_vertrongen }
+
+		equipment_bonus = {
+			air_attack = 0.05
+			reliability = 0.05
+		}
+
+	}
+
+
 }
 

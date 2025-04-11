@@ -3249,6 +3249,8 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = FRA_Gensokyo.072.a
+		annex_country = { target = FRA transfer_troops = no }
+		load_focus_tree = Free_france_focus
 		set_cosmetic_tag = FREE_FRA
 		FRA = {
 			FRA_Marisa = { set_nationality = ROOT }
@@ -3391,24 +3393,59 @@ country_event = {
 		tag = FRA
 		FRA = { has_war_with = DVL }
 		DVL = { is_faction_leader = yes }
-		surrender_progress > 0.8
+		surrender_progress > 0.5
+		16 = { controller = { NOT = { original_tag = FRA } } }
 		NOT = { has_global_flag = FRA_has_fallen }
 		LIB = { is_subject_of = FRA }
 	}
 	option = {
 		name = FRA_Gensokyo.077.a
+		FRA = {
+			transfer_navy = {
+				target = LIB
+			}
+		}
 		set_global_flag = FRA_has_fallen
+		if = {
+			limit = {
+				is_faction_leader  = yes
+			}
+			dismantle_faction = yes
+		}
+		if = {
+			limit = {
+				LIB = {
+					NOT = {
+						has_war_with = DVL
+					}
+				}
+			}
+			DVL = {
+				declare_war_on = { target = LIB type = take_state }
+			}
+		}
 		LIB = {
-			change_tag_from_ROOT = yes
-			end_puppet_this = yes
 			country_event = {
 				id = FRA_Gensokyo.072
-				hours = 1
+				days = 3
 			}
+			ROOT = {
+				set_autonomy = {
+					target = LIB
+					autonomy_state = autonomy_free
+				}
+			}
+			set_autonomy = {
+				target = COG
+				autonomy_state = autonomy_puppet
+			}
+			add_ideas = LIB_never_surrunder
+			change_tag_from_ROOT = yes
+			end_puppet_this = yes
 		}
 		hidden_effect = {
 			add_timed_idea = {
-				idea = ready_to_surrender
+				idea = LIB_never_surrunder
 				days = 15
 			}
 		}

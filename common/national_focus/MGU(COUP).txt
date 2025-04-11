@@ -13,6 +13,12 @@ focus_tree = {
 	
 	default = no
 
+	continuous_focus_position = {
+		x = 100
+		y = 1400
+	}
+
+
 	focus = { #整治吉祥物
 		id = TBMGU_01
 		icon = GFX_focus_MGU_QB
@@ -45,6 +51,10 @@ focus_tree = {
 				state = 501
 				remember_old_capital = no
 			}
+            add_victory_points = {
+                province = 10513
+                value = 5
+            }
             hidden_effect = {
                 IF = {
                     limit = {
@@ -68,17 +78,20 @@ focus_tree = {
                         is_ai = yes
                         NOT = { has_global_flag = MGU_COUP_AI_BUFF_super_flag }
                         NOT = { has_global_flag = MGU_COUP_AI_super_flag }
+                        NOT = { has_global_flag = MGU_COUP_AI_attitude_flag }
                     }
                     add_popularity = { ideology = neutrality popularity = 0.25 }
                     random_list = {
-                        50 = { #傲慢
+                        30 = { #傲慢
                             set_country_flag = MGU_We_are_mahoshaojiu_flag
                             add_ideas = MGU_COUP_AI_BUFF_3
+                            set_country_leader_ideology = Homura_subideology
                         }
                         30 = { #谦逊
                             add_ideas = MGU_COUP_AI_BUFF_2
+                            set_country_leader_ideology = Homura_subideology
                         }
-                        20 = { #强而有力呀
+                        40 = { #强而有力呀
                             add_ideas = MGU_COUP_AI_BUFF
                             set_country_leader_ideology = Homura_subideology
                         }
@@ -349,8 +362,8 @@ focus_tree = {
 			army_experience = 25
 			navy_experience = 25
 			air_experience = 25
-
 			add_command_power = 50
+		#	add_research_slot = -1
 			add_ideas = MGU_magic_overcharge_MP
 			every_army_leader = {
 				add_attack = 1
@@ -382,19 +395,203 @@ focus_tree = {
 		#		}
 		}
 	}
-	focus = { #南部开发的准备
-		id = TBMGU_07
-		icon = GFX_goal_generic_construct_infrastructure
-		x = 5
+
+	focus = { #见泷原经济特区 见泷原城市规划
+		id = TBMGU_JLYTQ_01
+		icon = GFX_PAN_focu_8
+		x = 4
 		y = 1
 		cost = 4
 		prerequisite = {
 			focus = TBMGU_01
 		}
 		ai_will_do = {
+			factor = 20
+		}
+        available = {
+		    501 = { is_controlled_by = MGU }
+	    }
+		completion_reward = {
+            501 = {
+                   add_extra_state_shared_building_slots = 5
+                    add_building_construction = {
+                  type = infrastructure
+                  level = 1
+                  instant_build = yes
+                  }
+            }
+		}
+	}
+	focus = { #修改工业法案
+		id = TBMGU_JLYTQ_02
+		icon = GFX_goal_generic_production2
+		x = 4
+		y = 2
+		cost = 4
+		prerequisite = {
+
+			focus = TBMGU_JLYTQ_01
+		}
+		mutually_exclusive = {
+		#	focus = TBMGU_JLYTQ_04
+		}
+		ai_will_do = {
+			factor = 20
+		}
+        available = {
+                    OR = {
+                        has_idea = civilian_economy
+                        has_idea = low_economic_mobilisation
+                    }
+	    }
+		completion_reward = {
+		    add_stability = -0.1
+            add_ideas = partial_economic_mobilisation
+		}
+	}
+	focus = { #神滨市车站
+		id = TBMGU_JLYTQ_03
+		icon = GFX_PAN_focu_283
+		x = 6
+		y = 1
+		cost = 4
+		prerequisite = {
+			focus = TBMGU_01
+		}
+		ai_will_do = {
+			factor = 20
+		}
+
+		completion_reward = {
+			500 = {
+                   add_extra_state_shared_building_slots = 5
+                  add_building_construction = {
+                  type = infrastructure
+                  level = 1
+                  instant_build = yes
+                  }
+            }
+		}
+	}
+	focus = { #接管镜屋
+		id = TBMGU_JLYTQ_04
+		icon = GFX_focus_ITA_devaluate_the_lire
+		x = 6
+		y = 2
+		cost = 4
+		prerequisite = {
+
+			focus = TBMGU_JLYTQ_03
+		}
+		mutually_exclusive = {
+		#	focus = TBMGU_JLYTQ_02
+		}
+		ai_will_do = {
+			factor = 20
+		}
+        available = {
+
+	    }
+		completion_reward = {
+			496 = {
+                   add_extra_state_shared_building_slots = 3
+                  add_building_construction = {
+                  type = industrial_complex
+                  level = 1
+                  instant_build = yes
+                  }
+            }
+		}
+	}
+	focus = { #见泷原经济特区 蜂巢都市
+		id = TBMGU_JLYTQ_05
+		icon = GFX_PAN_focu_30
+		x = 5
+		y = 3
+		cost = 4
+		prerequisite = {
+		#	focus = TBMGU_JLYTQ_02
+		#	focus = TBMGU_JLYTQ_04
+		}
+		prerequisite = {
+            focus = TBMGU_01
+		}
+
+		ai_will_do = {
+			factor = 20
+		}
+        available = {
+            num_of_factories > 35
+		    501 = { is_controlled_by = MGU }
+	    }
+
+		completion_reward = {
+            501 = {
+                   add_extra_state_shared_building_slots = 3
+                  add_building_construction = {
+                  type = industrial_complex
+                  level = 2
+                  instant_build = yes
+                  }
+            }
+		}
+	}
+	focus = { #见泷原经济特区
+		id = TBMGU_JLYTQ_06
+		icon = GFX_goal_generic_small_arms
+		x = 4
+		y = 4
+		cost = 4
+		allow_branch = {
+			always = no # 这里禁用了 这里这里这里
+		}
+		prerequisite = {
+			focus = TBMGU_JLYTQ_05
+		}
+		mutually_exclusive = {
+			focus = TBMGU_JLYTQ_07
+		}
+		ai_will_do = {
+			factor = 20
+		}
+		completion_reward = {
+		}
+	}
+	focus = { #见泷原经济特区
+		id = TBMGU_JLYTQ_07
+		icon = GFX_goal_generic_small_arms
+		x = 6
+		y = 4
+		cost = 4
+		allow_branch = {
+			always = no # 这里禁用了 这里这里这里
+		}
+		prerequisite = {
+			focus = TBMGU_JLYTQ_05
+		}
+		mutually_exclusive = {
+			focus = TBMGU_JLYTQ_06
+		}
+		ai_will_do = {
+			factor = 20
+		}
+		completion_reward = {
+		}
+	}
+	focus = { #南部开发的准备
+		id = TBMGU_07
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 5
+		y = 5
+		cost = 4
+		prerequisite = {
+
+		}
+		ai_will_do = {
 			factor = 18
 		}
 		available = {
+		has_completed_focus = TBMGU_126
 			503 = {
 				is_controlled_by = MGU
 						}
@@ -453,9 +650,10 @@ focus_tree = {
 	focus = { #树海化 整顿废墟
 		id = TBMGU_08
 		icon = GFX_goal_generic_construct_civilian
-		x = 5
-		y = 2
+		x = 0
+		y = 1
 		cost = 4
+		relative_position_id = TBMGU_07
 		prerequisite = {
 			focus = TBMGU_07
 		}
@@ -482,19 +680,19 @@ focus_tree = {
     		}
     		completion_reward = {
     			502 = {
-    					add_extra_state_shared_building_slots = 1
+    					add_extra_state_shared_building_slots = 3
     				}
     			503 = {
-    					add_extra_state_shared_building_slots = 1
+    					add_extra_state_shared_building_slots = 3
     				}
     			894 = {
-    					add_extra_state_shared_building_slots = 1
+    					add_extra_state_shared_building_slots = 3
     				}
     			1041 = {
-    					add_extra_state_shared_building_slots = 1
+    					add_extra_state_shared_building_slots = 3
     			    }
     			1164 = {
-    					add_extra_state_shared_building_slots = 1
+    					add_extra_state_shared_building_slots = 3
     			    }
 		}
 
@@ -502,9 +700,10 @@ focus_tree = {
 	focus = { #开拓居住区 恢复工业生产
 		id = TBMGU_09
 		icon = GFX_PAN_focu_253
-		x = 5
-		y = 3
+		x = 0
+		y = 2
 		cost = 9
+		relative_position_id = TBMGU_07
 		prerequisite = {
 			focus = TBMGU_08
 		}
@@ -566,9 +765,10 @@ focus_tree = {
 	focus = { #树海兵工厂 #树海工业区 #收缴叛军武器工厂
 		id = TBMGU_10
 		icon = GFX_goal_generic_construct_mil_factory
-		x = 6
-		y = 4
+		x = 1
+		y = 3
 		cost = 4
+		relative_position_id = TBMGU_07
 		prerequisite = {
 			focus = TBMGU_09
 		}
@@ -583,9 +783,10 @@ focus_tree = {
 	focus = { #橡胶种植 重整工业资源 开发镜界资源
 		id = TBMGU_11
 		icon = GFX_focus_generic_steel
-		x = 4
-		y = 4
+		x = -1
+		y = 3
 		cost = 4
+		relative_position_id = TBMGU_07
 		prerequisite = {
 			focus = TBMGU_09
 		}
@@ -627,7 +828,7 @@ focus_tree = {
 		icon = GFX_goal_generic_expanded_production
 		x = 2
 		y = 4
-		cost = 4
+		cost = 2
 		prerequisite = {
 			focus = TBMGU_05
 		}
@@ -642,7 +843,6 @@ focus_tree = {
 	    }
 		completion_reward = {
 		        add_research_slot = 1
-		        add_political_power = -25
 				swap_ideas = {
 					remove_idea = mitakihara_arms_dealer
 					add_idea = mitakihara_arms_dealer_1
@@ -665,17 +865,69 @@ focus_tree = {
 				uses = 2
 				category = support_tech
 				}
+			    add_tech_bonus = {
+				name = TBMGU_12
+				bonus = 0.50
+				uses = 1
+				category = artillery
+				}
 			}
 		}
+
+	focus = { #军火组分支A1
+		id = TBMGU_JHZ_A1
+		icon = GFX_goal_generic_expanded_production
+		x = 1
+		y = 5
+		cost = 2
+		prerequisite = {
+			focus = TBMGU_12
+		}
+		mutually_exclusive = {
+            focus = TBMGU_JHZ_A2
+		}
+		ai_will_do = {
+			factor = 10
+		}
+        available = {
+
+	    }
+		completion_reward = {
+            add_ideas = MGU_hidden_idea_JHZ_A1
+		}
+	}
+	focus = { #军火组分支A2
+		id = TBMGU_JHZ_A2
+		icon = GFX_goal_generic_expanded_production
+		x = 3
+		y = 5
+		cost = 2
+		prerequisite = {
+			focus = TBMGU_12
+		}
+		mutually_exclusive = {
+            focus = TBMGU_JHZ_A1
+		}
+		ai_will_do = {
+			factor = 10
+		}
+        available = {
+
+	    }
+		completion_reward = {
+            add_ideas = MGU_hidden_idea_JHZ_A2
+		}
+	}
 
 	focus = { #魔联科研峰会（科技逆向工程）
 		id = TBMGU_725
 		icon = GFX_goal_continuous_naval_production
 		x = 2
-		y = 5
-		cost = 4
+		y = 6
+		cost = 2
 		prerequisite = {
-			focus = TBMGU_12
+			focus = TBMGU_JHZ_A1
+			focus = TBMGU_JHZ_A2
 		}
 		ai_will_do = {
 			factor = 20
@@ -684,7 +936,6 @@ focus_tree = {
 		date > 1939.1.1
 	    }
 		completion_reward = {
-		    add_political_power = -50
 				swap_ideas = {
 					remove_idea = mitakihara_arms_dealer_1
 					add_idea = mitakihara_arms_dealer_2
@@ -734,14 +985,61 @@ focus_tree = {
 			}
 		}
 
-	focus = { #破碎星辰（）近未来物理学
-		id = TBMGU_726
-		icon = GFX_r56_goal_generic_nuclear_energy
-		x = 2
-		y = 6
-		cost = 4
+	focus = { #军火组分支B1
+		id = TBMGU_JHZ_B1
+		icon = GFX_goal_continuous_naval_production
+		x = 1
+		y = 7
+		cost = 2
 		prerequisite = {
 			focus = TBMGU_725
+		}
+		mutually_exclusive = {
+            focus = TBMGU_JHZ_B2
+		}
+		ai_will_do = {
+			factor = 10
+		}
+        available = {
+
+	    }
+		completion_reward = {
+            add_ideas = MGU_hidden_idea_JHZ_B1
+			}
+		}
+
+	focus = { #军火组分支B2
+		id = TBMGU_JHZ_B2
+		icon = GFX_goal_continuous_naval_production
+		x = 3
+		y = 7
+		cost = 2
+		prerequisite = {
+			focus = TBMGU_725
+		}
+		mutually_exclusive = {
+            focus = TBMGU_JHZ_B1
+		}
+		ai_will_do = {
+			factor = 10
+		}
+        available = {
+
+	    }
+		completion_reward = {
+            add_ideas = MGU_hidden_idea_JHZ_B2
+			}
+		}
+
+	focus = { #破碎星辰（）近未来物理学
+		id = TBMGU_726
+		icon = GFX_goal_generic_nuclear_energy
+		x = 2
+		y = 8
+		cost = 2
+		prerequisite = {
+			focus = TBMGU_JHZ_B1
+			focus = TBMGU_JHZ_B2
 		}
 		ai_will_do = {
 			factor = 20
@@ -750,22 +1048,82 @@ focus_tree = {
 		date > 1941.1.1
 	    }
 		completion_reward = {
-		        add_political_power = -75
 				swap_ideas = {
 					remove_idea = mitakihara_arms_dealer_2
 					add_idea = mitakihara_arms_dealer_3
 				}
 			    add_tech_bonus = {
 				name = TBMGU_726
-				bonus = 0.50
-				uses = 2
+				ahead_reduction = 1
+				bonus = 1.0
+				uses = 1
 				category = computing_tech
 				}
 			    add_tech_bonus = {
 				name = TBMGU_726
-				bonus = 0.50
-				uses = 2
+				bonus = 1.0
+				uses = 1
 				category = nuclear
+				}
+			}
+		}
+
+	focus = { #军火组分支C1
+		id = TBMGU_JHZ_C1
+		icon = GFX_goal_generic_nuclear_energy
+		x = 1
+		y = 9
+		cost = 2
+		prerequisite = {
+			focus = TBMGU_726
+		}
+		mutually_exclusive = {
+            focus = TBMGU_JHZ_C2
+		}
+		ai_will_do = {
+			factor = 10
+		}
+        available = {
+
+	    }
+		completion_reward = {
+            add_ideas = MGU_hidden_idea_JHZ_C1
+			    add_tech_bonus = {
+				name = TBMGU_JHZ_C1
+				ahead_reduction = 2
+				bonus = 1.0
+				uses = 1
+				category = computing_tech
+				}
+			}
+		}
+
+	focus = { #军火组分支C2
+		id = TBMGU_JHZ_C2
+		icon = GFX_goal_generic_nuclear_energy
+		x = 3
+		y = 9
+		cost = 2
+		prerequisite = {
+			focus = TBMGU_726
+		}
+		mutually_exclusive = {
+            focus = TBMGU_JHZ_C1
+		}
+		ai_will_do = {
+			factor = 10
+		}
+        available = {
+
+	    }
+		completion_reward = {
+            add_ideas = MGU_hidden_idea_JHZ_C2
+			    add_tech_bonus = {
+				name = TBMGU_JHZ_C2
+				ahead_reduction = 2
+				bonus = 1.0
+				uses = 1
+				category = rocketry
 				}
 			}
 		}
@@ -921,12 +1279,12 @@ focus_tree = {
 						}
             add_resource = {
                             type = chromium
-                            amount = 25
+                            amount = 15
                             state = 280
                   }
             add_resource = {
                              type = tungsten
-                             amount = 40
+                             amount = 30
                              state = 505
                  }
 			}
@@ -1012,11 +1370,7 @@ focus_tree = {
 
 		}
 		completion_reward = {
-		add_resource = {
-							type = oil
-							amount = 13
-							state = 898
-						}
+
 		add_resource = {
 						type = oil
 						amount = 18
@@ -1028,7 +1382,11 @@ focus_tree = {
 						state = 505
 					}
 				}
-
+		add_resource = {
+							type = oil
+							amount = 6
+							state = 280
+						}
 
 
 
@@ -1069,7 +1427,7 @@ focus_tree = {
 					instant_build = yes
 				}
 			}
-			898 = {
+			280 = {
 				add_extra_state_shared_building_slots = 3
 				add_building_construction = {
 					type = industrial_complex
@@ -1082,7 +1440,7 @@ focus_tree = {
 		}
 	focus = { #劳动者文化 #征服丛林 #雨林的馈赠 #自然的馈赠
 		id = TBMGU_19
-		icon = GFX_goal_generic_soviet_construction
+		icon = GFX_focus_SWE_beneath_sticks_and_stone
 		x = 9
 		y = 5
 		cost = 4
@@ -1176,41 +1534,22 @@ focus_tree = {
 	focus = { #重视西北方问题 #处理南方叛军
 		id = TBMGU_120
 		icon = GFX_focus_generic_annex_country
-		x = 19
+		x = 17
 		y = 0
 		cost = 4
 		ai_will_do = {
 			factor = 35
 		}
+		mutually_exclusive = {
+		#	focus = TBMGU_PJ_A1
+		}
 		available = {
+		    has_completed_focus = TBMGU_37
 			#has_government = communism
-			501 = {
-				is_controlled_by = MGU
-						}
-			500 = {
-				is_controlled_by = MGU
-						}
         # add_to_array = { state_victory_points = 11121 }
         # add_to_array = { state_victory_points = 11115 }
 		}
 		completion_reward = {
-			500 = {
-                   add_extra_state_shared_building_slots = 2
-                  add_building_construction = {
-                  type = infrastructure
-                  level = 2
-                  instant_build = yes
-                  }
-
-            }
-            501 = {
-                   add_extra_state_shared_building_slots = 2
-                    add_building_construction = {
-                  type = infrastructure
-                  level = 2
-                  instant_build = yes
-                  }
-            }
             build_railway = {
         				level = 2
         				path = {
@@ -1235,24 +1574,26 @@ focus_tree = {
                     transfer_state = 894
                     transfer_state = 502
  			}
-              503 = {
-                    remove_core_of = MST
-                    add_core_of = MGU
-			  }
-              894 = {
-        		    remove_core_of = MST
-        			add_core_of = MGU
-        	  }
-              502 = {
-        		    remove_core_of = MST
-        			add_core_of = MGU
-        	  }
+			hidden_effect = {
+                  503 = {
+                        remove_core_of = MST
+                        add_core_of = MGU
+                  }
+                  894 = {
+                        remove_core_of = MST
+                        add_core_of = MGU
+                  }
+                  502 = {
+                        remove_core_of = MST
+                        add_core_of = MGU
+                  }
+        	}
 		}
 	}
 	focus = { #勇者部五条款（重新集结部队）（动员整个联盟）
 		id = TBMGU_121
 		icon = GFX_focus_MGU_YUUSHA
-		x = 19
+		x = 17
 		y = 1
 		cost = 4
 		prerequisite = {
@@ -1302,9 +1643,9 @@ focus_tree = {
 	focus = { #修复强袭组件 强袭组件维护 整编强袭魔女
 		id = TBMGU_121_1
 		icon = GFX_goal_generic_build_airforce
-		x = 19
+		x = 17
 		y = 2
-		cost = 4
+		cost = 2
 		prerequisite = {
 			focus = TBMGU_121
 		}
@@ -1332,7 +1673,7 @@ focus_tree = {
 
 	focus = { # （最后的和平机会
 		id = TBMGU_122
-		icon = GFX_goal_generic_intelligence_exchange
+		icon = GFX_goal_generic_more_territorial_claims
 		x = 15
 		y = 2
 		cost = 2
@@ -1456,7 +1797,6 @@ focus_tree = {
             country_event = { id = magicunion.1011_MGU_TB days = 3 }
               502 = {
         			add_core_of = MGU
-
 					add_building_construction = { type = bunker level = 3 province = 5110 instant_build = yes }
 			  }
               1041 = {
@@ -1498,7 +1838,7 @@ focus_tree = {
 
 		}
 		available = {
-
+		    has_completed_focus = TBMGU_01
 		}
 		completion_reward = {
 		#	remove_ideas = magius_threat
@@ -1708,6 +2048,7 @@ focus_tree = {
 		    	focus = TBMGU_124_6
 		    }
 		available = {
+		has_completed_focus = TBMGU_37
 		    OR = {
 		    date > 1939.1.1
 		        AND = {
@@ -1767,7 +2108,7 @@ focus_tree = {
 		y = 5
 		cost = 4
 		prerequisite = {
-		    focus = TBMGU_126
+		    focus = TBMGU_124
 		}
 		available = {
 		    OR = {
@@ -1845,6 +2186,7 @@ focus_tree = {
 		}
 		available = {
 		neutrality > 0.7
+		has_completed_focus = TBMGU_37
         }
 
 		completion_reward = {
@@ -1910,14 +2252,17 @@ focus_tree = {
 		}
 	}
 
-	focus = { #承认男性魔法少女地位（魔法少女人权法案
+	focus = { #魔法少女人权法案
 		id = TBMGU_30
 		icon = GFX_goal_generic_neutrality_focus
-		x = 22
+		x = 21
 		y = 2
 		cost = 4
 		prerequisite = {
 			focus = TBMGU_121
+		}
+		mutually_exclusive = {
+		#	focus = TBMGU_PJ_A3
 		}
 		ai_will_do = {
 			factor = 20
@@ -1935,13 +2280,25 @@ focus_tree = {
 		cost = 4
 		prerequisite = {
 			focus = TBMGU_30
+		#	focus = TBMGU_PJ_A3
 		}
 
 		ai_will_do = {
 			factor = 20
 		}
 		completion_reward = {
-			remove_ideas = disordered_army_1
+            if = {
+                limit = {
+                    has_idea = disordered_army_1
+                }
+                remove_ideas = disordered_army_1
+            }
+            if = {
+                limit = {
+                    has_idea = disordered_army_0
+                }
+                remove_ideas = disordered_army_0
+            }
 			add_command_power = 50
 		}
 	}
@@ -2047,6 +2404,9 @@ focus_tree = {
 		prerequisite = {
 			focus = TBMGU_132_22
 		}
+		available = {
+            has_completed_focus = TBMGU_37
+        }
 		mutually_exclusive = {
 
 		}
@@ -2291,16 +2651,27 @@ focus_tree = {
     	}
 
 
+
+
 	focus = { #架空魔法少女大议会
 		id = TBMGU_37
-		icon = GFX_focus_generic_improve_the_administration
-		x = 33
+		icon = GFX_focus_ARG_keep_it_in_the_party
+		x = 31
 		y = 0
 		cost = 4
 		ai_will_do = {
-			factor = 20
+			factor = 25
 		}
-
+		available = {
+		    has_completed_focus = TBMGU_01
+			    has_country_leader = {
+					ruling_only = yes
+					character = MGU_akemi_homura
+				}
+		}
+		mutually_exclusive = {
+		#	focus = TBMGU_YH_1
+		}
 		completion_reward = {
 			add_political_power = 100
 			add_popularity = { ideology = neutrality popularity = 0.10 }
@@ -2316,13 +2687,16 @@ focus_tree = {
 	focus = { #跨过北极的航线 跨过大洋的航线 防备丛林的敌意
 		id = TBMGU_37_1
 		icon = GFX_goal_generic_air_fighter2
-		x = 35
-		y = 0
+		x = 39
+		y = 1
 		cost = 4
 		ai_will_do = {
 			factor = 20
 		}
-
+		prerequisite = {
+			focus = TBMGU_37
+			focus = TBMGU_YH_1
+		}
 		completion_reward = {
 			air_experience = 75
 			add_doctrine_cost_reduction = {
@@ -2341,6 +2715,10 @@ focus_tree = {
 		cost = 4
 		ai_will_do = {
 			factor = 1
+		}
+		prerequisite = {
+			focus = TBMGU_37
+			focus = TBMGU_YH_1
 		}
 		completion_reward = {
             500 = {
@@ -2484,7 +2862,7 @@ focus_tree = {
 		id = TBMGU_40
 		icon = GFX_focus_MGU_MGU_MP_1
 		x = 0
-		y = 5
+		y = 6
 		cost = 4
 		ai_will_do = {
 			factor = 20
@@ -2518,7 +2896,7 @@ focus_tree = {
 		id = TBMGU_41
 		icon = GFX_focus_MGU_MGU_MP_2
 		x = 0
-		y = 6
+		y = 8
 		cost = 4
 		ai_will_do = {
 			factor = 20
@@ -2558,6 +2936,7 @@ focus_tree = {
 		}
 		prerequisite = {
 			focus = TBMGU_37
+			focus = TBMGU_YH_1
 		}
 		available = {
 			MGU = {
@@ -2575,11 +2954,14 @@ focus_tree = {
 	focus = { #地球防卫联盟（天使圣教会）昆虫与植物权利法案
 		id = TBMGU_142_1
 		icon = GFX_focus_hol_the_foundations_of_defense
-		x = 33
+		x = 32
 		y = 2
 		cost = 4
 		ai_will_do = {
 			factor = 20
+		}
+		prerequisite = {
+			focus = TBMGU_37
 		}
 		prerequisite = {
 			focus = TBMGU_142
@@ -2638,7 +3020,7 @@ focus_tree = {
 
 		}
 		completion_reward = {
-		    hidden_effect = { BRA = { country_event = { id = magicunion.1090 days = 600 } } }
+		#    hidden_effect = { BRA = { country_event = { id = magicunion.1090 days = 600 } } }
 				    add_equipment_to_stockpile = { type = infantry_equipment amount = -6000 }
 		    BRA = {
         		division_template = {
@@ -2778,12 +3160,10 @@ focus_tree = {
 		y = 6
 		cost = 4
 		ai_will_do = {
-			factor = 0
+			base = 5
 		    modifier = {
-		        OR = {
-            		surrender_progress > 0.10
-		        }
-		    	factor = 50
+            	surrender_progress > 0.20
+		    	add = 50
 		    }
 		}
 		prerequisite = {
@@ -2817,7 +3197,7 @@ focus_tree = {
 			}
         news_event = { id = magicunion.1058_MGU days = 1 }
 		hidden_effect = {
-            news_event = { id = magicunion.1059_MGU days = 150 }
+            country_event = { id = magicunion.10591_MGU days = 150 }
 		}
 		}
 	}
@@ -2861,14 +3241,25 @@ focus_tree = {
             NOT = { has_country_flag = MGU_Soul_Contract_flag }
 		}
 		completion_reward = {
-		#	set_politics = {
-    	#		ruling_party = communism
-    	#	 }
-    		custom_effect_tooltip = TBMGU_49_txt
+			custom_effect_tooltip = TBMGU_49_txt
             hidden_effect = {
-            MST = {	MGU_DEMO_homura = { set_nationality = MGU } }
+				set_portraits = {
+					character = MGU_Akemi_Homura
+					civilian = {
+						large = "gfx/leaders/MGU/MGU_Akemi_Homura_Demon.dds"
+					}
+				}
+				add_field_marshal_role = {
+					character = "MGU_Akemi_Homura"
+					traits = { demon organizer logistics_wizard thorough_planner brilliant_strategist offensive_doctrine aggressive_assaulter }
+					skill = 9
+					attack_skill = 8
+					defense_skill = 8
+					planning_skill = 9
+					logistics_skill = 9
+				}
                 add_country_leader_role = {
-                    character = "MGU_DEMO_homura"
+                    character = "MGU_Akemi_Homura"
                     country_leader={
                     desc = "POLITICS_AKIMI_HOMURA_DEMO_DESC"
                     expire = "1999.1.1"
@@ -2877,16 +3268,6 @@ focus_tree = {
                     }
                     promote_leader = yes
                 }
-                add_field_marshal_role = {
-                    character = "MGU_DEMO_homura"
-                    traits = { demon organizer logistics_wizard thorough_planner brilliant_strategist offensive_doctrine aggressive_assaulter }
-                    skill = 9
-                    attack_skill = 8
-                    defense_skill = 8
-                    planning_skill = 9
-                    logistics_skill = 9
-                }
-                remove_unit_leader_role = MGU_Akemi_Homura
                 hidden_effect = { news_event = news.1027 }
             }
 		}
@@ -2911,41 +3292,45 @@ focus_tree = {
 			focus = TBMGU_49
 		}
 		available = {
-		    has_war = yes
-		    OR = {
-            date > 1947.1.1
-		    owns_state = 219
-		    is_subject_of = SOV
-		    SOV = { is_subject_of = MGU }
-		    }
-		    NOT = { has_country_flag = MGU_Soul_Contract_flag }
+			has_war = yes
+			OR = {
+				date > 1947.1.1
+				owns_state = 219
+				is_subject_of = SOV
+				SOV = { is_subject_of = MGU }
+			}
+			NOT = { has_country_flag = MGU_Soul_Contract_flag }
 		}
 		completion_reward = {
-                country_event = { id = magicunion.721 days = 1 }
-    		hidden_effect = {
-                MST = { MGU_Ulimate_Madoka = { set_nationality = MGU } }
-                add_country_leader_role = {
-                    character = "MGU_Ulimate_Madoka"
-                    country_leader={
-                    desc = "POLITICS_MGU_MADOKA_DESC"
-                    expire = "1999.1.1"
-                    ideology = Madokaism
-                    traits = { madokami }
-                    }
-                    promote_leader = yes
-                }
-                add_field_marshal_role = {
-                    character = "MGU_Ulimate_Madoka"
-                    traits = { kami organizer logistics_wizard thorough_planner inflexible_strategist unyielding_defender inspirational_leader defensive_doctrine }
-                    skill = 9
-                    attack_skill = 9
-                    defense_skill = 9
-                    planning_skill = 9
-                    logistics_skill = 9
-                }
-                set_politics = {
-                    ruling_party = communism
-                 }
+			country_event = { id = magicunion.721 days = 1 }
+			hidden_effect = {
+				set_portraits = {
+					character = MGU_Kaname_Madoka
+					civilian = {
+						large = "gfx/leaders/MGU/MGU_Kaname_Madoka_2.dds"
+					}
+				}
+				add_country_leader_role = {
+					character = "MGU_Kaname_Madoka"
+					country_leader={
+						desc = "POLITICS_MGU_MADOKA_DESC"
+						expire = "1999.1.1"
+						ideology = Madokaism
+						traits = { madokami }
+					}
+					promote_leader = yes
+				}
+				add_field_marshal_role = {
+					character = "MGU_Kaname_Madoka"
+					traits = { kami organizer logistics_wizard thorough_planner inflexible_strategist unyielding_defender inspirational_leader defensive_doctrine }
+					skill = 9
+					attack_skill = 9
+					defense_skill = 9
+					planning_skill = 9
+					logistics_skill = 9
+				}
+				set_politics = { ruling_party = communism }
+				add_popularity = { ideology = communism popularity = 1 }
 			}
 			hidden_effect = { news_event = { id = news.1028 days = 3 } }
 		}
@@ -3016,7 +3401,8 @@ focus_tree = {
 			}
 		}
 		prerequisite = {
-			focus = TBMGU_37_1
+			focus = TBMGU_37
+			focus = TBMGU_YH_1
 		}
 
 		completion_reward = {
@@ -3362,7 +3748,7 @@ focus_tree = {
 		y = 6
 		cost = 1
 		ai_will_do = {
-			factor = 5
+			factor = 0
 		}
 		prerequisite = {
 			focus = TBMGU_142_1_A
@@ -3422,6 +3808,7 @@ focus_tree = {
                 NOT = { country_exists = PAQ }
                 PAQ = { is_subject = yes }
             }
+            BRA = { is_in_faction = no }
         }
 		completion_reward = {
             build_railway = {
@@ -3996,9 +4383,9 @@ focus_tree = {
 		}
 	}
     
-	focus = { #扩军征兵
+	focus = { #使魔扩军
 		id = TBMGU_Walpurgis_Night_02
-		icon = GFX_focus_MGU_HOMURA
+		icon = GFX_goal_generic_special_forces
 		x = -2
 		y = 1
 		relative_position_id = TBMGU_Walpurgis_Night_01
@@ -4018,9 +4405,9 @@ focus_tree = {
 	    }
 	}
 
-	focus = { #第二修正案
+	focus = { #第二修正案 风暴应对法案
 		id = TBMGU_Walpurgis_Night_03
-		icon = GFX_focus_MGU_HOMURA
+		icon = GFX_goal_factory_complex
 		x = -2
 		y = 2
 		relative_position_id = TBMGU_Walpurgis_Night_01
@@ -4032,17 +4419,23 @@ focus_tree = {
 		focus = TBMGU_Walpurgis_Night_02
 		}
 		available = {
+		    has_tech = land_fort_tech_2
+		    has_tech = construction4
 		}
 		mutually_exclusive = {
 		}
 		completion_reward = {
-            add_ideas = limited_conscription
+			custom_effect_tooltip = TBMGU_Walpurgis_Night_03_txt
+		    hidden_effect = {
+                MS1 = { add_ideas = MGU_hidden_idea_014 }
+            }
+
 		}
 	}
 
 	focus = { #清理谣言
 		id = TBMGU_Walpurgis_Night_04
-		icon = GFX_focus_MGU_HOMURA
+		icon = GFX_focus_renounce_the_treaty_of_trianon
 		x = 0
 		y = 1
 		relative_position_id = TBMGU_Walpurgis_Night_01
@@ -4060,9 +4453,11 @@ focus_tree = {
 		}
 		completion_reward = {
 		    #add_days_remove
-            add_days_mission_timeout  = {
-                mission = form_MGU_Rumors_of_Witch_Night_0
-                days = 180
+		    hidden_effect = {
+                add_days_mission_timeout  = {
+                    mission = form_MGU_Rumors_of_Witch_Night_0
+                    days = 180
+                }
             }
 			add_to_variable = {
 				MGU_Magia_Exedra_stability_factor = 0.05
@@ -4073,7 +4468,7 @@ focus_tree = {
 	}
 	focus = { #推迟魔女之夜出现时间
 		id = TBMGU_Walpurgis_Night_05
-		icon = GFX_focus_MGU_HOMURA
+		icon = GFX_focus_SWE_as_the_barometer_falls
 		x = 0
 		y = 2
 		relative_position_id = TBMGU_Walpurgis_Night_01
@@ -4089,10 +4484,12 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
+		hidden_effect = {
             add_days_mission_timeout  = {
                 mission = form_MGU_Rumors_of_Witch_Night_0
                 days = 360
             }
+        }
         custom_effect_tooltip = TBMGU_Walpurgis_Night_05_txt
 		}
 	}
@@ -4122,12 +4519,15 @@ focus_tree = {
             MGU_akemi_homura = {
                 add_unit_leader_trait = MST_I_am_the_storm_trait
             }
+		    hidden_effect = {
+                add_ideas = MGU_hidden_idea_015
+            }
 		}
 	}
 
 	focus = { #延长防线
 		id = TBMGU_Walpurgis_Night_07
-		icon = GFX_focus_MGU_HOMURA
+		icon = GFX_focus_SWE_hedgehog_defense
 		x = 2
 		y = 1
 		relative_position_id = TBMGU_Walpurgis_Night_01
@@ -4139,6 +4539,7 @@ focus_tree = {
 		focus = TBMGU_Walpurgis_Night_01
 		}
 		available = {
+		    has_tech = land_fort_tech_1
 		}
 		mutually_exclusive = {
 		}
@@ -4156,7 +4557,7 @@ focus_tree = {
 	}
 	focus = { #要塞化魔联
 		id = TBMGU_Walpurgis_Night_08
-		icon = GFX_focus_MGU_HOMURA
+		icon = GFX_goal_nested_fortifications
 		x = 2
 		y = 2
 		relative_position_id = TBMGU_Walpurgis_Night_01
@@ -4168,6 +4569,7 @@ focus_tree = {
 		focus = TBMGU_Walpurgis_Night_07
 		}
 		available = {
+		    has_tech = construction3
 		}
 		mutually_exclusive = {
 		}
@@ -4240,6 +4642,7 @@ focus_tree = {
 				has_idea = MGU_Magic_Doll_army_3_4
 				has_idea = MGU_Magic_Doll_army_3_5
 				has_idea = MGU_Magic_Doll_army_3_6
+				has_idea = MGU_Magic_Doll_army_3_7
 		    }
 
 		}
@@ -4342,7 +4745,7 @@ focus_tree = {
 
 			add_to_variable = { MGU_Magia_Exedra_supply_consumption_factor = -0.10 }
 			add_to_variable = { MGU_Magia_Exedra_monthly_population_factor = -0.08 }
-
+            add_to_variable = { MGU_Magia_Exedra_production_factory_efficiency_gain_factor = 0.05 }
 			custom_effect_tooltip = TBMGU_Ode_and_Prayer_06_txt
 			force_update_dynamic_modifier = yes
 		}
@@ -4370,8 +4773,8 @@ focus_tree = {
 			add_to_variable = { MGU_Magia_Exedra_communism_factor = -0.02 }
             add_to_variable = { MGU_Magia_Exedra_democratic_factor = -0.02 }
             add_to_variable = { MGU_Magia_Exedra_fascism_factor = -0.02 }
-
-			custom_effect_tooltip = TBMGU_Ode_and_Prayer_08_txt
+            add_to_variable = { MGU_Magia_Exedra_army_morale_factor = 0.05 }
+			custom_effect_tooltip = TBMGU_Ode_and_Prayer_07_txt
 			force_update_dynamic_modifier = yes
 		}
 	}
@@ -4396,7 +4799,14 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
-
+			add_to_variable = {
+                MGU_Magia_Exedra_communism_factor = -0.08
+			}
+			add_to_variable = {
+                MGU_Magia_Exedra_resistance_target = -0.05
+			}
+			custom_effect_tooltip = TBMGU_Ode_and_Prayer_08_txt
+			force_update_dynamic_modifier = yes
 		}
 	}
 
@@ -4414,7 +4824,8 @@ focus_tree = {
 		focus = TBMGU_Ode_and_Prayer_08
 		}
 		available = {
-		    num_of_nukes > 1
+		    num_of_nukes > 0
+		    has_tech = thermonuclear_bombs
 		}
 		mutually_exclusive = {
 		}
@@ -4422,18 +4833,24 @@ focus_tree = {
 			hidden_effect = {
 		    add_nuclear_bombs = -1
 		    }
-            280 = { damage_building = { type = infrastructure damage = 1 } }
-            280 = { damage_building = { type = supply_node damage = 1 } }
-            280 = { damage_building = { type = arms_factory damage = 1 } }
-            280 = { damage_building = { type = industrial_complex damage = 1 } }
-            280 = { damage_building = { type = air_base damage = 1 } }
+            280 = { damage_building = { type = infrastructure damage = 10 } }
+            280 = { damage_building = { type = supply_node damage = 10 } }
+            280 = { damage_building = { type = arms_factory damage = 10 } }
+            280 = { damage_building = { type = industrial_complex damage = 10 } }
+            280 = { damage_building = { type = air_base damage = 10 } }
+            280 = {
+						add_dynamic_modifier = {
+							modifier = fallout_thermonuclear
+							days = 730
+						}
+            }
 		    custom_effect_tooltip = TBMGU_Ode_and_Prayer_09_txt
-
+			add_to_variable = {
+                MGU_Magia_Exedra_compliance_growth = 0.08
+			}
 		    SOV = { add_opinion_modifier = { target = MGU modifier = MGU_Morales_is_dead } }
 		    PAN = { add_opinion_modifier = { target = MGU modifier = MGU_Morales_is_dead } }
-			add_to_variable = {
-                MGU_Magia_Exedra_communism_factor = -0.08
-			}
+
 			custom_effect_tooltip = TBMGU_Ode_and_Prayer_09_2_txt
 			force_update_dynamic_modifier = yes
 		}
@@ -4465,6 +4882,10 @@ focus_tree = {
 		completion_reward = {
 				custom_effect_tooltip = RUS_500_ubs_save_cost_tooltip
 				add_to_variable = { ubs_save = -500 }
+                add_to_variable = {
+                    MGU_Magia_Exedra_democratic_factor = -0.08
+                }
+				custom_effect_tooltip = TBMGU_Ode_and_Prayer_10_txt
 		}
 	}
 
@@ -4489,10 +4910,13 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_to_variable = {
-                MGU_Magia_Exedra_democratic_factor = -0.08
+                MGU_Magia_Exedra_enemy_operative_detection_chance_factor = 0.30
 			}
-			custom_effect_tooltip = TBMGU_Ode_and_Prayer_11_txt
+			add_to_variable = {
+                MGU_Magia_Exedra_enemy_operative_capture_chance_factor = 0.30
+			}
 			force_update_dynamic_modifier = yes
+			custom_effect_tooltip = TBMGU_Ode_and_Prayer_11_txt
 		}
 	}
 
@@ -4537,7 +4961,7 @@ focus_tree = {
 		x = -3
 		y = 1
 		relative_position_id = TBMGU_Plantera_01
-		cost = 4
+		cost = 2
 		ai_will_do = {
 			factor = 0
 		}
@@ -4613,7 +5037,7 @@ focus_tree = {
 		x = -1
 		y = 1
 		relative_position_id = TBMGU_Plantera_01
-		cost = 4
+		cost = 2
 		ai_will_do = {
 			factor = 0
 		}
@@ -4656,7 +5080,7 @@ focus_tree = {
 		x = 1
 		y = 1
 		relative_position_id = TBMGU_Plantera_01
-		cost = 4
+		cost = 2
 		ai_will_do = {
 			factor = 0
 		}
@@ -4717,7 +5141,7 @@ focus_tree = {
 		x = 3
 		y = 1
 		relative_position_id = TBMGU_Plantera_01
-		cost = 4
+		cost = 2
 		ai_will_do = {
 			factor = 0
 		}
@@ -4924,6 +5348,10 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = TBMGU_TBMGU_rest_04_txt
 			hidden_effect = {
+                add_breakthrough_points = {
+                   specialization = all
+                   value = 1
+                }
 				set_technology = {
 					MGU_The_Dream_of_the_Library_tech = 1
 					popup = no
@@ -4933,8 +5361,34 @@ focus_tree = {
 					popup = no
 				}
 			}
+            add_stability = -0.36
+			custom_effect_tooltip = TBMGU_rest_04A_txt
+            set_global_flag = Silver_Court_start_flag
 		}
 	}
+
+	#focus = { #银之庭院
+	#	id = TBMGU_rest_04A
+	#	icon = GFX_focus_SWE_form_rfsu
+	#	x = 7
+	#	y = 3
+	#	cost = 4
+	#	ai_will_do = {
+	#		factor = 0
+	#	}
+	#	relative_position_id = TBMGU_rest_01
+	#	prerequisite = {
+	#	focus = TBMGU_rest_04
+	#	}
+	#	available = {
+	#	}
+	#	mutually_exclusive = {
+	#	}
+#
+#		completion_reward = {
+#
+#		}
+#	}
 
 	focus = { #平息仇恨 平息怨恨
 		id = TBMGU_rest_05
@@ -4989,6 +5443,12 @@ focus_tree = {
 		focus = TBMGU_rest_01
 		}
 		available = {
+            PAM = {
+                OR = {
+                    is_subject = yes
+                    exists = no
+                }
+            }
 			PAO = {
 			    exists = yes
 			    NOT = { has_war_with = MGU }
@@ -5239,8 +5699,8 @@ focus_tree = {
 		bypass = {
 		}
 		completion_reward = {
-		    add_manpower = 30000
-            add_stability = 0.05
+            add_political_power = 100
+            add_stability = 0.10
 		}
 	}
 	focus = { #发动战争
@@ -5368,7 +5828,7 @@ focus_tree = {
 		    has_tech = magic_artillery4
 		    has_tech = strike_unit3
 		    has_tech = nuclear_reactor
-		    has_tech = jet_engines
+		#   has_tech = jet_engines
 		}
 		mutually_exclusive = {
 		}
@@ -5555,6 +6015,12 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
+				add_tech_bonus = {
+					name = TBMGU_Tearalaments_07
+					bonus = 1
+					uses = 1
+					category = transport_planes_cat
+				}
             custom_effect_tooltip = TBMGU_Tearalaments_07_txt
             hidden_effect = {
                 add_timed_idea = {
@@ -5579,9 +6045,12 @@ focus_tree = {
 		focus = TBMGU_Tearalaments_07
 		}
 		available = {
-			 custom_trigger_tooltip = {
-				tooltip = TBMGU_Tearalaments_08_txt
-				477 = { is_controlled_by = MGU }
+		    OR = {
+                 custom_trigger_tooltip = {
+                    tooltip = TBMGU_Tearalaments_08_txt
+                    477 = { is_controlled_by = MGU }
+                }
+                has_tech = submarine_5
 			}
 		}
 		mutually_exclusive = {
@@ -5814,6 +6283,12 @@ focus_tree = {
 		mutually_exclusive = {
 		}
 		completion_reward = {
+				add_tech_bonus = {
+					name = TBMGU_Chaos_Angel_01
+					bonus = 1
+					uses = 1
+					category = transport_planes_cat
+				}
 		    custom_effect_tooltip = TBMGU_Chaos_Angel_01_txt
 		    hidden_effect = {
                 add_ideas = MGU_hidden_idea_001
@@ -5852,7 +6327,7 @@ focus_tree = {
 	}
 	focus = { #强韧性钢丝袜
 		id = TBMGU_Chaos_Angel_03
-		icon = GFX_PAN_focu_156
+		icon = GFX_PAN_focu_155 #GFX_PAN_focu_156
 		x = -1
 		y = 2
 		relative_position_id = TBMGU_Chaos_Angel_01
@@ -6096,9 +6571,13 @@ focus_tree = {
 		}
 		completion_reward = {
 		    custom_effect_tooltip = TBMGU_Chaos_Angel_10_txt
-		    hidden_effect = {
-                add_ideas = MGU_hidden_idea_002
-            }
+			add_to_variable = {
+                MGU_Magia_Exedra_resistance_target = -0.10
+			}
+			force_update_dynamic_modifier = yes
+		#    hidden_effect = {
+        #        add_ideas = MGU_hidden_idea_002
+        #    }
 		}
 	}
 
@@ -6117,7 +6596,7 @@ focus_tree = {
 		has_country_flag = MGU_COUP_All_Hail_HOMURA_flag
 		date > 1938.1.1
 			has_equipment = {
-				convoy > 500
+				convoy > 499
 			}
 		}
 		completion_reward = {
@@ -6265,6 +6744,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 0
 		}
+		allow_branch = {
+			always = no # 这里禁用了 这里这里这里
+		}
 		prerequisite = {
 		focus = TBMGU_West_Africa_01
 		}
@@ -6310,11 +6792,11 @@ focus_tree = {
 				}
 			}
             has_equipment = {
-				infantry_equipment > 10000
+				infantry_equipment > 12000
 			}
 		}
 		completion_reward = {
-		    add_equipment_to_stockpile = { type = infantry_equipment amount = -10000 }
+		    add_equipment_to_stockpile = { type = infantry_equipment amount = -12000 }
 			MS2 = {
 				transfer_state = 272
 			}
@@ -6332,6 +6814,14 @@ focus_tree = {
                     infantry = { x = 0 y = 1 }
                     infantry = { x = 1 y = 0 }
                     infantry = { x = 1 y = 1 }
+                    infantry = { x = 0 y = 2 }
+                    infantry = { x = 0 y = 3 }
+                    infantry = { x = 1 y = 2 }
+                    infantry = { x = 1 y = 3 }
+                    infantry = { x = 2 y = 0 }
+                    infantry = { x = 2 y = 1 }
+                    infantry = { x = 2 y = 2 }
+                    infantry = { x = 2 y = 3 }
                      }
                      support = {
                      }
@@ -6341,7 +6831,7 @@ focus_tree = {
             			create_unit = {
             				division = "name = \"西非反抗军\" division_template = \"西非反抗军\" start_experience_factor = 0.1 start_equipment_factor = 1 "
             				owner = MS2
-            				count = 8
+            				count = 10
             				allow_spawning_on_enemy_provs = yes
             			}
             		}
@@ -6351,7 +6841,6 @@ focus_tree = {
 			}
 			MS2 = {
 				add_manpower = 200000
-				add_equipment_to_stockpile = {type = infantry_equipment_1 amount = 6800 }
 			}
 		}
 	}
@@ -6404,20 +6893,21 @@ focus_tree = {
 		}
 		available = {
             has_equipment = {
-				infantry_equipment > 6000
+				infantry_equipment > 24000
 			}
 		    272 = { is_controlled_by = MS2 }
 		}
 		completion_reward = {
-				    add_equipment_to_stockpile = { type = infantry_equipment amount = -6000 }
+				    add_equipment_to_stockpile = { type = infantry_equipment amount = -24000 }
                     272 = {
             			create_unit = {
             				division = "name = \"西非反抗军\" division_template = \"西非反抗军\" start_experience_factor = 0.1 start_equipment_factor = 1 "
             				owner = MS2
-            				count = 15
+            				count = 10
             				allow_spawning_on_enemy_provs = yes
             			}
             		}
+            		MS2 = { add_equipment_to_stockpile = {type = infantry_equipment_1 amount = 12000 } }
 		}
 	}
 	focus = { #阿非利加战略

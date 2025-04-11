@@ -2139,49 +2139,243 @@ MAN_pacify_the_countryside = {
 	}
 }
 
+#第二次统一战线
 MAN_Anti_Japanese_united_front = {
-	MAN_visit_Zhangxueniang = {
+	#迫使樱花投降
+	MAN_force_Sakura_to_surrender = {
+		visible = {
+			or = {
+				has_completed_focus = MAN_Second_united_front
+				has_completed_focus = MAN_War_of_Independence_begins
+				is_debug = yes
+			}
+		}
 		available = {
+			has_war_with = JAP
+			controls_state = 745
+			controls_state = 525
+			controls_state = 527
+			controls_state = 1146
+			controls_state = 1147
+			controls_state = 1148
+			controls_state = 1149
 		}
-		cost = 50
+		complete_effect = {
+			JAP = {
+				country_event = { id = man.213 hours = 18 random_hours = 6 }
+			}
+		}
+	}
+	#挪用机械设备
+	MAN_divert_machine_tools = {
+		visible = {
+			has_completed_focus = MAN_Promote_Chinese
+		}
+		available = {
+			is_subject_of = JAP
+		}
+		cost = 100
+		days_remove = 120
+		remove_effect = {
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT 	
+					is_fully_controlled_by = ROOT
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			MAN_sub_Japan_Attitude_effect = yes
+		}
+	}
+	#挪用军火
+	MAN_misappropriate_military_equipment = {
+		visible = {
+			has_completed_focus = MAN_Promote_Chinese
+		}
+		available = {
+			is_subject_of = JAP
+		}
+		cost = 100
+		days_remove = 120
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1000
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 100
+			}
+			MAN_sub_Japan_Attitude_effect = yes
+		}
+	}
+	#上缴贡税
+	MAN_pay_tribute_tax = {
+		visible = {
+			has_completed_focus = MAN_Increase_the_offerings
+		}
+		available = {
+			is_subject_of = JAP
+		}
+		cost = 100
+		days_remove = 90
+		remove_effect = {
+			MAN_add_Japan_Attitude_effect = yes
+		}
+	}
+	#贿赂大本营
+	MAN_bribery_headquarters = {
+		visible = {
+			has_completed_focus = MAN_Dotting_relationships
+		}
+		available = {
+			is_subject_of = JAP
+		}
+		cost = 100
+		days_remove = 90
+		remove_effect = {
+			MAN_add_Army_Allowed_effect = yes
+		}
+	}
+	#军队政治教育
+	MAN_military_political_education = {
+		visible = {
+			has_completed_focus = MAN_Training_of_private_armies
+		}
+		available = {
+			is_subject_of = JAP
+		}
+		cost = 100
+		days_remove = 90
+		remove_effect = {
+			MAN_add_Troop_loyalty_effect = yes
+		}
+	}
+	#援助同志
+	NGD_assist_KMT_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			or = {
+				has_completed_focus = MAN_Seek_comrades
+				is_debug = yes
+			}
+		}
+		available = {
+			has_country_flag = MAN_visit_Lizongren
+			is_subject_of = JAP
+		}
+		custom_cost_trigger = {
+			has_equipment = { infantry_equipment > 1999 }
+		}
+		custom_cost_text = 2000_infantry_equipment_1
+		complete_effect = {
+			MAN_add_ROC_Resistance_effect = yes
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -2000
+				}
+			}
+		}
+		days_re_enable = 90
+
 		ai_will_do = {
-			factor = 0
+			factor = 10
+			modifier = {
+				factor = 0
+				has_equipment = { infantry_equipment < 4000 }
+			}
 		}
-		days_remove = 30
-		fire_only_once = yes
+	}
+	NGD_assist_PRC_decision = {
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			or = {
+				has_completed_focus = MAN_Seek_comrades
+				is_debug = yes
+			}
+		}
+		available = {
+			has_country_flag = MAN_visit_Lingnan
+			is_subject_of = JAP
+		}
+		custom_cost_trigger = {
+			has_equipment = { infantry_equipment > 1999 }
+		}
+		custom_cost_text = 2000_infantry_equipment_1
+		complete_effect = {
+			MAN_add_PRC_Resistance_effect = yes
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -2000
+				}
+			}
+		}
+		days_re_enable = 90
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_equipment = { infantry_equipment < 4000 }
+			}
+		}
+	}
+
+	MAN_visit_Zhangxueniang = {
+		ai_will_do = {
+			factor = 10
+		}
 		visible = {
 			AHM = {
 				has_character = MAN_zhangxueliang
 			}
-		}
-		remove_effect = {
-			country_event = {
-				id = man.141
-			}
-		}
-	}
-	MAN_visit_Lizongren = {
-		available = {
-			ROC = {
-				is_subject_of = JAP
-			}
+			has_completed_focus = MAN_Seek_comrades
 		}
 		cost = 50
-		ai_will_do = {
-			factor = 0
-		}
 		days_remove = 30
 		fire_only_once = yes
-		visible = {
-		}
 		remove_effect = {
 			country_event = {
 				id = man.142
 			}
 		}
 	}
+	MAN_visit_Lizongren = {
+		ai_will_do = {
+			factor = 10
+		}
+		visible = {
+			ROC = {
+				is_subject_of = JAP
+			}
+			has_completed_focus = MAN_Seek_comrades
+		}
+		cost = 50
+		days_remove = 30
+		fire_only_once = yes
+		remove_effect = {
+			country_event = {
+				id = man.143
+			}
+		}
+	}
 	MAN_visit_Lingnan = {
-		available = {
+		ai_will_do = {
+			factor = 10
+		}
+		visible = {
 			PRC = {
 				exists = no
 			}
@@ -2199,18 +2393,183 @@ MAN_Anti_Japanese_united_front = {
 					}
 				}
 			}
+			has_completed_focus = MAN_Seek_comrades
 		}
 		cost = 50
-		ai_will_do = {
-			factor = 0
-		}
 		days_remove = 30
 		fire_only_once = yes
-		visible = {
-		}
 		remove_effect = {
 			country_event = {
-				id = man.143
+				id = man.145
+			}
+		}
+	}
+
+	#邀请加入统一战线
+	MAN_invitation_to_join_the_united_front = {
+		visible = {
+			or = {
+				AND = {
+					has_completed_focus = MAN_Second_united_front
+					has_global_flag = china_second_sino_japanese_war
+				}
+				is_debug = yes
+			}
+			any_country = {
+				is_chinese_country = yes
+				NOT = {
+					is_subject_of = JAP
+					is_in_faction_with = MAN
+				}
+				has_war = no
+			}
+		}
+		complete_effect = {
+			every_other_country = {
+				limit = {
+					is_chinese_country = yes
+					NOT = {
+						is_subject_of = JAP
+						is_in_faction_with = MAN
+					}
+				}
+				country_event = man.210
+			}
+		}
+	}
+
+}
+
+#中华建设方略
+MAN_China_construction_strategy = {
+	#成立中央政府
+	MAN_establish_a_central_government = {
+		visible = {
+			or = {
+				has_completed_focus = MAN_restore_China
+				is_debug = yes
+			}
+		}
+		available = {
+			CHI = {
+				exists = no
+			}
+			ROC = {
+				exists = no
+			}
+			PRC = {
+				exists = no
+			}
+			TIB = {
+				exists = no
+			}
+			XSM = {
+				exists = no
+			}
+			SIK = {
+				exists = no
+			}
+			MON = {
+				exists = no
+			}
+			YUN = {
+				exists = no
+			}
+			GXC = {
+				exists = no
+			}
+			WUH = {
+				exists = no
+			}
+			FUJ = {
+				exists = no
+			}
+			SIC = {
+				exists = no
+			}
+			JSZ = {
+				exists = no
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			every_owned_state = {
+				limit = {
+					or = {
+						is_claimed_by = root
+						is_core_of = CHI
+						is_core_of = ROC
+						is_core_of = PRC
+						is_core_of = TIB
+						is_core_of = XSM
+						is_core_of = SIK
+						is_core_of = MON
+						is_core_of = YUN
+						is_core_of = GXC
+						is_core_of = SHH
+						is_core_of = WUH
+						is_core_of = FUJ
+						is_core_of = SIC
+						is_core_of = JSZ
+					}
+				}
+				add_core_of = root
+			}
+			set_cosmetic_tag = MAN_chongjian
+			clr_global_flag = china_second_sino_japanese_war
+			add_ideas = MAN_economy_near_collapse_idea
+			add_ideas = MAN_government_in_chaos_idea
+			add_ideas = MAN_military_in_disarray_idea
+			add_ideas = MAN_intricate_land_issues_idea
+		}
+	}
+	MAN_invite_investment_decision = {
+		name = MAN_invite_investment
+		visible = {
+			or = {
+				has_completed_focus = MAN_invite_investment
+				is_debug = yes
+			}
+		}
+		available = {
+			or = {
+				is_in_faction_with = SOV
+				is_in_faction_with = NGD
+				is_in_faction_with = ENG
+			}
+		}
+		cost = 75
+		days_remove = 90
+		remove_effect = {
+			if = {
+				limit = {
+					is_in_faction_with = SOV
+				}
+				random_owned_controlled_state = {
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+					add_extra_state_shared_building_slots = 1
+				}
+			}
+			else_if = {
+				limit = {
+					is_in_faction_with = NGD
+					is_in_faction_with = ENG
+				}
+				random_owned_controlled_state = {
+					limit = {
+						is_coastal = yes
+					}
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+					add_extra_state_shared_building_slots = 1
+				}
 			}
 		}
 	}

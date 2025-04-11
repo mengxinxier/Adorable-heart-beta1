@@ -653,6 +653,9 @@ SOV_faction_management_category = {
 	}
 
 	SOV_invite_POL_to_join_us = {
+		allowed = {
+			always = no
+		}
 		icon = decision_generic_nationalism
 		visible = {
 			is_subject = no
@@ -2120,14 +2123,13 @@ SOV_territorial_affairs = {
 			factor = 100
 		}
 		complete_effect = {
-			5 = {
-				set_state_name = "Kaliningrad"
-			}
+			5 = { set_state_name = "Kaliningrad" }
 			set_province_name = {
 				id = 6332
 				name = "Kaliningrad"
 			}
-			add_state_core = 5
+			add_state_claim = 5
+			5 = { enable_state_integration_80_compliance = yes }
 		}
 	}
 }
@@ -3852,91 +3854,6 @@ SOV_propaganda_campaigns = {
 		}
 	}
 
-	# SOV_propaganda_Sonia = { # ID = 23
-	# 	priority = 22
-
-	# 	icon = eng_propaganda_campaigns
-
-	# 	ai_will_do = {
-	# 		base = 5
-	# 		modifier = {
-	# 			factor = 2
-	# 			has_war = no
-	# 		}
-	# 	}
-
-	# 	allowed = {
-	# 		original_tag = SOV
-	# 	}
-
-	# 	available = {
-	# 		SOV_propaganda_poster_slot_available = yes
-	# 	}
-
-	# 	visible = {
-	# 		has_completed_focus = SOV_cult_of_personality_Sonia
-	# 	}
-
-	# 	days_remove = 150
-
-	# 	days_re_enable = 90
-
-	# 	cost = 50
-
-	# 	modifier = {
-	# 		political_power_factor = 0.07
-	# 		command_power_gain_mult = 0.1
-	# 		war_support_weekly = 0.002
-	# 		communism_drift = 0.1
-	# 	}
-
-	# 	complete_effect = {
-	# 		set_variable = { SOV_new_propaganda_campaign = 23 }
-	# 		SOV_pick_propaganda_campaign_slot_effect = yes
-	# 		SOV_achievement_propaganda_counter_effect = yes
-	# 		if = {
-	# 			limit = { NOT = { has_country_flag = SOV_propaganda_Sonia_a } } 
-	# 			set_country_flag = SOV_propaganda_Sonia_a
-	# 		}
-	# 		else_if = {
-	# 			limit = { NOT = { has_country_flag = SOV_propaganda_Sonia_b } } 
-	# 			set_country_flag = SOV_propaganda_Sonia_b
-	# 		}
-	# 		else_if = {
-	# 			limit = { NOT = { has_country_flag = SOV_propaganda_Sonia_c } } 
-	# 			set_country_flag = SOV_propaganda_Sonia_c
-	# 		}
-	# 	}
-
-	# 	remove_effect = {
-	# 		set_variable = { SOV_propaganda_campaign_to_remove = 23 }
-	# 		custom_effect_tooltip = SOV_propaganda_Sonia_tt
-	# 		if = {
-	# 			limit = {
-	# 				has_country_flag = SOV_propaganda_Sonia_a
-	# 				NOT = { has_country_leader_with_trait = Sonia_father_of_nations }
-	# 			}
-	# 			add_country_leader_trait = Sonia_father_of_nations
-	# 		}
-	# 		if = {
-	# 			limit = {
-	# 				has_country_flag = SOV_propaganda_Sonia_b
-	# 				NOT = { has_country_leader_with_trait = Sonia_great_commander }
-	# 			}
-	# 			add_country_leader_trait = Sonia_great_commander
-	# 		}
-	# 		if = {
-	# 			limit = {
-	# 				has_country_flag = SOV_propaganda_Sonia_c
-	# 				NOT = { has_country_leader_with_trait = Sonia_architect_of_communism }
-	# 			}
-	# 			add_country_leader_trait = Sonia_architect_of_communism
-	# 		}
-	# 		SOV_reset_propaganda_campaign_slot_effect = yes
-	# 		custom_effect_tooltip = SOV_propaganda_campaign_reuse_tt
-	# 	}
-	# }
-
 	SOV_propaganda_rebuild_to_glory = { # ID = 24
 		priority = 23
 
@@ -4202,19 +4119,29 @@ SOV_dip_agitprop_category = {
 			has_country_flag = SOV_down_to_the_Balkans_flag
 		}
 		available = {
-			ROM = { is_neighbor_of = ROOT }
+			78 = {
+				owner = { is_neighbor_of = ROOT }
+			}
 		}
 		cost = 10
 		fire_only_once = yes
 		days_remove = 14
 		war_with_target_on_remove = yes
 		complete_effect = {
-			ROM = { country_event = SOV_flavor.30 }
+			78 = {
+				owner = { country_event = SOV_flavor.30 }
+			}
 		}
 		remove_effect = {
-			declare_war_on = {
-				target = ROM
-				type = annex_everything
+			78 = {
+				owner = {
+					ROOT = {
+						declare_war_on = {
+							target = PREV
+							type = annex_everything
+						}
+					}
+				}
 			}
 		}
 	}
@@ -4477,6 +4404,7 @@ SOV_expelling_alien_forces = {
 					modifier = SOV_comecon_leader
 				}
 				FROM = { NOT = { has_country_flag = had_invited_comecon } }
+				FROM = { not = { has_war_with = ROOT } }
 			}
 			available = {
 				is_subject = no
@@ -4488,6 +4416,7 @@ SOV_expelling_alien_forces = {
 					is_faction_leader = no
 					is_in_faction_with = ROOT
 					NOT = { has_idea = SOV_comecon_buff }
+					not = { has_war_with = ROOT }
 				}
 			}
 			days_remove = 7
@@ -4528,8 +4457,9 @@ SOV_expelling_alien_forces = {
 					NOT = { 
 						has_country_flag = had_invited_comecon 
 						has_idea = SOV_comecon_buff
-					} 
+					}
 				}
+				FROM = { not = { has_war_with = ROOT } }
 			}
 			available = {
 				is_subject = no
@@ -6015,6 +5945,35 @@ SOV_operation_forgotten_cards_category = {
 
 #小樱的衣柜
 SOV_Sakura_clothes = {
+	Sakura_clothes_0 = {
+		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+			custom_effect_tooltip = SOV_Sakura_00
+			set_portraits = {
+				character = SOV_Sakura
+				civilian = {
+					large = "GFX_SOV_Sakura_00"
+				}
+			}
+		}
+	}
 	Sakura_clothes_1 = {
 		visible = {
 			has_country_leader = {
@@ -6271,7 +6230,152 @@ SOV_Sakura_clothes = {
 			set_portraits = {
 				character = SOV_Sakura
 				civilian = {
-					large = "gfx/leaders/SOV/SOV_Sakura_09.png"
+					large = "gfx/leaders/SOV/SOV_Sakura_09.dds"
+				}
+			}
+		}
+	}
+	Sakura_clothes_10 = {
+		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+			custom_effect_tooltip = SOV_Sakura_10
+			set_portraits = {
+				character = SOV_Sakura
+				civilian = {
+					large = "GFX_SOV_Sakura_10"
+				}
+			}
+		}
+	}
+	Sakura_clothes_11 = {
+		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+			custom_effect_tooltip = SOV_Sakura_11
+			set_portraits = {
+				character = SOV_Sakura
+				civilian = {
+					large = "GFX_SOV_Sakura_11"
+				}
+			}
+		}
+	}
+	Sakura_clothes_12 = {
+		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+			custom_effect_tooltip = SOV_Sakura_12
+			set_portraits = {
+				character = SOV_Sakura
+				civilian = {
+					large = "GFX_SOV_Sakura_12"
+				}
+			}
+		}
+	}
+	Sakura_clothes_13 = {
+		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+			custom_effect_tooltip = SOV_Sakura_13
+			set_portraits = {
+				character = SOV_Sakura
+				civilian = {
+					large = "GFX_SOV_Sakura_13"
+				}
+			}
+		}
+	}
+	Sakura_clothes_14 = {
+		visible = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		available = {
+			has_country_leader = {
+				character = SOV_Sakura
+				ruling_only = yes
+			}
+			has_idea = SOV_Temoyu
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+			custom_effect_tooltip = SOV_Sakura_14
+			set_portraits = {
+				character = SOV_Sakura
+				civilian = {
+					large = "GFX_SOV_Sakura_14"
 				}
 			}
 		}
@@ -6380,7 +6484,6 @@ SOV_World_Soviets = {
 			add_research_slot = 1
 			set_cosmetic_tag = World_Soviets
 			every_country = {
-				every_character = { set_nationality = ROOT }
 				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 			}
 			set_faction_name = Gaia_Community
@@ -6441,7 +6544,7 @@ Reunit_Russia_decision_cate = {
 				if = {
 					limit = { controls_state = 195 }
 					set_province_name = {
-						id = 6174
+						id = 3151
 						name = "彼得格勒"
 					}
 					195 = { set_state_name = "彼得格勒" }
@@ -7067,35 +7170,35 @@ SOV_great_patriotic_war_category = {
 		}
 	}
 
-	SOV_blizzard_magic_in_214_city = {
-		icon = GFX_decision_generic_coastal_fortification
-		visible = {
-			#has_war_with_major = yes
-			owns_state = 214
-			NOT = { has_country_flag = SOV_blizzard_magic_in_214_city_flag }
-		}
-		available = {
-			has_war_with_major = yes
-			214 = { is_fully_controlled_by = ROOT }
-		}
-		fire_only_once = no
-		days_remove = 7
-		cost = 5
-		ai_will_do = {
-			base = 1000
-			modifier = {
-				factor = 0
-				has_war = no
-			}
-		}
-		remove_effect = {
-			set_country_flag = SOV_blizzard_magic_in_214_city_flag
-			214 = {
-				set_demilitarized_zone = yes
-			}
-		}
-
-	}
+#	SOV_blizzard_magic_in_214_city = {
+#		icon = GFX_decision_generic_coastal_fortification
+#		visible = {
+#			#has_war_with_major = yes
+#			owns_state = 214
+#			NOT = { has_country_flag = SOV_blizzard_magic_in_214_city_flag }
+#		}
+#		available = {
+#			has_war_with_major = yes
+#			214 = { is_fully_controlled_by = ROOT }
+#		}
+#		fire_only_once = no
+#		days_remove = 7
+#		cost = 5
+#		ai_will_do = {
+#			base = 1000
+#			modifier = {
+#				factor = 0
+#				has_war = no
+#			}
+#		}
+#		remove_effect = {
+#			set_country_flag = SOV_blizzard_magic_in_214_city_flag
+#			214 = {
+#				set_demilitarized_zone = yes
+#			}
+#		}
+#
+#	}
 	
 	SOV_stop_blizzard_magic_in_214_city = {
 		icon = GFX_decision_generic_coastal_fortification
@@ -7140,13 +7243,8 @@ SOV_great_patriotic_war_category = {
 				}
 			}
 		}
-		cancel_trigger = {
-			NOT = {
-				has_template = "Punitive division"
-			}
-		}
 		days_remove = 30
-		cost = 50
+		cost = 0
 		ai_will_do = {
 			base = 1000
 		}
@@ -7315,7 +7413,84 @@ SOV_great_patriotic_war_category = {
 	}
 }
 
-#242  219  192 137 842
+Catch_SOV_Vivio = {
+	Appease_SOV_Vivio = {
+		icon = GFX_decision_ger_mefo_bills
+		visible = {
+		}
+		cost = 25
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			NOT = {
+				has_country_flag = catch_SOV_Vivio_going
+			}
+		}
+		modifier = {
+			civilian_factory_use = 10
+		}
+		days_remove = 30
+		complete_effect = {
+			set_country_flag = catch_SOV_Vivio_going
+		}
+		remove_effect = {
+			country_event = {
+				id = SOV_catch.01
+			}
+		}
+	}
+	Torture_SOV_Vivio = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+		}
+		cost = 25
+		fire_only_once = yes
+		ai_will_do = {
+			base = 50
+		}
+		available = {
+			NOT = {
+				has_country_flag = catch_SOV_Vivio_going
+			}
+		}
+		days_remove = 1
+		complete_effect = {
+			set_country_flag = catch_SOV_Vivio_going
+		}
+		remove_effect = {
+			country_event = {
+				id = SOV_catch.06
+			}
+		}
+	}
+	Brainwash_SOV_Vivio = {
+		icon = GFX_decision_generic_research
+		visible = {
+		}
+		cost = 25
+		ai_will_do = {
+			base = 100
+		}
+		available = {
+			has_tech = magic_weapons5
+			NOT = { has_country_flag = catch_SOV_Vivio_going }
+		}
+		days_remove = 150
+		complete_effect = {
+			set_country_flag = catch_SOV_Vivio_going
+		}
+		remove_effect = {
+			country_event = {
+				id = SOV_catch.10
+			}
+		}
+	}
+}
 
+
+
+
+#242  219  192 137 842
 
 
