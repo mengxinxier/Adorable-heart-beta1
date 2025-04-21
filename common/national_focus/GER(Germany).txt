@@ -7637,6 +7637,12 @@ focus_tree = {
 				#大选
 				id = ah_germany.17
 			}
+			hidden_effect = {
+				country_event = {
+					id = demGermany.006
+					days = 7
+				}
+			}
 		}
 	}
 ##德意志政治线民主德国##
@@ -8309,7 +8315,7 @@ focus_tree = {
 		icon = GFX_goal_generic_soviet_assistance
 		relative_position_id = GER_House_of_the_People
 		x = 0
-		y = 1
+		y = 2
 		mutually_exclusive = {
 			focus = GER_Europe_for_Europeans
 			focus = GER_Join_the_free_world
@@ -8335,6 +8341,10 @@ focus_tree = {
 					has_government = communism
 					has_country_leader_ideology = socialism
 				}
+			}
+			SOV = {
+				is_faction_leader = yes
+				has_government = communism
 			}
 		}
 		available_if_capitulated = no
@@ -8382,10 +8392,14 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_in_faction = no
+			is_subject = no
+			is_major = yes
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			create_faction = Berlin_Mutual_Aid_Agreement
 		}
 	}
 	#恢复与西方的关系
@@ -8495,7 +8509,7 @@ focus_tree = {
 		icon = GFX_FRA_Europe_for_Europeans
 		relative_position_id = GER_German_Free_Market
 		x = 0
-		y = 1
+		y = 2
 		mutually_exclusive = {
 			focus = GER_Close_to_Third_International
 			focus = GER_Join_the_free_world
@@ -8809,7 +8823,7 @@ focus_tree = {
 		icon = GFX_focus_chi_british_cooperation
 		relative_position_id = GER_German_national_revival
 		x = 0
-		y = 1
+		y = 2
 		mutually_exclusive = {
 			focus = GER_Close_to_Third_International
 			focus = GER_Europe_for_Europeans
@@ -8828,10 +8842,19 @@ focus_tree = {
 			has_completed_focus = GER_ailika_12
 			is_in_faction = no
 			is_subject = no
+			ENG = {
+				is_faction_leader = yes
+				has_government = democratic
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			ENG = {
+				country_event = {
+					id = generic.2002
+				}
+			}
 		}
 	}
 	#防范意识形态渗透
@@ -8930,6 +8953,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_Cold_War_was_hot_idea
 		}
 	}
 	#防御计划
@@ -8956,6 +8980,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = FRA_All_out_competition_idea
 		}
 	}
 	#主动出击
@@ -8978,11 +9003,36 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			is_subject = no
+			is_major = yes
+			not = { has_government = SOV }
+			SOV = {
+				has_government = communism
+				NOT = {
+					or = {
+						is_in_faction_with = ROOT
+						has_war_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		bypass = {
+			SOV = {
+				OR = {
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+					has_war_with = ROOT
+					exists = no
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			declare_war_on = { target = SOV type = annex_everything }
 		}
+		will_lead_to_war_with = SOV
 	}
 ##复辟线经济##
 	#国家建设
