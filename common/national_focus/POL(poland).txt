@@ -5244,8 +5244,9 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			army_experience = 15
-			add_war_support = 0.05
+			army_experience = 30
+			add_manpower = 20000
+			add_war_support = 0.10
 			if = {
 				limit = {
 					has_power_balance = {
@@ -5678,8 +5679,19 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			always = no
+		}
 		completion_reward = {
-			
+			if = {
+				limit = {
+					NOT = { has_government = fascism }
+				}
+				set_politics = {
+					ruling_party = fascism
+				}
+			}
+			add_country_leader_trait = POL_actual_power_queen
 		}
 	}
 																	
@@ -5699,8 +5711,26 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			always = no
+		}
 		completion_reward = {
-			
+			if = {
+				limit = {
+					NOT = { has_government = neutrality }
+				}
+				set_politics = {
+					ruling_party = neutrality
+				}
+			}
+			add_country_leader_role = {
+				character = POL_Riddle
+				country_leader = {
+					ideology = autocracy_subideology
+					traits = { POL_military_and_political_integration }
+				}
+				promote_leader = yes
+			}
 		}
 	}
 																		
@@ -5717,8 +5747,17 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			has_idea = POL_imperial_cooperation
+			is_subject = no
+			is_in_faction = no
+			country_exists = DVL
+			DVL = { is_major = yes }
+			NOT = { has_war_with = DVL }
+		}
+		available_if_capitulated = yes
 		completion_reward = {
-			
+			DVL = { country_event = POL_roy.009 }
 		}
 	}
 																			
@@ -5735,8 +5774,34 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			is_in_faction_with = DVL
+		}
 		completion_reward = {
-			
+			effect_tooltip = {
+				swap_ideas = {
+					remove_idea = POL_imperial_cooperation
+					add_idea = POL_imperial_cooperation2a
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						has_idea = POL_imperial_cooperation
+					}
+					swap_ideas = {
+						remove_idea = POL_imperial_cooperation
+						add_idea = POL_imperial_cooperation2a
+					}
+				}
+				else_if = {
+					limit = { has_idea = POL_imperial_cooperation2b }
+					swap_ideas = {
+						remove_idea = POL_imperial_cooperation2b
+						add_idea = POL_imperial_cooperation3
+					}
+				}
+			}
 		}
 	}
 																				
@@ -5749,13 +5814,38 @@ focus_tree = {
 		relative_position_id = POL_leaning_towards_DVL
 		prerequisite = {
 			focus = POL_leaning_towards_DVL
-			focus = POL_iron_fist_chancellor
 		}
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			is_in_faction_with = DVL
+		}
 		completion_reward = {
-			
+			effect_tooltip = {
+				swap_ideas = {
+					remove_idea = POL_imperial_cooperation
+					add_idea = POL_imperial_cooperation2b
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						has_idea = POL_imperial_cooperation
+					}
+					swap_ideas = {
+						remove_idea = POL_imperial_cooperation
+						add_idea = POL_imperial_cooperation2b
+					}
+				}
+				else_if = {
+					limit = { has_idea = POL_imperial_cooperation2a }
+					swap_ideas = {
+						remove_idea = POL_imperial_cooperation2a
+						add_idea = POL_imperial_cooperation3
+					}
+				}
+			}
 		}
 	}
 																					
@@ -5775,8 +5865,15 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			is_in_faction_with = DVL
+		}
 		completion_reward = {
-			
+			DVL = { country_event = POL_roy.011 }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				DVL = { add_ideas = POL_imperial_cooperation_in_DVL }
+			}
 		}
 	}
 																					
@@ -5794,7 +5891,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			
+			create_faction = POL_white_guard_united_front
 		}
 	}
 																						
@@ -5812,7 +5909,13 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			
+			activate_targeted_decision = { target = BAL decision = POL_invitation_to_white_guard_member_states }
+			activate_targeted_decision = { target = ROM decision = POL_invitation_to_white_guard_member_states }
+			activate_targeted_decision = { target = FIN decision = POL_invitation_to_white_guard_member_states }
+			activate_targeted_decision = { target = TUR decision = POL_invitation_to_white_guard_member_states }
+			activate_targeted_decision = { target = TAM decision = POL_invitation_to_white_guard_member_states }
+			activate_targeted_decision = { target = SWE decision = POL_invitation_to_white_guard_member_states }
+			activate_targeted_decision = { target = AFG decision = POL_invitation_to_white_guard_member_states }
 		}
 	}
 																							
@@ -5830,8 +5933,17 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			is_faction_leader = yes
+		}
 		completion_reward = {
-			
+			add_ideas = POL_anti_Soviet_front_focus
+			every_other_country = {
+				limit = {
+					is_in_faction_with = ROOT
+				}
+				add_ideas = POL_anti_Soviet_front_focus
+			}
 		}
 	}
 																								
@@ -5849,7 +5961,21 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			
+			every_state = {
+				limit = {
+					OR = {
+						state = 63
+						state = 68
+						state = 66
+						state = 67
+					}
+				}
+				add_claim_by = ROOT
+				enable_state_integration_50_tooltip = yes
+				OWNER = {
+					country_event = { id = POL_roy.014 days = 3 }
+				}
+			}
 		}
 	}
 																								
@@ -5869,8 +5995,12 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		will_lead_to_war_with = SOV
 		completion_reward = {
-			
+			declare_war_on = {
+				target = SOV
+				type = puppet_wargoal_focus
+			}
 		}
 	}
 
