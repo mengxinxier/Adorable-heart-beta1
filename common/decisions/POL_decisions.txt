@@ -787,11 +787,11 @@ POL_and_SOV_game_in_Minsk_category = {
 		ai_will_do = {
 			base = 10
 			modifier = {
-				factor = 2
+				factor = 1
 				check_variable = { POL_and_SOV_game_points < 10 }
 			}
 			modifier = {
-				factor = 2
+				factor = 1
 				check_variable = { POL_and_SOV_game_points < 20 }
 			}
 			modifier = {
@@ -860,11 +860,11 @@ POL_and_SOV_game_in_Minsk_category = {
 		ai_will_do = {
 			base = 10
 			modifier = {
-				factor = 0.1
+				factor = 2
 				check_variable = { POL_and_SOV_game_points < 10 }
 			}
 			modifier = {
-				factor = 0.5
+				factor = 2
 				check_variable = { POL_and_SOV_game_points < 20 }
 			}
 			modifier = {
@@ -1941,6 +1941,7 @@ POL_civil_war_resolution_category = {
 				clr_global_flag = POL_civil_war_has_begun_flag
 				clr_country_flag = POL_cw_unavoidable_flag
 				mark_focus_tree_layout_dirty = yes
+				add_ideas = POL_post_war_famine_event
 				every_other_country = {
 					limit = { original_tag = POL }
 					send_equipment_fraction = {
@@ -2013,11 +2014,14 @@ POL_civil_war_resolution_category = {
 						fascism = 80
 					}
 					every_character = {
-						limit = { has_character_flag = POL_republicans_character }
+						limit = { 
+							has_character_flag = POL_republicans_character 
+							NOT = { has_character_flag = POL_Nearl_family_character }
+						}
 						set_nationality = AHM
 					}
 					every_character = {
-						limit = { has_character_flag = POL_royalists_character }
+						limit = { has_character_flag = POL_SSS_organization_character }
 						set_nationality = AHM
 					}
 					POL_remove_all_head_of_government = yes
@@ -2029,6 +2033,122 @@ POL_civil_war_resolution_category = {
 					add_attack = 1
 				}
 			}
+		}
+	}
+}
+
+POL_battle_between_king_and_minister_balance_category = {
+	POL_supporting_Chancellor = {
+		icon = GFX_decision_generic_nationalism
+		priority = 3
+		visible = {
+			has_power_balance = {
+				id = POL_battle_between_king_and_minister_balance
+			}
+		}
+		available = {
+			has_completed_focus = POL_conflict_between_two_houses
+		}
+		fire_only_once = no
+		days_re_enable = 30
+		days_remove = 60
+		cost = 50
+		remove_effect = {
+			add_power_balance_value = {
+				id = POL_battle_between_king_and_minister_balance
+				value = -0.05
+			}
+		}
+	}
+
+	POL_supporting_Her_Majesty_the_Queen = {
+		icon = GFX_decision_generic_monarchy
+		priority = 2
+		visible = {
+			has_power_balance = {
+				id = POL_battle_between_king_and_minister_balance
+			}
+		}
+		available = {
+			has_completed_focus = POL_conflict_between_two_houses
+		}
+		fire_only_once = no
+		days_re_enable = 30
+		days_remove = 60
+		cost = 50
+		remove_effect = {
+			add_power_balance_value = {
+				id = POL_battle_between_king_and_minister_balance
+				value = 0.05
+			}
+		}
+	}
+
+	POL_night_banquet_decision = {
+		icon = GFX_decision_eng_ally_imperialist_coup
+		priority = 1
+		visible = {
+			has_power_balance = {
+				id = POL_battle_between_king_and_minister_balance
+			}
+		}
+		available = {
+			has_completed_focus = POL_conflict_between_two_houses
+			OR = {
+				is_power_balance_in_range = {
+					id = POL_battle_between_king_and_minister_balance
+					range = POL_battle_between_king_and_minister_balance_left_side
+				}
+				is_power_balance_in_range = {
+					id = POL_battle_between_king_and_minister_balance
+					range = POL_battle_between_king_and_minister_balance_right_side
+				}
+			}
+		}
+		fire_only_once = yes
+		cost = 0
+		complete_effect = {
+			if = {
+				limit = {
+					is_power_balance_in_range = {
+						id = POL_battle_between_king_and_minister_balance
+						range = POL_battle_between_king_and_minister_balance_left_side
+					}
+				}
+				set_country_flag = POL_minister_win
+			}
+			else_if = {
+				limit = {
+					is_power_balance_in_range = {
+						id = POL_battle_between_king_and_minister_balance
+						range = POL_battle_between_king_and_minister_balance_right_side
+					}
+				}
+				set_country_flag = POL_king_win
+			}
+			country_event = POL_roy.016
+		}
+	}
+}
+
+POL_white_guard_united_front_category = {
+	POL_invitation_to_white_guard_member_states = {
+		icon = GFX_decision_generic_nationalism
+		allowed = {
+			always = no
+		}
+		visible = {
+			is_faction_leader = yes
+		}
+		available = {
+			NOT = { has_war_with = FROM }
+			FROM = { is_in_faction = no }
+			FROM = { NOT = { has_government = communism } }
+		}
+		fire_only_once = yes
+		cost = 10
+		complete_effect = {
+			FROM = { country_event = { id = POL_roy.012 days = 3 } }
 		}
 	}
 }
