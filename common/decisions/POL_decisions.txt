@@ -1345,12 +1345,12 @@ POL_secondary_faction_decision_category = {
 			if = {
 				limit = { has_country_flag = POL_political_mediation_flag }
 				custom_trigger_tooltip = {
-					has_country_flag = { flag = POL_political_mediation_flag days > 120 }
+					has_country_flag = { flag = POL_political_mediation_flag days > 29 }
 					tooltip = POL_political_mediation_tooltip
 				}
 			}
 		}
-		cost = 120
+		cost = 50
 		days_remove = 30
 		remove_effect = {
 			clr_country_flag = POL_political_mediation_flag
@@ -1424,7 +1424,7 @@ POL_civil_war_resolution_category = {
 		cancel_trigger = {
 			always = no
 		}
-		days_mission_timeout = 100
+		days_mission_timeout = 70
 		timeout_effect = {
 			custom_effect_tooltip = POL_civil_war_is_coming_tt
 			hidden_effect = {
@@ -2026,15 +2026,53 @@ POL_civil_war_resolution_category = {
 					}
 					POL_remove_all_head_of_government = yes
 					set_country_flag = POL_Riddle_head_of_government
+					every_possible_country = {
+						limit = { 
+							has_character = POL_Riddle
+						}
+						every_character = {
+							limit = { is_character = POL_Riddle }
+							set_nationality = ROOT
+						}
+					}
 				}
 				army_experience = 100
 				every_unit_leader = {
 					add_skill_level = 1
 					add_attack = 1
 				}
+				set_country_flag = POL_local_autonomy_bypass
+				PRE = { country_event = polish.010 }
 			}
 		}
 	}
+
+	POL_quick_decision_in_war = {
+		visible = {
+			has_global_flag = POL_civil_war_has_begun_flag
+			tag = POL
+		}
+		available = {
+			has_global_flag = {
+				flag = POL_civil_war_has_begun_flag
+				days > 90
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		fire_only_once = yes
+		complete_effect = {
+			every_other_country = {
+				limit = {
+					original_tag = POL
+					has_civil_war = yes
+				}
+				add_ideas = POL_veteran_troops_weary
+			}
+		}
+	}
+
 }
 
 POL_battle_between_king_and_minister_balance_category = {
@@ -2048,12 +2086,17 @@ POL_battle_between_king_and_minister_balance_category = {
 		}
 		available = {
 			has_completed_focus = POL_conflict_between_two_houses
+			NOT = { has_country_flag = POL_supporting_king_or_minister }
 		}
 		fire_only_once = no
 		days_re_enable = 30
-		days_remove = 60
+		days_remove = 30
 		cost = 50
+		complete_effect = {
+			set_country_flag = POL_supporting_king_or_minister
+		}
 		remove_effect = {
+			clr_country_flag = POL_supporting_king_or_minister
 			add_power_balance_value = {
 				id = POL_battle_between_king_and_minister_balance
 				value = -0.05
@@ -2071,12 +2114,31 @@ POL_battle_between_king_and_minister_balance_category = {
 		}
 		available = {
 			has_completed_focus = POL_conflict_between_two_houses
+			NOT = { has_country_flag = POL_supporting_king_or_minister }
+		}
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 10
+				OR = {
+					has_completed_focus = POL_relying_on_magic_coins
+					has_completed_focus = POL_refurbishment_of_old_coins
+				}
+				is_power_balance_in_range = {
+					id = POL_battle_between_king_and_minister_balance
+					range = POL_battle_between_king_and_minister_balance_mid_range
+				}
+			}
 		}
 		fire_only_once = no
 		days_re_enable = 30
-		days_remove = 60
+		days_remove = 30
 		cost = 50
+		complete_effect = {
+			set_country_flag = POL_supporting_king_or_minister
+		}
 		remove_effect = {
+			clr_country_flag = POL_supporting_king_or_minister
 			add_power_balance_value = {
 				id = POL_battle_between_king_and_minister_balance
 				value = 0.05
@@ -2104,6 +2166,9 @@ POL_battle_between_king_and_minister_balance_category = {
 					range = POL_battle_between_king_and_minister_balance_right_side
 				}
 			}
+		}
+		ai_will_do = {
+			base = 1000
 		}
 		fire_only_once = yes
 		cost = 0
