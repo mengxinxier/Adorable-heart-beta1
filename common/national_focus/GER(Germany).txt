@@ -953,6 +953,7 @@ focus_tree = {
 			navy_experience = 50
 			air_experience = 50
 			custom_effect_tooltip = AUS_Germany_Plan_01
+			unlock_decision_tooltip = AUS_GER_REBUILD
 			hidden_effect = {
 				every_state = {
 					limit = {
@@ -8347,6 +8348,16 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_opinion_modifier = {
+				target = SOV
+				modifier = GER_Close_to_Third_International_opinion_modifiers
+			}
+			SOV = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = GER_Close_to_Third_International_opinion_modifiers
+				}
+			}
 		}
 	}
 	#加强与第三国际经济联系
@@ -8366,10 +8377,12 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			not = { has_war_with = SOV }
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = communism popularity = 0.1 }
 		}
 	}
 	#中欧堡垒
@@ -8397,6 +8410,31 @@ focus_tree = {
 		cancel_if_invalid = yes
 		completion_reward = {
 			create_faction = Berlin_Mutual_Aid_Agreement
+			unlock_decision_category_tooltip = GER_Customs_Union
+			add_ideas = GER_Customs_Union_idea
+			hidden_effect = {
+				every_country = {
+					limit = {
+						not = { has_government = fascism }
+						not_in_any_economy_faction = yes
+						is_subject = no
+						not = { has_idea = GER_Customs_Union_idea }
+						not = {
+							or = {
+								has_war_with = ROOT
+								is_in_faction_with = ROOT
+							}
+						}
+						not = { tag = AHM }
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = GER_invite_FROM_add_to_Customs_Union_neutral
+						}
+					}
+				}
+			}
 		}
 	}
 	#恢复与西方的关系
@@ -8416,10 +8454,12 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			not = { has_war_with = ENG }
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_popularity = { ideology = democratic popularity = 0.1 }
 		}
 	}
 	#亲近经济互助委员会
@@ -8442,10 +8482,12 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			not = { has_war_with = SOV }
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = GER_comecon_observer_state
 		}
 	}
 	#亲近世界贸易组织
@@ -8468,10 +8510,12 @@ focus_tree = {
 			base = 10
 		}
 		available = {
+			not = { has_war_with = ENG }
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = GER_wto_observer_state
 		}
 	}
 	#冷战阴影下的乐土
@@ -8498,6 +8542,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = GER_promised_land_in_shadow_of_Cold_War_idea
 		}
 	}
   #欧洲人的欧洲
@@ -8752,66 +8797,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			custom_effect_tooltip = FRA_Start_integration_process_tt
-			add_research_slot = 1
-			set_cosmetic_tag = EUR_UNIFIED
-			hidden_effect = {
-				every_country = {
-					limit = {
-						is_subject_of = ROOT
-						capital_scope = { is_on_continent = europe }
-					}
-					every_core_state = {
-						add_core_of = ROOT
-					}
-					every_character = { set_nationality = ROOT }
-					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
-				}
-				for_each_scope_loop = {
-					array = global.GER_European_Union_members_array
-					every_country = {
-						limit = {
-							is_subject_of = PREV
-							capital_scope = { is_on_continent = europe }
-						}
-						every_core_state = {
-							add_core_of = ROOT
-						}
-						every_character = { set_nationality = ROOT }
-						ROOT = { annex_country = { target = PREV transfer_troops = yes } }
-					}
-					if = {
-						limit = {
-							not = { tag = ROOT }
-							capital_scope = { is_on_continent = europe }
-						}
-						every_core_state = {
-							add_core_of = ROOT
-						}
-						every_character = { set_nationality = ROOT }
-						ROOT = { annex_country = { target = PREV transfer_troops = yes } }
-					}
-				}
-				every_state = {
-					limit = {
-						is_on_continent = europe
-						NOT = {
-							or = {
-								is_core_of = ROOT
-								is_claimed_by = ROOT
-							}
-						}
-					}
-					add_claim_by = ROOT
-				}
-				news_event = {
-					id = FRA_Gensokyo_news.013
-				}
-				country_event = {
-					id = ah_germany.106
-				}
-				clear_array = global.GER_European_Union_members_array
-			}
+			build_European_Union_effect = yes
 		}
 	}
   #加入自由世界
@@ -8875,6 +8861,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = GER_Guard_against_ideological_infiltration_idea
 		}
 	}
 	#柏林防御条约
@@ -8898,6 +8885,11 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = GER_Berlin_Defense_Treaty_idea
+			every_allied_country = {
+				limit = { not = { tag = ROOT } }
+				add_ideas = GER_Berlin_Defense_Treaty_idea
+			}
 		}
 	}
 	#东墙计划
@@ -8921,6 +8913,7 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			add_ideas = GER_East_Wall_Plan_idea
 		}
 	}
 	#东西对抗
