@@ -1,9 +1,58 @@
-AUS_L_GER = {
-	AUS_GER_REBUILD = {
+##政治行动
+political_actions = {
+	GER_recall_hasso_von_manteuffel = {
+		allowed = {
+			tag = GER
+		}
+		visible = {
+			PAQ = {
+				has_character = GER_hasso_von_manteuffel
+			}
+		}
+		cost = 0
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0
+				not = {
+					has_war_with_major = yes
+				}
+			}
+		}
+		fire_only_once = yes
+		available = {
+		}
+		modifier = {
+		}
+		days_remove = 5
+		complete_effect = {
+		}
+		remove_effect = {
+			PAQ = {
+				GER_hasso_von_manteuffel = {
+					set_nationality = GER
+				}
+			}
+			hidden_effect = {
+				PAQ = {
+					country_event = {
+						id = ah_germany.111
+					}
+				}
+			}
+		}
+	}
+}
+
+#德国外交部
+German_Foreign_Office = {
+	AUS_GER_REBUILD = {  ##德意志归来
 		###
 		icon = GFX_decision_congress
 		visible = {
 			is_subject = no
+			has_country_flag = AUS_L_GER
+			not = { has_global_flag = GER_REBUILD_ALREADY }
 		}
 		priority = 100
 		days_remove = 0
@@ -37,37 +86,7 @@ AUS_L_GER = {
 			factor = 100
 		}
 	}
-	# AUS_ATTACK_POL = {
-	# 	visible = {
-	# 		TAG = GER
-	# 	}
-	# 	available = {
-	# 		country_exists = POL
-	# 		has_war = no
-	# 		POL = {
-	# 			or = {
-	# 				is_faction_leader = yes
-	# 				and = {
-	# 					is_in_faction = no
-	# 					is_subject = no
-	# 				}
-	# 			}
-	# 		}
-	# 	}
-	# 	cost = 50
-	# 	days_remove = 7
-	# 	remove_effect = {
-	# 		declare_war_on = {
-	# 			target = POL
-	# 			type = annex_everything
-	# 		}
-	# 	}
-	# 	war_with_on_remove = POL
-	# 	ai_will_do = {
-	# 		factor = 0
-	# 	}
-	# }
-	AUS_DVL_3 = {
+	GER_Demand_allies_hand_over_Berlin = {  ##要求盟友交出柏林
 		visible = {
 			TAG = GER
 			is_subject = no
@@ -76,6 +95,8 @@ AUS_L_GER = {
 					is_controlled_by = GER
 				}
 			}
+			has_country_flag = AUS_L_GER
+			not = { has_global_flag = GER_REBUILD_ALREADY }
 		}
 		available = {
 			TAG = GER
@@ -109,9 +130,11 @@ AUS_L_GER = {
 			factor = 100
 		}
 	}
-	AUS_attack_bolin_controler = {
+	AUS_attack_bolin_controler = {  ##夺回柏林
 		icon = GFX_decision_generic_ignite_civil_war
 		visible = {
+			has_country_flag = AUS_L_GER
+			not = { has_global_flag = GER_REBUILD_ALREADY }
 		}
 		target_trigger = {
 			FROM = {
@@ -163,8 +186,768 @@ AUS_L_GER = {
 			}
 		}
 	}
+	GER_east_war = { ##东部计划
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_generic_06
+		}
+		target_trigger = {
+			FROM = {
+				any_controlled_state = {
+					or = {
+						is_core_of = POL
+						is_core_of = BAL
+						is_core_of = FIN
+						is_core_of = SOV
+						is_core_of = UKR
+						is_core_of = CZE
+					}
+				}
+				NOT = {
+					is_in_faction_with = ROOT
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				NOT = {
+					any_home_area_neighbor_country = {
+						has_war_with = ROOT
+					}
+				}
+				add = 30
+			}
+			modifier = {
+				has_country_flag = GER_war_plan_going_on
+				add = -30
+			}
+		}
+		complete_effect = {
+			set_country_flag = {
+				flag = GER_war_plan_going_on
+				value = 1
+				days = 60
+			}
+		}
+		cost = 10
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			setup_decision_attack_AI = yes
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_state
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+	}
+	GER_west_war = {  ##西部计划
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_generic_07
+		}
+		target_trigger = {
+			FROM = {
+				any_controlled_state = {
+					or = {
+						is_core_of = FRA
+						is_core_of = ENG
+						is_core_of = NPT
+						is_core_of = TRB
+					}
+				}
+				NOT = {
+					is_in_faction_with = ROOT
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				NOT = {
+					any_home_area_neighbor_country = {
+						has_war_with = ROOT
+					}
+				}
+				add = 30
+			}
+			modifier = {
+				has_country_flag = GER_war_plan_going_on
+				add = -30
+			}
+		}
+		complete_effect = {
+			set_country_flag = {
+				flag = GER_war_plan_going_on
+				value = 1
+				days = 60
+			}
+		}
+		cost = 10
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			setup_decision_attack_AI = yes
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_state
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+	}
+	GER_north_war = {  ##北部计划
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_generic_08
+		}
+		target_trigger = {
+			FROM = {
+				any_controlled_state = {
+					or = {
+						is_core_of = DEN
+						is_core_of = NOR
+						is_core_of = FIN
+					}
+				}
+				NOT = {
+					is_in_faction_with = ROOT
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				NOT = {
+					any_home_area_neighbor_country = {
+						has_war_with = ROOT
+					}
+				}
+				add = 30
+			}
+			modifier = {
+				has_country_flag = GER_war_plan_going_on
+				add = -30
+			}
+		}
+		complete_effect = {
+			set_country_flag = {
+				flag = GER_war_plan_going_on
+				value = 1
+				days = 60
+			}
+		}
+		cost = 10
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			setup_decision_attack_AI = yes
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_state
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+	}
+	GER_ber_war = {  ##巴尔干计划
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_generic_09
+		}
+		target_trigger = {
+			FROM = {
+				any_controlled_state = {
+					or = {
+						is_core_of = ROM
+						is_core_of = ALB
+						is_BA_state = yes
+						is_core_of = HUN
+						is_core_of = BUL
+						is_core_of = GRE
+					}
+				}
+				NOT = {
+					is_in_faction_with = ROOT
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				NOT = {
+					any_home_area_neighbor_country = {
+						has_war_with = ROOT
+					}
+				}
+				add = 30
+			}
+			modifier = {
+				has_country_flag = GER_war_plan_going_on
+				add = -30
+			}
+		}
+		complete_effect = {
+			set_country_flag = {
+				flag = GER_war_plan_going_on
+				value = 1
+				days = 60
+			}
+		}
+		cost = 10
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			setup_decision_attack_AI = yes
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_state
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+	}
+	GER_north_amercian_war = {  ##北美计划
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_generic_10
+		}
+		target_trigger = {
+			FROM = {
+				any_controlled_state = {
+					is_on_continent = north_america
+				}
+				NOT = {
+					is_in_faction_with = ROOT
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		cost = 10
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			setup_decision_attack_AI = yes
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_state
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+	}
+	GER_invite_Chinese_country = {  ##邀请老钟国家
+		visible = {
+			is_faction_leader = yes
+			or = {
+				has_completed_focus = GER_generic_11
+				has_completed_focus = GER_generic_12
+				has_completed_focus = GER_generic_13
+				has_completed_focus = GER_Germany_s_enemies_are_unforgivable
+			}
+		}
+		available = {
+			has_global_flag = CHI_REUNIT
+			FROM = {
+				not = { is_in_faction_with = ROOT }
+				is_subject = no
+			}
+			not = {
+				has_war_with = FROM
+			}
+			not = {
+				any_allied_country = {
+					has_war_with = FROM
+				}
+			}
+			is_faction_leader = yes
+			or = {
+				has_completed_focus = GER_generic_11
+				has_completed_focus = GER_generic_12
+				has_completed_focus = GER_generic_13
+				has_completed_focus = GER_Germany_s_enemies_are_unforgivable
+			}
+		}
+		target_trigger = {
+			FROM = {
+				is_chinese_country = yes
+				not = {
+					has_country_flag = GER_has_already_invited
+				}
+				has_country_flag = Participate_in_the_competition_for_China_reunification
+				or = {
+					has_government = fascism
+					has_government = neutrality
+				}
+			}
+			ROOT = {
+				is_faction_leader = yes
+				is_subject = no
+			}
+		}
+		cost = 10
+		days_remove = 10
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				any_country = {
+					or = {
+						is_in_faction_with = ROOT
+						tag = GER
+					}
+					FROM = {
+						or = {
+							any_allied_country = {
+								is_neighbor_of = PREV.PREV
+							}
+							is_neighbor_of = PREV
+						}
+					}
+				}
+				add = 30
+			}
+		}
+		remove_effect = {
+			FROM = {
+				set_country_flag = GER_has_already_invited
+				country_event = {
+					id = ah_germany.89
+				}
+			}
+		}
+	}
+	GER_invite_other_country = {  ##邀请太君、俄罗斯
+		visible = {
+			is_faction_leader = yes
+			or = {
+				has_completed_focus = GER_generic_11
+				has_completed_focus = GER_generic_12
+				has_completed_focus = GER_generic_13
+				has_completed_focus = GER_Germany_s_enemies_are_unforgivable
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					is_in_faction_with = ROOT
+				}
+				is_subject = no
+				or = {
+					has_government = fascism
+					has_government = neutrality
+				}
+			}
+			not = {
+				has_war_with = FROM
+			}
+			not = {
+				any_allied_country = {
+					has_war_with = FROM
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				or = {
+					tag = JAP
+					tag = RJE
+					tag = UKR
+				}
+				not = {
+					has_country_flag = GER_has_already_invited
+				}
+			}
+			ROOT = {
+				is_faction_leader = yes
+				is_subject = no
+			}
+		}
+		cost = 10
+		days_remove = 10
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				any_country = {
+					or = {
+						is_in_faction_with = ROOT
+						tag = GER
+					}
+					FROM = {
+						or = {
+							any_allied_country = {
+								is_neighbor_of = PREV.PREV
+							}
+							is_neighbor_of = PREV
+						}
+					}
+				}
+				add = 30
+			}
+		}
+		remove_effect = {
+			FROM = {
+				set_country_flag = GER_has_already_invited
+				country_event = {
+					id = ah_germany.89
+				}
+			}
+		}
+	}
+	GER_Eye_of_Rebirth_Project_attack_ENG = {  ##重生之眼-进攻圣杯
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_The_Spirit_of_the_Grail
+		}
+		target_trigger = {
+			FROM = {
+				controls_state = 126
+				NOT = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		available = {
+			has_completed_focus = GER_The_Spirit_of_the_Grail
+			has_war = no
+			is_subject = no
+		}
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+			setup_decision_attack_AI = yes
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	GER_Eye_of_Rebirth_Project_attack_FRA = {  ##重生之眼-进攻幻想乡
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_The_Underworld_of_Fantasy_Town
+		}
+		target_trigger = {
+			FROM = {
+				controls_state = 16
+				NOT = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		available = {
+			has_completed_focus = GER_The_Underworld_of_Fantasy_Town
+			has_war = no
+			is_subject = no
+		}
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+			setup_decision_attack_AI = yes
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	GER_Eye_of_Rebirth_Project_attack_POL = {  ##重生之眼-进攻执念
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_The_land_of_the_dead_obsessed
+		}
+		target_trigger = {
+			FROM = {
+				controls_state = 10
+				NOT = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		available = {
+			has_completed_focus = GER_The_land_of_the_dead_obsessed
+			has_war = no
+			is_subject = no
+		}
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+			setup_decision_attack_AI = yes
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	GER_Eye_of_Rebirth_Project_attack_SOV = {  ##重生之眼-进攻苏联
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			has_completed_focus = GER_Russian_magic
+		}
+		target_trigger = {
+			FROM = {
+				controls_state = 219
+				NOT = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			ROOT = {
+				is_subject = no
+			}
+		}
+		available = {
+			has_completed_focus = GER_Russian_magic
+			has_war = no
+			is_subject = no
+		}
+		cost = 0
+		days_remove = 30
+		war_with_target_on_remove = yes
+		complete_effect = {
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+			setup_decision_attack_AI = yes
+		}
+		remove_effect = {
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
 }
 
+##关税同盟
+GER_Customs_Union = {
+	GER_invite_FROM_add_to_Customs_Union = {
+		icon = GFX_Customs_Union_decision
+		allowed = {
+			is_germany_tag = yes
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				not_in_any_economy_faction = yes
+				not = { has_government = fascism }
+				not = { has_country_flag = GER_invite_FROM_add_to_Customs_Union }
+				not = { has_idea = GER_Customs_Union_idea }
+			}
+		}
+		target_array = allies
+		available = {
+			FROM = {
+				not = { has_government = fascism }
+			}
+			not = { has_war_with = FROM }
+		}
+		cost = 10
+		days_remove = 15
+		remove_effect = {
+			FROM = {
+				set_country_flag = GER_invite_FROM_add_to_Customs_Union
+				country_event = {
+					id = germany_union.0038
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	GER_invite_FROM_add_to_Customs_Union_neutral = {
+		icon = GFX_Customs_Union_decision
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				not_in_any_economy_faction = yes
+				not = { has_government = fascism }
+				not = { has_country_flag = GER_invite_FROM_add_to_Customs_Union }
+				not = { has_idea = GER_Customs_Union_idea }
+			}
+		}
+		available = {
+			FROM = {
+				not = { has_government = fascism }
+			}
+			not = { has_war_with = FROM }
+		}
+		cost = 10
+		days_remove = 15
+		remove_effect = {
+			FROM = {
+				set_country_flag = GER_invite_FROM_add_to_Customs_Union
+				country_event = {
+					id = germany_union.0038
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
+#政治宣传部门
 AUS_pl_cat = {
 	##安分点，别以为我找不到你
 	AUS_publicity_A = {
@@ -835,186 +1618,185 @@ GER_Renaissance_War = {
 	}
 }
 
-##梅福券
-GER_mefo_bills_category = {
-	##梅福券到期
-	GER_mefo_bills_mission = {
-		allowed = { always = no }
-		icon = ger_mefo_bills
-		available = {
-			hidden_trigger = { always = no }
-		}
-		days_mission_timeout = 180
-		is_good = yes
-		fire_only_once = yes
-		cancel_trigger = {
-			hidden_trigger = { not = { has_idea = GER_mefo_bills } }
-		}
-		remove_effect = {
-		}
-		complete_effect = {
-		}
-		priority = 10
-		timeout_effect = {
-			custom_effect_tooltip = GER_mefo_bills_Payouts_apply_add_100
-			add_to_variable = { GER_mefo_bills_Payouts_apply = 100 }
-			hidden_effect = { activate_mission = GER_mefo_bills_mission }
-		}
-		ai_will_do = {
-			factor = 200
-		}
-	}
-	##取消梅福券
-	GER_cancel_mefos = {
-		icon = ger_mefo_bills
-		available = {
-		}
-		cost = 0
-		fire_only_once = no
-		visible = {
-			hidden_trigger = { not = { has_country_flag = ger_has_cancelled_mefo } }
-		}
-		cancel_if_not_visible = yes
-		remove_effect = {
-			set_country_flag = ger_has_cancelled_mefo
-			remove_ideas = GER_mefo_bills
-			set_temp_variable = { GER_mefo_bills_Payouts_apply_monthly = GER_mefo_bills_Payouts_apply }
-			divide_temp_variable = { GER_mefo_bills_Payouts_apply_monthly = 50 }
-			add_timed_idea = {
-				idea = GER_mefo_bills_ended
-				months = GER_mefo_bills_Payouts_apply_monthly
-			}
-		}
-		ai_will_do = {
-			factor = 0
-		}
-	}
-}
-
-political_actions = {
-	GER_recall_hasso_von_manteuffel = {
+#光复大德意志
+GER_GREAT_GERMANIA_PLAN = {
+	declare_bulid_of_GERMANIA = {
+		icon = GFX_decision_ger_reichskommissariats
 		allowed = {
-			tag = GER
 		}
 		visible = {
-			PAQ = {
-				has_character = GER_hasso_von_manteuffel
-			}
 		}
-		cost = 0
-		ai_will_do = {
-			base = 10
-			modifier = {
-				factor = 0
-				not = {
-					has_war_with_major = yes
-				}
-			}
-		}
-		fire_only_once = yes
 		available = {
-		}
-		modifier = {
-		}
-		days_remove = 5
-		complete_effect = {
-		}
-		remove_effect = {
-			PAQ = {
-				GER_hasso_von_manteuffel = {
-					set_nationality = GER
-				}
-			}
-			hidden_effect = {
-				PAQ = {
-					country_event = {
-						id = ah_germany.111
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_G_GER
+				NOT = {
+					any_state = {
+						has_state_flag = G_GER
+						NOT = {
+							or = {
+								state = 102
+								state = 103
+								state = 736
+								state = 683
+								state = 488
+								state = 783
+								state = 28
+							}
+						}
+						NOT = {
+							is_controlled_by = GER
+						}
 					}
 				}
 			}
 		}
-	}
-}
-
-Caught_xier = {
-	anfu_xier = {
-		icon = GFX_decision_ger_mefo_bills
-		visible = {
-		}
-		cost = 25
-		ai_will_do = {
-			base = 10
-		}
-		available = {
-			NOT = {
-				has_country_flag = xier_PRISON_RUNNING
-			}
-		}
-		modifier = {
-			civilian_factory_use = 10
-		}
-		days_remove = 30
-		complete_effect = {
-			set_country_flag = xier_PRISON_RUNNING
-		}
-		remove_effect = {
-			country_event = {
-				id = austria.09
-			}
-		}
-	}
-	xingxun_xier = {
-		icon = GFX_decision_generic_civil_support
-		visible = {
-		}
-		cost = 25
 		fire_only_once = yes
+		cost = 0
 		ai_will_do = {
-			base = 50
+			factor = 1
 		}
-		available = {
-			NOT = {
-				has_country_flag = xier_PRISON_RUNNING
-			}
-		}
-		days_remove = 1
 		complete_effect = {
-			set_country_flag = xier_PRISON_RUNNING
-		}
-		remove_effect = {
-			country_event = {
-				id = austria.11
+			if = {
+				limit = {
+					has_country_leader = {
+						ruling_only = yes
+						character = GER_Hiiragi_Utena
+					}
+				}
+				set_cosmetic_tag = GER_G_GER_occultism
+				hidden_effect = {
+					news_event = {
+						id = germany_news.03
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					has_country_leader = {
+						ruling_only = yes
+						character = GER_joseph_goebbels
+					}
+				}
+				set_cosmetic_tag = GER_G_GER_Strasserism
+				hidden_effect = {
+					news_event = {
+						id = germany_news.03
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					has_country_leader = {
+						ruling_only = yes
+						character = GER_maiye
+					}
+				}
+				set_cosmetic_tag = G_GER_Goring_government
+				hidden_effect = {
+					news_event = {
+						id = germany_news.03
+					}
+				}
+			}
+			else = {
+				country_event = {
+					id = ah_germany.09
+				}
 			}
 		}
 	}
-	xinao_xier = {
-		icon = GFX_decision_generic_research
-		visible = {
-		}
-		cost = 25
-		ai_will_do = {
-			base = 100
-		}
-		available = {
-			has_tech = magic_weapons2
-			NOT = {
-				has_country_flag = xier_PRISON_RUNNING
+	GREAT_GERMANIA_target_decision_declare_war = {
+		icon = GFX_decision_generic_ignite_civil_war
+		target_trigger = {
+			FROM = {
+				any_controlled_state = {
+					or = {
+						has_state_flag = G_GER
+						has_state_flag = L_GER
+					}
+				}
+				NOT = {
+					is_in_faction_with = ROOT
+					has_war_with = ROOT
+				}
+			}
+			ROOT = {
+				is_subject = no
 			}
 		}
+		cost = 10
 		days_remove = 30
+		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = xier_PRISON_RUNNING
+			set_country_flag = {
+				flag = GER_war_plan_going_on
+				value = 1
+				days = 60
+			}
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+			setup_decision_attack_AI = yes
 		}
 		remove_effect = {
-			country_event = {
-				id = austria.14
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = take_state
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				NOT = {
+					any_home_area_neighbor_country = {
+						has_war_with = ROOT
+					}
+				}
+				add = 30
+			}
+			modifier = {
+				has_country_flag = GER_war_plan_going_on
+				add = -30
+			}
+		}
+	}
+	GREAT_GERMANIA_target_decision_transfer = {
+		icon = GFX_decision_generic_brainwash
+		target_trigger = {
+			any_country = {
+				AND = {
+					is_subject_of = GER
+					FROM = {
+						or = {
+							has_state_flag = G_GER
+						}
+						NOT = {
+							is_owned_and_controlled_by = GER
+						}
+						is_owned_and_controlled_by = PREV
+					}
+				}
+			}
+		}
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		#icon = decision_infiltrate_state
+		cost = 5
+		days_remove = 7
+		ai_will_do = {
+			factor = 10
+		}
+		remove_effect = {
+			ROOT = {
+				transfer_state = FROM
 			}
 		}
 	}
 }
 
-####
-
+##大日耳曼妮娅计划
 GER_Greater_Germania_Plan = {
 	GER_build_Centre_Germania = {
 		icon = generic_construction
@@ -1338,341 +2120,63 @@ GER_Greater_Germania_Plan = {
 	}
 }
 
-GER_GREAT_GERMANIA_PLAN = {
-	declare_bulid_of_GERMANIA = {
-		icon = GFX_decision_ger_reichskommissariats
-		allowed = {
-		}
-		visible = {
-		}
+##梅福券
+GER_mefo_bills_category = {
+	##梅福券到期
+	GER_mefo_bills_mission = {
+		allowed = { always = no }
+		icon = ger_mefo_bills
 		available = {
-			custom_trigger_tooltip = {
-				tooltip = ALL_CONTROL_G_GER
-				NOT = {
-					any_state = {
-						has_state_flag = G_GER
-						NOT = {
-							or = {
-								state = 102
-								state = 103
-								state = 736
-								state = 683
-								state = 488
-								state = 783
-								state = 28
-							}
-						}
-						NOT = {
-							is_controlled_by = GER
-						}
-					}
-				}
-			}
+			hidden_trigger = { always = no }
 		}
+		days_mission_timeout = 180
+		is_good = yes
 		fire_only_once = yes
-		cost = 0
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			if = {
-				limit = {
-					has_country_leader = {
-						ruling_only = yes
-						character = GER_Hiiragi_Utena
-					}
-				}
-				set_cosmetic_tag = GER_G_GER_occultism
-				hidden_effect = {
-					news_event = {
-						id = germany_news.03
-					}
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_leader = {
-						ruling_only = yes
-						character = GER_joseph_goebbels
-					}
-				}
-				set_cosmetic_tag = GER_G_GER_Strasserism
-				hidden_effect = {
-					news_event = {
-						id = germany_news.03
-					}
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_leader = {
-						ruling_only = yes
-						character = GER_maiye
-					}
-				}
-				set_cosmetic_tag = G_GER_Goring_government
-				hidden_effect = {
-					news_event = {
-						id = germany_news.03
-					}
-				}
-			}
-			else = {
-				country_event = {
-					id = ah_germany.09
-				}
-			}
-		}
-	}
-	GREAT_GERMANIA_target_decision_declare_war = {
-		icon = GFX_decision_generic_ignite_civil_war
-		target_trigger = {
-			FROM = {
-				any_controlled_state = {
-					or = {
-						has_state_flag = G_GER
-						has_state_flag = L_GER
-					}
-				}
-				NOT = {
-					is_in_faction_with = ROOT
-					has_war_with = ROOT
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		cost = 10
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			set_country_flag = {
-				flag = GER_war_plan_going_on
-				value = 1
-				days = 60
-			}
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-			setup_decision_attack_AI = yes
+		cancel_trigger = {
+			hidden_trigger = { not = { has_idea = GER_mefo_bills } }
 		}
 		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = take_state
-			}
 		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
+		complete_effect = {
+		}
+		priority = 10
+		timeout_effect = {
+			custom_effect_tooltip = GER_mefo_bills_Payouts_apply_add_100
+			add_to_variable = { GER_mefo_bills_Payouts_apply = 100 }
+			hidden_effect = { activate_mission = GER_mefo_bills_mission }
+		}
+		ai_will_do = {
+			factor = 200
+		}
+	}
+	##取消梅福券
+	GER_cancel_mefos = {
+		icon = ger_mefo_bills
+		available = {
+		}
+		cost = 0
+		fire_only_once = no
+		visible = {
+			hidden_trigger = { not = { has_country_flag = ger_has_cancelled_mefo } }
+		}
+		cancel_if_not_visible = yes
+		remove_effect = {
+			set_country_flag = ger_has_cancelled_mefo
+			remove_ideas = GER_mefo_bills
+			set_temp_variable = { GER_mefo_bills_Payouts_apply_monthly = GER_mefo_bills_Payouts_apply }
+			divide_temp_variable = { GER_mefo_bills_Payouts_apply_monthly = 50 }
+			add_timed_idea = {
+				idea = GER_mefo_bills_ended
+				months = GER_mefo_bills_Payouts_apply_monthly
+			}
 		}
 		ai_will_do = {
 			factor = 0
-			modifier = {
-				NOT = {
-					any_home_area_neighbor_country = {
-						has_war_with = ROOT
-					}
-				}
-				add = 30
-			}
-			modifier = {
-				has_country_flag = GER_war_plan_going_on
-				add = -30
-			}
-		}
-	}
-	GREAT_GERMANIA_target_decision_transfer = {
-		icon = GFX_decision_generic_brainwash
-		target_trigger = {
-			any_country = {
-				AND = {
-					is_subject_of = GER
-					FROM = {
-						or = {
-							has_state_flag = G_GER
-						}
-						NOT = {
-							is_owned_and_controlled_by = GER
-						}
-						is_owned_and_controlled_by = PREV
-					}
-				}
-			}
-		}
-		state_target = yes
-		on_map_mode = map_and_decisions_view
-		#icon = decision_infiltrate_state
-		cost = 5
-		days_remove = 7
-		ai_will_do = {
-			factor = 10
-		}
-		remove_effect = {
-			ROOT = {
-				transfer_state = FROM
-			}
 		}
 	}
 }
 
-GER_comfort_war_scar = {
-	GER_send_money = {
-		icon = GFX_decision_hol_attract_foreign_investors
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			has_war = no
-			not = {
-				has_country_flag = GER_comfort_war_scar_others_on
-			}
-		}
-		fire_only_once = yes
-		cost = 50
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_comfort_war_scar_others_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_comfort_war_scar_others_on
-			custom_effect_tooltip = GER_send_money_300
-			add_to_variable = {
-				var = ubs_load
-				value = 300
-			}
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK_2
-				}
-				remove_ideas = GER_WAR_BREAK_2
-			}
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK
-				}
-				swap_ideas = {
-					remove_idea = GER_WAR_BREAK
-					add_idea = GER_WAR_BREAK_2
-				}
-			}
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK_1
-				}
-				swap_ideas = {
-					remove_idea = GER_WAR_BREAK_1
-					add_idea = GER_WAR_BREAK
-				}
-			}
-		}
-	}
-	GER_birth_guli = {
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			has_war = no
-			not = {
-				has_country_flag = GER_comfort_war_scar_others_on
-			}
-		}
-		fire_only_once = yes
-		cost = 50
-		days_remove = 100
-		ai_will_do = {
-			factor = 1
-		}
-		modifier = {
-			monthly_population = 0.15
-		}
-		complete_effect = {
-			set_country_flag = GER_comfort_war_scar_others_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_comfort_war_scar_others_on
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK_2
-				}
-				remove_ideas = GER_WAR_BREAK_2
-			}
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK
-				}
-				swap_ideas = {
-					remove_idea = GER_WAR_BREAK
-					add_idea = GER_WAR_BREAK_2
-				}
-			}
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK_1
-				}
-				swap_ideas = {
-					remove_idea = GER_WAR_BREAK_1
-					add_idea = GER_WAR_BREAK
-				}
-			}
-		}
-	}
-	GER_improve_gongzi = {
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			has_war = no
-			not = {
-				has_country_flag = GER_comfort_war_scar_others_on
-			}
-		}
-		fire_only_once = yes
-		cost = 50
-		days_remove = 100
-		ai_will_do = {
-			factor = 1
-		}
-		modifier = {
-			consumer_goods_factor = 0.2
-		}
-		complete_effect = {
-			set_country_flag = GER_comfort_war_scar_others_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_comfort_war_scar_others_on
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK_2
-				}
-				remove_ideas = GER_WAR_BREAK_2
-			}
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK
-				}
-				swap_ideas = {
-					remove_idea = GER_WAR_BREAK
-					add_idea = GER_WAR_BREAK_2
-				}
-			}
-			if = {
-				limit = {
-					has_idea = GER_WAR_BREAK_1
-				}
-				swap_ideas = {
-					remove_idea = GER_WAR_BREAK_1
-					add_idea = GER_WAR_BREAK
-				}
-			}
-		}
-	}
-}
-
+##拓展德意志生存空间
 GER_LIVE_SPARE = {
 	GER_POL_CREATE = {
 		icon = GFX_decision_generic_form_nation
@@ -3722,735 +4226,7 @@ GER_LIVE_SPARE = {
 	}
 }
 
-GER_war_plan = {
-	GER_east_war = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-			has_completed_focus = GER_generic_06
-		}
-		target_trigger = {
-			FROM = {
-				any_controlled_state = {
-					or = {
-						is_core_of = POL
-						is_core_of = BAL
-						is_core_of = FIN
-						is_core_of = SOV
-						is_core_of = UKR
-						is_core_of = CZE
-					}
-				}
-				NOT = {
-					is_in_faction_with = ROOT
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				NOT = {
-					any_home_area_neighbor_country = {
-						has_war_with = ROOT
-					}
-				}
-				add = 30
-			}
-			modifier = {
-				has_country_flag = GER_war_plan_going_on
-				add = -30
-			}
-		}
-		complete_effect = {
-			set_country_flag = {
-				flag = GER_war_plan_going_on
-				value = 1
-				days = 60
-			}
-		}
-		cost = 10
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			setup_decision_attack_AI = yes
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = take_state
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-	}
-	GER_west_war = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-			has_completed_focus = GER_generic_07
-		}
-		target_trigger = {
-			FROM = {
-				any_controlled_state = {
-					or = {
-						is_core_of = FRA
-						is_core_of = ENG
-						is_core_of = NPT
-						is_core_of = TRB
-					}
-				}
-				NOT = {
-					is_in_faction_with = ROOT
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				NOT = {
-					any_home_area_neighbor_country = {
-						has_war_with = ROOT
-					}
-				}
-				add = 30
-			}
-			modifier = {
-				has_country_flag = GER_war_plan_going_on
-				add = -30
-			}
-		}
-		complete_effect = {
-			set_country_flag = {
-				flag = GER_war_plan_going_on
-				value = 1
-				days = 60
-			}
-		}
-		cost = 10
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			setup_decision_attack_AI = yes
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = take_state
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-	}
-	GER_north_war = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-			has_completed_focus = GER_generic_08
-		}
-		target_trigger = {
-			FROM = {
-				any_controlled_state = {
-					or = {
-						is_core_of = DEN
-						is_core_of = NOR
-						is_core_of = FIN
-					}
-				}
-				NOT = {
-					is_in_faction_with = ROOT
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				NOT = {
-					any_home_area_neighbor_country = {
-						has_war_with = ROOT
-					}
-				}
-				add = 30
-			}
-			modifier = {
-				has_country_flag = GER_war_plan_going_on
-				add = -30
-			}
-		}
-		complete_effect = {
-			set_country_flag = {
-				flag = GER_war_plan_going_on
-				value = 1
-				days = 60
-			}
-		}
-		cost = 10
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			setup_decision_attack_AI = yes
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = take_state
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-	}
-	GER_ber_war = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-			has_completed_focus = GER_generic_09
-		}
-		target_trigger = {
-			FROM = {
-				any_controlled_state = {
-					or = {
-						is_core_of = ROM
-						is_core_of = ALB
-						is_BA_state = yes
-						is_core_of = HUN
-						is_core_of = BUL
-						is_core_of = GRE
-					}
-				}
-				NOT = {
-					is_in_faction_with = ROOT
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				NOT = {
-					any_home_area_neighbor_country = {
-						has_war_with = ROOT
-					}
-				}
-				add = 30
-			}
-			modifier = {
-				has_country_flag = GER_war_plan_going_on
-				add = -30
-			}
-		}
-		complete_effect = {
-			set_country_flag = {
-				flag = GER_war_plan_going_on
-				value = 1
-				days = 60
-			}
-		}
-		cost = 10
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			setup_decision_attack_AI = yes
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = take_state
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-	}
-	GER_build_bag = {
-		icon = GFX_decision_generic_form_nation
-		visible = {
-			NOT = {
-				ROM = {
-					is_in_faction_with = ROOT
-				}
-			}
-		}
-		available = {
-			has_war = no
-			custom_trigger_tooltip = {
-				tooltip = "GER_BER_kuozhang"
-				any_state = {
-					or = {
-						BUL_is_balkan_state = yes
-					}
-					not = {
-						state = 773
-					}
-					not = {
-						has_state_flag = G_GER
-					}
-					or = {
-						is_controlled_by = GER
-						any_other_country = {
-							NOT = {
-								tag = GBK
-							}
-							is_subject_of = GER
-							controls_state = PREV
-						}
-					}
-				}
-			}
-		}
-		cost = 0
-		days_remove = 0
-		ai_will_do = {
-			factor = 10
-		}
-		remove_effect = {
-			every_state = {
-				limit = {
-					or = {
-						BUL_is_balkan_state = yes
-					}
-					not = {
-						state = 773
-					}
-					NOT = {
-						has_state_flag = G_GER
-					}
-					or = {
-						is_controlled_by = GER
-						any_other_country = {
-							NOT = {
-								tag = GBK
-							}
-							is_subject_of = GER
-							controls_state = PREV
-						}
-					}
-				} 
-				add_core_of = GBK
-				GBK = {
-					transfer_state = PREV
-				}
-			}
-			GBK = {
-				if = {
-					limit = {
-						not = {
-							is_subject_of = GER
-						}
-					}
-					GER = {
-						set_autonomy = {
-							target = GBK
-							autonomy_state = autonomy_reichskommissariat
-						}
-					}
-					GBK = {
-						create_country_leader = {
-							name = "麦基利斯·法里德"
-							desc = ""
-							picture = "gfx/leaders/ROM/leader_maiji.dds"
-							expire = "1985.1.1"
-							ideology = Right_populism_subideology
-							traits = {
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-	GER_send_bag = {
-		icon = GFX_decision_generic_brainwash
-		visible = {
-			ROM = {
-				is_in_faction_with = GER
-				is_subject = no
-			}
-		}
-		available = {
-			has_war = no
-			custom_trigger_tooltip = {
-				tooltip = "GER_BER_kuozhang"
-				any_state = {
-					or = {
-						is_core_of = ROM
-						is_BA_state = yes
-						is_core_of = HUN
-						is_core_of = BUL
-						is_core_of = GRE
-					}
-					not = {
-						has_state_flag = G_GER
-					}
-					or = {
-						is_controlled_by = GER
-						any_other_country = {
-							NOT = {
-								tag = ROM
-							}
-							is_subject_of = GER
-							controls_state = PREV
-						}
-					}
-				}
-			}
-		}
-		cost = 0
-		days_remove = 0
-		ai_will_do = {
-			factor = 10
-		}
-		remove_effect = {
-			every_state = {
-				limit = {
-					or = {
-						is_core_of = ROM
-						is_BA_state = yes
-						is_core_of = HUN
-						is_core_of = BUL
-						is_core_of = GRE
-					}
-					NOT = {
-						has_state_flag = G_GER
-					}
-					or = {
-						is_controlled_by = GER
-						any_other_country = {
-							NOT = {
-								tag = ROM
-							}
-							is_subject_of = GER
-							controls_state = PREV
-						}
-					}
-				}
-				add_core_of = ROM
-				ROM = {
-					transfer_state = PREV
-				}
-			}
-		}
-	}
-	GER_north_amercian_war = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-			has_completed_focus = GER_generic_10
-		}
-		target_trigger = {
-			FROM = {
-				any_controlled_state = {
-					is_on_continent = north_america
-				}
-				NOT = {
-					is_in_faction_with = ROOT
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		cost = 10
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			setup_decision_attack_AI = yes
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = take_state
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-	}
-}
-
-GER_special_tank = {
-	GER_special_light_tank = {
-		icon = GFX_decision_category_ger_military_buildup
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-		}
-		cost = 200
-		days_remove = 150
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			add_tech_bonus = {
-				bonus = 0.5
-				ahead_reduction = 0.5
-				uses = 1
-				category = cat_light_armor
-			}
-		}
-	}
-	GER_special_middle_tank = {
-		icon = GFX_decision_category_ger_military_buildup
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-		}
-		cost = 200
-		days_remove = 150
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			add_tech_bonus = {
-				bonus = 0.5
-				ahead_reduction = 0.5
-				uses = 1
-				category = cat_medium_armor
-			}
-		}
-	}
-	GER_special_magic_tank = {
-		icon = GFX_decision_category_ger_military_buildup
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-		}
-		cost = 200
-		days_remove = 150
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			add_tech_bonus = {
-				bonus = 0.5
-				ahead_reduction = 0.5
-				uses = 1
-				category = amphibious_armor_tech
-			}
-		}
-	}
-	GER_special_heavy_tank = {
-		icon = GFX_decision_category_ger_military_buildup
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-		}
-		cost = 200
-		days_remove = 150
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			add_tech_bonus = {
-				bonus = 0.5
-				ahead_reduction = 0.5
-				uses = 1
-				category = cat_heavy_armor
-			}
-		}
-	}
-	GER_special_super_heavy_tank = {
-		icon = GFX_decision_category_ger_military_buildup
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-		}
-		cost = 200
-		days_remove = 150
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			add_tech_bonus = {
-				bonus = 0.5
-				ahead_reduction = 0.5
-				uses = 1
-				category = cat_super_heavy_armor
-			}
-		}
-	}
-	GER_special_super_modern_tank = {
-		icon = GFX_decision_category_ger_military_buildup
-		allowed = {
-		}
-		visible = {
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-		}
-		cost = 200
-		days_remove = 150
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			add_tech_bonus = {
-				bonus = 0.5
-				ahead_reduction = 0.5
-				uses = 1
-				category = cat_modern_armor
-			}
-		}
-	}
-	##改进超重型坦克
-	GER_refine_super_heavy_armor = {
-		icon = GFX_science_decision
-		allowed = {
-		}
-		visible = {
-			has_completed_focus = GER_Behemoth_of_War
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-			has_tech = super_heavy_tank_chassis
-		}
-		cost = 200
-		days_remove = 150
-		fire_only_once = yes
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			country_event = {
-				id = ah_germany.127
-			}
-		}
-	}
-	##改进陆地巡洋舰
-	GER_refine_land_cruiser = {
-		icon = GFX_science_decision
-		allowed = {
-		}
-		visible = {
-			has_completed_focus = GER_Behemoth_of_War
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-			is_special_project_completed = sp:sp_land_land_cruiser
-		}
-		cost = 200
-		days_remove = 150
-		fire_only_once = yes
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			country_event = {
-				id = ah_germany.128
-			}
-		}
-	}
-	##改进核弹
-	GER_refine_nuclear = {
-		icon = GFX_science_decision
-		allowed = {
-		}
-		visible = {
-			has_completed_focus = GER_Behemoth_of_War
-		}
-		available = {
-			not = {
-				has_country_flag = GER_special_tank_on
-			}
-			is_special_project_completed = sp:sp_nuclear_bomb
-		}
-		cost = 200
-		days_remove = 150
-		fire_only_once = yes
-		ai_will_do = {
-			factor = 1
-		}
-		complete_effect = {
-			set_country_flag = GER_special_tank_on
-		}
-		remove_effect = {
-			clr_country_flag = GER_special_tank_on
-			set_country_flag = GER_refine_nuclear
-            custom_effect_tooltip = RAJ_bathe_in_hellfire_desc_tt
-		}
-	}
-}
-
+##重建神圣罗马帝国
 GER_unit_HRR = {
 	GER_build_empire_HRR = {
 		icon = GFX_decision_generic_monarchy
@@ -4569,7 +4345,8 @@ GER_unit_HRR = {
 	}
 }
 
-news_event_SOV_attack_GER = {
+##苏德冲突
+Soviet_German_conflict = {
 	SOV_Operation_Thunderstorm = {
 		icon = GFX_decision_category_SOV_civil_puppet_interaction
 		available = {
@@ -4731,6 +4508,7 @@ news_event_SOV_attack_GER = {
 	}
 }
 
+##恢复欧洲君主制
 GER_reich_Diplomacy_decisions = {
 	GER_Restoration_of_fra_monarchy = {
 		icon = GFX_decision_generic_monarchy
@@ -5089,141 +4867,7 @@ GER_reich_Diplomacy_decisions = {
 	}
 }
 
-GER_faction_expand = {
-	GER_invite_Chinese_country = {
-		available = {
-			has_global_flag = CHI_REUNIT
-			FROM = {
-				not = { is_in_faction_with = ROOT }
-				is_subject = no
-			}
-			not = {
-				has_war_with = FROM
-			}
-			not = {
-				any_allied_country = {
-					has_war_with = FROM
-				}
-			}
-		}
-		target_trigger = {
-			FROM = {
-				is_chinese_country = yes
-				not = {
-					has_country_flag = GER_has_already_invited
-				}
-				has_country_flag = Participate_in_the_competition_for_China_reunification
-				or = {
-					has_government = fascism
-					has_government = neutrality
-				}
-			}
-			ROOT = {
-				is_faction_leader = yes
-				is_subject = no
-			}
-		}
-		cost = 10
-		days_remove = 10
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				any_country = {
-					or = {
-						is_in_faction_with = ROOT
-						tag = GER
-					}
-					FROM = {
-						or = {
-							any_allied_country = {
-								is_neighbor_of = PREV.PREV
-							}
-							is_neighbor_of = PREV
-						}
-					}
-				}
-				add = 30
-			}
-		}
-		remove_effect = {
-			FROM = {
-				set_country_flag = GER_has_already_invited
-				country_event = {
-					id = ah_germany.89
-				}
-			}
-		}
-	}
-	GER_invite_other_country = {
-		available = {
-			FROM = {
-				not = {
-					is_in_faction_with = ROOT
-				}
-				is_subject = no
-				or = {
-					has_government = fascism
-					has_government = neutrality
-				}
-			}
-			not = {
-				has_war_with = FROM
-			}
-			not = {
-				any_allied_country = {
-					has_war_with = FROM
-				}
-			}
-		}
-		target_trigger = {
-			FROM = {
-				or = {
-					tag = JAP
-					tag = RJE
-					tag = UKR
-				}
-				not = {
-					has_country_flag = GER_has_already_invited
-				}
-			}
-			ROOT = {
-				is_faction_leader = yes
-				is_subject = no
-			}
-		}
-		cost = 10
-		days_remove = 10
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				any_country = {
-					or = {
-						is_in_faction_with = ROOT
-						tag = GER
-					}
-					FROM = {
-						or = {
-							any_allied_country = {
-								is_neighbor_of = PREV.PREV
-							}
-							is_neighbor_of = PREV
-						}
-					}
-				}
-				add = 30
-			}
-		}
-		remove_effect = {
-			FROM = {
-				set_country_flag = GER_has_already_invited
-				country_event = {
-					id = ah_germany.89
-				}
-			}
-		}
-	}
-}
-
+##重生之眼
 GER_Eye_of_Rebirth_Project = {
 	GER_Blood_Summoning_Ritual = {
 		icon = GFX_decision_generic_intelligence_operation
@@ -5364,236 +5008,9 @@ GER_Eye_of_Rebirth_Project = {
 			factor = 1
 		}
 	}
-	GER_Eye_of_Rebirth_Project_attack_ENG = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-		}
-		target_trigger = {
-			FROM = {
-				controls_state = 126
-				NOT = {
-					or = {
-						has_war_with = ROOT
-						is_in_faction_with = ROOT
-						is_subject_of = ROOT
-					}
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		available = {
-			has_completed_focus = GER_The_Spirit_of_the_Grail
-			has_war = no
-			is_subject = no
-		}
-		cost = 0
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-			setup_decision_attack_AI = yes
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = annex_everything
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-		ai_will_do = {
-			base = 1000
-			modifier = {
-				any_home_area_neighbor_country = {
-					has_war_with = ROOT
-				}
-				factor = 0
-			}
-			modifier = {
-				FROM = {
-					is_stronger_than_ROOT_and_not_vulnerable = yes
-				}
-				factor = 0
-			}
-		}
-	}
-	GER_Eye_of_Rebirth_Project_attack_FRA = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-		}
-		target_trigger = {
-			FROM = {
-				controls_state = 16
-				NOT = {
-					or = {
-						has_war_with = ROOT
-						is_in_faction_with = ROOT
-						is_subject_of = ROOT
-					}
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		available = {
-			has_completed_focus = GER_The_Underworld_of_Fantasy_Town
-			has_war = no
-			is_subject = no
-		}
-		cost = 0
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-			setup_decision_attack_AI = yes
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = annex_everything
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-		ai_will_do = {
-			base = 1000
-			modifier = {
-				any_home_area_neighbor_country = {
-					has_war_with = ROOT
-				}
-				factor = 0
-			}
-			modifier = {
-				FROM = {
-					is_stronger_than_ROOT_and_not_vulnerable = yes
-				}
-				factor = 0
-			}
-		}
-	}
-	GER_Eye_of_Rebirth_Project_attack_POL = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-		}
-		target_trigger = {
-			FROM = {
-				controls_state = 10
-				NOT = {
-					or = {
-						has_war_with = ROOT
-						is_in_faction_with = ROOT
-						is_subject_of = ROOT
-					}
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		available = {
-			has_completed_focus = GER_The_land_of_the_dead_obsessed
-			has_war = no
-			is_subject = no
-		}
-		cost = 0
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-			setup_decision_attack_AI = yes
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = annex_everything
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-		ai_will_do = {
-			base = 1000
-			modifier = {
-				any_home_area_neighbor_country = {
-					has_war_with = ROOT
-				}
-				factor = 0
-			}
-			modifier = {
-				FROM = {
-					is_stronger_than_ROOT_and_not_vulnerable = yes
-				}
-				factor = 0
-			}
-		}
-	}
-	GER_Eye_of_Rebirth_Project_attack_SOV = {
-		icon = GFX_decision_generic_ignite_civil_war
-		visible = {
-		}
-		target_trigger = {
-			FROM = {
-				controls_state = 219
-				NOT = {
-					or = {
-						has_war_with = ROOT
-						is_in_faction_with = ROOT
-						is_subject_of = ROOT
-					}
-				}
-			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		available = {
-			has_completed_focus = GER_Russian_magic
-			has_war = no
-			is_subject = no
-		}
-		cost = 0
-		days_remove = 30
-		war_with_target_on_remove = yes
-		complete_effect = {
-			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
-			setup_decision_attack_AI = yes
-		}
-		remove_effect = {
-			clear_decision_attack_AI = yes
-			declare_war_on = {
-				target = FROM
-				type = annex_everything
-			}
-		}
-		cancel_effect = {
-			clear_decision_attack_AI = yes
-		}
-		ai_will_do = {
-			base = 1000
-			modifier = {
-				any_home_area_neighbor_country = {
-					has_war_with = ROOT
-				}
-				factor = 0
-			}
-			modifier = {
-				FROM = {
-					is_stronger_than_ROOT_and_not_vulnerable = yes
-				}
-				factor = 0
-			}
-		}
-	}
 }
 
+##欧洲联盟
 GER_European_Union_decision_cate = {
 	###解放[FROM.Getname]
 	FRA_liberate_FROM = {
@@ -5926,40 +5343,278 @@ GER_European_Union_decision_cate = {
 	}
 }
 
-GER_European_Union_decision_cate2 = {
-	EU_target_decision_CORE = {
-		icon = generic_nationalism
-		target_trigger = {
-			FROM = {
-				NOT = {
-					is_core_of = ROOT
-				}
-				is_on_continent = europe
-			}
-			ROOT = {
-				has_cosmetic_tag = EUR_UNIFIED
+##黑日计划
+GER_black_sun_plan = {
+}
+
+##特别研究部门
+GER_special_tank = {
+	GER_special_light_tank = {
+		icon = GFX_decision_category_ger_military_buildup
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
 			}
 		}
-		state_target = yes
-		on_map_mode = map_and_decisions_view
-		target_array = controlled_states
-		cost = 50
-		days_remove = 100
+		cost = 200
+		days_remove = 150
 		ai_will_do = {
-			factor = 100
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
 		}
 		remove_effect = {
-			FROM = {
-				add_core_of_ROOT = yes
+			clr_country_flag = GER_special_tank_on
+			add_tech_bonus = {
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_light_armor
 			}
+		}
+	}
+	GER_special_middle_tank = {
+		icon = GFX_decision_category_ger_military_buildup
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
+			}
+		}
+		cost = 200
+		days_remove = 150
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
+		}
+		remove_effect = {
+			clr_country_flag = GER_special_tank_on
+			add_tech_bonus = {
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_medium_armor
+			}
+		}
+	}
+	GER_special_magic_tank = {
+		icon = GFX_decision_category_ger_military_buildup
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
+			}
+		}
+		cost = 200
+		days_remove = 150
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
+		}
+		remove_effect = {
+			clr_country_flag = GER_special_tank_on
+			add_tech_bonus = {
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = magic_tank
+			}
+		}
+	}
+	GER_special_heavy_tank = {
+		icon = GFX_decision_category_ger_military_buildup
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
+			}
+		}
+		cost = 200
+		days_remove = 150
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
+		}
+		remove_effect = {
+			clr_country_flag = GER_special_tank_on
+			add_tech_bonus = {
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_heavy_armor
+			}
+		}
+	}
+	GER_special_super_heavy_tank = {
+		icon = GFX_decision_category_ger_military_buildup
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
+			}
+		}
+		cost = 200
+		days_remove = 150
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
+		}
+		remove_effect = {
+			clr_country_flag = GER_special_tank_on
+			add_tech_bonus = {
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_super_heavy_armor
+			}
+		}
+	}
+	GER_special_super_modern_tank = {
+		icon = GFX_decision_category_ger_military_buildup
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
+			}
+		}
+		cost = 200
+		days_remove = 150
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
+		}
+		remove_effect = {
+			clr_country_flag = GER_special_tank_on
+			add_tech_bonus = {
+				bonus = 0.5
+				ahead_reduction = 0.5
+				uses = 1
+				category = cat_modern_armor
+			}
+		}
+	}
+	##改进超重型坦克
+	GER_refine_super_heavy_armor = {
+		icon = GFX_science_decision
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = GER_Behemoth_of_War
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
+			}
+			has_tech = super_heavy_tank_chassis
+		}
+		cost = 200
+		days_remove = 150
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
+		}
+		remove_effect = {
+			clr_country_flag = GER_special_tank_on
+			country_event = {
+				id = ah_germany.127
+			}
+		}
+	}
+	##改进陆地巡洋舰
+	GER_refine_land_cruiser = {
+		icon = GFX_science_decision
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = GER_Behemoth_of_War
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
+			}
+			is_special_project_completed = sp:sp_land_land_cruiser
+		}
+		cost = 200
+		days_remove = 150
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
+		}
+		remove_effect = {
+			clr_country_flag = GER_special_tank_on
+			country_event = {
+				id = ah_germany.128
+			}
+		}
+	}
+	##改进核弹
+	GER_refine_nuclear = {
+		icon = GFX_science_decision
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = GER_Behemoth_of_War
+		}
+		available = {
+			not = {
+				has_country_flag = GER_special_tank_on
+			}
+			is_special_project_completed = sp:sp_nuclear_bomb
+		}
+		cost = 200
+		days_remove = 150
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = GER_special_tank_on
+		}
+		remove_effect = {
+			clr_country_flag = GER_special_tank_on
+			set_country_flag = GER_refine_nuclear
+            custom_effect_tooltip = RAJ_bathe_in_hellfire_desc_tt
 		}
 	}
 }
 
-GER_black_sun_plan = {
-
-}
-
+##统一德意志
 Build_germany_decision_cate = {
 	Build_germany_decision = {
 		allowed = {
@@ -6061,6 +5716,7 @@ Build_germany_decision_cate = {
 	}
 }
 
+##多瑙河冲突
 GER_Danube_Conflict = {
 	GER_ATTACK_HUN = {
 		icon = GFX_decision_generic_intelligence_operation
@@ -6167,6 +5823,85 @@ GER_Danube_Conflict = {
 	}
 }
 
+##监狱中的元首
+Caught_xier = {
+	anfu_xier = {
+		icon = GFX_decision_ger_mefo_bills
+		visible = {
+		}
+		cost = 25
+		ai_will_do = {
+			base = 10
+		}
+		available = {
+			NOT = {
+				has_country_flag = xier_PRISON_RUNNING
+			}
+		}
+		modifier = {
+			civilian_factory_use = 10
+		}
+		days_remove = 30
+		complete_effect = {
+			set_country_flag = xier_PRISON_RUNNING
+		}
+		remove_effect = {
+			country_event = {
+				id = austria.09
+			}
+		}
+	}
+	xingxun_xier = {
+		icon = GFX_decision_generic_civil_support
+		visible = {
+		}
+		cost = 25
+		fire_only_once = yes
+		ai_will_do = {
+			base = 50
+		}
+		available = {
+			NOT = {
+				has_country_flag = xier_PRISON_RUNNING
+			}
+		}
+		days_remove = 1
+		complete_effect = {
+			set_country_flag = xier_PRISON_RUNNING
+		}
+		remove_effect = {
+			country_event = {
+				id = austria.11
+			}
+		}
+	}
+	xinao_xier = {
+		icon = GFX_decision_generic_research
+		visible = {
+		}
+		cost = 25
+		ai_will_do = {
+			base = 100
+		}
+		available = {
+			has_tech = magic_weapons2
+			NOT = {
+				has_country_flag = xier_PRISON_RUNNING
+			}
+		}
+		days_remove = 30
+		complete_effect = {
+			set_country_flag = xier_PRISON_RUNNING
+		}
+		remove_effect = {
+			country_event = {
+				id = austria.14
+			}
+		}
+	}
+}
+
+##调试决议
 GER_debug = {
 	GER_debug_go_back_home = {
 		complete_effect = {
@@ -6187,13 +5922,6 @@ GER_debug = {
 			country_event = {
 				id = austria.15
 			}
-		}
-	}
-	GER_debug_Xier = {
-		available = {
-			has_global_flag = AUS_GER_REBUILD
-		}
-		complete_effect = {
 		}
 	}
 }
