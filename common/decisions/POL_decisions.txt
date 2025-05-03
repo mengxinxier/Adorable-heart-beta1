@@ -576,10 +576,8 @@ Project_East_Wall = {
 				NOT = {  has_government = fascism }
 				is_faction_leader = yes
 			}
-			if = {
-				limit = { has_government = communism }
-				FROM = { has_government = communism }
-			}
+			is_subject = no
+			is_in_faction = no
 		}
 		target_trigger = {
 			FROM = {
@@ -2169,6 +2167,7 @@ POL_civil_war_resolution_category = {
 					}
 					POL_remove_all_head_of_government = yes
 					set_country_flag = POL_yuri_head_of_government
+					complete_national_focus = POL_common_obsession
 				}
 				else = {
 					set_politics = {
@@ -2382,6 +2381,252 @@ POL_white_guard_united_front_category = {
 		cost = 10
 		complete_effect = {
 			FROM = { country_event = { id = POL_roy.012 days = 3 } }
+		}
+	}
+}
+
+POL_establishing_a_socialist_republic_category = {
+	POL_transforming_old_morality = {
+		icon = GFX_decision_generic_speech
+		priority = 9
+		visible = {
+			has_completed_focus = POL_eradicating_the_old_culture
+		}
+		cost = 50
+		modifier = {
+			political_power_cost = 0.05
+		}
+		days_remove = 180
+		fire_only_once = yes
+		remove_effect = {
+			set_country_flag = POL_transforming_old_morality_finish
+			unlock_decision_tooltip = POL_transforming_old_art
+		}
+	}
+
+	POL_transforming_old_art = {
+		icon = GFX_decision_hol_radio_oranje
+		priority = 8
+		visible = {
+			has_country_flag = POL_transforming_old_morality_finish
+		}
+		cost = 50
+		modifier = {
+			political_power_cost = 0.1
+		}
+		days_remove = 120
+		fire_only_once = yes
+		remove_effect = {
+			set_country_flag = POL_transforming_old_art_finish
+			unlock_decision_tooltip = POL_purging_the_old_bureaucrats
+		}
+	}
+
+	POL_purging_the_old_bureaucrats = {
+		icon = GFX_decision_generic_arrest
+		priority = 7
+		visible = {
+			has_country_flag = POL_transforming_old_art_finish
+		}
+		cost = 50
+		modifier = {
+			political_power_cost = 0.5
+			stability_weekly = -0.05
+		}
+		days_remove = 90
+		fire_only_once = yes
+		remove_effect = {
+			add_ideas = POL_revolutionary_pioneer_art
+		}
+	}
+	
+	POL_carrying_out_land_reform_in_the_western_region = {
+		icon = GFX_decision_POL_looming_peasants_strike
+		priority = 6
+		visible = {
+			has_completed_focus = POL_peasant_communization
+		}
+		cost = 100
+		modifier = {
+			production_speed_buildings_factor = -0.10
+		}
+		days_remove = 90
+		fire_only_once = yes
+		remove_effect = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 776
+						state = 86
+						state = 87
+						state = 98
+						state = 777
+					}
+				}
+				add_dynamic_modifier = {
+					modifier = POL_land_revolution_finish
+				}
+			}
+		}
+	}
+
+	POL_carrying_out_land_reform_in_the_central_region = {
+		icon = GFX_decision_POL_looming_peasants_strike
+		priority = 5
+		visible = {
+			has_completed_focus = POL_peasant_communization
+		}
+		cost = 100
+		modifier = {
+			production_speed_buildings_factor = -0.10
+		}
+		days_remove = 90
+		fire_only_once = yes
+		remove_effect = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 97
+						state = 1088
+						state = 89
+						state = 91
+						state = 88
+						state = 90
+						state = 92
+						state = 1182
+					}
+				}
+				add_dynamic_modifier = {
+					modifier = POL_land_revolution_finish
+				}
+			}
+		}
+	}
+
+	POL_carrying_out_land_reform_in_the_eastern_region = {
+		icon = GFX_decision_POL_looming_peasants_strike
+		priority = 4
+		visible = {
+			has_completed_focus = POL_peasant_communization
+		}
+		cost = 100
+		modifier = {
+			production_speed_buildings_factor = -0.10
+		}
+		days_remove = 90
+		fire_only_once = yes
+		remove_effect = {
+			every_owned_state = {
+				limit = {
+					OR = {
+						state = 96
+						state = 94
+						state = 204
+						state = 95
+						state = 792
+						state = 997
+						state = 93
+					}
+				}
+				add_dynamic_modifier = {
+					modifier = POL_land_revolution_finish
+				}
+			}
+		}
+	}
+
+	POL_introducing_aircraft_technology = {
+		icon = GFX_decision_generic_merge_plant_aircraft
+		priority = 3
+		visible = {
+			has_completed_focus = POL_accelerating_arms_building
+			is_in_faction_with = SOV
+		}
+		available = {
+			is_in_faction_with = SOV
+		}
+		cost = 10
+		days_remove = 30
+		fire_only_once = yes
+		remove_effect = {
+			add_breakthrough_points = {
+				specialization = specialization_air
+				value = 1
+			}
+			add_tech_bonus = {
+				name = POL_introducing_aircraft_technology
+				category = light_air
+				ahead_reduction = 1.0
+				bonus = 0.5
+				uses = 1.0
+			}
+		}
+	}
+
+	POL_learning_armor_technology = {
+		icon = GFX_decision_generic_merge_plant_tank
+		priority = 2
+		visible = {
+			has_completed_focus = POL_accelerating_arms_building
+			is_in_faction_with = SOV
+		}
+		available = {
+			is_in_faction_with = SOV
+		}
+		cost = 10
+		days_remove = 30
+		fire_only_once = yes
+		remove_effect = {
+			add_breakthrough_points = {
+				specialization = specialization_land
+				value = 1
+			}
+			add_tech_bonus = {
+				name = POL_learning_armor_technology
+				category = armor
+				ahead_reduction = 1.0
+				bonus = 0.5
+				uses = 1.0
+			}
+		}
+	}
+}
+
+operations = {
+	POL_special_military_operation = {
+		is_good = no
+		icon = GFX_decision_revolt
+		allowed = {
+			always = no
+		}
+		activation = {
+			always = no
+		}
+		available = {
+			has_war = no
+		}
+		cancel_trigger = {
+			BAL = {
+				OR = {
+					is_in_faction = yes
+					is_subject = yes
+				}
+			}
+		}
+		days_mission_timeout = 90
+		cancel_effect = {
+			add_political_power = -100
+			add_war_support = -0.10
+			POL = {
+				white_peace = BAL
+			}
+		}
+		timeout_effect = {
+			add_political_power = -100
+			add_war_support = -0.10
+			POL = {
+				white_peace = BAL
+			}
 		}
 	}
 }
