@@ -2740,11 +2740,23 @@ focus_tree = {
 		}
 		search_filters = { FOCUS_FILTER_RESEARCH }
 		completion_reward = {
+			air_experience = 15
+			army_experience = 15
 			add_tech_bonus = {
-				name = POL_industrial_plan
+				name = POL_joint_air_ground_exercise
 				bonus = 0.5
 				uses = 1
-				category = industry
+				category = air_equipment
+			}
+			add_tech_bonus = {
+				name = POL_joint_air_ground_exercise
+				bonus = 0.5
+				uses = 1
+				category = support_tech
+			}
+			swap_ideas = {
+				remove_idea = POL_pilot_training
+				add_idea = POL_pilot_training2
 			}
 		}
 	}
@@ -3408,7 +3420,7 @@ focus_tree = {
 		icon = GFX_focus_NOR_restore_public_trust_in_the_storting
 		x = 0
 		y = 1
-		cost = 4
+		cost = 2
 		relative_position_id = POL_bicameral_system
 		prerequisite = {
 			focus = POL_bicameral_system
@@ -3425,10 +3437,42 @@ focus_tree = {
 		cancelable = no
 		select_effect = {
 			country_event = polish.028
+			clr_country_flag = POL_cohesion_effective
+			set_country_flag = POL_stop_check_cohesiveness
 		}
 		completion_reward = {
 			effect_tooltip = {
 				country_event = polish.028
+			}
+			custom_effect_tooltip = POL_Euclywood_decision_tt
+
+			if = {
+				limit = { has_template = "Union Infantry Brigade" }
+				set_division_template_lock = {
+					division_template = "Union Infantry Brigade"
+					is_locked = no
+				}
+			}
+			if = {
+				limit = { has_template = "Union Knight Brigade" }
+				set_division_template_lock = {
+					division_template = "Union Knight Brigade"
+					is_locked = no
+				}
+			}
+			if = {
+				limit = { has_template = "Union Knight Regiment" }
+				set_division_template_lock = {
+					division_template = "Union Knight Regiment"
+					is_locked = no
+				}
+			}
+			if = {
+				limit = { has_template = "Armored Mixed Brigade" }
+				set_division_template_lock = {
+					division_template = "Armored Mixed Brigade"
+					is_locked = no
+				}
 			}
 		}
 	}
@@ -3993,18 +4037,6 @@ focus_tree = {
 		available = {
 			is_subject = no
 			is_in_faction = no
-			any_occupied_country = {
-				OR = {
-					tag = SWE
-					tag = BAL
-					tag = ROM
-				}
-				is_in_faction = no
-				NOT = {
-					has_government = communism
-					has_government = fascism
-				}
-			}
 		}
 		completion_reward = {
 			create_faction = "海间联邦"
@@ -4056,7 +4088,7 @@ focus_tree = {
 			create_faction = "卡西米尔联邦"
 			if = {
 				limit = { BAL = { is_in_faction = no } }
-				BAL = { country_event = polish.037 }
+				BAL = { country_event = polish.056 }
 			}
 		}
 	}
@@ -4129,11 +4161,24 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			10 = {
-				add_building_construction = {
-					type = land_facility
-					level = 1
-					province = 3544
+			if = {
+				limit = {
+					any_owned_state = {
+						land_facility > 0
+					}
+				}
+				add_breakthrough_points = {
+					specialization = specialization_land
+					value = 1
+				}
+			}
+			else = {
+				10 = {
+					add_building_construction = {
+						type = land_facility
+						level = 1
+						province = 3544
+					}
 				}
 			}
 		}
@@ -4156,6 +4201,7 @@ focus_tree = {
 			has_capitulated = yes
 			has_war_with = DVL
 		}
+		available_if_capitulated = yes
 		completion_reward = {
 			every_owned_state = {
 				limit = {
@@ -4164,7 +4210,6 @@ focus_tree = {
 				add_dynamic_modifier = {
 					modifier = POL_SSS_organization_moment
 					days = 720
-					scope = DVL
 				}
 			}
 		}
@@ -4187,6 +4232,7 @@ focus_tree = {
 			has_capitulated = yes
 			has_war_with = DVL
 		}
+		available_if_capitulated = yes
 		completion_reward = {
 			every_owned_state = {
 				limit = {
@@ -4195,7 +4241,6 @@ focus_tree = {
 				add_dynamic_modifier = {
 					modifier = POL_underground_networks_moment
 					days = 720
-					scope = DVL
 				}
 			}
 		}
@@ -4419,33 +4464,28 @@ focus_tree = {
 		completion_reward = {
 			every_state = {
 				limit = {
-					OR = {
-						state = 209
-						state = 210
-						state = 755
-						state = 192
-						state = 198
-						state = 199
-						state = 201
-						state = 202
-						state = 203
-						state = 197
-						state = 226
-						state = 777
-						state = 5
-						state = 11
-						state = 12
-						state = 13
-						state = 188
-						state = 189
-						state = 190
-						state = 191
-						state = 842
-						state = 880
-					}
+					is_great_poland_state = yes
+					is_Minsk_region = no
+					is_baltic_state = no
+					is_east_Prussia_region = no
 				}
 				add_claim_by = ROOT
-				enable_state_integration_80_tooltip = yes
+			}
+			every_other_country = {
+				limit = {
+					any_owned_state = {
+						is_great_poland_state = yes
+					}
+				}
+				custom_effect_tooltip = POL_declare_homeland_tt
+				hidden_effect = {
+					ROOT = {
+						add_collaboration = {
+							target = PREV
+							value = 0.20
+						}
+					}
+				}
 			}
 		}
 	}
@@ -4491,34 +4531,14 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			every_state = {
+			every_other_country = {
 				limit = {
-					OR = {
-						state = 209
-						state = 210
-						state = 755
-						state = 192
-						state = 198
-						state = 199
-						state = 201
-						state = 202
-						state = 203
-						state = 197
-						state = 226
-						state = 777
-						state = 5
-						state = 11
-						state = 12
-						state = 13
-						state = 188
-						state = 189
-						state = 190
-						state = 191
-						state = 842
-						state = 880
+					any_owned_state = {
+						is_great_poland_state = yes
 					}
 				}
-				controller = {
+				custom_effect_tooltip = POL_go_to_war_tt
+				hidden_effect = {
 					ROOT = {
 						create_wargoal = {
 							target = PREV
@@ -4756,6 +4776,13 @@ focus_tree = {
 				}
 				POL_obtain_medium_scale_troops_support_effect = yes
 				POL_obtain_support_for_medium_weapons = yes
+				random_owned_controlled_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+					}
+				}
 			}
 		}
 	}
@@ -4837,6 +4864,13 @@ focus_tree = {
 					popularity = 0.10
 				}
 				add_ideas = POL_political_commitment_focus
+				random_owned_controlled_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+					}
+				}
 			}
 		}
 	}
@@ -4895,6 +4929,13 @@ focus_tree = {
 				}
 				POL_obtain_medium_scale_troops_support_effect = yes
 				POL_obtain_support_for_medium_weapons = yes
+				random_owned_controlled_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+					}
+				}
 			}
 			
 		}
@@ -4970,6 +5011,13 @@ focus_tree = {
 				}
 				POL_obtain_medium_scale_troops_support_effect = yes
 				POL_obtain_support_for_medium_weapons = yes
+				random_owned_controlled_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+					}
+				}
 			}
 			
 		}
@@ -5001,6 +5049,13 @@ focus_tree = {
 				}
 				POL_obtain_large_scale_troops_support_effect = yes
 				POL_obtain_support_for_large_weapons = yes
+				random_owned_controlled_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+					}
+				}
 			}
 			
 			if = {
@@ -5042,10 +5097,17 @@ focus_tree = {
 		completion_reward = {
 			hidden_effect = { POL_focus_counter_effect = yes }
 			every_other_country  = {
-					limit = {
-						original_tag = POL
-						has_country_flag = POL_orthodox_organization_flag
+				limit = {
+					original_tag = POL
+					has_country_flag = POL_orthodox_organization_flag
+				}
+				random_owned_controlled_state = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
 					}
+				}
 				10 = {
 					add_building_construction = {
 						type = bunker
@@ -5234,7 +5296,7 @@ focus_tree = {
 				ideology = neutrality
 				popularity = 0.30
 			}
-			add_political_power = 50
+			add_political_power = 150
 			set_power_balance = {
 				id = POL_battle_between_king_and_minister_balance
 				set_value = 0
@@ -6183,15 +6245,10 @@ focus_tree = {
 		completion_reward = {
 			every_state = {
 				limit = {
-					OR = {
-						state = 63
-						state = 68
-						state = 66
-						state = 67
-					}
+					is_Silesia_state = yes
 				}
 				add_claim_by = ROOT
-				enable_state_integration_50_tooltip = yes
+				enable_state_integration_50_compliance = yes
 				OWNER = {
 					country_event = { id = POL_roy.014 days = 3 }
 				}
@@ -6225,6 +6282,16 @@ focus_tree = {
 		}
 		will_lead_to_war_with = TSA
 		completion_reward = {
+			every_state = {
+				limit = {
+					is_great_poland_state = yes
+					is_Minsk_region = no
+					is_baltic_state = no
+					is_east_Prussia_region = no
+				}
+				add_claim_by = ROOT
+				enable_state_integration_80_compliance = yes
+			}
 			declare_war_on = {
 				target = TSA
 				type = puppet_wargoal_focus
@@ -6256,6 +6323,7 @@ focus_tree = {
 			factor = 10
 		}
 		completion_reward = {
+			add_political_power = 150
 			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
@@ -6272,6 +6340,13 @@ focus_tree = {
 		cost = 5
 		ai_will_do = {
 			factor = 10
+		}
+		bypass = {
+			hidden_trigger = {
+				any_character = {
+					has_character_flag = POL_Culoverde_family_character
+				}
+			}
 		}
 		completion_reward = {
 			every_possible_country = {
@@ -6460,12 +6535,32 @@ focus_tree = {
 		}
 		completion_reward = {
 			effect_tooltip = {
-				every_character = {
-					limit = { has_character_flag = POL_reliable_communist_character }
-					set_nationality = ROOT
+				if = {
+					limit = { country_exists = SOV }
+					every_character = {
+						limit = { has_character_flag = POL_reliable_communist_character }
+						set_nationality = SOV
+					}
+				}
+				else = {
+					every_character = {
+						limit = { has_character_flag = POL_reliable_communist_character }
+						retire = yes
+					}
 				}
 			}
-			country_event = { id = POL_roy.017 days = 3 }
+			hidden_effect = {
+				if = {
+					limit = { country_exists = SOV }
+					SOV = { country_event = { id = POL_roy.017 days = 3 } }
+				}
+				else = {
+					every_character = {
+						limit = { has_character_flag = POL_reliable_communist_character }
+						set_nationality = AHM
+					}
+				}
+			}
 		}
 	}
 									
@@ -6602,7 +6697,7 @@ focus_tree = {
 							state = 202
 						}
 					}
-					enable_state_integration_50_tooltip = yes
+					enable_state_integration_50_compliance = yes
 				}
 			}
 		}
@@ -6895,9 +6990,11 @@ focus_tree = {
 			factor = 1
 		}
 		bypass = {
-			NOT = { country_exists = TSA }
-			has_war_with = TSA
-			TSA = { is_ally_with = ROOT }
+			OR = {
+				NOT = { country_exists = TSA }
+				has_war_with = TSA
+				TSA = { is_ally_with = ROOT }
+			}
 		}
 		available = {
 			is_subject = no
@@ -6925,66 +7022,29 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
-			owns_state = 842
-			owns_state = 202
+			842 = {
+				owns_or_subject_of = yes
+			}
+			202 = {
+				owns_or_subject_of = yes
+			}
 		}
 		completion_reward = {
 			every_state = {
 				limit = {
-					OR = {
-						state = 209
-						state = 210
-						state = 755
-						state = 192
-						state = 198
-						state = 199
-						state = 201
-						state = 203
-						state = 197
-						state = 226
-						state = 777
-						state = 5
-						state = 11
-						state = 12
-						state = 13
-						state = 188
-						state = 189
-						state = 190
-						state = 191
-						state = 880
-					}
+					is_Polish_Lithuanian_state = yes
+					is_Minsk_region = no
+					is_baltic_state = no
+					is_east_Prussia_region = no
+					is_Silesia_state = no
 				}
 				add_claim_by = ROOT
-				enable_state_integration_80_tooltip = yes
+				enable_state_integration_80_compliance = yes
 			}
 			every_subject_country = {
 				every_owned_state = {
 					limit = {
-						OR = {
-							state = 209
-							state = 210
-							state = 755
-							state = 192
-							state = 198
-							state = 199
-							state = 201
-							state = 202
-							state = 203
-							state = 197
-							state = 226
-							state = 777
-							state = 5
-							state = 11
-							state = 12
-							state = 13
-							state = 188
-							state = 189
-							state = 190
-							state = 191
-							state = 842
-							state = 880
-						}
-						
+						is_Polish_Lithuanian_state = yes
 					}
 					transfer_state_to = ROOT
 				}
@@ -7006,9 +7066,11 @@ focus_tree = {
 			factor = 1
 		}
 		bypass = {
-			NOT = { country_exists = ROM }
-			has_war_with = ROM
-			ROM = { is_ally_with = ROOT }
+			OR = {
+				NOT = { country_exists = ROM }
+				has_war_with = ROM
+				ROM = { is_ally_with = ROOT }
+			}
 		}
 		available = {
 			is_subject = no
@@ -7042,33 +7104,28 @@ focus_tree = {
 		completion_reward = {
 			every_state = {
 				limit = {
-					OR = {
-						state = 63
-						state = 68
-						state = 66
-						state = 67
-					}
+					is_Silesia_state = yes
 				}
 				add_claim_by = ROOT
-				enable_state_integration_50_tooltip = yes
-				OWNER = {
-					ROOT = {
-						create_wargoal = {
-							target = PREV
-							type = take_claimed_state
-						}
+				enable_state_integration_50_compliance = yes
+			}
+			every_other_country = {
+				limit = {
+					any_owned_state = {
+						is_Silesia_state = yes
+					}
+				}
+				ROOT = {
+					create_wargoal = {
+						target = PREV
+						type = take_claimed_state
 					}
 				}
 			}
 			every_subject_country = {
 				every_owned_state = {
 					limit = {
-						OR = {
-							state = 63
-							state = 68
-							state = 66
-							state = 67
-						}
+						is_Silesia_state = yes
 					}
 					transfer_state_to = ROOT
 				}
@@ -7096,7 +7153,16 @@ focus_tree = {
 					owns_state = 267
 					owns_state = 407
 				}
-				is_neighbor_of = ROOT
+				OR = {
+					is_neighbor_of = ROOT
+					any_other_country = {
+						OR = {
+							is_subject_of = ROOT
+							is_in_faction_with = ROOT
+						}
+						is_neighbor_of = PREV
+					}
+				}
 			}
 		}
 		completion_reward = {
@@ -7138,7 +7204,7 @@ focus_tree = {
 			add_country_leader_trait = POL_Eastern_European_hegemon
 			every_owned_state = {
 				limit = { NOT = { is_core_of = ROOT } }
-				add_compliance = 0.3
+				add_compliance = 30
 			}
 		}
 	}
@@ -7166,7 +7232,8 @@ focus_tree = {
 			factor = 100
 		}
 		completion_reward = {
-			
+			add_political_power = 150
+			custom_effect_tooltip = this_focus_triggered_by_events_tt
 		}
 	}
 																									
@@ -7441,7 +7508,7 @@ focus_tree = {
 				}
 			}
 			custom_effect_tooltip = available_industrial_concern
-			show_ideas_tooltip = POL_state_planning_commission
+			show_ideas_tooltip = POL_state_planning_commission_industrial_concern
 		}
 	}
 																																		
@@ -7758,14 +7825,27 @@ focus_tree = {
 			is_in_faction_with = SOV
 		}
 		completion_reward = {
-			10 = {
-				add_building_construction = {
-					type = land_facility
-					level = 1
-					province = 3544
+			if = {
+				limit = {
+					any_owned_state = {
+						land_facility > 0
+					}
+				}
+				add_breakthrough_points = {
+					specialization = specialization_land
+					value = 1
 				}
 			}
-			
+			else = {
+				10 = {
+					add_building_construction = {
+						type = land_facility
+						level = 1
+						province = 3544
+					}
+				}
+			}
+
 			add_tech_bonus = {
 				name = POL_Soviet_industrial_assistance
 				category = industry
@@ -7961,8 +8041,28 @@ focus_tree = {
 				limit = { is_small_poland_state = yes }
 				add_extra_state_shared_building_slots = 2
 				add_building_construction = {
-					type = industrial_complex
+					type = arms_factory
 					level = 2
+				}
+			}
+			if = {
+				limit = {
+					any_owned_state = {
+						nuclear_facility > 0
+					}
+				}
+				add_breakthrough_points = {
+					specialization = specialization_nuclear
+					value = 1
+				}
+			}
+			else = {
+				10 = {
+					add_building_construction = {
+						type = nuclear_facility
+						level = 1
+						province = 3544
+					}
 				}
 			}
 			create_equipment_variant = {

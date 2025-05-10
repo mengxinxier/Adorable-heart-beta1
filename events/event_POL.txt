@@ -18,6 +18,18 @@ add_namespace = POL_sss
 		option = {
 			name = polish.001.a
 			hidden_effect = { country_event = { id = polish.002 days = 3 } }
+			hidden_effect = {
+				every_state = {
+					limit = {
+						OR = {
+							is_Minsk_region = yes
+							is_baltic_state = yes
+							is_east_Prussia_region = yes
+						}
+					}
+					enable_state_integration_50_compliance = yes
+				}
+			}
 		}
 	}
 	
@@ -429,7 +441,8 @@ add_namespace = POL_sss
 		option = {
 			name = polish.021.a
 			add_to_variable = { ubs_load = 100 }
-			add_political_power = 50
+			add_political_power = 80
+			custom_effect_tooltip = RUS_100_ubs_save_cost_tooltip
 		}
 		option = {
 			name = polish.021.b
@@ -476,7 +489,7 @@ add_namespace = POL_sss
 			hidden_effect = {
 				modify_timed_idea = {
 					idea = POL_economic_crisis_idea
-					days = -60
+					days = -90
 				}
 			}
 			if = {
@@ -485,7 +498,7 @@ add_namespace = POL_sss
 				}
 				remove_ideas = POL_lack_of_investment
 			}
-			custom_effect_tooltip = POL_economic_crisis_reduced_by_60_days
+			custom_effect_tooltip = POL_economic_crisis_reduced_by_90_days
 			if = {
 				limit = { FROM = { tag = DEN } }
 				add_tech_bonus = {
@@ -1331,6 +1344,130 @@ add_namespace = POL_sss
 			}
 		}
 	}
+	
+	country_event = {
+		id = polish.056
+		title = polish.056.t
+		desc = polish.056.d
+		is_triggered_only = yes
+		option = {
+			name = polish.056.a
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 0
+					FROM = { has_government = fascism }
+					has_government = communism
+				}
+				modifier = {
+					factor = 0
+					is_in_faction = yes
+				}
+				modifier = {
+					factor = 0
+					is_subject = yes
+				}
+				modifier = {
+					factor = 0.5
+					FROM = { has_government = neutrality }
+					has_government = communism
+				}
+				modifier = {
+					factor = 0.75
+					FROM = { has_government = democratic }
+					has_government = communism
+				}
+			}
+			FROM = { set_country_flag = BAL_allow_the_great_Casimir }
+			hidden_effect = {
+				FROM = {
+					country_event = polish.057
+				}
+				SOV = { country_event = polish.058 }
+			}
+		}
+		option = {
+			name = polish.056.b
+			ai_chance = {
+				base = 1
+			}
+			hidden_effect = {
+				FROM = {
+					country_event = polish.057
+				}
+			}
+		}
+	}
+		
+	country_event = {
+		id = polish.057
+		title = polish.057.t
+		desc = {
+			text = polish.057.d1
+			trigger = { has_country_flag = BAL_allow_the_great_Casimir }
+		}
+		desc = {
+			text = polish.057.d2
+			trigger = { NOT = { has_country_flag = BAL_allow_the_great_Casimir } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = polish.057.a
+			trigger = { has_country_flag = BAL_allow_the_great_Casimir }
+			add_political_power = 25
+			FROM = {
+				every_character = {
+					limit = {
+						NOT = { has_character_flag = BAL_support_revolution }
+					}
+					set_nationality = ROOT
+				}
+			}
+			annex_country = {
+				target = FROM
+				transfer_troops = yes
+			}
+		}
+		option = {
+			name = polish.057.b
+			trigger = { NOT = { has_country_flag = BAL_allow_the_great_Casimir } }
+			create_wargoal = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+	}
+			
+	country_event = {
+		id = polish.058
+		title = polish.058.t
+		desc = polish.058.d
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				BAL = {
+					every_character = {
+						limit = {
+							has_character_flag = BAL_support_revolution
+						}
+						set_nationality = SOV
+					}
+				}
+			}
+		}
+		option = {
+			name = polish.058.a
+			add_political_power = 25
+			effect_tooltip = {
+				every_character = {
+					limit = {
+						has_character_flag = BAL_support_revolution
+					}
+					set_nationality = SOV
+				}
+			}
+		}
+	}
 #新闻
 
 #大博弈-执念
@@ -1715,7 +1852,15 @@ add_namespace = POL_sss
 		is_triggered_only = yes
 		option = {
 			name = pol_game.022.a
-			
+			every_possible_country = {
+				limit = {
+					any_character = { has_character_flag = ETL_shitenikka_character }
+				}
+				every_character = {
+					limit = { has_character_flag = ETL_shitenikka_character }
+					set_nationality = ROOT
+				}
+			}
 		}
 	}
 
@@ -1733,6 +1878,17 @@ add_namespace = POL_sss
 				localization_key = POL_cohesiveness_increase
 				cohesion = 30
 			}
+			ETL = {
+				every_character = {
+					limit = { has_character_flag = POL_Culoverde_family_character }
+					set_nationality = ROOT
+				}
+			}
+			every_state = {
+				limit = { is_Minsk_region = yes }
+				transfer_state_to = ROOT
+			}
+			add_ideas = POL_the_victor_of_the_Great_Game_in_Minsk
 		}
 	}
 
@@ -1791,6 +1947,7 @@ add_namespace = POL_sss
 			name = sov_game.001.a
 			add_political_power = -5
 			hidden_effect = {
+				set_country_flag = SOV_forgotten_cards_start
 				country_event = { id = sov_game.002 days = 1 }
 			}
 		}
@@ -2293,7 +2450,15 @@ add_namespace = POL_sss
 		is_triggered_only = yes
 		option = {
 			name = sov_game.032.a
-			
+			every_possible_country = {
+				limit = {
+					any_character = { has_character_flag = ETL_shitenikka_character }
+				}
+				every_character = {
+					limit = { has_character_flag = ETL_shitenikka_character }
+					set_nationality = ROOT
+				}
+			}
 		}
 	}
 
@@ -2319,6 +2484,41 @@ add_namespace = POL_sss
 			hidden_effect = {
 				country_event = { id = sov_game.035 days = 3 }
 			}
+			SOV_Touya = {
+				add_corps_commander_role = {
+					traits = { order_mahoushojo career_officer }
+					skill = 2
+					attack_skill = 3
+					defense_skill = 1
+					planning_skill = 2
+					logistics_skill = 1
+				}
+			}
+			SOV_Allyall = {
+				add_advisor_role = {
+					advisor = {
+						slot = high_command
+						cost = 200
+						idea_token = SOV_Allyall
+						traits = {
+							Magic_Tactics_3
+						}
+					}
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { SOV_sakura_path_progress_var = 10 }
+				if = {
+					limit = { check_variable = { SOV_sakura_path_progress_var > 100 } }
+					set_variable = { SOV_sakura_path_progress_var = 100 }
+				}
+				SOV_balance_calculation = yes
+			}
+			custom_effect_tooltip = SOV_Sakura_path_up_10_tt
+			hidden_effect = {
+				set_country_flag = SOV_subdue_forgotten_card
+				set_country_flag = SOV_great_game_of_Minsk_pypass
+			}
 		}
 	}
 
@@ -2330,6 +2530,11 @@ add_namespace = POL_sss
 		is_triggered_only = yes
 		option = {
 			name = sov_game.035.a
+			every_state = {
+				limit = { is_Minsk_region = yes }
+				transfer_state_to = ROOT
+			}
+			add_ideas = POL_the_victor_of_the_Great_Game_in_Minsk
 		}
 	}
 
@@ -2355,6 +2560,15 @@ add_namespace = POL_sss
 		is_triggered_only = yes
 		option = {
 			name = sov_game.037.a
+			hidden_effect = {
+				add_to_variable = { SOV_sakura_path_progress_var = -40 }
+				clamp_variable = { var = SOV_sakura_path_progress_var min = 0 }
+				SOV_balance_calculation = yes
+				set_country_flag = SOV_subdue_forgotten_card
+				set_country_flag = SOV_great_game_of_Minsk_pypass
+				set_country_flag = SOV_FC_minority_win
+			}
+			custom_effect_tooltip = SOV_anti_path_up_40_tt
 		}
 	}
 
