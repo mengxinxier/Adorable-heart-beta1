@@ -1487,7 +1487,7 @@ add_namespace = POL_sss
 
 #大博弈-执念
 
-	#第一幕
+#第一幕
 	#明斯克的异动
 	country_event = {
 		id = pol_game.001
@@ -1947,6 +1947,20 @@ add_namespace = POL_sss
 		is_triggered_only = yes
 		option = {
 			name = pol_game.026.a
+		}
+	}
+	
+	country_event = {
+		id = pol_game.027
+		title = pol_game.027.t
+		desc = pol_game.027.d
+		is_triggered_only = yes
+		option = {
+			name = pol_game.027.a
+			every_possible_country = {
+				limit = { has_character = POL_Riddle }
+				POL_Riddle = { set_nationality = ROOT }
+			}
 		}
 	}
 
@@ -2584,6 +2598,25 @@ add_namespace = POL_sss
 		}
 	}
 
+		
+	country_event = {
+		id = sov_game.038
+		title = sov_game.038.t
+		desc = sov_game.038.d
+		is_triggered_only = yes
+		option = {
+			name = sov_game.038.a
+			set_country_flag = SOV_great_game_of_Minsk_pypass
+			country_event = SOV_pol.3
+			country_event = { id = sov_game.032 days = 3 }
+			set_autonomy = {
+				target = ELT
+				autonomy_state = SOV_member_state
+			}
+			add_ideas = POL_the_victor_of_the_Great_Game_in_Minsk
+		}
+	}
+
 #内战事件
 	country_event = {
 		id = pol_cw.001
@@ -2613,6 +2646,35 @@ add_namespace = POL_sss
 				country_event = { id = pol_cw.003 days = 3 random_days = 4 }
 				set_country_flag = POL_cw_unavoidable_flag
 				mark_focus_tree_layout_dirty = yes
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_country_flag  = POL_and_SOV_game_in_Minsk }
+					country_event = { id = pol_game.027 days = 3 }
+					SOV = { country_event = { id = sov_game.038 days = 3 } }
+					POL = {
+						if = {
+							limit = { has_active_mission = POL_and_SOV_the_first_round_of_the_game }
+							remove_mission = POL_and_SOV_the_first_round_of_the_game
+						}
+						if = {
+							limit = { has_active_mission = POL_and_SOV_the_second_round_of_the_game }
+							remove_mission = POL_and_SOV_the_second_round_of_the_game
+						}
+						clr_country_flag = POL_and_SOV_game_in_Minsk
+					}
+					SOV = {
+						if = {
+							limit = { has_active_mission = SOV_and_POL_the_first_round_of_the_game }
+							remove_mission = SOV_and_POL_the_first_round_of_the_game
+						}
+						if = {
+							limit = { has_active_mission = SOV_and_POL_the_second_round_of_the_game }
+							remove_mission = SOV_and_POL_the_second_round_of_the_game
+						}
+						clr_country_flag = POL_and_SOV_game_in_Minsk
+					}
+				}
 			}
 		}
 		option = {
@@ -3829,16 +3891,20 @@ add_namespace = POL_sss
 			name = POL_roy.009.a
 			add_political_power = 15
 			add_to_faction = FROM
-			FROM = {
-				country_event = POL_roy.010
+			hidden_effect = {
+				FROM = {
+					country_event = POL_roy.010
+				}
 			}
 		}
 		option = {
 			name = POL_roy.009.b
 			ai_chance = { base = 0 }
 			add_political_power = -50
-			FROM = {
-				country_event = POL_roy.010
+			hidden_effect = {
+				FROM = {
+					country_event = POL_roy.010
+				}
 			}
 		}
 	}
@@ -3922,7 +3988,7 @@ add_namespace = POL_sss
 			add_political_power = 15
 			FROM = {
 				add_to_faction = ROOT
-				country_event = POL_roy.013
+				hidden_effect = { country_event = POL_roy.013 }
 			}
 		}
 		option = {
@@ -3930,9 +3996,7 @@ add_namespace = POL_sss
 			ai_chance = {
 				base = 5
 			}
-			FROM = {
-				country_event = POL_roy.013
-			}
+			hidden_effect = { FROM = { country_event = POL_roy.013 } }
 		}
 	}
 
@@ -3983,24 +4047,35 @@ add_namespace = POL_sss
 				modifier = {
 					factor = 0
 					is_subject = yes
+					NOT = { is_subject_of = ROOT }
 				}
 			}
 			add_political_power = -100
 			add_stability = -0.10
+			set_country_flag = POL_get_Silesia_from_us
 			FROM = {
 				transfer_state = 63
 				transfer_state = 68
 				transfer_state = 66
 				transfer_state = 67
+				hidden_effect = {
+					country_event = POL_roy.015
+				}
 			}
 		}
 		option = {
 			name = POL_roy.014.b
 			ai_chance = {
 				base = 8
+				modifier = {
+					factor = 0
+					is_subject_of = ROOT
+				}
 			}
-			FROM = {
-				country_event = POL_roy.015
+			hidden_effect = {
+				FROM = {
+					country_event = POL_roy.015
+				}
 			}
 		}
 	}
@@ -4009,29 +4084,29 @@ add_namespace = POL_sss
 		id = POL_roy.015
 		title = {
 			text = POL_roy.015.ta
-			trigger = { is_in_faction_with = FROM }
+			trigger = { FROM = { has_country_flag = POL_get_Silesia_from_us } }
 		}
 		title = {
 			text = POL_roy.015.tb
-			trigger = { NOT = { is_in_faction_with = FROM } }
+			trigger = { NOT = { FROM = { has_country_flag = POL_get_Silesia_from_us } } }
 		}
 		desc = {
 			text = POL_roy.015.da
-			trigger = { is_in_faction_with = FROM }
+			trigger = { FROM = { has_country_flag = POL_get_Silesia_from_us } }
 		}
 		desc = {
 			text = POL_roy.015.db
-			trigger = { NOT = { is_in_faction_with = FROM } }
+			trigger = { NOT = { FROM = { has_country_flag = POL_get_Silesia_from_us } } }
 		}
 		is_triggered_only = yes
 		option = {
 			name = POL_roy.015.a
-			trigger = { is_in_faction_with = FROM }
+			trigger = { FROM = { has_country_flag = POL_get_Silesia_from_us } }
 			add_political_power = 25
 		}
 		option = {
 			name = POL_roy.015.b
-			trigger = { NOT = { is_in_faction_with = FROM } }
+			trigger = { NOT = { FROM = { has_country_flag = POL_get_Silesia_from_us } } }
 			add_political_power = -5
 			create_wargoal = {
 				target = FROM
