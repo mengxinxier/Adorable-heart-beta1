@@ -198,7 +198,7 @@ GER_BACK = {
 	# }
 }
 
-GEU_Improve_political_situation = {
+GER_Improve_political_situation = {
 	custom_effect_tooltip = GEU_Improve_political_situation
 	if = {
 		limit = {
@@ -436,43 +436,6 @@ sheri_faction = {
 				type = annex_everything
 			}
 		}
-	}
-}
-
-GER_economic_recovery_ww = {
-	custom_effect_tooltip = GER_economic_recovery_tt
-	if = {
-		limit = {
-			has_idea = GER_serious_lose_job_1
-		}
-		swap_ideas = {
-			remove_idea = GER_serious_lose_job_1
-			add_idea = GER_serious_lose_job
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = GER_serious_lose_job
-		}
-		swap_ideas = {
-			remove_idea = GER_serious_lose_job
-			add_idea = GER_serious_lose_job_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = GER_serious_lose_job_2
-		}
-		swap_ideas = {
-			remove_idea = GER_serious_lose_job_2
-			add_idea = GER_serious_lose_job_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = GER_serious_lose_job_3
-		}
-		remove_ideas = GER_serious_lose_job_3
 	}
 }
 
@@ -5576,6 +5539,21 @@ GER_improve_economics = {
 	}
 }
 
+###  计算战争热情  ###
+GER_Count_Warzeal = {
+	hidden_effect = {
+		clamp_variable = {
+			var = warzeal_var
+			min = 0
+			max = 100
+		}
+		set_variable = { GER_Warzeal_war_support_factor = warzeal_var }
+		divide_variable = { GER_Warzeal_war_support_factor = 500 }
+		set_variable = { GER_Warzeal_army_attack_factor = GER_Warzeal_war_support_factor }
+		set_variable = { GER_Warzeal_breakthrough_factor = GER_Warzeal_war_support_factor }
+	}
+}
+
 ###  移除所有副领袖  ###
 GER_remove_all_ideas = {
 	hidden_effect = {
@@ -5586,9 +5564,7 @@ GER_remove_all_ideas = {
 			GER_August_von_Mackensen_idea
 			GER_Elaina_idea
 			GER_Violet_Evergarden_idea
-			GER_Vlasov_subjcet_idea
-			GER_Siegfried_subjcet_idea
-			GER_Sakuya_subjcet_idea
+			GER_Jean_Gunnhildr_idea
 			KMS_Tirpitz_idea
 			RHI_Jean_Gunnhildr_idea
 			RHI_Eula_Lawrence_idea
@@ -5613,4 +5589,141 @@ GEU_Rose_International_effect = {
 	set_variable = { global.GEU_Rose_International_leader_production_speed_buildings_factor = global.num_of_Rose_International }
 	divide_variable = { global.GEU_Rose_International_leader_production_speed_buildings_factor = 200 }
 }
+
+###  改进核弹  ###
+GER_bathe_in_hellfire_nuclear = {
+    if = {
+        limit = {
+            has_event_target = nuclear_gandhi_actor_country
+            event_target:nuclear_gandhi_actor_country = {
+                original_tag = GER
+                has_country_flag = GER_refine_nuclear
+            }
+            has_dlc = "Graveyard of Empires"
+        }
+        clear_global_event_target = nuclear_gandhi_actor_country
+        THIS = {
+            set_variable = { t_arms_factory_level = arms_factory_level }
+            if = {
+                limit = {
+                    check_variable = { t_arms_factory_level > 0 }
+                }
+                multiply_variable = { t_arms_factory_level = 0.5 } 
+                round_variable = t_arms_factory_level #highest int is chosen 
+                if = {
+                    limit = {
+                        check_variable = { t_arms_factory_level > 0 }
+                    }
+                    remove_building = {
+                        type =  arms_factory
+                        level = t_arms_factory_level
+                    }
+                }
+            }
+        }
+    }
+}
+
+GER_bathe_in_hellfire_thermonuclear = {
+    if = {
+        limit = {
+            has_event_target = nuclear_gandhi_actor_country
+            event_target:nuclear_gandhi_actor_country = {
+                original_tag = GER
+                has_country_flag = GER_refine_nuclear
+            }
+            has_dlc = "Graveyard of Empires"
+        }
+        clear_global_event_target = nuclear_gandhi_actor_country
+        THIS = {
+            set_variable = { t_arms_factory_level = arms_factory_level }
+            if = {
+                limit = {
+                    check_variable = { t_arms_factory_level > 0 }
+                }
+                multiply_variable = { t_arms_factory_level = 1 } 
+                round_variable = t_arms_factory_level #highest int is chosen 
+                if = {
+                    limit = {
+                        check_variable = { t_arms_factory_level > 0 }
+                    }
+                    remove_building = {
+                        type =  arms_factory
+                        level = t_arms_factory_level
+                    }
+                }
+            }
+        }
+    }
+}
+
+###  成立欧盟  ###
+build_European_Union_effect = {
+	custom_effect_tooltip = FRA_Start_integration_process_tt  ##吞并所有成员国并获得核心\n获得所有欧洲领土的宣称
+	if = {  ##科研槽不足7则+1
+		limit = { amount_research_slots < 7 }
+		add_research_slot = 1
+	}
+	set_cosmetic_tag = EUR_UNIFIED  ##cosmetic tag
+	hidden_effect = {
+		every_country = {  ##吞并所有成员国并获得核心
+			limit = {
+				is_subject_of = ROOT
+				capital_scope = { is_on_continent = europe }
+			}
+			every_core_state = {
+				add_core_of = ROOT
+			}
+			ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+		}
+		for_each_scope_loop = {
+			array = global.GER_European_Union_members_array
+			every_subject_country = {  ##附庸
+				if = {
+					limit = { capital_scope = { is_on_continent = europe } }  ##欧洲国家
+					every_core_state = {
+						add_core_of = ROOT
+					}
+					every_character = { set_nationality = ROOT }
+					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+				}
+				else = {
+					ROOT = { puppet = PREV }  ##非欧洲则附庸
+				}
+			}
+			if = {
+				limit = {
+					not = { tag = ROOT }
+					capital_scope = { is_on_continent = europe }
+				}
+				every_core_state = {
+					add_core_of = ROOT
+				}
+				every_character = { set_nationality = ROOT }
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+			}
+		}
+		every_state = {  ##其他欧洲领土添加宣称与造核
+			limit = {
+				is_on_continent = europe
+				NOT = {
+					or = {
+						is_core_of = ROOT
+						is_claimed_by = ROOT
+					}
+				}
+			}
+			add_claim_by = ROOT
+			enable_state_integration_50_compliance = yes
+		}
+		news_event = {  ##欧盟成立的新闻
+			id = FRA_Gensokyo_news.013
+		}
+		country_event = {  ##新欧洲的首都
+			id = ah_germany.106
+		}
+		clear_array = global.GER_European_Union_members_array
+	}
+}
+
 

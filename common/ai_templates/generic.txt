@@ -1,1330 +1,628 @@
 
 ######################
-#	MOUNTAINEER ROLE
+#	特种部队 role
 ######################
 
-mountaineer_generic = {
-	blocked_for = {
-		SOV DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG CHI PRC GXC YUN SHX XSM SIK MEN MAN
-	}
-	roles = { mountaineer }
-
-	upgrade_prio = {
-		factor = 2
-	}
-
-	match_to_count = 0.45
-
-	mountainer_template = {
-		reinforce_prio = 2
-
+	mountaineer_generic = {
+		blocked_for = {
+			DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG CHI PRC GXC YUN SHX XSM SIK MEN MAN
+		}
+		role = mountaineer
 		upgrade_prio = {
 			factor = 2
 		}
-
-		target_width = 24
-		width_weight = 3
-		column_swap_factor = 0.2
-
-		stat_weights = {
-			0 #-- default_morale
-			1 #-- defense
-			1 #-- breakthrough
-			0 #-- hardness
-			2 #-- soft_attack
-			0 #-- hard_attack
-			0 #-- recon
-			0 #-- entrenchment
-			0 #-- initiative
-			0 #-- casualty_trickleback
-			0  #-- supply_consumption_factor
-			0 #-- supply_consumption
-			0 #-- suppression
-			0 #-- suppression_factor
-			0 #-- experience_loss_factor
-			0 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0 #-- air_attack
-			#-- Common Values
-			1 #-- max_organisation
-			1 #-- max_strength
-			0 #-- maximum_speed
-			0 #-- armor_value
-			0 #-- ap_attack
-			0 #-- reliability
-			0 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			-0.1 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.5
-			match_value = 3000
-
-			regiments = {
-				mountaineers = 12
+		mountainer_template = {
+			reinforce_prio = 2
+			upgrade_prio = {
+				factor = 2
 			}
-
-			support = {
-				artillery = 1
-				engineer = 1
+			target_template = {
+				regiments = {
+					mountaineers = 12
+				}
+				support = {
+					artillery = 1
+					engineer = 1
+				}
 			}
-		}
-
-		allowed_types = {
-			mountaineers
-			engineer
-			artillery
-			logistics_company
-			field_hospital
-			recon
 		}
 	}
 
-}
-
-
-######################
-#	MARINE ROLE
-######################
-
-marine_generic = {
-	blocked_for = {
-		SOV DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG
-	}
-	roles = { marine }
-	upgrade_prio = {
-		factor = 2
-		modifier = {
+	magic_assault_generic = {
+		role = magic_assault
+		upgrade_prio = {
 			factor = 0
-			NOT = { has_tech = marines }
+			modifier = {
+				add = 10
+				has_tech = magic_weapons0
+			}
+		}
+
+		magic_assault_default = {
+			upgrade_prio = {
+				factor = 10
+			}
+			target_template = {
+				regiments = {
+					magic_assault = 9
+				}
+				support = {
+					engineer = 1
+					recon = 1
+					logistics_company = 1
+					anti_air = 1
+					artillery = 1
+				}
+			}
+			replace_at_match = 1.5  # value higher than 1.0 means it will only upgrade/replace when upgrade_prio takes over
+			replace_with = magic_artillery_SOV
+			target_min_match = 0.8
+		}
+
+		magic_artillery_SOV = {
+			upgrade_prio = {
+				factor = 2
+				modifier = {
+					factor = 6
+					has_tech = magic_artillery1
+				}
+				modifier = {
+					factor = 0
+					NOT = { tag = SOV }
+				}
+			}
+			enable = {
+				tag = SOV
+				has_tech = magic_artillery1
+			}
+			target_template = {
+				regiments = {
+					magic_assault = 9
+					magic_artillery = 1
+				}
+				support = {
+					engineer = 1
+					recon = 1
+					anti_air = 1
+					artillery = 1
+					logistics_company = 1
+				}	
+			}
 		}
 	}
-	match_to_count = 0.45
 
-	marine_template = {
-		reinforce_prio = 2
+	magic_artillery_generic = {
+		available_for = {
+			USA
+			FRA
+			DVL
+		}
+		role = magic_artillery
+		upgrade_prio = {
+			factor = 100
+			modifier = {
+				factor = 0
+				NOT = { has_tech = magic_artillery1 }
+			}
+		}
+		magic_artillery_default = {
+			upgrade_prio = {
+				factor = 10
+				modifier = {
+					tag = DVL
+					factor = 100
+				}
+			}
+			target_template = {
+				regiments = {
+					magic_assault = 7
+					magic_artillery = 2
+				}
+				support = {
+					engineer = 1
+					recon = 1
+					anti_air = 1
+					artillery = 1
+					logistics_company = 1
+				}	
+			}
+		}
+	}
 
+	marine_generic = {
+		blocked_for = {
+			DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG
+		}
+		role = marine
 		upgrade_prio = {
 			factor = 2
-		}
-
-		target_width = 18
-		width_weight = 1.0
-		column_swap_factor = 0.1
-
-		stat_weights = {
-			0.00 #-- default_morale
-			0.00 #-- defense
-			1.00 #-- breakthrough
-			0.05 #-- hardness
-			3.00 #-- soft_attack
-			0.01 #-- hard_attack
-			0.00 #-- recon
-			2.20 #-- entrenchment
-			0.00 #-- initiative
-			0.00 #-- casualty_trickleback
-			-0.1 #-- supply_consumption_factor
-			-0.1 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.00 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.00 #-- air_attack
-			#-- Common Values
-			0.60 #-- max_organisation
-			0.40 #-- max_strength
-			0.00 #-- maximum_speed
-			0.05 #-- armor_value
-			0.00 #-- ap_attack
-			0.00 #-- reliability
-			0.00 #-- reliability_factor
-			-0.2 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			-0.1 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.9
-			match_value = 2000
-
-			regiments = {
-				marine = 9
-			}
-
-			support = {
-				artillery = 1
-				engineer = 1
+			modifier = {
+				factor = 0
+				NOT = { has_tech = marines }
 			}
 		}
-
-		allowed_types = {
-			marine
-			artillery
-			engineer
+		marine_template = {
+			reinforce_prio = 2
+			upgrade_prio = {
+				factor = 2
+			}
+			target_template = {
+				regiments = {
+					marine = 9
+				}
+				support = {
+					artillery = 1
+					engineer = 1
+				}
+			}
 		}
 	}
-}
 
+	paratrooper_generic = {
 
-infantry_default = {
-	blocked_for = {
-		SOV DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG CHI PRC GXC YUN SHX XSM SIK MEN MAN
-	}
+		blocked_for = {
+			DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG
+		}
 
-	roles = { infantry }
-
-	upgrade_prio = {
-		factor = 15
-	}
-
-	match_to_count = 0.5
-
-	# For countries with <20 military factories
-	infantry_template_small = {
+		role = paratroopers
+		
 		upgrade_prio = {
-			factor = 40
+			base = 2
+
 			modifier = {
 				factor = 0
-				num_of_military_factories > 19
+				NOT = {
+					has_tech = paratroopers
+				}
 			}
 		}
+		
+		paratrooper_default = {
+		
+			upgrade_prio = {
+				base = 1
 
-		production_prio = {
-			factor = 1
-			modifier = {
-				factor = 0
-				num_of_military_factories > 19
-			}
-		}
-
-		target_width = 18.0
-		width_weight = 1.0
-		column_swap_factor = 0.5
-
-		stat_weights = {
-			0.00 #-- default_morale
-			0.00 #-- defense
-			1.00 #-- breakthrough
-			0.00 #-- hardness
-			4.00 #-- soft_attack
-			0.00 #-- hard_attack
-			0.00 #-- recon
-			1.00 #-- entrenchment
-			0.00 #-- initiative
-			0.00 #-- casualty_trickleback
-			0.00 #-- supply_consumption_factor
-			0.00 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.00 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.00 #-- air_attack
-			#-- Common Values
-			0.60 #-- max_organisation
-			0.40 #-- max_strength
-			0.00 #-- maximum_speed
-			0.00 #-- armor_value
-			0.20 #-- ap_attack
-			0.00 #-- reliability
-			0.00 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			0.00 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.9
-			match_value = 3000.0
-
-			regiments = {
-				infantry = 9
+				modifier = {
+					factor = 1
+				}
 			}
 
-			support = {
-				artillery = 1
+			target_template = {
+				
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_tank = 1
+				}
+				
+				regiments = {
+					paratrooper = 9
+				}
 			}
-		}
-
-		allowed_types = {
-			irregular_infantry
-			infantry
-			engineer
-			recon
-			signal_company
-			field_hospital
-			logistics_company
-			anti_tank
-			military_police
-			artillery
-			anti_air
-			rocket_artillery
-			anti_tank_brigade
-			artillery_brigade
-			rocket_artillery_brigade
 		}
 	}
 
-	# For countries with 20-49 military factories
-	infantry_template_medium = {
+######################
+#	步兵 ROLE
+######################
+
+	infantry_default = {
+		blocked_for = {
+			SOV DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG CHI PRC GXC YUN SHX XSM SIK MEN MAN EGY
+		}
+		role = infantry
 		upgrade_prio = {
-			factor = 40
-			modifier = {
-				factor = 0
+			factor = 15
+		}
+
+		infantry_template_small = {
+			upgrade_prio = {
+				factor = 10
+			}
+			enable = {
 				num_of_military_factories < 20
 			}
+			target_template = {
+				regiments = {
+					infantry = 9
+				}
+				support = {
+					artillery = 1
+				}
+			}
+			replace_at_match = 1.5
+			replace_with = infantry_template_medium
+			target_min_match = 0.9
 		}
-		production_prio = {
-			factor = 1
-			modifier = {
-				factor = 0
-				OR = {
-					num_of_military_factories < 20
+
+		infantry_template_medium = {
+			upgrade_prio = {
+				factor = 8
+				modifier = {
+					factor = 2
+					num_of_military_factories < 50
+				}
+			}
+			enable = {
+				num_of_military_factories < 50
+			}
+			target_template = {
+				regiments = {
+					infantry = 9
+					artillery_brigade = 1
+				}
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_air = 1
+					logistics_company = 1
+				}
+			}
+			replace_at_match = 1.5
+			replace_with = infantry_template_large
+			target_min_match = 0.9
+		}
+
+		infantry_template_large = {
+			upgrade_prio = {
+				factor = 6
+				modifier = {
+					factor = 3
 					num_of_military_factories > 49
 				}
 			}
-		}
-
-		target_width = 21.0
-		width_weight = 1.0
-		column_swap_factor = 0.5
-
-		stat_weights = {
-			0.00 #-- default_morale
-			0.00 #-- defense
-			1.00 #-- breakthrough
-			0.00 #-- hardness
-			4.00 #-- soft_attack
-			0.00 #-- hard_attack
-			0.00 #-- recon
-			1.00 #-- entrenchment
-			0.00 #-- initiative
-			0.00 #-- casualty_trickleback
-			0.00 #-- supply_consumption_factor
-			0.00 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.00 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.00 #-- air_attack
-			#-- Common Values
-			0.60 #-- max_organisation
-			0.40 #-- max_strength
-			0.00 #-- maximum_speed
-			0.00 #-- armor_value
-			0.20 #-- ap_attack
-			0.00 #-- reliability
-			0.00 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			0.00 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.9
-			match_value = 3000.0
-
-			regiments = {
-				infantry = 9
-				artillery_brigade = 1
+			enable = {
+				num_of_military_factories > 49
 			}
-
-			support = {
-				engineer = 1
-				artillery = 1
-				anti_air = 1
-				logistics_company = 1
+			target_template = {
+				regiments = {
+					infantry = 9
+					artillery_brigade = 3
+				}
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_air = 1
+					logistics_company = 1
+					field_hospital = 1
+				}
 			}
-		}
-
-		allowed_types = {
-			irregular_infantry
-			infantry
-			engineer
-			recon
-			signal_company
-			field_hospital
-			logistics_company
-			anti_tank
-			military_police
-			artillery
-			anti_air
-			rocket_artillery
-			anti_tank_brigade
-			artillery_brigade
-			rocket_artillery_brigade
 		}
 	}
 
-	# For countries with 50+ military factories
-	infantry_template_large = {
+	infantry_militia_division = {
+		available_for = {
+			CHI PRC GXC YUN SHX XSM SIK MEN MAN NPT MOR ARF BLA
+		}
+		role = militia
 		upgrade_prio = {
-			factor = 40
-			modifier = {
-				factor = 0
-				num_of_military_factories < 50
+			factor = 20
+		}
+		infantry_militia_division = {
+			upgrade_prio = {
+				factor = 2
 			}
-		}
-		production_prio = {
-			factor = 1
-			modifier = {
-				factor = 0
-				num_of_military_factories < 50
+			target_template = {
+				regiments = {
+					irregular_infantry = 6
+				}
 			}
-		}
-
-		target_width = 27.0
-		width_weight = 1.0
-		column_swap_factor = 0.5
-
-		stat_weights = {
-			0.00 #-- default_morale
-			0.00 #-- defense
-			1.00 #-- breakthrough
-			0.00 #-- hardness
-			4.00 #-- soft_attack
-			0.00 #-- hard_attack
-			0.00 #-- recon
-			1.00 #-- entrenchment
-			0.00 #-- initiative
-			0.00 #-- casualty_trickleback
-			0.00 #-- supply_consumption_factor
-			0.00 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.00 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.00 #-- air_attack
-			#-- Common Values
-			0.60 #-- max_organisation
-			0.40 #-- max_strength
-			0.00 #-- maximum_speed
-			0.00 #-- armor_value
-			0.20 #-- ap_attack
-			0.00 #-- reliability
-			0.00 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			0.00 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.9
-			match_value = 3000.0
-
-			regiments = {
-				infantry = 9
-				artillery_brigade = 3
-			}
-
-			support = {
-				engineer = 1
-				artillery = 1
-				anti_air = 1
-				logistics_company = 1
-				field_hospital = 1
-			}
-		}
-
-		allowed_types = {
-			irregular_infantry
-			infantry
-			engineer
-			recon
-			field_hospital
-			logistics_company
-			maintenance_company
-			anti_air_brigade
-			artillery
-			artillery_brigade
-		}
-	}
-}
-
-
-garrison_default = {
-	blocked_for = {
-		SOV DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG
-	}
-	roles = { garrison }
-
-	upgrade_prio = {
-		factor = 80
-		modifier = {
-			factor = 0
-			ai_has_role_template = garrison
 		}
 	}
 
-	match_to_count = 0.8
-
-	# For countries with <20 military factories
 	garrison_default = {
+		blocked_for = {
+			SOV DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG
+		}
+		role = garrison
 		upgrade_prio = {
-			factor = 2
-		}
-
-		reinforce_prio = 0
-		custom_icon = 7
-
-		target_width = 12.0
-		width_weight = 1.0
-		column_swap_factor = 0.5
-
-		target_template = {
-			weight = 0.9
-			match_value = 3000.0
-
-			regiments = {
-				cavalry = 4
-			}
-
-			support = {
-				military_police = 1
+			factor = 0.5
+			modifier = {
+				factor = 10
+				NOT = { ai_has_role_template = garrison }
 			}
 		}
 
-		allowed_types = {
-			cavalry
-			military_police
+		garrison_default = {
+			upgrade_prio = {
+				factor = 1
+			}
+			reinforce_prio = 0
+			custom_icon = 7
+			target_template = {
+				regiments = {
+					cavalry = 4
+				}
+				support = {
+					military_police = 1
+				}
+			}
 		}
 	}
-}
 
 ######################
-#	ARMOR ROLE
+#	机动装甲 ROLE
 ######################
 
-armour_generic = {
-	blocked_for = {
-		SOV DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG ROM CHI PRC GXC YUN SHX XSM SIK MEN MAN
-	}
-	roles = { armor }
-	upgrade_prio = {
-		factor = 2
-		modifier = {
-			factor = 5
-			OR = {
-				has_tech = basic_medium_tank
-				has_tech = basic_medium_tank_chassis
-			}
+	armor_generic = {
+		blocked_for = {
+			SOV DVL KVO TRY GEH SCH ABY SHJ RED MIL AKK SRT ARI VAL FRA ENG ROM CHI PRC GXC YUN SHX XSM SIK MEN MAN
 		}
-		modifier = {
-			factor = 2
-			OR = {
-				has_tech = main_battle_tank
-				has_tech = main_battle_tank_chassis
-			}
-		}
-	}
-
-	match_to_count = 0.5
-
-	LIGHT_ARMOR_TEMPLATE = {
-		upgrade_prio = {
-			factor = 4
-		}
-
-		production_prio = {
-			factor = 1
-			modifier = {
-				factor = 3
-				num_of_military_factories > 119
-			}
-		}
-
-		can_upgrade_in_field = {
-			has_equipment = { light_tank_chassis < 500 }
-		}
-
-		target_width = 18.0
-		width_weight = 1.0
-		column_swap_factor = 0.1
-		reinforce_prio = 2
-
-		stat_weights = {
-			0.00 #-- default_morale
-			1.10 #-- defense
-			1.10 #-- breakthrough
-			0.60 #-- hardness
-			1.00 #-- soft_attack
-			0.00 #-- hard_attack
-			0.10 #-- recon
-			0.01 #-- entrenchment
-			0.10 #-- initiative
-			0.01 #-- casualty_trickleback
-			-0.05 #-- supply_consumption_factor
-			-0.01 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.01 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.02 #-- air_attack
-			#-- Common Values
-			30.00 #-- max_organisation
-			0.80 #-- max_strength
-			2.0 #-- maximum_speed
-			0.20 #-- armor_value
-			0.05 #-- ap_attack
-			0.10 #-- reliability
-			0.10 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			0.00 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.9
-			match_value = 4000.0
-
-			regiments = {
-				light_armor = 5
-				motorized = 4
-			}
-
-			support = {
-				engineer = 1
-				mot_recon = 1
-				anti_air = 1
-				logistics_company = 1
-				field_hospital = 1
-			}
-		}
-
-		allowed_types = {
-			light_armor
-			motorized
-			mechanized
-			engineer
-			mot_recon
-			anti_air
-			logistics_company
-			field_hospital
-		}
-
-		replace_at_match = 0.4
-		replace_with = MEDIUM_ARMOR_TEMPLATE
-		target_min_match = 0.5
-	}
-
-	HEAVY_ARMOR_TEMPLATE = {
-		upgrade_prio = {
-			factor = 2
-		}
-		production_prio = {
-			factor = 1
-			modifier = {
-				factor = 0
-				num_of_military_factories < 100
-			}
-		}
-
-		target_width = 20.0
-		width_weight = 3.0
-		column_swap_factor = 0.1
-		reinforce_prio = 2
-
-		stat_weights = {
-			0.00 #-- default_morale
-			1.10 #-- defense
-			1.10 #-- breakthrough
-			0.60 #-- hardness
-			2.00 #-- soft_attack
-			0.00 #-- hard_attack
-			0.10 #-- recon
-			0.01 #-- entrenchment
-			0.10 #-- initiative
-			0.01 #-- casualty_trickleback
-			-0.05 #-- supply_consumption_factor
-			-0.01 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.01 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.02 #-- air_attack
-			#-- Common Values
-			10.00 #-- max_organisation
-			0.80 #-- max_strength
-			0.0 #-- maximum_speed
-			0.20 #-- armor_value
-			0.05 #-- ap_attack
-			0.10 #-- reliability
-			0.10 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			0.00 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.5
-			match_value = 1000.0
-
-			regiments = {
-				heavy_armor = 5
-				infantry = 4
-			}
-
-			support = {
-				engineer = 1
-				recon = 1
-				maintenance_company = 1
-				logistics_company = 1
-				field_hospital = 1
-			}
-
-		}
-
-		allowed_types = {
-			heavy_armor
-			light_sp_artillery_brigade
-			light_tank_destroyer_brigade
-			light_sp_anti_air_brigade
-			medium_sp_artillery_brigade
-			medium_tank_destroyer_brigade
-			medium_sp_anti_air_brigade
-			modern_sp_artillery_brigade
-			modern_tank_destroyer_brigade
-			modern_sp_anti_air_brigade
-			infantry
-
-			engineer
-			recon
-			signal_company
-			maintenance_company
-			logistics_company
-
-			anti_tank
-			military_police
-			artillery
-			anti_air
-			rocket_artillery
-		}
-
-		replace_at_match = 0.4
-		replace_with = MODERN_ARMOR_TEMPLATE
-		target_min_match = 0.5
-	}
-
-	MEDIUM_ARMOR_TEMPLATE = {
+		role = armor
 		upgrade_prio = {
 			factor = 2
 			modifier = {
+				factor = 5
+				OR = {
+					has_tech = basic_medium_tank
+					has_tech = basic_medium_tank_chassis
+				}
+			}
+			modifier = {
+				factor = 2
+				OR = {
+					has_tech = main_battle_tank
+					has_tech = main_battle_tank_chassis
+				}
+			}
+		}
+
+		
+		light_armor_template = {
+			upgrade_prio = {
 				factor = 4
-				OR = {
-					has_tech = basic_medium_tank
-					has_tech = basic_medium_tank_chassis
+			}
+			can_upgrade_in_field = {
+				has_equipment = { light_tank_chassis < 500 } 
+			}
+			reinforce_prio = 2
+			target_template = {
+				regiments = {
+					light_armor = 5
+					motorized = 4
+				}
+				support = {
+					engineer = 1
+					mot_recon = 1
+					anti_air = 1
+					logistics_company = 1
+					field_hospital = 1
+				}
+			}
+			replace_at_match = 1.5
+			replace_with = medium_armor_template
+			target_min_match = 0.8
+		}
+
+		medium_armor_template = {
+			upgrade_prio = {
+				factor = 2
+				modifier = {
+					factor = 4
+					OR = {
+						has_tech = basic_medium_tank
+						has_tech = basic_medium_tank_chassis
+					}
+				}
+			}
+			target_template = {
+				regiments = {
+					medium_armor = 6
+					motorized = 6
+				}
+				support = {
+					engineer = 1
+					mot_recon = 1
+					maintenance_company = 1
+					logistics_company = 1
+					field_hospital = 1
+				}
+			}
+			replace_at_match = 1.5
+			replace_with = modern_armor_template
+			target_min_match = 0.5
+		}
+
+		modern_armor_template = {
+			upgrade_prio = {
+				factor = 2
+				modifier = {
+					factor = 5
+					OR = {
+						has_tech = main_battle_tank
+						has_tech = main_battle_tank_chassis
+					}
+				}
+			}
+			target_template = {
+				regiments = {
+					modern_armor = 5
+					mechanized = 4
+				}
+				support = {
+					engineer = 1
+					mot_recon = 1
+					maintenance_company = 1
+					logistics_company = 1
+					field_hospital = 1
+				}
+			}
+		}
+	}
+
+	cavalry_generic = {
+		role = cavalry
+		upgrade_prio = {
+			factor = 1
+		}
+
+		cavalry_default = {
+			upgrade_prio = {
+				factor = 1
+			}
+			target_template = {
+				regiments = {
+					cavalry = 9
+					mot_artillery_brigade = 1
+				}
+
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_air = 1
+					logistics_company = 1
+					field_hospital = 1
 				}
 			}
 		}
 
-		can_upgrade_in_field = {
-			has_equipment = { medium_tank_chassis < 500 }
-		}
-
-		target_width = 24.0
-		width_weight = 1.5
-		column_swap_factor = 0.5
-
-		stat_weights = {
-			0.00 #-- default_morale
-			1.10 #-- defense
-			1.10 #-- breakthrough
-			1.60 #-- hardness
-			1.00 #-- soft_attack
-			2.00 #-- hard_attack
-			0.10 #-- recon
-			0.01 #-- entrenchment
-			0.10 #-- initiative
-			0.01 #-- casualty_trickleback
-			-0.05 #-- supply_consumption_factor
-			-0.01 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.01 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.02 #-- air_attack
-			#-- Common Values
-			50.00 #-- max_organisation
-			0.80 #-- max_strength
-			1.0 #-- maximum_speed
-			10.0 #-- armor_value
-			0.05 #-- ap_attack
-			0.10 #-- reliability
-			0.10 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			0.00 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.9
-			match_value = 7000.0
-
-			regiments = {
-				medium_armor = 6
-				motorized = 6
+		cavalry_POL = {
+			upgrade_prio = {
+				factor = 2
 			}
-
-			support = {
-				engineer = 1
-				mot_recon = 1
-				maintenance_company = 1
-				logistics_company = 1
-				field_hospital = 1
+			enable = {
+				original_tag = POL
 			}
-		}
+			target_template = {
+				regiments = {
+					cavalry = 9
+					artillery_brigade = 1
+				}
 
-		allowed_types = {
-			medium_armor
-			motorized
-			engineer
-			mot_recon
-			maintenance_company
-			logistics_company
-			field_hospital
-		}
-
-		replace_at_match = 0.8
-		replace_with = MODERN_ARMOR_TEMPLATE
-		target_min_match = 0.5
-	}
-
-	MODERN_ARMOR_TEMPLATE = {
-		upgrade_prio = {
-			factor = 2
-		}
-
-		target_width = 18.0
-		width_weight = 2.0
-		column_swap_factor = 0.1
-
-		stat_weights = {
-			0.00 #-- default_morale
-			1.10 #-- defense
-			1.10 #-- breakthrough
-			0.60 #-- hardness
-			2.00 #-- soft_attack
-			0.00 #-- hard_attack
-			0.10 #-- recon
-			0.01 #-- entrenchment
-			0.10 #-- initiative
-			0.01 #-- casualty_trickleback
-			-0.05 #-- supply_consumption_factor
-			-0.01 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.01 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.02 #-- air_attack
-			#-- Common Values
-			50.00 #-- max_organisation
-			0.80 #-- max_strength
-			10.0 #-- maximum_speed
-			0.20 #-- armor_value
-			0.05 #-- ap_attack
-			0.10 #-- reliability
-			0.10 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			0.00 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.9
-			match_value = 9000.0
-
-			regiments = {
-				modern_armor = 5
-				mechanized = 4
-			}
-
-			support = {
-				engineer = 1
-				mot_recon = 1
-				maintenance_company = 1
-				logistics_company = 1
-				field_hospital = 1
-			}
-		}
-
-		allowed_types = {
-			modern_armor
-			mechanized
-			engineer
-			mot_recon
-			maintenance_company
-			logistics_company
-			field_hospital
-		}
-	}
-}
-
-cavalry_generic = {
-
-	roles = { cavalry }
-	upgrade_prio = {
-		factor = 0.5
-		modifier = {
-			factor = 10
-			OR = {
-				tag = TAM
-				tag = SIK
-				tag = MON
-				tag = XSM
-			}
-		}
-	}
-	match_to_count = 0.5
-
-	cavalry_default = {
-		upgrade_prio = {
-			factor = 20
-		}
-
-		target_width = 21.0
-		width_weight = 1.0
-		column_swap_factor = 0.5
-
-		stat_weights = {
-			0.00 #-- default_morale
-			0.00 #-- defense
-			1.00 #-- breakthrough
-			0.00 #-- hardness
-			4.00 #-- soft_attack
-			0.00 #-- hard_attack
-			0.00 #-- recon
-			1.00 #-- entrenchment
-			0.00 #-- initiative
-			0.00 #-- casualty_trickleback
-			0.00 #-- supply_consumption_factor
-			0.00 #-- supply_consumption
-			0.00 #-- suppression
-			0.00 #-- suppression_factor
-			0.00 #-- experience_loss_factor
-			0.00 #-- equipment_capture_factor
-			0.00 #-- fuel_capacity
-			#-- Air Values
-			0.00 #-- air_attack
-			#-- Common Values
-			0.60 #-- max_organisation
-			0.40 #-- max_strength
-			0.00 #-- maximum_speed
-			0.00 #-- armor_value
-			0.20 #-- ap_attack
-			0.00 #-- reliability
-			0.00 #-- reliability_factor
-			0.00 #-- weight
-			0.00 #-- fuel_consumption
-			0.00 #-- fuel_consumption_factor
-			0.00 #-- strat_attack
-			0.00 #-- carrier_size
-			0.00 #-- acc_hot_gain
-			0.00 #-- acc_cold_gain
-			0.00 #-- build_cost_ic
-		}
-
-		target_template = {
-			weight = 0.9
-			match_value = 3000.0
-
-			regiments = {
-				cavalry = 9
-				mot_artillery_brigade = 1
-			}
-
-			support = {
-				engineer = 1
-				artillery = 1
-				anti_air = 1
-				logistics_company = 1
-				field_hospital = 1
-			}
-		}
-
-		allowed_types = {
-			irregular_infantry
-			infantry
-			cavalry
-			engineer
-			recon
-			signal_company
-			field_hospital
-			logistics_company
-			anti_tank
-			military_police
-			artillery
-			anti_air
-			rocket_artillery
-			anti_tank_brigade
-			artillery_brigade
-			rocket_artillery_brigade
-		}
-	}
-}
-
-motorized_generic = {
-
-	roles = { motorized }
-
-	blocked_for = { DEN }
-
-	upgrade_prio = {
-		base = 0
-		modifier = {
-			add = 20
-			has_tech = KEI_AUTO_META_0
-		}
-	}
-	match_to_count = 0.35
-
-	motorized_default = {
-		upgrade_prio = {
-			factor = 20
-		}
-
-		target_width = 30.0
-		width_weight = 1.0
-		column_swap_factor = 0.5
-
-		target_template = {
-			weight = 0.9
-			match_value = 7500.0
-
-			regiments = {
-				KEI_AUTO_META_units = 9
-				artillery_brigade = 4
-			}
-
-			support = {
-				engineer = 1
-				artillery = 1
-				anti_air = 1
-				logistics_company = 1
-			}
-		}
-
-		allowed_types = {
-			KEI_AUTO_META_units
-			artillery_brigade
-
-			engineer
-			artillery
-			anti_air
-			logistics_company
-		}
-	}
-}
-
-armour_AUTO_META = {
-	available_for = {
-		ROM NPT DEN
-	}
-	roles = { armor }
-	upgrade_prio = {
-		factor = 45
-		modifier = {
-			factor = 0
-			NOT = { has_tech = KEI_AUTO_META_0 }
-		}
-	}
-
-	match_to_count = 0.35
-
-	LIGHT_ARMOR_AUTO_META = {
-		upgrade_prio = {
-			factor = 20
-			modifier = {
-				factor = 0
-				OR = {
-					has_tech = basic_medium_tank
-					has_tech = basic_medium_tank_chassis
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_air = 1
+					logistics_company = 1
+					field_hospital = 1
 				}
 			}
 		}
-
-		production_prio = {
-			factor = 20
-		}
-
-		target_width = 24.0
-		width_weight = 2.0
-		column_swap_factor = 0.1
-		reinforce_prio = 2
-
-		target_template = {
-			weight = 0.9
-			match_value = 9000.0
-
-			regiments = {
-				light_armor = 6
-				KEI_AUTO_META_units = 6
-			}
-
-			support = {
-				engineer = 1
-				artillery = 1
-				anti_air = 1
-				anti_tank = 1
-				logistics_company = 1
-			}
-		}
-
-		allowed_types = {
-			light_armor
-			KEI_AUTO_META_units
-
-			engineer
-			artillery
-			anti_air
-			logistics_company
-			anti_tank
-		}
-
-		replace_at_match = 0.4
-		replace_with = MEDIUM_ARMOR_AUTO_META
-		target_min_match = 0.5
 	}
 
-	MEDIUM_ARMOR_AUTO_META = {
-		upgrade_prio = {
-			factor = 20
-		}
-
-		production_prio = {
-			factor = 25
-		}
-
-		target_width = 24.0
-		width_weight = 1.5
-		column_swap_factor = 0.5
-
-		target_template = {
-			weight = 0.9
-			match_value = 9000.0
-
-			regiments = {
-				medium_armor = 6
-				KEI_AUTO_META_units = 8
-			}
-
-			support = {
-				engineer = 1
-				artillery = 1
-				anti_air = 1
-				anti_tank = 1
-				logistics_company = 1
-			}
-		}
-
-		allowed_types = {
-			medium_armor
-			KEI_AUTO_META_units
-
-			engineer
-			artillery
-			anti_air
-			logistics_company
-			anti_tank
-		}
-
-		replace_at_match = 0.8
-		replace_with = MODERN_ARMOR_AUTO_META
-		target_min_match = 0.5
-	}
-
-	MODERN_ARMOR_AUTO_META = {
+	AUTO_META_generic = {
+		role = AUTO_META
 		upgrade_prio = {
 			base = 0
 			modifier = {
-				add = 150
-				has_tech = main_battle_tank
+				add = 10
+				has_tech = KEI_AUTO_META_0
 			}
 		}
 
-		target_width = 24.0
-		width_weight = 2.0
-		column_swap_factor = 0.1
-
-		target_template = {
-			weight = 0.9
-			match_value = 9000.0
-
-			regiments = {
-				modern_armor = 6
-				KEI_AUTO_META_units = 8
+		AUTO_META_default = {
+			upgrade_prio = {
+				factor = 2
 			}
-
-			support = {
-				engineer = 1
-				artillery = 1
-				anti_air = 1
-				anti_tank = 1
-				logistics_company = 1
+			target_template = {
+				regiments = {
+					KEI_AUTO_META_units = 9
+					artillery_brigade = 3
+				}
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_air = 1
+					logistics_company = 1
+				}
 			}
-		}
-
-		allowed_types = {
-			modern_armor
-			KEI_AUTO_META_units
-			engineer
-			artillery
-			anti_air
-			logistics_company
-			anti_tank
 		}
 	}
-}
 
-AUTO_META  = {
-	available_for = {
-		DEN NPT ROM
-	}
-	roles = { AUTO_META }
-	upgrade_prio = {
-		factor = 25
-		modifier = {
+	armour_AUTO_META = {
+		available_for = {
+			ROM DEN
+		}
+		role = armor
+		upgrade_prio = {
 			factor = 0
-			NOT = { has_tech = KEI_AUTO_META_0 }
-		}
-	}
-
-	match_to_count = 0.35
-
-	LIGHT_AUTO_META = {
-		upgrade_prio = {
-			factor = 20
-		}
-
-		production_prio = {
-			factor = 20
-		}
-
-		target_width = 27.0
-		width_weight = 2.0
-		column_swap_factor = 0.1
-		reinforce_prio = 2
-
-		target_template = {
-			weight = 0.9
-			match_value = 9000.0
-
-			regiments = {
-				artillery = 3
-				KEI_AUTO_META_units = 9
-			}
-
-			support = {
-				engineer = 1
-				artillery = 1
-				anti_air = 1
-				anti_tank = 1
-				logistics_company = 1
+			modifier = {
+				factor = 10
+				has_tech = KEI_AUTO_META_0
 			}
 		}
 
-		allowed_types = {
-			artillery
-			KEI_AUTO_META_units
-
-			engineer
-			artillery
-			anti_air
-			logistics_company
-			anti_tank
+		light_armor_AUTO_META = {
+			upgrade_prio = {
+				factor = 4
+			}
+			reinforce_prio = 2
+			target_template = {
+				regiments = {
+					light_armor = 6
+					KEI_AUTO_META_units = 6
+				}
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_air = 1
+					anti_tank = 1
+					logistics_company = 1
+				}
+			}
+			replace_at_match = 1.5
+			replace_with = medium_armor_AUTO_META
+			target_min_match = 0.8
 		}
-	}
-}
 
-infantry_light_division_CHI = {
-	blocked_for = {
-		CHI PRC GXC YUN SHX XSM SIK MEN MAN
-	}
-	roles = {
-		militia
-	}
-	upgrade_prio = {
-		factor = 20
-	}
-	match_to_count = 0.1
-	infantry_small_division_CHI = {
-		upgrade_prio = {
-			factor = 2
+		medium_armor_AUTO_META = {
+			upgrade_prio = {
+				factor = 2
+				modifier = {
+					factor = 4
+					OR = {
+						has_tech = basic_medium_tank
+						has_tech = basic_medium_tank_chassis
+					}
+				}
+			}
+			target_template = {
+				regiments = {
+					medium_armor = 6
+					KEI_AUTO_META_units = 6
+				}
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_air = 1
+					anti_tank = 1
+					logistics_company = 1
+				}
+			}
+			replace_at_match = 1.5
+			replace_with = medium_armor_AUTO_META
+			target_min_match = 0.8
 		}
-		target_width = 12
-		width_weight = 1
-		column_swap_factor = 0.5
-		target_template = {
-			weight = 0.9
-			match_value = 3000
-			regiments = {
-				irregular_infantry = 6
+
+		medium_armor_AUTO_META = {
+			upgrade_prio = {
+				base = 2
+				modifier = {
+					factor = 5
+					OR = {
+						has_tech = main_battle_tank
+						has_tech = main_battle_tank_chassis
+					}
+				}
+			}
+			target_template = {
+				regiments = {
+					modern_armor = 6
+					KEI_AUTO_META_units = 6
+				}
+				support = {
+					engineer = 1
+					artillery = 1
+					anti_air = 1
+					anti_tank = 1
+					logistics_company = 1
+				}
 			}
 		}
-		allowed_types = {
-			irregular_infantry
-		}
 	}
-}
+
+# 最后改动：
+# 1.苏联的特种部队移除，采用通用编制，反正本身也不会训练；
+# 2.自动机编制统一放置在这里，只要拥有自动机科技就能通过AUTO_META的role调用通用编制；
+# 3.把通用的魔法部队编制移动到了这里，只要有魔法科技就能通过magic_assault的role调用编制，当然魔炮仍旧是部分国家专属。
+# 4.虽然自动机编制和魔法部队编制面向全部国家，但通用ai策略并未赋给相关的role，不用担心ai训练这些编制。
