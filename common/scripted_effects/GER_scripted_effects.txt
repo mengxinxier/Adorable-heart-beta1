@@ -5560,6 +5560,7 @@ GER_remove_all_ideas = {
 		remove_ideas = {
 			GER_xier_idea
 			GER_Hiiragi_Utena_idea
+			GER_Araga_Kiwi_idea
 			GER_Auto_Strasser_idea
 			GER_August_von_Mackensen_idea
 			GER_Elaina_idea
@@ -5678,16 +5679,18 @@ build_European_Union_effect = {
 		}
 		for_each_scope_loop = {
 			array = global.GER_European_Union_members_array
-			every_country = {
-				limit = {
-					is_subject_of = PREV
-					capital_scope = { is_on_continent = europe }
+			every_subject_country = {  ##附庸
+				if = {
+					limit = { capital_scope = { is_on_continent = europe } }  ##欧洲国家
+					every_core_state = {
+						add_core_of = ROOT
+					}
+					every_character = { set_nationality = ROOT }
+					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 				}
-				every_core_state = {
-					add_core_of = ROOT
+				else = {
+					ROOT = { puppet = PREV }  ##非欧洲则附庸
 				}
-				every_character = { set_nationality = ROOT }
-				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 			}
 			if = {
 				limit = {
@@ -5723,3 +5726,5 @@ build_European_Union_effect = {
 		clear_array = global.GER_European_Union_members_array
 	}
 }
+
+
