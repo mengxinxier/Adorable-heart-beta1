@@ -6,6 +6,8 @@ add_namespace = poland_news
 add_namespace = pol_game
 add_namespace = sov_game
 add_namespace = pol_cw
+add_namespace = POL_roy
+add_namespace = POL_sss
 
 #普通事件
 	country_event = {
@@ -16,6 +18,18 @@ add_namespace = pol_cw
 		option = {
 			name = polish.001.a
 			hidden_effect = { country_event = { id = polish.002 days = 3 } }
+			hidden_effect = {
+				every_state = {
+					limit = {
+						OR = {
+							is_Minsk_region = yes
+							is_baltic_state = yes
+							is_east_Prussia_region = yes
+						}
+					}
+					enable_state_integration_50_compliance = yes
+				}
+			}
 		}
 	}
 	
@@ -201,7 +215,7 @@ add_namespace = pol_cw
 			name = polish.012.a
 			FROM = {
 				set_country_flag = POL_success_in_ELT
-				country_event = polish.011 
+				country_event = polish.013 
 			}
 		}
 		option = {
@@ -209,7 +223,7 @@ add_namespace = pol_cw
 			ai_chance = {
 				base = 0
 			}
-			FROM = { country_event = polish.011 }
+			FROM = { country_event = polish.013 }
 		}
 	}
 				
@@ -221,7 +235,7 @@ add_namespace = pol_cw
 			trigger = { has_country_flag = POL_success_in_ELT }
 		}
 		desc = {
-			text = polish.011.d2
+			text = polish.013.d2
 			trigger = { NOT = { has_country_flag = POL_success_in_ELT } }
 		}
 		is_triggered_only = yes
@@ -325,7 +339,6 @@ add_namespace = pol_cw
 			name = polish.016.a
 			complete_national_focus = POL_economic_crisis_strikes
 			add_ideas = POL_lack_of_investment
-			custom_effect_tooltip = decrease_monthly_income_by_20_per
 		}
 	}
 					
@@ -427,7 +440,8 @@ add_namespace = pol_cw
 		option = {
 			name = polish.021.a
 			add_to_variable = { ubs_load = 100 }
-			add_political_power = 50
+			add_political_power = 80
+			custom_effect_tooltip = RUS_100_ubs_save_cost_tooltip
 		}
 		option = {
 			name = polish.021.b
@@ -474,7 +488,7 @@ add_namespace = pol_cw
 			hidden_effect = {
 				modify_timed_idea = {
 					idea = POL_economic_crisis_idea
-					days = -60
+					days = -90
 				}
 			}
 			if = {
@@ -483,7 +497,7 @@ add_namespace = pol_cw
 				}
 				remove_ideas = POL_lack_of_investment
 			}
-			custom_effect_tooltip = POL_economic_crisis_reduced_by_60_days
+			custom_effect_tooltip = POL_economic_crisis_reduced_by_90_days
 			if = {
 				limit = { FROM = { tag = DEN } }
 				add_tech_bonus = {
@@ -618,12 +632,32 @@ add_namespace = pol_cw
 		is_triggered_only = yes
 		option = {
 			name = polish.028.a
+			ai_chance = {
+				base = 999
+				modifier = {
+					factor = 0
+					has_game_rule = {
+						rule = AH_POL_ai_behavior_SELECTION
+						option = POL_GAME_RULE_1
+					}
+				}
+			}
 			hidden_effect = {
 				country_event = { id = polish.029 days = 3 }
 			}
 		}
 		option = {
 			name = polish.028.b
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 0
+					has_game_rule = {
+						rule = AH_POL_ai_behavior_SELECTION
+						option = POL_GAME_RULE_2
+					}
+				}
+			}
 			hidden_effect = {
 				country_event = { id = polish.031 days = 3 }
 			}
@@ -797,7 +831,7 @@ add_namespace = pol_cw
 			}
 		}
 		option = {
-			name = polish.037.a
+			name = polish.037.b
 			ai_chance = {
 				base = 4
 				modifier = {
@@ -1214,11 +1248,265 @@ add_namespace = pol_cw
 			name = polish.051.a
 		}
 	}
+
+	country_event = {
+		id = polish.054
+		title = polish.054.t
+		desc = polish.054.d
+		is_triggered_only = yes
+		option = {
+			name = polish.054.a
+			ai_chance = {
+				base = 4
+			}
+			set_variable = { POL_support = 1 }
+			hidden_effect = {
+				FROM = {
+					country_event = polish.055
+				}
+			}
+		}
+		option = {
+			name = polish.054.b
+			ai_chance = {
+				base = 4
+			}
+			set_variable = { POL_support = 2 }
+			hidden_effect = {
+				FROM = {
+					country_event = polish.055
+				}
+			}
+		}
+		option = {
+			name = polish.054.c
+			ai_chance = {
+				base = 2
+			}
+			set_variable = { POL_support = 0 }
+			hidden_effect = {
+				FROM = {
+					country_event = polish.055
+				}
+			}
+		}
+	}
+
+	country_event = {
+		id = polish.055
+		title = {
+			text = polish.055.ta
+			trigger = { check_variable = { FROM.POL_support = 1 } }
+		}
+		title = {
+			text = polish.055.tb
+			trigger = { check_variable = { FROM.POL_support = 2 } }
+		}
+		title = {
+			text = polish.055.tc
+			trigger = { check_variable = { FROM.POL_support = 0 } }
+		}
+		desc = {
+			text = polish.055.da
+			trigger = { check_variable = { FROM.POL_support = 1 } }
+		}
+		desc = {
+			text = polish.055.db
+			trigger = { check_variable = { FROM.POL_support = 2 } }
+		}
+		desc = {
+			text = polish.055.dc
+			trigger = { NOT = { is_in_faction_with = FROM } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = polish.055.a
+			trigger = { check_variable = { FROM.POL_support = 1 } }
+			random_owned_controlled_state = {
+				limit = { is_small_poland_state = yes }
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+		}
+		option = {
+			name = polish.055.b
+			trigger = { check_variable = { FROM.POL_support = 2 } }
+			add_tech_bonus = {
+				name = polish.055.tb
+				category = industry
+				bonus = 0.5
+				uses = 1.0
+			}
+		}
+		option = {
+			name = polish.055.c
+			trigger = { check_variable = { FROM.POL_support = 0 } }
+			add_political_power = -5
+			if = {
+				limit = {
+					FROM = { tag = ENG }
+				}
+				set_country_flag = POL_support_rejected_in_ENG
+			}
+			if = {
+				limit = {
+					FROM = { tag = FRA }
+				}
+				set_country_flag = POL_support_rejected_in_FRA
+			}
+		}
+	}
+	
+	country_event = {
+		id = polish.056
+		title = polish.056.t
+		desc = polish.056.d
+		is_triggered_only = yes
+		option = {
+			name = polish.056.a
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 0
+					FROM = { has_government = fascism }
+					has_government = communism
+				}
+				modifier = {
+					factor = 0
+					is_in_faction = yes
+				}
+				modifier = {
+					factor = 0
+					is_subject = yes
+				}
+				modifier = {
+					factor = 0.5
+					FROM = { has_government = neutrality }
+					has_government = communism
+				}
+				modifier = {
+					factor = 0.75
+					FROM = { has_government = democratic }
+					has_government = communism
+				}
+			}
+			FROM = { set_country_flag = BAL_allow_the_great_Casimir }
+			hidden_effect = {
+				FROM = {
+					country_event = polish.057
+				}
+				SOV = { country_event = polish.058 }
+			}
+		}
+		option = {
+			name = polish.056.b
+			ai_chance = {
+				base = 1
+			}
+			hidden_effect = {
+				FROM = {
+					country_event = polish.057
+				}
+			}
+		}
+	}
+		
+	country_event = {
+		id = polish.057
+		title = polish.057.t
+		desc = {
+			text = polish.057.d1
+			trigger = { has_country_flag = BAL_allow_the_great_Casimir }
+		}
+		desc = {
+			text = polish.057.d2
+			trigger = { NOT = { has_country_flag = BAL_allow_the_great_Casimir } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = polish.057.a
+			trigger = { has_country_flag = BAL_allow_the_great_Casimir }
+			add_political_power = 25
+			FROM = {
+				every_character = {
+					limit = {
+						NOT = { has_character_flag = BAL_support_revolution }
+					}
+					set_nationality = ROOT
+				}
+			}
+			annex_country = {
+				target = FROM
+				transfer_troops = yes
+			}
+		}
+		option = {
+			name = polish.057.b
+			trigger = { NOT = { has_country_flag = BAL_allow_the_great_Casimir } }
+			create_wargoal = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+	}
+			
+	country_event = {
+		id = polish.058
+		title = polish.058.t
+		desc = polish.058.d
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				BAL = {
+					every_character = {
+						limit = {
+							has_character_flag = BAL_support_revolution
+						}
+						set_nationality = SOV
+					}
+				}
+			}
+		}
+		option = {
+			name = polish.058.a
+			add_political_power = 25
+			effect_tooltip = {
+				every_character = {
+					limit = {
+						has_character_flag = BAL_support_revolution
+					}
+					set_nationality = SOV
+				}
+			}
+		}
+	}
+				
+	country_event = {
+		id = polish.059
+		title = polish.059.t
+		desc = polish.059.d
+		is_triggered_only = yes
+		option = {
+			name = polish.059.a
+			add_political_power = -25
+			effect_tooltip = {
+				remove_ideas = POL_economic_crisis_idea
+				remove_ideas = POL_lack_of_investment
+			}
+		}
+	}
 #新闻
 
 #大博弈-执念
 
-	#第一幕
+#第一幕
 	#明斯克的异动
 	country_event = {
 		id = pol_game.001
@@ -1598,7 +1886,15 @@ add_namespace = pol_cw
 		is_triggered_only = yes
 		option = {
 			name = pol_game.022.a
-			
+			every_possible_country = {
+				limit = {
+					any_character = { has_character_flag = ETL_shitenikka_character }
+				}
+				every_character = {
+					limit = { has_character_flag = ETL_shitenikka_character }
+					set_nationality = ROOT
+				}
+			}
 		}
 	}
 
@@ -1616,6 +1912,17 @@ add_namespace = pol_cw
 				localization_key = POL_cohesiveness_increase
 				cohesion = 30
 			}
+			ELT = {
+				every_character = {
+					limit = { has_character_flag = POL_Culoverde_family_character }
+					set_nationality = ROOT
+				}
+			}
+			every_state = {
+				limit = { is_Minsk_region = yes }
+				transfer_state_to = ROOT
+			}
+			add_ideas = POL_the_victor_of_the_Great_Game_in_Minsk
 		}
 	}
 
@@ -1661,6 +1968,20 @@ add_namespace = pol_cw
 			name = pol_game.026.a
 		}
 	}
+	
+	country_event = {
+		id = pol_game.027
+		title = pol_game.027.t
+		desc = pol_game.027.d
+		is_triggered_only = yes
+		option = {
+			name = pol_game.027.a
+			every_possible_country = {
+				limit = { has_character = POL_Riddle }
+				POL_Riddle = { set_nationality = ROOT }
+			}
+		}
+	}
 
 #大博弈-苏联
 #第一幕
@@ -1674,6 +1995,7 @@ add_namespace = pol_cw
 			name = sov_game.001.a
 			add_political_power = -5
 			hidden_effect = {
+				set_country_flag = SOV_forgotten_cards_start
 				country_event = { id = sov_game.002 days = 1 }
 			}
 		}
@@ -2176,7 +2498,15 @@ add_namespace = pol_cw
 		is_triggered_only = yes
 		option = {
 			name = sov_game.032.a
-			
+			every_possible_country = {
+				limit = {
+					any_character = { has_character_flag = ETL_shitenikka_character }
+				}
+				every_character = {
+					limit = { has_character_flag = ETL_shitenikka_character }
+					set_nationality = ROOT
+				}
+			}
 		}
 	}
 
@@ -2202,6 +2532,38 @@ add_namespace = pol_cw
 			hidden_effect = {
 				country_event = { id = sov_game.035 days = 3 }
 			}
+			SOV_Touya = {
+				add_corps_commander_role = {
+					traits = { order_mahoushojo career_officer }
+					skill = 2
+					attack_skill = 3
+					defense_skill = 1
+					planning_skill = 2
+					logistics_skill = 1
+				}
+			}
+			SOV_Allyall = {
+				add_advisor_role = {
+					advisor = {
+						slot = high_command
+						cost = 200
+						idea_token = SOV_Allyall
+						traits = {
+							Magic_Tactics_3
+						}
+					}
+				}
+			}
+			hidden_effect = {
+				add_to_variable = { SOV_sakura_path_progress_var = 10 }
+				clamp_variable = { var = SOV_sakura_path_progress_var max = 100  }
+				SOV_balance_calculation = yes
+			}
+			custom_effect_tooltip = SOV_Sakura_path_up_10_tt
+			hidden_effect = {
+				set_country_flag = SOV_subdue_forgotten_card
+				set_country_flag = SOV_great_game_of_Minsk_pypass
+			}
 		}
 	}
 
@@ -2213,6 +2575,11 @@ add_namespace = pol_cw
 		is_triggered_only = yes
 		option = {
 			name = sov_game.035.a
+			every_state = {
+				limit = { is_Minsk_region = yes }
+				transfer_state_to = ROOT
+			}
+			add_ideas = POL_the_victor_of_the_Great_Game_in_Minsk
 		}
 	}
 
@@ -2238,6 +2605,34 @@ add_namespace = pol_cw
 		is_triggered_only = yes
 		option = {
 			name = sov_game.037.a
+			hidden_effect = {
+				add_to_variable = { SOV_sakura_path_progress_var = -40 }
+				clamp_variable = { var = SOV_sakura_path_progress_var min = 0 }
+				SOV_balance_calculation = yes
+				set_country_flag = SOV_subdue_forgotten_card
+				set_country_flag = SOV_great_game_of_Minsk_pypass
+				set_country_flag = SOV_FC_minority_win
+			}
+			custom_effect_tooltip = SOV_anti_path_up_40_tt
+		}
+	}
+
+		
+	country_event = {
+		id = sov_game.038
+		title = sov_game.038.t
+		desc = sov_game.038.d
+		is_triggered_only = yes
+		option = {
+			name = sov_game.038.a
+			set_country_flag = SOV_great_game_of_Minsk_pypass
+			country_event = SOV_pol.3
+			country_event = { id = sov_game.032 days = 3 }
+			set_autonomy = {
+				target = ELT
+				autonomy_state = SOV_member_state
+			}
+			add_ideas = POL_the_victor_of_the_Great_Game_in_Minsk
 		}
 	}
 
@@ -2269,6 +2664,36 @@ add_namespace = pol_cw
 			hidden_effect = {
 				country_event = { id = pol_cw.003 days = 3 random_days = 4 }
 				set_country_flag = POL_cw_unavoidable_flag
+				mark_focus_tree_layout_dirty = yes
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_country_flag  = POL_and_SOV_game_in_Minsk }
+					country_event = { id = pol_game.027 days = 3 }
+					SOV = { country_event = { id = sov_game.038 days = 3 } }
+					POL = {
+						if = {
+							limit = { has_active_mission = POL_and_SOV_the_first_round_of_the_game }
+							remove_mission = POL_and_SOV_the_first_round_of_the_game
+						}
+						if = {
+							limit = { has_active_mission = POL_and_SOV_the_second_round_of_the_game }
+							remove_mission = POL_and_SOV_the_second_round_of_the_game
+						}
+						clr_country_flag = POL_and_SOV_game_in_Minsk
+					}
+					SOV = {
+						if = {
+							limit = { has_active_mission = SOV_and_POL_the_first_round_of_the_game }
+							remove_mission = SOV_and_POL_the_first_round_of_the_game
+						}
+						if = {
+							limit = { has_active_mission = SOV_and_POL_the_second_round_of_the_game }
+							remove_mission = SOV_and_POL_the_second_round_of_the_game
+						}
+						clr_country_flag = POL_and_SOV_game_in_Minsk
+					}
+				}
 			}
 		}
 		option = {
@@ -2391,6 +2816,30 @@ add_namespace = pol_cw
 		is_triggered_only = yes
 		option = {
 			name = pol_cw.009.a
+			ai_chance = { 
+				base = 30 
+				modifier = {
+					factor = 0
+					OR = {
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_6
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_7
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_8
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_9
+						}
+					}
+				}
+			}
 			complete_national_focus = POL_support_the_Royalist_party
 			hidden_effect = {
 				activate_mission = POL_civil_war_is_coming
@@ -2399,6 +2848,30 @@ add_namespace = pol_cw
 		}
 		option = {
 			name = pol_cw.009.b
+			ai_chance = { 
+				base = 30 
+				modifier = {
+					factor = 0
+					OR = {
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_4
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_5
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_8
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_9
+						}
+					}
+				}
+			}
 			complete_national_focus = POL_authorize_Maynar
 			hidden_effect = {
 				activate_mission = POL_civil_war_is_coming
@@ -2407,6 +2880,30 @@ add_namespace = pol_cw
 		}
 		option = {
 			name = pol_cw.009.c
+			ai_chance = { 
+				base = 30 
+				modifier = {
+					factor = 0
+					OR = {
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_4
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_5
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_6
+						}
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = POL_GAME_RULE_7
+						}
+					}
+				}
+			}
 			complete_national_focus = POL_shinda_sekai_sensen
 			hidden_effect = {
 				activate_mission = POL_civil_war_is_coming
@@ -2662,12 +3159,7 @@ add_namespace = pol_cw
 					}
 					every_character = {
 						limit = {
-							OR = {
-								is_character = POL_Allen
-								is_character = POL_Charlotte
-								is_character = POL_Eluka
-								is_character = POL_Mije
-							}
+							has_character_flag = POL_Culoverde_family_character
 						}
 						set_nationality = BAL
 					}
@@ -2749,12 +3241,7 @@ add_namespace = pol_cw
 					}
 					every_character = {
 						limit = {
-							OR = {
-								is_character = POL_Allen
-								is_character = POL_Charlotte
-								is_character = POL_Eluka
-								is_character = POL_Mije
-							}
+							has_character_flag = POL_Culoverde_family_character
 						}
 						set_nationality = BAL
 					}
@@ -2928,6 +3415,19 @@ add_namespace = pol_cw
 			add_war_support = 0.10
 			POL_obtain_medium_scale_troops_support_effect = yes
 			POL_obtain_support_for_medium_weapons = yes
+			if = {
+				limit = {
+					is_ai = yes
+					NOT = {
+						has_game_rule = {
+							rule = AH_POL_ai_behavior_SELECTION
+							option = DEFAULT
+						}
+					}
+				}
+				POL_obtain_medium_scale_troops_support_effect = yes
+				POL_obtain_support_for_medium_weapons = yes
+			}
 		}
 	}
 							
@@ -3249,4 +3749,1103 @@ add_namespace = pol_cw
 		}
 	}
 
+#保皇派
+										
+	country_event = {
+		id = POL_roy.001
+		title = POL_roy.001.t
+		desc = POL_roy.001.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.001.a
+			add_political_power = -5
+		}
+		option = {
+			name = POL_roy.001.b
+			add_political_power = -5
+		}
+	}
+											
+	country_event = {
+		id = POL_roy.002
+		title = POL_roy.002.t
+		desc = POL_roy.002.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.002.a
+			add_political_power = -5
+			add_power_balance_value = {
+				id = POL_battle_between_king_and_minister_balance
+				value = 0.05
+			}
+		}
+	}
+											
+	country_event = {
+		id = POL_roy.003
+		title = POL_roy.003.t
+		desc = POL_roy.003.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.003.a
+			every_character = {
+				limit = { has_character_flag = POL_Culoverde_family_character }
+				set_nationality = FROM
+			}
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = POL_get_Culoverde_family_flag
+					country_event = POL_roy.004
+				}
+			}
+		}
+		option = {
+			name = POL_roy.003.b
+			ai_chance = { base = 0 }
+			add_political_power = -15
+		}
+	}
+										
+	country_event = {
+		id = POL_roy.004
+		title = {
+			text = POL_roy.004.ta
+			trigger = { has_country_flag = POL_get_Culoverde_family_flag }
+		}
+		title = {
+			text = POL_roy.004.tb
+			trigger = { NOT = { has_country_flag = POL_get_Culoverde_family_flag } }
+		}
+		desc = {
+			text = POL_roy.004.da
+			trigger = { has_country_flag = POL_get_Culoverde_family_flag }
+		}
+		desc = {
+			text = POL_roy.004.db
+			trigger = { NOT = { has_country_flag = POL_get_Culoverde_family_flag } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.004.a
+			trigger = { has_country_flag = POL_get_Culoverde_family_flag }
+			effect_tooltip = {
+				every_character = {
+					limit = { has_character_flag = POL_Culoverde_family_character }
+					set_nationality = ROOT
+				}
+			}
+			if = {
+				limit = {
+					has_power_balance = {
+						id = POL_battle_between_king_and_minister_balance
+					}
+				}
+				add_power_balance_value = {
+					id = POL_battle_between_king_and_minister_balance
+					value = -0.05
+				}
+			}
+		}
+		option = {
+			name = POL_roy.004.b
+			trigger = { NOT = { has_country_flag = POL_get_Culoverde_family_flag } }
+			add_political_power = -5
+			if = {
+				limit = {
+					has_power_balance = {
+						id = POL_battle_between_king_and_minister_balance
+					}
+				}
+				add_power_balance_value = {
+					id = POL_battle_between_king_and_minister_balance
+					value = 0.05
+				}
+			}
+		}
+	}
+												
+	country_event = {
+		id = POL_roy.005
+		title = POL_roy.005.t
+		desc = POL_roy.005.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.005.a
+			add_political_power = 5
+			hidden_effect = {
+				FROM = {
+					set_country_flag = POL_imperial_cooperation_flag
+					country_event = POL_roy.006
+				}
+			}
+		}
+		option = {
+			name = POL_roy.005.b
+			ai_chance = { base = 0 }
+			hidden_effect = {
+				FROM = {
+					country_event = POL_roy.006
+				}
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = -0.05
+			}
+		}
+	}
 
+	country_event = {
+		id = POL_roy.006
+		title = {
+			text = POL_roy.006.ta
+			trigger = { has_country_flag = POL_imperial_cooperation_flag }
+		}
+		title = {
+			text = POL_roy.006.tb
+			trigger = { NOT = { has_country_flag = POL_imperial_cooperation_flag } }
+		}
+		desc = {
+			text = POL_roy.006.da
+			trigger = { has_country_flag = POL_imperial_cooperation_flag }
+		}
+		desc = {
+			text = POL_roy.006.db
+			trigger = { NOT = { has_country_flag = POL_imperial_cooperation_flag } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.006.a
+			trigger = { has_country_flag = POL_imperial_cooperation_flag }
+			add_political_power = 100
+			add_ideas = POL_imperial_cooperation
+			add_tech_bonus = {
+				name = POL_imperial_cooperation
+				category = industry
+				bonus = 0.50
+				uses = 1.0
+			}
+			if = {
+				limit = {
+					has_power_balance = {
+						id = POL_battle_between_king_and_minister_balance
+					}
+				}
+				add_power_balance_value = {
+					id = POL_battle_between_king_and_minister_balance
+					value = 0.10
+				}
+			}
+		}
+		option = {
+			name = POL_roy.006.b
+			trigger = { NOT = { has_country_flag = POL_imperial_cooperation_flag } }
+			add_political_power = -75
+			add_war_support = -0.10
+			if = {
+				limit = {
+					has_power_balance = {
+						id = POL_battle_between_king_and_minister_balance
+					}
+				}
+				add_power_balance_value = {
+					id = POL_battle_between_king_and_minister_balance
+					value = -0.50
+				}
+			}
+		}
+	}
+									
+	country_event = {
+		id = POL_roy.007
+		title = POL_roy.007.t
+		desc = POL_roy.007.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.007.a
+			add_political_power = 5
+		}
+	}
+										
+	country_event = {
+		id = POL_roy.008
+		title = POL_roy.008.t
+		desc = POL_roy.008.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.008.a
+			add_political_power = 5
+		}
+	}
+											
+	country_event = {
+		id = POL_roy.009
+		title = POL_roy.009.t
+		desc = POL_roy.009.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.009.a
+			add_political_power = 15
+			add_to_faction = FROM
+			hidden_effect = {
+				FROM = {
+					country_event = POL_roy.010
+				}
+			}
+		}
+		option = {
+			name = POL_roy.009.b
+			ai_chance = { base = 0 }
+			add_political_power = -50
+			hidden_effect = {
+				FROM = {
+					country_event = POL_roy.010
+				}
+			}
+		}
+	}
+
+	country_event = {
+		id = POL_roy.010
+		title = {
+			text = POL_roy.010.ta
+			trigger = { is_in_faction_with = FROM }
+		}
+		title = {
+			text = POL_roy.010.tb
+			trigger = { NOT = { is_in_faction_with = FROM } }
+		}
+		desc = {
+			text = POL_roy.010.da
+			trigger = { is_in_faction_with = FROM }
+		}
+		desc = {
+			text = POL_roy.010.db
+			trigger = { NOT = { is_in_faction_with = FROM } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.010.a
+			trigger = { is_in_faction_with = FROM }
+			add_political_power = 25
+		}
+		option = {
+			name = POL_roy.010.b
+			trigger = { NOT = { is_in_faction_with = FROM } }
+			add_political_power = -75
+			add_stability = -0.10
+		}
+	}
+											
+	country_event = {
+		id = POL_roy.011
+		title = POL_roy.011.t
+		desc = POL_roy.011.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.011.a
+			add_political_power = 15
+			add_ideas = POL_imperial_cooperation_in_DVL
+		}
+	}
+												
+	country_event = {
+		id = POL_roy.012
+		title = POL_roy.012.t
+		desc = POL_roy.012.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.012.a
+			ai_chance = {
+				base = 5
+				modifier = {
+					factor = 0.5
+					has_government = democratic
+				}
+				modifier = {
+					factor = 1.5
+					has_government = fascism
+				}
+				modifier = {
+					factor = 1.5
+					POL = { 
+						strength_ratio = {
+							tag = SOV
+							ratio = 0.75
+						} 
+					}
+				}
+				modifier = {
+					factor = 0
+					tag = TUR
+					SOV = { has_idea = SOV_treaty_of_friendship_S_and_T }
+				}
+			}
+			add_political_power = 15
+			FROM = {
+				add_to_faction = ROOT
+				hidden_effect = { country_event = POL_roy.013 }
+			}
+		}
+		option = {
+			name = POL_roy.012.b
+			ai_chance = {
+				base = 5
+			}
+			hidden_effect = { FROM = { country_event = POL_roy.013 } }
+		}
+	}
+
+	country_event = {
+		id = POL_roy.013
+		title = {
+			text = POL_roy.013.ta
+			trigger = { is_in_faction_with = FROM }
+		}
+		title = {
+			text = POL_roy.013.tb
+			trigger = { NOT = { is_in_faction_with = FROM } }
+		}
+		desc = {
+			text = POL_roy.013.da
+			trigger = { is_in_faction_with = FROM }
+		}
+		desc = {
+			text = POL_roy.013.db
+			trigger = { NOT = { is_in_faction_with = FROM } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.013.a
+			trigger = { is_in_faction_with = FROM }
+			add_political_power = 25
+		}
+		option = {
+			name = POL_roy.013.b
+			trigger = { NOT = { is_in_faction_with = FROM } }
+			add_political_power = -5
+		}
+	}
+													
+	country_event = {
+		id = POL_roy.014
+		title = POL_roy.014.t
+		desc = POL_roy.014.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.014.a
+			ai_chance = {
+				base = 4
+				modifier = {
+					factor = 0
+					is_major = yes
+				}
+				modifier = {
+					factor = 0
+					is_subject = yes
+					NOT = { is_subject_of = FROM }
+				}
+			}
+			add_political_power = -100
+			add_stability = -0.10
+			set_country_flag = POL_get_Silesia_from_us
+			FROM = {
+				transfer_state = 63
+				transfer_state = 68
+				transfer_state = 66
+				transfer_state = 67
+				hidden_effect = {
+					country_event = POL_roy.015
+				}
+			}
+		}
+		option = {
+			name = POL_roy.014.b
+			ai_chance = {
+				base = 6
+				modifier = {
+					factor = 0
+					is_subject_of = FROM
+				}
+			}
+			hidden_effect = {
+				FROM = {
+					country_event = POL_roy.015
+				}
+			}
+		}
+	}
+
+	country_event = {
+		id = POL_roy.015
+		title = {
+			text = POL_roy.015.ta
+			trigger = { FROM = { has_country_flag = POL_get_Silesia_from_us } }
+		}
+		title = {
+			text = POL_roy.015.tb
+			trigger = { NOT = { FROM = { has_country_flag = POL_get_Silesia_from_us } } }
+		}
+		desc = {
+			text = POL_roy.015.da
+			trigger = { FROM = { has_country_flag = POL_get_Silesia_from_us } }
+		}
+		desc = {
+			text = POL_roy.015.db
+			trigger = { NOT = { FROM = { has_country_flag = POL_get_Silesia_from_us } } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.015.a
+			trigger = { FROM = { has_country_flag = POL_get_Silesia_from_us } }
+			add_political_power = 25
+		}
+		option = {
+			name = POL_roy.015.b
+			trigger = { NOT = { FROM = { has_country_flag = POL_get_Silesia_from_us } } }
+			add_political_power = -5
+			create_wargoal = {
+				target = FROM
+				type = take_claimed_state
+			}
+		}
+	}
+	
+	country_event = {
+		id = POL_roy.016
+		title = POL_roy.016.t
+		desc = {
+			text = POL_roy.016.da
+			trigger = { has_country_flag = POL_minister_win }
+		}
+		desc = {
+			text = POL_roy.016.db
+			trigger = { has_country_flag = POL_king_win }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.016.a
+			trigger = { has_country_flag = POL_minister_win }
+			complete_national_focus = POL_iron_fist_chancellor
+		}
+		option = {
+			name = POL_roy.016.b
+			trigger = { has_country_flag = POL_king_win }
+			complete_national_focus = POL_the_only_one
+		}
+	}
+														
+	country_event = {
+		id = POL_roy.017
+		title = POL_roy.017.t
+		desc = POL_roy.017.d
+		is_triggered_only = yes
+		immediate = {
+			hidden_effect = {
+				every_character = {
+					limit = { has_character_flag = POL_reliable_communist_character }
+					set_nationality = SOV
+				}
+			}
+		}
+		option = {
+			name = POL_roy.017.a
+			add_political_power = -5
+			effect_tooltip = {
+				every_character = {
+					limit = { has_character_flag = POL_reliable_communist_character }
+					set_nationality = SOV
+				}
+			}
+			hidden_effect = {
+				SOV = { country_event = POL_roy.018 }
+			}
+		}
+	}
+															
+	country_event = {
+		id = POL_roy.018
+		title = POL_roy.018.t
+		desc = POL_roy.018.d
+		is_triggered_only = yes
+		option = {
+			name = POL_roy.018.a
+			add_political_power = 15
+			every_character = {
+				limit = { has_character_flag = POL_reliable_communist_character }
+				set_nationality = ROOT
+			}
+			
+		}
+	}
+
+#SSS
+															
+	country_event = {
+		id = POL_sss.001
+		title = POL_sss.001.t
+		desc = POL_sss.001.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.001.a
+			add_political_power = 25
+		}
+	}
+
+	country_event = {
+		id = POL_sss.002
+		title = POL_sss.002.t
+		desc = POL_sss.002.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.002.a
+			add_war_support = 0.02
+		}
+	}
+	
+	country_event = {
+		id = POL_sss.003
+		title = POL_sss.003.t
+		desc = POL_sss.003.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.003.a
+			add_popularity = {
+				ideology = communism
+				popularity = 0.02
+			}
+		}
+	}
+		
+	country_event = {
+		id = POL_sss.004
+		title = POL_sss.004.t
+		desc = POL_sss.004.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.004.a
+			add_stability = 0.02
+		}
+	}
+			
+	country_event = {
+		id = POL_sss.005
+		title = POL_sss.005.t
+		desc = POL_sss.005.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.005.a
+			army_experience = 5
+		}
+	}
+				
+	country_event = {
+		id = POL_sss.006
+		title = POL_sss.006.t
+		desc = POL_sss.006.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.006.a
+			add_intel = {
+				target = DVL
+				army_intel = 0.25
+			}
+		}
+	}
+			
+	country_event = {
+		id = POL_sss.007
+		title = POL_sss.007.t
+		desc = POL_sss.007.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.007.a
+			add_popularity = {
+				ideology = communism
+				popularity = 0.02
+			}
+		}
+	}
+				
+	country_event = {
+		id = POL_sss.008
+		title = POL_sss.008.t
+		desc = {
+			text = POL_sss.008.da
+			trigger = { SOV = { NOT = { owns_state = 206 } } }
+		}
+		desc = {
+			text = POL_sss.008.db
+			trigger = { SOV = { owns_state = 206 } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.008.a
+			hidden_effect = {
+				FROM = {
+					country_event = { id = POL_sss.009 days = 3 }
+				}
+			}
+		}
+		option = {
+			name = POL_sss.008.b
+			ai_chance = { base = 0 }
+			hidden_effect = {
+				FROM = {
+					country_event = { id = POL_sss.010 days = 3 }
+				}
+			}
+		}
+	}
+				
+	country_event = {
+		id = POL_sss.009
+		title = POL_sss.009.t
+		desc = {
+			text = POL_sss.009.da
+			trigger = { SOV = { NOT = { owns_state = 206 } } }
+		}
+		desc = {
+			text = POL_sss.009.db
+			trigger = { SOV = { owns_state = 206 } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.009.a
+			FROM = {
+				country_event = { id = POL_sss.011 days = 3 }
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.02
+			}
+		}
+		option = {
+			name = POL_sss.009.b
+			ai_chance = { base = 0 }
+			FROM = {
+				country_event = { id = POL_sss.013 days = 3 }
+			}
+			add_war_support = 0.05
+		}
+	}
+					
+	country_event = {
+		id = POL_sss.010
+		title = POL_sss.010.t
+		desc = POL_sss.010.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.010.a
+			add_political_power = -5
+		}
+	}
+						
+	country_event = {
+		id = POL_sss.011
+		title = POL_sss.011.t
+		desc = POL_sss.011.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.011.a
+			add_political_power = 10
+			if = {
+				limit = { NOT = { owns_state = 206 } }
+				every_state = {
+					limit = { is_Minsk_region = yes }
+					transfer_state_to = ROOT
+				}
+			}
+			POL = {
+				every_core_state = {
+					limit = {
+						is_owned_by = POL
+						is_claimed_by = ROOT
+					}
+					remove_claim_by = ROOT
+				}
+			}
+			hidden_effect = {
+				FROM = { country_event = { id = POL_sss.012 days = 3 } }
+			}
+
+		}
+	}
+							
+	country_event = {
+		id = POL_sss.012
+		title = POL_sss.012.t
+		desc = POL_sss.012.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.012.a
+			random_controlled_state = {
+				limit = {
+					OR = {
+						state = 96
+						state = 94
+						state = 204
+						state = 95
+						state = 792
+						state = 997
+						state = 93
+					}
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+			}
+			random_controlled_state = {
+				limit = {
+					OR = {
+						state = 96
+						state = 94
+						state = 204
+						state = 95
+						state = 792
+						state = 997
+						state = 93
+					}
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+			}
+			random_controlled_state = {
+				limit = {
+					OR = {
+						state = 96
+						state = 94
+						state = 204
+						state = 95
+						state = 792
+						state = 997
+						state = 93
+					}
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+			}
+		}
+	}
+								
+	country_event = {
+		id = POL_sss.013
+		title = POL_sss.013.t
+		desc = POL_sss.013.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.013.a
+			add_political_power = -5
+			hidden_effect = {
+				FROM = { country_event = { id = POL_sss.010 days = 3 } }
+			}
+		}
+	}
+									
+	country_event = {
+		id = POL_sss.014
+		title = POL_sss.014.t
+		desc = POL_sss.014.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.014.a
+			ai_chance = {
+				base = 10
+				modifier = {
+					add = 5
+					FROM = { has_same_ideology = yes }
+				}
+				modifier = {
+					add = 5
+					strength_ratio = {
+						tag = FROM
+						ratio < 0.5
+					}
+				}
+				modifier = {
+					add = -10
+					FROM = { has_same_ideology = yes }
+				}
+				modifier = {
+					factor = 0
+					has_government = fascism
+				}
+				modifier = {
+					factor = 0
+					is_subject = yes
+				}
+			}
+			hidden_effect = {
+				FROM = {
+					set_country_flag = POL_Riga_agrees_to_the_merge
+					country_event = { id = POL_sss.015 days = 3 }
+				}
+			}
+		}
+		option = {
+			name = POL_sss.014.b
+			ai_chance = {
+				base = 10
+				modifier = {
+					add = 5
+					FROM = { has_same_ideology = yes }
+				}
+				modifier = {
+					add = 20
+					strength_ratio = {
+						tag = FROM
+						ratio > 0.5
+					}
+				}
+				modifier = {
+					factor = 0
+					has_government = fascism
+				}
+				modifier = {
+					factor = 0
+					is_subject = yes
+				}
+			}
+			hidden_effect = {
+				FROM = {
+					set_country_flag = POL_Riga_agrees_to_cooperate
+					country_event = { id = POL_sss.015 days = 3 }
+				}
+			}
+		}
+		option = {
+			name = POL_sss.014.c
+			ai_chance = {
+				base = 10
+				modifier = {
+					add = -5
+					FROM = { has_same_ideology = yes }
+				}
+				modifier = {
+					add = -5
+					strength_ratio = {
+						tag = FROM
+						ratio < 0.5
+					}
+				}
+			}
+			hidden_effect = {
+				country_event = { id = POL_sss.016 days = 3 }
+			}
+		}
+	}
+
+									
+	country_event = {
+		id = POL_sss.015
+		title = POL_sss.015.t
+		desc = {
+			text = POL_sss.015.da
+			trigger = { has_country_flag = POL_Riga_agrees_to_the_merge }
+		}
+		desc = {
+			text = POL_sss.015.db
+			trigger = { has_country_flag = POL_Riga_agrees_to_cooperate }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.015.a
+			trigger = { has_country_flag = POL_Riga_agrees_to_the_merge }
+			add_political_power = 75
+			FROM = {  
+				every_character = {
+					set_nationality = ROOT
+				}
+			}
+			annex_country = {
+				target = FROM
+				transfer_troops = yes
+			}
+		}
+		option = {
+			name = POL_sss.015.b
+			trigger = { has_country_flag = POL_Riga_agrees_to_cooperate }
+			add_political_power = 15
+			hidden_effect = {
+				FROM = { country_event = { id = POL_sss.017 days = 3 } }
+			}
+		}
+	}
+									
+	country_event = {
+		id = POL_sss.016
+		title = POL_sss.016.t
+		desc = POL_sss.016.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.016.a
+			ai_chance = {
+				base = 5
+			}
+			add_political_power = -5
+		}
+		option = {
+			name = POL_sss.016.b
+			ai_chance = {
+				base = 0
+				modifier = {
+					add = 1
+					FROM = { 
+						is_in_faction = no
+						is_subject = no
+					}
+				}
+				modifier = {
+					factor = 10
+					FROM = { 
+						has_same_ideology = no
+					}
+				}
+			}
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+			activate_mission = POL_special_military_operation
+		}
+	}
+										
+	country_event = {
+		id = POL_sss.017
+		title = POL_sss.017.t
+		desc = POL_sss.017.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.017.a
+			add_breakthrough_points = {
+				specialization = specialization_land
+				value = 1
+			}
+			add_tech_bonus = {
+				name = POL_sss.017.t
+				category = armor
+				bonus = 0.5
+				uses = 1
+			}
+			hidden_effect = {
+				FROM = { country_event = POL_sss.018 }
+			}
+		}
+	}
+											
+	country_event = {
+		id = POL_sss.018
+		title = POL_sss.018.t
+		desc = POL_sss.018.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.018.a
+			add_breakthrough_points = {
+				specialization = specialization_air
+				value = 1
+			}
+			add_tech_bonus = {
+				name = POL_sss.018.t
+				category = light_air
+				bonus = 0.5
+				uses = 1
+			}
+		}
+	}
+
+	country_event = {
+		id = POL_sss.019
+		title = POL_sss.019.t
+		desc = POL_sss.019.d
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.019.a
+			ai_chance = {
+				base = 6
+				modifier = {
+					factor = 2
+					FROM = { has_same_ideology = yes }
+				}
+			}
+			if = {
+				limit = {
+					FROM = {
+						has_dynamic_modifier = {
+							modifier = POL_concept_of_Baltic_dynamic_modifiers
+						}
+					}
+				}
+				add_ideas = POL_concept_of_Baltic_event
+			}
+			hidden_effect = {
+				set_variable = { POL_Intermarium_concept = 1 }
+				FROM = { country_event = { id = POL_sss.020 days = 3 } }
+			}
+		}
+		option = {
+			name = POL_sss.019.a
+			ai_chance = {
+				base = 4
+				modifier = {
+					factor = 2
+					has_government = democratic
+				}
+				modifier = {
+					factor = 0.5
+					strength_ratio = {
+						tag = FROM
+						ratio < 0.5
+					}
+				}
+			}
+			hidden_effect = {
+				set_variable = { POL_Intermarium_concept = 0 }
+				FROM = { country_event = { id = POL_sss.020 days = 3 } }
+			}
+		}
+	}
+												
+	country_event = {
+		id = POL_sss.020
+		title = {
+			text = POL_sss.020.ta
+			trigger = { check_variable = { FROM.POL_Intermarium_concept = 1 } }
+		}
+		title = {
+			text = POL_sss.020.tb
+			trigger = { check_variable = { FROM.POL_Intermarium_concept = 0 } }
+		}
+		desc = {
+			text = POL_sss.020.da
+			trigger = { check_variable = { FROM.POL_Intermarium_concept = 1 } }
+		}
+		desc = {
+			text = POL_sss.020.db
+			trigger = { check_variable = { FROM.POL_Intermarium_concept = 0 } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = POL_sss.020.a
+			trigger = { check_variable = { FROM.POL_Intermarium_concept = 1 } }
+			hidden_effect = {
+				add_to_variable = { POL_cob_consumer_goods_factor = -0.05 }
+				add_to_variable = { POL_cob_production_factory_max_efficiency_factor = 0.02 }
+				add_to_variable = { POL_cob_production_factory_efficiency_gain_factor = 0.05 }
+			}
+			custom_effect_tooltip = POL_concept_of_Baltic_event_tt
+			add_to_variable = {
+				POL_Intermarium_concept = 1
+			}
+		}
+		option = {
+			name = POL_sss.020.b
+			trigger = { check_variable = { FROM.POL_Intermarium_concept = 0 } }
+			add_political_power = -5
+		}
+	}
+	
+	

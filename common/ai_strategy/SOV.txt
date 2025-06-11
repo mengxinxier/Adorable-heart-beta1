@@ -94,13 +94,13 @@
 		ai_strategy = {
 			type = role_ratio
 			id = armor
-			value = 60
+			value = 80
 		}
 
 		ai_strategy = {
 			type = role_ratio
 			id = infantry
-			value = 40 
+			value = 20 
 		}
 	}
 
@@ -683,7 +683,127 @@
 
 		ai_strategy = {
 			type = garrison
-			value = -100
+			value = -200
+		}
+	}
+
+	SOV_place_troops_on_garrison_duty = {
+		allowed = {
+			original_tag = SOV
+		}
+
+		enable = {
+			controls_state = 219
+			controls_state = 217
+			controls_state = 195
+		}
+
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = put_unit_buffers
+			ratio = 0.1
+			states = {
+				219
+				217
+				195
+			}
+		}
+		
+		ai_strategy = {
+			type = area_priority
+			id = areas_SOV_home_front
+			value = -200
+		}
+	}
+
+	SOV_dont_naval_invading_DVL = {
+		allowed = {
+			original_tag = SOV
+		}
+		enable = {
+			DVL = {
+				is_ai = yes
+			}
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = invasion_unit_request
+			tag = DVL
+			value = -500
+		}
+	}
+
+	SOV_dont_naval_invading_JAP = {
+		allowed = {
+			original_tag = SOV
+		}
+		enable = {
+			JAP = {
+				is_ai = yes
+			}
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = invasion_unit_request
+			tag = JAP
+			value = -500
+		}
+	}
+
+	SOV_dont_naval_invading_POL = {
+		allowed = {
+			original_tag = POL
+		}
+		enable = {
+			POL = {
+				is_ai = yes
+			}
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = invasion_unit_request
+			tag = POL
+			value = -500
+		}
+	}
+
+	SOV_dont_naval_invading_ROM = {
+		allowed = {
+			original_tag = ROM
+		}
+		enable = {
+			ROM = {
+				is_ai = yes
+			}
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = invasion_unit_request
+			tag = ROM
+			value = -500
+		}
+	}
+
+	SOV_dont_naval_invading_MAN = {
+		allowed = {
+			original_tag = MAN
+		}
+		enable = {
+			MAN = {
+				is_ai = yes
+			}
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = invasion_unit_request
+			tag = MAN
+			value = -500
 		}
 	}
 
@@ -797,14 +917,14 @@
 			id = "DVL"
 			value = 9999
 		}
-		ai_strategy = { #防守前线
-			type = front_control
-			priority = 200
-			tag = DVL
-			#ratio > 0.1
-			execution_type = careful
-			execute_order = yes
-		}
+		# ai_strategy = { #防守前线
+		# 	type = front_control
+		# 	priority = 200
+		# 	tag = DVL
+		# 	#ratio > 0.1
+		# 	execution_type = careful
+		# 	execute_order = yes
+		# }
 		ai_strategy = { #帮波罗的填线
 			type = force_defend_ally_borders
 			id = "BAL"
@@ -1366,6 +1486,44 @@
 			type = befriend
 			id = "SOV"
 			value = 25
+		}
+	}
+
+	SOV_ignore_china_front_unit_request = {
+
+		allowed = {
+			original_tag = SOV
+		}
+		enable = {
+			any_other_country = {
+				is_chinese_country = yes
+				NOT = { 
+					has_war_with = SOV 
+					has_wargoal_against = SOV
+				}
+			}
+		}
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = front_unit_request
+			country_trigger = {
+				OR = {
+					tag = MAN
+					tag = SIK
+					tag = MON
+				}
+				OR = {
+					is_subject = no
+					OVERLORD = {
+						NOT = {
+							has_government = fascism
+							has_government = neutrality
+						}
+					}
+				}
+			}
+			value = -50
 		}
 	}
 

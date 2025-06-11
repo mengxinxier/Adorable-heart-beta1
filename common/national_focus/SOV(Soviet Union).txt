@@ -277,12 +277,31 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		available = {
+			NOT = { has_country_flag = SOV_forgotten_cards_start }
+		}
 		cancelable = no
+		cancel_if_invalid = no
+		continue_if_invalid = yes
 		select_effect = {
 			country_event = SOV_pol.3
 		}
 		bypass = {
-			has_country_flag = SOV_power_struggle_end
+			OR = {
+				has_country_flag = SOV_power_struggle_end
+				has_country_flag = SOV_great_game_of_Minsk_pypass
+			}
+		}
+		bypass_effect = {
+			add_corps_commander_role = {
+				character = SOV_Li_Xiaolang
+				skill = 3
+				traits = { brilliant_strategist order_mahoushojo career_officer trickster }
+				attack_skill = 4
+				defense_skill = 1
+				planning_skill = 4
+				logistics_skill = 3
+			}
 		}
 		completion_reward = {
 			custom_effect_tooltip = SOV_great_game_of_Minsk_tt
@@ -745,7 +764,7 @@ focus_tree = {
 			}
 			hidden_effect = {
 				add_to_variable = {
-					SPU = -90
+					SPU = -120
 				}
 			}
 			custom_effect_tooltip = SOV_modern_management_tt
@@ -1115,6 +1134,10 @@ focus_tree = {
 			mio:SOV_veritas_university_organization = {
 				add_mio_size = 1
 			}
+			add_breakthrough_points = {
+				specialization = specialization_land
+				value = 1
+			}
 		}
 		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
 	}
@@ -1426,6 +1449,10 @@ focus_tree = {
 					tank_nsb_armor_upgrade = 8
 				}
 			}
+			add_breakthrough_points = {
+				specialization = specialization_land
+				value = 1
+			}
 		}
 		search_filters = { FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
 	}
@@ -1695,6 +1722,7 @@ focus_tree = {
 				add_to_variable = { SOV_fyp_production_factory_max_efficiency_factor = 0.05 }
 			}
 			custom_effect_tooltip = SOV_fourth_five_year_project_tt
+			unlock_decision_tooltip = SOV_build_landmark_palace_of_soviets
 		}
 		search_filters = { FOCUS_FILTER_INDUSTRY }
 	}
@@ -2390,6 +2418,10 @@ focus_tree = {
 			add_offsite_building = {
 				type = arms_factory
 				level = 2
+			}
+			add_breakthrough_points = {
+				specialization = specialization_land
+				value = 1
 			}
 		}
 		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_ARMY_XP }
@@ -3505,6 +3537,10 @@ focus_tree = {
 					special_type_slot_3 = armor_plate_small
 				}
 			}
+			add_breakthrough_points = {
+				specialization = specialization_air
+				value = 1
+			}
 		}
 	}
 
@@ -3776,6 +3812,10 @@ focus_tree = {
 				bonus = 1.0
 				uses = 3
 				category = jet_technology
+			}
+			add_breakthrough_points = {
+				specialization = specialization_air
+				value = 1
 			}
 		}
 	}
@@ -4184,6 +4224,10 @@ focus_tree = {
 			}
 			add_ideas = SOV_red_fleet
 			navy_experience = 50
+			add_breakthrough_points = {
+				specialization = specialization_naval
+				value = 1
+			}
 		}
 	}
 
@@ -4846,6 +4890,10 @@ focus_tree = {
 						amount = 1
 					}
 				}
+			}
+			add_breakthrough_points = {
+				specialization = specialization_naval
+				value = 1
 			}
 		}
 	}
@@ -6257,12 +6305,20 @@ focus_tree = {
 		}
 
 		search_filters = { FOCUS_FILTER_ANNEXATION }
+
+		will_lead_to_war_with = var:194.controller
 		completion_reward = {
 			194 = {
 				controller = { 
 					if = {
 						limit = { is_in_faction_with = ROOT }
 						country_event = SOV_dip.30
+					}
+					else_if = {
+						limit = { is_subject = yes }
+						OVERLORD = {
+							country_event = SOV_dip.8
+						}
 					}
 					else = { country_event = SOV_dip.8 }
 				}
@@ -6298,11 +6354,17 @@ focus_tree = {
 					is_in_faction = no
 					is_in_faction_with = ROOT
 				}
+				NOT = { has_government = fascism }
 			}
 		}
 		
 		bypass = {
-			has_war_with = POL
+			OR =  {
+				has_war_with = POL
+				POL = { has_government = fascism }
+				POL = { is_subject = yes }
+				POL = { is_in_faction_with = DVL }
+			}
 		}
 
 		search_filters = { FOCUS_FILTER_ANNEXATION }
@@ -6634,7 +6696,7 @@ focus_tree = {
 			is_subject = no
 		}
 		
-		search_filters = {}
+		
 
 		completion_reward = {
 			activate_targeted_decision = { target = AFG decision = SOV_uphold_dec_national_self_determination }
@@ -6817,7 +6879,7 @@ focus_tree = {
 					enable_state_integration_80_compliance = yes
 				}
 			}
-			custom_effect_tooltip = annex_integration_generic
+			
 		}
 	}
 	
@@ -6940,7 +7002,7 @@ focus_tree = {
 			}
 		}
 		
-		search_filters = {}
+		
 
 		completion_reward = {
 			408 = {
@@ -7267,7 +7329,6 @@ focus_tree = {
 			}
 		}
 		
-		search_filters = {  }
 
 		bypass = {
 			AND = {
@@ -7370,6 +7431,7 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
+			NOT = { has_non_aggression_pact_with = JAP }
 			NOT = { country_exists = DVL }
 			any_other_country = {
 				OR = {
