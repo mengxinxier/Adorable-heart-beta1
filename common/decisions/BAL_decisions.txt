@@ -80,3 +80,295 @@ BAL_wedding_to_gods_category = {
 		}
 	}
 }
+
+BAL_preparing_for_currency_issuance_category = {
+	BAL_renovation_of_riga_municipal_building = {
+		icon = GFX_decision_SOV_place_hq
+		priority = 99
+		available = {
+			owns_state = 842
+		}
+		custom_cost_text = RUS_150_ubs_save_cost
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 150 }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		fire_only_once = yes
+		days_remove = 90
+		complete_effect = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = -150 }
+			}
+		}
+		remove_effect = {
+			842 = {
+				hidden_effect = { SOV_promote_regional_development = yes }
+				custom_effect_tooltip = SOV_upgrading_area_type_tt
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+				}
+			}
+			mio:BAL_vef = {
+				add_mio_funds_gain_factor = 0.10
+			}
+			mio:BAL_anbo = {
+				add_mio_funds_gain_factor = 0.10
+			}
+		}
+	}
+	BAL_expansion_of_Tallinn_industrial_zone = {
+		icon = GFX_decision_generic_factory
+		priority = 98
+		available = {
+			owns_state = 13
+		}
+		custom_cost_text = RUS_200_ubs_save_cost
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 200 }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		fire_only_once = yes
+		days_remove = 90
+		complete_effect = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = -200 }
+			}
+		}
+		remove_effect = {
+			13 = {
+				hidden_effect = { SOV_promote_regional_development = yes }
+				custom_effect_tooltip = SOV_upgrading_area_type_tt
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+				}
+			}
+			mio:BAL_arsenal = {
+				add_mio_funds = 400
+				add_mio_funds_gain_factor = 0.10
+			}
+		}
+	}
+	BAL_establishment_of_central_bank = {
+		icon = GFX_decision_generic_fundraising
+		priority = 97
+		visible = {
+			has_completed_focus = BAL_currency_preparation
+		}
+		fire_only_once = yes
+		cost = 10
+		days_remove = 365
+		modifier = {
+			consumer_goods_factor = 0.30
+		}
+		complete_effect = {
+			set_country_flag = BAL_establishment_of_central_bank_flag
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { has_idea = BAL_central_bank }
+				}
+				add_ideas = BAL_central_bank
+			}
+			if = {
+				limit = {
+					has_country_flag = BAL_establishment_of_central_bank_flag
+				}
+				clr_country_flag = BAL_establishment_of_central_bank_flag
+			}
+		}
+	}
+	BAL_stockpiling_precious_metals = {
+		icon = GFX_decision_hol_attract_foreign_investors
+		priority = 96
+		visible = {
+			has_country_flag = BAL_establishment_of_central_bank_flag
+		}
+		custom_cost_text = RUS_100_ubs_save_cost
+		custom_cost_trigger = {
+			OR = {
+				check_variable = { ubs_save > 100 }
+				hidden_trigger = { check_variable = { BAL_central_bank_ubs_save > 800 } }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		fire_only_once = no
+		complete_effect = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = -100 }
+				add_to_variable = { BAL_central_bank_ubs_save = 200 }
+			}
+			custom_effect_tooltip = BAL_stockpiling_precious_metals_tt
+			hidden_effect = {
+				if = {
+					limit = { check_variable = { BAL_central_bank_ubs_save > 800 } }
+					remove_decision = BAL_establishment_of_central_bank
+					if = {
+						limit = {
+							NOT = { has_idea = BAL_central_bank }
+						}
+						add_ideas = BAL_central_bank
+					}
+					if = {
+						limit = {
+							has_country_flag = BAL_establishment_of_central_bank_flag
+						}
+						clr_country_flag = BAL_establishment_of_central_bank_flag
+					}
+				}
+			}
+		}
+	}
+	BAL_seeking_help_from_democratic_countries = {
+		icon = GFX_decision_SWI_swiss_democratic_tradition_campaign
+		priority = 95
+		visible = {
+			has_country_flag = BAL_establishment_of_central_bank_flag
+		}
+		fire_only_once = yes
+		cost = 10
+		days_remove = 14
+		remove_effect = {
+			every_other_country = {
+				limit = {
+					is_major = yes
+					has_government = democratic
+					NOT = { has_war_with = ROOT }
+				}
+				country_event = BAL_pol.4
+			}
+			custom_effect_tooltip = if_they_accept
+			custom_effect_tooltip = BAL_central_bank_ubs_save_tt
+		}
+	}
+	BAL_seeking_help_from_communist_countries = {
+		icon = GFX_decision_hol_exchange_intelligence_data
+		priority = 94
+		visible = {
+			has_country_flag = BAL_establishment_of_central_bank_flag
+		}
+		available = {
+			SOV = {
+				has_government = communism
+				is_major = yes
+			}
+		}
+		fire_only_once = no
+		days_re_enable = 44
+		days_remove = 14
+		remove_effect = {
+			SOV = {
+				country_event = BAL_pol.7
+			}
+			custom_effect_tooltip = if_they_accept
+			custom_effect_tooltip = BAL_central_bank_ubs_save_tt
+		}
+	}
+	BAL_connecting_dec_with_water_transport = {
+		icon = GFX_decision_generic_construction
+		priority = 93
+		visible = {
+			has_completed_focus = BAL_waterway_dredging
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					state = 655
+					state = 880
+					state = 12
+					state = 190
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		available = {
+			owns_state = FROM
+		}
+		custom_cost_text = RUS_100_ubs_save_cost
+		custom_cost_trigger = {
+			check_variable = { ubs_save > 100 }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		fire_only_once = yes
+		days_remove = 90
+		complete_effect = {
+			hidden_effect = {
+				add_to_variable = { ubs_save = -100 }
+			}
+		}
+		remove_effect = {
+			FROM = {
+				hidden_effect = { SOV_promote_regional_development = yes }
+				custom_effect_tooltip = SOV_upgrading_area_type_tt
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+				}
+				add_dynamic_modifier = {
+					modifier = DEN_local_investment
+				}
+			}
+		}
+	}
+	BAL_allowing_Soviet_to_use_the_port_of_Klaipeda = {
+		icon = GFX_decision_generic_merge_plant_ship
+		priority = 92
+		visible = {
+			has_completed_focus = BAL_Riga_Bay_opening
+			SOV = {
+				has_government = communism
+				is_major = yes
+				is_neighbor_of = ROOT
+			}
+		}
+		available = {
+			SOV = {
+				has_government = communism
+				is_major = yes
+				is_neighbor_of = ROOT
+			}
+		}
+		fire_only_once = yes
+		days_remove = 14
+		remove_effect = {
+			SOV = {
+				country_event = BAL_pol.9
+			}
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				189 = {
+					hidden_effect = { SOV_promote_regional_development = yes }
+					custom_effect_tooltip = SOV_upgrading_area_type_tt
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+					}
+					add_building_construction = {
+						type = dockyard
+						level = 1
+					}
+				}
+				hidden_effect = {
+					add_to_variable = { ubs_save = 200 }
+				}
+				custom_effect_tooltip = SOV_get_200_add_to_reserve
+				add_popularity = {
+					ideology = communism
+					popularity = 0.10
+				}
+			}
+		}
+	}
+}
