@@ -4241,6 +4241,70 @@ news_event = {
 		}
 	}
 }
+country_event = {
+	id = generic.2022
+	immediate = {log = "[GetDateText]: [Root.GetName]: event oppaperclip.1"}
+	hidden = yes
+
+	is_triggered_only = yes
+	option = {
+		random_state = {
+			limit = {
+				owner = {
+					OR = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				has_state_flag = op_paperclip_state
+			}
+			clr_state_flag = op_paperclip_state
+			every_state = {
+				limit = {
+					owner = {
+						OR = {
+							tag = ROOT
+							is_subject_of = ROOT
+						}
+					}
+					check_variable = { previous_owner = PREV.previous_owner }
+				}
+				add_to_variable = { PREV.total_industry_value = industrial_complex_level }
+				add_to_variable = { PREV.total_industry_value = arms_factory_level }
+				clr_state_flag = op_paperclip_state
+			}
+			set_variable = { previous_owner_industry_ratio = total_industry_value }
+			divide_variable = { previous_owner_industry_ratio = previous_owner_industry_value }
+			multiply_variable = { previous_owner_industry_ratio = 100 }
+			round_variable = previous_owner_industry_ratio
+			clamp_variable = {
+				var = previous_owner_industry_ratio
+				min = 0
+				max = 100
+			}
+			var:previous_owner = {
+				ROOT = { paperclip_tech = yes }
+			}
+			every_state = {
+				limit = {
+					owner = {
+						OR = {
+							tag = ROOT
+							is_subject_of = ROOT
+						}
+					}
+					check_variable = { previous_owner = PREV.previous_owner }
+				}
+				clear_variable = previous_owner
+				clear_variable = previous_owner_industry_value
+				clear_variable = previous_owner_industry_ratio
+				clear_variable = total_industry_value
+				clear_variable = previous_owner
+				clear_variable = previous_owner_industry_value
+			}
+		}
+	}
+}
 
 
 add_namespace = Frieren_Travels
