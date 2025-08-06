@@ -11,11 +11,31 @@ LUG_DEBUG = {
 	}
 }
 LUG_Parliament = {
+	GRE_election_will_result = {   #选举结果
+		priority = 100
+		name = GRE_election_will_result
+		days_mission_timeout = 30
+		fire_only_once = no
+		visible = {
+			tag = GRE			
+		}
+		cancel_if_not_visible = yes
+		is_good = yes
+		available = { #完成任务的条件
+			always = no
+		}
+		activation = { #触发任务的条件（满足这个条件就开始任务）
+			always = no
+		}
+		timeout_effect = {
+			country_event = { id = LUG.1 }
+		}
+	}
 	GRE_witch_cult_purge = {   #魔女教暗中密谋
 		priority = 100
 		name = GRE_witch_cult_purge
 		icon = generic_civil_support	
-		days_mission_timeout = 100
+		days_mission_timeout = 30
 		fire_only_once = no
 		visible = {
 			tag = GRE			
@@ -79,6 +99,9 @@ LUG_Parliament = {
 			}
 		}
 		available = {
+			not = { 
+				has_country_flag = lug_is_pacifying
+			}
 			has_completed_focus = LUG_Witch_Cult_Purge_Operation
 			divisions_in_state = {
 				state = 341 
@@ -111,7 +134,11 @@ LUG_Parliament = {
 		days_remove = 20
 		is_good = yes
 		fire_only_once = yes
+		complete_effect = {
+			set_country_flag = lug_is_pacifying
+		}
 		remove_effect = {
+			clr_country_flag = lug_is_pacifying
 			if = {
 				limit = {
 					has_idea = LUG_Witch_Cult_1
@@ -139,6 +166,9 @@ LUG_Parliament = {
 			}
 		}
 		available = {
+			not = { 
+				has_country_flag = lug_is_pacifying
+			}
 			has_completed_focus = LUG_Witch_Cult_Purge_Operation
 			divisions_in_state = {
 				state = 989
@@ -168,10 +198,13 @@ LUG_Parliament = {
 				}
 			}
 		}
-
 		is_good = yes
 		days_remove = 20
+		complete_effect = {
+			set_country_flag = lug_is_pacifying
+		}
 		remove_effect = {
+			clr_country_flag = lug_is_pacifying
 			if = {
 				limit = {
 					has_idea = LUG_Witch_Cult_1
@@ -530,6 +563,146 @@ LUG_Build = {
 			}
 		}
 		cost = 5
+	}
+}
+LUG_Emilia_choose_line = {
+	join_comecon = {
+		visible = {
+		}
+		available = {
+			NOT = {
+				has_idea = SOV_comecon_buff 
+			}
+			NOT = {
+				has_idea = ENG_idea_wto
+			}
+			any_country = {
+				has_dynamic_modifier = { modifier = SOV_comecon_leader }
+			}
+			not = {
+				has_war_with = SOV
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			add_ideas = SOV_comecon_buff 
+			add_power_balance_value = {
+				id = LUG_Line_choose_bop 
+				value = -0.35
+			}
+		}
+	}
+	join_wto = {
+		visible = {
+		}
+		available = {
+			NOT = {
+				has_idea = SOV_comecon_buff 
+			}
+			NOT = {
+				has_idea = ENG_idea_wto
+			}
+			any_country = {
+				has_dynamic_modifier = { modifier = ENG_dynamic_modifier_wto }
+			}
+			not = {
+				has_war_with = ENG
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			add_ideas = ENG_idea_wto
+			add_power_balance_value = {
+				id = LUG_Line_choose_bop 
+				value = 0.35
+			}
+		}
+	}
+	ask_eng_for_help = {
+		visible = {
+		}
+		available = {
+			has_opinion = {  
+				target = ENG value > 49
+			}
+			has_global_flag = second_weltkrieg_has_started 
+			not = {
+				has_war_with = ENG
+			}
+		}
+		days_re_enable = 100
+		days_remove = 30
+		complete_effect = {
+			add_power_balance_value = {
+				id = LUG_Line_choose_bop 
+				value = 0.1
+			}
+		}
+		modifier = {
+			production_factory_max_efficiency_factor = 0.05
+		}
+		cost = 25
+	}
+	ask_sov_for_help = {
+		visible = {
+		}
+		available = {
+			has_opinion = {  
+				target = SOV value > 49
+			}
+			has_global_flag = second_weltkrieg_has_started 
+			not = {
+				has_war_with = SOV
+			}
+		}
+		days_re_enable = 100
+		days_remove = 30
+		complete_effect = {
+			add_power_balance_value = {
+				id = LUG_Line_choose_bop 
+				value = -0.1
+			}
+		}
+		modifier = {
+			industrial_capacity_factory = 0.1
+		}
+		cost = 25
+	}
+	anti_ENG_strategy = {
+		visible = {
+			has_war_with = ENG
+		}
+		available = {
+			has_war_with = ENG
+		}
+		fire_only_once = yes
+		complete_effect = {
+			add_power_balance_value = {
+				id = LUG_Line_choose_bop 
+				value = -1
+			}
+		}
+		modifier = {
+			army_attack_against_major_factor = 0.1
+		}
+	}
+	anti_SOV_strategy = {
+		visible = {
+			has_war_with = SOV
+		}
+		available = {
+			has_war_with = SOV
+		}
+		fire_only_once = yes
+		complete_effect = {
+			add_power_balance_value = {
+				id = LUG_Line_choose_bop 
+				value = 1
+			}
+		}
+		modifier = {
+			army_defence_against_major_factor = 0.1
+		}
 	}
 }
 form_byzantine_empire_category = {
