@@ -1246,77 +1246,305 @@ CHI_Industrialization_of_China = {
 	}
 }
 
-CHI_generic_core = {
-	CHI_target_decision_get_Concession = {
-		icon = generic_nationalism
-		available = {
-			FROM = {
-				is_controlled_by = ROOT
-			}
+CHI_reclaim_concession = {
+	###夺取香港
+	CHI_seizure_HongKong = {
+		icon = GFX_decision_generic_confiscation
+		allowed = {
 		}
-		target_trigger = {
-			FROM = {
-				or = {
-					state = 729
-					state = 326
-					state = 524
-					state = 743
-				}
-				owner = {
-					not = {
-						tag = ROOT
-					}
-				}
+		highlight_states = {
+			highlight_states_trigger = {
+				state = 326
 			}
 		}
 		visible = {
-			has_country_flag = can_declare_WAR_to_RYU
+			326 = { is_controlled_by_ROOT_or_subject = no }
 		}
-		state_target = yes
-		on_map_mode = map_and_decisions_view
-		cost = 10
-		days_remove = 7
+		available = {
+			is_subject = no
+			divisions_in_border_state = {
+				#type = infantry
+				size > 2
+				state = 593
+				border_state = 326
+			}
+		}
+		fire_only_once = yes
+		cost = 15
 		ai_will_do = {
 			factor = 100
 		}
 		remove_effect = {
-			custom_effect_tooltip = We_will_retain_these_territories_after_the_peace_talks
-			transfer_state = FROM
+			custom_effect_tooltip = CHI_seizure_concession_tt
+			326 = {
+				owner = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = CHI_seizure_HongKong
+					}
+					if = {
+						limit = { is_subject = yes }
+						overlord = {
+							country_event = { id = china_generic.013 }
+							add_opinion_modifier = {
+								target = ROOT
+								modifier = CHI_seizure_HongKong
+							}
+						}
+					}
+					else = { country_event = { id = china_generic.013 } }
+				}
+			}
+			326 = {
+				transfer_state_to = ROOT
+				add_compliance = 10
+			}
 		}
 	}
-	CHI_WP_with_ally = {
+	###夺取澳门
+	CHI_seizure_Macau = {
+		icon = GFX_decision_generic_confiscation
 		allowed = {
 		}
+		highlight_states = {
+			highlight_states_trigger = {
+				state = 729
+			}
+		}
 		visible = {
-			has_war_with = ENG
-			has_country_flag = can_declare_WAR_to_RYU
+			729 = { is_controlled_by_ROOT_or_subject = no }
 		}
 		available = {
 			is_subject = no
-			has_war_with = ENG
+			divisions_in_border_state = {
+				#type = infantry
+				size > 2
+				state = 593
+				border_state = 729
+			}
 		}
 		fire_only_once = yes
-		cost = 10
+		cost = 15
+		ai_will_do = {
+			factor = 100
+		}
+		remove_effect = {
+			custom_effect_tooltip = CHI_seizure_concession_tt
+			729 = {
+				owner = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = CHI_seizure_Macau
+					}
+					if = {
+						limit = { is_subject = yes }
+						overlord = {
+							country_event = { id = china_generic.014 }
+							add_opinion_modifier = {
+								target = ROOT
+								modifier = CHI_seizure_Macau
+							}
+						}
+					}
+					else = { country_event = { id = china_generic.014 } }
+				}
+			}
+			729 = {
+				transfer_state_to = ROOT
+				add_compliance = 10
+			}
+		}
+	}
+	###夺取上海租界
+	CHI_seizure_ShangHai = {
+		icon = GFX_decision_generic_confiscation
+		allowed = {
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				state = 1187
+			}
+		}
+		visible = {
+			1187 = { is_controlled_by_ROOT_or_subject = no }
+		}
+		available = {
+			is_subject = no
+			divisions_in_border_state = {
+				#type = infantry
+				size > 2
+				state = 743
+				border_state = 1187
+			}
+		}
+		fire_only_once = yes
+		cost = 15
+		ai_will_do = {
+			factor = 100
+		}
+		remove_effect = {
+			custom_effect_tooltip = CHI_seizure_concession_tt
+			1187 = {
+				owner = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = CHI_seizure_ShangHai
+					}
+					if = {
+						limit = { is_subject = yes }
+						overlord = {
+							country_event = { id = china_generic.015 }
+							add_opinion_modifier = {
+								target = ROOT
+								modifier = CHI_seizure_ShangHai
+							}
+						}
+					}
+					else = { country_event = { id = china_generic.015 } }
+				}
+			}
+			1187 = {
+				transfer_state_to = ROOT
+				add_compliance = 10
+			}
+		}
+	}
+	###训练台湾纵队
+	CHI_Train_Taiwan_column = {
+		icon = GFX_decision_eng_blackshirt_march
+		allowed = {
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				state = 524
+			}
+		}
+		visible = {
+			524 = { is_controlled_by_ROOT_or_subject = no }
+		}
+		available = {
+			is_subject = no
+		}
+		custom_cost_text = decision_cost_100_gun_and_10_xp
 		days_remove = 30
 		ai_will_do = {
-			base = 0
-			modifier = {
-				and = {
-					controls_state = 729
-					controls_state = 326
-					#controls_state = 524
-					controls_state = 743
+			factor = 100
+		}
+		custom_cost_trigger = {
+			has_army_experience > 9
+			has_equipment = { infantry_equipment > 99  }
+		}
+		complete_effect = {
+			hidden_effect = {
+				army_experience = -10
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -100
 				}
-				add = 10
 			}
 		}
 		remove_effect = {
-			clr_country_flag = can_declare_WAR_to_RYU
-			ENG = {
-				faction_leader = {
-					white_peace = {
-						tag = ROOT
-						message = get_Concession_BACK_WAR
+			add_to_variable = { CHI_Train_Taiwan_column_var = 1 }
+			custom_effect_tooltip = CHI_Train_Taiwan_column_var_up_1
+		}
+	}
+	###夺取台湾
+	CHI_seizure_Taiwan = {
+		icon = GFX_decision_infiltrate_state
+		allowed = {
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				state = 524
+			}
+		}
+		visible = {
+			524 = { is_controlled_by_ROOT_or_subject = no }
+		}
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = CHI_Train_Taiwan_column_var_biger_than_0
+				check_variable = { CHI_Train_Taiwan_column_var > 0 }
+			}
+		}
+		#fire_only_once = yes
+		cost = 15
+		ai_will_do = {
+			factor = 100
+		}
+		remove_effect = {
+			custom_effect_tooltip = CHI_seizure_concession_tt
+			custom_effect_tooltip = CHI_seizure_Taiwan_batting_tt
+			random_list = {
+				10 = {
+					modifier = {
+						add = -2
+						check_variable = { CHI_Train_Taiwan_column_var = 1 }
+					}
+					modifier = {
+						add = -4
+						check_variable = { CHI_Train_Taiwan_column_var = 2 }
+					}
+					modifier = {
+						add = -6
+						check_variable = { CHI_Train_Taiwan_column_var = 3 }
+					}
+					modifier = {
+						add = -8
+						check_variable = { CHI_Train_Taiwan_column_var = 4 }
+					}
+					modifier = {
+						add = -10
+						check_variable = { CHI_Train_Taiwan_column_var > 4 }
+					}
+					custom_effect_tooltip = CHI_seizure_Taiwan_fail_tt
+					524 = {
+						owner = {
+							add_opinion_modifier = {
+								target = ROOT
+								modifier = be_provoked
+							}
+							if = {
+								limit = { is_subject = yes }
+								overlord = {
+									add_opinion_modifier = {
+										target = ROOT
+										modifier = be_provoked
+									}
+								}
+							}
+						}
+					}
+				}
+				10 = {
+					modifier = {
+						factor = 0
+						check_variable = { CHI_Train_Taiwan_column_var = 0 }
+					}
+					custom_effect_tooltip = CHI_seizure_Taiwan_succeed_tt
+					524 = {
+						owner = {
+							add_opinion_modifier = {
+								target = ROOT
+								modifier = CHI_seizure_Taiwan
+							}
+							if = {
+								limit = { is_subject = yes }
+								overlord = {
+									country_event = { id = china_generic.016 }
+									add_opinion_modifier = {
+										target = ROOT
+										modifier = CHI_seizure_Taiwan
+									}
+								}
+							}
+							else = { country_event = { id = china_generic.016 } }
+						}
+					}
+					524 = {
+						transfer_state_to = ROOT
+						add_compliance = 10
 					}
 				}
 			}

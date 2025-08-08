@@ -330,16 +330,66 @@ add_namespace = CHI_WangQuan
 			}
 		}
 	}
-	
-	#江浙经略论
+
+	#南直隶局势升级
 	country_event = {
 		id = China.012
 		title = China.012.title
 		desc = China.012.desc
 		is_triggered_only = yes
 		fire_only_once = no
+		immediate = {
+			hidden_effect = {
+				unlock_decision_category_tooltip = CHI_gambling_of_JSZ
+				set_country_flag = Chinese_Battle_of_JZ_start
+				activate_mission = JSZ_Gambling_results
+				if = {
+					limit = {
+						or = {
+							CHI = { is_ai = yes }
+							has_global_flag = JSZ_Anti_Peking
+						}
+					}
+					activate_mission = CHI_raise_gambling_of_JSZ_action
+				}
+				if = {
+					limit = { ROC = { is_ai = yes } }
+					activate_mission = ROC_raise_gambling_of_JSZ_action
+				}
+				if = {
+					limit = { TPA = { is_ai = yes } }
+					activate_mission = TPA_raise_gambling_of_JSZ_action
+				}
+				if = {
+					limit = { tag = CHI }
+					hidden_effect = {
+						SIK = {
+							activate_mission = SIK_Gambling_results
+							if = {
+								limit = {
+									or = {
+										CHI = { is_ai = yes }
+										has_global_flag = JSZ_Anti_Peking
+									}
+								}
+								activate_mission = CHI_raise_gambling_of_JSZ_action
+							}
+							if = {
+								limit = { ROC = { is_ai = yes } }
+								activate_mission = ROC_raise_gambling_of_JSZ_action
+							}
+							if = {
+								limit = { TPA = { is_ai = yes } }
+								activate_mission = TPA_raise_gambling_of_JSZ_action
+							}
+						}
+					}
+				}
+			}
+		}
 		option = {
 			name = China.012.a
+			unlock_decision_category_tooltip = CHI_gambling_of_JSZ
 			ai_chance = {
 				base = 10
 			}
@@ -670,48 +720,8 @@ add_namespace = CHI_WangQuan
 				tooltip = Honour_Emperor_faction_influence_var_down_middle
 			}
 			CHI_faction_influence_calculate = yes
-			every_state = {
-				limit = {
-					has_dynamic_modifier = {
-						modifier = CHI_Taiyuan_Pacification_Office
-					}
-				}
-				set_demilitarized_zone = no
-				remove_dynamic_modifier = {
-					modifier = CHI_Taiyuan_Pacification_Office
-				}
-				remove_core_of = CHI
-				add_claim_by = CHI
-				add_core_of = SHX
-				transfer_state_to = SHX
-			}
-			CHI_chongyue = { set_nationality = SHX }
-			SHX = {
-				CHI_chongyue = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = military_politicism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-				load_oob = SHX_1936
-			}
-			JSZ = {
-				end_puppet_this = yes
-				leave_faction = yes
-				clr_country_flag = CHI_country
-			}
 			activate_targeted_decision = {
 				target = SHX
-				decision = CHI_attck_FROM
-			}
-			activate_targeted_decision = {
-				target = JSZ
 				decision = CHI_attck_FROM
 			}
 			hidden_effect = {
@@ -758,6 +768,12 @@ add_namespace = CHI_WangQuan
 				country_event = {
 					id = China.024
 					days = 7
+				}
+				JSZ = {
+					country_event = {
+						id = JSZ.05
+						days = 4
+					}
 				}
 			}
 			ai_chance = {
@@ -867,6 +883,16 @@ add_namespace = CHI_WangQuan
 						days = 1
 					}
 				}
+				JSZ = {
+					country_event = {
+						id = JSZ.06
+						days = 1
+					}
+				}
+					country_event = {
+						id = China.033
+						hours = 6
+					}
 			}
 			every_state = {
 				limit = {
@@ -917,6 +943,12 @@ add_namespace = CHI_WangQuan
 				country_event = {
 					id = China.030
 					days = 15
+				}
+				JSZ = {
+					country_event = {
+						id = JSZ.07
+						days = 1
+					}
 				}
 			}
 			set_party_name = {
@@ -1174,6 +1206,184 @@ add_namespace = CHI_WangQuan
 			}
 			ai_chance = {
 				factor = 10
+			}
+		}
+	}
+
+	#两广的命运？
+	country_event = {
+		id = China.031
+		title = China.031.title
+		desc = China.031.desc
+		is_triggered_only = yes
+		option = {
+			name = China.031.a
+			every_state = {
+				limit = {
+					has_state_flag = liangguang_state_area
+					is_controlled_by_ROOT_or_subject = yes
+				}
+				add_core_of = GXC
+				transfer_state_to = GXC
+			}
+			set_temp_variable = { tag_to_release = GXC }
+			CHI_puppet_released_tag_and_old_govern = yes
+			clr_country_flag = CHI_war_plan_going_on
+			add_political_power = 15
+			ai_chance = {
+				factor = 10
+			}
+		}
+		option = {
+			name = China.031.b
+			WUH = {
+				every_owned_state = {
+					limit = {
+						has_state_flag = liangguang_state_area
+					}
+					add_claim_by = PREV
+					enable_state_integration_50_compliance = yes
+				}
+			}
+			FUJ = {
+				every_owned_state = {
+					limit = {
+						has_state_flag = liangguang_state_area
+					}
+					add_claim_by = PREV
+					enable_state_integration_50_compliance = yes
+				}
+			}
+			ai_chance = {
+				factor = 10
+			}
+		}
+		option = {
+			name = China.031.c
+			every_state = {
+				limit = {
+					has_state_flag = liangguang_state_area
+					is_controlled_by_ROOT_or_subject = yes
+				}
+				transfer_state_to = ROOT
+				add_compliance = 10
+			}
+			add_political_power = -50
+			ai_chance = {
+				factor = 10
+			}
+		}
+	}
+
+	#[FROM.Getname]宣布反对北京
+	country_event = {
+		id = China.032
+		title = China.032.title
+		desc = China.032.desc
+		is_triggered_only = yes
+		option = {
+			name = China.032.a
+			ai_chance = {
+				factor = 10
+			}
+		}
+	}
+
+	#重岳宣布反对北京
+	country_event = {
+		id = China.033
+		title = China.033.title
+		desc = China.033.desc
+		is_triggered_only = yes
+		option = {
+			name = China.033.a
+			every_state = {
+				limit = {
+					has_dynamic_modifier = {
+						modifier = CHI_Taiyuan_Pacification_Office
+					}
+				}
+				set_demilitarized_zone = no
+				remove_dynamic_modifier = {
+					modifier = CHI_Taiyuan_Pacification_Office
+				}
+				remove_core_of = CHI
+				add_claim_by = CHI
+				add_core_of = SHX
+				transfer_state_to = SHX
+			}
+			CHI_chongyue = { set_nationality = SHX }
+			SHX = {
+				CHI_chongyue = {
+					add_country_leader_role = {
+						country_leader = {
+							desc = ""
+							ideology = military_politicism
+							traits = {}
+							expire = "1999.1.1.1"
+							id = -1
+						}
+						promote_leader = yes
+					}
+				}
+				load_oob = SHX_1936
+			}
+			ai_chance = {
+				factor = 10
+			}
+		}
+	}
+	
+	#[FROM.Getname]回归中央
+	country_event = {
+		id = China.034
+		title = China.034.title
+		desc = China.034.desc
+		is_triggered_only = yes
+		option = {
+			name = China.034.a
+			set_temp_variable = { tag_to_release = FROM }
+			CHI_puppet_released_tag_and_old_govern = yes
+			clr_country_flag = CHI_war_plan_going_on
+			ai_chance = {
+				factor = 10
+			}
+		}
+	}
+
+	#南直隶总督府失败
+	country_event = {
+		id = China.035
+		title = China.035.title
+		desc = China.035.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		option = {
+			name = China.035.a
+			JSZ = {
+				CHI_duanqirui = { set_nationality = ROOT }
+				CHI_chentiaoyuan = { set_nationality = ROOT }
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#新疆中原派失败
+	country_event = {
+		id = China.036
+		title = China.036.title
+		desc = China.036.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		option = {
+			name = China.036.a
+			SIK = {
+				CHI_Qiubai = { set_nationality = ROOT }
+			}
+			ai_chance = {
+				base = 25
 			}
 		}
 	}
