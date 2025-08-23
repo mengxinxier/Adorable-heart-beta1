@@ -708,38 +708,7 @@ LHS_unit= { #单位倾向
     }
 }
 
-LHS_unit_xueyi= { #雪伊单位倾向
-    allowed = {
-        original_tag = LHS
-    }
-    enable = {
-        has_completed_focus = LHS_youqi
-    }
 
-    abort_when_not_enabled = yes
-
-    ai_strategy = {
-        type = role_ratio
-        id = LHS_infantry
-        value = -400
-    }
-
-    ai_strategy = {
-        type = role_ratio
-        id = LHS_qibing
-        value = 400
-    }
-    ai_strategy = {
-        type = template_prio
-        id = LHS_infantry
-        value = -400
-    }
-    ai_strategy = {
-        type = template_prio
-        id = LHS_qibing
-        value = 400
-    }
-}
 LHS_unit_xgz= { #小果子单位倾向
     allowed = {
         original_tag = LHS
@@ -825,6 +794,96 @@ LHS_unit_xgz2= { #小果子单位倾向2
         id = magic_LHS
         value = 400
     }
+}
+LHS_unit_buffer_for_asian_threat = {#退守战场
+	allowed = {
+		original_tag = LHS
+	}
+	enable = {
+		OR = { #Always have a small unit buffer along the railway, just in case asian fronts get dangerous
+			has_war = no
+			AND = {
+				has_war = yes
+				surrender_progress < 0.75
+			}
+		}
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = put_unit_buffers
+
+		# ratio of total armeis in country to be buffered
+		ratio = 0.02
+
+		# you can specify an order id. ratio of same orders ids will be share same ratio
+		#order_id = 2
+
+		# states to put garrison orders (if no state is friendly, strat is invalid)
+		states = {
+			845
+			491
+			1040
+			902
+			1144
+			278
+			847
+			901
+            903
+            1073
+            848
+		}
+
+		# ai areas that the orders will use these buffers in
+		area = asia
+
+		# by default if you have orders in target areas, the buffer will request less units.
+		# you can override this to disable the feature
+		subtract_invasions_from_need = no
+		subtract_fronts_from_need = yes
+	}
+}
+LHS_civ = { #前期别产飞机
+	allowed = {
+		original_tag = LHS
+	}
+	enable = {
+		date < 1939.1.1
+	}
+
+	abort = { date > 1939.1.1 }
+
+        ai_strategy = {
+		type = added_military_to_civilian_factory_ratio
+		value = -999
+	}
+        ai_strategy = {
+		type = equipment_production_factor #飞机不急着产
+		id = fighter
+		value = -99
+	}
+        ai_strategy = {
+		type = equipment_production_factor #飞机不急着产
+		id = cas
+		value = -99
+	}
+}
+SOV_no_wants_dockyard  = { #统一前别造船厂
+	allowed = {
+		original_tag = LHS
+	}
+	enable = {
+		not = {
+            has_country_flag = LHS_nanmeitongyi
+        }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = building_target
+		id = dockyard 
+		value = 0
+	}
 }
 LHS_air_production = { #空军生产
 
@@ -3799,13 +3858,9 @@ LHS_PAN_is_friend = {
     enable = {
         has_government = communism
         LHS ={
-            or = {
-                AND = {
-                    has_cosmetic_tag = LHS_tongyi_communism
-                    has_completed_focus = LHS_renmintuanjie
-                }
-            }
+            has_country_flag =  LHS_nanmeitongyi
         }
+        
         PAN = {
             exists = yes
             has_government = communism
@@ -3856,6 +3911,7 @@ LHS_support_USA = { #支援红精灵
                     has_cosmetic_tag = LHS_xgtongyi_communism
                  
                 }
+                has_country_flag = LHS_nanmeitongyi
             }
     }
     ai_strategy = {
@@ -3884,6 +3940,7 @@ LHS_support_NGD = { #支援红远洋
                     has_cosmetic_tag = LHS_xgtongyi_communism
                  
                 }
+                has_country_flag = LHS_nanmeitongyi
             }
     }
     ai_strategy = {
@@ -3913,6 +3970,7 @@ LHS_support_FRG = { #支援齐亚德
                     has_cosmetic_tag = LHS_xgtongyi_communism
                  
                 }
+                has_country_flag = LHS_nanmeitongyi
             }
     }
     ai_strategy = {
@@ -3934,6 +3992,7 @@ LHS_SOV_is_friend = {
                     has_cosmetic_tag = LHS_tongyi_communism
                     has_completed_focus = LHS_tuanjiesulian
                 }
+                has_country_flag = LHS_nanmeitongyi
             }
         }
         SOV = {
@@ -4088,6 +4147,7 @@ LHS_support_communism = {#派志愿军给相同意识形态的国家
                     has_cosmetic_tag = LHS_xgtongyi_communism
                  
                 }
+                has_country_flag = LHS_nanmeitongyi
             }
         }
         OR = {
@@ -4638,6 +4698,10 @@ LHS_diplomacy_with_ENG = { #对抗圣杯
             has_war_with = PAY
             has_war_with = FRA
             has_war_with = FRG
+            has_war_with = MGU
+            has_war_with = PAO
+            has_war_with = PAQ
+            has_war_with = ELF
             tag = PAN
             }
 		}
