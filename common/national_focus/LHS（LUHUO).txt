@@ -825,7 +825,8 @@ focus_tree = {
 				producer = LHS
 			}
 			add_to_variable = {
-				LHS_tjzx_land_reinforce_rate = 0.05
+				LHS_tjzx_army_core_attack_factor = 0.05
+				LHS_tjzx_army_core_defence_factor = 0.05
 			}
 			add_to_variable = {
 				LHS_tjzx_political_power_factor = 0.2
@@ -2956,6 +2957,10 @@ focus_tree = {
 				trait = LHS_rmgp
 			}
 			add_ideas = LHS_xuechou4
+			country_event = {
+				days = 1
+				id = LHS.106
+			}
 		}
 	}
 	#禾果线
@@ -7487,6 +7492,8 @@ focus_tree = {
 				LHS_pbrm_production_speed_buildings_factor = 0.1
 			}
 			custom_effect_tooltip = pbrm10_tt
+			custom_effect_tooltip = jiesuoguoce
+			mark_focus_tree_layout_dirty = yes
 		}
 	}
 	#风的邮差，星的广播
@@ -8001,6 +8008,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_political_power = 50
+			add_ideas = LHS_tuanjieyuanjun
 		}
 	}
 	#我听到了，那首古老的歌
@@ -8070,16 +8078,19 @@ focus_tree = {
 			base = 100
 		}
 		completion_reward = {
-			#添加装备
-			add_equipment_to_stockpile = {
+			effect_tooltip = {
+				send_equipment = {
+				amount = 20000
 				type = infantry_equipment
-				amount = -20000
+				target = PRC
 			}
-			#添加装备
-			add_equipment_to_stockpile = {
+			send_equipment = {
 				type = support_equipment
-				amount = -2000
+				amount = 2000
+				target = PRC
 			}
+			}
+				
 			add_ideas = LHS_yyqg
 			PRC = {
 				country_event = {
@@ -8157,7 +8168,7 @@ focus_tree = {
 			base = 100
 		}
 		completion_reward = {
-			add_ideas = LHS_tuanjieyuanjun
+			
 			country_event = {
 				days = 1
 				id = LHS.59
@@ -8242,22 +8253,34 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_political_power = 50
+			every_other_country = {
+				limit = {
+					or = {
+							    has_government = fascism
+					}
+					NOT = { or = {tag = DVL tag = JAP TAG = USA TAG = NFA TAG = FRG TAG = NGD is_subject = yes} }
+				}
+				ROOT = {
+					activate_targeted_decision = { target = PREV decision = LHS_jiefang_FROM }
+					
+				}
+			}
 		}
 	}
 	#同志，请不要灰心
 	focus = {
 		id = LHS_zmtz
 		icon = GFX_zmtz
-		x = 0
-		y = 19
+		x = -1
+		y = 20
 		cost = 5
 		mutually_exclusive = {
-			#国策互斥效果（注：所谓互斥 是互相排斥 所以你需要在目标国策上也设置相同的代码指向本国策）
+			focus = LHS_wmdz#国策互斥效果（注：所谓互斥 是互相排斥 所以你需要在目标国策上也设置相同的代码指向本国策）
 		}
 		available = {
+			has_global_flag = Collapse_of_the_Soviet_Union
 			country_exists = PRC
 			PRC = {
-				has_war = no
 				has_capitulated = NO
 				is_subject = no
 				has_completed_focus = PRC_Founding_Ceremony
@@ -8265,6 +8288,12 @@ focus_tree = {
 		}
 		prerequisite = {
 			focus = LHS_sishen			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		prerequisite = {
+			focus = LHS_lmhc			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		prerequisite = {
+			focus = LHS_tysq			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
 		}
 		bypass = {
 		}
@@ -8285,34 +8314,7 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			if = {
-				limit = {
-					country_exists = PRC
-					PRC = {
-						is_subject = no
-					}
-				}
-				PRC = {
-					country_event = {
-						days = 1
-						id = LHS.1133
-					}
-				}
-			}
-			if = {
-				limit = {
-					country_exists = SOV
-					SOV = {
-						is_subject = no
-					}
-				}
-				SOV = {
-					country_event = {
-						days = 10
-						id = LHS.1133
-					}
-				}
-			}
+			
 			if = {
 				limit = {
 					not = {
@@ -8423,25 +8425,90 @@ focus_tree = {
 				}
 				will_lead_to_war_with = DVL
 			}
-			if = {
-				limit = {
-					GER = {
-						not = {
-							has_government = communism
-						}
+			
+		}
+	}
+	#同志，我们都在
+	focus = {
+		id = LHS_wmdz
+		icon = GFX_wmdz
+		x = 1
+		y = 20
+		cost = 5
+		mutually_exclusive = {
+			focus = LHS_zmtz #是互相排斥 所以你需要在目标国策上也设置相同的代码指向本国策）
+		}
+		available = {
+			country_exists = SOV
+			SOV = {
+				has_capitulated = NO
+				is_subject = no
+			}
+			country_exists = PRC
+			PRC = {
+				has_capitulated = NO
+				is_subject = no
+				has_completed_focus = PRC_Founding_Ceremony
+			}
+		}
+		prerequisite = {
+			focus = LHS_sishen			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		prerequisite = {
+			focus = LHS_lmhc			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		prerequisite = {
+			focus = LHS_tysq			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		bypass = {
+		}
+		allow_branch = {
+			has_country_flag = LHS_xiaofengtongyi
+		}
+		relative_position_id = LHS_chetui
+		ai_will_do = {
+			base = 0
+			modifier = {
+				not = {
+					has_game_rule = {
+						rule = AH_LHS_ai_behavior_SELECTION
+						option = DEFAULT
 					}
 				}
-				diplomatic_relation = {
-					country = GER
-					relation = non_aggression_pact
-					active = no
+				add = 100
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					country_exists = PRC
+					PRC = {
+						is_subject = no
+					}
 				}
-				create_wargoal = {
-					type = annex_everything
-					target = GER
+				PRC = {
+					country_event = {
+						days = 1
+						id = LHS.1133
+					}
 				}
 			}
-			custom_effect_tooltip = zhengjiusulian
+			if = {
+				limit = {
+					country_exists = SOV
+					SOV = {
+						is_subject = no
+					}
+				}
+				SOV = {
+					country_event = {
+						days = 10
+						id = LHS.1133
+					}
+				}
+			}
+			custom_effect_tooltip = jiarusulian
+			
 		}
 	}
 	#刺破长夜
@@ -8449,7 +8516,7 @@ focus_tree = {
 		id = LHS_sishen
 		icon = GFX_sishen
 		x = 0
-		y = 18
+		y = 19
 		cost = 5
 		mutually_exclusive = {
 			#国策互斥效果（注：所谓互斥 是互相排斥 所以你需要在目标国策上也设置相同的代码指向本国策）
@@ -8506,7 +8573,7 @@ focus_tree = {
 		id = LHS_sztc
 		icon = GFX_sztc
 		x = 0
-		y = 20
+		y = 21
 		cost = 5
 		mutually_exclusive = {
 			#国策互斥效果（注：所谓互斥 是互相排斥 所以你需要在目标国策上也设置相同的代码指向本国策）
@@ -8526,14 +8593,11 @@ focus_tree = {
 				}
 			}
 		}
+		
+
 		prerequisite = {
 			focus = LHS_zmtz			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-		}
-		prerequisite = {
-			focus = LHS_tysq			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-		}
-		prerequisite = {
-			focus = LHS_lmhc			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+			focus = LHS_wmdz
 		}
 		bypass = {
 			or = {
@@ -8553,6 +8617,7 @@ focus_tree = {
 			base = 100
 		}
 		completion_reward = {
+			set_country_flag = noyihe
 			if = {
 				every_country = {
 					limit = {
@@ -8598,7 +8663,7 @@ focus_tree = {
 		id = LHS_gsjw
 		icon = GFX_gsjw
 		x = 0
-		y = 21
+		y = 22
 		cost = 10
 		mutually_exclusive = {
 			#国策互斥效果（注：所谓互斥 是互相排斥 所以你需要在目标国策上也设置相同的代码指向本国策）
@@ -8706,6 +8771,10 @@ focus_tree = {
 			}
 			remove_ideas = LHS_shijiegeming
 			custom_effect_tooltip = LHS_kaiduan
+			country_event = {
+				days = 10
+				id = LHS.107
+			}
 		}
 	}
 	#北方的风，也吟唱悲歌？
@@ -9743,7 +9812,8 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_to_variable = {
-				LHS_tjzx_land_reinforce_rate = 0.05
+				LHS_tjzx_army_core_attack_factor = 0.05
+				LHS_tjzx_army_core_defence_factor = 0.05
 			}
 			add_to_variable = {
 				LHS_tjzx_political_power_factor = 0.2
@@ -9835,6 +9905,7 @@ focus_tree = {
 				}
 			}
 			custom_effect_tooltip = gyqj_tt
+			show_ideas_tooltip = LHS_tuanjiemeizhou
 		}
 	}
 	#亚洲的同志
@@ -9930,10 +10001,14 @@ focus_tree = {
 		}
 		completion_reward = {
 			#添加装备
-			add_equipment_to_stockpile = {
-				type = infantry_equipment
-				amount = -20000
-			}
+		effect_tooltip = {
+			send_equipment = {
+					amount = 20000
+					type = infantry_equipment
+					target = PRC
+				}
+		}
+			
 			PRC = {
 				add_opinion_modifier = {
 					target = LHS
@@ -10048,7 +10123,7 @@ focus_tree = {
 				LHS_tjzx_weekly_manpower = 2000
 			}
 			add_to_variable = {
-				LHS_tjzx_army_org_factor = 0.2
+				LHS_tjzx_conscription_factor = 0.2
 			}
 			PRC = {
 				country_event = {
@@ -10327,6 +10402,7 @@ focus_tree = {
 				LHS_tjzx_production_speed_buildings_factor = 0.15
 			}
 			custom_effect_tooltip = tjzxsulian_tt
+			show_ideas_tooltip = LHS_Comintern_yuanzhu
 			SOV = {
 				country_event = {
 					days = 1
@@ -11729,32 +11805,11 @@ focus_tree = {
 		ai_will_do = {
 			#ai点击国策的倾向
 			base = 100			#基础值
-			modifier = {
-				date < 1941.1.1
-				add = -100
-			}
-			modifier = {
-				501 = {
-					owner = {
-						tag = LHS
-					}
-				}
-				OR = {
-					not = {
-						country_exists = MGU
-					}
-					MGU = {
-						is_subject_of = LHS
-					}
-				}
-				add = 100
-			}
+			
 		}
 		relative_position_id = LHS_zhihui
 		completion_reward = {
-			every_army_leader = {
-				add_unit_leader_trait = LHS_yinni
-			}
+			add_ideas = LHS_yinni
 		}
 	}
 	#游击行军准则
@@ -12532,7 +12587,7 @@ focus_tree = {
 		icon = GFX_hongjuntuanjie
 		x = 0
 		y = 8
-		cost = 5
+		cost = 10
 		prerequisite = {
 			focus = LHS_hongjunsudu			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
 		}
@@ -13352,6 +13407,170 @@ focus_tree = {
 			}
 		}
 	}
+
+	#每一颗子弹的意义
+	focus = {
+		id = LHS_zdyy
+		icon = GFX_zdyy
+		x = 0
+		y = 12
+		cost = 10
+		prerequisite = {
+						#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		available = {
+			
+		}
+		allow_branch = {
+			has_country_flag = xiaofeng
+			has_completed_focus = LHS_fxyl
+		}
+		bypass = {
+		}
+		ai_will_do = {
+			#ai点击国策的倾向
+			base = 20			#基础值
+		}
+		relative_position_id = LHS_kuangwu
+		completion_reward = {
+     add_tech_bonus = {
+				name = buqiang
+				category = infantry_tech
+				bonus = 1
+				uses = 1
+				ahead_reduction = 1
+			}
+				add_ideas = LHS_wqyj
+			}
+			
+		}
+
+		#不只是移动的堡垒
+	focus = {
+		id = LHS_ydbl
+		icon = GFX_ydbl
+		x = -1
+		y = 13
+		cost = 10
+		prerequisite = {
+			focus = LHS_zdyy			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		available = {
+		}
+		allow_branch = {
+			has_country_flag = xiaofeng
+			has_completed_focus = LHS_fxyl
+		}
+		bypass = {
+		}
+		ai_will_do = {
+			#ai点击国策的倾向
+			base = 20			#基础值
+		}
+		relative_position_id = LHS_kuangwu
+		completion_reward = {
+     add_tech_bonus = {
+				name = buqiang
+				category = armor
+				bonus = 1
+				uses = 1
+				ahead_reduction = 1
+			}
+		    swap_ideas = {
+				remove_idea = LHS_wqyj
+				add_idea = LHS_wqyj2
+			}
+				
+			}
+			
+		}
+
+		#天空下的眼睛
+	focus = {
+		id = LHS_tkyj
+		icon = GFX_tkyj
+		x = 1
+		y = 13
+		cost = 10
+		prerequisite = {
+			focus = LHS_ydbl			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		prerequisite = {
+			focus = LHS_zdyy			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		available = {
+		}
+		allow_branch = {
+			has_country_flag = xiaofeng
+			has_completed_focus = LHS_fxyl
+		}
+		bypass = {
+		}
+		ai_will_do = {
+			#ai点击国策的倾向
+			base = 20			#基础值
+		}
+		relative_position_id = LHS_kuangwu
+		completion_reward = {
+     add_tech_bonus = {
+				name = buqiang
+				category = air_equipment
+				bonus = 1
+				uses = 1
+				ahead_reduction = 1
+			}
+		    swap_ideas = {
+				remove_idea = LHS_wqyj2
+				add_idea = LHS_wqyj3
+			}
+				
+			}
+			
+		}
+
+		#越过海湾的船
+	focus = {
+		id = LHS_yghw
+		icon = GFX_yghw
+		x = 0
+		y = 14
+		cost = 10
+		prerequisite = {
+			focus = LHS_ydbl			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		prerequisite = {
+			focus = LHS_tkyj			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+		}
+		available = {
+		}
+		allow_branch = {
+			has_country_flag = xiaofeng
+			has_completed_focus = LHS_fxyl
+		}
+		bypass = {
+		}
+		ai_will_do = {
+			#ai点击国策的倾向
+			base = 20			#基础值
+		}
+		relative_position_id = LHS_kuangwu
+		completion_reward = {
+     add_tech_bonus = {
+				name = buqiang
+				category = naval_equipment
+				bonus = 1
+				uses = 1
+				ahead_reduction = 1
+			}
+		    swap_ideas = {
+				remove_idea = LHS_wqyj3
+				add_idea = LHS_wqyj4
+			}
+				
+			}
+			
+		}
+	
 	#雪伊经济线
 	#雪伊的建设
 	focus = {
@@ -13918,29 +14137,15 @@ focus_tree = {
 		}
 		relative_position_id = LHS_kuangwu
 		completion_reward = {
-			303 = {
+			512 = {
 				add_resource = {
 					type = steel
-					amount = 60
+					amount = 20
 				}
 			}
-			903 = {
-				add_resource = {
-					type = tungsten
-					amount = 48
-				}
-				494 = {
-					add_resource = {
-						type = chromium
-						amount = 35
-					}
-				}
-				279 = {
-					add_resource = {
-						type = aluminium
-						amount = 32
-					}
-				}
+			swap_ideas = {
+				remove_idea =LHS_ziyuan
+				add_idea = LHS_ziyuan2
 			}
 		}
 	}
@@ -14018,7 +14223,7 @@ focus_tree = {
 				LHS_hhjj_local_resources_factor = 0.01
 			}
 			add_to_variable = {
-				LHS_hhjj_local_resources = 0.005
+				LHS_hhjj_production_lack_of_resource_penalty_factor = -0.005
 			}
 			add_to_variable = {
 				LHS_min_export = 0.005
@@ -14034,12 +14239,7 @@ focus_tree = {
 						tag = LHS
 					}
 				}
-				add_to_variable = {
-					LHS_hhjj_local_resources_factor = 0.01
-				}
-				add_to_variable = {
-					LHS_hhjj_local_resources = 0.005
-				}
+
 				country_event = {
 					days = 1
 					id = LHS.20
@@ -14104,6 +14304,7 @@ focus_tree = {
 			focus = LHS_zyyj			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
 		}
 		available = {
+			has_tech = synth_oil_experiments
 		}
 		allow_branch = {
 			has_country_flag = xueyi
@@ -14116,36 +14317,37 @@ focus_tree = {
 		}
 		relative_position_id = LHS_kuangwu
 		completion_reward = {
+		
 			random_owned_controlled_state = {
-				prioritize = {
-					279
-				}
-				add_extra_state_shared_building_slots = 4
-				add_building_construction = {
+				prioritize = { 12798 }
+				add_extra_state_shared_building_slots = 1
+		add_building_construction = {
 					type = synthetic_refinery
-					level = 4
-				}
-				add_resource = {
-					type = oil
-					amount = 32
+					level = 1
 				}
 			}
 			random_owned_controlled_state = {
-				prioritize = {
-					303
-				}
-				add_resource = {
-					type = oil
-					amount = 12
+				prioritize = { 8199 }
+				add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+					type = synthetic_refinery
+					level = 1
 				}
 			}
 			random_owned_controlled_state = {
-				prioritize = {
-					845
+				prioritize = { 12997 }
+				add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+					type = synthetic_refinery
+					level = 1
 				}
-				add_resource = {
-					type = oil
-					amount = 23
+			}
+			random_owned_controlled_state = {
+				prioritize = { 650 }
+				add_extra_state_shared_building_slots = 1
+		add_building_construction = {
+					type = synthetic_refinery
+					level = 1
 				}
 			}
 			swap_ideas = {
