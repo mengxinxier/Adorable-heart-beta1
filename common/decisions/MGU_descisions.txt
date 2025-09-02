@@ -33,9 +33,9 @@ form_MGU_Silver_Court_category = {#银之庭院
 				name = "银之庭院"
 			}
 			501 = { set_state_name = "银之庭院" }
-			set_victory_points = {
+			add_victory_points = {
 				province = 1719
-				value = 5
+				value = 10
 			}
 		}
 	}
@@ -70,9 +70,9 @@ form_MGU_Silver_Court_category = {#银之庭院
 		}
 		remove_effect = {
 		set_global_flag = MGU_Silver_Court_2_standing_by_flag
-			set_victory_points = {
+			add_victory_points = {
 				province = 1719
-				value = 5
+				value = 10
 			}
 		}
 	}
@@ -110,9 +110,9 @@ form_MGU_Silver_Court_category = {#银之庭院
         }
 		remove_effect = {
 		set_global_flag = MGU_Silver_Court_3_standing_by_flag
-			set_victory_points = {
+			add_victory_points = {
 				province = 1719
-				value = 5
+				value = 10
 			}
 		}
 	}
@@ -129,7 +129,7 @@ form_MGU_Silver_Court_category = {#银之庭院
 			owns_state = 501
 			controls_state = 501
 			has_global_flag = MGU_Silver_Court_1_standing_by_flag
-			has_tech = construction_b
+			has_tech = construction5
 			has_completed_focus = TBMGU_Plantera_10
 			has_war = no
 		}
@@ -149,17 +149,17 @@ form_MGU_Silver_Court_category = {#银之庭院
 		}
 		remove_effect = {
 		set_global_flag = MGU_Silver_Court_4_standing_by_flag
-			set_victory_points = {
+			add_victory_points = {
 				province = 1719
-				value = 5
+				value = 10
 			}
-			set_victory_points = {
+			add_victory_points = {
 				province = 10360
-				value = 5
+				value = 10
 			}
-			set_victory_points = {
+			add_victory_points = {
 				province = 5112
-				value = 5
+				value = 10
 			}
 		}
 	}
@@ -178,7 +178,11 @@ form_MGU_Silver_Court_category = {#银之庭院
 			has_global_flag = MGU_Silver_Court_1_standing_by_flag
 			has_equipment = { magic_assault_equipment_3 > 14999 }
 			has_completed_focus = TBMGU_Tearalaments_09
-			has_idea = USA_Excellent_spirit_suit
+			OR = {
+                has_idea = USA_Excellent_spirit_suit
+                1165 = { controller = { is_in_faction_with = ROOT } }
+                owns_state = 1165
+			}
 			has_war = no
 		}
 		fire_only_once = yes
@@ -198,9 +202,9 @@ form_MGU_Silver_Court_category = {#银之庭院
         }
 		remove_effect = {
         set_global_flag = MGU_Silver_Court_5_standing_by_flag
-			set_victory_points = {
+			add_victory_points = {
 				province = 1719
-				value = 5
+				value = 10
 			}
 		}
 	}
@@ -238,9 +242,9 @@ form_MGU_Silver_Court_category = {#银之庭院
 		}
 		remove_effect = {
 		set_global_flag = MGU_Silver_Court_6_standing_by_flag
-			set_victory_points = {
+			add_victory_points = {
 				province = 1719
-				value = 5
+				value = 10
 			}
 			501 = {
 				add_building_construction = {
@@ -255,6 +259,740 @@ form_MGU_Silver_Court_category = {#银之庭院
 		}
 	}
 }
+
+form_MGU_homura_industrious_category = {#勤劳的晓美焰
+
+MGU_homura_industrious_0 = {#晓美焰恢复疲劳
+		icon = GFX_decision_duihuan_gongchang_1
+		allowed = {#
+			tag = MGU
+		}
+		visible = {
+            has_global_flag = MGU_Homura_COUP
+            always = no
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		days_mission_timeout = 0
+		activation = {
+            has_global_flag = MGU_Homura_COUP
+                check_variable = {
+                    global.MGU_homura_tired > 0
+                }
+		}
+		cancel_trigger = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		days_re_enable = 0
+		fixed_random_seed = no
+		fire_only_once = no
+		is_good = yes
+
+		modifier = {
+		}
+
+		timeout_effect = {
+            add_to_variable = { global.MGU_homura_tired = -5 }
+		}
+	}
+	MGU_homura_industrious_a = { #协助科研
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_a_flag }
+		}
+		fire_only_once = yes
+		days_remove = 180
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		modifier = {
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 20 }
+            custom_effect_tooltip = MGU_homura_tired_add_20_txt
+            set_country_flag = MGU_homura_working_a_flag
+			custom_effect_tooltip = MGU_homura_industrious_a_txt
+			hidden_effect = {
+				set_technology = {
+					MGU_homura_industrious_a_tec = 1
+					popup = no
+				}
+			}
+		}
+		remove_effect = {
+            clr_country_flag = MGU_homura_working_a_flag
+		}
+	}
+	MGU_homura_industrious_b = { #协助工业生产
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_a_flag }
+		}
+		fire_only_once = yes
+		days_remove = 180
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		modifier = {
+
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 20 }
+            custom_effect_tooltip = MGU_homura_tired_add_20_txt
+            set_country_flag = MGU_homura_working_a_flag
+			custom_effect_tooltip = MGU_homura_industrious_b_txt
+			hidden_effect = {
+				set_technology = {
+					MGU_homura_industrious_b_tec = 1
+					popup = no
+				}
+			}
+		}
+		remove_effect = {
+            clr_country_flag = MGU_homura_working_b_flag
+		}
+	}
+	MGU_homura_industrious_c = { #生产效率
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_a_flag }
+		}
+		fire_only_once = yes
+		days_remove = 180
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		modifier = {
+
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 20 }
+            custom_effect_tooltip = MGU_homura_tired_add_20_txt
+            set_country_flag = MGU_homura_working_a_flag
+			custom_effect_tooltip = MGU_homura_industrious_c_txt
+			hidden_effect = {
+				set_technology = {
+					MGU_homura_industrious_c_tec = 1
+					popup = no
+				}
+			}
+		}
+		remove_effect = {
+            clr_country_flag = MGU_homura_working_c_flag
+		}
+	}
+	MGU_homura_industrious_d = { #建造速度
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_a_flag }
+		}
+		fire_only_once = yes
+		days_remove = 180
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		modifier = {
+
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 20 }
+            custom_effect_tooltip = MGU_homura_tired_add_20_txt
+            set_country_flag = MGU_homura_working_a_flag
+			custom_effect_tooltip = MGU_homura_industrious_d_txt
+			hidden_effect = {
+				set_technology = {
+					MGU_homura_industrious_d_tec = 1
+					popup = no
+				}
+			}
+		}
+		remove_effect = {
+            clr_country_flag = MGU_homura_working_d_flag
+		}
+	}
+	MGU_homura_industrious_e = { #处理内政
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		has_country_flag = MGU_MGU_homura_industrious_e_on_flag
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_a_flag }
+		}
+		fire_only_once = yes
+		days_remove = 180
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		modifier = {
+
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 20 }
+            custom_effect_tooltip = MGU_homura_tired_add_20_txt
+            set_country_flag = MGU_homura_working_a_flag
+			custom_effect_tooltip = MGU_homura_industrious_d_txt
+			hidden_effect = {
+				set_technology = {
+					MGU_homura_industrious_d_tec = 1
+					popup = no
+				}
+			}
+		}
+		remove_effect = {
+		    add_political_power = 80
+		}
+	}
+	MGU_homura_industrious_1 = { #整顿政务
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+
+		}
+		remove_effect = {
+		    add_political_power = 60
+		    add_popularity = { ideology = neutrality popularity = 0.05 }
+			remove_dynamic_modifier = {
+				modifier = MGU_aftermath_of_the_coup
+			}
+			add_victory_points = {
+				province = 5107
+				value = -5
+			}
+			add_victory_points = {
+				province = 10098
+				value = -5
+			}
+			add_victory_points = {
+				province = 1719
+				value = 5
+			}
+			add_victory_points = {
+				province = 13268
+				value = -2
+			}
+			add_victory_points = {
+				province = 12933
+				value = -1
+			}
+            set_country_flag = MGU_MGU_homura_industrious_e_on_flag
+		}
+	}
+
+	MGU_homura_industrious_2 = { #建设规划 见泷原
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+            #set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+			501 = {
+			    add_extra_state_shared_building_slots = 6
+			}
+            #clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_3 = { #建设规划 神滨市
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+            #set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+			capital_scope = {
+			    add_extra_state_shared_building_slots = 6
+			}
+            #clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_4 = { #建设规划 东北
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+            #set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+			498 = {
+			    add_extra_state_shared_building_slots = 6
+			}
+            #clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_5 = { #整理稳定度
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = no
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+            #set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+            add_stability = 0.10
+            #clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_6 = { #意识形态支持度
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = no
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+            #set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+            add_popularity = { ideology = neutrality popularity = 0.1 }
+            #clr_country_flag = MGU_homura_working_flag
+		}
+	}
+
+
+	MGU_homura_industrious_7 = { #建设规划 内政部方针
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+            #set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+            country_event = magicunion.1187
+		}
+	}
+
+	MGU_homura_industrious_8 = { #间谍组织
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+            #set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+            country_event = magicunion.1188
+		    add_popularity = { ideology = neutrality popularity = 0.05 }
+			create_intelligence_agency = {
+				name = "魔联审判庭"
+				icon = GFX_intelligence_agency_logo_homura
+			}
+		    upgrade_intelligence_agency = upgrade_passive_defense
+		}
+	}
+	MGU_homura_industrious_9 = { #协助里见灯花的研究
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 50 }
+            custom_effect_tooltip = MGU_homura_tired_add_50_txt
+            set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+			add_research_slot = 1
+			add_resource = {
+                type = originium
+                amount = 120
+                state = 498
+            }
+            country_event = magicunion.1188
+            clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_10 = { #魔联科学部
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 10
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 50 }
+            custom_effect_tooltip = MGU_homura_tired_add_50_txt
+            set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+		    set_global_flag = MGU_science_expansion_flag
+            clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_11 = { #魔法工业园区 繁荣部
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+            num_of_factories > 100
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 10
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 50 }
+            custom_effect_tooltip = MGU_homura_tired_add_50_txt
+            set_country_flag = MGU_homura_working_flag
+		}
+		remove_effect = {
+    		add_ideas = MGU_yilaimofa
+			#add_offsite_building = { type = arms_factory level = 5 }
+            #add_offsite_building = { type = industrial_complex level = 5 }
+            set_global_flag = form_MGU_mofagongyeyuanqu_flag
+			add_resource = {
+                        	type = aluminium
+                        	amount = 10
+                        	state = 500
+                        	}
+            add_resource = {
+                            type = steel
+                            amount = 10
+                            state = 502
+                            }
+            add_resource = {
+                            type = originium
+            				amount = 10
+            				state = 500
+            				}
+
+            add_timed_idea = {
+                idea = MGU_gongyeyuanqu
+                days = 120
+                }
+            custom_effect_tooltip = MGU_homura_industrious_11_txt
+            clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_12 = { #农业方案 友爱部
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 50 }
+            custom_effect_tooltip = MGU_homura_tired_add_50_txt
+            set_country_flag = MGU_homura_working_flag
+            set_country_flag = MGU_homura_industrious_12_flag
+		}
+		remove_effect = {
+            clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_13 = { #重整议会 和谐部
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 50 }
+            custom_effect_tooltip = MGU_homura_tired_add_50_txt
+            set_country_flag = MGU_homura_working_flag
+            set_country_flag = MGU_homura_industrious_13_flag
+		}
+		remove_effect = {
+            clr_country_flag = MGU_homura_working_flag
+		}
+	}
+	MGU_homura_industrious_14 = { #地下深处的巫女
+		#icon = decision_ger_mefo_bills
+		visible = {
+		tag = MGU
+        has_completed_focus = TBMGU_rest_01
+		}
+		available = {
+            custom_trigger_tooltip = {
+                tooltip = MGU_homura_tired_less_200_txt
+                check_variable = {
+                    global.MGU_homura_tired < 200
+                }
+            }
+            NOT = { has_country_flag = MGU_homura_working_flag }
+            has_tech = excavation3
+            has_tech = tech_field_hospital3
+            has_completed_focus = TBMGU_rest_01
+		}
+		fire_only_once = yes
+		days_remove = 90
+		cost = 0
+		ai_will_do = {
+			factor = 10
+		}
+		complete_effect = {
+            add_to_variable = { global.MGU_homura_tired = 30 }
+            custom_effect_tooltip = MGU_homura_tired_add_30_txt
+		}
+		remove_effect = {
+            country_event = magicunion.1134
+		}
+	}
+
+}
+
+
 
 
 
@@ -466,6 +1204,7 @@ form_MGU_TGC_category = {#大议会
 		NOT = { has_country_leader = { ruling_only = yes name = "晓美焰" } }
 		has_country_flag = MGU_Next_flag
 		is_in_faction = no
+		always = no
 		}
 		fire_only_once = no
 		days_remove = 720
@@ -476,6 +1215,30 @@ form_MGU_TGC_category = {#大议会
 		}
 		complete_effect = {
             country_event = MGU_event.18
+		}
+		remove_effect = {
+
+		}
+	}
+	MGU_TGC_2 = { #吞并玛吉斯之翼
+		#icon = decision_ger_mefo_bills
+		available = {
+           MGS = { is_subject_of = MGU }
+		}
+		visible = {
+		tag = MGU
+		has_completed_focus = TBMGU_MZ_0
+		MGS = { is_subject_of = MGU }
+		}
+		fire_only_once = no
+		days_remove = 1
+		days_re_enable = 1
+		cost = 0
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+            annex_country = { target = MGS transfer_troops = no }
 		}
 		remove_effect = {
 
@@ -964,6 +1727,621 @@ MGU_parliament_dispute_category = {#魔联议会假决议
 }
 
 ###########魔联议会假决议↑↑#########
+###########魔联民主线决议↓↓################
+MGU_Heart_Democracy_category = {
+	MGU_Heart_Democracy_AI_2 = {AI部署
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            is_ai = yes
+            has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+        }
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+            has_war = yes
+            has_army_manpower = { size < 999999 }
+		}
+		#仅一次
+		fire_only_once = no
+		#费用
+		cost = 0
+		#花费天数
+		days_remove = 30
+		modifier = {
+		    mobilization_speed = 0.5
+		}
+		complete_effect = {
+            add_manpower = -120000
+		}
+		remove_effect = {#结束后效果
+                    capital_scope = {
+                    			create_unit = {
+                    				division = "name = \"自由卫队\" division_template = \"自由卫队\" start_experience_factor = 0.2 start_equipment_factor = 0.5 "
+                    				owner = MGU
+                    				count = 12
+                    				allow_spawning_on_enemy_provs = yes
+                    			}
+                    		}
+		}
+	}
+	MGU_Heart_Democracy_Deploy = {民主部署
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            has_completed_focus = TBMGU_MZ_JG_7
+        }
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+            has_war = yes
+            has_army_manpower = { size < 999999 }
+
+		}
+		#仅一次
+		fire_only_once = yes
+		#费用
+		cost = 0
+		#花费天数
+		days_remove = 30
+		modifier = {
+		}
+		complete_effect = {
+		add_manpower = -180000
+		set_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+        		division_template = {
+                    name = "自由卫队" #名字
+                    division_names_group = "自由卫队"
+                    is_locked = yes
+                    regiments = {
+                    infantry = { x = 0 y = 0 }
+                    infantry = { x = 0 y = 1 }
+                    infantry = { x = 0 y = 2 }
+                    infantry = { x = 1 y = 0 }
+                    infantry = { x = 1 y = 1 }
+                    infantry = { x = 1 y = 2 }
+                    infantry = { x = 2 y = 0 }
+                    infantry = { x = 2 y = 1 }
+                    infantry = { x = 2 y = 2 }
+                     }
+                     support = {
+
+                     }
+                    }
+
+        		division_template = {
+                    name = "民主先锋" #名字
+                    division_names_group = "民主先锋"
+                    is_locked = yes
+                    regiments = {
+                    cavalry = { x = 0 y = 0 }
+                    cavalry = { x = 0 y = 1 }
+                    cavalry = { x = 0 y = 2 }
+                    cavalry = { x = 1 y = 0 }
+                    cavalry = { x = 1 y = 1 }
+                    cavalry = { x = 1 y = 2 }
+                     }
+                     support = {
+
+                     }
+                    }
+
+        		division_template = {
+                    name = "强大到不可思议的部队" #名字
+                    division_names_group = "强大到不可思议的部队"
+                    is_locked = yes
+                    regiments = {
+                    infantry = { x = 0 y = 0 }
+                    infantry = { x = 0 y = 1 }
+                    infantry = { x = 0 y = 2 }
+                    infantry = { x = 1 y = 0 }
+                    infantry = { x = 1 y = 1 }
+                    infantry = { x = 1 y = 2 }
+                    infantry = { x = 2 y = 0 }
+                    artillery_brigade = { x = 3 y = 0 }
+                    artillery_brigade = { x = 3 y = 1 }
+                     }
+                     support = {
+                     engineer = { x = 0 y = 0 }
+                     }
+                    }
+		}
+		remove_effect = {#结束后效果
+            if = {
+                limit = {
+                    is_ai = yes
+                }
+                    capital_scope = {
+                    			create_unit = {
+                    				division = "name = \"自由卫队\" division_template = \"自由卫队\" start_experience_factor = 0.2 start_equipment_factor = 1.0 "
+                    				owner = MGU
+                    				count = 12
+                    				allow_spawning_on_enemy_provs = yes
+                    			}
+                    		}
+                    capital_scope = {
+                    			create_unit = {
+                    				division = "name = \"民主先锋\" division_template = \"民主先锋\" start_experience_factor = 0.2 start_equipment_factor = 1.0 "
+                    				owner = MGU
+                    				count = 4
+                    				allow_spawning_on_enemy_provs = yes
+                    			}
+                    		}
+                    capital_scope = {
+                    			create_unit = {
+                    				division = "name = \"强大到不可思议的部队\" division_template = \"强大到不可思议的部队\" start_experience_factor = 0.4 start_equipment_factor = 1.0 "
+                    				owner = MGU
+                    				count = 2
+                    				allow_spawning_on_enemy_provs = yes
+                    			}
+                    		}
+            }
+            else = {
+                    capital_scope = {
+                    			create_unit = {
+                    				division = "name = \"自由卫队\" division_template = \"自由卫队\" start_experience_factor = 0.2 start_equipment_factor = 0.1 "
+                    				owner = MGU
+                    				count = 12
+                    				allow_spawning_on_enemy_provs = yes
+                    			}
+                    		}
+                    capital_scope = {
+                    			create_unit = {
+                    				division = "name = \"民主先锋\" division_template = \"民主先锋\" start_experience_factor = 0.2 start_equipment_factor = 0.1 "
+                    				owner = MGU
+                    				count = 4
+                    				allow_spawning_on_enemy_provs = yes
+                    			}
+                    		}
+                    capital_scope = {
+                    			create_unit = {
+                    				division = "name = \"强大到不可思议的部队\" division_template = \"强大到不可思议的部队\" start_experience_factor = 0.4 start_equipment_factor = 0.1 "
+                    				owner = MGU
+                    				count = 2
+                    				allow_spawning_on_enemy_provs = yes
+                    			}
+                    		}
+            }
+
+		}
+
+	}
+
+	MGU_Heart_Democracy_1 = {买稳定 民主事业
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            has_completed_focus = TBMGU_MZ_9
+        }
+		ai_will_do = {
+			factor = 0
+		}
+		custom_cost_trigger = {
+			has_political_power > 49
+		}
+		custom_cost_text = HCP_200_and_PP_50
+		available = {
+            has_stability < 1
+		}
+		#仅一次
+		fire_only_once = no
+		#费用
+		cost = 100
+		#花费天数
+		days_remove = 90
+		modifier = {
+		}
+		complete_effect = {
+			hidden_effect = {
+				COST_200_UBS_LOAD = yes
+				add_political_power = -50
+			}
+		}
+		remove_effect = {#结束后效果
+			add_to_variable = {
+				MGU_Heart_Democracy_stability_factor = 0.10
+			}
+			force_update_dynamic_modifier = yes
+			custom_effect_tooltip = MGU_Heart_Democracy_1_txt
+		}
+	}
+	MGU_Heart_Democracy_2 = {民主王牌
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+        }
+		ai_will_do = {
+			factor = 0
+		}
+		custom_cost_trigger = {
+			has_political_power > 49
+		}
+		custom_cost_text = HCP_200_and_PP_50
+		available = {
+
+		}
+		#仅一次
+		fire_only_once = no
+		#费用
+		cost = 0
+		#花费天数
+		days_remove = 60
+		modifier = {
+		}
+		complete_effect = {
+			hidden_effect = {
+				COST_200_UBS_LOAD = yes
+				add_political_power = -50
+			}
+			add_manpower = 10000
+            add_equipment_to_stockpile = { type = magic_assault_equipment amount = 1000 }
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+	MGU_Heart_Democracy_3 = {民主宣传
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+        }
+		ai_will_do = {
+			factor = 0
+		}
+		custom_cost_trigger = {
+			has_political_power > 49
+		}
+		custom_cost_text = HCP_200_and_PP_50
+		available = {
+
+		}
+		#仅一次
+		fire_only_once = no
+		#费用
+		cost = 0
+		#花费天数
+		days_remove = 120
+		modifier = {
+		    mobilization_speed = 0.25
+		}
+		complete_effect = {
+			hidden_effect = {
+				COST_200_UBS_LOAD = yes
+				add_political_power = -50
+			}
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+	MGU_Heart_Democracy_4 = {封禁非法广播
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+        }
+		ai_will_do = {
+			factor = 0
+		}
+		custom_cost_trigger = {
+			has_political_power > 49
+		}
+		custom_cost_text = HCP_200_and_PP_50
+		available = {
+
+		}
+		#仅一次
+		fire_only_once = no
+		#费用
+		cost = 0
+		#花费天数
+		days_remove = 120
+		modifier = {
+		    army_morale_factor = 0.25
+		}
+		complete_effect = {
+			hidden_effect = {
+				COST_200_UBS_LOAD = yes
+				add_political_power = -50
+			}
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+	MGU_Heart_Democracy_5 = {保卫民主城市！
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+        }
+		ai_will_do = {
+			factor = 0
+		}
+		custom_cost_trigger = {
+			has_political_power > 49
+		}
+		custom_cost_text = HCP_200_and_PP_50
+		available = {
+
+		}
+		#仅一次
+		fire_only_once = no
+		#费用
+		cost = 0
+		#花费天数
+		days_remove = 120
+		modifier = {
+		    army_core_attack_factor = 0.075
+		    army_core_defence_factor = 0.075
+		}
+		complete_effect = {
+			hidden_effect = {
+				COST_200_UBS_LOAD = yes
+				add_political_power = -50
+			}
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+}
+###########魔联民主线决议↑↑################
+###########魔联魔女之夜↓↓################
+MGU_Walpurgisnacht_warning_category  = {#魔女之夜NEW
+
+    	form_MGU_Rumors_of_Witch_Night_0 = { #魔女之夜即将到来
+            		icon = generic_decision
+            allowed = {#获得条件
+                tag = MGU
+            	}
+		    activation = {
+                date > 1937.3.1
+                MGU = { exists = yes }
+                MGU = { is_ai = no }
+            #    has_global_flag = MGU_Homura_COUP
+                NOT = { has_global_flag = MGU_Witch_Night_befall }
+		    }
+            available = {
+                has_global_flag = MGU_Witch_Night_befall
+            }
+            is_good = no
+            days_mission_timeout = 730
+            timeout_effect = {
+                country_event = magicunion.10670_MGU
+            }
+            complete_effect = {
+
+            }
+        }
+
+MGU_Walpurgisnacht_warning_0 = {#魔女之夜正在移动
+		icon = GFX_decision_duihuan_gongchang_1
+
+		allowed = {#
+			tag = MGU
+		}
+		visible = {
+            NOT = { has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag }
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+            has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+		}
+		days_mission_timeout = 42
+		activation = {
+			NOT = { has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag }
+			has_global_flag = form_MGU_Walpurgisnacht_warning_start_flag
+		}
+		cancel_trigger = {
+			has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+		}
+		days_re_enable = 1
+		fixed_random_seed = no
+		fire_only_once = no
+		is_good = no
+
+		modifier = {
+		}
+
+		timeout_effect = {
+            custom_effect_tooltip = MGU_Walpurgisnacht_warning_0_txt
+            MGU_Walpurgisnacht_warning_act = yes
+            add_to_variable = { global.Walpurgisnacht_pow = -5 }
+		}
+	}
+
+	MGU_Walpurgisnacht_resolution_1 = {#灵装突击
+		icon = GFX_decision_duihuan_gongchang_1
+		visible = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_start_flag
+		NOT = { has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag }
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+		has_equipment = { magic_assault_equipment > 499 }
+		}
+		days_re_enable = 1
+		days_remove = 90
+		modifier = {
+			research_speed_factor = -0.05
+		}
+		complete_effect = {
+            add_equipment_to_stockpile = { type = magic_assault_equipment amount = -500 }
+            if = {
+                limit = {
+                    has_tech = magic_weapons5
+                }
+                custom_effect_tooltip = MGU_Walpurgisnacht_resolution_D15_txt
+                add_to_variable = { global.Walpurgisnacht_pow = -15 }
+            }
+            else = {
+                custom_effect_tooltip = MGU_Walpurgisnacht_resolution_D10_txt
+                add_to_variable = { global.Walpurgisnacht_pow = -10 }
+            }
+            if = {
+                limit = {
+                    check_variable = {
+                        global.Walpurgisnacht_pow < 1
+                    }
+                }
+                set_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+            }
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+
+	MGU_Walpurgisnacht_resolution_2 = {#魔炮
+		icon = GFX_decision_duihuan_gongchang_1
+		visible = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_start_flag
+		NOT = { has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag }
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+		has_equipment = { magic_artillery_equipment > 199 }
+		}
+		days_re_enable = 1
+		days_remove = 90
+		modifier = {
+			research_speed_factor = -0.05
+		}
+		complete_effect = {
+            add_equipment_to_stockpile = { type = magic_artillery_equipment amount = -200 }
+            if = {
+                limit = {
+                    has_tech = magic_artillery3
+
+                }
+                custom_effect_tooltip = MGU_Walpurgisnacht_resolution_D30_txt
+                add_to_variable = { global.Walpurgisnacht_pow = -30 }
+            }
+            else = {
+                custom_effect_tooltip = MGU_Walpurgisnacht_resolution_D20_txt
+                add_to_variable = { global.Walpurgisnacht_pow = -20 }
+            }
+            if = {
+                limit = {
+                    check_variable = {
+                        global.Walpurgisnacht_pow < 1
+                    }
+                }
+                set_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+            }
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+	MGU_Walpurgisnacht_resolution_3 = {#空中强袭
+		icon = GFX_decision_duihuan_gongchang_1
+		visible = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_start_flag
+		NOT = { has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag }
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+		has_equipment = { strike_witches_equipment > 74 }
+		}
+		days_re_enable = 1
+		days_remove = 90
+		modifier = {
+			research_speed_factor = -0.05
+		}
+		complete_effect = {
+            add_equipment_to_stockpile = { type = strike_witches_equipment amount = -75 }
+            if = {
+                limit = {
+                    has_tech = strike_unit3
+
+                }
+                custom_effect_tooltip = MGU_Walpurgisnacht_resolution_D45_txt
+                add_to_variable = { global.Walpurgisnacht_pow = -45 }
+            }
+            else = {
+                custom_effect_tooltip = MGU_Walpurgisnacht_resolution_D30_txt
+                add_to_variable = { global.Walpurgisnacht_pow = -30 }
+            }
+            if = {
+                limit = {
+                    check_variable = {
+                        global.Walpurgisnacht_pow < 1
+                    }
+                }
+                set_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+            }
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+
+	MGU_Walpurgisnacht_resolution_4 = {#供应物资
+		icon = GFX_decision_duihuan_gongchang_1
+		visible = {
+		NOT = { has_global_flag = form_MGU_Walpurgisnacht_warning_start_flag }
+		NOT = { has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag }
+		always = no
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+		has_equipment = { support_equipment > 199 }
+		}
+		days_re_enable = 1
+		days_remove = 90
+		modifier = {
+			industrial_capacity_factory = -0.05
+		}
+		complete_effect = {
+            add_to_variable = { global.Walpurgisnacht_zb = 5 }
+            add_equipment_to_stockpile = { type = support_equipment amount = -200 }
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+	MGU_Walpurgisnacht_resolution_5 = {#固守防线
+		icon = GFX_decision_duihuan_gongchang_1
+		visible = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_start_flag
+		NOT = { has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag }
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+		has_global_flag = form_MGU_Walpurgisnacht_warning_over_flag
+		}
+		days_re_enable = 1
+		days_remove = 90
+		modifier = {
+			research_speed_factor = -0.05
+		}
+		complete_effect = {
+            add_days_mission_timeout  = {
+                mission = MGU_Walpurgisnacht_warning_0
+                days = 30
+            }
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+}
+###########魔联魔女之夜↑↑################
 MGU_shoulie_category = {#MGU魔法少女特殊行动
 
 MGU_shoulieweihu = {#狩猎维护
@@ -1043,7 +2421,7 @@ MGU_shoulieweihu = {#狩猎维护
 		}
 		available = {
         is_AI = no
-        has_equipment = { support_equipment > 499 }
+        has_equipment = { support_equipment > 199 }
 		}
 		days_re_enable = 1
 		days_remove = 90
@@ -1051,7 +2429,7 @@ MGU_shoulieweihu = {#狩猎维护
 			research_speed_factor = -0.10
 		}
 		complete_effect = {
-			add_equipment_to_stockpile = { type = support_equipment amount = -500 }
+			add_equipment_to_stockpile = { type = support_equipment amount = -200 }
 		}
 		remove_effect = {#结束后效果
 			add_manpower = 10000
@@ -1449,7 +2827,7 @@ MGU_shoulieweihu = {#狩猎维护
 
 	}
 
- 	MGU_PAU_CHL_war_keep_1 = {#为人类军团提供资金
+ 	MGU_PAU_LHS_war_keep_1 = {#为人类军团提供资金
 
  		#图标
  		#icon = 图标名
@@ -1479,7 +2857,7 @@ MGU_shoulieweihu = {#狩猎维护
  		}
  		custom_cost_text = HCP_300
  		available = {#
- 		   CHL = {
+ 		   LHS = {
  		    is_ai = yes
                 OR = {
                     is_in_faction = no
@@ -1496,7 +2874,7 @@ MGU_shoulieweihu = {#狩猎维护
  		}
  		visible = {#显示条件
             has_completed_focus = TBMGU_38
- 		   CHL = {
+ 		   LHS = {
  		    is_ai = yes
  		    is_subject = no
  		    exists = yes
@@ -1518,7 +2896,7 @@ MGU_shoulieweihu = {#狩猎维护
  		modifier = {#进行中效果
  	   	}
  		complete_effect = {#点击后效果
- 		    PAU = { declare_war_on = { target = CHL type = annex_everything } }
+ 		    PAU = { declare_war_on = { target = LHS type = annex_everything } }
 			add_to_variable = {
 				var = ubs_save
 				value = -300
@@ -1531,7 +2909,7 @@ MGU_shoulieweihu = {#狩猎维护
  		}
 
  	}
- 	MGU_PAU_CHL_war_keep_2 = {#为人类军团提供枪械
+ 	MGU_PAU_LHS_war_keep_2 = {#为人类军团提供枪械
 
  		#图标
  		#icon = 图标名
@@ -1559,7 +2937,7 @@ MGU_shoulieweihu = {#狩猎维护
  		}
  		visible = {#显示条件
             has_completed_focus = TBMGU_38
- 		   CHL = {
+ 		   LHS = {
  		    is_ai = yes
  		    is_subject = no
  		    exists = yes
@@ -1590,7 +2968,7 @@ MGU_shoulieweihu = {#狩猎维护
 
  	}
 
- 	MGU_PAU_CHL_war_keep_3 = {#收留人类军团
+ 	MGU_PAU_LHS_war_keep_3 = {#收留人类军团 吃掉南方土地
 
  		#图标
  		#icon = 图标名
@@ -1613,53 +2991,43 @@ MGU_shoulieweihu = {#狩猎维护
  		}
  		available = {#
             PAU = { surrender_progress > 0.5 }
-            PAU = { has_war_with = CHL }
+            PAU = { has_war_with = LHS }
             NOT = { PAU = { has_war_with = PAN } }
             NOT = { PAU = { has_war_with = MGU } }
-            NOT = { CHL = { has_war_with = MGU } }
+            NOT = { LHS = { has_war_with = MGU } }
  		}
  		visible = {#显示条件
             has_completed_focus = TBMGU_38
- 		   CHL = {
- 		    is_ai = yes
+ 		   LHS = {
  		    is_subject = no
  		    exists = yes
-                OR = {
-                    is_in_faction = no
-                    is_faction_leader = yes
-                }
  		    }
  		   PAU = {
  		    is_ai = yes
  		    is_subject = no
  		    exists = yes
-                OR = {
-                    is_in_faction = no
-                    is_faction_leader = yes
-                }
  		    }
  		}
  		modifier = {#进行中效果
  	   	}
  		complete_effect = {#点击后效果
-            CHL = { white_peace = { tag = PAU message = CHL_win_PAU } }
-			CHL = {
-			    transfer_state = 901
-			    transfer_state = 509
-			    transfer_state = 902
-			    transfer_state = 1144
-			    transfer_state = 278
-			    transfer_state = 449
-			    transfer_state = 512
-			    transfer_state = 1029
-			    transfer_state = 507
-			    transfer_state = 1028
-			}
+        #    LHS = { white_peace = { tag = PAU message = LHS_win_PAU } }
+		#	LHS = {
+		#	    transfer_state = 901
+		#	    transfer_state = 509
+		#	    transfer_state = 902
+		#	    transfer_state = 1144
+		#	    transfer_state = 278
+		#	    transfer_state = 449
+		#	    transfer_state = 512
+		#	    transfer_state = 1029
+		#	    transfer_state = 507
+		#	    transfer_state = 1028
+		#	}
             MGU = {
-                set_autonomy = {
-                    target = PAU
-                    autonomy_state = autonomy_puppet
-                }
+                transfer_state = 300
+                transfer_state = 510
+                transfer_state = 1074
             }
  		}
  		remove_effect = {#结束后效果
@@ -1667,9 +3035,43 @@ MGU_shoulieweihu = {#狩猎维护
  		}
 
  	}
+ 	MGU_PAU_LHS_war_keep_4 = {#整编军团
+ 		#图标
+ 		#icon = 图标名
+ 		#花费点数
+ 		cost = 100
+ 		#AI会使用的欲望
+ 		ai_will_do = {
+ 			factor = 0
+ 		}
+ 		#花费天数
+ 		days_remove = 90
+ 		#仅一次
+ 		fire_only_once = yes
+ 		#下次点击需要等待天数
+ 		#days_re_enable = 30
+ 		allowed = {#
+ 			tag = MGU
+ 		}
+ 		available = {#
+ 		}
+ 		visible = {#显示条件
+            owns_state = 300
+ 		}
+ 		modifier = {#进行中效果
+ 	   	}
+ 		complete_effect = {#点击后效果
+
+ 		}
+ 		remove_effect = {#结束后效果
+            add_manpower = 100000
+ 		}
+
+ 	}
+
 
 ###############下面是旧的#########
-	MGU_QB_helpCHL = {#MGU支援智利
+	MGU_QB_helpLHS = {#MGU支援智利
     		icon = decision_revolt
     		cost = 25
     		days_remove = 30
@@ -1683,7 +3085,7 @@ MGU_shoulieweihu = {#狩猎维护
             			}
             		}
             		custom_cost_text = HCP_200
-    		available = { is_subject = no  CHL = { has_war = yes }
+    		available = { is_subject = no  LHS = { has_war = yes }
                 has_equipment = { infantry_equipment > 4999 } has_equipment = { support_equipment > 199 } has_equipment = { artillery_equipment > 199 }
     		}
     		visible = { has_global_flag = form_MGU_qbtegong_flag ROC = { exists = yes } OR = { CHI = { exists = yes } YUN = { exists = yes } } }
@@ -1707,7 +3109,7 @@ MGU_shoulieweihu = {#狩猎维护
             infantry = { x = 2 y = 2 }  artillery_brigade = { x = 0 y = 3 }  }
              support = { recon = { x = 0 y = 0 } engineer = { x = 0 y = 1 } }
               }     }
-            CHL = { random_owned_controlled_state = { create_unit = {
+            LHS = { random_owned_controlled_state = { create_unit = {
             				division = "name = \"被派来的雇佣军\" division_template = \"被派来的雇佣军\" start_experience_factor = 0.05 start_equipment_factor = 1 "
             				owner = ROC count = 3 allow_spawning_on_enemy_provs = yes }  }   }
             custom_effect_tooltip = MGU_QB_2_up
@@ -2303,7 +3705,7 @@ MGU_shoulieweihu = {#狩猎维护
 ###
 }
 
-form_MGU_North_America_category = {
+form_MGU_North_America_category = { #干涉北美
      	MGU_North_America_strategic1 = {
      		visible = {
                 has_completed_focus = TBMGU_132_1
@@ -2506,6 +3908,146 @@ form_MGU_North_America_category = {
      		}
      	}
 }
+
+form_MGU_Iberia_category = { #超次元 伊比利亚
+
+     	MGU_Iberia_strategic1 = {
+     		visible = {
+                has_completed_focus = TBMGU_132_1
+                has_global_flag = Iberian_civil_war_start
+                NPT = { has_war = yes }
+     		    NOT = { has_global_flag = NPT_birth_of_devil_sword }
+     		}
+     		ai_will_do = {
+     			factor = 0
+     		}
+     		available = {
+                has_equipment = { infantry_equipment > 1999 }
+     		}
+     		fire_only_once = yes
+     		cost = 100
+     		days_re_enable = 1
+     		days_remove = 7
+     		modifier = {
+     		}
+     		complete_effect = {
+                set_country_flag = MGU_help_NPT_flag
+                add_equipment_to_stockpile = { type = infantry_equipment amount = -2000 }
+     		}
+     		remove_effect = {#结束后效果
+                NPT = { country_event = magicunion.1225 }
+     		}
+     	}
+
+     	MGU_Iberia_strategic2 = {
+     		visible = {
+                has_completed_focus = TBMGU_132_1
+                has_global_flag = Iberian_civil_war_start
+                BLA = { has_war = yes }
+     		    has_global_flag = NPT_birth_of_devil_sword
+     		}
+     		ai_will_do = {
+     			factor = 0
+     		}
+     		available = {
+
+                has_equipment = { infantry_equipment > 1999 }
+     		}
+     		fire_only_once = yes
+     		cost = 100
+     		days_re_enable = 1
+     		days_remove = 7
+     		modifier = {
+     		}
+     		complete_effect = {
+                set_country_flag = MGU_help_NPT_flag
+                add_equipment_to_stockpile = { type = infantry_equipment amount = -2000 }
+     		}
+     		remove_effect = {#结束后效果
+                BLA = { country_event = magicunion.1225 }
+     		}
+     	}
+
+     	MGU_Iberia_strategic3 = {
+     		visible = {
+                has_completed_focus = TBMGU_132_1
+                has_country_flag = MGU_help_NPT_flag
+     		    OR = {
+                    has_global_flag = Iberian_civil_war_start
+                    OR = {
+                        NPT = { has_country_flag = NPT_federation_win }
+                        BLA = { has_country_flag = NPT_federation_win }
+                    }
+                }
+     		}
+     		ai_will_do = {
+     			factor = 0
+     		}
+     		available = {
+     		    NOT = { has_global_flag = Iberian_civil_war_start }
+     		    OR = {
+                    NPT = { has_country_flag = NPT_federation_win }
+                    BLA = { has_country_flag = NPT_federation_win }
+     		    }
+     		}
+     		fire_only_once = yes
+     		cost = 200
+     		days_re_enable = 1
+     		days_remove = 15
+     		modifier = {
+     		}
+     		complete_effect = {
+
+     		}
+     		remove_effect = {#结束后效果
+                add_ideas = MGU_NPT_game_console
+     		}
+     	}
+     	MGU_Iberia_strategic4 = {
+     		visible = {
+                has_completed_focus = TBMGU_132_1
+                has_country_flag = MGU_help_NPT_flag
+     		    OR = {
+                    has_global_flag = Iberian_civil_war_start
+                    OR = {
+                        NPT = { has_country_flag = NPT_federation_win }
+                        BLA = { has_country_flag = NPT_federation_win }
+                    }
+                }
+     		}
+     		ai_will_do = {
+     			factor = 0
+     		}
+     		available = {
+     		    NOT = { has_global_flag = Iberian_civil_war_start }
+     		    OR = {
+                    NPT = { has_country_flag = NPT_federation_win }
+                    BLA = { has_country_flag = NPT_federation_win }
+     		    }
+     		}
+     		fire_only_once = yes
+     		cost = 200
+     		days_re_enable = 1
+     		days_remove = 15
+     		modifier = {
+     		}
+     		complete_effect = {
+
+     		}
+     		remove_effect = {#结束后效果
+                custom_effect_tooltip = MGU_Iberia_strategic4_txt
+                hidden_effect = {
+                    set_technology = {
+                        MGU_NPT_power_faith_tech = 1
+                        popup = no
+                    }
+                }
+     		}
+     	}
+
+
+}
+
 
 form_MGU_Africa_strategic_category = {
      	MGU_Africa_strategic0 = {
@@ -2921,7 +4463,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		days_remove = 90
             		complete_effect = {
 
-			        add_offsite_building = { type = arms_factory level = 2 }
+			        add_offsite_building = { type = arms_factory level = 3 }
             		}
             		ai_will_do = {
             			factor = 5
@@ -2948,7 +4490,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		days_remove = 90
             		complete_effect = {
 
-                     add_offsite_building = { type = industrial_complex level = 2 }
+                     add_offsite_building = { type = industrial_complex level = 3 }
             		}
             		ai_will_do = {
             			factor = 5
@@ -2967,8 +4509,8 @@ form_MGU_mofagongyeyuanqu_category = {
             		cost = 100
             		days_remove = 90
             		complete_effect = {
-                        add_equipment_to_stockpile = { type = magic_assault_equipment amount = 1200 producer = MGU }
-                        add_equipment_to_stockpile = { type = magic_artillery_equipment amount = 400 producer = MGU }
+                        add_equipment_to_stockpile = { type = magic_assault_equipment amount = 1800 producer = MGU }
+                        add_equipment_to_stockpile = { type = magic_artillery_equipment amount = 600 producer = MGU }
             		}
             		ai_will_do = {
             			factor = 1
@@ -3096,7 +4638,7 @@ form_MGU_mofagongyeyuanqu_category = {
                      				}
             		}
             		ai_will_do = {
-            			factor = 100
+            			factor = 0
             		}
             	}
     	form_MGU_powerful_magic_landforce = { #更强大的魔炮
@@ -3196,10 +4738,10 @@ form_MGU_mofagongyeyuanqu_category = {
             		    country_exists = PAU
             		    NOT = { has_war_with = PAU }
             		    NOT = { has_country_flag = MGU_PAU_hate_flag }
-                        has_equipment = { support_equipment > 499 }
+                        has_equipment = { support_equipment > 199 }
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		    country_exists = PAU
             		    NOT = { has_country_flag = MGU_PAU_hate_flag }
             		}
@@ -3209,7 +4751,7 @@ form_MGU_mofagongyeyuanqu_category = {
 
 	   	            }
             		complete_effect = {
-                    add_equipment_to_stockpile = { type = support_equipment amount = -500 }
+                    add_equipment_to_stockpile = { type = support_equipment amount = -200 }
            			add_to_variable = {
            				var = ubs_save
            				value = 100
@@ -3234,7 +4776,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         has_equipment = { artillery_equipment > 499 }
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		    country_exists = PAU
             		    NOT = { has_country_flag = MGU_PAU_hate_flag }
             		}
@@ -3271,7 +4813,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         has_equipment = { motorized_equipment > 599 }
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		    country_exists = PAU
             		    NOT = { has_country_flag = MGU_PAU_hate_flag }
             		}
@@ -3310,7 +4852,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         has_equipment = { support_equipment > 149 }
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
                         always = no
             		}
             		cost = 100
@@ -3341,7 +4883,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		}
             		visible = {
             		    PAO = { is_ai = yes }
-            		    has_completed_focus = TBMGU_142
+            		    has_country_flag = MGU_homura_industrious_12_flag
             		}
             		cost = 0
             		days_remove = 7
@@ -3407,7 +4949,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		}
             		visible = {
             		    BRA = { is_ai = yes }
-            		    has_completed_focus = TBMGU_142
+            		    has_country_flag = MGU_homura_industrious_12_flag
             		}
             		cost = 0
             		days_remove = 7
@@ -3467,19 +5009,19 @@ form_MGU_mofagongyeyuanqu_category = {
 		        fire_only_once = no
             		available = {
                         is_ai = no
-			            has_army_experience > 200
+			            has_army_experience > 10
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
                         global.MGU_MAD < 2
             		}
-            		cost = 200
+            		cost = 100
             		days_remove = 120
 		            modifier = {#进行中效果
 	   	            }
             		complete_effect = {
                     add_to_variable = { global.MGU_MAD = 1 }
-			        army_experience = -200
+			        army_experience = -10
             		}
             		ai_will_do = {
             			factor = 100
@@ -3496,7 +5038,7 @@ form_MGU_mofagongyeyuanqu_category = {
                          has_completed_focus = TBMGU_126
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3529,7 +5071,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		    has_country_flag = MGU_chasm_mobilization_flag
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3556,7 +5098,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		    has_country_flag = MGU_chasm_mobilization_flag
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3582,7 +5124,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		    has_country_flag = MGU_chasm_mobilization_flag
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3608,7 +5150,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		    has_country_flag = MGU_chasm_mobilization_flag
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3633,7 +5175,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		    has_country_flag = MGU_chasm_mobilization_flag
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3671,7 +5213,7 @@ form_MGU_mofagongyeyuanqu_category = {
         			}
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3704,7 +5246,7 @@ form_MGU_mofagongyeyuanqu_category = {
         			}
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3738,7 +5280,7 @@ form_MGU_mofagongyeyuanqu_category = {
         			}
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
 
             		}
             		cost = 150
@@ -3772,7 +5314,7 @@ form_MGU_mofagongyeyuanqu_category = {
         			}
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3806,7 +5348,7 @@ form_MGU_mofagongyeyuanqu_category = {
         			}
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
             		}
             		cost = 150
             		days_remove = 70
@@ -3836,7 +5378,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		#    neutrality > 0.99
             		}
             		visible = {
-                        has_completed_focus = TBMGU_131_0
+                        has_country_flag = MGU_homura_industrious_13_flag
                         has_global_flag = MGU_Homura_COUP
             		}
             		cost = 0
@@ -3864,8 +5406,8 @@ form_MGU_mofagongyeyuanqu_category = {
             		NOT = { has_war_with = PRC }
             		NOT = { has_war_with = NGD }
             		OR = {
-                        CHL = { has_capitulated = yes }
-                        CHL = { NOT = { is_in_faction_with = PAN } }
+                        LHS = { has_capitulated = yes }
+                        LHS = { NOT = { is_in_faction_with = PAN } }
             		}
             		OR = {
                         PA1 = { has_capitulated = yes }
@@ -3897,17 +5439,17 @@ form_MGU_mofagongyeyuanqu_category = {
 	MGU_army_sacrifices = { #美好与和平的祭品
 		icon = generic_prepare_civil_war
 		available = {
-			has_army_experience > 200
+			has_army_experience > 50
 			has_completed_focus = TBMGU_132
 		}
-		cost = 200
+		cost = 10
 		ai_will_do = {
 			factor = 10
 		}
 		days_remove = 90
 		visible = {
 		    has_completed_focus = TBMGU_132
-            has_completed_focus = TBMGU_131_0
+            has_country_flag = MGU_homura_industrious_13_flag
 			NOT = {
 				has_country_flag = MGU_army_sacrifices_done
 			}
@@ -3943,10 +5485,118 @@ form_MGU_mofagongyeyuanqu_category = {
 			}
 		}
 		complete_effect = {
-			army_experience = -200
+			army_experience = -50
 		}
 	}
+    	form_MGU_War_DiKang_50 = { #抵抗 对命运的抗争
+            		icon = generic_decision
+            allowed = {#获得条件
+                tag = MGU
+            	}
+		        fire_only_once = yes
+            		available = {
+                            surrender_progress > 0.5
+            		}
+            		visible = {
+                        has_war = yes
+                        or = {
+                            has_country_flag = MGU_COUP_All_Hail_HOMURA_flag
+                            is_ai = yes
+                        }
+            		}
+            		cost = 0
+            		days_remove = 90
+		            modifier = {#进行中效果
+		            #    surrender_limit = 1.00
+                        army_core_attack_factor = 0.2
+                        army_core_defence_factor = 0.2
+	   	            }
+            		complete_effect = {
 
+            		}
+            		remove_effect = {#结束后效果
+            		}
+            		ai_will_do = {
+            			factor = 10
+                        modifier = {
+                            add = 50
+                            surrender_progress > 0.5
+                        }
+            		}
+            	}
+    	form_MGU_War_DiKang_70 = { #抵抗 对命运的抗争 风与雪
+            		icon = generic_decision
+            allowed = {#获得条件
+                tag = MGU
+            	}
+		        fire_only_once = yes
+            		available = {
+                            surrender_progress > 0.7
+            		}
+            		visible = {
+                        has_war = yes
+                        or = {
+                            has_country_flag = MGU_COUP_All_Hail_HOMURA_flag
+                            is_ai = yes
+                        }
+            		}
+            		cost = 0
+            		days_remove = 90
+		            modifier = {#进行中效果
+
+	   	            }
+            		complete_effect = {
+        division_template = {
+            	name = "魔联半魔女化部队"
+            	#is_locked = yes
+            	regiments = {
+            		magic_assault = { x = 0 y = 0 }
+            		magic_assault = { x = 0 y = 1 }
+            		magic_assault = { x = 0 y = 2 }
+            		magic_assault = { x = 0 y = 3 }
+            		magic_assault = { x = 0 y = 4 }
+            		magic_assault = { x = 1 y = 0 }
+            		magic_assault = { x = 1 y = 1 }
+            		magic_assault = { x = 1 y = 2 }
+            		magic_assault = { x = 1 y = 3 }
+            		magic_assault = { x = 1 y = 4 }
+            		magic_assault = { x = 2 y = 0 }
+            		magic_assault = { x = 2 y = 1 }
+            		magic_assault = { x = 2 y = 2 }
+            		magic_assault = { x = 2 y = 3 }
+            		magic_assault = { x = 2 y = 4 }
+            		magic_assault = { x = 3 y = 0 }
+            		magic_assault = { x = 3 y = 1 }
+            		magic_assault = { x = 3 y = 2 }
+            		magic_assault = { x = 3 y = 3 }
+            		magic_assault = { x = 3 y = 4 }
+            	}
+            	support = {
+            		recon = { x = 0 y = 0 }
+            		artillery = { x = 0 y = 1 }
+            		engineer = { x = 0 y = 2 }
+            		field_hospital = { x = 0 y = 3 }
+            	}
+            }
+            capital_scope = {
+                create_unit = { division = "name = \"破碎匕首\" division_template = \"魔联半魔女化部队\" start_experience_factor = 1 start_equipment_factor = 1 "
+            	owner = ROOT }
+                create_unit = { division = "name = \"高贵幻影\" division_template = \"魔联半魔女化部队\" start_experience_factor = 1 start_equipment_factor = 1 "
+            	owner = ROOT }
+                create_unit = { division = "name = \"奇术二组\" division_template = \"魔联半魔女化部队\" start_experience_factor = 1 start_equipment_factor = 1 "
+            	owner = ROOT }
+            	}
+            		}
+            		remove_effect = {#结束后效果
+            		}
+            		ai_will_do = {
+            			factor = 10
+                        modifier = {
+                            add = 50
+                            surrender_progress > 0.5
+                        }
+            		}
+            	}
 
     }
 
@@ -4685,8 +6335,11 @@ form_MGU_mofagongyeyuanqu_category = {
            has_army_manpower = { size > 499999 }
         }
         visible = {
+            always = no # 这里禁用了 这里这里这里
             has_country_flag = MGU_COUP_COUP_flag
             NOT = { has_country_flag = MGU_COUP_All_Hail_HOMURA_flag }
+            has_war_with = MRB
+            has_completed_focus = TBMGU_132_2
         }
         cost = 100
         days_remove = 7
@@ -4706,31 +6359,33 @@ form_MGU_mofagongyeyuanqu_category = {
         ##################################################
             ##################################################
                 ##################################################
-    form_MGU_Rumors_of_Witch_Night_category = {
-    	form_MGU_Rumors_of_Witch_Night_0 = { #魔女之夜即将到来
-            		icon = generic_decision
-            allowed = {#获得条件
-                tag = MGU
-            	}
-		    activation = {
-                date > 1940.1.1
-                MGU = { exists = yes }
-                has_global_flag = MGU_Homura_COUP
-                NOT = { has_global_flag = MGU_Witch_Night_befall }
-		    }
-            available = {
-                has_global_flag = MGU_Witch_Night_befall
-            }
-            is_good = no
-            days_mission_timeout = 730
-            timeout_effect = {
-                country_event = magicunion.1067_MGU
-            }
-            complete_effect = {
-
-            }
-        }
-    }
+#    form_MGU_Rumors_of_Witch_Night_category = {
+ #   	form_MGU_Rumors_of_Witch_Night_0 = { #魔女之夜即将到来
+  #          		icon = generic_decision
+   #         allowed = {#获得条件
+    #            tag = MGU
+  #          	}
+#		    activation = {
+#                date > 1940.1.1
+ #               MGU = { exists = yes }
+  #              MGU = { is_ai = no }
+   #             always = no
+    #            has_global_flag = MGU_Homura_COUP
+     #           NOT = { has_global_flag = MGU_Witch_Night_befall }
+#		    }
+ #           available = {
+  #              has_global_flag = MGU_Witch_Night_befall
+   #         }
+    #        is_good = no
+    #        days_mission_timeout = 730
+    #        timeout_effect = {
+    #            country_event = magicunion.10670_MGU
+    #        }
+    #        complete_effect = {
+#
+ #           }
+  #      }
+  #  }
         ##################################################
             ##################################################
                 ##################################################
@@ -4751,11 +6406,11 @@ form_MGU_mofagongyeyuanqu_category = {
                         has_war_with = ROOT
                     }
                 }
-                NOT = {
+
                     FROM = {
-                        TAG = ENG
+                        TAG = MGU
                     }
-                }
+
             }
 		target_trigger = {
 			FROM = {
@@ -5059,17 +6714,28 @@ form_MGU_mofagongyeyuanqu_category = {
             		}
 
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
         				check_variable = {
         					global.MGU_draw_angel < 10
         				}
             		}
-            		cost = 40
+            		cost = 10
             		days_remove = 30
 		            modifier = {#进行中效果
 	   	            }
             		complete_effect = {
                     add_to_variable = { global.MGU_draw_angel = 1 }
+                        random_list = {
+                            30 = {
+                                280 = { add_manpower = 50000 }
+                            }
+                            30 = {
+                                505 = { add_manpower = 50000 }
+                            }
+                            30 = {
+                                896 = { add_manpower = 50000 }
+                            }
+                        }
             		}
             		ai_will_do = {
             			factor = 100
@@ -5087,7 +6753,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         is_ai = no
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
             		}
             		cost = 100
             		days_remove = 30
@@ -5118,7 +6784,7 @@ form_MGU_mofagongyeyuanqu_category = {
         			}
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
                         NOT= { has_country_flag = MGU_naimuyuanzi_zhonggong_flag }
             		}
             		cost = 50
@@ -5128,7 +6794,12 @@ form_MGU_mofagongyeyuanqu_category = {
             		complete_effect = {
                     set_country_flag = MGU_naimuyuanzi_zhonggong_flag
                     custom_effect_tooltip = MGU_Hive_build_flag
-
+                    280 = { SOV_promote_regional_development = yes }
+                    505 = { SOV_promote_regional_development = yes }
+                    896 = { SOV_promote_regional_development = yes }
+                    #280 = { add_extra_state_shared_building_slots = 1 add_building_construction = { type = industrial_complex level = 1 instant_build = yes } }
+            		#505 = { add_extra_state_shared_building_slots = 1 add_building_construction = { type = industrial_complex level = 1 instant_build = yes } }
+            		#896 = { add_extra_state_shared_building_slots = 1 add_building_construction = { type = industrial_complex level = 1 instant_build = yes } }
             		}
             		ai_will_do = {
             			factor = 100
@@ -5145,7 +6816,7 @@ form_MGU_mofagongyeyuanqu_category = {
                     #    BRA = { NOT = { has_completed_focus = TBMGU_14 } }
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
             		}
             		cost = 200
 		            modifier = {#进行中效果
@@ -5180,7 +6851,7 @@ form_MGU_mofagongyeyuanqu_category = {
         			}
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
                         NOT= { has_idea = tianshidexintiao_MGU }
             		}
             		cost = 100
@@ -5213,7 +6884,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		    is_ai = yes
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
                         NOT= { has_idea = tianshidexintiao_MGU }
             		    is_ai = yes
             		}
@@ -5240,16 +6911,19 @@ form_MGU_mofagongyeyuanqu_category = {
             	}
 		        fire_only_once = yes
             		available = {
+            		    NOT = { has_country_flag = MGU_magicunion_1057_MGU_flag }
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
                         NOT = { has_country_flag = MGU_Oriko_die_flag }
+                        NOT = { has_country_flag = MGU_magicunion_1057_MGU_flag }
             		}
             		cost = 25
             		days_remove = 30
 		            modifier = {#进行中效果
 	   	            }
             		complete_effect = {
+            		    set_country_flag = MGU_magicunion_1057_MGU_progress_flag
             		}
             		remove_effect = {#结束后效果
             			country_event = magicunion.1056_MGU
@@ -5266,9 +6940,10 @@ form_MGU_mofagongyeyuanqu_category = {
             	}
 		        fire_only_once = yes
             		available = {
+                        has_country_flag = MGU_magicunion_1057_MGU_flag
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
                         NOT = { has_country_flag = MGU_Oriko_die_flag }
             		}
             		cost = 50
@@ -5278,8 +6953,9 @@ form_MGU_mofagongyeyuanqu_category = {
             		complete_effect = {
             		}
             		remove_effect = {#结束后效果
-			            add_manpower = -1
+			            add_manpower = 1
 			            set_country_flag = MGU_Oriko_die_flag
+			            country_event = magicunion.1188
             		}
             		ai_will_do = {
             			factor = 100
@@ -5345,7 +7021,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
             		}
             		cost = 25
             		days_remove = 3
@@ -5382,7 +7058,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
-                        has_completed_focus = TBMGU_142
+                        has_country_flag = MGU_homura_industrious_12_flag
             		}
             		cost = 25
             		days_remove = 3
@@ -5404,12 +7080,11 @@ form_MGU_mofagongyeyuanqu_category = {
             	}
 		        fire_only_once = yes
             		available = {
-                        BRA = { has_defensive_war = yes }
+                        ELF = { has_defensive_war = yes }
                         custom_trigger_tooltip = {
                             tooltip = TBMGU_Jungle_fire_ally_BUG_trigger_tooltip
-                            BRA = {
+                            ELF = {
                                 exists = yes
-                                is_in_faction = no
                                 NOT = { has_war_with = MGU }
                                 OR = {
                                     is_subject_of = MGU
@@ -5419,7 +7094,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
-                        country_exists = BRA
+                        country_exists = ELF
             		}
             		cost = 25
             		days_remove = 3
@@ -5428,15 +7103,15 @@ form_MGU_mofagongyeyuanqu_category = {
             		complete_effect = {
             		}
             		remove_effect = {#结束后效果
-                        #give_guarantee = BRA
+                        #give_guarantee = ELF
                         if = {
                             limit = {
                                 is_in_faction = no
                             }
                             create_faction = "魔法少女联盟"
                         }
-                        BRA = {
-                            country_event = generic.2008
+                        ELF = {
+                            country_event = magicunion.10992
                         }
             		}
             		ai_will_do = {
@@ -5466,6 +7141,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		}
             		visible = {
                         country_exists = PAO
+                        always = no
             		}
             		cost = 25
             		days_remove = 3
@@ -5507,6 +7183,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
+            		    always = no
             		}
             		cost = 0
             		days_remove = 7
@@ -5599,6 +7276,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
+            		    always = no
                         NOT = { has_war_with = ENG }
                         ENG = {
                                 exists = yes
@@ -5632,16 +7310,6 @@ form_MGU_mofagongyeyuanqu_category = {
                             surrender_progress > 0.5
                             date > 1945.1.1
                             has_global_flag = SA_war_4_years_flag
-                        #    custom_trigger_tooltip = {
-                        #        tooltip = MGU_ENG_War_aid_3_2
-                        #        has_global_flag = second_weltkrieg_has_started
-                        #        DVL = {
-                        #            or = {
-                        #                exists = no
-                        #                is_subject = yes
-                        #            }
-                        #        }
-                        #    }
                         }
                         has_defensive_war = yes
                         has_war_with = PAN
@@ -5656,6 +7324,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
+            		    always = no
                         has_defensive_war = yes
                         has_war_with = PAN
                                 ENG = {
@@ -5690,11 +7359,18 @@ form_MGU_mofagongyeyuanqu_category = {
 		        fire_only_once = yes
             		available = {
             		OR ={
-            		    date > 1944.1.1
-                        any_country = {
-                            has_war_with = ENG
-                            has_war_with = MGU
-                        }
+                        has_war = no
+            		    date > 1941.1.1
+                        hidden_trigger = {
+                             AND = {
+                                is_ai = yes
+                                date > 1944.1.1
+                             }
+                         }
+                        #any_country = {
+                        #    has_war_with = ENG
+                        #    has_war_with = MGU
+                        #}
             		}
                         custom_trigger_tooltip = {
                             tooltip = MGU_ENG_War_aid_3_2
@@ -5729,9 +7405,11 @@ form_MGU_mofagongyeyuanqu_category = {
                         #}
             		}
             		visible = {
+            		    always = no
                         NOT = { is_in_faction_with = ENG }
                         OR = {
                             NOT = { has_war_with = PAN }
+                            NOT = { has_war_with = PAY }
                             has_global_flag = SA_war_not_STOP_flag
                             has_global_flag = SA_war_STOP_flag
                         }
@@ -5791,6 +7469,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
+            		always = no
                     NOT = { is_in_faction_with = ENG }
             		}
             		cost = 0
@@ -5842,6 +7521,7 @@ form_MGU_mofagongyeyuanqu_category = {
 
             		}
             		visible = {
+            		    always = no
             		    is_in_faction_with = ENG
                         BRA = {
                             exists = yes
@@ -5863,7 +7543,7 @@ form_MGU_mofagongyeyuanqu_category = {
             			factor = 100
             		}
             	}
-    	form_MGU_Invite_join_ENG_PAO = { #邀请圣塞莉母巢加入圣杯阵营
+    	form_MGU_Invite_join_ENG_PAO = { #邀请安息之国加入圣杯阵营
             		icon = generic_decision
             allowed = {#获得条件
                 tag = MGU
@@ -5898,6 +7578,7 @@ form_MGU_mofagongyeyuanqu_category = {
 
             		}
             		visible = {
+            		    always = no
             		    is_in_faction_with = ENG
                         PAO = {
                             exists = yes
@@ -5954,6 +7635,7 @@ form_MGU_mofagongyeyuanqu_category = {
 
             		}
             		visible = {
+            		    always = no
             		    is_in_faction_with = ENG
                         PAM = {
                             exists = yes
@@ -6009,6 +7691,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
+            		    always = no
             		    is_in_faction_with = ENG
                             PAU = {
                                 exists = yes
@@ -6064,6 +7747,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
+            		    always = no
             		    is_in_faction_with = ENG
                             PAQ = {
                                 exists = yes
@@ -6098,22 +7782,23 @@ form_MGU_mofagongyeyuanqu_category = {
             		}
             		visible = {
             		    is_ai = yes
-                        NOT = { has_country_flag = MGU_We_are_mahoshaojiu_flag }
+                    #    NOT = { has_country_flag = MGU_We_are_mahoshaojiu_flag }
             		}
             		cost = 0
             		days_remove = 360
 		            modifier = {#进行中效果
 	   	            }
             		complete_effect = {
-            		add_offsite_building = { type = arms_factory level = -10 }
+            		  hidden_effect = { add_offsite_building = { type = arms_factory level = -10 }
                         add_equipment_to_stockpile = {
                             type =  strike_witches_equipment
                             amount = 300
                             producer = MGU
                         }
+                      }
             		}
             		remove_effect = {#结束后效果
-            		add_offsite_building = { type = arms_factory level = 10 }
+            		hidden_effect = { add_offsite_building = { type = arms_factory level = 10 } }
             		}
             		ai_will_do = {
             			factor = 10
@@ -6132,12 +7817,12 @@ form_MGU_mofagongyeyuanqu_category = {
 		}
 		available = {#
             neutrality > 0.50
-			date < 1938.1.1
+		#	date < 1938.1.1
 			has_completed_focus = TBMGU_02
 			has_completed_focus = TBMGU_37
 		}
 		visible = {#显示条件
-			date < 1938.1.1
+		#	date < 1938.1.1
 			has_completed_focus = TBMGU_02
 			has_completed_focus = TBMGU_37
 		}
@@ -6149,7 +7834,7 @@ form_MGU_mofagongyeyuanqu_category = {
 
 		remove_effect = {#结束后效果
 			add_political_power = 50
-            add_offsite_building = { type = industrial_complex level = 1 }
+            add_offsite_building = { type = industrial_complex level = 2 }
 		}
 
 	}
@@ -6166,12 +7851,12 @@ form_MGU_mofagongyeyuanqu_category = {
 		}
 		available = {#
             neutrality > 0.70
-			date < 1938.1.1
+		#	date < 1938.1.1
 			has_completed_focus = TBMGU_02
 			has_completed_focus = TBMGU_37
 		}
 		visible = {#显示条件
-			date < 1938.1.1
+		#	date < 1938.1.1
 			has_completed_focus = TBMGU_02
 			has_completed_focus = TBMGU_37
 		}
@@ -6183,7 +7868,7 @@ form_MGU_mofagongyeyuanqu_category = {
 
 		remove_effect = {#结束后效果
 			add_political_power = 50
-            add_offsite_building = { type = industrial_complex level = 1 }
+            add_offsite_building = { type = industrial_complex level = 2 }
 		}
 
 	}
@@ -6200,12 +7885,12 @@ form_MGU_mofagongyeyuanqu_category = {
 		}
 		available = {#
             neutrality > 0.90
-			date < 1938.1.1
+		#	date < 1938.1.1
 			has_completed_focus = TBMGU_02
 			has_completed_focus = TBMGU_37
 		}
 		visible = {#显示条件
-			date < 1938.1.1
+		#	date < 1938.1.1
 			has_completed_focus = TBMGU_02
 			has_completed_focus = TBMGU_37
 		}
@@ -6245,10 +7930,40 @@ form_MGU_mofagongyeyuanqu_category = {
 		visible = {
             has_completed_focus = TBMGU_132_222
 			NOT = {
-				has_idea = MGU_Magic_Doll_army_3_7
+				has_idea = MGU_Magic_Doll_army_3_10
 			}
 		}
 		remove_effect = {
+			if = {
+				limit = {
+					has_idea = MGU_Magic_Doll_army_3_9
+				}
+				country_event = magicunion.10755
+				swap_ideas = {
+					remove_idea = MGU_Magic_Doll_army_3_9
+					add_idea = MGU_Magic_Doll_army_3_10
+				}
+			}
+			if = {
+				limit = {
+					has_idea = MGU_Magic_Doll_army_3_8
+				}
+				country_event = magicunion.10754
+				swap_ideas = {
+					remove_idea = MGU_Magic_Doll_army_3_8
+					add_idea = MGU_Magic_Doll_army_3_9
+				}
+			}
+			if = {
+				limit = {
+					has_idea = MGU_Magic_Doll_army_3_7
+				}
+				country_event = magicunion.10753
+				swap_ideas = {
+					remove_idea = MGU_Magic_Doll_army_3_7
+					add_idea = MGU_Magic_Doll_army_3_8
+				}
+			}
 			if = {
 				limit = {
 					has_idea = MGU_Magic_Doll_army_3_6
@@ -6343,18 +8058,18 @@ form_MGU_science_expansion_category = {
 		#icon = 图标名
 		cost = 450
 		ai_will_do = { factor = 10 }
-		days_remove = 360
+		days_remove = 120
 		fire_only_once = yes
 		#days_re_enable = 30
 		allowed = {#
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 			has_global_flag = MGU_science_expansion_flag
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 			always = no
 		}
 		modifier = {#进行中效果
@@ -6381,11 +8096,11 @@ form_MGU_science_expansion_category = {
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
             has_completed_focus = TBMGU_Ode_and_Prayer_11
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 		}
 		modifier = {#进行中效果
 
@@ -6399,25 +8114,25 @@ form_MGU_science_expansion_category = {
 	}
 	MGU_science_expansion_nucl_1 = {#核反应堆
 		#icon = 图标名
-		cost = 200
+		cost = 300
 		ai_will_do = { factor = 10 }
-		days_remove = 540
+		days_remove = 180
 		fire_only_once = yes
 		#days_re_enable = 30
 		allowed = {#
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 			has_tech = atomic_research
 		#	has_global_flag = MGU_science_expansion_flag
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 			always = no
 		}
 		modifier = {#进行中效果
-		political_power_cost = 0.27
+
 	   	}
 		complete_effect = {#点击后效果
             #MGU_science_expansion_occupy = yes
@@ -6428,24 +8143,24 @@ form_MGU_science_expansion_category = {
 	}
 	MGU_science_expansion_nucl_2 = {#永燃薪柴
 		#icon = 图标名
-		cost = 200
+		cost = 300
 		ai_will_do = { factor = 10 }
-		days_remove = 540
+		days_remove = 180
 		fire_only_once = yes
 		#days_re_enable = 30
 		allowed = {#
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 		#	has_tech = nuclear_reactor
 		#	has_global_flag = MGU_science_expansion_flag
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 		}
 		modifier = {#进行中效果
-		political_power_cost = 0.27
+
 	   	}
 		complete_effect = {#点击后效果
             #MGU_science_expansion_occupy = yes
@@ -6461,25 +8176,25 @@ form_MGU_science_expansion_category = {
 	}
 	MGU_science_expansion_nucl_3 = {#核能驱动灵装
 		#icon = 图标名
-		cost = 200
+		cost = 300
 		ai_will_do = { factor = 10 }
-		days_remove = 540
+		days_remove = 180
 		fire_only_once = yes
 		#days_re_enable = 30
 		allowed = {#
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 		#	has_global_flag = MGU_science_expansion_flag
 			has_country_flag = MGU_science_expansion_nucl_2_flag
 			#has_idea = MGU_hidden_idea_science_expansion_nucl_2
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 		}
 		modifier = {#进行中效果
-		political_power_cost = 0.27
+
 	   	}
 		complete_effect = {#点击后效果
             #MGU_science_expansion_occupy = yes
@@ -6491,59 +8206,60 @@ form_MGU_science_expansion_category = {
 
 	MGU_science_expansion_1 = {#飞行魔法的现代化应用 喷漆引擎
 		#icon = 图标名
-		cost = 200
+		cost = 300
 		ai_will_do = { factor = 10 }
-		days_remove = 540
+		days_remove = 0
 		fire_only_once = yes
 		#days_re_enable = 30
 		allowed = {#
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
-			has_tech = strike_unit2
+			has_global_flag = MGU_science_expansion_flag
+			has_tech = strike_unit3
+			date > 1945.1.1
 		#	has_global_flag = MGU_science_expansion_flag
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 			always = no
 		}
 		modifier = {#进行中效果
-		political_power_cost = 0.27
+
 	   	}
 		complete_effect = {#点击后效果
             #MGU_science_expansion_occupy = yes
 		}
 		remove_effect = {#结束后效果
-        #    set_technology = { jet_engines = 1 }
-                add_breakthrough_points = {
-                   specialization = specialization_air
-                   value = 1
-                }
+           set_technology = { jet_engines = 1 }
+		#		set_technology = {
+		#			strike_unit4 = 1
+		#			popup = no
+		#		}
 		}
 	}
 
 	MGU_science_expansion_3 = {#改进强袭组件航程
 		#icon = 图标名
-    cost = 200
+    cost = 300
 		ai_will_do = { factor = 10 }
-		days_remove = 540
+		days_remove = 180
 		fire_only_once = yes
 		#days_re_enable = 30
 		allowed = {#
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
             has_completed_focus = TBMGU_712
 			has_tech = transport_plane_equipment_3
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 
 		}
 		modifier = {#进行中效果
-		political_power_cost = 0.27
+
 	   	}
 		complete_effect = {#点击后效果
             #MGU_science_expansion_occupy = yes
@@ -6554,24 +8270,24 @@ form_MGU_science_expansion_category = {
 	}
 	MGU_science_expansion_4 = {#强袭组件对地攻击挂件
 		#icon = 图标名
-		cost = 200
+		cost = 300
 		ai_will_do = { factor = 10 }
-		days_remove = 540
+		days_remove = 180
 		fire_only_once = yes
 		#days_re_enable = 30
 		allowed = {#
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
             has_completed_focus = TBMGU_712
 			has_tech = magic_artillery4
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 		}
 		modifier = {#进行中效果
-		political_power_cost = 0.27
+
 	   	}
 		complete_effect = {#点击后效果
             #MGU_science_expansion_occupy = yes
@@ -6582,24 +8298,24 @@ form_MGU_science_expansion_category = {
 	}
 	MGU_science_expansion_5 = {#强袭组件新式护盾
 		#icon = 图标名
-		cost = 200
+		cost = 300
 		ai_will_do = { factor = 10 }
-		days_remove = 540
+		days_remove = 180
 		fire_only_once = yes
 		#days_re_enable = 30
 		allowed = {#
 			tag = MGU
 		}
 		available = {#
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
             has_completed_focus = TBMGU_712
 			has_tech = magic_weapons5
 		}
 		visible = {#显示条件
-			has_completed_focus = TBMGU_129_1
+			has_global_flag = MGU_science_expansion_flag
 		}
 		modifier = {#进行中效果
-		political_power_cost = 0.27
+
 	   	}
 		complete_effect = {#点击后效果
             #MGU_science_expansion_occupy = yes
@@ -6608,6 +8324,37 @@ form_MGU_science_expansion_category = {
             add_ideas = MGU_hidden_idea_science_expansion_5
 		}
 	}
+	MGU_science_expansion_6 = {#奇术穿甲弹
+		#icon = 图标名
+		cost = 300
+		ai_will_do = { factor = 10 }
+		days_remove = 180
+		fire_only_once = yes
+		#days_re_enable = 30
+		allowed = {#
+			tag = MGU
+		}
+		available = {#
+			has_global_flag = MGU_science_expansion_flag
+            has_completed_focus = TBMGU_712
+			has_tech = magic_weapons5
+		}
+		visible = {#显示条件
+			has_global_flag = MGU_science_expansion_flag
+		}
+		modifier = {#进行中效果
+
+	   	}
+		complete_effect = {#点击后效果
+            #MGU_science_expansion_occupy = yes
+		}
+		remove_effect = {#结束后效果
+			add_ideas = MGU_AOD-CN-0002-Beat_Control
+		#	custom_effect_tooltip = TBMGU_Chaos_Angel_04_txt
+
+		}
+	}
+
 
 	MGU_Dream_Library_0 = {#探索图书馆
 		#icon = 图标名
@@ -7792,6 +9539,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -7825,6 +9573,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -7858,6 +9607,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -7891,6 +9641,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -7924,6 +9675,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -7957,6 +9709,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -8023,6 +9776,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -8056,6 +9810,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -8089,6 +9844,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
@@ -8122,6 +9878,7 @@ adorable_heart_TBMGUprisoner_MGU = {#俘虏事件
             exists = yes
             has_capitulated = no
             has_country_flag = MGU_TBMGUprisoner_owner
+            always = no
 		}
 		cost = 10
 		fire_only_once = no
