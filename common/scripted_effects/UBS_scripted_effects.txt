@@ -732,7 +732,65 @@ generate_econ_rankings = {
 	clear_variable = global.indu_countries_index
 	#
 	#CORE_STATE_check_every_month_effect = yes
+	compute_global_gdp = yes
 }
+	compute_global_gdp = { #计算全球gdp与各经济阵营收入占比
+		set_variable = { global.global_gdp_var = 0 } #所有国家gdp
+		set_variable = { global.temp_economy_faction_index = 1 } #临时变量
+		clear_array = global.economy_faction_GDP  ##各个经济阵营GDP
+		clear_array = global.economy_faction_GDP_ratio  ##各个经济阵营GDP占比
+		clear_array = global.economy_faction_GDP_temp  ##各个经济阵营GDP副本(仅用于排序)
+		clear_array = global.economy_faction_GDP_rank  ##各个经济阵营GDP排行
+		clear_array = global.economy_faction_GDP_rank_num  ##各个经济阵营GDP排行数字
+		for_each_scope_loop = { #GDP归零
+			array = global.econ_countries
+			if = {
+				limit = { check_variable = { THIS.economy_faction_var > 0 } }
+				set_variable = { global.economy_faction_GDP^economy_faction_var = 0 }
+			}
+		}
+		for_each_scope_loop = { #计算所有国家gdp及阵营GDP
+			array = global.econ_countries
+			add_to_variable = { global.global_gdp_var = total_shouru }
+			if = {
+				limit = { check_variable = { THIS.economy_faction_var > 0 } }
+				add_to_variable = { global.economy_faction_GDP^economy_faction_var = total_shouru }
+				add_to_variable = { global.economy_faction_GDP_temp^economy_faction_var = total_shouru }
+			}
+		}
+		for_each_scope_loop = { #计算阵营GDP占比与排名
+			array = global.econ_countries
+			set_variable = { global.economy_faction_GDP_ratio^global.temp_economy_faction_index = global.economy_faction_GDP^global.temp_economy_faction_index }
+			divide_variable = { global.economy_faction_GDP_ratio^global.temp_economy_faction_index = global.global_gdp_var }
+			add_to_variable = { global.temp_economy_faction_index = 1 }
+		}
+		clear_array = global.economy_faction
+		set_variable = { global.economy_faction_index = 0 }
+		for_each_scope_loop = {
+			array = global.econ_countries
+			if = {
+				limit = {
+					check_variable = { THIS.economy_faction_var > 0 }
+					not = { is_in_array = { global.economy_faction_GDP_rank = THIS.economy_faction_var } }
+				}
+				add_to_array = { global.economy_faction_GDP_rank = THIS.economy_faction_var }
+				add_to_array = { global.economy_faction = THIS }
+				set_variable = { economy_faction_temp_GDP = global.economy_faction_GDP^economy_faction_var }
+			}
+		}
+		get_sorted_scored_countries = {
+			scorer = economy_faction_rank_scorer
+			array = global.economy_faction
+		}
+		for_each_scope_loop = {
+			array = global.economy_faction
+			add_to_variable = { global.economy_faction_index = 1 }
+			set_variable = { global.economy_faction_GDP_rank_num^economy_faction_var = global.economy_faction_index }
+		}
+		clear_variable = global.economy_faction_index
+
+		Wto_leader_modifier_effect = yes
+	}
 
 #教育经费
 education_fund_up_effet = {
@@ -1123,3 +1181,4 @@ Livelihood_fund_down_effet = {
 		}
 	}
 }
+

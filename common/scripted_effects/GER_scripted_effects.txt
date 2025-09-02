@@ -5582,13 +5582,55 @@ GER_remove_all_ideas = {
 }
 
 ###  玫瑰国际领袖buff计算  ###
-GEU_Rose_International_effect = {
+GEU_Rose_International_modifier_effect = {
 	set_variable = { global.GEU_Rose_International_leader_research_speed_factor = global.num_of_Rose_International }
 	divide_variable = { global.GEU_Rose_International_leader_research_speed_factor = 200 }
 	set_variable = { global.GEU_Rose_International_leader_global_building_slots_factor = global.num_of_Rose_International }
 	divide_variable = { global.GEU_Rose_International_leader_global_building_slots_factor = 100 }
 	set_variable = { global.GEU_Rose_International_leader_production_speed_buildings_factor = global.num_of_Rose_International }
 	divide_variable = { global.GEU_Rose_International_leader_production_speed_buildings_factor = 200 }
+}
+
+###  维也纳互助公约计算  ###
+Vienna_Convention_effect = {
+	clear_array = global.Vienna_Convention_member
+	set_variable = { global.num_of_Vienna_Convention = 0 }
+	every_country = {
+		limit = { check_variable = { THIS.economy_faction_var = 4 } }
+		add_to_array = { global.Vienna_Convention_member = THIS }
+		add_to_variable = { global.num_of_Vienna_Convention = 1 }
+	}
+	###  刷新经济阵营GDP
+	compute_global_gdp = yes
+}
+
+###  关税同盟计算  ###
+Customs_Union_effect = {
+	clear_array = global.Customs_Union_member
+	set_variable = { global.num_of_Customs_Union = 0 }
+	every_country = {
+		limit = { check_variable = { THIS.economy_faction_var = 6 } }
+		add_to_array = { global.Customs_Union_member = THIS }
+		add_to_variable = { global.num_of_Customs_Union = 1 }
+	}
+	###  刷新经济阵营GDP
+	compute_global_gdp = yes
+}
+
+###  玫瑰国际计算  ###
+Rose_International_effect = {
+	###  统计经济阵营成员数量
+	clear_array = global.Rose_International_member  ##成员所在的数组
+	set_variable = { global.num_of_Rose_International = 0 }  ##成员数量变量
+	every_country = {
+		limit = { check_variable = { THIS.economy_faction_var = 5 } }
+		add_to_array = { global.Rose_International_member = THIS }
+		add_to_variable = { global.num_of_Rose_International = 1 }
+	}
+	###  计算动态阵营buff（如果有）
+	GEU_Rose_International_modifier_effect = yes
+	###  刷新经济阵营GDP
+	compute_global_gdp = yes
 }
 
 ###  改进核弹  ###
@@ -5624,7 +5666,6 @@ GER_bathe_in_hellfire_nuclear = {
         }
     }
 }
-
 GER_bathe_in_hellfire_thermonuclear = {
     if = {
         limit = {

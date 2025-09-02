@@ -2540,3 +2540,22 @@ clear_decision_attack_AI = {
 		clear_array = preparing_for_war_with_@FROM
 	}
 }
+
+##加载阵营成员列表
+Load_list_of_economy_faction_members = {
+	set_variable = { ROOT.temp_economy_faction_var = FROM.economy_faction_var }
+	clear_array = global.temp_economy_faction_member
+	for_each_scope_loop = {
+		array = global.econ_countries
+		if = {
+			limit = {
+				check_variable = { THIS.economy_faction_var = FROM.economy_faction_var }
+			}
+			add_to_array = { global.temp_economy_faction_member = THIS }
+		}
+	}
+	get_sorted_scored_countries = {
+		scorer = economy_faction_member_GDP_rank_scorer
+		array = global.temp_economy_faction_member
+	}
+}
