@@ -464,10 +464,10 @@ PAO_unit= { #单位倾向
         value = 0
     }
 
-    ai_strategy = { #魔装
+    ai_strategy = { #安息的魂灵
         type = role_ratio
-        id = magic_assault
-        value = 200
+        id = PAO_anxi
+        value = 500
     }
 
     ai_strategy = {
@@ -491,12 +491,27 @@ PAO_unit= { #单位倾向
         id = infantry
         value = -4000
     }
-
-    ai_strategy = {
+      ai_strategy = {
         type = role_ratio
         id = infantry
         value = -4000
     }
+        ai_strategy = {
+        type = template_prio
+        id = armor
+        value = -4000
+    }
+      ai_strategy = {
+        type = role_ratio
+        id = armor
+        value = -4000
+    }
+ ai_strategy = { #安息的魂灵
+        type = template_prio
+        id = PAO_anxi
+        value = 500
+    }
+  
 
 
     ai_strategy = {
@@ -1561,6 +1576,64 @@ ai_strategy = {
 
 }
 
+PAO_war_with_LHS = { #与洛社开战
+    allowed = {
+        original_tag = PAO
+    }
+    enable = {
+        has_war_with = LHS
+
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        tag = LHS
+        
+        priority = 75
+        ordertype = front
+        manual_attack = no
+        execution_type = careful
+        execute_order = yes
+    }
+    ai_strategy = {
+        type = garrison
+        value = -100                    # 驻军需求（默认70-100）
+    }
+    ai_strategy = {
+        type = front_armor_score
+        id = WL1
+        value = 100
+    }
+ai_strategy = {
+		type = front_unit_request #前线部队
+		tag = LHS
+		value = 9999 # lets put more units, should be safe
+	}
+    ai_strategy = {
+        type = force_defend_ally_borders
+        id = "PAQ"
+        value = -1000
+    }
+    ai_strategy = {
+        type = force_defend_ally_borders
+        id = "MRB"
+        value = -1000
+    }
+    ai_strategy = {
+        type = force_defend_ally_borders
+        id = "MGC"
+        value = -1000
+    }
+
+    ai_strategy = {
+        type = force_defend_ally_borders
+        id = "PGM"
+        value = -1000
+    }
+
+}
+
 
 PAO_war_with_BRA = { #与妖精开战
     allowed = {
@@ -2405,7 +2478,39 @@ PAO_PAM_is_friend = {
 }
 
 
+#要军通
+	LHS_ask_for_access = {
+		reversed = yes
 
+		allowed = {
+			original_tag = LHS
+		}
+
+		enable = {
+            PAO = {
+    has_completed_focus = LHS_zshn
+}
+			NOT = {
+                
+				OR = {
+					is_in_faction_with = LHS
+					has_military_access_to = LHS
+                    
+				}
+			}
+            
+            OR = {
+TAG = PAM
+            }
+		}
+	
+		ai_strategy = {
+			type = diplo_action_desire
+			id = "PAO"
+			target = military_access
+			value = 1000
+		}
+	}
 
 
 
@@ -2502,4 +2607,36 @@ PAO_you_should_be_prepared_for_war = {
         type = force_build_armies
         value = 100
     }
+}
+#最终编制
+PAO_anxi_production = {
+    allowed = {
+        original_tag = PAO
+    }
+    enable = {
+        date > 1938.2.1
+        arms_factory > 100
+    }
+     ai_strategy = { #安息的魂灵2
+        type = role_ratio
+        id = PAO_anxi
+        value = -500
+    }
+ ai_strategy = { #安息的魂灵2
+        type = template_prio
+        id = PAO_anxi
+        value = -500
+    }
+   ai_strategy = { #安息的魂灵2
+        type = role_ratio
+        id = PAO_anxi2
+        value = 500
+    }
+ ai_strategy = { #安息的魂灵2
+        type = template_prio
+        id = PAO_anxi2
+        value = 500
+    }
+
+
 }
