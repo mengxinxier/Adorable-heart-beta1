@@ -261,6 +261,23 @@ lujun_meiyue_jisuan = {
 	divide_variable = {
 		hexinkaizhi = 4
 	}
+	set_variable = { income_for_overlord = 0 }
+	if = {
+		limit = { is_subject_of = CHI }
+		add_to_variable = { income_for_overlord = modifier@hcp_income_for_overlord_monthly }
+		add_to_variable = { income_for_overlord = modifier@hcp_income_for_CHI_monthly }
+		overlord = { add_to_variable = { THIS.diplo_exincome = PREV.income_for_overlord } }
+	}
+	else_if = {
+		limit = { is_subject = yes }
+		add_to_variable = { income_for_overlord = modifier@hcp_income_for_overlord_monthly }
+		overlord = { add_to_variable = { THIS.diplo_exincome = PREV.income_for_overlord } }
+	}
+	else_if = {
+		limit = { CHI = { is_subject = no } }
+		add_to_variable = { income_for_overlord = modifier@hcp_income_for_CHI_monthly }
+		CHI = { add_to_variable = { THIS.diplo_exincome = PREV.income_for_overlord } }
+	}
 	add_to_variable = {
 		var = xingzengkaizhi_var
 		value = zhujunkaizhi
@@ -268,6 +285,10 @@ lujun_meiyue_jisuan = {
 	add_to_variable = {
 		var = xingzengkaizhi_var
 		value = hexinkaizhi
+	}
+	add_to_variable = {
+		var = xingzengkaizhi_var
+		value = income_for_overlord
 	}
 }
 
@@ -419,6 +440,9 @@ econmic_debuff_jisuan_II = {
 
 jiesuanjingji = {
 	every_country = {
+		set_variable = { diplo_exincome = 0 }
+	}
+	every_country = {
 		#计算维护费
 		lujun_meiyue_jisuan = yes
 		haijun_meiyue_jisuan = yes
@@ -541,8 +565,14 @@ jiesuanjingji = {
 		add_to_variable = {
 			lirun_meiyue = modifier@hcp_exincome_monthly
 		}
+		add_to_variable = {
+			lirun_meiyue = diplo_exincome
+		}
 		set_variable = { exincome_tooltip = exincome }
 		add_to_variable = { exincome_tooltip = modifier@hcp_exincome_monthly }
+		add_to_variable = { exincome_tooltip = diplo_exincome }
+		set_variable = { exincome_from_other = exincome }
+		add_to_variable = { exincome_from_other = modifier@hcp_exincome_monthly }
 		##收入修正-百分比
 		set_variable = {
 			exincome_multiply_modifier = 1
@@ -559,6 +589,42 @@ jiesuanjingji = {
 			var = lirun_meiyue
 			value = exincome_multiply_modifier
 		}
+		##收入修正（给宗主国/天朝）-百分比
+		set_variable = { exincome_multiply_modifier = 0 }
+		set_variable = { diplo_income_factor_var = 0 }
+		set_variable = { exincome_for_overlord = 0 }
+		set_variable = { exincome_for_CHI = 0 }
+		if = {
+			limit = { is_subject_of = CHI }
+			add_to_variable = { exincome_multiply_modifier = modifier@hcp_income_for_overlord_factor_monthly }
+			add_to_variable = { exincome_multiply_modifier = modifier@hcp_income_for_CHI_factor_monthly }
+			subtract_from_variable = { diplo_income_factor_var = modifier@hcp_income_for_overlord_factor_monthly }
+			subtract_from_variable = { diplo_income_factor_var = modifier@hcp_income_for_CHI_factor_monthly }
+			set_variable = { exincome_for_CHI_temp = lirun_meiyue }
+			multiply_variable = { exincome_for_CHI_temp = exincome_multiply_modifier }
+			add_to_variable = { exincome_for_CHI = exincome_for_CHI_temp }
+			CHI = { add_to_variable = { diplo_exincome = PREV.exincome_for_CHI } }
+		}
+		else_if = {
+			limit = { is_subject = yes }
+			add_to_variable = { exincome_multiply_modifier = modifier@hcp_income_for_overlord_factor_monthly }
+			subtract_from_variable = { diplo_income_factor_var = modifier@hcp_income_for_overlord_factor_monthly }
+			set_variable = { exincome_for_overlord_temp = lirun_meiyue }
+			multiply_variable = { exincome_for_overlord_temp = exincome_multiply_modifier }
+			add_to_variable = { exincome_for_overlord = exincome_for_overlord_temp }
+			overlord = { add_to_variable = { diplo_exincome = PREV.exincome_for_overlord } }
+		}
+		else_if = {
+			limit = { CHI = { is_subject = no } }
+			add_to_variable = { exincome_multiply_modifier = modifier@hcp_income_for_CHI_factor_monthly }
+			subtract_from_variable = { diplo_income_factor_var = modifier@hcp_income_for_CHI_factor_monthly }
+			set_variable = { exincome_for_CHI_temp = lirun_meiyue }
+			multiply_variable = { exincome_for_CHI_temp = exincome_multiply_modifier }
+			add_to_variable = { exincome_for_CHI = exincome_for_CHI_temp }
+			CHI = { add_to_variable = { diplo_exincome = PREV.exincome_for_CHI } }
+		}
+		subtract_from_variable = { lirun_meiyue = exincome_for_overlord }
+		subtract_from_variable = { lirun_meiyue = exincome_for_CHI }
 		##结算净收入
 		set_variable = {
 			total_shouru = lirun_meiyue
