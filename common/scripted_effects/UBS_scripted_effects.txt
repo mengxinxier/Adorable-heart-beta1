@@ -1,1125 +1,1129 @@
-#图标变化
-UBS_bank_icon_frames = {
-	set_temp_variable = {
-		cunkuan_temp = ubs_save
-	}
-	divide_temp_variable = {
-		cunkuan_temp = 4200
-	}
-	multiply_temp_variable = {
-		cunkuan_temp = 6
-	}
-	if = {
-		limit = {
-			check_variable = {
-				cunkuan_temp > 0
-			}
-		}
-		clamp_temp_variable = {
-			var = cunkuan_temp
-			min = 1
-			max = 6
-		}
-	}
-	else = {
-		set_temp_variable = {
-			cunkuan_temp = 1
-		}
-	}
-	set_variable = {
-		current_cunkuan_icon_frame = cunkuan_temp
-	}
-	set_temp_variable = {
-		daikuan_temp = THIS.ubs_load
-	}
-	divide_temp_variable = {
-		daikuan_temp = 4200
-	}
-	multiply_temp_variable = {
-		daikuan_temp = 6
-	}
-	if = {
-		limit = {
-			check_variable = {
-				daikuan_temp > 0
-			}
-		}
-		clamp_temp_variable = {
-			var = daikuan_temp
-			min = 1
-			max = 6
-		}
-	}
-	else = {
-		set_temp_variable = {
-			daikuan_temp = 1
-		}
-	}
-	set_variable = {
-		current_daikuan_icon_frame = daikuan_temp
-	}
-	###图标变化
-	if = {
-		limit = {
-			not = { check_variable = { lirun_meiyue < 0 } }
-			not = { check_variable = { current_jinglirun_icon_frame = 2 } }
-		}
-		set_variable = { current_jinglirun_icon_frame = 2 }
-	}
-	if = {
-		limit = {
-			check_variable = { lirun_meiyue < 0 }
-			not = { check_variable = { current_jinglirun_icon_frame = 1 } }
-		}
-		set_variable = { current_jinglirun_icon_frame = 1 }
-	}
-	clamp_variable = {
-		var = THIS.ubs_load
-		min = 0
-	}
-	clamp_variable = {
-		var = ubs_save
-		min = 0
-	}
-	round_variable = THIS.ubs_load
-	round_variable = ubs_save
+#工业税收入 - AHES_Industrial_tax_income
+#消费税收入 - AHES_Consumption_tax_income
+#收入修正 - AHES_income_correction_coefficient
+#外交收入修正 - AHES_diplo_income_correction_coefficient
+#外交收入 - AHES_diplo_exincome
+#其他额外收入 - AHES_other_exincome
+#总额外收入 - AHES_total_exincome
+#月度总收入 - AHES_Total_income
+
+#陆军支出 - AHES_Army_outcome
+#陆军维护费修正 - AHES_Army_outcome_factor
+#海军支出 - AHES_Navy_outcome
+#海军维护费修正 - AHES_Navy_outcome_factor
+#行政支出 - AHES_Administration_outcome
+#外交支出 - AHES_income_for_overlord
+#总额外支出 - AHES_total_outcome
+#月度总支出 - AHES_Total_outcome
+
+#月度净收入 - AHES_Net_income
+
+##  初始化变量
+AHES_Initialize_var = {
+    every_country = {
+        set_variable = { AHES_diplo_exincome = 0 }
+        set_variable = { AHES_Total_income = 0 }
+        set_variable = { AHES_Total_outcome = 0 }
+    }
 }
 
-####民用工厂计算税收####
-mingong_jisuan_shuishou = {
-	set_variable = {
-		shui_shouru = num_of_civilian_factories_available_for_projects
-	}
-	multiply_variable = {
-		var = shui_shouru
-		value = 1.5
-	}
-	#消费税
-	set_variable = {
-		xiaofeipin = num_of_civilian_factories
-	}
-	subtract_from_variable = {
-		var = xiaofeipin
-		value = num_of_civilian_factories_available_for_projects
-	}
-	set_variable = {
-		num_of_xiaofeipin = xiaofeipin
-	}
-	multiply_variable = {
-		var = xiaofeipin
-		value = 2
-	}
-	add_to_variable = {
-		var = shui_shouru
-		value = xiaofeipin
-	}
-	#工业税
-	set_variable = {
-		gongyeshui = num_of_civilian_factories_available_for_projects
-	}
-	multiply_variable = {
-		var = gongyeshui
-		value = 1.5
-	}
+###  刷新收入-工业及消费税
+AHES_Refresh_income_indus = {
+    ##工业税
+    set_variable = { AHES_Industrial_tax_income = num_of_civilian_factories_available_for_projects }  ##工业税
+    multiply_variable = { AHES_Industrial_tax_income = 1.7 }
+    ##消费税
+    set_variable = { AHES_num_of_CGCF = num_of_civilian_factories }  ##消费品民工
+    subtract_from_variable = { AHES_num_of_CGCF = num_of_civilian_factories_available_for_projects }
+    set_variable = { AHES_Consumption_tax_income = AHES_num_of_CGCF }  ##消费税收入
+    multiply_variable = { AHES_Consumption_tax_income = 2.2 }
+    ##添加到总收入中
+    add_to_variable = { AHES_Total_income = AHES_Industrial_tax_income }
+    add_to_variable = { AHES_Total_income = AHES_Consumption_tax_income }
 }
 
-####计算海军军费####
-haijun_meiyue_jisuan = {
-	set_variable = {
-		var = zhulijian
-		value = num_ships_with_type@battle_cruiser
-	}
-	add_to_variable = {
-		var = zhulijian
-		value = num_ships_with_type@battleship
-	}
-	add_to_variable = {
-		var = zhulijian
-		value = num_ships_with_type@heavy_cruiser
-	}
-	# add_to_variable = {
-	# 	var = zhulijian
-	# 	value = num_ships_with_type@heavy_cruiser
-	# }
-	set_variable = {
-		var = hangmu
-		value = num_ships_with_type@carrier
-	}
-	set_variable = {
-		var = pingweijian_num
-		value = num_ships_with_type@destroyer
-	}
-	add_to_variable = {
-		var = pingweijian_num
-		value = num_ships_with_type@light_cruiser
-	}
-	# add_to_variable = {
-	# 	var = pingweijian_num
-	# 	value = num_ships_with_type@light_cruiser
-	# }
-	set_variable = {
-		var = pingweijian_money
-		value = pingweijian_num
-	}
-	divide_variable = {
-		var = pingweijian_money
-		value = 100
-	}
-	set_variable = {
-		var = qianting_num
-		value = num_ships_with_type@submarine
-	}
-	divide_variable = {
-		var = qianting_num
-		value = 500
-	}
-	set_variable = {
-		var = haijun_meiyue_navy
-		value = zhulijian
-	}
-	add_to_variable = {
-		var = haijun_meiyue_navy
-		value = hangmu
-	}
-	add_to_variable = {
-		var = haijun_meiyue_navy
-		value = pingweijian_money
-	}
-	add_to_variable = {
-		var = haijun_meiyue_navy
-		value = qianting_num
-	}
-	# set_variable = {
-	# 	var = air_money
-	# 	value = num_deployed_planes
-	# }
-	# divide_variable = {
-	# 	var = air_money
-	# 	value = 200
-	# }
-	set_variable = {
-		var = haijun_meiyue
-		value = haijun_meiyue_navy
-	}
-	set_variable = {
-		var = navy_fee_modifier_total
-		value = 1
-	}
-	add_to_variable = {
-		var = navy_fee_modifier_total
-		value = navy_fee_modifier
-	}
-	multiply_variable = {
-		var = haijun_meiyue
-		value = navy_fee_modifier_total
-	}
-	# add_to_variable = {
-	# 	var = haijun_meiyue
-	# 	value = air_money
-	# }
+###  刷新收入-收入修正
+AHES_Refresh_income_factor = {
+    set_variable = { temp_income_multiply_factor = 1 }
+    add_to_variable = { temp_income_multiply_factor = exincome_modifier }
+    add_to_variable = { temp_income_multiply_factor = modifier@hcp_income_factor_monthly }
+    set_variable = { AHES_income_correction_coefficient = exincome_modifier }
+    add_to_variable = { AHES_income_correction_coefficient = modifier@hcp_income_factor_monthly }
+    multiply_variable = { AHES_Total_income = temp_income_multiply_factor }
 }
 
-####计算陆军军费####
-lujun_meiyue_jisuan = {
-	set_variable = {
-		var = lujun_meiyue
-		value = num_battalions
-	}
-	divide_variable = {
-		lujun_meiyue = 50
-	}
-	set_variable = {
-		var = army_fee_modifier_total
-		value = 1
-	}
-	add_to_variable = {
-		var = army_fee_modifier_total
-		value = army_fee_modifier
-	}
-	multiply_variable = {
-		var = lujun_meiyue
-		value = army_fee_modifier_total
-	}
-	#################################
-	#############行政开支############
-	#################################
-	set_variable = {
-		var = xingzengkaizhi_var
-		value = 0
-	}
-	set_variable = {
-		var = zhujunkaizhi
-		value = garrison_manpower_need
-	}
-	divide_variable = {
-		zhujunkaizhi = 5000000
-	}
-	set_variable = {
-		var = hexinkaizhi
-		value = num_controlled_states
-	}
-	divide_variable = {
-		hexinkaizhi = 4
-	}
-	add_to_variable = {
-		var = xingzengkaizhi_var
-		value = zhujunkaizhi
-	}
-	add_to_variable = {
-		var = xingzengkaizhi_var
-		value = hexinkaizhi
-	}
+###  刷新收入-外交收入修正
+AHES_Refresh_income_dipol_factor = {
+    set_variable = { AHES_diplo_income_correction_coefficient = 0 }
+    set_variable = { temp_income_multiply_factor = 0 }  ##临时乘数
+    set_variable = { temp_outcome_for_overlord = 0 }  ##临时支出-贡献给宗主国
+    set_variable = { temp_outcome_for_CHI = 0 }  ##临时支出-贡献给CHI
+    if = {
+        limit = { is_subject_of = CHI }
+        add_to_variable = { temp_income_multiply_factor = modifier@hcp_income_for_overlord_factor_monthly }
+        add_to_variable = { temp_income_multiply_factor = modifier@hcp_income_for_CHI_factor_monthly }
+        subtract_from_variable = { AHES_diplo_income_correction_coefficient = modifier@hcp_income_for_overlord_factor_monthly }
+        subtract_from_variable = { AHES_diplo_income_correction_coefficient = modifier@hcp_income_for_CHI_factor_monthly }
+        set_variable = { temp_outcome_for_overlord = AHES_Total_income }
+        multiply_variable = { temp_outcome_for_overlord = temp_income_multiply_factor }
+        CHI = { add_to_variable = { AHES_diplo_exincome = PREV.temp_outcome_for_overlord } }
+    }
+    else_if = {
+        limit = { is_subject = yes }
+        add_to_variable = { temp_income_multiply_factor = modifier@hcp_income_for_overlord_factor_monthly }
+        subtract_from_variable = { AHES_diplo_income_correction_coefficient = modifier@hcp_income_for_overlord_factor_monthly }
+        set_variable = { temp_outcome_for_overlord = AHES_Total_income }
+        multiply_variable = { temp_outcome_for_overlord = temp_income_multiply_factor }
+        overlord = { add_to_variable = { AHES_diplo_exincome = PREV.temp_outcome_for_overlord } }
+    }
+    else_if = {
+        limit = { CHI = { is_subject = no } }
+        add_to_variable = { temp_income_multiply_factor = modifier@hcp_income_for_CHI_factor_monthly }
+        subtract_from_variable = { AHES_diplo_income_correction_coefficient = modifier@hcp_income_for_CHI_factor_monthly }
+        set_variable = { temp_outcome_for_CHI = AHES_Total_income }
+        multiply_variable = { temp_outcome_for_CHI = temp_income_multiply_factor }
+        CHI = { add_to_variable = { AHES_diplo_exincome = PREV.temp_outcome_for_CHI } }
+    }
+    subtract_from_variable = { AHES_Total_income = temp_outcome_for_overlord }
+    subtract_from_variable = { AHES_Total_income = temp_outcome_for_CHI }
 }
 
-###计算debuff####
-econmic_debuff_jisuan = {
-	if = {
-		limit = {
-			check_variable = {
-				total_shouru > 0
-			}
-		}
-		set_variable = {
-			this_country_GDP = total_shouru
-		}
-	}
-	else = {
-		set_variable = { this_country_GDP = 1 }
-	}
-	multiply_variable = {
-		var = this_country_GDP
-		value = 12
-	}
-	set_variable = {
-		Debt_ratio = ubs_load
-	}
-	divide_variable = {
-		var = Debt_ratio
-		value = this_country_GDP
-	}
-	if = {
-		limit = { check_variable = { Debt_ratio > 1 } }
-		set_variable = {
-			Debt_ratio_2 = Debt_ratio
-		}
-		add_to_variable = {
-			Debt_ratio_2 = -1
-		}
-		set_variable = {
-			UBS_debuff_stability_factor = Debt_ratio_2
-		}
-		divide_variable = {
-			var = UBS_debuff_stability_factor
-			value = -4
-		}
-		set_variable = {
-			UBS_debuff_production_speed_buildings_factor = UBS_debuff_stability_factor
-		}
-		set_variable = {
-			UBS_debuff_industrial_capacity_factory = Debt_ratio_2
-		}
-		divide_variable = {
-			var = UBS_debuff_industrial_capacity_factory
-			value = -10
-		}
-		clamp_variable = {
-			var = UBS_debuff_stability_factor
-			min = -0.8
-			max = 0
-		}
-		clamp_variable = {
-			var = UBS_debuff_production_speed_buildings_factor
-			min = -0.8
-			max = 0
-		}
-		clamp_variable = {
-			var = UBS_debuff_industrial_capacity_factory
-			min = -0.8
-			max = 0
-		}
-	}
-	else = {
-		set_variable = { UBS_debuff_production_speed_buildings_factor = 0 }
-		set_variable = { UBS_debuff_industrial_capacity_factory = 0 }
-		set_variable = { UBS_debuff_stability_factor = 0 }
-	}
-	#force_update_dynamic_modifier = yes
+###  刷新收入-额外收入
+AHES_Refresh_exincome = {
+    set_variable = { AHES_other_exincome = exincome }
+    add_to_variable = { AHES_other_exincome = modifier@hcp_exincome_monthly }
+    set_variable = { AHES_total_exincome = AHES_other_exincome }
+    add_to_variable = { AHES_total_exincome = AHES_diplo_exincome }
+    add_to_variable = { AHES_Total_income = AHES_total_exincome }
 }
 
-econmic_debuff_jisuan_II = {
-	if = {
-		limit = {
-			NOT = {
-				has_country_flag = UBS_not
-			}
-		}
-		###debuff计算##
-		econmic_debuff_jisuan = yes
-		if = {
-			limit = {
-				check_variable = {
-					Debt_ratio > 1
-				}
-				not = {
-					has_dynamic_modifier = {
-						modifier = econmic_debuff_modifer
-					}
-				}
-			}
-			if = {
-				limit = {
-					is_ai = yes
-				}
-				add_ideas = AI_Arms_imitation
-			}
-			add_dynamic_modifier = {
-				modifier = econmic_debuff_modifer
-			}
-		}
-		if = {
-			limit = {
-				check_variable = {
-					Debt_ratio = 1
-				}
-				has_dynamic_modifier = {
-					modifier = econmic_debuff_modifer
-				}
-			}
-			if = {
-				limit = {
-					has_idea = AI_Arms_imitation
-				}
-				remove_ideas = AI_Arms_imitation
-			}
-			remove_dynamic_modifier = {
-				modifier = econmic_debuff_modifer
-			}
-		}
-		else_if = {
-			limit = {
-				check_variable = {
-					Debt_ratio < 1
-				}
-				has_dynamic_modifier = {
-					modifier = econmic_debuff_modifer
-				}
-			}
-			if = {
-				limit = {
-					has_idea = AI_Arms_imitation
-				}
-				remove_ideas = AI_Arms_imitation
-			}
-			remove_dynamic_modifier = {
-				modifier = econmic_debuff_modifer
-			}
-		}
-	}
+###  刷新支出-陆军支出
+AHES_Refresh_outcome_army = {
+    ##变量-步兵 AHES_num_of_infantry  0.04
+    ##变量-非正规步兵 AHES_num_of_irregular_infantry  0.02
+    ##变量-骑兵 AHES_num_of_cavalry  0.07
+    ##变量-装甲车 AHES_num_of_armored_vehicle  0.1
+    ##变量-炮兵 AHES_num_of_artillery  0.15
+    ##变量-摩托化步兵 AHES_num_of_motorized  0.09
+    ##变量-机械化步兵 AHES_num_of_mechanized  0.13
+    ##变量-装甲 AHES_num_of_armor  0.25
+    ##变量-自动机 AHES_num_of_auto_meta  0.1
+    ##变量-特种步兵 AHES_num_of_special_forces  0.08
+    ##变量-魔炮 AHES_num_of_magic_artillery  0.22
+    ##变量-高级特殊兵种 AHES_num_of_advanced_special_forces  0.25
+    ##变量-其他特殊兵种及支援连 AHES_num_of_other_special_forces  0.01
+
+    ##  计算陆军各兵种数量
+    set_variable = { AHES_num_of_infantry = num_battalions_with_type@infantry }
+    set_variable = { AHES_num_of_irregular_infantry = num_battalions_with_type@irregular_infantry }
+    add_to_variable = { AHES_num_of_irregular_infantry = num_battalions_with_type@militia }
+    add_to_variable = { AHES_num_of_irregular_infantry = num_battalions_with_type@youjibudui }
+    set_variable = { AHES_num_of_cavalry = num_battalions_with_type@cavalry }
+    add_to_variable = { AHES_num_of_cavalry = num_battalions_with_type@bicycle_battalion }
+    add_to_variable = { AHES_num_of_cavalry = num_battalions_with_type@camelry }
+    add_to_variable = { AHES_num_of_cavalry = num_battalions_with_type@elephantry }
+    set_variable = { AHES_num_of_armored_vehicle = num_battalions_with_type@armored_car }
+    set_variable = { AHES_num_of_artillery = num_battalions_with_type@artillery_brigade }
+    add_to_variable = { AHES_num_of_artillery = num_battalions_with_type@mot_artillery_brigade }
+    add_to_variable = { AHES_num_of_artillery = num_battalions_with_type@rocket_artillery_brigade }
+    add_to_variable = { AHES_num_of_artillery = num_battalions_with_type@mot_rocket_artillery_brigade }
+    add_to_variable = { AHES_num_of_artillery = num_battalions_with_type@motorized_rocket_brigade }
+    add_to_variable = { AHES_num_of_artillery = num_battalions_with_type@anti_tank_brigade }
+    add_to_variable = { AHES_num_of_artillery = num_battalions_with_type@mot_anti_tank_brigade }
+    add_to_variable = { AHES_num_of_artillery = num_battalions_with_type@anti_air_brigade }
+    add_to_variable = { AHES_num_of_artillery = num_battalions_with_type@mot_anti_air_brigade }
+    set_variable = { AHES_num_of_motorized = num_battalions_with_type@motorized }
+    set_variable = { AHES_num_of_mechanized = num_battalions_with_type@mechanized }
+    add_to_variable = { AHES_num_of_mechanized = num_battalions_with_type@amphibious_mechanized }
+    set_variable = { AHES_num_of_armor = num_battalions_with_type@amphibious_armor }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@amphibious_light_armor }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@amphibious_medium_armor }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@amphibious_heavy_armor }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@heavy_armor }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@light_armor }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@medium_armor }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@modern_armor }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@light_sp_anti_air_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@medium_sp_anti_air_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@heavy_sp_anti_air_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@super_heavy_sp_anti_air_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@modern_sp_anti_air_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@light_sp_artillery_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@medium_sp_artillery_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@heavy_sp_artillery_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@super_heavy_sp_artillery_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@modern_sp_artillery_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@light_tank_destroyer_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@medium_tank_destroyer_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@heavy_tank_destroyer_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@super_heavy_tank_destroyer_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@modern_tank_destroyer_brigade }
+    add_to_variable = { AHES_num_of_armor = num_battalions_with_type@Airborne_tanks }
+    set_variable = { AHES_num_of_auto_meta = num_battalions_with_type@KEI_AUTO_META_units }
+    set_variable = { AHES_num_of_special_forces = num_battalions_with_type@marine }
+    add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@marine_commando }
+    add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@mountaineers }
+    add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@paratrooper }
+    add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@magic_assault }
+    add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@wangling2 }
+    add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@silverspear_pegasus }
+    set_variable = { AHES_num_of_magic_artillery = num_battalions_with_type@magic_artillery }
+    set_variable = { AHES_num_of_advanced_special_forces = num_battalions_with_type@magic_silverspear_pegasus }
+    add_to_variable = { AHES_num_of_advanced_special_forces = num_battalions_with_type@grail_knight_units }
+    add_to_variable = { AHES_num_of_advanced_special_forces = num_battalions_with_type@the_worldtank }
+    add_to_variable = { AHES_num_of_advanced_special_forces = num_battalions_with_type@mech }
+    set_variable = { AHES_num_of_other_special_forces = num_battalions }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_infantry }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_irregular_infantry }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_cavalry }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_armored_vehicle }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_artillery }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_motorized }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_mechanized }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_armor }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_auto_meta }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_special_forces }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_magic_artillery }
+    subtract_from_variable = { AHES_num_of_other_special_forces = AHES_num_of_advanced_special_forces }
+
+    ##  计算陆军各兵种维护费
+    set_variable = { AHES_num_of_infantry_outcome = AHES_num_of_infantry }
+    multiply_variable = { AHES_num_of_infantry_outcome = 0.04 }
+    set_variable = { AHES_num_of_irregular_infantry_outcome = AHES_num_of_irregular_infantry }
+    multiply_variable = { AHES_num_of_irregular_infantry_outcome = 0.02 }
+    set_variable = { AHES_num_of_cavalry_outcome = AHES_num_of_cavalry }
+    multiply_variable = { AHES_num_of_cavalry_outcome = 0.07 }
+    set_variable = { AHES_num_of_armored_vehicle_outcome = AHES_num_of_armored_vehicle }
+    multiply_variable = { AHES_num_of_armored_vehicle_outcome = 0.1 }
+    set_variable = { AHES_num_of_artillery_outcome = AHES_num_of_artillery }
+    multiply_variable = { AHES_num_of_artillery_outcome = 0.15 }
+    set_variable = { AHES_num_of_motorized_outcome = AHES_num_of_motorized }
+    multiply_variable = { AHES_num_of_motorized_outcome = 0.09 }
+    set_variable = { AHES_num_of_mechanized_outcome = AHES_num_of_mechanized }
+    multiply_variable = { AHES_num_of_mechanized_outcome = 0.13 }
+    set_variable = { AHES_num_of_armor_outcome = AHES_num_of_armor }
+    multiply_variable = { AHES_num_of_armor_outcome = 0.25 }
+    set_variable = { AHES_num_of_auto_meta_outcome = AHES_num_of_auto_meta }
+    multiply_variable = { AHES_num_of_auto_meta_outcome = 0.1 }
+    set_variable = { AHES_num_of_special_forces_outcome = AHES_num_of_special_forces }
+    multiply_variable = { AHES_num_of_special_forces_outcome = 0.08 }
+    set_variable = { AHES_num_of_magic_artillery_outcome = AHES_num_of_magic_artillery }
+    multiply_variable = { AHES_num_of_magic_artillery_outcome = 0.22 }
+    set_variable = { AHES_num_of_advanced_special_forces_outcome = AHES_num_of_advanced_special_forces }
+    multiply_variable = { AHES_num_of_advanced_special_forces_outcome = 0.25 }
+    set_variable = { AHES_num_of_other_special_forces_outcome = AHES_num_of_other_special_forces }
+    multiply_variable = { AHES_num_of_other_special_forces_outcome = 0.01 }
+
+    ##  陆军总维护费
+    set_variable = { AHES_Army_outcome = AHES_num_of_infantry_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_irregular_infantry_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_cavalry_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_armored_vehicle_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_artillery_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_motorized_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_mechanized_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_armor_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_auto_meta_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_special_forces_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_magic_artillery_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_advanced_special_forces_outcome }
+    add_to_variable = { AHES_Army_outcome = AHES_num_of_other_special_forces_outcome }
+    set_variable = { AHES_Army_outcome_factor = army_fee_modifier }
+    add_to_variable = { AHES_Army_outcome_factor = modifier@hcp_Military_maintenance_fee_factor }
+    add_to_variable = { AHES_Army_outcome_factor = modifier@hcp_Army_maintenance_fee_factor }
+    set_variable = { temp_AHES_Army_outcome_factor = 1 }
+    add_to_variable = { temp_AHES_Army_outcome_factor = AHES_Army_outcome_factor }
+    multiply_variable = { AHES_Army_outcome = temp_AHES_Army_outcome_factor }
+    add_to_variable = { AHES_Total_outcome = AHES_Army_outcome }
 }
 
-jiesuanjingji = {
-	every_country = {
-		#计算维护费
-		lujun_meiyue_jisuan = yes
-		haijun_meiyue_jisuan = yes
-		#合计维护费
-		set_variable = {
-			heji_meiyue = haijun_meiyue
-		}
-		add_to_variable = {
-			var = heji_meiyue
-			value = lujun_meiyue
-		}
-		###计算维护费修正
-		if = {
-			limit = {
-				has_idea = low_economic_mobilisation
-			}
-			set_variable = {
-				weihufei_modifer = -0.1
-			}
-		}
-		else_if = {
-			limit = {
-				or = {
-					has_idea = partial_economic_mobilisation
-				}
-			}
-			set_variable = {
-				weihufei_modifer = -0.15
-			}
-		}
-		else_if = {
-			limit = {
-				or = {
-					has_idea = war_economy
-				}
-			}
-			set_variable = {
-				weihufei_modifer = -0.2
-			}
-		}
-		else_if = {
-			limit = {
-				or = {
-					has_idea = tot_economic_mobilisation
-				}
-			}
-			set_variable = {
-				weihufei_modifer = -0.25
-			}
-		}
-		else_if = {
-			set_variable = {
-				weihufei_modifer = 0
-			}
-		}
-		set_variable = {
-			weihufei_modifer_II = 1
-		}
-		add_to_variable = {
-			var = weihufei_modifer_II
-			value = weihufei_modifer
-		}
-		multiply_variable = {
-			var = heji_meiyue
-			value = weihufei_modifer_II
-		}
-		###行政开支与额外开支
-		add_to_variable = {
-			var = heji_meiyue
-			value = exoutcome
-		}
-		add_to_variable = {
-			heji_meiyue = modifier@hcp_exoutcome_monthly
-		}
-		set_variable = { exoutcome_tooltip = exoutcome }
-		add_to_variable = { exoutcome_tooltip = modifier@hcp_exoutcome_monthly }
-		add_to_variable = {
-			var = heji_meiyue
-			value = xingzengkaizhi_var
-		}
-		###支出修正###
-		set_variable = {
-			kaizhi_modifer_jisuan = 1
-		}
-		add_to_variable = {
-			var = kaizhi_modifer_jisuan
-			value = kaizhi_modifer
-		}
-		add_to_variable = {
-			kaizhi_modifer_jisuan = modifier@hcp_outcome_factor_monthly
-		}
-		set_variable = { outcome_modifier_tooltip = kaizhi_modifer }
-		add_to_variable = { outcome_modifier_tooltip = modifier@hcp_outcome_factor_monthly }
-		multiply_variable = {
-			var = heji_meiyue
-			value = kaizhi_modifer_jisuan
-		}
-		#######计算收入########
-		#消费税及工业税
-		if = {
-			limit = {
-				NOT = {
-					has_idea = undisturbed_isolation
-					has_idea = isolation
-				}
-			}
-			mingong_jisuan_shuishou = yes
-		}
-		##把收入加起来
-		set_variable = {
-			lirun_meiyue = 0
-		}
-		add_to_variable = {
-			lirun_meiyue = shui_shouru
-		}
-		##额外收入-固定值
-		add_to_variable = {
-			lirun_meiyue = exincome
-		}
-		add_to_variable = {
-			lirun_meiyue = modifier@hcp_exincome_monthly
-		}
-		set_variable = { exincome_tooltip = exincome }
-		add_to_variable = { exincome_tooltip = modifier@hcp_exincome_monthly }
-		##收入修正-百分比
-		set_variable = {
-			exincome_multiply_modifier = 1
-		}
-		add_to_variable = {
-			exincome_multiply_modifier = exincome_modifier
-		}
-		add_to_variable = {
-			exincome_multiply_modifier = modifier@hcp_income_factor_monthly
-		}
-		set_variable = { income_modifier_tooltip = exincome_modifier }
-		add_to_variable = { income_modifier_tooltip = modifier@hcp_income_factor_monthly }
-		multiply_variable = {
-			var = lirun_meiyue
-			value = exincome_multiply_modifier
-		}
-		##结算净收入
-		set_variable = {
-			total_shouru = lirun_meiyue
-		}
-		subtract_from_variable = {
-			lirun_meiyue = heji_meiyue
-		}
-		###图标变化
-		if = {
-			limit = {
-				not = { check_variable = { lirun_meiyue < 0 } }
-				not = { check_variable = { current_jinglirun_icon_frame = 2 } }
-			}
-			set_variable = { current_jinglirun_icon_frame = 2 }
-		}
-		if = {
-			limit = {
-				check_variable = { lirun_meiyue < 0 }
-				not = { check_variable = { current_jinglirun_icon_frame = 1 } }
-			}
-			set_variable = { current_jinglirun_icon_frame = 1 }
-		}
-		UBS_bank_icon_frames = yes
-		# ##市场
-		# if = {
-		# 	limit = {
-		# 		not = {
-		# 			has_government = neutrality
-		# 		}
-		# 	}
-		# 	every_other_country = {
-		# 		limit = {
-		# 			not = {	
-		# 				or = {
-		# 					has_government = neutrality
-		# 					has_government = PREV
-		# 				}
-		# 			}
-		# 			has_country_flag = can_be_in_market_of_@PREV
-		# 			not = {
-		# 				or = {
-		# 					is_in_faction_with = PREV
-		# 					is_subject_of = PREV
-		# 				}
-		# 			}
-		# 		}
-		# 		remove_country_flag = can_be_in_market_of_@PREV
-		# 		remove_opinion_modifier = {
-		# 			target = PREV
-		# 			modifier = Trading_partners
-		# 		}
-		# 	}
-		# }
-	}
+###  刷新支出-海军支出
+AHES_Refresh_outcome_navy = {
+    ##临时变量-主力舰数量 AHES_num_of_battleship  1
+    ##临时变量-航母数量 AHES_num_of_carrier  1
+    ##临时变量-屏卫舰数量 AHES_num_of_screenship  0.18
+    ##临时变量-潜艇数量 AHES_num_of_submarine  0.09
+    ##临时变量-其他舰种数量 AHES_num_of_othership 0.5
+
+    ##  计算海军各舰种数量
+    set_variable = { AHES_num_of_battleship = num_ships_with_type@battle_cruiser }
+    add_to_variable = { AHES_num_of_battleship = num_ships_with_type@battleship }
+    add_to_variable = { AHES_num_of_battleship = num_ships_with_type@heavy_cruiser }
+    set_variable = { AHES_num_of_carrier = num_ships_with_type@carrier }
+    set_variable = { AHES_num_of_screenship = num_ships_with_type@destroyer }
+    add_to_variable = { AHES_num_of_screenship = num_ships_with_type@light_cruiser }
+    set_variable = { AHES_num_of_submarine = num_ships_with_type@submarine }
+    set_variable = { AHES_num_of_othership = num_ships }
+    subtract_from_variable = { AHES_num_of_othership = AHES_num_of_battleship }
+    subtract_from_variable = { AHES_num_of_othership = AHES_num_of_carrier }
+    subtract_from_variable = { AHES_num_of_othership = AHES_num_of_screenship }
+    subtract_from_variable = { AHES_num_of_othership = AHES_num_of_submarine }
+    ##  计算海军各舰种维护费
+    set_variable = { AHES_num_of_screenship_outcome = AHES_num_of_screenship }
+    multiply_variable = { AHES_num_of_screenship_outcome = 0.18 }
+    set_variable = { AHES_num_of_submarine_outcome = AHES_num_of_submarine }
+    multiply_variable = { AHES_num_of_submarine_outcome = 0.09 }
+    set_variable = { AHES_num_of_othership_outcome = AHES_num_of_othership }
+    multiply_variable = { AHES_num_of_othership_outcome = 0.5 }
+
+    ##  海军总维护费
+    set_variable = { AHES_Navy_outcome = AHES_num_of_battleship }
+    add_to_variable = { AHES_Navy_outcome = AHES_num_of_carrier }
+    add_to_variable = { AHES_Navy_outcome = AHES_num_of_screenship_outcome }
+    add_to_variable = { AHES_Navy_outcome = AHES_num_of_submarine_outcome }
+    add_to_variable = { AHES_Navy_outcome = AHES_num_of_othership_outcome }
+    set_variable = { AHES_Navy_outcome_factor = navy_fee_modifier }
+    add_to_variable = { AHES_Navy_outcome_factor = modifier@hcp_Military_maintenance_fee_factor }
+    add_to_variable = { AHES_Navy_outcome_factor = modifier@hcp_Navy_maintenance_fee_factor }
+    set_variable = { temp_AHES_Navy_outcome_factor = 1 }
+    add_to_variable = { temp_AHES_Navy_outcome_factor = AHES_Navy_outcome_factor }
+    multiply_variable = { AHES_Navy_outcome = temp_AHES_Navy_outcome_factor }
+    add_to_variable = { AHES_Total_outcome = AHES_Navy_outcome }
 }
 
-save_and_load_jisuan = {
-	##结算存款与债务
-	if = {
-		limit = {
-			#收入为正
-			check_variable = {
-				lirun_meiyue > 0
-			}
-		}
-		add_to_variable = {
-			var = ubs_save
-			value = lirun_meiyue
-		}
-	}
-	else = {
-		#收入为0或负
-		subtract_from_variable = {
-			var = ubs_load
-			value = lirun_meiyue
-		}
-	}
-	###自动还款###
-	if = {
-		limit = {
-			check_variable = { ubs_save > 0 }
-			check_variable = { ubs_load > 0 }
-			check_variable = { adorable_heart_automatic_repayment_var = 2 }
-		}
-		if = {
-			limit = {
-				not = { check_variable = { ubs_load > ubs_save } }
-			}
-			subtract_from_variable = { ubs_save = ubs_load }
-			set_variable = { ubs_load = 0 }
-		}
-		else = {
-			subtract_from_variable = { ubs_load = ubs_save }
-			set_variable = { ubs_save = 0 }
-		}
-	}
-	#####利息结算####
-	multiply_variable = {
-		var = ubs_load
-		value = 1.005
-	}
-	###图标变化
-		if = {
-			limit = {
-				not = { check_variable = { lirun_meiyue < 0 } }
-				not = { check_variable = { current_jinglirun_icon_frame = 2 } }
-			}
-			set_variable = { current_jinglirun_icon_frame = 2 }
-		}
-		if = {
-			limit = {
-				check_variable = { lirun_meiyue < 0 }
-				not = { check_variable = { current_jinglirun_icon_frame = 1 } }
-			}
-			set_variable = { current_jinglirun_icon_frame = 1 }
-		}
-	UBS_bank_icon_frames = yes
-	set_country_flag = {
-		flag = shouru_zhichu_CD_30
-		value = 1
-		days = 27
-	}
+###  刷新支出-行政支出
+AHES_Refresh_outcome_administration = {
+    set_variable = { AHES_Administration_outcome = 0 }
+    set_variable = { AHES_Garrison_outcome = garrison_manpower_need }
+    divide_variable = { AHES_Garrison_outcome = 5000000 }
+    set_variable = { AHES_Core_outcome = num_controlled_states }
+    divide_variable = { AHES_Core_outcome = 4 }
+    add_to_variable = { AHES_Administration_outcome = AHES_Garrison_outcome }
+    add_to_variable = { AHES_Administration_outcome = AHES_Core_outcome }
+    add_to_variable = { AHES_Total_outcome = AHES_Garrison_outcome }
+    add_to_variable = { AHES_Total_outcome = AHES_Core_outcome }
+}
+
+###  刷新支出-外交支出
+AHES_Refresh_outcome_dipol = {
+    set_variable = { AHES_income_for_overlord = 0 }
+    if = {
+        limit = { is_subject_of = CHI }
+        add_to_variable = { AHES_income_for_overlord = modifier@hcp_AHES_income_for_overlord_monthly }
+        add_to_variable = { AHES_income_for_overlord = modifier@hcp_income_for_CHI_monthly }
+        overlord = { add_to_variable = { THIS.AHES_diplo_exincome = PREV.AHES_income_for_overlord } }
+    }
+    else_if = {
+        limit = { is_subject = yes }
+        add_to_variable = { AHES_income_for_overlord = modifier@hcp_AHES_income_for_overlord_monthly }
+        overlord = { add_to_variable = { THIS.AHES_diplo_exincome = PREV.AHES_income_for_overlord } }
+    }
+    else_if = {
+        limit = { CHI = { is_subject = no } }
+        add_to_variable = { AHES_income_for_overlord = modifier@hcp_income_for_CHI_monthly }
+        CHI = { add_to_variable = { THIS.AHES_diplo_exincome = PREV.AHES_income_for_overlord } }
+    }
+    add_to_variable = { AHES_Administration_outcome = AHES_income_for_overlord }
+    add_to_variable = { AHES_Total_outcome = AHES_income_for_overlord }
+}
+
+###  刷新支出-支出修正
+AHES_Refresh_outcome_factor = {
+    set_variable = { temp_outcome_multiply_factor = 1 }
+    add_to_variable = { temp_outcome_multiply_factor = kaizhi_modifer }
+    add_to_variable = { temp_outcome_multiply_factor = modifier@hcp_outcome_factor_monthly }
+    set_variable = { AHES_outcome_correction_coefficient = kaizhi_modifer }
+    add_to_variable = { AHES_outcome_correction_coefficient = modifier@hcp_outcome_factor_monthly }
+    multiply_variable = { AHES_Total_outcome = temp_outcome_multiply_factor }
+}
+
+###  刷新支出-额外支出
+AHES_Refresh_exoutcome = {
+    add_to_variable = { AHES_total_outcome = exoutcome }
+    add_to_variable = { AHES_total_outcome = modifier@hcp_exoutcome_monthly }
+    add_to_variable = { AHES_Total_outcome = AHES_total_outcome }
 }
 
 #GDP排行
 generate_econ_rankings = {
-	clear_array = global.econ_countries
-	set_variable = { global.econ_countries_index = 0 }
-	every_country = {
-		add_to_array = {
-			global.econ_countries = THIS
-		}
-	}
-	get_sorted_scored_countries = {
-		scorer = GDP_rank_scorer
-		array = global.econ_countries
-	}
-	# Set up ranking positions
-	for_each_scope_loop = {
-		array = global.econ_countries
-		add_to_variable = {
-			global.econ_countries_index = 1
-		}
-		set_variable = {
-			econ_ranking = global.econ_countries_index
-		}
-	}
-	clear_variable = global.econ_countries_index
-	#####
-	clear_array = global.indu_countries
-	set_variable = { global.indu_countries_index = 0 }
-	every_country = {
-		add_to_array = {
-			global.indu_countries = THIS
-		}
-	}
-	get_sorted_scored_countries = {
-		scorer = industy_rank_scorer
-		array = global.indu_countries
-	}
-	# Set up ranking positions
-	for_each_scope_loop = {
-		array = global.indu_countries
-		add_to_variable = {
-			global.indu_countries_index = 1
-		}
-		set_variable = {
-			indu_ranking = global.indu_countries_index
-		}
-	}
-	clear_variable = global.indu_countries_index
-	#
-	#CORE_STATE_check_every_month_effect = yes
+    clear_array = global.econ_countries
+    set_variable = { global.econ_countries_index = 0 }
+    every_country = {
+        add_to_array = {
+            global.econ_countries = THIS
+        }
+    }
+    get_sorted_scored_countries = {
+        scorer = GDP_rank_scorer
+        array = global.econ_countries
+    }
+    # Set up ranking positions
+    for_each_scope_loop = {
+        array = global.econ_countries
+        add_to_variable = {
+            global.econ_countries_index = 1
+        }
+        set_variable = {
+            econ_ranking = global.econ_countries_index
+        }
+    }
+    clear_variable = global.econ_countries_index
+    #####
+    clear_array = global.indu_countries
+    set_variable = { global.indu_countries_index = 0 }
+    every_country = {
+        add_to_array = {
+            global.indu_countries = THIS
+        }
+    }
+    get_sorted_scored_countries = {
+        scorer = industy_rank_scorer
+        array = global.indu_countries
+    }
+    # Set up ranking positions
+    for_each_scope_loop = {
+        array = global.indu_countries
+        add_to_variable = {
+            global.indu_countries_index = 1
+        }
+        set_variable = {
+            indu_ranking = global.indu_countries_index
+        }
+    }
+    clear_variable = global.indu_countries_index
+    #
+    #CORE_STATE_check_every_month_effect = yes
+    compute_global_gdp = yes
+}
+#计算全球gdp与各经济阵营收入占比
+compute_global_gdp = {
+    set_variable = { global.global_gdp_var = 0 } #所有国家gdp
+    set_variable = { global.temp_economy_faction_index = 1 } #临时变量
+    clear_array = global.economy_faction_GDP  ##各个经济阵营GDP
+    clear_array = global.economy_faction_GDP_ratio  ##各个经济阵营GDP占比
+    clear_array = global.economy_faction_GDP_temp  ##各个经济阵营GDP副本(仅用于排序)
+    clear_array = global.economy_faction_GDP_rank  ##各个经济阵营GDP排行
+    clear_array = global.economy_faction_GDP_rank_num  ##各个经济阵营GDP排行数字
+    for_each_scope_loop = { #GDP归零
+        array = global.econ_countries
+        if = {
+            limit = { check_variable = { THIS.economy_faction_var > 0 } }
+            set_variable = { global.economy_faction_GDP^economy_faction_var = 0 }
+        }
+    }
+    for_each_scope_loop = { #计算所有国家gdp及阵营GDP
+        array = global.econ_countries
+        add_to_variable = { global.global_gdp_var = AHES_Total_income }
+        if = {
+            limit = { check_variable = { THIS.economy_faction_var > 0 } }
+            add_to_variable = { global.economy_faction_GDP^economy_faction_var = AHES_Total_income }
+            add_to_variable = { global.economy_faction_GDP_temp^economy_faction_var = AHES_Total_income }
+        }
+    }
+    for_each_scope_loop = { #计算阵营GDP占比与排名
+        array = global.econ_countries
+        set_variable = { global.economy_faction_GDP_ratio^global.temp_economy_faction_index = global.economy_faction_GDP^global.temp_economy_faction_index }
+        divide_variable = { global.economy_faction_GDP_ratio^global.temp_economy_faction_index = global.global_gdp_var }
+        add_to_variable = { global.temp_economy_faction_index = 1 }
+    }
+    clear_array = global.economy_faction
+    set_variable = { global.economy_faction_index = 0 }
+    for_each_scope_loop = {
+        array = global.econ_countries
+        if = {
+            limit = {
+                check_variable = { THIS.economy_faction_var > 0 }
+                not = { is_in_array = { global.economy_faction_GDP_rank = THIS.economy_faction_var } }
+            }
+            add_to_array = { global.economy_faction_GDP_rank = THIS.economy_faction_var }
+            add_to_array = { global.economy_faction = THIS }
+            set_variable = { economy_faction_temp_GDP = global.economy_faction_GDP^economy_faction_var }
+        }
+    }
+    get_sorted_scored_countries = {
+        scorer = economy_faction_rank_scorer
+        array = global.economy_faction
+    }
+    for_each_scope_loop = {
+        array = global.economy_faction
+        add_to_variable = { global.economy_faction_index = 1 }
+        set_variable = { global.economy_faction_GDP_rank_num^economy_faction_var = global.economy_faction_index }
+    }
+    clear_variable = global.economy_faction_index
+    Wto_leader_modifier_effect = yes
+}
+
+###  计算负债率及debuff
+econmic_debuff_calculation = {
+    if = {
+        limit = { check_variable = { AHES_Total_income > 1 } }
+        set_variable = { this_country_GDP = AHES_Total_income }
+    }
+    else = {
+        set_variable = { this_country_GDP = 1 }
+    }
+    multiply_variable = {
+        var = this_country_GDP
+        value = 12
+    }
+    set_variable = {
+        Debt_ratio = ubs_load
+    }
+    divide_variable = {
+        var = Debt_ratio
+        value = this_country_GDP
+    }
+    if = {
+        limit = { check_variable = { Debt_ratio > 1 } }
+        set_variable = {
+            Debt_ratio_2 = Debt_ratio
+        }
+        add_to_variable = {
+            Debt_ratio_2 = -1
+        }
+        set_variable = {
+            UBS_debuff_stability_factor = Debt_ratio_2
+        }
+        divide_variable = {
+            var = UBS_debuff_stability_factor
+            value = -4
+        }
+        set_variable = {
+            UBS_debuff_production_speed_buildings_factor = UBS_debuff_stability_factor
+        }
+        set_variable = {
+            UBS_debuff_industrial_capacity_factory = Debt_ratio_2
+        }
+        divide_variable = {
+            var = UBS_debuff_industrial_capacity_factory
+            value = -10
+        }
+        clamp_variable = {
+            var = UBS_debuff_stability_factor
+            min = -0.8
+            max = 0
+        }
+        clamp_variable = {
+            var = UBS_debuff_production_speed_buildings_factor
+            min = -0.8
+            max = 0
+        }
+        clamp_variable = {
+            var = UBS_debuff_industrial_capacity_factory
+            min = -0.8
+            max = 0
+        }
+    }
+    else = {
+        set_variable = { UBS_debuff_production_speed_buildings_factor = 0 }
+        set_variable = { UBS_debuff_industrial_capacity_factory = 0 }
+        set_variable = { UBS_debuff_stability_factor = 0 }
+    }
+    if = {
+        limit = {
+            check_variable = { Debt_ratio > 1 }
+            not = { has_dynamic_modifier = { modifier = econmic_debuff_modifer } }
+        }
+        if = {
+            limit = { is_ai = yes }
+            add_ideas = AI_Arms_imitation
+        }
+        add_dynamic_modifier = { modifier = econmic_debuff_modifer }
+    }
+    if = {
+        limit = {
+            check_variable = {
+                Debt_ratio = 1
+            }
+            has_dynamic_modifier = {
+                modifier = econmic_debuff_modifer
+            }
+        }
+        if = {
+            limit = {
+                has_idea = AI_Arms_imitation
+            }
+            remove_ideas = AI_Arms_imitation
+        }
+        remove_dynamic_modifier = {
+            modifier = econmic_debuff_modifer
+        }
+    }
+    else_if = {
+        limit = {
+            check_variable = {
+                Debt_ratio < 1
+            }
+            has_dynamic_modifier = {
+                modifier = econmic_debuff_modifer
+            }
+        }
+        if = {
+            limit = {
+                has_idea = AI_Arms_imitation
+            }
+            remove_ideas = AI_Arms_imitation
+        }
+        remove_dynamic_modifier = {
+            modifier = econmic_debuff_modifer
+        }
+    }
+}
+
+###  月度结算
+save_and_load_settlement = {
+    AHES_Refresh_income_and_outcome = yes
+    every_country = {
+        limit = { NOT = { has_country_flag = shouru_zhichu_CD_30 } }
+        ##结算存款与债务
+        if = {
+            limit = {
+                #收入为正
+                check_variable = { AHES_Net_income > 0 }
+            }
+            add_to_variable = {
+                var = ubs_save
+                value = AHES_Net_income
+            }
+        }
+        else = {
+            #收入为0或负
+            subtract_from_variable = {
+                var = ubs_load
+                value = AHES_Net_income
+            }
+        }
+        ###自动还款###
+        if = {
+            limit = {
+                check_variable = { ubs_save > 0 }
+                check_variable = { ubs_load > 0 }
+                check_variable = { adorable_heart_automatic_repayment_var = 2 }
+            }
+            if = {
+                limit = {
+                    not = { check_variable = { ubs_load > ubs_save } }
+                }
+                subtract_from_variable = { ubs_save = ubs_load }
+                set_variable = { ubs_load = 0 }
+            }
+            else = {
+                subtract_from_variable = { ubs_load = ubs_save }
+                set_variable = { ubs_save = 0 }
+            }
+        }
+        #####利息结算####
+        multiply_variable = {
+            var = ubs_load
+            value = 1.005
+        }
+        ###图标变化
+        if = {
+            limit = {
+                not = { check_variable = { AHES_Net_income < 0 } }
+                not = { check_variable = { current_jinglirun_icon_frame = 2 } }
+            }
+            set_variable = { current_jinglirun_icon_frame = 2 }
+        }
+        if = {
+            limit = {
+                check_variable = { AHES_Net_income < 0 }
+                not = { check_variable = { current_jinglirun_icon_frame = 1 } }
+            }
+            set_variable = { current_jinglirun_icon_frame = 1 }
+        }
+        UBS_bank_icon_frames = yes
+        set_country_flag = {
+            flag = shouru_zhichu_CD_30
+            value = 1
+            days = 27
+        }
+        econmic_debuff_calculation = yes
+    }
+}
+
+#图标变化
+UBS_bank_icon_frames = {
+    set_temp_variable = {
+        cunkuan_temp = ubs_save
+    }
+    divide_temp_variable = {
+        cunkuan_temp = 4200
+    }
+    multiply_temp_variable = {
+        cunkuan_temp = 6
+    }
+    if = {
+        limit = {
+            check_variable = {
+                cunkuan_temp > 0
+            }
+        }
+        clamp_temp_variable = {
+            var = cunkuan_temp
+            min = 1
+            max = 6
+        }
+    }
+    else = {
+        set_temp_variable = {
+            cunkuan_temp = 1
+        }
+    }
+    set_variable = {
+        current_cunkuan_icon_frame = cunkuan_temp
+    }
+    set_temp_variable = {
+        daikuan_temp = THIS.ubs_load
+    }
+    divide_temp_variable = {
+        daikuan_temp = 4200
+    }
+    multiply_temp_variable = {
+        daikuan_temp = 6
+    }
+    if = {
+        limit = {
+            check_variable = {
+                daikuan_temp > 0
+            }
+        }
+        clamp_temp_variable = {
+            var = daikuan_temp
+            min = 1
+            max = 6
+        }
+    }
+    else = {
+        set_temp_variable = {
+            daikuan_temp = 1
+        }
+    }
+    set_variable = {
+        current_daikuan_icon_frame = daikuan_temp
+    }
+    ###图标变化
+    if = {
+        limit = {
+            not = { check_variable = { AHES_Net_income < 0 } }
+            not = { check_variable = { current_jinglirun_icon_frame = 2 } }
+        }
+        set_variable = { current_jinglirun_icon_frame = 2 }
+    }
+    if = {
+        limit = {
+            check_variable = { AHES_Net_income < 0 }
+            not = { check_variable = { current_jinglirun_icon_frame = 1 } }
+        }
+        set_variable = { current_jinglirun_icon_frame = 1 }
+    }
+    clamp_variable = {
+        var = THIS.ubs_load
+        min = 0
+    }
+    clamp_variable = {
+        var = ubs_save
+        min = 0
+    }
+    round_variable = THIS.ubs_load
+    round_variable = ubs_save
+}
+
+###  刷新收支
+AHES_Refresh_income_and_outcome = {
+    every_country = { AHES_Initialize_var = yes }  ###初始化变量
+    every_country = {
+        AHES_Refresh_income_indus = yes  ###工业及消费税
+        AHES_Refresh_income_factor = yes  ###收入修正
+        AHES_Refresh_income_dipol_factor = yes  ###外交收入修正
+        AHES_Refresh_outcome_army = yes  ###陆军支出
+        AHES_Refresh_outcome_navy = yes  ###海军支出
+        AHES_Refresh_outcome_administration = yes  ###行政支出
+        AHES_Refresh_outcome_factor = yes  ###支出修正
+        AHES_Refresh_outcome_dipol = yes  ###外交支出
+        AHES_Refresh_exoutcome = yes  ###额外支出
+    }
+    every_country = {
+        AHES_Refresh_exincome = yes  ###额外收入
+        econmic_debuff_calculation = yes  ###计算负债率及debuff
+        UBS_bank_icon_frames = yes  ###图标变化
+        set_variable = { AHES_Net_income = AHES_Total_income }
+        subtract_from_variable = { AHES_Net_income = AHES_Total_outcome }
+    }
+    generate_econ_rankings = yes
 }
 
 #教育经费
 education_fund_up_effet = {
-	if = {
-		limit = {
-			has_idea = education_fund_1
-		}
-		swap_ideas = {
-			remove_idea = education_fund_1
-			add_idea = education_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = education_fund_2
-		}
-		swap_ideas = {
-			remove_idea = education_fund_2
-			add_idea = education_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = education_fund_3
-		}
-		swap_ideas = {
-			remove_idea = education_fund_3
-			add_idea = education_fund_4
-		}
-	}
-	else_if = {
-		limit = {
-			not = {
-				has_idea = education_fund_4
-			}
-		}
-		add_ideas = education_fund_1
-	}
+    if = {
+        limit = {
+            has_idea = education_fund_1
+        }
+        swap_ideas = {
+            remove_idea = education_fund_1
+            add_idea = education_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = education_fund_2
+        }
+        swap_ideas = {
+            remove_idea = education_fund_2
+            add_idea = education_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = education_fund_3
+        }
+        swap_ideas = {
+            remove_idea = education_fund_3
+            add_idea = education_fund_4
+        }
+    }
+    else_if = {
+        limit = {
+            not = {
+                has_idea = education_fund_4
+            }
+        }
+        add_ideas = education_fund_1
+    }
 }
-
 education_fund_down_effet = {
-	if = {
-		limit = {
-			has_idea = education_fund_4
-		}
-		swap_ideas = {
-			remove_idea = education_fund_4
-			add_idea = education_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = education_fund_3
-		}
-		swap_ideas = {
-			remove_idea = education_fund_3
-			add_idea = education_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = education_fund_2
-		}
-		swap_ideas = {
-			remove_idea = education_fund_2
-			add_idea = education_fund_1
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = education_fund_1
-		}
-		remove_ideas = education_fund_1
-		set_variable = {
-			level_of_education_fund = 0
-		}
-	}
+    if = {
+        limit = {
+            has_idea = education_fund_4
+        }
+        swap_ideas = {
+            remove_idea = education_fund_4
+            add_idea = education_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = education_fund_3
+        }
+        swap_ideas = {
+            remove_idea = education_fund_3
+            add_idea = education_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = education_fund_2
+        }
+        swap_ideas = {
+            remove_idea = education_fund_2
+            add_idea = education_fund_1
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = education_fund_1
+        }
+        remove_ideas = education_fund_1
+        set_variable = {
+            level_of_education_fund = 0
+        }
+    }
 }
 
 #行政经费
 administrative_fund_up_effet = {
-	if = {
-		limit = {
-			has_idea = administrative_fund_1
-		}
-		swap_ideas = {
-			remove_idea = administrative_fund_1
-			add_idea = administrative_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = administrative_fund_2
-		}
-		swap_ideas = {
-			remove_idea = administrative_fund_2
-			add_idea = administrative_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = administrative_fund_3
-		}
-		swap_ideas = {
-			remove_idea = administrative_fund_3
-			add_idea = administrative_fund_4
-		}
-	}
-	else_if = {
-		limit = {
-			not = {
-				has_idea = administrative_fund_4
-			}
-		}
-		add_ideas = administrative_fund_1
-	}
+    if = {
+        limit = {
+            has_idea = administrative_fund_1
+        }
+        swap_ideas = {
+            remove_idea = administrative_fund_1
+            add_idea = administrative_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = administrative_fund_2
+        }
+        swap_ideas = {
+            remove_idea = administrative_fund_2
+            add_idea = administrative_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = administrative_fund_3
+        }
+        swap_ideas = {
+            remove_idea = administrative_fund_3
+            add_idea = administrative_fund_4
+        }
+    }
+    else_if = {
+        limit = {
+            not = {
+                has_idea = administrative_fund_4
+            }
+        }
+        add_ideas = administrative_fund_1
+    }
 }
-
 administrative_fund_down_effet = {
-	if = {
-		limit = {
-			has_idea = administrative_fund_4
-		}
-		swap_ideas = {
-			remove_idea = administrative_fund_4
-			add_idea = administrative_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = administrative_fund_3
-		}
-		swap_ideas = {
-			remove_idea = administrative_fund_3
-			add_idea = administrative_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = administrative_fund_2
-		}
-		swap_ideas = {
-			remove_idea = administrative_fund_2
-			add_idea = administrative_fund_1
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = administrative_fund_1
-		}
-		remove_ideas = administrative_fund_1
-		set_variable = {
-			level_of_administrative_fund = 0
-		}
-	}
+    if = {
+        limit = {
+            has_idea = administrative_fund_4
+        }
+        swap_ideas = {
+            remove_idea = administrative_fund_4
+            add_idea = administrative_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = administrative_fund_3
+        }
+        swap_ideas = {
+            remove_idea = administrative_fund_3
+            add_idea = administrative_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = administrative_fund_2
+        }
+        swap_ideas = {
+            remove_idea = administrative_fund_2
+            add_idea = administrative_fund_1
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = administrative_fund_1
+        }
+        remove_ideas = administrative_fund_1
+        set_variable = {
+            level_of_administrative_fund = 0
+        }
+    }
 }
 
 #陆军经费
 army_fund_up_effet = {
-	if = {
-		limit = {
-			has_idea = army_fund_1
-		}
-		swap_ideas = {
-			remove_idea = army_fund_1
-			add_idea = army_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = army_fund_2
-		}
-		swap_ideas = {
-			remove_idea = army_fund_2
-			add_idea = army_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = army_fund_3
-		}
-		swap_ideas = {
-			remove_idea = army_fund_3
-			add_idea = army_fund_4
-		}
-	}
-	else_if = {
-		limit = {
-			not = {
-				has_idea = army_fund_4
-			}
-		}
-		add_ideas = army_fund_1
-	}
+    if = {
+        limit = {
+            has_idea = army_fund_1
+        }
+        swap_ideas = {
+            remove_idea = army_fund_1
+            add_idea = army_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = army_fund_2
+        }
+        swap_ideas = {
+            remove_idea = army_fund_2
+            add_idea = army_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = army_fund_3
+        }
+        swap_ideas = {
+            remove_idea = army_fund_3
+            add_idea = army_fund_4
+        }
+    }
+    else_if = {
+        limit = {
+            not = {
+                has_idea = army_fund_4
+            }
+        }
+        add_ideas = army_fund_1
+    }
 }
-
 army_fund_down_effet = {
-	if = {
-		limit = {
-			has_idea = army_fund_4
-		}
-		swap_ideas = {
-			remove_idea = army_fund_4
-			add_idea = army_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = army_fund_3
-		}
-		swap_ideas = {
-			remove_idea = army_fund_3
-			add_idea = army_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = army_fund_2
-		}
-		swap_ideas = {
-			remove_idea = army_fund_2
-			add_idea = army_fund_1
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = army_fund_1
-		}
-		remove_ideas = army_fund_1
-		set_variable = {
-			level_of_army_fund = 0
-		}
-	}
+    if = {
+        limit = {
+            has_idea = army_fund_4
+        }
+        swap_ideas = {
+            remove_idea = army_fund_4
+            add_idea = army_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = army_fund_3
+        }
+        swap_ideas = {
+            remove_idea = army_fund_3
+            add_idea = army_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = army_fund_2
+        }
+        swap_ideas = {
+            remove_idea = army_fund_2
+            add_idea = army_fund_1
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = army_fund_1
+        }
+        remove_ideas = army_fund_1
+        set_variable = {
+            level_of_army_fund = 0
+        }
+    }
 }
 
 #海军经费
 navy_fund_up_effet = {
-	if = {
-		limit = {
-			has_idea = navy_fund_1
-		}
-		swap_ideas = {
-			remove_idea = navy_fund_1
-			add_idea = navy_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = navy_fund_2
-		}
-		swap_ideas = {
-			remove_idea = navy_fund_2
-			add_idea = navy_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = navy_fund_3
-		}
-		swap_ideas = {
-			remove_idea = navy_fund_3
-			add_idea = navy_fund_4
-		}
-	}
-	else_if = {
-		limit = {
-			not = {
-				has_idea = navy_fund_4
-			}
-		}
-		add_ideas = navy_fund_1
-	}
+    if = {
+        limit = {
+            has_idea = navy_fund_1
+        }
+        swap_ideas = {
+            remove_idea = navy_fund_1
+            add_idea = navy_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = navy_fund_2
+        }
+        swap_ideas = {
+            remove_idea = navy_fund_2
+            add_idea = navy_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = navy_fund_3
+        }
+        swap_ideas = {
+            remove_idea = navy_fund_3
+            add_idea = navy_fund_4
+        }
+    }
+    else_if = {
+        limit = {
+            not = {
+                has_idea = navy_fund_4
+            }
+        }
+        add_ideas = navy_fund_1
+    }
 }
-
 navy_fund_down_effet = {
-	if = {
-		limit = {
-			has_idea = navy_fund_4
-		}
-		swap_ideas = {
-			remove_idea = navy_fund_4
-			add_idea = navy_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = navy_fund_3
-		}
-		swap_ideas = {
-			remove_idea = navy_fund_3
-			add_idea = navy_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = navy_fund_2
-		}
-		swap_ideas = {
-			remove_idea = navy_fund_2
-			add_idea = navy_fund_1
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = navy_fund_1
-		}
-		remove_ideas = navy_fund_1
-		set_variable = {
-			level_of_navy_fund = 0
-		}
-	}
+    if = {
+        limit = {
+            has_idea = navy_fund_4
+        }
+        swap_ideas = {
+            remove_idea = navy_fund_4
+            add_idea = navy_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = navy_fund_3
+        }
+        swap_ideas = {
+            remove_idea = navy_fund_3
+            add_idea = navy_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = navy_fund_2
+        }
+        swap_ideas = {
+            remove_idea = navy_fund_2
+            add_idea = navy_fund_1
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = navy_fund_1
+        }
+        remove_ideas = navy_fund_1
+        set_variable = {
+            level_of_navy_fund = 0
+        }
+    }
 }
 
 #民生经费
 Livelihood_fund_up_effet = {
-	if = {
-		limit = {
-			has_idea = Livelihood_fund_1
-		}
-		swap_ideas = {
-			remove_idea = Livelihood_fund_1
-			add_idea = Livelihood_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = Livelihood_fund_2
-		}
-		swap_ideas = {
-			remove_idea = Livelihood_fund_2
-			add_idea = Livelihood_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = Livelihood_fund_3
-		}
-		swap_ideas = {
-			remove_idea = Livelihood_fund_3
-			add_idea = Livelihood_fund_4
-		}
-	}
-	else_if = {
-		limit = {
-			not = {
-				has_idea = Livelihood_fund_4
-			}
-		}
-		add_ideas = Livelihood_fund_1
-	}
+    if = {
+        limit = {
+            has_idea = Livelihood_fund_1
+        }
+        swap_ideas = {
+            remove_idea = Livelihood_fund_1
+            add_idea = Livelihood_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = Livelihood_fund_2
+        }
+        swap_ideas = {
+            remove_idea = Livelihood_fund_2
+            add_idea = Livelihood_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = Livelihood_fund_3
+        }
+        swap_ideas = {
+            remove_idea = Livelihood_fund_3
+            add_idea = Livelihood_fund_4
+        }
+    }
+    else_if = {
+        limit = {
+            not = {
+                has_idea = Livelihood_fund_4
+            }
+        }
+        add_ideas = Livelihood_fund_1
+    }
 }
-
 Livelihood_fund_down_effet = {
-	if = {
-		limit = {
-			has_idea = Livelihood_fund_4
-		}
-		swap_ideas = {
-			remove_idea = Livelihood_fund_4
-			add_idea = Livelihood_fund_3
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = Livelihood_fund_3
-		}
-		swap_ideas = {
-			remove_idea = Livelihood_fund_3
-			add_idea = Livelihood_fund_2
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = Livelihood_fund_2
-		}
-		swap_ideas = {
-			remove_idea = Livelihood_fund_2
-			add_idea = Livelihood_fund_1
-		}
-	}
-	else_if = {
-		limit = {
-			has_idea = Livelihood_fund_1
-		}
-		remove_ideas = Livelihood_fund_1
-		set_variable = {
-			level_of_Livelihood_fund = 0
-		}
-	}
+    if = {
+        limit = {
+            has_idea = Livelihood_fund_4
+        }
+        swap_ideas = {
+            remove_idea = Livelihood_fund_4
+            add_idea = Livelihood_fund_3
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = Livelihood_fund_3
+        }
+        swap_ideas = {
+            remove_idea = Livelihood_fund_3
+            add_idea = Livelihood_fund_2
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = Livelihood_fund_2
+        }
+        swap_ideas = {
+            remove_idea = Livelihood_fund_2
+            add_idea = Livelihood_fund_1
+        }
+    }
+    else_if = {
+        limit = {
+            has_idea = Livelihood_fund_1
+        }
+        remove_ideas = Livelihood_fund_1
+        set_variable = {
+            level_of_Livelihood_fund = 0
+        }
+    }
 }
