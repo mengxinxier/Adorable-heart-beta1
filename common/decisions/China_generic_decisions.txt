@@ -302,6 +302,8 @@ Build_chinese_united_font = {
 			}
 			set_global_flag = CHINA_united_font_has_built
 			set_country_flag = CHINA_united_font_leader
+			set_country_flag = unit_font_participant
+			mark_focus_tree_layout_dirty = yes
 			if = {
 				limit = {
 					is_faction_leader = yes
@@ -322,6 +324,14 @@ Build_chinese_united_font = {
 				}
 			}
 			hidden_effect = {
+				every_other_country = {
+					limit = {
+						not = { has_country_flag = unit_font_participant }
+						is_subject_of = ROOT
+					}
+					set_country_flag = unit_font_participant
+					mark_focus_tree_layout_dirty = yes
+				}
 				every_other_country = {
 					limit = {
 						is_chinese_country = yes
@@ -436,6 +446,7 @@ Build_chinese_united_font = {
 				dismantle_faction = yes
 			}
 			set_global_flag = dismate_Build_chinese_united_font
+			hidden_effect = { every_country = { mark_focus_tree_layout_dirty = yes } }
 		}
 	}
 	##要求[JAP.Getname]投降
@@ -536,6 +547,27 @@ Build_chinese_united_font = {
 		}
 		ai_will_do = {
 			base = 1000
+		}
+	}
+	###加入统一战线国策树
+	China_join_unit_font_foucs = {
+		allowed = {
+			is_chinese_country = yes
+		}
+		available = {
+		}
+		visible = {
+			not = { has_country_flag = unit_font_participant }
+			faction_leader = { has_country_flag = unit_font_participant }
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 500
+		}
+		complete_effect = {
+			set_country_flag = unit_font_participant
+			mark_focus_tree_layout_dirty = yes
 		}
 	}
 }
@@ -791,7 +823,7 @@ CHI_reclaim_concession = {
 				border_state = 326
 			}
 		}
-		fire_only_once = yes
+		#fire_only_once = yes
 		cost = 15
 		ai_will_do = {
 			factor = 100
@@ -845,7 +877,7 @@ CHI_reclaim_concession = {
 				border_state = 729
 			}
 		}
-		fire_only_once = yes
+		#fire_only_once = yes
 		cost = 15
 		ai_will_do = {
 			factor = 100
@@ -899,7 +931,7 @@ CHI_reclaim_concession = {
 				border_state = 1187
 			}
 		}
-		fire_only_once = yes
+		#fire_only_once = yes
 		cost = 15
 		ai_will_do = {
 			factor = 100
@@ -1072,6 +1104,60 @@ CHI_reclaim_concession = {
 						add_compliance = 10
 					}
 				}
+			}
+		}
+	}
+	###夺取青岛
+	CHI_seizure_Qingdao = {
+		icon = GFX_decision_generic_confiscation
+		allowed = {
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				state = 744
+			}
+		}
+		visible = {
+			744 = { is_controlled_by_ROOT_or_subject = no }
+		}
+		available = {
+			is_subject = no
+			divisions_in_border_state = {
+				#type = infantry
+				size > 2
+				state = 1065
+				border_state = 744
+			}
+		}
+		#fire_only_once = yes
+		cost = 15
+		ai_will_do = {
+			factor = 100
+		}
+		remove_effect = {
+			custom_effect_tooltip = CHI_seizure_concession_tt
+			744 = {
+				owner = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = CHI_seizure_Qingdao
+					}
+					if = {
+						limit = { is_subject = yes }
+						overlord = {
+							country_event = { id = china_generic.013 }
+							add_opinion_modifier = {
+								target = ROOT
+								modifier = CHI_seizure_Qingdao
+							}
+						}
+					}
+					else = { country_event = { id = china_generic.013 } }
+				}
+			}
+			744 = {
+				transfer_state_to = ROOT
+				add_compliance = 10
 			}
 		}
 	}
