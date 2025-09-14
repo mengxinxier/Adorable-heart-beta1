@@ -5985,13 +5985,13 @@ country_event = {
             }
         }
 		ai_chance = {
-			base = 10
+			base = 0
                 modifier = {
                     has_game_rule = {
                         rule = AH_MS_war_ai_behavior_SELECTION
-                        option = MS_war_GAME_RULE_1
+                        option = MS_war_GAME_RULE_2
                     }
-                    add = -10
+                    add = 10
                 }
 		}
 	}
@@ -6014,6 +6014,13 @@ country_event = {
                     }
                     add = -10
                 }
+                modifier = {
+                    has_game_rule = {
+                        rule = AH_MS_war_ai_behavior_SELECTION
+                        option = MS_war_GAME_RULE_1
+                    }
+                    add = -10
+                }
 		}
 	}
 	option = {#漠不关心，还是摸鱼好
@@ -6028,7 +6035,14 @@ country_event = {
             }
         }
 		ai_chance = {
-			factor = 0
+			base = 0
+                modifier = {
+                    has_game_rule = {
+                        rule = AH_MS_war_ai_behavior_SELECTION
+                        option = MS_war_GAME_RULE_1
+                    }
+                    add = 10
+                }
 		}
 	}
 }
@@ -6975,6 +6989,70 @@ country_event = {
 }
 
 country_event = {
+	# 南美局势-瓦社进攻帝国
+	id = magicunion.11096
+	title = magicunion.11096.t
+	desc = magicunion.11096.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = no
+	fire_only_once = yes
+		trigger = {
+		    tag = PAN
+		    is_subject = no
+            NOT = { has_war_with = LHS }
+            PAQ = { is_subject_of = PAN }
+            LHS = { has_government = communism }
+        }
+	option = {#给他们
+		name = magicunion.11096.a
+        LHS = { annex_country = { target = PAQ transfer_troops = no } }
+        LHS = { country_event = 11097 }
+		ai_chance = {
+			factor = 10
+		}
+	}
+	option = {#不给
+		name = magicunion.11096.b
+        LHS = { country_event = 11098 }
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+country_event = {
+	# 南美局势-瓦社转让帝国给洛社
+	id = magicunion.11097
+	title = magicunion.11097.t
+	desc = magicunion.11097.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {#接受
+		name = magicunion.11097.a
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
+country_event = {
+	# 南美局势-瓦社拒绝转让帝国给洛社
+	id = magicunion.11098
+	title = magicunion.11098.t
+	desc = magicunion.11098.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {#知道了
+		name = magicunion.11098.a
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
+
+
+country_event = {
 	# 南美局势-结束战争？ 和谈
 	id = magicunion.1110
 	title = magicunion.1110.t
@@ -6985,6 +7063,13 @@ country_event = {
 
 	option = {#只能接受
 		name = magicunion.1110.a
+    MGU = {
+        white_peace = {
+            tag = PAN
+            message = MGU_PAN_war_peace
+        }
+    }
+        hidden_effect = {
 			every_enemy_country = {
 				limit = {
 					is_valid_peace_target = yes
@@ -6994,21 +7079,34 @@ country_event = {
 				}
 				white_peace = {
 					tag = PAN
-					message = MGU_PAN_war_peace
+				#	message = MGU_PAN_war_peace
 				}
 			}
+	    }
 	remove_from_faction = CHL
 	remove_from_faction = PA1
     MGU = {
-        set_autonomy = {
-            target = CHL
-            autonomy_state = autonomy_puppet
-        }
-        set_autonomy = {
-            target = PA1
-            autonomy_state = autonomy_puppet
-        }
+		if = {
+			limit = {
+				LHS = { has_capitulated = yes }
+			}
+            set_autonomy = {
+                target = LHS
+                autonomy_state = autonomy_puppet
+            }
+		}
+		if = {
+			limit = {
+				PA1 = { has_capitulated = yes }
+			}
+            set_autonomy = {
+                target = PA1
+                autonomy_state = autonomy_puppet
+            }
+		}
+
     }
+
 
 		ai_chance = {
 			factor = 10
@@ -12245,7 +12343,7 @@ country_event = {
 	        tag = MGU
 	        has_global_flag = MGU_Homura_COUP
             date > 1942.1.1
-            has_ideas = MGU_COUP_AI_BUFF
+            has_idea = MGU_COUP_AI_BUFF
 			has_country_leader = {
 				ruling_only = yes
 				character = MGU_akemi_homura
@@ -12275,6 +12373,39 @@ country_event = {
 		    }
     		trigger = {
                tag = MGU
+            }
+    	}
+}
+country_event = {
+	##瓦社对洛社志愿军
+	id = magicunion.1227
+	title = magicunion.1227.t
+	desc = magicunion.1227.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = no
+	trigger = {
+	    tag = PAN
+	    is_subject = no
+        is_ai = yes
+        date > 1940.6.1
+			country_exists = LHS
+			LHS = {
+				has_government = communism
+				has_war_with = MGU
+			}
+	}
+	immediate = {
+	}
+    option = {
+    		name = magicunion.1227.a
+            add_ideas = PAN_volunteers_LHS
+		    ai_chance = {
+			    base = 10
+		    }
+    		trigger = {
+                tag = PAN
             }
     	}
 }
