@@ -448,6 +448,67 @@ PRC_Revolutionary_issues = {
 			}
 		}
 	}
+	##联合北伐
+	PRC_attck_CHI_with_ROC = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		targets = { CHI }
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				has_war_with = ROC
+			}
+			ROC = { has_country_flag = Cooperation_between_KMT_and_CCP }
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = PRC_war_plan_going_on
+			}
+			FROM_subject_neighbor_with_root = yes
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 17 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		cancel_effect  = { clr_country_flag = PRC_war_plan_going_on }
+		remove_effect = {
+			clr_country_flag = PRC_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+		}
+	}
 	##解放
 	PRC_attck_FROM = {
 		icon = GFX_decision_generic_ignite_civil_war
@@ -494,13 +555,6 @@ PRC_Revolutionary_issues = {
 			declare_war_on = {
 				target = FROM
 				type = annex_everything
-			}
-			if = {
-				limit = {
-					ROC = { has_country_flag = Cooperation_between_KMT_and_CCP }
-					FROM = { tag = CHI }
-				}
-				ROC = { country_event = { id = roc.69 } }
 			}
 		}
 		ai_will_do = {

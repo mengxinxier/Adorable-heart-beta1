@@ -41,6 +41,20 @@ CHI_Crisis_of_CHI_Dynasty = {
 			}
 			Crisis_of_CHI_Dynasty_Var_effect = yes
 			Crisis_of_CHI_Dynasty_Variable_effect = yes
+			hidden_effect = {
+				if = {
+					limit = { has_country_flag = CHI_Imperial_comeback_flag }
+					news_event = { id = China_news.003 }
+				}
+				else_if = {
+					limit = { has_country_flag = CHI_regent_Yuan_flag }
+					news_event = { id = China_news.002 }
+				}
+				else_if = {
+					limit = { has_country_flag = CHI_democracy_HanGeKi_flag }
+					news_event = { id = China_news.004 }
+				}
+			}
 		}
 	}
 	##重新统治辽满地区
@@ -1250,7 +1264,7 @@ CHI_Mandate_of_Heaven = {
 	}
 
 	CHI_free_market_capitalism = {#自由资本主义
-		icon = GFX_decision_category_generic_economy
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
 		visible = {
 			has_completed_focus = CHI_focus_private_capital_lead
 		}
@@ -1284,6 +1298,7 @@ CHI_Mandate_of_Heaven = {
 	}
 
 	CHI_country_led_planned_economy = {#国家主导计划经济
+		icon = GFX_decision_eng_trade_unions_demand
 		visible = {
 			has_completed_focus = CHI_focus_Nation_lead_industrialisation
 		}
@@ -1317,6 +1332,7 @@ CHI_Mandate_of_Heaven = {
 	}
 
 	CHI_Promoting_public_schools = {#推广公立学校
+		icon = GFX_decision_generic_research
 		visible = {
 			has_completed_focus = CHI_focus_Promoting_public_schools
 		}
@@ -1350,6 +1366,7 @@ CHI_Mandate_of_Heaven = {
 	}
 
 	CHI_Revolution_empire_decision = {#革命帝国
+		icon = GFX_decision_category_generic_communist_revolution
 		visible = {
 			has_completed_focus = CHI_focus_Shu
 		}
@@ -1385,6 +1402,7 @@ CHI_Mandate_of_Heaven = {
 	}
 
 	CHI_JiaJiuXi_decision = {#加九锡、假节钺、剑履上殿
+		icon = GFX_decision_category_army_reform
 		visible = {
 			has_completed_focus = CHI_focus_Control_propaganda_machine
 		}
@@ -1432,6 +1450,7 @@ CHI_Mandate_of_Heaven = {
 	}
 
 	CHI_Return_power_to_Congress_decision = {#权力回归国会
+		icon = GFX_decision_category_generic_political_actions
 		visible = {
 			has_completed_focus = CHI_focus_Return_power_to_Congress
 		}
@@ -1483,6 +1502,103 @@ CHI_Mandate_of_Heaven = {
 			set_country_flag = build_CHI_congress
 			custom_effect_tooltip = build_CHI_congress
 			CHI_faction_influence_calculate = yes
+		}
+	}
+
+	CHI_Yuan_attck_FROM = {#元帅教令-进攻XXX
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				has_country_flag = CHI_regent_Yuan_flag
+			}
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				is_chinese_country = yes
+				not = { has_country_flag = Participate_in_the_competition_for_China_reunification }
+			}
+			FROM_subject_neighbor_with_root = yes
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = CHI_war_plan_going_on
+			}
+			FROM_subject_neighbor_with_root = yes
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+		}
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.8
+			}
+		}
+		custom_cost_text = CHI_cost_20_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.2
+				}
+			}
+		}
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 32 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		remove_effect = {
+			clr_country_flag = CHI_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 0
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				has_completed_focus = CHI_focus_compete_for_Central
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHX }
+				add = 1000
+			}
+			modifier = {
+				FROM = { tag = JSZ }
+				add = 1000
+			}
+			modifier = {
+				date < 1938.1.1
+				factor = 0
+			}
 		}
 	}
 }
@@ -2919,6 +3035,7 @@ CHI_Industrialization_of_China = {
 
  # 重启旧工厂
 	CHI_Restart_Telegraph_Office = {#重启电报总局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -2964,6 +3081,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_ShangHai_ZhiBuJu = {#重启上海机器织布局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3008,6 +3126,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_HuBei_ZhiBuJu = {#重启湖北织布局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3053,6 +3172,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_AnQing_arms_factory = {#重启安庆内军械所
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3098,6 +3218,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_JiangNan_ZhiZaoZongJu = {#重启江南机器制造总局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3143,6 +3264,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_TianJin_ZhiZaoJu = {#重启天津机器制造局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3187,6 +3309,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_JinLing_ZhiZaoJu = {#重启金陵机器制造局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3232,6 +3355,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_FuChow_ChuanZhenJu = {#重启福州船政局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3276,6 +3400,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_LunChuan_ZhaoShangJu = {#重启轮船招商局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3320,6 +3445,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_HanYang_Ironworks = {#重启汉阳铁厂
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3363,6 +3489,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_KaiPing_KuangWuJu = {#重启开平矿务局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
@@ -3403,6 +3530,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_attract_foreign_investment = {#引进外资
+		icon = GFX_decision_generic_merge_plant_materiel
 		visible = {
 			has_completed_focus = CHI_focus_Promote_joint_ventures
 			check_variable = {
@@ -3454,6 +3582,7 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_Investment_QinJin_region = {#投资秦晋工业
+		icon = GFX_decision_duihuan_gongchang_1
 		custom_cost_trigger = {
 			always = yes
 		}
