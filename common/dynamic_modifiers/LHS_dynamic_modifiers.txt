@@ -1,3 +1,15 @@
+#attacker_modifier = yes #当为yes时，动态修正（大多为战斗类修正）会影响那些正在攻击该状态内单位的单位
+#例：​正常情况下（attacker_modifier = no）​​：
+
+#只有实际驻扎在“阿尔萨斯”地区内的你的部队，才能获得这15%的攻击加成。（如果enable = {always = yes}。或是其他已触发的启用条件）敌军从相邻的“洛林”地区进攻“阿尔萨斯”，那么在“洛林”的敌军不会受到任何影响。
+
+#​特殊情况下（attacker_modifier = yes）​​：
+
+#如果为“阿尔萨斯”的地区修正设置了 attacker_modifier = yes，那么效果就不同了。当敌军从“洛林”进攻“阿尔萨斯”时，你的防守部队不仅能获得15%的攻击加成，更重要的是，​这个加成还会“反向”应用到正在进攻的敌军身上，让她们也获得这15%的攻击加成，哪怕她们并不处于“阿尔萨斯”地区。（甚至可以无视限定tag！！！）
+
+#注：由于p社的奇怪代码逻辑，一些奇奇怪怪的地形类buff仍然会无视限定tag（例如补给效率）代码继续生效。。
+
+
 LHS_zhalan = {
     enable = {
         always = yes
@@ -9,37 +21,44 @@ LHS_zhalan = {
     army_defence_factor = -0.5
 }
 LHS_bydj = {
-    enable = {
-    }
     remove_trigger = {
-        
 
-            or = {
-                PAM = {
-                    has_capitulated = no
-                    is_subject = no
-                    exists = no
-                }
-                PAU = {
-                    has_capitulated = no
-                    is_subject = no
-                    exists = no
-                }
-                LHS = {
-                    has_capitulated = no
-                    is_subject = no
+
+        or = {
+            PAM = {
+                or = {
+                    has_capitulated = yes
+                    is_subject = yes
                     exists = no
                 }
             }
-        
+            PAU = {
+                or = {
+                    has_capitulated = yes
+                    is_subject = yes
+                    exists = no
+                }
+            }
+            LHS = {
+                or = {
+                    has_capitulated = yes
+                    is_subject = yes
+                    exists = no
+                }
+            }
+
+        }
+
+
 
     }
     icon = GFX_bydj
-    army_attack_speed_factor = -0.5
-    army_defence_factor = 2
-    army_attack_factor = -2
-	air_cas_efficiency = -1
-	air_accidents_factor = 1
+    attacker_modifier = yes #当为yes时，战斗类动态修正会影响那些正在攻击该状态内单位的单位。
+    air_cas_present_factor = -0.75
+    army_attack_factor = -0.9
+    army_attack_speed_factor = -0.9
+    ground_attack_factor = -0.75
+    local_org_regain = -0.5
 }
 
 LHS_pbrm = {
@@ -80,6 +99,7 @@ LHS_pbrm = {
 LHS_gyqj = {
     icon = GFX_idea_gyqj
     enable = {
+        always = yes
     }
     abort = {
     }
