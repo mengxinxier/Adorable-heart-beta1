@@ -33,16 +33,14 @@ add_namespace = BAL_cw
 		picture = GFX_report_event_BAL_organize_army
 		option = {
 			name = BAL_pol.02.a
-			army_experience = 15
-			upgrade_intelligence_agency = upgrade_army_department
-			upgrade_intelligence_agency = upgrade_commando_training
+			army_experience = 50
 			add_popularity = {
 				ideology = neutrality
 				popularity = 0.05
 			}
 		}
 		option = {
-			name = BAL_pol.02.a
+			name = BAL_pol.02.b
 			army_experience = 15
 			upgrade_intelligence_agency = upgrade_army_department
 			upgrade_intelligence_agency = upgrade_commando_training
@@ -173,7 +171,7 @@ add_namespace = BAL_cw
 			name = BAL_pol.07.a
 			add_popularity = {
 				ideology = democratic
-				popularity = 0.05
+				popularity = 0.02
 			}
 			hidden_effect = {
 				add_to_variable = { BAL.BAL_central_bank_ubs_save = 200 }
@@ -870,14 +868,14 @@ add_namespace = BAL_cw
 					if = {
 						limit = {
 							check_variable = { BAL_polling_quarter = 2 }
-							neutrality > democratic
+							neutrality > party_popularity@democratic
 						}
 						country_event = { id = BAL_ele.03 days = 1 }
 					}
 					if = {
 						limit = {
 							check_variable = { BAL_polling_quarter = 2 }
-							NOT = { neutrality > democratic }
+							NOT = { neutrality > party_popularity@democratic }
 						}
 						country_event = { id = BAL_ele.04 days = 1 }
 					}
@@ -905,7 +903,7 @@ add_namespace = BAL_cw
 		option = {
 			name = BAL_ele.01.b
 			trigger = {
-				neutrality > democratic
+				neutrality > party_popularity@democratic
 			}
 			add_popularity = {
 				ideology = fascism
@@ -924,7 +922,7 @@ add_namespace = BAL_cw
 		option = {
 			name = BAL_ele.01.c
 			trigger = {
-				NOT = { neutrality > democratic }
+				NOT = { neutrality > party_popularity@democratic }
 			}
 			add_popularity = {
 				ideology = neutrality
@@ -1121,23 +1119,28 @@ add_namespace = BAL_cw
 		title = {
 			text = BAL_ele.07.t1
 			trigger = {
-				NOT = { neutrality > democratic }
+				NOT = { neutrality > party_popularity@democratic }
 			}
 		}
 		title = {
 			text = BAL_ele.07.t2
 			trigger = {
-				neutrality > democratic
+				neutrality > party_popularity@democratic
 			}
 		}
 		desc = BAL_ele.07.d
 		
 		is_triggered_only = yes
 		fire_only_once = yes
+		immediate = {
+			hidden_effect = {
+				clr_country_flag = BAL_public_opinion_manipulation_flag
+			}
+		}
 		option = {
 			name = BAL_ele.07.a
 			trigger = {
-				NOT = { neutrality > democratic }
+				NOT = { neutrality > party_popularity@democratic }
 			}
 			hidden_effect = {
 				if = {
@@ -1157,7 +1160,7 @@ add_namespace = BAL_cw
 		option = {
 			name = BAL_ele.07.b
 			trigger = {
-				neutrality > democratic
+				neutrality > party_popularity@democratic
 			}
 			hidden_effect = {
 				if = {
@@ -1201,6 +1204,11 @@ add_namespace = BAL_cw
 		is_triggered_only = yes
 		fire_only_once = yes
 		picture = GFX_report_event_BAL_Kasugano_deploy
+		immediate = {
+			hidden_effect = {
+				set_country_flag = BAL_CW_TAI_line
+			}
+		}
 		option = {
 			name = BAL_ele.09.a
 			add_popularity = {
@@ -1233,6 +1241,11 @@ add_namespace = BAL_cw
 		desc = BAL_ele.11.d
 		is_triggered_only = yes
 		fire_only_once = yes
+		immediate = {
+			hidden_effect = {
+				set_country_flag = BAL_CW_BAT_line
+			}
+		}
 		picture = GFX_report_event_BAL_Kasugano_conspire
 		option = {
 			name = BAL_ele.11.a
@@ -1242,6 +1255,198 @@ add_namespace = BAL_cw
 			}
 		}
 	}
+
+	#大选结束
+	country_event = {
+		id = BAL_ele.12
+		title = BAL_ele.12.t
+		desc = BAL_ele.12.d
+		is_triggered_only = yes
+		fire_only_once = yes
+		trigger = {
+			tag = BAL
+		}
+		option = {
+			name = BAL_ele.12.a
+			add_political_power = 15
+			hidden_effect = {
+				if = {
+					limit = {
+						OR = {
+							has_country_flag = BAL_CW_TAI_line
+							has_country_flag = BAL_CW_BAT_line
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						democratic > party_popularity@neutrality
+					}
+					if = {
+						limit = {
+							communism > party_popularity@democratic
+						}
+						country_event = BAL_ele.14
+					}
+					else = {
+						country_event = BAL_ele.13
+					}
+				}
+				else_if = {
+					limit = {
+						NOT = { democratic > party_popularity@neutrality }
+					}
+					if = {
+						limit = {
+							communism > party_popularity@neutrality
+						}
+						country_event = BAL_ele.16
+					}
+					else = {
+						country_event = BAL_ele.15
+					}
+				}
+				set_politics = {
+					ruling_party = democratic
+					elections_allowed = no
+				}
+			}
+		}
+	}
+
+	country_event = {
+		id = BAL_ele.13
+		title = BAL_ele.13.t
+		desc = BAL_ele.13.d
+		is_triggered_only = yes
+		immediate = {
+			set_country_leader_ideology = one_party_system_subtype
+		}
+		option = {
+			name = BAL_ele.13.a
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Mimori_head_of_government
+			add_political_power = 50
+			army_experience = 50
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.20
+			}
+		}
+		option = {
+			name = BAL_ele.13.b
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Kasugano_head_of_government
+			add_political_power = 100
+			add_stability = 0.10
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.20
+			}
+		}
+	}
+
+	country_event = {
+		id = BAL_ele.14
+		title = BAL_ele.14.t
+		desc = BAL_ele.14.d
+		is_triggered_only = yes
+		option = {
+			name = BAL_ele.14.a
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Yuki
+				country_leader = {
+					ideology = popular_front_subtype
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Mimori_head_of_government
+		}
+		option = {
+			name = BAL_ele.14.b
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Takashima
+				country_leader = {
+					ideology = leninism
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Sonoko_head_of_government
+		}
+		option = {
+			name = BAL_ele.14.c
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Utano
+				country_leader = {
+					ideology = Agrarian_socialism
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Mito_head_of_government
+		}
+	}
+	
+	country_event = {
+		id = BAL_ele.15
+		title = BAL_ele.15.t
+		desc = BAL_ele.15.d
+		is_triggered_only = yes
+		option = {
+			name = BAL_ele.15.a
+			set_politics = {
+				ruling_party = neutrality
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Ludmila
+				country_leader = {
+					ideology = left_wing_corporatism_subtype
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Titta_head_of_government
+		}
+	}
+	
+	country_event = {
+		id = BAL_ele.16
+		title = BAL_ele.16.t
+		desc = BAL_ele.16.d
+		is_triggered_only = yes
+		option = {
+			name = BAL_ele.16.a
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Elenora
+				country_leader = {
+					ideology = leninism
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Titta_head_of_government
+		}
+	}
+
 
 #内战
 
