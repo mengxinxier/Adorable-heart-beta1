@@ -6058,4 +6058,163 @@ CHI_Debug = {
 	}
 }
 
+CHI_IC_migration_category = {#工业迁移
+	CHI_civil_IC_migration = {
+		icon = GFX_decision_generic_trucks
+		fire_only_once = yes
+		on_map_mode = map_and_decisions_view
+		visible = {
+			has_completed_focus = CHI_Industrial_relocation_plan
+			FROM = {
+				NOT = {
+					has_state_flag = CHI_civil_inward_migration
+				}
+				industrial_complex > 0 
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CHI_industrial_migration_tt
+				check_variable = {
+					CHI_migration < 5
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					region = 209
+					region = 210
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		days_remove = 60
+		cost = 10
+		complete_effect = {
+			add_to_variable = {
+				CHI_migration = 1
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					check_variable = {
+						CHI_migration < 0
+					}
+				}
+				set_variable = {
+					CHI_migration = 0
+				}
+			}
+			else = {
+				add_to_variable = {
+					CHI_migration = -1
+				}
+			}
+			FROM = {
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				set_state_flag = CHI_civil_inward_migration
+			}
+			random_owned_controlled_state = {
+				limit = {
+					region = 211
+				}
+				hidden_effect = { SOV_promote_regional_development = yes }
+				custom_effect_tooltip = SOV_upgrading_area_type_tt
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
 
+			}
+		}
+	}
+	CHI_arms_IC_migration = {
+		icon = GFX_decision_generic_industry
+		fire_only_once = yes
+		on_map_mode = map_and_decisions_view
+		visible = {
+			has_completed_focus = CHI_Industrial_relocation_plan
+			FROM = {
+				NOT = {
+					has_state_flag = CHI_army_inward_migration
+				}
+				arms_factory > 0 
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CHI_industrial_migration_tt
+				check_variable = {
+					CHI_migration < 5
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					region = 209
+					region = 210
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		days_remove = 60
+		cost = 10
+		complete_effect = {
+			add_to_variable = {
+				CHI_migration = 1
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					check_variable = {
+						CHI_migration < 0
+					}
+				}
+				set_variable = {
+					CHI_migration = 0
+				}
+			}
+			else = {
+				add_to_variable = {
+					CHI_migration = -1
+				}
+			}
+			FROM = {
+				remove_building = {
+					type = arms_factory
+					level = 1
+				}
+				set_state_flag = CHI_army_inward_migration
+			}
+			random_owned_controlled_state = {
+				limit = {
+					region = 211
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+
+			}
+		}
+	}
+
+}
