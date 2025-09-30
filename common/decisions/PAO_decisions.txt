@@ -117,30 +117,45 @@ PAO_urbanization_decision_cate = {
 }
 #建设奇观
 PAO_qiguan = {
-#强迫圣杯议和
-PAO_shengbeiyihe = {
-    priority = 9999
-    visible = {
-        has_war_with = ENG
-        date < 1945.1.1
+    #强迫圣杯议和
+    PAO_shengbeiyihe = {
+        priority = 9999
+        visible = {
+            has_war_with = ENG
+            date < 1945.1.1
 
-        has_country_flag = engyihe
+            has_country_flag = engyihe
 
-        or = {
-            has_war_with = NGD
-            has_war_with = CAN
-            has_war_with = USA
-            has_war_with = FRG
-            has_war_with = NFA
+            or = {
+                has_war_with = NGD
+                has_war_with = CAN
+                has_war_with = USA
+                has_war_with = FRG
+                has_war_with = NFA
+            }
+            or = {
+                TAG = MGU
+                TAG = PAO
+            }
         }
-        or = {
-            TAG = MGU
-            TAG = PAO
-        }
-    }
-    cancel_trigger = {
+        cancel_trigger = {
 
-        not = {
+            not = {
+                382 = {
+                    controller = {
+                        or = {
+                            tag = PAO
+                            is_in_faction_with = PAO
+                        }
+                    }
+                }
+
+
+            }
+
+        }
+        available = {
+            has_war_with = ENG
             382 = {
                 controller = {
                     or = {
@@ -151,126 +166,115 @@ PAO_shengbeiyihe = {
             }
 
 
+
+
         }
 
-    }
-    available = {
-        has_war_with = ENG
-        382 = {
-            controller = {
-                or = {
-                    tag = PAO
-                    is_in_faction_with = PAO
-                }
-            }
-        }
+        cost = 200
+        days_remove = 7
+        fire_only_once = yes
+        remove_effect = {
+            clr_country_flag = engyihe
+            if = {
 
-
-
-
-    }
-
-    cost = 200
-    days_remove = 7
-    fire_only_once = yes
-    remove_effect = {
-        clr_country_flag = engyihe
-        if = {
-
-            every_country = {
-                limit = {
-                    OR = {
-
-
-                        is_in_faction_with = ENG
-                        TAG = ENG
-                    }
-                    NOT = {
+                every_country = {
+                    limit = {
                         OR = {
-                            tag = NFA
-                            tag = USA
-                            tag = NGD
-                            tag = FRG
-                            tag = PGM
+
+
+                            is_in_faction_with = ENG
+                            TAG = ENG
+                        }
+                        NOT = {
+                            OR = {
+                                tag = NFA
+                                tag = USA
+                                tag = NGD
+                                tag = FRG
+                                tag = PGM
+                            }
                         }
                     }
-                }
-                PAO = {
-                    white_peace = PREV
-                }
-                CAN = {
-                    leave_faction = yes
-                }
-            }
-        }
-    }
-    ai_will_do = {
-        base = 100
-    }
-}
-PAO_jingong_FROM = {
-    priority = 9999
-    icon = GFX_anxijingong
-    cost = 10
-    days_remove = 15
-    target_trigger = {
-        ROOT = {
-            is_subject = no
-        }
-        FROM = {
-            not = {
-                or = {
-                    has_war_with = ROOT
-                    is_in_faction_with = ROOT
-                    is_subject_of = ROOT
+                    PAO = {
+                        white_peace = PREV
+                    }
+                    CAN = {
+                        leave_faction = yes
+                    }
                 }
             }
         }
+        ai_will_do = {
+            base = 100
+        }
     }
-    allowed = {
-        always = no
-    }
-    available = {
-        FROM = {
-            not = {
-                or = {
-                    has_war_with = ROOT
-                    is_in_faction_with = ROOT
-                    is_subject_of = ROOT
+    PAO_jingong_FROM = {
+        priority = 9999
+        icon = GFX_anxijingong
+        cost = 10
+        days_remove = 15
+        target_trigger = {
+            ROOT = {
+                is_subject = no
+            }
+            FROM = {
+                not = {
+                    or = {
+                        has_war_with = ROOT
+                        is_in_faction_with = ROOT
+                        is_subject_of = ROOT
+                    }
                 }
             }
-            not = {
-                has_country_flag = LHS_war_plan_going_on
+        }
+        allowed = {
+            always = no
+        }
+        available = {
+            FROM = {
+                not = {
+                    or = {
+                        has_war_with = ROOT
+                        is_in_faction_with = ROOT
+                        is_subject_of = ROOT
+                    }
+                }
+                not = {
+                    has_country_flag = LHS_war_plan_going_on
+                }
             }
         }
-    }
-    ai_will_do = {
-        base = 100
-        modifier = {
-            has_war = yes
-            add = -10000
+        ai_will_do = {
+            base = 100
+            modifier = {
+                has_war = yes
+                add = -10000
+            }
+            modifier = {
+                tag = MGU
+                add = -10000
+            }
+            modifier = {
+                tag = PAO
+                add = -10000
+            }
         }
-        modifier = {
-            tag = MGU
-            add = -10000
+        complete_effect = {
+            set_country_flag = PAO_war_plan_going_on
+            FROM_country_is_defender_and_ROOT_is_accacker = yes
+        }
+        remove_effect = {
+            declare_war_on = {
+                target = FROM
+                type = topple_government
+            }
+            clr_country_flag = PAO_war_plan_going_on
+        }
+        cancel_trigger = {
+        }
+        cancel_effect = {
         }
     }
-    complete_effect = {
-        set_country_flag = PAO_war_plan_going_on
-        FROM_country_is_defender_and_ROOT_is_accacker = yes
-    }
-    remove_effect = {
-        declare_war_on = {
-            target = FROM
-            type = topple_government
-        }
-        clr_country_flag = PAO_war_plan_going_on
-    }
-    cancel_trigger = {
-    }
-    cancel_effect = {
-    }
-}
 
     PAO_minshengjianshe_AH3 = {
         icon = GFX_huayuanjianshe
