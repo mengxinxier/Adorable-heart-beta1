@@ -141,6 +141,15 @@ add_namespace = CHI_ShanXi_auto
 		option = {
 			name = China.005.a
 			CHI_remove_all_ideas = yes
+			promote_character = {
+				character = CHI_jianglihua
+				ideology = enlightened_despotism
+			}
+			set_party_name = {
+				ideology = neutrality
+				long_name = Innovation_Alliance_party_long
+				name = Innovation_Alliance_party
+			}
 			add_ideas = CHI_lixingke_idea
 			set_variable = { CHI_ascended_advisor_2 = 0 }
 			CHI_yuankeding = { retire = yes }
@@ -2441,6 +2450,7 @@ add_namespace = CHI_ShanXi_auto
 		picture = GFX_PRC_Red_Star_Over_China_event
 		option = {
 			name = China.049.a
+			set_country_flag = CHI_CP_absorb_the_moderates_flag #吸纳温和派
 			hidden_effect = {
 				#出山
 				country_event = {
@@ -2503,9 +2513,26 @@ add_namespace = CHI_ShanXi_auto
 				value = 0.1
 				tooltip = PWDP_faction_influence_var_up_middle
 			}
+			set_party_name = {
+				ideology = communism
+				long_name = CHI_PWDP_Radicals_party_long
+				name = CHI_PWDP_Radicals_party
+			}
 			every_possible_country = {
 				limit = { has_character = PRC_zhou_enlai }
-				PRC_zhou_enlai = { set_nationality = ROOT }
+				PRC_zhou_enlai = {
+					set_nationality = ROOT
+					add_country_leader_role = {
+                    	country_leader = {
+                       		desc = ""
+                        	ideology = warm_syndicalism_group
+                        	traits = {}
+                        	expire = "1999.1.1.1"
+                        	id = -1
+                    	}
+                    	promote_leader = yes
+                	}
+				}
 			}
 			every_possible_country = {
 				limit = { has_character = PRC_liu_shaoqi }
@@ -2644,6 +2671,69 @@ add_namespace = CHI_ShanXi_auto
 			set_variable = { GongChe_leader_var = 2 }
 			ai_chance = {
 				base = 25
+			}
+		}
+	}
+
+	#来自西洋的铁路人偶 （19号来华）
+	unit_leader_event = {
+		id = China.053
+		title = China.053.title
+		desc = China.053.desc
+		is_triggered_only = yes
+		after = {
+			effect_tooltip = {
+				TRB_19hao = {
+					set_nationality = CHI
+					custom_effect_tooltip = CHI_19hao_be_a_advisor_tt
+				}
+			}
+			show_ideas_tooltip = TRB_19hao_CHI_advisor
+		}
+		option = {#袁神的选项
+			name = China.053.b
+			TRB_19hao = {
+				custom_effect_tooltip = CHI_19hao_unit_leader_up_tt
+				effect_tooltip = {
+					add_corps_commander_role = {
+						skill = 1
+						attack_skill = 1
+						defense_skill = 1
+						planning_skill = 1
+						logistics_skill = 1
+					}
+				}
+				add_unit_leader_trait = Reiruroodo
+				gain_xp = 1000
+				add_attack = 1
+				add_logistics = 3
+			}
+			trigger = {
+				OR = {
+					has_country_leader = {
+						character = CHI_yuankeding
+						ruling_only = yes
+					}
+					has_idea = CHI_yuankeding_idea
+				}
+
+			}
+		}
+		option = {#蒋丽华的选项
+			name = China.053.a
+			hidden_effect = {
+				TRB_19hao = {
+					remove_unit_leader_role = yes
+				}
+			}
+			trigger = {
+				has_country_leader = {
+					character = CHI_jianglihua
+					ruling_only = yes
+				}
+				NOT = {
+					has_idea = CHI_yuankeding_idea
+				}
 			}
 		}
 	}
@@ -3073,6 +3163,7 @@ add_namespace = CHI_ShanXi_auto
 			}
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_chiyu_idea
+			complete_national_focus = CHI_focus_Election_PWDP
 			ai_chance = {
 				base = 25
 			}
@@ -3105,6 +3196,7 @@ add_namespace = CHI_ShanXi_auto
 			}
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_lixingke_idea
+			complete_national_focus = CHI_focus_Election_Cadets_party
 			ai_chance = {
 				base = 25
 			}
@@ -3137,6 +3229,7 @@ add_namespace = CHI_ShanXi_auto
 			}
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_zhonglanzhu_idea
+			complete_national_focus = CHI_focus_Election_ZhiGong_party
 			ai_chance = {
 				base = 25
 			}
@@ -3169,6 +3262,7 @@ add_namespace = CHI_ShanXi_auto
 			}
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Luo_Tianyi_idea
+			complete_national_focus = CHI_focus_Election_CLU_party
 			ai_chance = {
 				base = 25
 			}
@@ -3201,6 +3295,7 @@ add_namespace = CHI_ShanXi_auto
 			}
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_fuhua_idea
+			complete_national_focus = CHI_focus_Election_GongChe_party
 			ai_chance = {
 				base = 25
 			}
@@ -3233,6 +3328,7 @@ add_namespace = CHI_ShanXi_auto
 			}
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_hanyang_idea
+			complete_national_focus = CHI_focus_Election_YCP
 			ai_chance = {
 				base = 25
 			}
@@ -3242,6 +3338,20 @@ add_namespace = CHI_ShanXi_auto
 				not = { check_variable = { Youth_faction_influence_var < CLU_faction_influence_var } }
 				not = { check_variable = { Youth_faction_influence_var < GongChe_faction_influence_var } }
 				not = { check_variable = { Youth_faction_influence_var < Cadets_faction_influence_var } }
+			}
+		}
+	}
+
+	country_event = {#[FROM]国有化我们的资产
+		id = CHI_democracy.4
+		title = CHI_democracy.4.t
+		desc = CHI_democracy.4.d
+		is_triggered_only = yes
+		option = {
+			name = CHI_democracy.4.a
+			add_opinion_modifier = {
+				target = FROM
+				modifier = CHI_nationalisation_Our_assets
 			}
 		}
 	}
