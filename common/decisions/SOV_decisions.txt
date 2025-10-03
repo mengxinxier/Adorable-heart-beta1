@@ -673,48 +673,28 @@ SOV_faction_management_category = {
 
 	SOV_integrate_Kiev_region = {
 		icon = GFX_decision_infiltrate_state
+		allowed = { tag = SOV }
 		visible = {
 			tag = SOV
-			UKR = {
-				exists = no
-			}
-			any_state = {
-				is_core_of = UKR
-				NOT = { is_core_of = ROOT }
-			}
+			UKR = { is_subject_of = ROOT }
 		}
 		available = {
-			any_state = {
-				is_core_of = UKR
-				is_controlled_by = ROOT
-			}
+			UKR = { is_subject_of = ROOT }
 		}
 		ai_will_do = {
 			factor = 100000
 		}
-		cost = 10
-		days_remove = 90
+		cost = 100
+		days_remove = 300
 		fire_only_once = yes
-		complete_effect = {
-			every_state = {
-				limit = { is_core_of = UKR }
-				add_claim_by = ROOT
-			}
-		}
 		remove_effect = {
-			every_state = {
-				limit = {
-					is_core_of = UKR
-					is_controlled_by = ROOT
+			UKR = {
+				every_core_state = {
+					limit = { is_fully_controlled_by = PREV }
+					add_core_of_ROOT = yes
 				}
-				add_compliance = 0.20
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 			}
-			hidden_effect = {
-				country_event = ukr_politics.45
-			}
-			add_to_variable = { ubs_save = 300 }
-			custom_effect_tooltip = SOV_get_300_add_to_reserve
-			SOV_allowance_of_peasants = yes
 		}
 	}
 
@@ -2401,10 +2381,47 @@ SOV_special_military_operations_category = {
 					is_subject_of = SOV
 				}
 			}
-		}   
+		}
+		cancel_trigger = {
+			202 = { is_controlled_by_ROOT_or_ally = yes }
+		}
 		days_mission_timeout = 180
 		is_good = no
 		fire_only_once = yes
+		cancel_effect = {
+			SOV = {
+				effect_tooltip = { white_peace = UKR }
+				hidden_effect = {
+					white_peace = {
+						tag = UKR
+						message = SOV_win_UKR
+					}
+					if = {
+						limit = { has_country_flag = SOV_special_operation_failure_decsison }
+						clr_country_flag = SOV_special_operation_failure_decsison
+						country_event = { id = SOV_flavor.20 days = 1 }
+					}
+					clr_country_flag = SOV_special_military_operations_start
+					country_event = SOV_flavor.23
+					news_event = { id = SOV_news.7 hours = 6 }
+				}
+				set_autonomy = {
+					target = UKR
+					autonomous_state = SOV_member_state
+				}
+				unlock_decision_tooltip = SOV_integrate_Kiev_region
+			}
+			UKR = {
+				create_country_leader = {
+					name = SOV_Lada   ##拉达
+					desc = ""
+					picture = "gfx/leaders/SOV/Gummy.dds"
+					expire = "1985.1.1"
+					ideology = leninism
+					traits = {}
+				}
+			}
+		}
 		timeout_effect = {      
 			SOV = {
 				add_timed_idea = {
@@ -2448,10 +2465,31 @@ SOV_special_military_operations_category = {
 					is_subject_of = SOV
 				}
 			}
-		}   
+		}
+		cancel_trigger = {
+			not = { controls_state = 202 }
+		}
 		days_mission_timeout = 180
 		is_good = yes
 		fire_only_once = yes
+		cancel_effect = {
+			effect_tooltip = {
+				SOV = {
+					white_peace = UKR
+					puppet = UKR
+				}
+				UKR = {
+					create_country_leader = {
+						name = SOV_Lada   ##拉达
+						desc = ""
+						picture = "gfx/leaders/SOV/Gummy.dds"
+						expire = "1985.1.1"
+						ideology = leninism
+						traits = {}
+					}
+				}
+			}
+		}
 		timeout_effect = {   
 			effect_tooltip = {
 				UKR = {
