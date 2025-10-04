@@ -6,7 +6,7 @@ focus_tree = {
 		factor = 0
 		
 		modifier = {
-			add = 0
+			add = 555
 			tag = MGU
 		}
 	}
@@ -1659,8 +1659,8 @@ focus_tree = {
 				}
 
         		division_template = {
-            name = "魔联凡人军团" #名字
-            division_names_group = "魔联凡人军团"
+            name = "魔联凡人辅助军" #名字
+            division_names_group = "魔联凡人辅助军"
             is_locked = no
             regiments = {
             infantry = { x = 0 y = 0 }
@@ -1685,7 +1685,7 @@ focus_tree = {
                 }
 
             501 = {
-            			create_unit = { division = "name = \"魔联凡人军团\" division_template = \"魔联凡人军团\" start_experience_factor = 0.7 start_equipment_factor = 1 "
+            			create_unit = { division = "name = \"魔联凡人辅助军\" division_template = \"魔联凡人辅助军\" start_experience_factor = 0.7 start_equipment_factor = 1 "
             				owner = MGU count = 6 allow_spawning_on_enemy_provs = yes }
             		}
 		}
@@ -5264,6 +5264,12 @@ focus_tree = {
 		}
 		completion_reward = {
             280 = {
+                add_extra_state_shared_building_slots = 2
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 2
+                    instant_build = yes
+                }
                 add_building_construction = {
                     type = infrastructure
                     level = 1
@@ -5584,7 +5590,7 @@ focus_tree = {
 #		}
 #	}
 
-	focus = { #平息仇恨 平息怨恨
+	focus = { #平息仇恨 平息怨恨 安息之地
 		id = TBMGU_rest_05
 		icon = GFX_focus_SWE_form_rfsu
 		x = 2
@@ -5623,11 +5629,26 @@ focus_tree = {
 		}
 
 		completion_reward = {
-           country_event =  magicunion.1150
+            PAO = { country_event = magicunion.1150 }
+                PAO = { add_opinion_modifier = { target = MGU modifier = MGU_Mother_Outro }}
+                add_opinion_modifier = { target = PAO modifier = MGU_Mother_Outro }
+            504 = {
+                add_extra_state_shared_building_slots = 2
+                add_building_construction = {
+                    type = infrastructure
+                    level = 1
+                    instant_build = yes
+                }
+                add_building_construction = {
+                    type = air_base
+                    level = 2
+                    instant_build = yes
+                }
+            }
 		}
 	}
 
-	focus = { #整合安息之国 净化白教区 白教堂
+	focus = { #整合安息之国 净化白教区 白教堂 骑士寂夜
 		id = TBMGU_rest_06
 		icon = GFX_focus_SWE_form_rfsu
 		x = 2
@@ -5643,13 +5664,45 @@ focus_tree = {
 		}
 
 		available = {
-
+            OR = {
+                NOT = { country_exists = PAO }
+                is_in_faction_with = PAO
+            }
 		}
 		mutually_exclusive = {
 		}
 
 		completion_reward = {
-            country_event = magicunion.10761
+            custom_effect_tooltip = TBMGU_rest_06_txt
+            if = {
+                limit = {
+                    NOT = { is_in_faction_with = PAO }
+                    country_exists = PAO
+                }
+                custom_effect_tooltip = TBMGU_rest_06_a_txt
+            }
+            if = {
+                limit = {
+                    NOT = { country_exists = PAO }
+                }
+                country_event = magicunion.10761
+                add_resource = {
+                    type = originium
+                    amount = 10
+                    state = 504
+                }
+            }
+            if = {
+                limit = {
+                    is_in_faction_with = PAO
+                }
+                PAO = { country_event = magicunion.10762 }
+                add_resource = {
+                    type = originium
+                    amount = 10
+                    state = 504
+                }
+            }
 		}
 	}
 
@@ -5730,12 +5783,6 @@ focus_tree = {
 		}
 		completion_reward = {
             country_event = magicunion.1136
-            PAO = {
-                swap_ideas = {
-                    remove_idea = PAO_Resentful_deceased
-                    add_idea = PAO_Resentful_deceased_2
-                }
-             }
             hidden_effect = {
                 country_event = { id = magicunion.1145 days = 360 }
             }
@@ -5765,12 +5812,6 @@ focus_tree = {
 
 		completion_reward = {
             country_event = magicunion.1141
-            PAO = {
-                swap_ideas = {
-                    remove_idea = PAO_Resentful_deceased
-                    add_idea = PAO_Resentful_deceased_2
-                }
-             }
 		}
 	}
 
