@@ -1,4 +1,84 @@
 KMK_unit_FRA = {
+	KMK_intervene_on_side_of_NPT = {
+		name = FRA_intervene_on_side_of_NPT
+		available = { has_war_support > 0.25 }
+		visible = { 
+			has_completed_focus = FRA_Intervene_in_NPT_civil_war
+		}
+		target = { NPT }
+		target_trigger = { 
+			FROM = {
+				original_tag = NPT
+				OR = {
+					has_war_with = ARF
+					has_war_with = BLA
+				}
+			}
+		}
+
+		complete_effect = {
+			#This is not optimal, but it generates a beautiful tooltip
+			if = {
+				limit = { FROM = { tag = NPT } }
+				if = {
+					limit = { country_exists = ARF }
+					add_to_war = { targeted_alliance = NPT enemy = ARF hostility_reason = asked_to_join }
+				}
+				if = {
+					limit = {
+						NPT = {
+							has_war_with = MOR
+						}
+						country_exists = MOR 
+					}
+					add_to_war = { targeted_alliance = NPT enemy = SPC hostility_reason = asked_to_join }
+				}
+				if = {
+					limit = { country_exists = BLA }
+					add_to_war = { targeted_alliance = NPT enemy = BLA hostility_reason = asked_to_join }
+				}
+			}
+
+			effect_tooltip = {
+				give_military_access = FROM
+				FROM = { give_military_access = ROOT }
+			}
+			hidden_effect = {
+				diplomatic_relation = {
+					country = FROM
+					relation = military_access
+					active = yes
+				}
+				FROM = {
+					diplomatic_relation = {
+						country = ROOT
+						relation = military_access
+						active = yes
+					}
+				}
+			}
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				add_to_faction = FROM
+			}
+		}
+
+		cost = 25
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				has_war = yes
+				factor = 0
+			}
+			modifier = {
+				is_historical_focus_on = yes
+				factor = 0
+			}
+		}
+		
+	}
 	KMK_attack_bolin_controler = {
 		name = "进攻柏林"
 		icon = GFX_decision_generic_ignite_civil_war
