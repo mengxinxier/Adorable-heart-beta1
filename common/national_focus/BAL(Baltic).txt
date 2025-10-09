@@ -3723,7 +3723,7 @@ focus_tree = {
 		}
 
 		available = {
-			has_subject = PRE
+			5 = { is_owned_by_ROOT_or_subject = yes }
 		}
 
 		bypass = {
@@ -3788,6 +3788,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			POL = { country_event = BAL_pol.28 }
 			custom_effect_tooltip = if_they_accept
 			effect_tooltip = {
 				complete_national_focus = BAL_introduction_of_military_industry_production_lines
@@ -3979,8 +3980,8 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = this_focus_triggered_by_events_tt
-			unlock_military_industrial_organization_tooltip = POL_pzinz_organization_1
-			unlock_military_industrial_organization_tooltip = POL_smpa_organization_1
+			unlock_military_industrial_organization_tooltip = mio:POL_pzinz_organization_1
+			unlock_military_industrial_organization_tooltip = mio:POL_smpa_organization_1
 		}
 	}
 										
@@ -3998,6 +3999,10 @@ focus_tree = {
 
 		ai_will_do = {
 			factor = 2.0
+		}
+
+		available = {
+			owns_state = 96
 		}
 
 		completion_reward = {
@@ -4025,6 +4030,7 @@ focus_tree = {
 			set_capital = {
 				state = 96
 			}
+			add_country_leader_trait = POL_Eastern_European_hegemon
 		}
 	}
 												
@@ -4045,11 +4051,12 @@ focus_tree = {
 		}
 
 		available = {
-			POL = {
-				OR = {
-					exists = no
-					is_subject_of = ROOT
+			OR = {
+				AND = {
+					owns_state = 10
+					NOT = { country_exists = POL }
 				}
+				has_subject = POL
 			}
 		}
 
@@ -4077,6 +4084,16 @@ focus_tree = {
 
 		ai_will_do = {
 			factor = 2.0
+		}
+
+		available = {
+			OR = {
+				AND = {
+					owns_state = 10
+					NOT = { country_exists = POL }
+				}
+				has_subject = POL
+			}
 		}
 
 		completion_reward = {
@@ -4193,7 +4210,7 @@ focus_tree = {
 			focus = BAL_predestined_path
 		}
 
-		cost = 5
+		cost = 2
 
 		ai_will_do = {
 			factor = 2.0
@@ -4204,7 +4221,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-
+			add_war_support = 0.05
 		}
 	}
 		
@@ -4302,8 +4319,55 @@ focus_tree = {
 			factor = 2.0
 		}
 
-		completion_reward = {
+		available = {
+			has_government = communism
+			OR = {
+				PRE = {
+					exists = yes
+					owns_state = 5
+				}
+				AND = { 
+					PRE = {
+						exists = no
+					}
+					SOV = { owns_state = 5 } 
+				}
+			}
+		}
+		
+		bypass = {
+			owns_state = 5
+		}
 
+		completion_reward = {
+			if = {
+				limit = { 
+					PRE = {
+						exists = yes
+						owns_state = 5
+						NOT = { is_subject_of = SOV }
+					}
+				}
+				PRE = { country_event = BAL_pol.36 }
+			}
+			else_if = {
+				limit = {
+					OR = {
+						PRE = {
+							exists = yes
+							owns_state = 5
+							is_subject_of = SOV
+						}
+						AND = { 
+							PRE = {
+								exists = no
+							}
+							SOV = { owns_state = 5 } 
+						}
+					}
+				}
+				SOV = { country_event = BAL_pol.37 } 
+			}
 		}
 	}
 						
@@ -4328,6 +4392,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			add_political_power = 50
 
 		}
 	}
@@ -4351,8 +4416,18 @@ focus_tree = {
 			factor = 0
 		}
 
-		completion_reward = {
+		available = {
+			POL = { can_ROOT_get_wargoal_on_THIS = yes }
+		}
 
+		will_lead_to_war_with = POL
+
+		completion_reward = {
+			declare_war_on = {
+				target = POL
+				type = take_state
+				generator = { 96 }
+			}
 		}
 	}
 							
@@ -4374,8 +4449,20 @@ focus_tree = {
 			factor = 2.0
 		}
 
-		completion_reward = {
+		available = {
+			POL = {
+				has_government = communism
+				NOT = { has_war_with = ROOT }
+			}
+		}
 
+		completion_reward = {
+			POL = { country_event = BAL_pol.43 }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				unlock_military_industrial_organization_tooltip = mio:POL_pzinz_organization_1
+				unlock_military_industrial_organization_tooltip = mio:POL_smpa_organization_1
+			}
 		}
 	}
 								
@@ -4473,8 +4560,16 @@ focus_tree = {
 			factor = 2.0
 		}
 
-		completion_reward = {
+		available = {
+			5 = { is_owned_by_ROOT_or_subject = yes }
+		}
 
+		bypass = {
+			has_idea = BAL_boundary_of_sacred_tree
+		}
+
+		completion_reward = {
+			add_ideas = BAL_boundary_of_sacred_tree
 		}
 	}
 												
@@ -4497,8 +4592,23 @@ focus_tree = {
 			factor = 0
 		}
 
-		completion_reward = {
+		available = {
+			FIN = {
+				NOT = {
+					is_subject_of = SOV
+					has_war_with = ROOT
+				}
+				can_ROOT_get_wargoal_on_THIS = yes
+			}
+		}
 
+		will_lead_to_war_with = FIN
+
+		completion_reward = {
+			declare_war_on = {
+				target = FIN
+				type = puppet_wargoal_focus
+			}
 		}
 	}
 													
@@ -4521,8 +4631,12 @@ focus_tree = {
 			factor = 2.0
 		}
 
-		completion_reward = {
+		available = {
+			FIN = { has_same_ideology = yes }
+		}
 
+		completion_reward = {
+			FIN = { country_event = BAL_pol.39 }
 		}
 	}
 														
@@ -4536,14 +4650,24 @@ focus_tree = {
 			focus = BAL_claim_Vilnius
 		}
 
-		cost = 5
+		cost = 1
 
 		ai_will_do = {
-			factor = 2.0
+			factor = 100
+		}
+
+		available = {
+			OR = {
+				AND = {
+					owns_state = 10
+					NOT = { country_exists = POL }
+				}
+				has_subject = POL
+			}
 		}
 
 		completion_reward = {
-
+			add_country_leader_trait = POL_Eastern_European_hegemon
 		}
 	}
 															
@@ -4694,7 +4818,20 @@ focus_tree = {
 		}
 
 		completion_reward = {
-
+			842 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+			}
+			12 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+				}
+			}
 		}
 	}
 															
@@ -4715,8 +4852,18 @@ focus_tree = {
 			factor = 2.0
 		}
 
-		completion_reward = {
+		available = {
+			OR = {
+				has_subject = FIN
+				has_country_flag = BAL_success_in_FIN
+			}
+		}
 
+		completion_reward = {
+			annex_country = {
+				target = FIN
+				transfer_troops = yes
+			}
 		}
 	}
 
@@ -4736,8 +4883,24 @@ focus_tree = {
 			factor = 2.0
 		}
 
-		completion_reward = {
+		available = {
+			OR = {
+				AND = {
+					owns_state = 10
+					NOT = { country_exists = POL }
+				}
+				has_subject = POL
+			}
+		}
 
+
+		completion_reward = {
+			POL = {
+				every_character = {
+					limit = { has_character_flag = POL_SSS_organization_character }
+					set_nationality = ROOT
+				}
+			}
 		}
 	}
 	
@@ -4758,7 +4921,27 @@ focus_tree = {
 		}
 
 		completion_reward = {
-
+			add_popularity = {
+				ideology = communism
+				popularity = 0.10
+			}
+			set_technology = { tech_silverspear_pegasus = 1 }
+			division_template = {
+				name = "Silverspear Pegasus"
+				regiments = {
+					silverspear_pegasus = { x = 0 y = 0 }
+					silverspear_pegasus = { x = 0 y = 1 }
+					silverspear_pegasus = { x = 0 y = 2 }
+					silverspear_pegasus = { x = 1 y = 0 }
+					silverspear_pegasus = { x = 1 y = 1 }
+					silverspear_pegasus = { x = 1 y = 2 }
+				}
+				support = {
+					recon = { x = 0 y = 0 }
+					engineer = { x = 0 y = 1 }
+					artillery = { x = 0 y = 2 }
+				}
+			}
 		}
 	}
 		
@@ -4808,7 +4991,20 @@ focus_tree = {
 		cost = 5
 
 		ai_will_do = {
-			factor = 2.0
+			base = 2.0
+			modifier = {
+				factor = 5.0
+				is_in_faction_with = DEN
+			}
+		}
+
+		available = {
+			DEN = { 
+				NOT = { 
+					has_government = fascism 
+					has_government = neutrality 
+				} 
+			}
 		}
 
 		completion_reward = {
@@ -4832,7 +5028,20 @@ focus_tree = {
 		cost = 5
 
 		ai_will_do = {
-			factor = 2.0
+			base = 2.0
+			modifier = {
+				factor = 5.0
+				is_in_faction_with = SWE
+			}
+		}
+
+		available = {
+			SWE = { 
+				NOT = { 
+					has_government = fascism 
+					has_government = neutrality 
+				} 
+			}
 		}
 
 		completion_reward = {
