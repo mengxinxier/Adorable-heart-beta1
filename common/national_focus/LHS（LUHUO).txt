@@ -1933,6 +1933,14 @@ focus_tree = {
             AND = {
                 has_war = no
                 country_exists = PAN
+                PA1 = {
+                    exits = yes
+                    or ={
+                        is_subject = no
+                        is_subject_of = PAN
+                    }
+
+                }
             }
         }
         prerequisite = {
@@ -2036,6 +2044,27 @@ focus_tree = {
         select_effect = {
         }
         completion_reward = {
+            if = {
+                limit = {
+                    PA1 = {
+                        is_subject = yes
+                        not = {
+                            is_subject_of = PAN
+                        }
+                    }
+                }
+                every_country = {
+                    limit = {
+                        has_subject = PA1
+                    }
+                    LHS = {
+                        declare_war_on = {
+                            target = PREV
+                            type = annex_everything
+                        }
+                    }
+                }
+            }
             set_country_flag = payyihe
             PA1 = {
                 PA1_JIANGHUAN = {
@@ -4089,23 +4118,14 @@ focus_tree = {
             }
             if = {
                 limit = {
-                    and = {
-                        306 = {
-                            owner = {
-                                not = {
-                                    is_subject_of = LHS
-                                    has_government = communism
-                                    is_subject_of = PAY
-                                }
-                            }
-                        }
-                        306 = {
-                            owner = {
-                                not = {
-                                    tag = LHS
-                                    has_government = communism
-                                    tag = PAY
-                                }
+                    306 = {
+                        owner = {
+                            not = {
+                                is_subject_of = LHS
+                                has_government = communism
+                                is_subject_of = PAY
+                                tag = LHS
+                                tag = PAY
                             }
                         }
                     }
@@ -4140,11 +4160,15 @@ focus_tree = {
             }
             if = {
                 limit = {
+                    PA1 = {
+                        exists = no
+                    }
                     306 = {
                         owner = {
                             or = {
-                                tag = PAY
-                                is_subject_of = PAY
+                                not = {
+                                    has_government = communism
+                                }
                             }
                         }
                     }
@@ -4211,7 +4235,6 @@ focus_tree = {
                         }
                     }
                 }
-                custom_effect_tooltip = xuanzhanyongyouzhe
                 hidden_effect = {
                     set_country_flag = payyihe
                     493 = {
@@ -4222,7 +4245,6 @@ focus_tree = {
                             }
                         }
                     }
-                    will_lead_to_war_with = PAY
                 }
             }
             custom_effect_tooltip = LHS_jhst_tt
@@ -7686,32 +7708,9 @@ focus_tree = {
             has_country_flag = LHS_xiaofengshengli
         }
         select_effect = {
-            if = {
-
-
-
-
-                limit = {
-                    306 = {
-                        owner = {
-                            not = {
-                                or = {
-                                    tag = ROOT
-                                    is_subject_of = ROOT
-                                    has_government = communism
-                                }
-                            }
-                        }
-                    }
-                }
-
-                LHS = { save_global_event_target_as = Adorable_heart_Accacker }
-                PAY = { save_global_event_target_as = Adorable_heart_Defender }
-                PAY = { set_country_flag = War_warning_window_visible }
-            }
         }
 
-
+        will_lead_to_war_with = PAY
         relative_position_id = LHS_chetui
         ai_will_do = {
             #ai点击国策的倾向
@@ -7720,10 +7719,114 @@ focus_tree = {
         completion_reward = {
             if = {
                 limit = {
+                    PA1 = {
+                        is_subject = yes
+                        not = {
+                            is_subject_of = PAN
+                        }
+                    }
+                }
+                every_country = {
+                    limit = {
+                        has_subject = PA1
+                    }
+                    LHS = {
+                        declare_war_on = {
+                            target = PREV
+                            type = annex_everything
+                        }
+                    }
+                }
+                PA1 = {
+                    PA1_JIANGHUAN = {
+                        set_nationality = ROOT
+                    }
+                }
+                add_ideas = LHS_jiefangsita
+                puppet = PA1
+                PA1 = {
+                    set_politics = {
+                        ruling_party = communism
+                    }
+                    add_ideas = LHS_jiefangsita
+                    transfer_state = 306
+                    transfer_state = 852
+                    transfer_state = 486
+                    add_state_core = 486
+                    division_template = {
+                        name = "莉兰迪亚红军"
+                        regiments = {
+                            infantry = {
+                                x = 0
+                                y = 0
+                            }
+                            infantry = {
+                                x = 0
+                                y = 1
+                            }
+                            infantry = {
+                                x = 0
+                                y = 2
+                            }
+                            infantry = {
+                                x = 0
+                                y = 3
+                            }
+                            infantry = {
+                                x = 1
+                                y = 0
+                            }
+                            infantry = {
+                                x = 1
+                                y = 1
+                            }
+                        }
+                        support = {
+                            #支援连
+                            engineer = {
+                                x = 0
+                                y = 0
+                            }
+                            recon = {
+                                x = 0
+                                y = 1
+                            }
+                        }
+                    }
+                    306 = {
+                        create_unit = {
+                            division = "name = \"斯塔人民军\" division_template = \"莉兰迪亚红军\" start_experience_factor = 0.7 start_equipment_factor = 1"
+                            count = 10
+                            owner = PA1
+                        }
+                    }
+                }
+                hidden_effect = {
+                    set_country_flag = payyihe
+                    493 = {
+                        CONTROLLER = {
+                            declare_war_on = {
+                                target = PA1
+                                type = annex_everything
+                            }
+                        }
+                    }
+                    will_lead_to_war_with = PAY
+                }
+            }
+            if = {
+                limit = {
                     PAN = {
                         exists = yes
                     }
                     #表示只在PAN存在时可用
+                    PA1 = {
+                        exists = yes
+                        or = {
+                            is_subject = no
+                            is_subject_of = PAN
+                        }
+                    }
                 }
                 PAN = {
                     country_event = {
@@ -7735,6 +7838,9 @@ focus_tree = {
             }
             if = {
                 limit = {
+                    PA1 = {
+                        exists = no
+                    }
                     306 = {
                         owner = {
                             not = {
@@ -7812,20 +7918,17 @@ focus_tree = {
                     }
                 }
                 custom_effect_tooltip = xuanzhanyongyouzhe
-                custom_effect_tooltip = LHS_jhst_tt
-                hidden_effect = {
-                    set_country_flag = payyihe
-                    493 = {
-                        CONTROLLER = {
-                            declare_war_on = {
-                                target = PA1
-                                type = annex_everything
-                            }
+                set_country_flag = payyihe
+                493 = {
+                    CONTROLLER = {
+                        declare_war_on = {
+                            target = PA1
+                            type = annex_everything
                         }
                     }
-                    will_lead_to_war_with = PAY
                 }
             }
+            custom_effect_tooltip = LHS_jhst_tt
         }
     }
     #清算旧账
