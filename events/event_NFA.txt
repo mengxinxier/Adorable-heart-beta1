@@ -3026,8 +3026,39 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = nfa.92.a
-		NFA = {
-			add_to_faction = ROOT
+		if = {
+			limit = {
+				is_in_faction_with = PAO
+				PAO = {
+					is_subject = NO
+				}
+			}
+			PAO = {
+				country_event = nfa.98
+			}
+		}else = {
+			ROOT = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					every_other_country = {
+						limit = {
+							is_in_faction_with = ROOT
+							not = { tag = ROOT }
+						}
+						FROM = {
+							add_to_faction = PREV
+						}
+					}
+				}
+			}
+			FROM = {
+				add_to_faction = ROOT
+			}
+			ROOT = {
+				adorable_heart_faction_buff = yes
+			}
 		}
 		ai_chance = {
 			base = 100
@@ -3178,3 +3209,69 @@ country_event = {
 			}
 		}
 	}
+
+country_event = {
+	id = nfa.98
+	title = nfa.98.t
+	desc = nfa.98.d
+	is_triggered_only = yes
+	option = {
+		name = nfa.98.a
+		ROOT = {
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = ROOT
+						not = { tag = ROOT }
+					}
+					NFA = {
+						add_to_faction = PREV
+					}
+				}
+			}
+		}
+		NFA = {
+			add_to_faction = ROOT
+		}
+		ROOT = {
+			adorable_heart_faction_buff = yes
+		}
+		ai_chance = {
+			base = 100
+		}
+	}
+	option = {
+		name = nfa.91.b
+		MGU = {
+			country_event = {
+				id = nfa.99
+				days = 1
+			}
+		}
+		NFA = {
+			country_event = {
+				id = nfa.99
+				days = 1
+			}
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+country_event = {
+	id = nfa.99
+	title = nfa.99.t
+	desc = nfa.99.d
+	is_triggered_only = yes
+	option = {
+		name = nfa.99.a
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
