@@ -51,6 +51,9 @@ on_actions = {
                         }
                     }
                     FROM = {
+                        not ={
+                            has_global_flag = PAO_shibai
+                        }
                         or = {
                             tag = PAO
                         }
@@ -73,6 +76,40 @@ on_actions = {
                 }
             }
             if = {
+                #反败为胜躁动的亡者
+                limit = {
+                    ROOT = {
+                        tag = WL1
+                        is_subject = no
+                        NOT = {
+                            any_enemy_country = {
+                                NOT = {
+                                    tag = PAO
+                                    has_war_together_with = PAO
+                                }
+                            }
+                        }
+                    }
+                    FROM = {
+                            has_global_flag = PAO_shibai
+                        or = {
+                            tag = PAO
+                        }
+
+                    }
+                }
+                PAO = {
+                    annex_country = {
+                        target = WL1
+                        transfer_troops = no
+                    }
+                    country_event = {
+                        days = 1
+                        id = PAO.62
+                    }
+                }
+            }
+            if = {
                 #战败躁动的亡者
                 limit = {
                     ROOT = {
@@ -88,6 +125,9 @@ on_actions = {
                         }
                     }
                     FROM = {
+                        not ={
+                            has_global_flag = PAO_shibai
+                        }
                         or = {
                             tag = WL1
                         }
@@ -95,16 +135,30 @@ on_actions = {
                     }
                 }
                 PAO = {
+                    set_global_flag = PAO_shibai
                     white_peace = {
                         tag = WL1
                         message = PAO_lose_WL1
                     }
-                    annex_country = {
-                        target = WL1
-                        transfer_troops = no
+                    WL1 = {
+                        every_state = {
+                            limit = {
+                                not = {
+                                    or = {
+                                        state = 301
+                                        state = 848
+                                        state = 302
+                                    }
+                                }
+                                is_core_of = PAO
+                            }
+                            WL1 = {
+                                transfer_state = prev
+                            }
+                        }
                     }
                     country_event = {
-                        days = 1
+                        hours = 48
                         id = PAO.3
                     }
                 }
