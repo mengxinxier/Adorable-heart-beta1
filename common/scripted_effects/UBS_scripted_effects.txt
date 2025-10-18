@@ -604,6 +604,38 @@ econmic_debuff_calculation = {
 ###  月度结算
 save_and_load_settlement = {
     AHES_Refresh_income_and_outcome = yes
+    if = {
+        limit = { check_variable = { ubs_save < 0 } }
+        subtract_from_variable = {
+            var = ubs_load
+            value = ubs_save
+        }
+        clamp_variable = {
+            var = ubs_save
+            min = 0
+        }
+    }
+    if = {
+        limit = { check_variable = { ubs_load < 0 } }
+        subtract_from_variable = {
+            var = ubs_save
+            value = ubs_load
+        }
+        clamp_variable = {
+            var = ubs_load
+            min = 0
+        }
+    }
+    clamp_variable = {
+        var = THIS.ubs_load
+        min = 0
+    }
+    clamp_variable = {
+        var = ubs_save
+        min = 0
+    }
+    round_variable = THIS.ubs_load
+    round_variable = ubs_save
     every_country = {
         limit = { NOT = { has_country_flag = shouru_zhichu_CD_30 } }
         ##结算存款与债务
@@ -748,16 +780,6 @@ UBS_bank_icon_frames = {
         }
         set_variable = { current_jinglirun_icon_frame = 1 }
     }
-    clamp_variable = {
-        var = THIS.ubs_load
-        min = 0
-    }
-    clamp_variable = {
-        var = ubs_save
-        min = 0
-    }
-    round_variable = THIS.ubs_load
-    round_variable = ubs_save
 }
 
 ###  刷新收支
