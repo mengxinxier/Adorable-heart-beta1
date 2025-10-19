@@ -133,6 +133,82 @@ PAO_urbanization_decision_cate = {
 }
 #建设奇观
 PAO_qiguan = {
+    PAO_chongjiankuilei = {
+        priority = 10000
+        #需要特别注意的是，在整个目标决议中，FROM均是指“目标”，也就是被该决议定准的国家/地区，而ROOT（或不写作用域）则指当前掌握决议的国家自己
+
+        icon = GFX_shty#决议的图标
+
+        fire_only_once = yes#是否为仅能进行一次的决议（默认no）
+
+        available = {
+            #满足其中条件，才允许点选该决议
+        }
+
+        visible = {
+            #什么条件下决议可见（但是因为每帧检测一次，用在目标决议中对性能消耗较大）
+        }
+        target_array = subjects
+        target_trigger = {
+            ROOT = {
+                has_completed_focus = PAO_lgch
+            }
+            FROM = {
+                is_subject_of = ROOT
+                exists = yes
+                not = {
+                    or = {
+                        has_idea = PAO_zqgt
+                        has_idea = PAO_zqgt2
+                        has_idea = PAO_zqgt3
+                        has_idea = PAO_zqgt4
+                        has_idea = PAO_ckmf
+                        has_idea = PAO_ckmf2
+                    }
+                }
+            }
+        }
+        cost = 100
+        complete_effect = {
+            #完成（点选）决议时触发的效果
+        }
+
+        cancel_trigger = {
+            #满足什么条件会立刻取消（中断）此决议，会立刻打断正在读条的决议
+        }
+
+        cancel_effect = {
+            #决议被打断时触发的效果（这个效果与其他效果不同，它不会在鼠标悬停于决议上方时显示出来）
+        }
+        days_remove = 20
+        remove_effect = {
+            FROM = {
+                random_list = {
+                    50 = {
+                        add_popularity = { ideology = communism popularity = 1 }
+                        set_politics = { ruling_party = communism }   #执政党
+                    }
+                    50 = {
+                        add_popularity = { ideology = democratic popularity = 1 }
+                        set_politics = { ruling_party = democratic }   #执政党
+                    }
+                }
+                if = {
+                    limit = {
+                        PAO = {
+                            has_completed_focus = PAO_lgch
+                        }
+                    }
+                    add_ideas = PAO_zqgt4
+                    add_ideas = PAO_ckmf2
+                }
+            }
+        }
+
+        ai_will_do = {
+            base = 100#ai点选这个决议的意愿
+        }
+    }
     #强迫圣杯议和
     PAO_shengbeiyihe = {
         priority = 9999
@@ -291,8 +367,8 @@ PAO_qiguan = {
             modifier = {
                 not = {
                     has_global_flag = PAO_rebuiid
-                    }
-                    tag = PAO
+                }
+                tag = PAO
                 add = 10000
             }
             modifier = {
@@ -1209,14 +1285,14 @@ PAO_BACK_PAM = {
 
         #效果
         complete_effect = {
-           
+
         }
         remove_effect = {
-            
+
         }
 
         cancel_effect = {
-           
+
         }
 
         ai_will_do = {
@@ -1243,7 +1319,7 @@ PAO_BACK_PAM = {
             has_war_with = LHS
             or = {
                 LHS = {
-                   surrender_progress > 0.2
+                    surrender_progress > 0.2
                 }
                 date > 1939.1.1
             }
@@ -1292,69 +1368,69 @@ PAO_BACK_PAM = {
 
     PAO_zzm = {
 
-            icon = GFX_PAO_zzm
-            days_remove = 180
+        icon = GFX_PAO_zzm
+        days_remove = 180
 
-            #基础花费
-            cost = 100
-            #自定义花费，其本质上是一个tt字符串，本身不会扣除任何东西，需要在complete_effect内进行扣除
+        #基础花费
+        cost = 100
+        #自定义花费，其本质上是一个tt字符串，本身不会扣除任何东西，需要在complete_effect内进行扣除
 
-            fire_only_once = yes
+        fire_only_once = yes
 
-            #条件
-            allowed = {
-                tag = PAO
-            }
-            available = {
-                has_war_with = LHS
-                or = {
-                    LHS = {
-                        surrender_progress > 0.5
-                    }
-                    date > 1940.1.1
-                }
-            }
-            visible = {
-                has_completed_focus = PAO_wmsq
+        #条件
+        allowed = {
+            tag = PAO
+        }
+        available = {
+            has_war_with = LHS
+            or = {
                 LHS = {
-                    exists = yes
+                    surrender_progress > 0.5
                 }
-            }
-
-            cancel_trigger = {
-                LHS = {
-                    exists = no
-                }
-            }
-
-            #修正
-            modifier = {
-                army_morale_factor = 0.2
-                coordination_bonus = 0.1
-                supply_node_range = 0.2
-                army_attack_speed_factor = 0.1
-                ai_focus_aggressive_factor = 1
-            }
-            targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
-                tag = LHS
-                attack_bonus_against = 0.2
-            }
-
-            #效果
-            complete_effect = {
-
-            }
-            remove_effect = {
-            }
-
-            cancel_effect = {
-
-            }
-
-            ai_will_do = {
-                factor = 100
+                date > 1940.1.1
             }
         }
+        visible = {
+            has_completed_focus = PAO_wmsq
+            LHS = {
+                exists = yes
+            }
+        }
+
+        cancel_trigger = {
+            LHS = {
+                exists = no
+            }
+        }
+
+        #修正
+        modifier = {
+            army_morale_factor = 0.2
+            coordination_bonus = 0.1
+            supply_node_range = 0.2
+            army_attack_speed_factor = 0.1
+            ai_focus_aggressive_factor = 1
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+            tag = LHS
+            attack_bonus_against = 0.2
+        }
+
+        #效果
+        complete_effect = {
+
+        }
+        remove_effect = {
+        }
+
+        cancel_effect = {
+
+        }
+
+        ai_will_do = {
+            factor = 100
+        }
+    }
     PAO_nalaibani = {
         icon = GFX_PAO_back_PAM3
         visible = {
