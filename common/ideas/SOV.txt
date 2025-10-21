@@ -9,11 +9,11 @@ ideas = {
 			}
 			equipment_bonus = {
 				KEI_AUTO_META_equipments  = {
-					build_cost_ic = -0.15
+					build_cost_ic = -0.1
 					instant = yes
 				}
 				support_equipment = {
-					build_cost_ic = -0.15
+					build_cost_ic = -0.1
 					instant = yes
 				}
 			}
@@ -90,41 +90,41 @@ ideas = {
 				army_core_defence_factor = 0.1
 				resistance_growth_on_our_occupied_states = 0.25
 			}
-			on_remove = {
-				if = {
-					limit = {
-						is_ai = yes
-					}
-					add_equipment_to_stockpile = {
-						type = infantry_equipment
-						amount = 200000
-						producer = SOV
-					}
-					add_equipment_to_stockpile = {
-						type = artillery_equipment
-						amount = 20000
-						producer = SOV
-					}
-					add_equipment_to_stockpile = {
-						type = support_equipment
-						amount = 3000
-						producer = SOV
-					}
-					add_equipment_to_stockpile = {
-						type = motorized_equipment
-						amount = 2500
-						producer = SOV
-					}
-					add_timed_idea = {
-						idea = SOV_superintendant_of_war_buff
-						days = 180
-					}
-					add_timed_idea = {
-						idea = SOV_extraordinary_measures_buff
-						days = 180
-					}
-				}
-			}
+			#on_remove = {
+			#	if = {
+			#		limit = {
+			#			is_ai = yes
+			#		}
+			#		add_equipment_to_stockpile = {
+			#			type = infantry_equipment
+			#			amount = 200000
+			#			producer = SOV
+			#		}
+			#		add_equipment_to_stockpile = {
+			#			type = artillery_equipment
+			#			amount = 20000
+			#			producer = SOV
+			#		}
+			#		add_equipment_to_stockpile = {
+			#			type = support_equipment
+			#			amount = 3000
+			#			producer = SOV
+			#		}
+			#		add_equipment_to_stockpile = {
+			#			type = motorized_equipment
+			#			amount = 2500
+			#			producer = SOV
+			#		}
+			#		add_timed_idea = {
+			#			idea = SOV_superintendant_of_war_buff
+			#			days = 180
+			#		}
+			#		add_timed_idea = {
+			#			idea = SOV_extraordinary_measures_buff
+			#			days = 180
+			#		}
+			#	}
+			#}
 		}
 
 		SOV_special_operation_UKR_failure = {
@@ -188,6 +188,8 @@ ideas = {
 				any_country = {
 					has_dynamic_modifier = { modifier = SOV_comecon_leader }
 				}
+				is_in_the_same_economy_faction_with_overlord = yes   ##与宗主国处于相同经济阵营
+				check_variable = { ROOT.economy_faction_var = 2 }
 			}
 			modifier = {
 				production_speed_buildings_factor = 0.05
@@ -196,7 +198,7 @@ ideas = {
 				communism_acceptance = 25
 				party_popularity_stability_factor = 0.1
 				trade_opinion_factor = 0.1
-				custom_modifier_tooltip = increase_monthly_income_by_10_per
+				hcp_income_factor_monthly = 0.1
 			}
 			cancel = {
 				any_enemy_country = {
@@ -204,15 +206,12 @@ ideas = {
 				}
 			}
 			on_add = {
-				add_to_variable = { exincome_modifier = 0.1 }
-				add_to_variable = { SOV.SOV_comecon_leader_production_speed_buildings_factor = 0.02 }
-				add_to_variable = { SOV.SOV_comecon_leader_research_speed_factor = 0.01 }
+				set_variable = { economy_faction_var = 2 }
+				comecon_effect = yes
 			}
 			on_remove = {
-				add_to_variable = { exincome_modifier = -0.1 }
-				add_to_variable = { SOV.SOV_comecon_leader_production_speed_buildings_factor = -0.02 }
-				add_to_variable = { SOV.SOV_comecon_leader_research_speed_factor = -0.01 }
-				SOV_members_remove_comecon = yes
+				set_variable = { economy_faction_var = 0 }
+				comecon_effect = yes
 			}
 		}
 
@@ -821,7 +820,7 @@ ideas = {
 					instant = yes
 				}
 				mechanized_equipment = {
-					build_cost_ic = -0.20
+					build_cost_ic = -0.10
 					instant = yes
 				}
 			}
@@ -889,8 +888,8 @@ ideas = {
 	    	picture = generic_air_payment
     		modifier = {
 				air_weather_penalty = -0.25
-				air_range_factor = 0.20
-				air_strategic_bomber_night_penalty = -0.15
+				air_range_factor = 0.25
+				air_strategic_bomber_night_penalty = -0.25
     		}
     	}
 
@@ -915,6 +914,8 @@ ideas = {
     		equipment_bonus = {
 				small_plane_airframe = {
 					thrust = 0.10
+					air_attack = 0.15
+					air_defence = 0.15
 					instant = yes
 				}
 				small_plane_cas_airframe = {
@@ -927,6 +928,30 @@ ideas = {
 				}
 			}
     	}
+
+		SOV_soviet_airforce4 = {
+			name = SOV_soviet_airforce
+	    	picture = generic_air_research
+    		modifier = {
+				air_ace_generation_chance_factor = 0.25
+				air_accidents_factor = -0.20
+				air_training_xp_gain_factor = 0.2
+				air_mission_efficiency = 0.25
+				air_cas_present_factor = 0.20
+				air_agility_factor = 0.10
+				army_bonus_air_superiority_factor = 0.15
+    		}
+    	}
+
+		SOV_vivio_aviation_group_idea = {
+			name = SOV_vivio_aviation_group
+			picture = generic_air_bonus
+    		modifier = {
+				air_cas_present_factor = 0.05
+				air_superiority_efficiency = 0.15
+				army_bonus_air_superiority_factor = 0.05
+    		}
+		}
 
 #海军
         
@@ -1220,7 +1245,7 @@ ideas = {
 			traits = { industrial_concern }
 			modifier = {
 				production_speed_buildings_factor = 0.10
-				production_factory_start_efficiency_factor = 0.15
+				line_change_production_efficiency_factor = 0.10
 			}
 			research_bonus = {
 				industry = 0.15
@@ -1763,7 +1788,7 @@ ideas = {
 			picture = generic_economic_increase
 			modifier = {
 				political_power_factor = 0.10
-				production_factory_start_efficiency_factor = 0.20
+				line_change_production_efficiency_factor = 0.10
 				min_export = 0.30
 				cic_construction_boost_factor = 0.10
 				custom_modifier_tooltip = increase_monthly_income_by_10_per

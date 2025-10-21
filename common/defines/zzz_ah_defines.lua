@@ -1,4 +1,8 @@
 
+-- 生涯档案
+NDefines.NCareerProfile.MOD_STATISTICS_GROUP = "AdorableHeart_career_profile"
+NDefines.NCareerProfile.MOD_STATISTICS_GROUP_NAME = "ADORABLEHEART_CAREER_PROFILE"
+
 -- 游戏性预设
 NDefines.NGame.END_DATE = "1999.1.1.1"										-- Vanilla is 1949.1.1.1
 NDefines.NCountry.EVENT_PROCESS_OFFSET = 5									-- Vanilla is 20 再苦一苦CPU...

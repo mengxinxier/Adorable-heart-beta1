@@ -808,7 +808,7 @@ MGU_homura_industrious_0 = {#晓美焰恢复疲劳
                 amount = 120
                 state = 498
             }
-            country_event = magicunion.1188
+            country_event = magicunion.1193
             clr_country_flag = MGU_homura_working_flag
 		}
 	}
@@ -1729,7 +1729,7 @@ MGU_parliament_dispute_category = {#魔联议会假决议
 ###########魔联议会假决议↑↑#########
 ###########魔联民主线决议↓↓################
 MGU_Heart_Democracy_category = {
-	MGU_Heart_Democracy_AI_2 = {AI部署
+	MGU_Heart_Democracy_AI_2 = {#AI部署
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             is_ai = yes
@@ -1743,7 +1743,7 @@ MGU_Heart_Democracy_category = {
             has_army_manpower = { size < 999999 }
 		}
 		#仅一次
-		fire_only_once = no
+		fire_only_once = yes
 		#费用
 		cost = 0
 		#花费天数
@@ -1787,6 +1787,21 @@ MGU_Heart_Democracy_category = {
 		modifier = {
 		}
 		complete_effect = {
+		if = {
+			limit = {
+				NOT = {
+					OR = {
+						has_idea = service_by_requirement
+						has_idea = all_adults_serve
+						has_idea = scraping_the_barrel
+					}
+				}
+			}
+            country_event = magicunion.1246
+		}
+		else = {
+			add_war_support = 0.15
+		}
 		add_manpower = -180000
 		set_global_flag = form_MGU_Heart_Democracy_Deploy_flag
         		division_template = {
@@ -1906,7 +1921,41 @@ MGU_Heart_Democracy_category = {
 		}
 
 	}
-
+	MGU_Heart_Democracy_p = {#自由卫士
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+        }
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+            has_war = yes
+            has_manpower > 120000
+		}
+		#仅一次
+		fire_only_once = no
+		#费用
+		cost = 50
+		#花费天数
+		days_remove = 30
+		modifier = {
+		    mobilization_speed = 0.15
+		}
+		complete_effect = {
+            add_manpower = -120000
+		}
+		remove_effect = {#结束后效果
+                    capital_scope = {
+                    			create_unit = {
+                    				division = "name = \"自由卫队\" division_template = \"自由卫队\" start_experience_factor = 0.2 start_equipment_factor = 0.2 "
+                    				owner = MGU
+                    				count = 12
+                    				allow_spawning_on_enemy_provs = yes
+                    			}
+                    		}
+		}
+	}
 	MGU_Heart_Democracy_1 = {买稳定 民主事业
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
@@ -1948,6 +1997,7 @@ MGU_Heart_Democracy_category = {
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+            has_war = yes
         }
 		ai_will_do = {
 			factor = 0
@@ -1983,6 +2033,7 @@ MGU_Heart_Democracy_category = {
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+            has_war = yes
         }
 		ai_will_do = {
 			factor = 0
@@ -2017,6 +2068,7 @@ MGU_Heart_Democracy_category = {
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+            has_war = yes
         }
 		ai_will_do = {
 			factor = 0
@@ -2051,6 +2103,7 @@ MGU_Heart_Democracy_category = {
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+            has_war = yes
         }
 		ai_will_do = {
 			factor = 0
@@ -2077,6 +2130,62 @@ MGU_Heart_Democracy_category = {
 				COST_200_UBS_LOAD = yes
 				add_political_power = -50
 			}
+		}
+		remove_effect = {#结束后效果
+
+		}
+	}
+
+	MGU_Heart_Democracy_6 = {民主征募
+		icon = GFX_decision_duihuan_gongchang_1
+        visible = {
+            has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
+            has_war = yes
+            NOT = { has_idea = scraping_the_barrel }
+        }
+		ai_will_do = {
+			factor = 100
+		}
+
+		available = {
+            surrender_progress > 0.3
+            has_manpower < 200000
+            OR = {
+                has_idea = service_by_requirement
+                has_idea = all_adults_serve
+            }
+		}
+		#仅一次
+		fire_only_once = yes
+		#费用
+		cost = 0
+		#花费天数
+		days_remove = 100
+		modifier = {
+            mobilization_speed = 0.10
+		}
+		complete_effect = {
+            if = {
+                limit = {
+                    has_idea = all_adults_serve
+                }
+                add_ideas = scraping_the_barrel
+                add_political_power = -100
+            }
+            if = {
+                limit = {
+                    has_idea = service_by_requirement
+                }
+                add_ideas = all_adults_serve
+                add_political_power = -100
+            }
+            if = {
+                limit = {
+                    has_idea = extensive_conscription
+                }
+                add_ideas = service_by_requirement
+                add_political_power = -100
+            }
 		}
 		remove_effect = {#结束后效果
 
@@ -5052,6 +5161,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         MGU_Oba_Juri = { set_nationality = MGU }
                         MGU_Chizu_Ranka = { set_nationality = MGU }
                         MGU_Kasane_Ao = { set_nationality = MGU }
+                        add_offsite_building = { type = arms_factory level = 2 }
                     }
             		ai_will_do = {
             			factor = 1
@@ -5401,10 +5511,11 @@ form_MGU_mofagongyeyuanqu_category = {
             	}
 		        fire_only_once = yes
             		available = {
-            		date > 1941.6.1
+            		date > 1942.1.1
             		NOT = { has_war_with = SOV }
             		NOT = { has_war_with = PRC }
             		NOT = { has_war_with = NGD }
+            		NOT = { has_war_with = USA }
             		OR = {
                         LHS = { has_capitulated = yes }
                         LHS = { NOT = { is_in_faction_with = PAN } }
@@ -5418,7 +5529,7 @@ form_MGU_mofagongyeyuanqu_category = {
             		    NOT = { 1036 = { controller = { has_war_with = MGU } } }#艾琉希欧
             		    NOT = { 845 = { controller = { has_war_with = MGU } } }#维洛尼亚
             		    NOT = { 278 = { controller = { has_war_with = MGU } } }#军团奇恩城
-            		    NOT = { 898 = { controller = { has_war_with = MGU } } }#塞莉母巢
+            		    NOT = { 1194 = { controller = { has_war_with = MGU } } }#丛林妖精
             		    NOT = { 301 = { controller = { has_war_with = MGU } } }#安息圣树
             		}
             		visible = {
@@ -5432,7 +5543,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         PAN = { country_event = magicunion.1110 days = 2 }
             		}
             		ai_will_do = {
-            			factor = 0
+            			factor = 10
             		}
             	}
 
@@ -5488,14 +5599,14 @@ form_MGU_mofagongyeyuanqu_category = {
 			army_experience = -50
 		}
 	}
-    	form_MGU_War_DiKang_50 = { #抵抗 对命运的抗争
+    	form_MGU_War_DiKang_40 = { #抵抗 对命运的抗争
             		icon = generic_decision
             allowed = {#获得条件
                 tag = MGU
             	}
 		        fire_only_once = yes
             		available = {
-                            surrender_progress > 0.5
+                            surrender_progress > 0.4
             		}
             		visible = {
                         has_war = yes
@@ -5512,7 +5623,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         army_core_defence_factor = 0.2
 	   	            }
             		complete_effect = {
-
+                    add_command_power = 40
             		}
             		remove_effect = {#结束后效果
             		}
@@ -5524,14 +5635,14 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             	}
-    	form_MGU_War_DiKang_70 = { #抵抗 对命运的抗争 风与雪
+    	form_MGU_War_DiKang_60 = { #抵抗 对命运的抗争 风与雪
             		icon = generic_decision
             allowed = {#获得条件
                 tag = MGU
             	}
 		        fire_only_once = yes
             		available = {
-                            surrender_progress > 0.7
+                            surrender_progress > 0.6
             		}
             		visible = {
                         has_war = yes
@@ -5546,9 +5657,10 @@ form_MGU_mofagongyeyuanqu_category = {
 
 	   	            }
             		complete_effect = {
+            		add_command_power = 40
         division_template = {
             	name = "魔联半魔女化部队"
-            	#is_locked = yes
+            	is_locked = yes
             	regiments = {
             		magic_assault = { x = 0 y = 0 }
             		magic_assault = { x = 0 y = 1 }
@@ -5586,7 +5698,9 @@ form_MGU_mofagongyeyuanqu_category = {
                 create_unit = { division = "name = \"奇术二组\" division_template = \"魔联半魔女化部队\" start_experience_factor = 1 start_equipment_factor = 1 "
             	owner = ROOT }
             	}
+            add_equipment_to_stockpile = { type = magic_assault_equipment amount = 3000 }
             		}
+
             		remove_effect = {#结束后效果
             		}
             		ai_will_do = {
@@ -5597,6 +5711,74 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             	}
+    	form_MGU_War_DiKang_1942 = { #抵抗 反击时刻
+            		icon = generic_decision
+            allowed = {#获得条件
+                tag = MGU
+            	}
+		        fire_only_once = yes
+            		available = {
+                        date > 1942.1.1
+                        has_war_with = LHS
+            		}
+            		visible = {
+                        has_war = yes
+                        has_war_with = LHS
+                        or = {
+                            has_country_flag = MGU_COUP_All_Hail_HOMURA_flag
+                            is_ai = yes
+                        }
+            		}
+            		cost = 0
+            		days_remove = 0
+		            modifier = {#进行中效果
+
+	   	            }
+            		complete_effect = {
+                    add_timed_idea = { idea = MGU_War_DiKang_1942_LHS days = 180 }
+            		}
+            		remove_effect = {#结束后效果
+            		}
+            		ai_will_do = {
+            			factor = 100
+            		}
+            	}
+    	form_MGU_War_DiKang_1249 = { #反公社阵线
+            		icon = generic_decision
+            allowed = {#获得条件
+                tag = MGU
+            	}
+		        fire_only_once = yes
+            		available = {
+                        has_war_with = LHS
+                        PAO = { has_war_with = LHS }
+                        NOT = { has_war_with = PAO }
+            		}
+            		visible = {
+                        has_war_with = LHS
+                        PAO = { has_war_with = LHS }
+                        NOT = { has_war_with = PAO }
+                        country_exists = PAO
+                        or = {
+                            has_country_flag = MGU_COUP_All_Hail_HOMURA_flag
+                            is_ai = yes
+                        }
+            		}
+            		cost = 0
+            		days_remove = 0
+		            modifier = {#进行中效果
+
+	   	            }
+            		complete_effect = {
+                       PAO = { country_event = magicunion.1249 }
+            		}
+            		remove_effect = {#结束后效果
+            		}
+            		ai_will_do = {
+            			factor = 100
+            		}
+            	}
+
 
     }
 
@@ -6648,6 +6830,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         }
             		}
             		visible = {
+            		    always = no
                         has_completed_focus = TBMGU_rest_05
                         PAO = { exists = yes }
                         PAM = { exists = yes }
@@ -6678,6 +6861,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         PAO = { has_capitulated = yes }
             		}
             		visible = {
+                        always = no
                         is_in_faction_with = PAO
                         has_war_with = PAM
                         PAO = { has_war_with = PAM }

@@ -18,6 +18,22 @@ CHI_remove_all_ideas = {
 			CHI_chongyue_idea
 			PRC_Shu_idea
 			CHI_Qian_daizhi_idea
+			CHI_hanyang_idea
+			CHI_liehaiwang_idea
+			CHI_Senate_idea
+			CHI_liu_shaoqi_idea
+		}
+	}
+}
+
+CHI_remove_all_eco_faction_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			CTS_Imperial_Tributary_idea
+			CTS_Imperial_Province_idea
+			CTS_Imperial_Domain_idea
+			CTS_Imperial_Duhufu_idea
+			CTS_Imperial_Vassal_idea
 		}
 	}
 }
@@ -370,6 +386,11 @@ CHI_puppet_released_tag_and_old_govern = {
 		}
 	}
 	custom_effect_tooltip = puppet_released_tag_and_old_govern_tt
+ ##加入战争
+	every_other_country = {
+		limit = { has_war_with = var:tag_to_release }
+		add_to_war = { targeted_alliance = var:tag_to_release enemy = PREV hostility_reason = asked_to_join }
+	}
  ##傀儡等级
 	set_autonomy = {
 		target = var:tag_to_release
@@ -414,6 +435,7 @@ CHI_puppet_released_tag_and_old_govern = {
  ##设置修饰性tag
 		if = {
 			limit = { PREV = { tag = CHI } }
+			add_ideas = CTS_Imperial_Province_idea
 			if = {
 				limit = { tag = SIC }
 				set_cosmetic_tag = SIC_CHI
@@ -721,58 +743,6 @@ JAP_peace_with_unit_font = {
 				remove_core_of = JAP
 				remove_claim_by = JAP
 			}
-			# #日本条约领
-			# create_dynamic_country = {
-			# 	original_tag = JAP
-			# 	copy_tag = JAP
-			# 	save_global_event_target_as = JAP_peace_conference_tag
-			# 	set_country_flag = { flag = disabled_annexations days = 15 value = 1 }
-			# 	set_politics = { ruling_party = neutrality }
-			# 	set_political_party = { ideology = neutrality popularity = 100 }
-			# 	ROOT = {
-			# 		every_enemy_country = {
-			# 			limit = { is_chinese_country = yes }
-			# 			event_target:JAP_peace_conference_tag = {
-			# 				add_to_war = {
-			# 					targeted_alliance = ROOT
-			# 					enemy = PREV
-			# 				}
-			# 			}
-			# 		}
-			# 		every_owned_state = {
-			# 			limit = {
-			# 				or = {
-			# 					has_state_flag = is_whole_chinese_state_area
-			# 					region = 191
-			# 				}
-			# 			}
-			# 			add_core_of = event_target:JAP_peace_conference_tag
-			# 			if = {
-			# 				limit = {
-			# 					OR = {
-			# 						is_fully_controlled_by = ROOT
-			# 						state = 745
-			# 					}
-			# 				}
-			# 				event_target:JAP_peace_conference_tag = { transfer_state = PREV }
-			# 			}
-			# 			else = {
-			# 				event_target:JAP_peace_conference_tag = { set_state_owner = PREV }
-			# 			}
-			# 		}
-			# 	}
-			# 	add_timed_idea = {
-			# 		idea = ready_to_surrender
-			# 		days = 15
-			# 	}
-			# 	set_cosmetic_tag = JAP_treaty
-			# 	every_enemy_country = {
-			# 		limit = { is_chinese_country = no }
-			# 		white_peace = { 
-			# 			tag = PREV
-			# 		}
-			# 	}
-			# }
 			#地块转移
 			every_state = {
 				limit = {
@@ -812,6 +782,20 @@ JAP_peace_with_unit_font = {
 					transfer_state = PREV
 				}
 			}
+			every_state = {
+				limit = {
+					owner = { tag = ROOT }
+					controller = {
+						or = {
+							tag = FROM
+							is_ally_with = FROM
+						}
+					}
+				}
+				controller = {
+					transfer_state = PREV
+				}
+			}
 			#中国盟友-离开阵营
 			every_country = {
 				limit = {
@@ -838,7 +822,19 @@ JAP_peace_with_unit_font = {
 				leave_faction = yes
 			}
 			#白和
-			ROOT = { white_peace = { tag = FROM } }
+			ROOT = {
+				white_peace = {
+					tag = FROM
+					message = ANTI_JAP_WAR_WIN
+				}
+				every_enemy_country = {
+					limit = { is_in_faction_with = FROM }
+					white_peace = {
+						tag = ROOT
+						message = ANTI_JAP_WAR_WIN
+					}
+				}
+			}
 		}
 	}
 }
@@ -3009,6 +3005,18 @@ CHI_army_reform_effect = {
 
 ##中国派系影响力
 CHI_faction_influence_calculate = {
+	clamp_variable = { var = CPC_faction_influence_var min = 0 }
+	clamp_variable = { var = PWDP_faction_influence_var min = 0 }
+	clamp_variable = { var = Cadets_faction_influence_var min = 0 }
+	clamp_variable = { var = ZhiGong_faction_influence_var min = 0 }
+	clamp_variable = { var = KMT_faction_influence_var min = 0 }
+	clamp_variable = { var = CLU_faction_influence_var min = 0 }
+	clamp_variable = { var = GongChe_faction_influence_var min = 0 }
+	clamp_variable = { var = Youth_faction_influence_var min = 0 }
+	clamp_variable = { var = North_Army_faction_influence_var min = 0 }
+	clamp_variable = { var = South_Army_faction_influence_var min = 0 }
+	clamp_variable = { var = Honour_Emperor_faction_influence_var min = 0 }
+	clamp_variable = { var = Innovation_Alliance_faction_influence_var min = 0 }
 	set_variable = { CHI_faction_influence_total = 0 }
 	if = {
 		limit = {
@@ -3297,6 +3305,155 @@ CHI_faction_influence_calculate = {
 	subtract_from_variable = { Innovation_Alliance_faction_seat = North_Army_faction_seat }
 	subtract_from_variable = { Innovation_Alliance_faction_seat = South_Army_faction_seat }
 	subtract_from_variable = { Innovation_Alliance_faction_seat = Honour_Emperor_faction_seat }
+	##
+	set_variable = { CPC_faction_seat_modifier = 0 }
+	set_variable = { PWDP_faction_seat_modifier = 0 }
+	set_variable = { Cadets_faction_seat_modifier = 0 }
+	set_variable = { ZhiGong_faction_seat_modifier = 0 }
+	set_variable = { KMT_faction_seat_modifier = 0 }
+	set_variable = { CLU_faction_seat_modifier = 0 }
+	set_variable = { GongChe_faction_seat_modifier = 0 }
+	set_variable = { Youth_faction_seat_modifier = 0 }
+	set_variable = { North_Army_faction_seat_modifier = 0 }
+	set_variable = { South_Army_faction_seat_modifier = 0 }
+	set_variable = { Honour_Emperor_faction_seat_modifier = 0 }
+	set_variable = { In_wild_influence_var = 0 }
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 1 } }
+		set_variable = { CPC_faction_seat_modifier = CPC_faction_influence_var }
+		multiply_variable = { CPC_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 2 } }
+		set_variable = { PWDP_faction_seat_modifier = PWDP_faction_influence_var }
+		multiply_variable = { PWDP_faction_seat_modifier = -0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 3 } }
+		set_variable = { Cadets_faction_seat_modifier = Cadets_faction_influence_var }
+		multiply_variable = { Cadets_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 4 } }
+		set_variable = { ZhiGong_faction_seat_modifier = ZhiGong_faction_influence_var }
+		multiply_variable = { ZhiGong_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 5 } }
+		set_variable = { KMT_faction_seat_modifier = KMT_faction_influence_var }
+		multiply_variable = { KMT_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 6 } }
+		set_variable = { CLU_faction_seat_modifier = CLU_faction_influence_var }
+		multiply_variable = { CLU_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 7 } }
+		set_variable = { GongChe_faction_seat_modifier = GongChe_faction_influence_var }
+		multiply_variable = { GongChe_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 8 } }
+		set_variable = { Youth_faction_seat_modifier = Youth_faction_influence_var }
+		multiply_variable = { Youth_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 9 } }
+		set_variable = { North_Army_faction_seat_modifier = North_Army_faction_influence_var }
+		multiply_variable = { North_Army_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 10 } }
+		set_variable = { South_Army_faction_seat_modifier = South_Army_faction_influence_var }
+		multiply_variable = { South_Army_faction_seat_modifier = 0.1 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 11 } }
+		set_variable = { Honour_Emperor_faction_seat_modifier = Honour_Emperor_faction_influence_var }
+		multiply_variable = { Honour_Emperor_faction_seat_modifier = 0.01 }
+	}
+	if = {
+		limit = { is_in_array = { CHI_main_party_array = 12 } }
+		set_variable = { Cadets_faction_seat_modifier = Innovation_Alliance_faction_influence_var }
+		multiply_variable = { Cadets_faction_seat_modifier = 0.1 }
+	}
 }
 
+###  天朝朝贡体系计算  ###
+China_tribute_system_effect = {
+	###  统计经济阵营成员数量
+	clear_array = global.China_tribute_system_member  ##成员所在的数组
+	clear_array = global.CTS_Imperial_Province_member
+	clear_array = global.CTS_Imperial_Vassal_member
+	clear_array = global.CTS_Imperial_Tributary_member
+	set_variable = { global.num_of_China_tribute_system = 0 }  ##成员数量变量
+	every_country = {
+		limit = { check_variable = { THIS.economy_faction_var = 7 } }
+		add_to_array = { global.China_tribute_system_member = THIS }
+		add_to_variable = { global.num_of_China_tribute_system = 1 }
+		if = {
+			limit = { has_autonomy_state = China_Provinces }
+			add_to_array = { global.CTS_Imperial_Province_member = THIS }
+		}
+		else_if = {
+			limit = { has_autonomy_state = China_Domain }
+			add_to_array = { global.CTS_Imperial_Province_member = THIS }
+		}
+		else_if = {
+			limit = { has_autonomy_state = China_Vassal }
+			add_to_array = { global.CTS_Imperial_Vassal_member = THIS }
+		}
+		else_if = {
+			limit = {
+				is_subject = no
+				not = { tag = CHI }
+			}
+			add_to_array = { global.CTS_Imperial_Tributary_member = THIS }
+		}
+	}
+	###  计算动态阵营buff（如果有）
+	China_tribute_system_leader_modifier_effect = yes
+	###  刷新经济阵营GDP
+	compute_global_gdp = yes
+}
+
+China_tribute_system_leader_modifier_effect = {
+	set_variable = { global.China_tribute_system_leader_research_speed_factor = global.economy_faction_GDP_ratio^7 }
+	set_variable = { global.China_tribute_system_leader_global_building_slots_factor = global.economy_faction_GDP_ratio^7 }
+	set_variable = { global.China_tribute_system_leader_production_speed_buildings_factor = global.economy_faction_GDP_ratio^7 }
+	set_variable = { global.China_tribute_system_leader_power_balance_weekly = global.economy_faction_GDP_ratio^7 }
+	multiply_variable = { global.China_tribute_system_leader_research_speed_factor = 0.25 }
+	multiply_variable = { global.China_tribute_system_leader_global_building_slots_factor = 0.5 }
+	multiply_variable = { global.China_tribute_system_leader_production_speed_buildings_factor = 0.5 }
+	multiply_variable = { global.China_tribute_system_leader_power_balance_weekly = 0.02 }
+}
+
+CHI_dismate_Build_chinese_united_font_effect = {
+	every_country = {
+		limit = {
+			or = {
+				is_in_faction_with = ROOT
+				tag = ROOT
+			}
+		}
+		add_to_temp_array = { global.former_china_unit_font_members = THIS }
+	}
+	for_each_scope_loop = {
+		array = global.former_china_unit_font_members
+		for_each_scope_loop = {
+			array = global.former_china_unit_font_members
+			if = {
+				limit = {
+					NOT = { tag = PREV }
+				}
+				give_military_access = PREV
+			}
+		}
+	}
+	faction_leader = { dismantle_faction = yes }
+	set_global_flag = dismate_Build_chinese_united_font
+
+	hidden_effect = { every_country = { mark_focus_tree_layout_dirty = yes } }
+}
 

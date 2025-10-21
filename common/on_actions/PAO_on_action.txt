@@ -1,0 +1,219 @@
+on_actions = {
+    on_declare_war = {
+        effect = {
+            #落幕战争
+            if = {
+                limit = {
+                    ROOT = {
+                        has_completed_focus = PAO_wmsq
+                        or = {
+                            has_war_together_with = PAO
+                            tag = PAO
+                            is_in_faction_with = PAO
+                            is_subject_of = PAO
+                        }
+                    }
+                    FROM = {
+                        or = {
+                            tag = LHS
+                            is_in_faction_with = LHS
+                        }
+                    }
+                    not = {
+                        has_global_flag = LHS_nmgm
+                    }
+                }
+                hidden_effect = {
+                    set_global_flag = LHS_nmgm
+                    news_event = {
+                        id = PAO_news.5
+                        days = 0
+                    }
+                }
+            }
+        }
+    }
+        on_capitulation_immediate = {
+            effect = {
+                if = {
+                    #战胜躁动的亡者
+                    limit = {
+                        ROOT = {
+                            tag = WL1
+                            is_subject = no
+                            NOT = {
+                                any_enemy_country = {
+                                    NOT = {
+                                        tag = PAO
+                                        has_war_together_with = PAO
+                                    }
+                                }
+                            }
+                        }
+                        FROM = {
+                            not ={
+                                has_global_flag = PAO_shibai
+                            }
+                            or = {
+                                tag = PAO
+                            }
+
+                        }
+                    }
+                    PAO = {
+                        white_peace = {
+                            tag = WL1
+                            message = PAO_win_WL1
+                        }
+                        annex_country = {
+                            target = WL1
+                            transfer_troops = no
+                        }
+                        country_event = {
+                            days = 1
+                            id = PAO.2
+                        }
+                    }
+                }
+                if = {
+                    #反败为胜躁动的亡者
+                    limit = {
+                        ROOT = {
+                            tag = WL1
+                            is_subject = no
+                            NOT = {
+                                any_enemy_country = {
+                                    NOT = {
+                                        tag = PAO
+                                        has_war_together_with = PAO
+                                    }
+                                }
+                            }
+                        }
+                        FROM = {
+                            has_global_flag = PAO_shibai
+                            or = {
+                                tag = PAO
+                            }
+
+                        }
+                    }
+                    PAO = {
+                        annex_country = {
+                            target = WL1
+                            transfer_troops = no
+                        }
+                        country_event = {
+                            days = 1
+                            id = PAO.62
+                        }
+                    }
+                }
+                if = {
+                    #战败躁动的亡者
+                    limit = {
+                        ROOT = {
+                            tag = PAO
+                            is_subject = no
+                            NOT = {
+                                any_enemy_country = {
+                                    NOT = {
+                                        tag = WL1
+                                        has_war_together_with = WL1
+                                    }
+                                }
+                            }
+                        }
+                        FROM = {
+                            not ={
+                                has_global_flag = PAO_shibai
+                            }
+                            or = {
+                                tag = WL1
+                            }
+
+                        }
+                    }
+                    PAO = {
+                        set_global_flag = PAO_shibai
+                        white_peace = {
+                            tag = WL1
+                            message = PAO_lose_WL1
+                        }
+                        WL1 = {
+                            every_state = {
+                                limit = {
+                                    not = {
+                                        or = {
+                                            state = 301
+                                            state = 848
+                                            state = 302
+                                        }
+                                    }
+                                    is_core_of = PAO
+                                }
+                                WL1 = {
+                                    transfer_state = prev
+                                }
+                            }
+                        }
+                        country_event = {
+                            hours = 6
+                            id = PAO.3
+                        }
+                    }
+                }
+
+
+                if = {
+                    #战胜瓦伦蒂娜
+                    limit = {
+                        ROOT = {
+                            tag = PAM
+                            is_subject = no
+                            NOT = {
+                                any_enemy_country = {
+                                    NOT = {
+                                        tag = QYJ
+                                        has_war_together_with = QYJ
+                                    }
+                                }
+                            }
+                        }
+                        FROM = {
+                            or = {
+                                tag = QYJ
+                                has_war_together_with = QYJ
+                            }
+
+                        }
+                    }
+                    set_global_flag = lwnygm2
+                    PAO = {
+                        country_event = {
+                            hours = 2
+                            id = PAO.19
+                        }
+                        white_peace = {
+                            tag = PAM
+                            message = PAO_win_VALENTINA
+                        }
+                        hidden_effect = {
+                            scoped_play_song = "痛苦之村"
+                        }
+                        QYJ =  {
+                            white_peace = {
+                                tag = PAM
+                            }
+                        }
+                    }
+                }
+
+
+
+            }
+        }
+    }
+
+
+

@@ -7,6 +7,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 		}
 		visible = {
 			has_country_flag = Participate_in_the_competition_for_China_reunification
+			not = { has_global_flag = CHI_REUNIT }
 		}
 		available = {
 			has_global_flag = CHI_has_split
@@ -31,7 +32,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 			add_ideas = ROC_crushed_country_1
 			add_power_balance_modifier = {
 				id = CHI_Mandate_of_Heaven_bop    # The ID of the balance of power
-				modifier = unit_China__modifier # The modifier to add
+				modifier = unit_China_modifier # The modifier to add
 			}
 			set_global_flag = CHI_REUNIT
 			add_to_variable = {
@@ -41,6 +42,28 @@ CHI_Crisis_of_CHI_Dynasty = {
 			}
 			Crisis_of_CHI_Dynasty_Var_effect = yes
 			Crisis_of_CHI_Dynasty_Variable_effect = yes
+			if = {
+				limit = { has_cosmetic_tag = CHI_Beijing_Government }
+				drop_cosmetic_tag = yes
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_cosmetic_tag = CHI_federation }
+					news_event = { id = China_news.010 }
+				}
+				else_if = {
+					limit = { has_country_flag = CHI_democracy_HanGeKi_flag }
+					news_event = { id = China_news.003 }
+				}
+				else_if = {
+					limit = { has_country_flag = CHI_regent_Yuan_flag }
+					news_event = { id = China_news.002 }
+				}
+				else_if = {
+					limit = { has_country_flag = CHI_Imperial_comeback_flag }
+					news_event = { id = China_news.004 }
+				}
+			}
 		}
 	}
 	##重新统治辽满地区
@@ -350,7 +373,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = CHI_war_plan_going_on
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 17 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
@@ -372,11 +395,20 @@ CHI_Crisis_of_CHI_Dynasty = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
 			modifier = {
 				FROM = { is_subject_of = JAP }
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = PRC }
+				date < 1941.6.1
 				factor = 0
 			}
 		}
@@ -417,8 +449,9 @@ CHI_Crisis_of_CHI_Dynasty = {
 		cost = 10
 		days_remove = 30
 		war_with_target_on_remove = yes
+		fire_only_once = yes
 		complete_effect = {
-			set_country_flag = CHI_war_plan_going_on
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 32 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 			FROM = { country_event = { id = china_generic.008 } }
 		}
@@ -463,6 +496,10 @@ CHI_Crisis_of_CHI_Dynasty = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
@@ -561,6 +598,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 				every_character = { set_nationality = ROOT }
 				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 			}
+			hidden_effect = { China_tribute_system_effect = yes }
 		}
 		ai_will_do = {
 			base = 1000
@@ -574,6 +612,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 		visible = {
 			PRC = { exists = no }
 			owns_state = 650
+			not = { has_character = PRC_lidesheng }
 		}
 		available = {
 			is_subject = no
@@ -605,7 +644,7 @@ CHI_foreign_ministry = {
 				not = {
 					or = {
 						has_war_with = ROOT
-						is_in_faction_with = ROOT
+						#is_in_faction_with = ROOT
 						is_subject_of = ROOT
 					}
 				}
@@ -645,7 +684,7 @@ CHI_foreign_ministry = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = CHI_war_plan_going_on
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 17 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		remove_effect = {
@@ -687,11 +726,50 @@ CHI_foreign_ministry = {
 		}
 		available = {
 			is_faction_leader = yes
-			has_government = communism
 			FROM = {
-				has_government = communism
 				is_in_faction = no
 			}
+			not = {
+				or = {
+					has_war_with = FROM
+					is_in_faction_with = FROM
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = {
+				set_country_flag = CHI_diplo_invite_FROM
+				country_event = {
+					id = generic.2008
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	CHI_diplo_invite_FROM_tribute = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			tag = CHI
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				has_idea = CTS_Imperial_Tributary_idea
+				not = { has_country_flag = CHI_diplo_invite_FROM }
+				any_enemy_country = { has_war_with = ROOT }
+			}
+		}
+		available = {
+			is_faction_leader = yes
+			FROM = { is_in_faction = no }
 			not = {
 				or = {
 					has_war_with = FROM
@@ -868,6 +946,1423 @@ CHI_foreign_ministry = {
 			base = 50
 		}
 	}
+	##恢复朝鲜四郡
+	CHI_recover_Lelang = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			has_completed_focus = CHI_focus_Free_korea
+		}
+		fire_only_once = yes
+		cost = 0
+		available = {
+			is_subject = no
+			527 = { is_controlled_by_ROOT_or_subject = yes }
+			1149 = { is_controlled_by_ROOT_or_subject = yes }
+			1146 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		complete_effect = {
+			527 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			1149 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			1146 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+		}
+		ai_will_do = {
+			base = 50
+		}
+	}
+	##恢复交趾三郡
+	CHI_recover_Jiaozhi = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			has_completed_focus = CHI_focus_Protection_south
+		}
+		fire_only_once = yes
+		cost = 0
+		available = {
+			is_subject = no
+			857 = { is_controlled_by_ROOT_or_subject = yes }
+			671 = { is_controlled_by_ROOT_or_subject = yes }
+			827 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		complete_effect = {
+			857 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			671 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			827 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+		}
+		ai_will_do = {
+			base = 50
+		}
+	}
+	##解散£China_tribute_system_text_icon §Y天朝朝贡体系§!
+	CHI_dismate_China_tribute_system = {
+		allowed = {
+		}
+		visible = {
+			is_faction_leader = no
+			check_variable = { economy_faction_var = 7 }
+			faction_leader = { check_variable = { THIS.economy_faction_var > 0 } }
+		}
+		available = {
+		}
+		fire_only_once = yes
+		cost = 0
+		days_remove = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_variable = { economy_faction_var = 0 }
+			remove_dynamic_modifier = { modifier = China_tribute_system_leader }
+		}
+	}
+	##都护府
+		##建立北冥都护府
+		CHI_build_DH1 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH1 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 14
+						region = 151
+						state = 516
+						region = 149
+						region = 235
+						state = 644
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 570
+					}
+				}
+			}
+			complete_effect = {
+				570 = {
+					transfer_state_to = DH1
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH1
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 14
+								region = 151
+								state = 516
+								region = 149
+								region = 235
+								state = 644
+							}
+							NOT = { state = 570 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH1
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 14
+								region = 151
+								state = 516
+								region = 149
+								region = 235
+								state = 644
+							}
+							NOT = { state = 570 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH1
+						set_state_controller_to = DH1
+						add_compliance = 25
+					}
+				}
+				DH1 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH1 = {
+						every_state = {
+							limit = {
+								or = {
+									region = 14
+									region = 151
+									state = 516
+									region = 149
+									region = 235
+									state = 644
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立安西都护府
+		CHI_build_DH6 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH6 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					has_state_flag = is_whole_Tresen_state_area
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 407
+					}
+				}
+			}
+			complete_effect = {
+				407 = {
+					transfer_state_to = DH6
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH6
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							has_state_flag = is_whole_Tresen_state_area
+							NOT = { state = 407 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH6
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							has_state_flag = is_whole_Tresen_state_area
+							NOT = { state = 407 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH6
+						set_state_controller_to = DH6
+						add_compliance = 25
+					}
+				}
+				DH6 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH6 = {
+						every_state = {
+							limit = {
+								has_state_flag = is_whole_Tresen_state_area
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立新罗都护府
+		CHI_build_DH2 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH2 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					region = 191
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 525
+					}
+				}
+			}
+			complete_effect = {
+				525 = {
+					transfer_state_to = DH2
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH2
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 191
+							NOT = { state = 525 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH2
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 191
+							NOT = { state = 525 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH2
+						set_state_controller_to = DH2
+						add_compliance = 25
+					}
+				}
+				DH2 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH2 = {
+						every_state = {
+							limit = {
+								region = 191
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立东瀛都护府
+		CHI_build_DH3 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH3 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 154
+						state = 555
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 282
+					}
+				}
+			}
+			complete_effect = {
+				282 = {
+					transfer_state_to = DH3
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH3
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 154
+								state = 555
+							}
+							NOT = { state = 282 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH3
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 154
+								state = 555
+							}
+							NOT = { state = 282 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH3
+						set_state_controller_to = DH3
+						add_compliance = 25
+					}
+				}
+				DH3 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH3 = {
+						every_state = {
+							limit = {
+								or = {
+									region = 154
+									state = 555
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立交趾都护府
+		CHI_build_DH4 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH4 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 196
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 286
+					}
+				}
+			}
+			complete_effect = {
+				286 = {
+					transfer_state_to = DH4
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH4
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 196
+							}
+							NOT = { state = 286 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH4
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 196
+							}
+							NOT = { state = 286 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH4
+						set_state_controller_to = DH4
+						add_compliance = 25
+					}
+				}
+				DH4 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH4 = {
+						every_state = {
+							limit = {
+								region = 196
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立应龙都护府
+		CHI_build_DH5 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH5 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 142
+						region = 194
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 336
+					}
+				}
+			}
+			complete_effect = {
+				336 = {
+					transfer_state_to = DH5
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH5
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 142
+								region = 194
+							}
+							NOT = { state = 336 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH5
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 142
+								region = 194
+							}
+							NOT = { state = 336 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH5
+						set_state_controller_to = DH5
+						add_compliance = 25
+					}
+				}
+				DH5 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH5 = {
+						every_state = {
+							limit = {
+								or = {
+									region = 142
+									region = 194
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立兰芳经济实验开放区
+		CHI_build_DH7 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH7 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 159
+						region = 192
+						region = 158
+						region = 93
+						state = 972
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 333
+					}
+				}
+			}
+			complete_effect = {
+				333 = {
+					transfer_state_to = DH7
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH7
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 159
+								region = 192
+								region = 158
+								region = 93
+								state = 972
+							}
+							NOT = { state = 333 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH7
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 159
+								region = 192
+								region = 158
+								region = 93
+								state = 972
+							}
+							NOT = { state = 333 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH7
+						set_state_controller_to = DH7
+						add_compliance = 25
+					}
+				}
+				DH7 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH7 = {
+						every_state = {
+							limit = {
+								or = {
+									region = 159
+									region = 192
+									region = 158
+									region = 93
+									state = 972
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立西天竺都护府
+		CHI_build_DH9 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH9 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					region = 153
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 439
+					}
+				}
+			}
+			complete_effect = {
+				439 = {
+					transfer_state_to = DH9
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH9
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 153
+							NOT = { state = 439 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH9
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 153
+							NOT = { state = 439 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH9
+						set_state_controller_to = DH9
+						add_compliance = 25
+					}
+				}
+				DH9 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH9 = {
+						every_state = {
+							limit = {
+								region = 153
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立东天竺都护府
+		CHI_build_DHA = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DHA = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 141
+						region = 195
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 431
+					}
+				}
+			}
+			complete_effect = {
+				431 = {
+					transfer_state_to = DHA
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DHA
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 141
+								region = 195
+							}
+							NOT = { state = 431 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DHA
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 141
+								region = 195
+							}
+							NOT = { state = 431 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DHA
+						set_state_controller_to = DHA
+						add_compliance = 25
+					}
+				}
+				DHA = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DHA = {
+						every_state = {
+							limit = {
+								or = {
+									region = 141
+									region = 195
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立南天竺都护府
+		CHI_build_DHB = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DHB = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					region = 31
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 425
+					}
+				}
+			}
+			complete_effect = {
+				425 = {
+					transfer_state_to = DHB
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DHB
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 31
+							NOT = { state = 425 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DHB
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 31
+							NOT = { state = 425 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DHB
+						set_state_controller_to = DHB
+						add_compliance = 25
+					}
+				}
+				DHB = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DHB = {
+						every_state = {
+							limit = {
+								region = 31
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+	##扩都护府
+	CHI_Expansion_of_Duhufu = {
+		icon = GFX_decision_generic_brainwash
+		allowed = { tag = CHI }
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				is_duhufu = yes
+			}
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					not = { tag = FROM }
+					any_controlled_state = {
+						is_claimed_by = FROM
+						is_claim_or_core_of_ROOT = no
+						is_fully_controlled_by = PREV
+					}
+				}
+		}
+		target_array = allies
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_any_FROM_claim
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					not = { tag = FROM }
+					any_controlled_state = {
+						is_claimed_by = FROM
+						is_claim_or_core_of_ROOT = no
+						is_fully_controlled_by = PREV
+					}
+				}
+			}
+		}
+		cost = 0
+		days_remove = 0
+		complete_effect = {
+			every_state = {	
+				limit = {
+					is_claim_or_core_of_ROOT = no
+					is_claimed_by = FROM
+					OR = {
+						is_controlled_by = ROOT
+						controller = { is_subject_of = ROOT }
+					}
+					controller = { has_full_control_of_state = PREV }
+					not = { is_controlled_by = FROM }
+				}
+				if = {
+					limit = {
+						OR = {
+							is_owned_by = ROOT
+							owner = { is_subject_of = ROOT }
+						}
+					}
+					transfer_state_to = FROM
+					add_compliance = 25
+				}
+				else = {
+					add_contested_owner = FROM
+					set_state_controller_to = FROM
+					add_compliance = 25
+				}
+			}
+			China_tribute_system_effect = yes
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
+#西安谈判
+CHI_Xian_negotiations = {
+	CHI_delegates_on_their_way = {  ##与会代表正在赶来
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 7
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				has_country_flag = SWE_has_form_cabinet
+			}
+		}
+		timeout_effect = {
+			if = {
+				limit = {
+					check_variable = { global.CHI_Xian_negotiations_members_var < 3 }
+				}
+				country_event = {
+					id = China.068
+				}
+			}
+			else = {
+				country_event = {
+					id = China.062
+				}
+			}
+		}
+	}
 }
 
 #天命决议
@@ -909,14 +2404,14 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 			not = { has_country_flag = CHI_army_reform_decision_ing }
 		}
 		custom_cost_trigger = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > -0.6
+				value > -0.4
 			}
 		}
 		custom_cost_text = CHI_cost_40_Tianming
@@ -953,7 +2448,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.2
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -993,7 +2488,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.2
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1032,7 +2527,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1074,7 +2569,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1115,11 +2610,11 @@ CHI_Mandate_of_Heaven = {
 	}
 	CHI_feudal_foreign_domain = {  ##晋封外藩
 		icon = GFX_decision_generic_monarchy
-		visible = { has_completed_focus = CHI_focus_ZongFan_system_modernisation }
+		visible = { has_completed_focus = CHI_focus_Tributary_system_modernisation }
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1133,9 +2628,12 @@ CHI_Mandate_of_Heaven = {
 		ai_will_do = {
 			factor = 500
 		}
+		fire_only_once = yes
 		days_remove = 100
 		remove_effect = {
 			set_country_flag = CHI_feudal_foreign_domain_flag
+			custom_effect_tooltip = CHI_feudal_foreign_domain_tt1
+			custom_effect_tooltip = CHI_feudal_foreign_domain_tt2
 		}
 		complete_effect = {
 			hidden_effect = {
@@ -1152,7 +2650,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1166,9 +2664,11 @@ CHI_Mandate_of_Heaven = {
 		ai_will_do = {
 			factor = 500
 		}
+		fire_only_once = yes
 		days_remove = 100
 		remove_effect = {
 			set_country_flag = CHI_Internalization_of_outer_domain_flag
+			custom_effect_tooltip = CHI_Internalization_of_outer_domain_tt
 		}
 		complete_effect = {
 			hidden_effect = {
@@ -1181,7 +2681,7 @@ CHI_Mandate_of_Heaven = {
 	}
 
 	CHI_free_market_capitalism = {#自由资本主义
-		icon = GFX_decision_category_generic_economy
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
 		visible = {
 			has_completed_focus = CHI_focus_private_capital_lead
 		}
@@ -1189,7 +2689,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1212,16 +2712,20 @@ CHI_Mandate_of_Heaven = {
 				}
 			}
 		}
+		ai_will_do = {
+			base = 1000
+		}
 	}
 
 	CHI_country_led_planned_economy = {#国家主导计划经济
+		icon = GFX_decision_eng_trade_unions_demand
 		visible = {
 			has_completed_focus = CHI_focus_Nation_lead_industrialisation
 		}
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1245,16 +2749,20 @@ CHI_Mandate_of_Heaven = {
 				}
 			}
 		}
+		ai_will_do = {
+			base = 1000
+		}
 	}
 
 	CHI_Promoting_public_schools = {#推广公立学校
+		icon = GFX_decision_generic_research
 		visible = {
 			has_completed_focus = CHI_focus_Promoting_public_schools
 		}
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1277,6 +2785,329 @@ CHI_Mandate_of_Heaven = {
 					value = -0.4
 				}
 			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CHI_Revolution_empire_decision = {#革命帝国
+		icon = GFX_decision_category_generic_communist_revolution
+		visible = {
+			has_completed_focus = CHI_focus_Shu
+		}
+		available = {
+			has_completed_focus = CHI_focus_Promoting_land_reform
+			has_completed_focus = CHI_focus_Acquisition_significant_capital
+			has_completed_focus = CHI_focus_Improve_political_review
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+		}
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.6
+			}
+		}
+		fire_only_once = yes
+		custom_cost_text = CHI_cost_40_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.4
+				}
+			}
+		}
+		remove_effect = {
+			complete_national_focus = CHI_focus_Empire_of_Revorution
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CHI_JiaJiuXi_decision = {#加九锡、假节钺、剑履上殿
+		icon = GFX_decision_category_army_reform
+		visible = {
+			has_completed_focus = CHI_focus_Control_propaganda_machine
+		}
+		available = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+		}
+		fire_only_once = yes
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.6
+			}
+		}
+		custom_cost_text = CHI_cost_40_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.4
+				}
+			}
+		}
+		remove_effect = {
+			set_country_flag = CHI_completed_JiaJiuXi_decision_flag
+
+			add_to_variable = {
+				var = Crisis_of_CHI_Dynasty_Var
+				value = -5
+				tooltip = Crisis_of_CHI_Dynasty_Var_down_5
+			}
+			Crisis_of_CHI_Dynasty_Var_effect = yes
+
+			add_to_variable = {
+				var = North_Army_faction_influence_var
+				value = 0.05
+				tooltip = North_Army_faction_influence_var_up_small
+			}
+			CHI_faction_influence_calculate = yes
+			add_political_power = 100
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CHI_Return_power_to_Congress_decision = {#权力回归国会
+		icon = GFX_decision_category_generic_political_actions
+		visible = {
+			has_completed_focus = CHI_focus_Return_power_to_Congress
+		}
+		available = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+		}
+		fire_only_once = yes
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.6
+			}
+		}
+		custom_cost_text = CHI_cost_40_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.4
+				}
+			}
+		}
+		remove_effect = {
+			add_to_variable = {
+				var = Crisis_of_CHI_Dynasty_Var
+				value = -5
+				tooltip = Crisis_of_CHI_Dynasty_Var_down_5
+			}
+			Crisis_of_CHI_Dynasty_Var_effect = yes
+
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.05
+			}
+
+			add_political_power = 100
+
+			add_to_variable = {
+				var = Honour_Emperor_faction_influence_var
+				value = -0.05
+				tooltip = Honour_Emperor_faction_influence_var_down_small
+			}
+			
+			set_country_flag = CHI_completed_return_power_to_Congress_decision_flag
+			set_country_flag = build_CHI_congress
+			custom_effect_tooltip = build_CHI_congress
+			CHI_faction_influence_calculate = yes
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CHI_Yuan_attck_FROM = {#元帅教令-进攻XXX
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				has_country_flag = CHI_regent_Yuan_flag
+			}
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				is_chinese_country = yes
+				not = { has_country_flag = Participate_in_the_competition_for_China_reunification }
+			}
+			FROM_subject_neighbor_with_root = yes
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = CHI_war_plan_going_on
+			}
+			FROM_subject_neighbor_with_root = yes
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+		}
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.8
+			}
+		}
+		custom_cost_text = CHI_cost_20_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.2
+				}
+			}
+		}
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 32 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		remove_effect = {
+			clr_country_flag = CHI_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 0
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				has_completed_focus = CHI_focus_compete_for_Central
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHX }
+				add = 1000
+			}
+			modifier = {
+				FROM = { tag = JSZ }
+				add = 1000
+			}
+			modifier = {
+				date < 1937.5.1
+				factor = 0
+			}
+		}
+	}
+
+	CHI_Be_Lord_of_Asia = {#亚洲之主
+		icon = GFX_decision_category_hol_war_on_pacifism
+		visible = {
+			has_completed_focus = CHI_focus_Back_to_World
+		}
+		available = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_whole_chinese_state_tt
+				NOT = {
+					any_state = {
+						has_state_flag = is_whole_chinese_state_area
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_KOR_state_tt
+				not = {
+					any_state = {
+						region = 191
+						NOT = { is_controlled_by_ROOT_or_ally = yes }
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_VIN_state_tt
+				NOT = {
+					any_state = {
+						is_core_of = VIN
+						NOT = { is_controlled_by_ROOT_or_ally = yes }
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_sides_of_Malacca_Strait_tt
+				963 = { is_controlled_by_ROOT_or_ally = yes }
+				846 = { is_controlled_by_ROOT_or_ally = yes }
+				336 = { is_controlled_by_ROOT_or_ally = yes }
+				672 = { is_controlled_by_ROOT_or_ally = yes }
+			}
+			282 = { is_controlled_by_ROOT_or_ally = yes }  ##东京
+			439 = { is_controlled_by_ROOT_or_ally = yes }  ##德里
+			1174 = { is_controlled_by_ROOT_or_ally = yes }  ##学园都市
+			327 = { is_controlled_by_ROOT_or_ally = yes }  ##马尼拉
+		}
+		fire_only_once = yes
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.6
+			}
+		}
+		custom_cost_text = CHI_cost_40_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.4
+				}
+			}
+		}
+		remove_effect = {
+			add_ideas = idea_CHI_Lord_of_Asia
+		}
+		ai_will_do = {
+			base = 1000
 		}
 	}
 }
@@ -2082,6 +3913,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2182,6 +4017,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2282,6 +4121,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2382,6 +4225,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2481,6 +4328,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2565,6 +4416,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2664,6 +4519,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2713,11 +4572,19 @@ CHI_Industrialization_of_China = {
 
  # 重启旧工厂
 	CHI_Restart_Telegraph_Office = {#重启电报总局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2758,11 +4625,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_ShangHai_ZhiBuJu = {#重启上海机器织布局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2802,11 +4677,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_HuBei_ZhiBuJu = {#重启湖北织布局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2847,11 +4730,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_AnQing_arms_factory = {#重启安庆内军械所
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2892,11 +4783,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_JiangNan_ZhiZaoZongJu = {#重启江南机器制造总局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2937,11 +4836,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_TianJin_ZhiZaoJu = {#重启天津机器制造局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2981,11 +4888,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_JinLing_ZhiZaoJu = {#重启金陵机器制造局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3026,11 +4941,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_FuChow_ChuanZhenJu = {#重启福州船政局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3070,11 +4993,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_LunChuan_ZhaoShangJu = {#重启轮船招商局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3114,11 +5045,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_HanYang_Ironworks = {#重启汉阳铁厂
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3157,11 +5096,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_KaiPing_KuangWuJu = {#重启开平矿务局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3197,10 +5144,18 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_attract_foreign_investment = {#引进外资
+		icon = GFX_decision_generic_merge_plant_materiel
 		visible = {
 			has_completed_focus = CHI_focus_Promote_joint_ventures
 			check_variable = {
 				CHI_attract_foreign_investment_num_Var < 15
+			}
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
 			}
 		}
 		available = {
@@ -3248,24 +5203,58 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_Investment_QinJin_region = {#投资秦晋工业
+		icon = GFX_decision_duihuan_gongchang_1
 		custom_cost_trigger = {
 			always = yes
 		}
 		visible = {
+			has_country_flag = CHI_shared_tree_leader
 			has_completed_focus = CHI_shared_Investment_QinJin
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				add = 50
+				check_variable = {
+					var = ubs_save
+					value > 400
+				}
+			}
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_400
 		days_remove = 60
 		days_re_enable = 60
 		complete_effect = {
 			COST_400_UBS_LOAD = yes
+			add_to_variable = {
+				CHI_Investment_QinJin_var = 1
+			}
 		}
 		available = {
 			SHX = {
 				is_subject_of = ROOT
 			}
+			custom_override_tooltip = {
+				tooltip = CHI_Investment_QinJin_num_tt
+				check_variable = {
+					CHI_Investment_QinJin_var < 5
+				}
+			}
+
 		}
 		remove_effect = {
+			if = {
+				limit = {
+					check_variable = {
+						CHI_Investment_QinJin_var = 5
+					}
+				}
+				clear_variable = CHI_Investment_QinJin_var
+			}
 			SHX = {
 				random_owned_state = {
 					limit = {
@@ -4426,6 +6415,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4455,6 +6451,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4484,6 +6487,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4526,6 +6536,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4555,6 +6572,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4591,6 +6615,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4611,42 +6642,42 @@ CHI_CARI_category = {#中国军械研究所
 		}
 	}
 
-	CHI_research_ShenJi_Armor_AT_aritiller = {#研究神机自行反坦克炮
-		icon = GFX_decision_category_tank
-		visible = {
-			has_completed_focus = CHI_focus_develop_TeSe_military_equipment
-		}
-		cost = 100
-		fire_only_once = yes
-		days_remove = 200
-		modifier = {
-			research_speed_factor = -0.05
-			consumer_goods_factor = 0.1
-		}
-		remove_effect = {
-			set_technology = {
-				CHI_ShenJi_Armor_AT_aritiller = 1
-				popup = no
-			}
-			mio:CHI_CNIC_tank_destroyer_organization = { add_mio_size = 1 }
-			effect_tooltip = {
-				add_unit_bonus = {
-					light_tank_destroyer_brigade = {
-						combat_width = -0.5
-					}
-					medium_tank_destroyer_brigade = {
-						combat_width = -0.5
-					}
-					heavy_tank_destroyer_brigade = {
-						combat_width = -0.5
-					}
-					modern_tank_destroyer_brigade = {
-						combat_width = -0.5
-					}
-				}
-			}
-		}
-	}
+	# CHI_research_ShenJi_Armor_AT_aritiller = {#研究神机自行反坦克炮
+	# 	icon = GFX_decision_category_tank
+	# 	visible = {
+	# 		has_completed_focus = CHI_focus_develop_TeSe_military_equipment
+	# 	}
+	# 	cost = 100
+	# 	fire_only_once = yes
+	# 	days_remove = 200
+	# 	modifier = {
+	# 		research_speed_factor = -0.05
+	# 		consumer_goods_factor = 0.1
+	# 	}
+	# 	remove_effect = {
+	# 		set_technology = {
+	# 			CHI_ShenJi_Armor_AT_aritiller = 1
+	# 			popup = no
+	# 		}
+	# 		mio:CHI_CNIC_tank_destroyer_organization = { add_mio_size = 1 }
+	# 		effect_tooltip = {
+	# 			add_unit_bonus = {
+	# 				light_tank_destroyer_brigade = {
+	# 					combat_width = -0.5
+	# 				}
+	# 				medium_tank_destroyer_brigade = {
+	# 					combat_width = -0.5
+	# 				}
+	# 				heavy_tank_destroyer_brigade = {
+	# 					combat_width = -0.5
+	# 				}
+	# 				modern_tank_destroyer_brigade = {
+	# 					combat_width = -0.5
+	# 				}
+	# 			}
+	# 		}
+	# 	}
+	# }
 }
 
 CHI_Sino_German_cooperation = {#中德合作
@@ -4660,6 +6691,13 @@ CHI_Sino_German_cooperation = {#中德合作
 		fire_only_once = yes
 		modifier = {
 			civilian_factory_use = 10
+		}
+		ai_will_do = {
+			base = 20
+			modifier = {
+				add = 80
+				has_completed_focus = CHI_focus_Introduction_German_equipment
+			}
 		}
 		available = {
 			num_of_civilian_factories_available_for_projects > 9
@@ -4684,6 +6722,9 @@ CHI_Sino_German_cooperation = {#中德合作
 		cost = 50
 		days_remove = 100
 		fire_only_once = yes
+		ai_will_do = {
+			base = 20
+		}
 		available = {
 			has_country_flag = CHI_introduce_battle_lines_flag
 		}
@@ -4699,6 +6740,28 @@ CHI_Sino_German_cooperation = {#中德合作
 			has_completed_focus = CHI_focus_Purchase_German_patents
 		}
 		days_remove = 30
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 30
+				check_variable = {
+					var = ubs_save
+					value = 300
+					compare = greater_than_or_equals
+				}
+			}
+			modifier = {
+				add = 50
+				date > 1939.1.1
+				NOT = {
+					has_tech = improved_infantry_weapons
+				}
+			}
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
+		}
 		custom_cost_trigger = {
 			check_variable = {
 				var = ubs_save
@@ -4750,6 +6813,21 @@ CHI_Sino_German_cooperation = {#中德合作
 				compare = greater_than_or_equals
 			}
 		}
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 50
+				check_variable = {
+					var = ubs_save
+					value = 300
+					compare = greater_than_or_equals
+				}
+			}
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
+		}
 		custom_cost_text = HCP_100
 		available = {
 			NOT = {
@@ -4794,6 +6872,21 @@ CHI_Sino_German_cooperation = {#中德合作
 				compare = greater_than_or_equals
 			}
 		}
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 50
+				check_variable = {
+					var = ubs_save
+					value = 300
+					compare = greater_than_or_equals
+				}
+			}
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
+		}
 		custom_cost_text = HCP_100
 		available = {
 			NOT = {
@@ -4823,3118 +6916,6 @@ CHI_Sino_German_cooperation = {#中德合作
 			}
 		}
 
-	}
-}
-
-#要求周边国家附庸
-CHI_chaogong = {
-	CHI_puppet_VIN = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				VIN = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					VIN = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			VIN = {
-				exists = yes
-			}
-			VIN = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			VIN = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_SIA = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				SIA = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					SIA = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			SIA = {
-				exists = yes
-			}
-			SIA = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			SIA = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_AFG = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				AFG = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					AFG = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			AFG = {
-				exists = yes
-			}
-			AFG = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			AFG = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_RAJ = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				RAJ = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					RAJ = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			RAJ = {
-				exists = yes
-			}
-			RAJ = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			RAJ = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_MAL = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				MAL = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					MAL = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			MAL = {
-				exists = yes
-			}
-			MAL = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			MAL = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_KOR = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				KOR = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					KOR = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-			visible = {
-				KOR = {
-					exists = yes
-				}
-				KOR = {
-					is_subject = no
-				}
-			}
-			remove_effect = {
-				KOR = {
-					country_event = {
-						id = chi.51
-						days = 1
-					}
-				}
-			}
-		}
-	}
-	CHI_puppet_JAP = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-		}
-		visible = {
-			JAP = {
-				exists = yes
-			}
-			JAP = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			JAP = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_ROV = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-		}
-		visible = {
-			ROV = {
-				exists = yes
-			}
-			ROV = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			ROV = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_CAM = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-		}
-		visible = {
-			CAM = {
-				exists = yes
-			}
-			CAM = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			CAM = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-}
-
-#都护府
-CHI_duhufu = {
-	CHI_anbeiduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			562 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			637 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			574 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			565 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			563 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			564 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			575 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			566 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			576 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			567 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			568 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			811 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			577 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			578 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			570 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			569 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			654 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			40 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			580 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			403 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			571 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			653 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			572 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			516 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			644 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			583 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			588 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				562 = {
-					add_core_of = DH1
-				}
-				637 = {
-					add_core_of = DH1
-				}
-				574 = {
-					add_core_of = DH1
-				}
-				565 = {
-					add_core_of = DH1
-				}
-				563 = {
-					add_core_of = DH1
-				}
-				564 = {
-					add_core_of = DH1
-				}
-				575 = {
-					add_core_of = DH1
-				}
-				566 = {
-					add_core_of = DH1
-				}
-				576 = {
-					add_core_of = DH1
-				}
-				567 = {
-					add_core_of = DH1
-				}
-				568 = {
-					add_core_of = DH1
-				}
-				811 = {
-					add_core_of = DH1
-				}
-				577 = {
-					add_core_of = DH1
-				}
-				578 = {
-					add_core_of = DH1
-				}
-				570 = {
-					add_core_of = DH1
-				}
-				569 = {
-					add_core_of = DH1
-				}
-				654 = {
-					add_core_of = DH1
-				}
-				40 = {
-					add_core_of = DH1
-				}
-				580 = {
-					add_core_of = DH1
-				}
-				403 = {
-					add_core_of = DH1
-				}
-				571 = {
-					add_core_of = DH1
-				}
-				653 = {
-					add_core_of = DH1
-				}
-				572 = {
-					add_core_of = DH1
-				}
-				516 = {
-					add_core_of = DH1
-				}
-				644 = {
-					add_core_of = DH1
-				}
-				583 = {
-					add_core_of = DH1
-				}
-				588 = {
-					add_core_of = DH1
-				}
-				562 = {
-					set_state_flag = dh1_claim
-				}
-				637 = {
-					set_state_flag = dh1_claim
-				}
-				574 = {
-					set_state_flag = dh1_claim
-				}
-				565 = {
-					set_state_flag = dh1_claim
-				}
-				563 = {
-					set_state_flag = dh1_claim
-				}
-				564 = {
-					set_state_flag = dh1_claim
-				}
-				575 = {
-					set_state_flag = dh1_claim
-				}
-				566 = {
-					set_state_flag = dh1_claim
-				}
-				576 = {
-					set_state_flag = dh1_claim
-				}
-				567 = {
-					set_state_flag = dh1_claim
-				}
-				568 = {
-					set_state_flag = dh1_claim
-				}
-				811 = {
-					set_state_flag = dh1_claim
-				}
-				577 = {
-					set_state_flag = dh1_claim
-				}
-				578 = {
-					set_state_flag = dh1_claim
-				}
-				570 = {
-					set_state_flag = dh1_claim
-				}
-				569 = {
-					set_state_flag = dh1_claim
-				}
-				654 = {
-					set_state_flag = dh1_claim
-				}
-				40 = {
-					set_state_flag = dh1_claim
-				}
-				580 = {
-					set_state_flag = dh1_claim
-				}
-				403 = {
-					set_state_flag = dh1_claim
-				}
-				571 = {
-					set_state_flag = dh1_claim
-				}
-				653 = {
-					set_state_flag = dh1_claim
-				}
-				572 = {
-					set_state_flag = dh1_claim
-				}
-				516 = {
-					set_state_flag = dh1_claim
-				}
-				644 = {
-					set_state_flag = dh1_claim
-				}
-				583 = {
-					set_state_flag = dh1_claim
-				}
-				588 = {
-					set_state_flag = dh1_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh1_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH1 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH1
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = anbei_tt
-		}
-	}
-	CHI_xinluoduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			527 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			525 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1149 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1146 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1148 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1147 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				every_state = {
-					limit = {
-						or = {
-							state = 525
-							state = 527
-							state = 1146
-							state = 1147
-							state = 1148
-							state = 1149
-						}
-					}
-					add_core_of = DH2
-					set_state_flag = dh2_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh2_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH2 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH2
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = xinluo_tt
-		}
-	}
-	CHI_dongyingduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			526 = { is_owned_by_ROOT_or_subject = yes }
-			528 = { is_owned_by_ROOT_or_subject = yes }
-			529 = { is_owned_by_ROOT_or_subject = yes }
-			530 = { is_owned_by_ROOT_or_subject = yes }
-			531 = { is_owned_by_ROOT_or_subject = yes }
-			532 = { is_owned_by_ROOT_or_subject = yes }
-			535 = { is_owned_by_ROOT_or_subject = yes }
-			282 = { is_owned_by_ROOT_or_subject = yes }
-			534 = { is_owned_by_ROOT_or_subject = yes }
-			533 = { is_owned_by_ROOT_or_subject = yes }
-			536 = { is_owned_by_ROOT_or_subject = yes }
-			555 = { is_owned_by_ROOT_or_subject = yes }
-			1150 = { is_owned_by_ROOT_or_subject = yes }
-			1151 = { is_owned_by_ROOT_or_subject = yes }
-			1152 = { is_owned_by_ROOT_or_subject = yes }
-			1153 = { is_owned_by_ROOT_or_subject = yes }
-			1154 = { is_owned_by_ROOT_or_subject = yes }
-			1155 = { is_owned_by_ROOT_or_subject = yes }
-			1156 = { is_owned_by_ROOT_or_subject = yes }
-		}
-		complete_effect = {
-			hidden_effect = {
-				every_state = {
-					limit = {
-						or = {
-							state = 526
-							state = 528
-							state = 529
-							state = 530
-							state = 531
-							state = 532
-							state = 535
-							state = 282
-							state = 534
-							state = 533
-							state = 536
-							state = 555
-							state = 1150
-							state = 1151
-							state = 1152
-							state = 1153
-							state = 1154
-							state = 1155
-							state = 1156
-						}
-					}
-					add_core_of = DH3
-					set_state_flag = dh3_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh3_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH3 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH3
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = dongying_tt
-		}
-	}
-	CHI_jiaozhiduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			857 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			671 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			670 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			827 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			286 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			856 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			826 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			750 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			756 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			822 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			882 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			823 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			824 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			825 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			831 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			289 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			749 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			724 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			701 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			72 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			640 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			790 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			288 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				857 = {
-					add_core_of = DH4
-				}
-				671 = {
-					add_core_of = DH4
-				}
-				670 = {
-					add_core_of = DH4
-				}
-				827 = {
-					add_core_of = DH4
-				}
-				286 = {
-					add_core_of = DH4
-				}
-				856 = {
-					add_core_of = DH4
-				}
-				826 = {
-					add_core_of = DH4
-				}
-				750 = {
-					add_core_of = DH4
-				}
-				756 = {
-					add_core_of = DH4
-				}
-				822 = {
-					add_core_of = DH4
-				}
-				882 = {
-					add_core_of = DH4
-				}
-				823 = {
-					add_core_of = DH4
-				}
-				824 = {
-					add_core_of = DH4
-				}
-				825 = {
-					add_core_of = DH4
-				}
-				831 = {
-					add_core_of = DH4
-				}
-				289 = {
-					add_core_of = DH4
-				}
-				749 = {
-					add_core_of = DH4
-				}
-				724 = {
-					add_core_of = DH4
-				}
-				701 = {
-					add_core_of = DH4
-				}
-				72 = {
-					add_core_of = DH4
-				}
-				640 = {
-					add_core_of = DH4
-				}
-				790 = {
-					add_core_of = DH4
-				}
-				288 = {
-					add_core_of = DH4
-				}
-				857 = {
-					set_state_flag = dh4_claim
-				}
-				671 = {
-					set_state_flag = dh4_claim
-				}
-				670 = {
-					set_state_flag = dh4_claim
-				}
-				827 = {
-					set_state_flag = dh4_claim
-				}
-				286 = {
-					set_state_flag = dh4_claim
-				}
-				856 = {
-					set_state_flag = dh4_claim
-				}
-				826 = {
-					set_state_flag = dh4_claim
-				}
-				750 = {
-					set_state_flag = dh4_claim
-				}
-				756 = {
-					set_state_flag = dh4_claim
-				}
-				822 = {
-					set_state_flag = dh4_claim
-				}
-				882 = {
-					set_state_flag = dh4_claim
-				}
-				823 = {
-					set_state_flag = dh4_claim
-				}
-				824 = {
-					set_state_flag = dh4_claim
-				}
-				825 = {
-					set_state_flag = dh4_claim
-				}
-				831 = {
-					set_state_flag = dh4_claim
-				}
-				289 = {
-					set_state_flag = dh4_claim
-				}
-				749 = {
-					set_state_flag = dh4_claim
-				}
-				724 = {
-					set_state_flag = dh4_claim
-				}
-				701 = {
-					set_state_flag = dh4_claim
-				}
-				72 = {
-					set_state_flag = dh4_claim
-				}
-				640 = {
-					set_state_flag = dh4_claim
-				}
-				790 = {
-					set_state_flag = dh4_claim
-				}
-				288 = {
-					set_state_flag = dh4_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh4_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH4 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH4
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = jiaozhi_tt
-		}
-	}
-	CHI_yinglongduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			999 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			830 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			751 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			963 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1002 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			846 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			336 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1023 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			672 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1021 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1022 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1020 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			335 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1019 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			667 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1018 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			721 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1017 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			711 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				999 = {
-					add_core_of = DH5
-				}
-				830 = {
-					add_core_of = DH5
-				}
-				751 = {
-					add_core_of = DH5
-				}
-				963 = {
-					add_core_of = DH5
-				}
-				1002 = {
-					add_core_of = DH5
-				}
-				846 = {
-					add_core_of = DH5
-				}
-				336 = {
-					add_core_of = DH5
-				}
-				1023 = {
-					add_core_of = DH5
-				}
-				672 = {
-					add_core_of = DH5
-				}
-				1021 = {
-					add_core_of = DH5
-				}
-				1022 = {
-					add_core_of = DH5
-				}
-				1020 = {
-					add_core_of = DH5
-				}
-				335 = {
-					add_core_of = DH5
-				}
-				1019 = {
-					add_core_of = DH5
-				}
-				667 = {
-					add_core_of = DH5
-				}
-				1018 = {
-					add_core_of = DH5
-				}
-				721 = {
-					add_core_of = DH5
-				}
-				1017 = {
-					add_core_of = DH5
-				}
-				711 = {
-					add_core_of = DH5
-				}
-				999 = {
-					set_state_flag = dh5_claim
-				}
-				830 = {
-					set_state_flag = dh5_claim
-				}
-				751 = {
-					set_state_flag = dh5_claim
-				}
-				963 = {
-					set_state_flag = dh5_claim
-				}
-				1002 = {
-					set_state_flag = dh5_claim
-				}
-				846 = {
-					set_state_flag = dh5_claim
-				}
-				336 = {
-					set_state_flag = dh5_claim
-				}
-				1023 = {
-					set_state_flag = dh5_claim
-				}
-				672 = {
-					set_state_flag = dh5_claim
-				}
-				1021 = {
-					set_state_flag = dh5_claim
-				}
-				1022 = {
-					set_state_flag = dh5_claim
-				}
-				1020 = {
-					set_state_flag = dh5_claim
-				}
-				335 = {
-					set_state_flag = dh5_claim
-				}
-				1019 = {
-					set_state_flag = dh5_claim
-				}
-				667 = {
-					set_state_flag = dh5_claim
-				}
-				1018 = {
-					set_state_flag = dh5_claim
-				}
-				721 = {
-					set_state_flag = dh5_claim
-				}
-				1017 = {
-					set_state_flag = dh5_claim
-				}
-				711 = {
-					set_state_flag = dh5_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh5_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH5 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH5
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = yinglong_tt
-		}
-	}
-	CHI_anxiduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			406 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			402 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			590 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			404 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			810 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			589 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			587 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			584 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			861 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			712 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			405 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			732 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			804 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1042 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			407 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			586 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				406 = {
-					add_core_of = DH6
-				}
-				402 = {
-					add_core_of = DH6
-				}
-				590 = {
-					add_core_of = DH6
-				}
-				404 = {
-					add_core_of = DH6
-				}
-				810 = {
-					add_core_of = DH6
-				}
-				589 = {
-					add_core_of = DH6
-				}
-				587 = {
-					add_core_of = DH6
-				}
-				584 = {
-					add_core_of = DH6
-				}
-				861 = {
-					add_core_of = DH6
-				}
-				712 = {
-					add_core_of = DH6
-				}
-				405 = {
-					add_core_of = DH6
-				}
-				732 = {
-					add_core_of = DH6
-				}
-				804 = {
-					add_core_of = DH6
-				}
-				1042 = {
-					add_core_of = DH6
-				}
-				407 = {
-					add_core_of = DH6
-				}
-				586 = {
-					add_core_of = DH6
-				}
-				406 = {
-					set_state_flag = dh6_claim
-				}
-				402 = {
-					set_state_flag = dh6_claim
-				}
-				590 = {
-					set_state_flag = dh6_claim
-				}
-				404 = {
-					set_state_flag = dh6_claim
-				}
-				810 = {
-					set_state_flag = dh6_claim
-				}
-				589 = {
-					set_state_flag = dh6_claim
-				}
-				587 = {
-					set_state_flag = dh6_claim
-				}
-				584 = {
-					set_state_flag = dh6_claim
-				}
-				861 = {
-					set_state_flag = dh6_claim
-				}
-				712 = {
-					set_state_flag = dh6_claim
-				}
-				405 = {
-					set_state_flag = dh6_claim
-				}
-				732 = {
-					set_state_flag = dh6_claim
-				}
-				804 = {
-					set_state_flag = dh6_claim
-				}
-				1042 = {
-					set_state_flag = dh6_claim
-				}
-				407 = {
-					set_state_flag = dh6_claim
-				}
-				586 = {
-					set_state_flag = dh6_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh6_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH6 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH6
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = anxi_tt
-		}
-	}
-	CHI_lanfangduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			333 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			828 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			334 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1016 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			673 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			668 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			972 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			669 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			843 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			523 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			757 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			737 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			634 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			734 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				333 = {
-					add_core_of = DH7
-				}
-				828 = {
-					add_core_of = DH7
-				}
-				334 = {
-					add_core_of = DH7
-				}
-				1016 = {
-					add_core_of = DH7
-				}
-				673 = {
-					add_core_of = DH7
-				}
-				668 = {
-					add_core_of = DH7
-				}
-				972 = {
-					add_core_of = DH7
-				}
-				669 = {
-					add_core_of = DH7
-				}
-				843 = {
-					add_core_of = DH7
-				}
-				523 = {
-					add_core_of = DH7
-				}
-				757 = {
-					add_core_of = DH7
-				}
-				737 = {
-					add_core_of = DH7
-				}
-				634 = {
-					add_core_of = DH7
-				}
-				734 = {
-					add_core_of = DH7
-				}
-				333 = {
-					set_state_flag = dh7_claim
-				}
-				828 = {
-					set_state_flag = dh7_claim
-				}
-				334 = {
-					set_state_flag = dh7_claim
-				}
-				1016 = {
-					set_state_flag = dh7_claim
-				}
-				673 = {
-					set_state_flag = dh7_claim
-				}
-				668 = {
-					set_state_flag = dh7_claim
-				}
-				972 = {
-					set_state_flag = dh7_claim
-				}
-				669 = {
-					set_state_flag = dh7_claim
-				}
-				843 = {
-					set_state_flag = dh7_claim
-				}
-				523 = {
-					set_state_flag = dh7_claim
-				}
-				757 = {
-					set_state_flag = dh7_claim
-				}
-				737 = {
-					set_state_flag = dh7_claim
-				}
-				634 = {
-					set_state_flag = dh7_claim
-				}
-				734 = {
-					set_state_flag = dh7_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh7_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH7 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH7
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = lanfang_tt
-		}
-	}
-	CHI_lvsongduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			623 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			327 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			624 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			625 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			628 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			627 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			626 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				623 = {
-					add_core_of = DH8
-				}
-				327 = {
-					add_core_of = DH8
-				}
-				624 = {
-					add_core_of = DH8
-				}
-				625 = {
-					add_core_of = DH8
-				}
-				628 = {
-					add_core_of = DH8
-				}
-				627 = {
-					add_core_of = DH8
-				}
-				626 = {
-					add_core_of = DH8
-				}
-				623 = {
-					set_state_flag = dh8_claim
-				}
-				327 = {
-					set_state_flag = dh8_claim
-				}
-				624 = {
-					set_state_flag = dh8_claim
-				}
-				625 = {
-					set_state_flag = dh8_claim
-				}
-				628 = {
-					set_state_flag = dh8_claim
-				}
-				627 = {
-					set_state_flag = dh8_claim
-				}
-				626 = {
-					set_state_flag = dh8_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh8_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH8 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH8
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = lvsong_tt
-		}
-	}
-	CHI_xitianzhuduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			441 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			891 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			443 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			433 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			890 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			440 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			815 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			439 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			839 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			428 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			814 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			323 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			438 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			936 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1057 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			437 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				441 = {
-					add_core_of = DH9
-				}
-				891 = {
-					add_core_of = DH9
-				}
-				443 = {
-					add_core_of = DH9
-				}
-				433 = {
-					add_core_of = DH9
-				}
-				890 = {
-					add_core_of = DH9
-				}
-				440 = {
-					add_core_of = DH9
-				}
-				815 = {
-					add_core_of = DH9
-				}
-				439 = {
-					add_core_of = DH9
-				}
-				839 = {
-					add_core_of = DH9
-				}
-				428 = {
-					add_core_of = DH9
-				}
-				814 = {
-					add_core_of = DH9
-				}
-				323 = {
-					add_core_of = DH9
-				}
-				438 = {
-					add_core_of = DH9
-				}
-				936 = {
-					add_core_of = DH9
-				}
-				1057 = {
-					add_core_of = DH9
-				}
-				437 = {
-					add_core_of = DH9
-				}
-				441 = {
-					set_state_flag = dh9_claim
-				}
-				891 = {
-					set_state_flag = dh9_claim
-				}
-				443 = {
-					set_state_flag = dh9_claim
-				}
-				433 = {
-					set_state_flag = dh9_claim
-				}
-				890 = {
-					set_state_flag = dh9_claim
-				}
-				440 = {
-					set_state_flag = dh9_claim
-				}
-				815 = {
-					set_state_flag = dh9_claim
-				}
-				439 = {
-					set_state_flag = dh9_claim
-				}
-				839 = {
-					set_state_flag = dh9_claim
-				}
-				428 = {
-					set_state_flag = dh9_claim
-				}
-				814 = {
-					set_state_flag = dh9_claim
-				}
-				323 = {
-					set_state_flag = dh9_claim
-				}
-				438 = {
-					set_state_flag = dh9_claim
-				}
-				936 = {
-					set_state_flag = dh9_claim
-				}
-				1057 = {
-					set_state_flag = dh9_claim
-				}
-				437 = {
-					set_state_flag = dh9_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dh9_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DH9 = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DH9
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = xitianzhu_tt
-		}
-	}
-	CHI_dongtianzhuduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			432 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			434 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			324 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			888 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			887 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			430 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			431 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			435 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			436 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			426 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			966 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			889 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				432 = {
-					add_core_of = DHA
-				}
-				434 = {
-					add_core_of = DHA
-				}
-				324 = {
-					add_core_of = DHA
-				}
-				888 = {
-					add_core_of = DHA
-				}
-				887 = {
-					add_core_of = DHA
-				}
-				430 = {
-					add_core_of = DHA
-				}
-				431 = {
-					add_core_of = DHA
-				}
-				435 = {
-					add_core_of = DHA
-				}
-				436 = {
-					add_core_of = DHA
-				}
-				426 = {
-					add_core_of = DHA
-				}
-				966 = {
-					add_core_of = DHA
-				}
-				889 = {
-					add_core_of = DHA
-				}
-				432 = {
-					set_state_flag = dha_claim
-				}
-				434 = {
-					set_state_flag = dha_claim
-				}
-				324 = {
-					set_state_flag = dha_claim
-				}
-				888 = {
-					set_state_flag = dha_claim
-				}
-				887 = {
-					set_state_flag = dha_claim
-				}
-				430 = {
-					set_state_flag = dha_claim
-				}
-				431 = {
-					set_state_flag = dha_claim
-				}
-				435 = {
-					set_state_flag = dha_claim
-				}
-				436 = {
-					set_state_flag = dha_claim
-				}
-				426 = {
-					set_state_flag = dha_claim
-				}
-				966 = {
-					set_state_flag = dha_claim
-				}
-				889 = {
-					set_state_flag = dha_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dha_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DHA = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DHA
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = dongtianzhu_tt
-		}
-	}
-	CHI_nantianzhuduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			429 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			893 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			427 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			868 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			321 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			424 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			425 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1034 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			867 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			423 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			320 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			818 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			422 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			281 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				429 = {
-					add_core_of = DHB
-				}
-				893 = {
-					add_core_of = DHB
-				}
-				427 = {
-					add_core_of = DHB
-				}
-				868 = {
-					add_core_of = DHB
-				}
-				321 = {
-					add_core_of = DHB
-				}
-				424 = {
-					add_core_of = DHB
-				}
-				425 = {
-					add_core_of = DHB
-				}
-				1034 = {
-					add_core_of = DHB
-				}
-				867 = {
-					add_core_of = DHB
-				}
-				423 = {
-					add_core_of = DHB
-				}
-				320 = {
-					add_core_of = DHB
-				}
-				818 = {
-					add_core_of = DHB
-				}
-				422 = {
-					add_core_of = DHB
-				}
-				281 = {
-					add_core_of = DHB
-				}
-				429 = {
-					set_state_flag = dhb_claim
-				}
-				893 = {
-					set_state_flag = dhb_claim
-				}
-				427 = {
-					set_state_flag = dhb_claim
-				}
-				868 = {
-					set_state_flag = dhb_claim
-				}
-				321 = {
-					set_state_flag = dhb_claim
-				}
-				424 = {
-					set_state_flag = dhb_claim
-				}
-				425 = {
-					set_state_flag = dhb_claim
-				}
-				1034 = {
-					set_state_flag = dhb_claim
-				}
-				867 = {
-					set_state_flag = dhb_claim
-				}
-				423 = {
-					set_state_flag = dhb_claim
-				}
-				320 = {
-					set_state_flag = dhb_claim
-				}
-				818 = {
-					set_state_flag = dhb_claim
-				}
-				422 = {
-					set_state_flag = dhb_claim
-				}
-				281 = {
-					set_state_flag = dhb_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dhb_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DHB = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DHB
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = nantianzhu_tt
-		}
-	}
-	CHI_bosiduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			442 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			445 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			444 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			415 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			267 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			418 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			416 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			414 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			410 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			411 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			412 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			420 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			266 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			421 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			413 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			417 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			419 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			998 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				442 = {
-					add_core_of = DHC
-				}
-				445 = {
-					add_core_of = DHC
-				}
-				444 = {
-					add_core_of = DHC
-				}
-				415 = {
-					add_core_of = DHC
-				}
-				267 = {
-					add_core_of = DHC
-				}
-				418 = {
-					add_core_of = DHC
-				}
-				416 = {
-					add_core_of = DHC
-				}
-				414 = {
-					add_core_of = DHC
-				}
-				410 = {
-					add_core_of = DHC
-				}
-				411 = {
-					add_core_of = DHC
-				}
-				412 = {
-					add_core_of = DHC
-				}
-				420 = {
-					add_core_of = DHC
-				}
-				266 = {
-					add_core_of = DHC
-				}
-				421 = {
-					add_core_of = DHC
-				}
-				413 = {
-					add_core_of = DHC
-				}
-				417 = {
-					add_core_of = DHC
-				}
-				419 = {
-					add_core_of = DHC
-				}
-				998 = {
-					add_core_of = DHC
-				}
-				442 = {
-					set_state_flag = dhc_claim
-				}
-				445 = {
-					set_state_flag = dhc_claim
-				}
-				444 = {
-					set_state_flag = dhc_claim
-				}
-				415 = {
-					set_state_flag = dhc_claim
-				}
-				267 = {
-					set_state_flag = dhc_claim
-				}
-				418 = {
-					set_state_flag = dhc_claim
-				}
-				416 = {
-					set_state_flag = dhc_claim
-				}
-				414 = {
-					set_state_flag = dhc_claim
-				}
-				410 = {
-					set_state_flag = dhc_claim
-				}
-				411 = {
-					set_state_flag = dhc_claim
-				}
-				412 = {
-					set_state_flag = dhc_claim
-				}
-				420 = {
-					set_state_flag = dhc_claim
-				}
-				266 = {
-					set_state_flag = dhc_claim
-				}
-				421 = {
-					set_state_flag = dhc_claim
-				}
-				413 = {
-					set_state_flag = dhc_claim
-				}
-				417 = {
-					set_state_flag = dhc_claim
-				}
-				419 = {
-					set_state_flag = dhc_claim
-				}
-				998 = {
-					set_state_flag = dhc_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dhc_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DHC = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DHC
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = bosi_tt
-		}
-	}
-	CHI_tianfangduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			812 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			291 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			349 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			819 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			676 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			677 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			995 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			680 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			554 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			455 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			553 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			992 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			454 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1035 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			994 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			915 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			754 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			679 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			982 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			675 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			292 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			991 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			656 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			993 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			907 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			658 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			347 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			981 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			678 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			859 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			294 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1024 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			752 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			293 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			659 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				812 = {
-					add_core_of = DHD
-				}
-				291 = {
-					add_core_of = DHD
-				}
-				349 = {
-					add_core_of = DHD
-				}
-				819 = {
-					add_core_of = DHD
-				}
-				676 = {
-					add_core_of = DHD
-				}
-				677 = {
-					add_core_of = DHD
-				}
-				995 = {
-					add_core_of = DHD
-				}
-				680 = {
-					add_core_of = DHD
-				}
-				554 = {
-					add_core_of = DHD
-				}
-				455 = {
-					add_core_of = DHD
-				}
-				553 = {
-					add_core_of = DHD
-				}
-				992 = {
-					add_core_of = DHD
-				}
-				454 = {
-					add_core_of = DHD
-				}
-				1035 = {
-					add_core_of = DHD
-				}
-				994 = {
-					add_core_of = DHD
-				}
-				915 = {
-					add_core_of = DHD
-				}
-				754 = {
-					add_core_of = DHD
-				}
-				679 = {
-					add_core_of = DHD
-				}
-				982 = {
-					add_core_of = DHD
-				}
-				675 = {
-					add_core_of = DHD
-				}
-				292 = {
-					add_core_of = DHD
-				}
-				991 = {
-					add_core_of = DHD
-				}
-				656 = {
-					add_core_of = DHD
-				}
-				993 = {
-					add_core_of = DHD
-				}
-				907 = {
-					add_core_of = DHD
-				}
-				658 = {
-					add_core_of = DHD
-				}
-				347 = {
-					add_core_of = DHD
-				}
-				981 = {
-					add_core_of = DHD
-				}
-				678 = {
-					add_core_of = DHD
-				}
-				859 = {
-					add_core_of = DHD
-				}
-				294 = {
-					add_core_of = DHD
-				}
-				1024 = {
-					add_core_of = DHD
-				}
-				752 = {
-					add_core_of = DHD
-				}
-				293 = {
-					add_core_of = DHD
-				}
-				659 = {
-					add_core_of = DHD
-				}
-				812 = {
-					set_state_flag = dhd_claim
-				}
-				291 = {
-					set_state_flag = dhd_claim
-				}
-				349 = {
-					set_state_flag = dhd_claim
-				}
-				819 = {
-					set_state_flag = dhd_claim
-				}
-				676 = {
-					set_state_flag = dhd_claim
-				}
-				677 = {
-					set_state_flag = dhd_claim
-				}
-				995 = {
-					set_state_flag = dhd_claim
-				}
-				680 = {
-					set_state_flag = dhd_claim
-				}
-				554 = {
-					set_state_flag = dhd_claim
-				}
-				455 = {
-					set_state_flag = dhd_claim
-				}
-				553 = {
-					set_state_flag = dhd_claim
-				}
-				992 = {
-					set_state_flag = dhd_claim
-				}
-				454 = {
-					set_state_flag = dhd_claim
-				}
-				1035 = {
-					set_state_flag = dhd_claim
-				}
-				994 = {
-					set_state_flag = dhd_claim
-				}
-				915 = {
-					set_state_flag = dhd_claim
-				}
-				754 = {
-					set_state_flag = dhd_claim
-				}
-				679 = {
-					set_state_flag = dhd_claim
-				}
-				982 = {
-					set_state_flag = dhd_claim
-				}
-				675 = {
-					set_state_flag = dhd_claim
-				}
-				292 = {
-					set_state_flag = dhd_claim
-				}
-				991 = {
-					set_state_flag = dhd_claim
-				}
-				656 = {
-					set_state_flag = dhd_claim
-				}
-				993 = {
-					set_state_flag = dhd_claim
-				}
-				907 = {
-					set_state_flag = dhd_claim
-				}
-				658 = {
-					set_state_flag = dhd_claim
-				}
-				347 = {
-					set_state_flag = dhd_claim
-				}
-				981 = {
-					set_state_flag = dhd_claim
-				}
-				678 = {
-					set_state_flag = dhd_claim
-				}
-				859 = {
-					set_state_flag = dhd_claim
-				}
-				294 = {
-					set_state_flag = dhd_claim
-				}
-				1024 = {
-					set_state_flag = dhd_claim
-				}
-				752 = {
-					set_state_flag = dhd_claim
-				}
-				293 = {
-					set_state_flag = dhd_claim
-				}
-				659 = {
-					set_state_flag = dhd_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dhd_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DHD = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DHD
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = tianfang_tt
-		}
-	}
-	CHI_lumiduhufu = {
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-			}
-		}
-		cost = 0
-		days_re_enable = 0
-		fire_only_once = yes
-		visible = {
-			original_tag = CHI
-		}
-		available = {
-			is_subject = no
-			230 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1000 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			354 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			352 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			350 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			344 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			585 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1001 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			345 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			355 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			356 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			49 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			343 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			346 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			342 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			339 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			340 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			773 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			341 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			187 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			183 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			164 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1121 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1113 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1117 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1120 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1119 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1110 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1109 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1106 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1107 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1108 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1116 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1115 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1118 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1114 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1112 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-			1111 = {
-				is_owned_by_ROOT_or_subject = yes
-			}
-		}
-		complete_effect = {
-			hidden_effect = {
-				230 = {
-					add_core_of = DHE
-				}
-				1000 = {
-					add_core_of = DHE
-				}
-				354 = {
-					add_core_of = DHE
-				}
-				352 = {
-					add_core_of = DHE
-				}
-				350 = {
-					add_core_of = DHE
-				}
-				344 = {
-					add_core_of = DHE
-				}
-				585 = {
-					add_core_of = DHE
-				}
-				1001 = {
-					add_core_of = DHE
-				}
-				345 = {
-					add_core_of = DHE
-				}
-				355 = {
-					add_core_of = DHE
-				}
-				356 = {
-					add_core_of = DHE
-				}
-				49 = {
-					add_core_of = DHE
-				}
-				343 = {
-					add_core_of = DHE
-				}
-				346 = {
-					add_core_of = DHE
-				}
-				342 = {
-					add_core_of = DHE
-				}
-				339 = {
-					add_core_of = DHE
-				}
-				340 = {
-					add_core_of = DHE
-				}
-				773 = {
-					add_core_of = DHE
-				}
-				341 = {
-					add_core_of = DHE
-				}
-				187 = {
-					add_core_of = DHE
-				}
-				183 = {
-					add_core_of = DHE
-				}
-				164 = {
-					add_core_of = DHE
-				}
-				1121 = {
-					add_core_of = DHE
-				}
-				1113 = {
-					add_core_of = DHE
-				}
-				1117 = {
-					add_core_of = DHE
-				}
-				1120 = {
-					add_core_of = DHE
-				}
-				1119 = {
-					add_core_of = DHE
-				}
-				1110 = {
-					add_core_of = DHE
-				}
-				1109 = {
-					add_core_of = DHE
-				}
-				1106 = {
-					add_core_of = DHE
-				}
-				1107 = {
-					add_core_of = DHE
-				}
-				1108 = {
-					add_core_of = DHE
-				}
-				1116 = {
-					add_core_of = DHE
-				}
-				1115 = {
-					add_core_of = DHE
-				}
-				1118 = {
-					add_core_of = DHE
-				}
-				1114 = {
-					add_core_of = DHE
-				}
-				1112 = {
-					add_core_of = DHE
-				}
-				1111 = {
-					add_core_of = DHE
-				}
-				230 = {
-					set_state_flag = dhe_claim
-				}
-				1000 = {
-					set_state_flag = dhe_claim
-				}
-				354 = {
-					set_state_flag = dhe_claim
-				}
-				352 = {
-					set_state_flag = dhe_claim
-				}
-				350 = {
-					set_state_flag = dhe_claim
-				}
-				344 = {
-					set_state_flag = dhe_claim
-				}
-				585 = {
-					set_state_flag = dhe_claim
-				}
-				1001 = {
-					set_state_flag = dhe_claim
-				}
-				345 = {
-					set_state_flag = dhe_claim
-				}
-				355 = {
-					set_state_flag = dhe_claim
-				}
-				356 = {
-					set_state_flag = dhe_claim
-				}
-				49 = {
-					set_state_flag = dhe_claim
-				}
-				343 = {
-					set_state_flag = dhe_claim
-				}
-				346 = {
-					set_state_flag = dhe_claim
-				}
-				342 = {
-					set_state_flag = dhe_claim
-				}
-				339 = {
-					set_state_flag = dhe_claim
-				}
-				340 = {
-					set_state_flag = dhe_claim
-				}
-				773 = {
-					set_state_flag = dhe_claim
-				}
-				341 = {
-					set_state_flag = dhe_claim
-				}
-				187 = {
-					set_state_flag = dhe_claim
-				}
-				183 = {
-					set_state_flag = dhe_claim
-				}
-				164 = {
-					set_state_flag = dhe_claim
-				}
-				1121 = {
-					set_state_flag = dhe_claim
-				}
-				1113 = {
-					set_state_flag = dhe_claim
-				}
-				1117 = {
-					set_state_flag = dhe_claim
-				}
-				1120 = {
-					set_state_flag = dhe_claim
-				}
-				1119 = {
-					set_state_flag = dhe_claim
-				}
-				1110 = {
-					set_state_flag = dhe_claim
-				}
-				1109 = {
-					set_state_flag = dhe_claim
-				}
-				1106 = {
-					set_state_flag = dhe_claim
-				}
-				1107 = {
-					set_state_flag = dhe_claim
-				}
-				1108 = {
-					set_state_flag = dhe_claim
-				}
-				1116 = {
-					set_state_flag = dhe_claim
-				}
-				1115 = {
-					set_state_flag = dhe_claim
-				}
-				1118 = {
-					set_state_flag = dhe_claim
-				}
-				1114 = {
-					set_state_flag = dhe_claim
-				}
-				1112 = {
-					set_state_flag = dhe_claim
-				}
-				1111 = {
-					set_state_flag = dhe_claim
-				}
-				every_state = {
-					limit = {
-						has_state_flag = dhe_claim
-						is_owned_by_ROOT_or_subject = yes
-					}
-					DHE = {
-						transfer_state = PREV
-					}
-				}
-				CHI = {
-					set_autonomy = {
-						target = DHE
-						autonomy_state = chi_duhufu_puppet
-					}
-				}
-			}
-			custom_effect_tooltip = lumi_tt
-		}
 	}
 }
 
@@ -7991,7 +6972,6 @@ CHI_Debug = {
 					value = 5
 					tooltip = Crisis_of_CHI_Dynasty_Var_up_5
 				}
-				unlock_national_focus = CHI_Darkest_hour
 				set_global_flag = chi_chaos
 				add_stability = -0.25
 				country_lock_all_division_template = no
@@ -8109,29 +7089,10 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = socialism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = socialism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = socialism }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_chiyu_idea
 			drop_cosmetic_tag = yes
@@ -8155,29 +7116,10 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = liberalism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = liberalism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = liberalism }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_lixingke_idea
 			drop_cosmetic_tag = yes
@@ -8201,29 +7143,10 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Chinese_federalism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Chinese_federalism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Chinese_federalism }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_zhonglanzhu_idea
 			drop_cosmetic_tag = yes
@@ -8247,29 +7170,10 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Trade_liberalism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Trade_liberalism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Trade_liberalism }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Luo_Tianyi_idea
 			drop_cosmetic_tag = yes
@@ -8293,31 +7197,12 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = conservatism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = conservatism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = conservatism }
 			CHI_remove_all_ideas = yes
-			add_ideas = CHI_kangyouwei_idea
+			add_ideas = CHI_fuhua_idea
 			drop_cosmetic_tag = yes
 		}
 	}
@@ -8339,31 +7224,12 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Right_populism_subideology
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Right_populism_subideology
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Right_populism_subideology }
 			CHI_remove_all_ideas = yes
-			add_ideas = CHI_Diana_idea
+			add_ideas = CHI_hanyang_idea
 			drop_cosmetic_tag = yes
 		}
 	}
@@ -8378,29 +7244,10 @@ CHI_Debug = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Absolute_monarchy
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Absolute_monarchy
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Absolute_monarchy }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Leizi_idea
 			drop_cosmetic_tag = yes
@@ -8417,29 +7264,10 @@ CHI_Debug = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Absolute_monarchy
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Absolute_monarchy
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Absolute_monarchy }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Qian_daizhi_idea
 			drop_cosmetic_tag = yes
@@ -8456,27 +7284,10 @@ CHI_Debug = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					has_country_leader = {
-						ruling_only = yes
-						character = CHI_jianglihua
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Absolute_monarchy
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Absolute_monarchy
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Absolute_monarchy }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Yue_zhengling_idea
 			drop_cosmetic_tag = yes
@@ -8493,31 +7304,12 @@ CHI_Debug = {
 				ruling_party = fascism
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_yuankeding
-						}
-					}
+				promote_character = {
+					character = CHI_yuankeding
+					ideology = fascism_ideology
 				}
-				CHI_yuankeding = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = fascism_ideology
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = fascism_ideology }
 			CHI_remove_all_ideas = yes
-			add_ideas = CHI_Diana_idea
+			add_ideas = CHI_hanyang_idea
 			drop_cosmetic_tag = yes
 			set_cosmetic_tag = CHI_hongxian
 		}
@@ -8533,31 +7325,12 @@ CHI_Debug = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_yuankeding
-						}
-					}
+				promote_character = {
+					character = CHI_yuankeding
+					ideology = Absolute_monarchy
 				}
-				CHI_yuankeding = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Absolute_monarchy
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Absolute_monarchy }
 			CHI_remove_all_ideas = yes
-			add_ideas = CHI_Kosaka_kirino_idea
+			add_ideas = CHI_liehaiwang_idea
 			drop_cosmetic_tag = yes
 			set_cosmetic_tag = CHI_hongxian
 		}
@@ -8619,6 +7392,18 @@ CHI_Debug = {
 		}
 	}
 
+	CHI_Debug_change_WangQuan_II = {#切换国策树-王权线
+		allowed = {
+			original_tag = CHI
+		}
+		complete_effect = {
+			set_country_flag = CHI_Imperial_comeback_flag
+			set_global_flag = CHI_REUNIT
+			set_country_flag = CHI_talk_with_Shu
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+
 	CHI_Debug_change_YuanShen = {#切换国策树-摄政王线
 		allowed = {
 			original_tag = CHI
@@ -8659,6 +7444,228 @@ CHI_Debug = {
 			mark_focus_tree_layout_dirty = yes
 		}
 	}
+
+	CHI_Debug_change_MinZhu_II = {#切换国策树-民主线
+		allowed = {
+			original_tag = CHI
+		}
+		complete_effect = {
+			set_country_flag = CHI_CP_absorb_the_moderates_flag
+			set_global_flag = CHI_REUNIT
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
 }
 
+CHI_IC_migration_category = {#工业迁移
+	CHI_civil_IC_migration = {
+		icon = GFX_decision_generic_trucks
+		fire_only_once = yes
+		on_map_mode = map_and_decisions_view
+		visible = {
+			has_completed_focus = CHI_Industrial_relocation_plan
+			FROM = {
+				NOT = {
+					has_state_flag = CHI_civil_inward_migration
+				}
+				industrial_complex > 0 
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CHI_industrial_migration_tt
+				check_variable = {
+					CHI_migration < 5
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					region = 209
+					region = 210
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		days_remove = 60
+		cost = 10
+		complete_effect = {
+			add_to_variable = {
+				CHI_migration = 1
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					check_variable = {
+						CHI_migration < 0
+					}
+				}
+				set_variable = {
+					CHI_migration = 0
+				}
+			}
+			else = {
+				add_to_variable = {
+					CHI_migration = -1
+				}
+			}
+			FROM = {
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				set_state_flag = CHI_civil_inward_migration
+			}
+			random_owned_controlled_state = {
+				limit = {
+					region = 211
+				}
+				hidden_effect = { SOV_promote_regional_development = yes }
+				custom_effect_tooltip = SOV_upgrading_area_type_tt
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
 
+			}
+		}
+	}
+	CHI_arms_IC_migration = {
+		icon = GFX_decision_generic_industry
+		fire_only_once = yes
+		on_map_mode = map_and_decisions_view
+		visible = {
+			has_completed_focus = CHI_Industrial_relocation_plan
+			FROM = {
+				NOT = {
+					has_state_flag = CHI_army_inward_migration
+				}
+				arms_factory > 0 
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CHI_industrial_migration_tt
+				check_variable = {
+					CHI_migration < 5
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					region = 209
+					region = 210
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		days_remove = 60
+		cost = 10
+		complete_effect = {
+			add_to_variable = {
+				CHI_migration = 1
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					check_variable = {
+						CHI_migration < 0
+					}
+				}
+				set_variable = {
+					CHI_migration = 0
+				}
+			}
+			else = {
+				add_to_variable = {
+					CHI_migration = -1
+				}
+			}
+			FROM = {
+				remove_building = {
+					type = arms_factory
+					level = 1
+				}
+				set_state_flag = CHI_army_inward_migration
+			}
+			random_owned_controlled_state = {
+				limit = {
+					region = 211
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+
+			}
+		}
+	}
+
+}
+
+prospect_for_resources = {
+	CHI_build_landmark_TerracottaWarriors = {
+		icon = generic_construction
+		allowed = { is_chinese_country = yes }
+		on_map_mode = decision_view_only
+		visible = {
+			has_global_flag = find_landmark_TerracottaWarriors
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 19
+			owns_state = 799
+			controls_state = 799
+		}
+		fire_only_once = yes
+		cost = 15
+		days_remove = 100
+		highlight_states = {
+			highlight_provinces = { 1976 }
+		}
+		modifier = {
+			civilian_factory_use = 20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		remove_effect = {
+			799 = {
+				if = {
+					limit = { infrastructure < 4 }
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 3
+				custom_effect_tooltip = landmark_TerracottaWarriors_TT
+			}
+			hidden_effect = {
+				799 = {
+					add_building_construction = {
+						type = landmark_TerracottaWarriors
+						level = 1
+						instant_build = yes
+						province = 1976
+					}
+				}
+			}
+		}
+	}
+}

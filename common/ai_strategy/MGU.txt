@@ -72,7 +72,20 @@
 			id = infantry
 			value = 65 #because doctrine 70
 		}
-
+        ai_strategy = {
+            type = force_build_armies
+            value = 100
+        }
+        ai_strategy = {
+            type = build_army
+            id = infantry
+            value = 100
+        }
+        ai_strategy = {#不造坦克
+            type = equipment_production_factor	#装备倾向
+            id = armor
+            value = -50
+        }
 	}
 
 	MGU_more_magic = {
@@ -158,25 +171,95 @@
 			value = 10
 		}
 	}
+    MGU_no_wants_dockyard  = { #别造船厂
+        allowed = {
+            original_tag = MGU
+        }
+        enable = {
+            date < 1942.1.1
+        }
+        abort_when_not_enabled = yes
+        ai_strategy = {
+            type = building_target
+            id = dockyard
+            value = -999
+        }
+    }
 
-MGU_Military_Command_HQ = {#魔联不进行海军登陆
-	enable = {
-		tag = MGU
+	#魔联征募
+	MGU_more_infantry_divisions = {
+		allowed = {
+			original_tag = MGU
+		}
+		enable = {
+			num_divisions < 120
+			has_equipment = {
+				infantry_equipment > 1000
+			}
+		}
+		abort = {
+			num_divisions > 120
+		}
+		ai_strategy = {
+			type = build_army
+			id = infantry
+			value = 400
+		}
 	}
+
+MGU_Military_Command_HQ = {#内战结束后 魔联守家
+    allowed = {
+        original_tag = MGU
+    }
+    enable = {
+        always = yes
+        NOT = { has_war_with = MRB }
+        NOT = { has_war_with = MGC }
+        has_global_flag = MGU_Homura_COUP
+    }
 	ai_strategy = {
 		type = naval_invasion_focus	#魔联不进行海军登陆
 		value = -500
 	}
 	ai_strategy = {
 		type = theatre_distribution_demand_increase #在神滨市部署更多兵力
-		value = 2
+		value = 50
 		id = 500
 	}
 	ai_strategy = {
 		type = theatre_distribution_demand_increase #在见泷原部署更多兵力
-		value = 3
+		value = 100
 		id = 501
 	}
+		ai_strategy = { #神滨市驻防
+			type = put_unit_buffers
+			states = {
+                500
+			}
+			ratio = 0.3
+			subtract_invasions_from_need = yes #海军入侵不计入比例
+			subtract_fronts_from_need = yes #陆地前线不计入
+		}
+		ai_strategy = { #见泷原驻防
+			type = put_unit_buffers
+			states = {
+                501
+			}
+			ratio = 0.5
+			subtract_invasions_from_need = yes #海军入侵不计入比例
+			subtract_fronts_from_need = yes #陆地前线不计入
+		}
+		ai_strategy = { #薄望之馆连接
+			type = put_unit_buffers
+			states = {
+                496
+                499
+                498
+			}
+			ratio = 0.2
+			subtract_invasions_from_need = yes #海军入侵不计入比例
+			subtract_fronts_from_need = no #陆地前线计入
+		}
 }
 
 MGU_hold_up_in = { #We got this far but there are bigger targets to worry about for a while
@@ -185,8 +268,9 @@ MGU_hold_up_in = { #We got this far but there are bigger targets to worry about 
 	}
 
 	enable = {
-		date > 1940.1.1
-		date < 1944.1.1
+		date > 1938.1.1
+		date < 1942.1.1
+		has_global_flag = MGU_Homura_COUP
 	}
 	abort_when_not_enabled = yes
 
@@ -201,6 +285,14 @@ MGU_hold_up_in = { #We got this far but there are bigger targets to worry about 
 	ai_strategy = { #别乱冲 人力都冲光了
 		type = front_control
 		tag = CHL
+		ratio > 0.1
+		priority = 100
+		ordertype = front
+		execution_type = careful
+	}
+	ai_strategy = { #别乱冲 人力都冲光了
+		type = front_control
+		tag = LHS
 		ratio > 0.1
 		priority = 100
 		ordertype = front

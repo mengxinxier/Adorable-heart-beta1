@@ -448,6 +448,67 @@ PRC_Revolutionary_issues = {
 			}
 		}
 	}
+	##联合北伐
+	PRC_attck_CHI_with_ROC = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		targets = { CHI }
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				has_war_with = ROC
+			}
+			ROC = { has_country_flag = Cooperation_between_KMT_and_CCP }
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = PRC_war_plan_going_on
+			}
+			FROM_subject_neighbor_with_root = yes
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 17 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		cancel_effect  = { clr_country_flag = PRC_war_plan_going_on }
+		remove_effect = {
+			clr_country_flag = PRC_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+		}
+	}
 	##解放
 	PRC_attck_FROM = {
 		icon = GFX_decision_generic_ignite_civil_war
@@ -485,22 +546,15 @@ PRC_Revolutionary_issues = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = PRC_war_plan_going_on
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 17 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
-		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		cancel_effect  = { clr_country_flag = PRC_war_plan_going_on }
 		remove_effect = {
 			clr_country_flag = PRC_war_plan_going_on
 			declare_war_on = {
 				target = FROM
 				type = annex_everything
-			}
-			if = {
-				limit = {
-					ROC = { has_country_flag = Cooperation_between_KMT_and_CCP }
-					FROM = { tag = CHI }
-				}
-				ROC = { country_event = { id = roc.69 } }
 			}
 		}
 		ai_will_do = {
@@ -514,6 +568,10 @@ PRC_Revolutionary_issues = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
@@ -560,11 +618,11 @@ PRC_Revolutionary_issues = {
 		days_remove = 30
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = PRC_war_plan_going_on
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 32 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 			FROM = { country_event = { id = PRC_add.49 } }
 		}
-		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		cancel_effect  = { clr_country_flag = PRC_war_plan_going_on }
 		remove_effect = {
 			clr_country_flag = PRC_war_plan_going_on
 			if = {
@@ -605,6 +663,10 @@ PRC_Revolutionary_issues = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
@@ -647,6 +709,7 @@ PRC_Revolutionary_issues = {
 		}
 		cost = 10
 		days_remove = 10
+		fire_only_once = yes
 		complete_effect = {
 		}
 		remove_effect = {
@@ -1027,6 +1090,68 @@ PRC_rebuild_SOV = {
 			modifier = {
 				has_country_flag = GER_war_plan_going_on
 				add = -30
+			}
+		}
+	}
+	##归还领土
+	PRC_return_cores_to_EAM = {
+		icon = generic_agreement
+		available = {
+			ROOT = {
+				OR = {
+					has_war = no
+					surrender_progress < 0.20
+				}
+			}
+		}
+		visible = {
+			is_subject = no
+			has_government = communism
+			any_state = {
+				OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
+				}
+				is_claim_or_core_of_ROOT = no
+				owner = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		targets = { EAM }
+		target_trigger = {
+			FROM = {
+				has_government = ROOT
+				is_subject = no
+				is_russia_uniter_tag = yes
+				exists = yes
+			}
+		}
+		cost = 0
+		fire_only_once = no
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			custom_effect_tooltip = PRC_return_cores_to_EAM_tt
+			every_state = {
+				limit = {
+					OR = {
+						is_core_of = FROM
+						is_claimed_by = FROM
+					}
+					is_claim_or_core_of_ROOT = no
+					owner = {
+						or = {
+							tag = ROOT
+							is_subject_of = ROOT
+						}
+					}
+				}
+				transfer_state_to = FROM
 			}
 		}
 	}
@@ -1817,7 +1942,7 @@ PRC_Diplomatic_matters = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = PRC_war_plan_going_on
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 15 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		remove_effect = {
@@ -3171,6 +3296,7 @@ SOV_Aid_to_Chinese_Revolution = {
 				has_government = communism
 				is_subject = no
 			}
+			NOT = { has_non_aggression_pact_with = JAP }
 		}
 		cost = 15
 		days_remove = 30
@@ -3257,7 +3383,6 @@ Build_chinese_united_font = {
 	##请求圣杯援助装备
 	PRC_ask_for_ENG_equipment = {
 		icon = GFX_decision_generic_prepare_civil_war
-		allowed = { tag = PRC }
 		visible = {
 			has_country_flag = PRC_Visit_London_ENG_accept
 			has_war_with = JAP
