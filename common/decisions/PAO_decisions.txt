@@ -361,13 +361,6 @@ PAO_qiguan = {
                 add = -100
             }
             modifier = {
-                not = {
-                    has_global_flag = PAO_rebuiid
-                }
-                tag = PAO
-                add = 10000
-            }
-            modifier = {
                 tag = PAO
                 add = -100
             }
@@ -388,7 +381,6 @@ PAO_qiguan = {
         cancel_effect = {
         }
     }
-
     PAO_minshengjianshe_AH3 = {
         icon = GFX_huayuanjianshe
         allowed = {
@@ -945,6 +937,8 @@ PAO_qiguan = {
             original_tag = PAO
         }
         available = {
+            has_template_containing_unit = wangling3
+            has_template_containing_unit = youjibudui
         }
         visible = {
         }
@@ -963,7 +957,7 @@ PAO_qiguan = {
             }
         }
         target_array = owned_states
-        cost = 100
+        cost = 50
         days_remove = 60
         modifier = {
         }
@@ -1666,11 +1660,11 @@ PAO_BACK_PAM2 = {
         }
         available = {
             or = {
-                 has_war_with = LHS
-                 LHS = {
-                     exists = no
-                 }
-             }
+                has_war_with = LHS
+                LHS = {
+                    exists = no
+                }
+            }
         }
         visible = {
             has_completed_focus = PAO_zhth
@@ -1792,11 +1786,11 @@ PAO_BACK_PAM2 = {
         }
         available = {
             or = {
-                 has_war_with = LHS
-                 LHS = {
-                     exists = no
-                 }
-             }
+                has_war_with = LHS
+                LHS = {
+                    exists = no
+                }
+            }
             or = {
                 LHS = {
                     surrender_progress > 0.5
@@ -1840,13 +1834,339 @@ PAO_BACK_PAM2 = {
             factor = 1000
         }
     }
+    PAO_juedou_FROM = {
+        priority = 9999
+        icon = GFX_PAO_zzjd_target
+        cost = 10
+        days_remove = 15
+        target_trigger = {
+            ROOT = {
+                is_subject = no
+            }
+            FROM = {
+                not = {
+                    or = {
+                        has_war_with = ROOT
+                        is_in_faction_with = ROOT
+                        is_subject_of = ROOT
+                    }
+                }
+            }
+        }
+        allowed = {
+            always = no
+        }
+        available = {
+            FROM = {
+                not = {
+                    or = {
+                        has_war_with = ROOT
+                        is_in_faction_with = ROOT
+                        is_subject_of = ROOT
+                    }
+                }
+                not = {
+                    has_country_flag = LHS_war_plan_going_on
+                }
+            }
+        }
+        ai_will_do = {
+            base = 100
+            modifier = {
+                has_war = yes
+                add = -100
+            }
+            modifier = {
+                tag = MGU
+                add = -100
+            }
+            modifier = {
+                has_idea = LHS_zdwl
+                add = -10000
+            }
+            modifier = {
+                is_ai = yes
+                add = -100
+            }
+            modifier = {
+                tag = PAO
+                add = -100
+            }
+        }
+        complete_effect = {
+            set_country_flag = PAO_war_plan_going_on
+            FROM_country_is_defender_and_ROOT_is_accacker = yes
+        }
+        remove_effect = {
+            add_ideas = PAO_zzjd
+            FROM = {
+                add_ideas = PAO_zzjd
+            }
+            if = {
+                limit = {
+                    FROM = {
+                        OR = {
+                            TAG = USA
+                            TAG = NGD
+                            TAG = NFA
+                            TAG = FRG
+                        }
+                    }
+                    PAN = {
+                        is_in_faction_with = PAO
+                    }
+                }
+                PAN = {
+                    add_ideas = PAO_zzjd
+                }
+            }
+            declare_war_on = {
+                target = FROM
+                type = topple_government
+            }
+            clr_country_flag = PAO_war_plan_going_on
+        }
+        cancel_trigger = {
+        }
+        cancel_effect = {
+        }
+    }
+    PAO_rmzd_target = {
+        icon = GFX_PAO_rmzd_target
+        visible = {
+        }
+        available = {
+            FROM = {
+                has_war_with = PAO
+                strength_ratio = {
+                    tag = PAO
+                    ratio > 1
+                }
+            }
+        }
+        cost = 50
+        days_remove = 1095
+        target_trigger = {
+            has_completed_focus = PAO_rmzd
+            FROM = {
+                has_war_with = PAO
+                strength_ratio = {
+                    tag = PAO
+                    ratio > 1
+                }
+            }
+        }
+        #修正
+        modifier = {
+            modifier_army_sub_unit_wangling3_breakthrough_factor = 0.1
+            modifier_army_sub_unit_youjibudui_defence_factor = 0.1
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+            tag = FROM
+            defense_bonus_against = 0.1
+        }
+        remove_effect = {
+        }
+        cancel_trigger = {
+            FROM = {
+                or = {
+                    not = {has_war_with = PAO}
+                    strength_ratio = {
+                        tag = PAO
+                        ratio < 1
+                    }
+                }
+            }
+        }
+        ai_will_do = {
+            factor = 100
+        }
+    }
+
+    PAO_rmzj_target = {
+        icon = GFX_PAO_rmzj_target
+        visible = {
+        }
+        available = {
+            FROM = {
+                has_war_with = PAO
+                casualties_inflicted_by = {
+                    opponent = PAO
+                    thousands > 721
+                }
+            }
+        }
+        cost = 50
+        days_remove = 30
+        target_trigger = {
+            has_completed_focus = PAO_rmzd
+            FROM = {
+                has_war_with = PAO
+                casualties_inflicted_by = {
+                    opponent = PAO
+                    thousands > 721
+                }
+                not={has_country_flag = PAO_rmzj_cf}
+            }
+        }
+        #修正
+        modifier = {
+            modifier_army_sub_unit_wangling3_org_recovery_cap_factor = 0.2
+            modifier_army_sub_unit_youjibudui_org_recovery_cap_factor = 0.2
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+            tag = FROM
+            breakthrough_bonus_against = 0.2
+        }
+        remove_effect = {
+            add_collaboration = {
+                target = FROM
+                value = 0.2
+            }
+            FROM = {
+                set_country_flag = PAO_rmzj_cf
+            }
+        }
+        cancel_trigger = {
+        }
+        ai_will_do = {
+            factor = 100
+        }
+    }
+
+    PAO_zhjs_target = {
+        icon = GFX_PAO_zhjs_target
+        visible = {
+        }
+        available = {
+            FROM = {
+                has_war_with = PAO
+                PAO = {
+                    casualties_inflicted_by = {
+                        opponent = FROM
+                        thousands > 10
+                    }
+                }
+            }
+        }
+        cost = 50
+        days_remove = 90
+        target_trigger = {
+            has_completed_focus = PAO_zhjs
+            FROM = {
+                has_war_with = PAO
+                not = {
+                    has_country_flag = PAO_zhjs_cf
+                    or = {
+                        tag = WL1
+                        tag = MS1
+                    }
+                }
+                PAO = {
+                    casualties_inflicted_by = {
+                        opponent = FROM
+                        thousands > 10
+                    }
+                }
+            }
+        }
+        #修正
+        modifier = {
+            production_speed_industrial_complex_factor = 0.1
+            repair_speed_industrial_complex_factor = 0.2
+            production_speed_infrastructure_factor = 0.1
+            repair_speed_infrastructure_factor = 0.2
+            conversion_cost_mil_to_civ_factor = -0.1
+            stability_weekly = 0.005
+            war_support_weekly = 0.005
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+        }
+        complete_effect = {
+            add_stability = -0.05
+            add_war_support = -0.05
+        }
+        remove_effect = {
+            FROM = {
+                set_country_flag = PAO_zhjs_cf
+            }
+        }
+        cancel_trigger = {
+        }
+        ai_will_do = {
+            factor = 100
+        }
+    }
+
+    PAO_mbqw_target = {
+        icon = GFX_PAO_mbqw_target
+        visible = {
+        }
+        available = {
+            any_controlled_state = {
+                compliance < 60
+                is_core_of = FROM
+            }
+            FROM = {
+                any_core_state = {
+                    or = {
+                        is_controlled_by = PAO
+                        is_owned_by = PAO
+                    }
+                }
+            }
+        }
+        target_trigger = {
+            has_completed_focus = PAO_mbqw
+            FROM = {
+                any_core_state = {
+                    compliance < 60
+                    or = {
+                        is_controlled_by = PAO
+                        is_owned_by = PAO
+                    }
+                }
+            }
+        }
+        cost = 50
+        days_remove = 30
+        #修正
+        modifier = {
+            civilian_factory_use = 10
+            political_power_cost = 0.5
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+        }
+        remove_effect = {
+            FROM = {
+                random_state = {
+                    limit = {
+                        compliance < 60
+                        is_core_of = MGU
+                        or = {
+                            is_controlled_by = PAO
+                            is_owned_by = PAO
+                        }
+                    }
+                    add_compliance = 20
+                }
+            }
+        }
+        cancel_trigger = {
+        }
+        ai_will_do = {
+            factor = 50
+        }
+    }
+
+
     PAO_nalaibani2 = {
         icon = GFX_PAO_back_PAM3
         visible = {
             TAG = PAO
             is_subject = no
             or = {
-                has_completed_focus = PAO_ygrd
+                has_completed_focus = PAO_yhyh
             }
             PAM = {
                 exists = no
