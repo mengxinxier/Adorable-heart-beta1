@@ -1972,8 +1972,8 @@ PAO_BACK_PAM2 = {
         }
         #修正
         modifier = {
-            modifier_army_sub_unit_wangling3_breakthrough_factor = 0.1
-            modifier_army_sub_unit_youjibudui_defence_factor = 0.1
+            breakthrough_factor = 0.1
+            army_defence_factor = 0.1
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
             tag = FROM
@@ -1987,7 +1987,7 @@ PAO_BACK_PAM2 = {
                     not = {has_war_with = PAO}
                     strength_ratio = {
                         tag = PAO
-                        ratio < 1
+                        ratio < 0.8
                     }
                 }
             }
@@ -2031,8 +2031,8 @@ PAO_BACK_PAM2 = {
         }
         #修正
         modifier = {
-            modifier_army_sub_unit_wangling3_org_recovery_cap_factor = 0.2
-            modifier_army_sub_unit_youjibudui_org_recovery_cap_factor = 0.2
+            army_morale_factor = 0.2
+            org_loss_when_moving = -0.2
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
             tag = FROM
@@ -2113,6 +2113,68 @@ PAO_BACK_PAM2 = {
             factor = 100
         }
     }
+    PAO_mqjj_target = {
+        icon = GFX_PAO_mqjj_target
+        visible = {
+        }
+        available = {
+            FROM = {
+                is_subject_of = PAO
+            }
+        }
+        cost = 100
+        days_remove = 90
+        target_trigger = {
+            has_completed_focus = PAO_mqjj
+            FROM = {
+                is_subject_of = PAO
+            }
+        }
+        #修正
+        modifier = {
+            civilian_factory_use = 20
+            political_power_cost = 1
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            FROM = {
+                add_popularity = {
+                    ideology = communism
+                    popularity = 0.2
+                }
+            }
+            country_event = {
+                id = PAO.120
+            }
+            custom_effect_tooltip = PAO_mqjj2_tt
+            effect_tooltip = {
+                FROM = {
+                    every_core_state = {
+                        add_claim_by = PAO
+                        add_compliance = 10
+                    }
+                    every_character = {
+                        set_nationality = PAO
+                    }
+                }
+                PAO = {
+                    FROM = { enable_country_integration_50_compliance = yes }
+                }
+                annex_country = {
+                    target = FROM
+                    transfer_troops = yes
+                }
+            }
+        }
+        cancel_trigger = {
+        }
+        ai_will_do = {
+            factor = 100
+        }
+    }
 
     PAO_mbqw_target = {
         icon = GFX_PAO_mbqw_target
@@ -2124,7 +2186,11 @@ PAO_BACK_PAM2 = {
                 is_core_of = FROM
             }
             FROM = {
+                has_war_with = PAO
                 any_core_state = {
+                    not = {
+                        is_core_of = PAO
+                    }
                     or = {
                         is_controlled_by = PAO
                         is_owned_by = PAO
@@ -2135,7 +2201,11 @@ PAO_BACK_PAM2 = {
         target_trigger = {
             has_completed_focus = PAO_mbqw
             FROM = {
+                has_war_with = PAO
                 any_core_state = {
+                    not = {
+                        is_core_of = PAO
+                    }
                     compliance < 60
                     or = {
                         is_controlled_by = PAO
@@ -2145,7 +2215,7 @@ PAO_BACK_PAM2 = {
             }
         }
         cost = 50
-        days_remove = 30
+        days_remove = 15
         #修正
         modifier = {
             civilian_factory_use = 10
@@ -2153,10 +2223,14 @@ PAO_BACK_PAM2 = {
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
         }
+        fixed_random_seed = no
         remove_effect = {
             FROM = {
                 random_state = {
                     limit = {
+                        not = {
+                            is_core_of = PAO
+                        }
                         compliance < 60
                         is_core_of = FROM
                         or = {
@@ -2164,7 +2238,83 @@ PAO_BACK_PAM2 = {
                             is_owned_by = PAO
                         }
                     }
-                    add_compliance = 20
+                    add_compliance = 10
+                }
+                random_list = {
+                    80 = {
+                        random_state = {
+                            limit = {
+                                not = {
+                                    is_core_of = PAO
+                                }
+                                compliance < 60
+                                is_core_of = FROM
+                                or = {
+                                    is_controlled_by = PAO
+                                    is_owned_by = PAO
+                                }
+                            }
+                            add_compliance = 10
+                        }
+                    }
+                    20 = {}
+                }
+                random_list = {
+                    60 = {
+                        random_state = {
+                            limit = {
+                                not = {
+                                    is_core_of = PAO
+                                }
+                                compliance < 60
+                                is_core_of = FROM
+                                or = {
+                                    is_controlled_by = PAO
+                                    is_owned_by = PAO
+                                }
+                            }
+                            add_compliance = 10
+                        }
+                    }
+                    40 = {}
+                }
+                random_list = {
+                    40 = {
+                        random_state = {
+                            limit = {
+                                not = {
+                                    is_core_of = PAO
+                                }
+                                compliance < 60
+                                is_core_of = FROM
+                                or = {
+                                    is_controlled_by = PAO
+                                    is_owned_by = PAO
+                                }
+                            }
+                            add_compliance = 10
+                        }
+                    }
+                    60 = {}
+                }
+                random_list = {
+                    20 = {
+                        random_state = {
+                            limit = {
+                                not = {
+                                    is_core_of = PAO
+                                }
+                                compliance < 60
+                                is_core_of = FROM
+                                or = {
+                                    is_controlled_by = PAO
+                                    is_owned_by = PAO
+                                }
+                            }
+                            add_compliance = 10
+                        }
+                    }
+                    80 = {}
                 }
             }
         }
