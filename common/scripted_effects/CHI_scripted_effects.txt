@@ -414,6 +414,7 @@ CHI_puppet_released_tag_and_old_govern = {
  ##设置修饰性tag
 		if = {
 			limit = { PREV = { tag = CHI } }
+			add_ideas = CTS_Imperial_Province_idea
 			if = {
 				limit = { tag = SIC }
 				set_cosmetic_tag = SIC_CHI
@@ -3299,4 +3300,44 @@ CHI_faction_influence_calculate = {
 	subtract_from_variable = { Innovation_Alliance_faction_seat = Honour_Emperor_faction_seat }
 }
 
+###  天朝朝贡体系计算  ###
+China_tribute_system_effect = {
+	###  统计经济阵营成员数量
+	clear_array = global.China_tribute_system_member  ##成员所在的数组
+	clear_array = global.CTS_Imperial_Province_member
+	clear_array = global.CTS_Imperial_Vassal_member
+	clear_array = global.CTS_Imperial_Tributary_member
+	set_variable = { global.num_of_China_tribute_system = 0 }  ##成员数量变量
+	every_country = {
+		limit = { check_variable = { THIS.economy_faction_var = 7 } }
+		add_to_array = { global.China_tribute_system_member = THIS }
+		add_to_variable = { global.num_of_China_tribute_system = 1 }
+		if = {
+			limit = { has_autonomy_state = China_Provinces }
+			add_to_array = { global.CTS_Imperial_Province_member = THIS }
+		}
+		else_if = {
+			limit = { has_autonomy_state = China_Domain }
+			add_to_array = { global.CTS_Imperial_Province_member = THIS }
+		}
+		else_if = {
+			limit = { has_autonomy_state = China_Vassal }
+			add_to_array = { global.CTS_Imperial_Vassal_member = THIS }
+		}
+		else_if = {
+			limit = {
+				is_subject = no
+				not = { tag = CHI }
+			}
+			add_to_array = { global.CTS_Imperial_Tributary_member = THIS }
+		}
+	}
+	###  计算动态阵营buff（如果有）
+	China_tribute_system_leader_modifier_effect = yes
+	###  刷新经济阵营GDP
+	compute_global_gdp = yes
+}
+
+China_tribute_system_leader_modifier_effect = {
+}
 

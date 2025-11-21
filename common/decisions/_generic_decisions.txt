@@ -121,24 +121,6 @@ political_actions = {
 			country_event = annex.3
 		}
 	}
-	DEBUG_TEST = {
-		available = {
-			custom_trigger_tooltip = {
-				tooltip = 11
-				check_variable = { another_country_leader_group = 1 }
-			}
-			has_volunteers_amount_from = {
-				tag = CHI
-				count > 0
-			}
-		}
-		visible = {
-			is_debug = yes
-		}
-		complete_effect = {
-			custom_effect_tooltip = DEBUG_TEST
-		}
-	}
 	AI_improve_north_America = {
 		allowed = {
 			tag = AHM
@@ -854,359 +836,6 @@ political_actions = {
 }
 
 economy_decisions = {
-	dismantle_maginot = {
-		icon = generic_construction
-		allowed = {
-			NOT = {
-				OR = {
-					tag = DVL
-					tag = FRA
-				}
-			}
-		}
-		cost = 50
-		fire_only_once = yes
-		days_remove = 200
-		available = {
-			controls_state = 28
-			if = {
-				limit = {
-					FRA = {
-						has_completed_focus = FRA_extend_the_maginot_line
-					}
-				}
-				controls_state = 18
-				controls_state = 29
-			}
-		}
-		visible = {
-			FRA = {
-				any_owned_state = {
-					is_controlled_by = ROOT
-				}
-			}
-			NOT = {
-				is_in_faction_with = FRA
-			}
-		}
-		modifier = {
-			civilian_factory_use = 5
-		}
-		complete_effect = {
-			28 = {
-				set_building_level = {
-					type = bunker
-					level = 2
-					province = {
-						all_provinces = yes
-						level > 2
-					}
-				}
-			}
-			if = {
-				limit = {
-					FRA = {
-						has_completed_focus = FRA_extend_the_maginot_line
-					}
-				}
-				18 = {
-					set_building_level = {
-						type = bunker
-						level = 2
-						province = {
-							all_provinces = yes
-							level > 2
-						}
-					}
-				}
-				29 = {
-					set_building_level = {
-						type = bunker
-						level = 2
-						province = {
-							all_provinces = yes
-							level > 2
-						}
-					}
-				}
-			}
-			if = {
-				limit = {
-					has_idea = FRA_protected_by_the_maginot_line
-				}
-				remove_ideas = FRA_protected_by_the_maginot_line
-			}
-		}
-	}
-	restructure_supply_system = {
-		#one time boost to get a few cheap supply hubs
-		visible = {
-			OR = {
-				is_major = no
-				AND = {
-					is_faction_leader = yes
-					num_of_factories < 51					#would be a minor if it wasn't for faction leader status
-				}
-			}
-		}
-		fire_only_once = yes
-		days_remove = 120
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				num_of_factories < 30
-				factor = 0
-			}
-		}
-		modifier = {
-			production_speed_supply_node_factor = 3
-		}
-		complete_effect = {
-			set_variable = {
-				node_goal = num_of_supply_nodes
-			}
-			add_to_variable = {
-				node_goal = 3
-			}
-			#maximum 3 additional nodes
-		}
-		cancel_trigger = {
-			check_variable = {
-				node_goal < num_of_supply_nodes
-			}
-			#if the number of supply nodes exceeds the old number by +3, immediately cancel
-		}
-	}
-	seize_some_trains_woo = {
-		#repeating train seize
-		visible = {
-			num_of_factories < 60
-		}
-		available = {
-			has_equipment = {
-				train_equipment < 101
-			}
-			has_tech = basic_train
-		}
-		days_remove = 180
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_stability < 0.56
-				factor = 0
-			}
-		}
-		complete_effect = {
-			add_equipment_to_stockpile = {
-				type = train_equipment
-				amount = 15
-			}
-			add_stability = -0.05
-		}
-	}
-	infrastructure_building_slot = {
-		icon = generic_construction
-		allowed = {
-			always = yes
-		}
-		cost = 100
-		fire_only_once = no
-		days_re_enable = 30
-		available = {
-			any_owned_state = {
-				NOT = {
-					has_state_flag = infrastructure_building_slot_flag
-				}
-				is_fully_controlled_by = ROOT
-				free_building_slots = {
-					building = infrastructure
-					size < 1
-				}
-			}
-		}
-		visible = {
-			any_owned_state = {
-				NOT = {
-					has_state_flag = infrastructure_building_slot_flag
-				}
-				is_fully_controlled_by = ROOT
-				free_building_slots = {
-					building = infrastructure
-					size < 1
-				}
-			}
-		}
-		complete_effect = {
-			random_owned_state = {
-				limit = {
-					is_fully_controlled_by = ROOT
-					free_building_slots = {
-						building = industrial_complex
-						size > 1
-						include_locked = yes
-					}
-					free_building_slots = {
-						building = infrastructure
-						size < 1
-					}
-					NOT = {
-						has_state_flag = infrastructure_building_slot_flag
-					}
-				}
-				add_extra_state_shared_building_slots = 1
-				set_state_flag = infrastructure_building_slot_flag
-			}
-		}
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 10
-				any_owned_state = {
-					free_building_slots = {
-						building = industrial_complex
-						size < 1
-						include_locked = no
-					}
-				}
-			}
-		}
-	}
-	war_building_slot = {
-		icon = generic_construction
-		allowed = {
-			always = yes
-		}
-		cost = 50
-		fire_only_once = no
-		available = {
-			has_war = yes
-			any_owned_state = {
-				NOT = {
-					has_state_flag = war_building_slot_flag
-				}
-				is_fully_controlled_by = ROOT
-			}
-		}
-		visible = {
-			has_war = yes
-			any_owned_state = {
-				NOT = {
-					has_state_flag = war_building_slot_flag
-				}
-				is_fully_controlled_by = ROOT
-			}
-		}
-		complete_effect = {
-			add_war_support = -0.025
-			add_stability = -0.025
-			if = {
-				limit = {
-					any_owned_state = {
-						is_fully_controlled_by = ROOT
-						free_building_slots = {
-							building = industrial_complex
-							size > 1
-							include_locked = yes
-						}
-						NOT = {
-							has_state_flag = war_building_slot_flag
-						}
-						infrastructure > 4
-					}
-				}
-				random_owned_state = {
-					limit = {
-						is_fully_controlled_by = ROOT
-						free_building_slots = {
-							building = industrial_complex
-							size > 1
-							include_locked = yes
-						}
-						NOT = {
-							has_state_flag = war_building_slot_flag
-						}
-						infrastructure > 4
-					}
-					add_extra_state_shared_building_slots = 1
-					set_state_flag = war_building_slot_flag
-				}
-			}
-			else_if = {
-				limit = {
-					any_owned_state = {
-						is_fully_controlled_by = ROOT
-						free_building_slots = {
-							building = industrial_complex
-							size > 1
-							include_locked = yes
-						}
-						NOT = {
-							has_state_flag = war_building_slot_flag
-						}
-						infrastructure > 2
-					}
-				}
-				random_owned_state = {
-					limit = {
-						is_fully_controlled_by = ROOT
-						free_building_slots = {
-							building = industrial_complex
-							size > 1
-							include_locked = yes
-						}
-						NOT = {
-							has_state_flag = war_building_slot_flag
-						}
-						infrastructure > 2
-					}
-					add_extra_state_shared_building_slots = 1
-					set_state_flag = war_building_slot_flag
-				}
-			}
-			else = {
-				random_owned_state = {
-					limit = {
-						is_fully_controlled_by = ROOT
-						free_building_slots = {
-							building = industrial_complex
-							size > 1
-							include_locked = yes
-						}
-						NOT = {
-							has_state_flag = war_building_slot_flag
-						}
-						infrastructure > 4
-					}
-					add_extra_state_shared_building_slots = 1
-					set_state_flag = war_building_slot_flag
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 10
-				all_owned_state = {
-					free_building_slots = {
-						building = industrial_complex
-						size < 1
-						include_locked = no
-					}
-				}
-			}
-			modifier = {
-				any_owned_state = {
-					infrastructure > 3
-					free_building_slots = {
-						building = industrial_complex
-						size > 0
-						include_locked = no
-					}
-				}
-				factor = 0
-			}
-		}
-	}
 }
 
 propaganda_efforts = {
@@ -4463,9 +4092,465 @@ adorable_heart_UBS_bank = {
 			country_event = adorable_heart_jueyi.10
 		}
 	}
+	dismantle_maginot = {
+		icon = generic_construction
+		allowed = {
+			NOT = {
+				OR = {
+					tag = DVL
+					tag = FRA
+				}
+			}
+		}
+		cost = 50
+		fire_only_once = yes
+		days_remove = 200
+		available = {
+			controls_state = 28
+			if = {
+				limit = {
+					FRA = {
+						has_completed_focus = FRA_extend_the_maginot_line
+					}
+				}
+				controls_state = 18
+				controls_state = 29
+			}
+		}
+		visible = {
+			FRA = {
+				any_owned_state = {
+					is_controlled_by = ROOT
+				}
+			}
+			NOT = {
+				is_in_faction_with = FRA
+			}
+		}
+		modifier = {
+			civilian_factory_use = 5
+		}
+		complete_effect = {
+			28 = {
+				set_building_level = {
+					type = bunker
+					level = 2
+					province = {
+						all_provinces = yes
+						level > 2
+					}
+				}
+			}
+			if = {
+				limit = {
+					FRA = {
+						has_completed_focus = FRA_extend_the_maginot_line
+					}
+				}
+				18 = {
+					set_building_level = {
+						type = bunker
+						level = 2
+						province = {
+							all_provinces = yes
+							level > 2
+						}
+					}
+				}
+				29 = {
+					set_building_level = {
+						type = bunker
+						level = 2
+						province = {
+							all_provinces = yes
+							level > 2
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					has_idea = FRA_protected_by_the_maginot_line
+				}
+				remove_ideas = FRA_protected_by_the_maginot_line
+			}
+		}
+	}
+	restructure_supply_system = {
+		#one time boost to get a few cheap supply hubs
+		visible = {
+			OR = {
+				is_major = no
+				AND = {
+					is_faction_leader = yes
+					num_of_factories < 51					#would be a minor if it wasn't for faction leader status
+				}
+			}
+		}
+		fire_only_once = yes
+		days_remove = 120
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				num_of_factories < 30
+				factor = 0
+			}
+		}
+		modifier = {
+			production_speed_supply_node_factor = 3
+		}
+		complete_effect = {
+			set_variable = {
+				node_goal = num_of_supply_nodes
+			}
+			add_to_variable = {
+				node_goal = 3
+			}
+			#maximum 3 additional nodes
+		}
+		cancel_trigger = {
+			check_variable = {
+				node_goal < num_of_supply_nodes
+			}
+			#if the number of supply nodes exceeds the old number by +3, immediately cancel
+		}
+	}
+	seize_some_trains_woo = {
+		#repeating train seize
+		visible = {
+			num_of_factories < 60
+		}
+		available = {
+			has_equipment = {
+				train_equipment < 101
+			}
+			has_tech = basic_train
+		}
+		days_remove = 180
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				has_stability < 0.56
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_equipment_to_stockpile = {
+				type = train_equipment
+				amount = 15
+			}
+			add_stability = -0.05
+		}
+	}
+	infrastructure_building_slot = {
+		icon = generic_construction
+		allowed = {
+			always = yes
+		}
+		cost = 100
+		fire_only_once = no
+		days_re_enable = 30
+		available = {
+			any_owned_state = {
+				NOT = {
+					has_state_flag = infrastructure_building_slot_flag
+				}
+				is_fully_controlled_by = ROOT
+				free_building_slots = {
+					building = infrastructure
+					size < 1
+				}
+			}
+		}
+		visible = {
+			any_owned_state = {
+				NOT = {
+					has_state_flag = infrastructure_building_slot_flag
+				}
+				is_fully_controlled_by = ROOT
+				free_building_slots = {
+					building = infrastructure
+					size < 1
+				}
+			}
+		}
+		complete_effect = {
+			random_owned_state = {
+				limit = {
+					is_fully_controlled_by = ROOT
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
+					}
+					free_building_slots = {
+						building = infrastructure
+						size < 1
+					}
+					NOT = {
+						has_state_flag = infrastructure_building_slot_flag
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				set_state_flag = infrastructure_building_slot_flag
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 10
+				any_owned_state = {
+					free_building_slots = {
+						building = industrial_complex
+						size < 1
+						include_locked = no
+					}
+				}
+			}
+		}
+	}
+	war_building_slot = {
+		icon = generic_construction
+		allowed = {
+			always = yes
+		}
+		cost = 50
+		fire_only_once = no
+		available = {
+			has_war = yes
+			any_owned_state = {
+				NOT = {
+					has_state_flag = war_building_slot_flag
+				}
+				is_fully_controlled_by = ROOT
+			}
+		}
+		visible = {
+			has_war = yes
+			any_owned_state = {
+				NOT = {
+					has_state_flag = war_building_slot_flag
+				}
+				is_fully_controlled_by = ROOT
+			}
+		}
+		complete_effect = {
+			add_war_support = -0.025
+			add_stability = -0.025
+			if = {
+				limit = {
+					any_owned_state = {
+						is_fully_controlled_by = ROOT
+						free_building_slots = {
+							building = industrial_complex
+							size > 1
+							include_locked = yes
+						}
+						NOT = {
+							has_state_flag = war_building_slot_flag
+						}
+						infrastructure > 4
+					}
+				}
+				random_owned_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						free_building_slots = {
+							building = industrial_complex
+							size > 1
+							include_locked = yes
+						}
+						NOT = {
+							has_state_flag = war_building_slot_flag
+						}
+						infrastructure > 4
+					}
+					add_extra_state_shared_building_slots = 1
+					set_state_flag = war_building_slot_flag
+				}
+			}
+			else_if = {
+				limit = {
+					any_owned_state = {
+						is_fully_controlled_by = ROOT
+						free_building_slots = {
+							building = industrial_complex
+							size > 1
+							include_locked = yes
+						}
+						NOT = {
+							has_state_flag = war_building_slot_flag
+						}
+						infrastructure > 2
+					}
+				}
+				random_owned_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						free_building_slots = {
+							building = industrial_complex
+							size > 1
+							include_locked = yes
+						}
+						NOT = {
+							has_state_flag = war_building_slot_flag
+						}
+						infrastructure > 2
+					}
+					add_extra_state_shared_building_slots = 1
+					set_state_flag = war_building_slot_flag
+				}
+			}
+			else = {
+				random_owned_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						free_building_slots = {
+							building = industrial_complex
+							size > 1
+							include_locked = yes
+						}
+						NOT = {
+							has_state_flag = war_building_slot_flag
+						}
+						infrastructure > 4
+					}
+					add_extra_state_shared_building_slots = 1
+					set_state_flag = war_building_slot_flag
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 10
+				all_owned_state = {
+					free_building_slots = {
+						building = industrial_complex
+						size < 1
+						include_locked = no
+					}
+				}
+			}
+			modifier = {
+				any_owned_state = {
+					infrastructure > 3
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = no
+					}
+				}
+				factor = 0
+			}
+		}
+	}
 }
 
 adorable_heart_generic_decision = {
+	DEBUG_TEST = {
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = 11
+				check_variable = { another_country_leader_group = 1 }
+			}
+			has_volunteers_amount_from = {
+				tag = CHI
+				count > 0
+			}
+		}
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			custom_effect_tooltip = DEBUG_TEST
+		}
+	}
+	economy_faction_debug = {
+		available = {
+		}
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			custom_effect_tooltip = economy_faction_debug_tt
+			hidden_effect = {
+				DVL = {
+					set_country_flag = DVL_Promote_economic_synergy
+					set_variable = { global.num_of_Berlin_Economic_Agreement = 0 }
+					clear_array = global.Berlin_Economic_Agreement_member
+					add_ideas = DVL_Berlin_Economic_Agreement
+					custom_effect_tooltip = DVL_Promote_economic_synergy_tt
+					hidden_effect = {
+						add_dynamic_modifier = {
+							modifier = DVL_Berlin_Economic_Agreement_leader
+						}
+						every_country = {
+							limit = { is_subject_of = DVL }
+							add_ideas = DVL_Berlin_Economic_Agreement
+						}
+					}
+				}
+				GER = {
+					add_ideas = GER_Vienna_Convention_idea
+				}
+				ENG = {
+					add_dynamic_modifier = {
+						modifier = ENG_dynamic_modifier_wto
+					}	
+						set_variable = { economy_faction_var = 1 }
+						wto_effect = yes
+				}
+				CAN = {
+					country_event = ENG_event_wto.1 		
+				}
+				RAJ = {
+					country_event = ENG_event_wto.1 					
+				}
+				SAF = {
+					country_event = ENG_event_wto.1 				
+				}
+				AST = {
+					country_event = ENG_event_wto.1 				
+				}
+				MAL = {
+					country_event = ENG_event_wto.1 				
+				}
+				EGY = {
+					country_event = ENG_event_wto.1 					
+				}
+				EAS = {
+					country_event = ENG_event_wto.1 			
+				}
+				RYU = {
+					country_event = ENG_event_wto.1  				
+				}
+				NEE = {
+					country_event = ENG_event_wto.1 				
+				}
+				YEM = {
+					country_event = ENG_event_wto.1 				
+				}
+				SOV = {
+					set_variable = { global.num_comecon_member = 0 }
+					custom_effect_tooltip = SOV_formation_comecon_tooltip
+					unlock_decision_tooltip = SOV_establish_research_organization
+					hidden_effect = {
+						add_dynamic_modifier = {
+							modifier = SOV_comecon_leader
+						}
+						set_variable = { economy_faction_var = 2 }   ##设置阵营变量
+						comecon_effect = yes   ##计算阵营相关
+					}
+				}
+				BAY = { complete_national_focus = GEU_Rudolph_Economic_Plan }
+				CHI = {
+					set_variable = { economy_faction_var = 7 }   ##设置阵营变量
+					China_tribute_system_effect = yes   ##计算阵营相关
+				}
+			}
+		}
+	}
 	remove_AI_Arms_imitation = {
 		visible = {
 			has_idea = AI_Arms_imitation
