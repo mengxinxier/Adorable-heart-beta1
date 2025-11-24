@@ -1,38 +1,4 @@
 SOV_faction_management_category = {
-
-	SOV_formation_comecon = {
-		icon = GFX_decision_SOV_the_stalin_constitution
-		priority = 99
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			is_faction_leader = yes
-		}
-		available = {
-			is_subject = no
-			num_faction_members > 3
-
-		}
-		days_remove = 14
-		ai_will_do = {
-			base = 1000
-		}
-		cost = 0
-		fire_only_once = yes
-		remove_effect = {
-			set_variable = { global.num_comecon_member = 0 }
-			custom_effect_tooltip = SOV_formation_comecon_tooltip
-			unlock_decision_tooltip = SOV_establish_research_organization
-			hidden_effect = {
-				add_dynamic_modifier = {
-					modifier = SOV_comecon_leader
-				}
-				set_variable = { economy_faction_var = 2 }   ##设置阵营变量
-				comecon_effect = yes   ##计算阵营相关
-			}
-		}
-	}
-
 	SOV_political_propaganda_Sakura_path = {
 		icon = GFX_decision_eng_propaganda_campaigns
 		priority = 9
@@ -699,6 +665,7 @@ SOV_deal_with_plague_category = {
 				remove_ideas = SOV_spread_of_plague
 				clr_country_flag = SOV_plague_start  
 				news_event = SOV_news.5
+				country_event = { id = SOV_dip.51 days = 10 }
 			}
 	    }
 	}
@@ -4173,9 +4140,9 @@ foreign_influence = {
 	}
 }
 
-SOV_dip_agitprop_category = {
+SOV_dip_agitprop_category = {  ##输出革命
 
-	SOV_march_on_Minsk = {
+	SOV_march_on_Minsk = {  ##向明斯克前进
 		icon = GFX_decision_generic_civil_support
 		allowed = {
 			always = no
@@ -4234,7 +4201,7 @@ SOV_dip_agitprop_category = {
 		}
 	}
 
-	SOV_down_to_the_Balkans = {
+	SOV_down_to_the_Balkans = {  ##南下巴尔干
 		icon = GFX_decision_generic_civil_support
 		visible = {
 			is_subject = no
@@ -4268,7 +4235,7 @@ SOV_dip_agitprop_category = {
 		}
 	}
 
-	SOV_encourage_communist_rallies_in_dec = {
+	SOV_encourage_communist_rallies_in_dec = {  ##解放[From.GetName]的人民
 		priority = 1
 		allowed = { always = no }
 		visible = { 
@@ -4299,7 +4266,7 @@ SOV_dip_agitprop_category = {
 		}
 	}
 
-	SOV_uphold_dec_national_self_determination = {
+	SOV_uphold_dec_national_self_determination = {  ##颠覆[From.GetName]反动政府
 		priority = 98
 		allowed = { always = no }
 		visible = { 
@@ -4351,17 +4318,21 @@ SOV_dip_agitprop_category = {
 		}
 	}
 
-	SOV_liberate_the_people_of_dec = {
+	SOV_liberate_the_people_of_dec = {  ##解放[From.GetName]的人民
 		priority = 99
+		allowed = { always = no }
 		visible = {
-			has_completed_focus = SOV_free_Europe
 		}
 		target_trigger = {
+			ROOT = { is_subject = no }
 			FROM = {
-				NOT = { is_in_faction_with = ROOT }
-				exists = yes
-				is_major = yes
-				capital_scope = { is_on_continent = europe }
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
 			}
 		}
 		ai_will_do = {
@@ -4400,31 +4371,108 @@ SOV_dip_agitprop_category = {
 					is_major = yes
 				}
 			}
-		}
-		available = { 
-			is_subject = no
-			OR = {
-				NOT = { country_exists = DVL }
-				DVL = { is_subject = yes }
+			modifier = {
+				factor = 0
+				has_country_flag = {
+					flag = DVL_banished_from_earth
+					days < 365
+				}
 			}
-			date > 1941.1.1
+		}
+		available = {
+			NOT = { has_non_aggression_pact_with = FROM }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			FROM_subject_neighbor_with_root = yes
 		}
 		war_with_target_on_remove = yes
 		complete_effect = {
-			FROM = { country_event = SOV_flavor.30 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		cost = 0
 		days_remove = 30
 		fire_only_once = yes
 		remove_effect = {
+			if = {
+				limit = {
+					not = { has_global_flag = second_weltkrieg_has_started }
+					FROM = { tag = DVL }
+				}
+				custom_effect_tooltip = this_will_lead_to_second_weltkrieg
+			}
 			declare_war_on = {
 				target = FROM
-				type = puppet_wargoal_focus
+				type = annex_everything
 			}
 		}
 	}
+	##整合
+	SOV_integration_FROM_SOV_member_state = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
+			has_war = no
+			FROM = { is_subject_of = ROOT }
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			set_autonomy = {
+				target = FROM
+				autonomous_state = SOV_member_state
+			}
+			activate_targeted_decision = { target = FROM decision = SOV_integration_FROM_annex }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	SOV_integration_FROM_annex = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
+			has_war = no
+			FROM = { is_subject_of = ROOT }
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 100
+		days_remove = 300
+		remove_effect = {
+			FROM = {
+				every_core_state = {
+					add_core_of = ROOT
+				}
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
 
-	SOV_exterminate_fascism_in_Europe = {
+	SOV_exterminate_fascism_in_Europe = {  ##消灭[From.GetName]法西斯分子
 		icon = GFX_decision_generic_tank
 		visible = {
 			is_subject = no
@@ -4614,39 +4662,74 @@ SOV_expelling_alien_forces = {
 			}
 		}
 
-		SOV_establish_research_organization = {
-			priority = 96
+		SOV_invite_dec_to_join_comecon_research_organization = {
+			icon = GFX_decision_hol_exchange_intelligence_data
+			priority = 98
 			visible = {
-				has_dynamic_modifier = {
-					modifier = SOV_comecon_leader
-				}
+				is_in_tech_sharing_group = comecon_research_organization
 			}
 			available = {
-				custom_trigger_tooltip = {
-					tooltip = SOV_establish_research_organization_tt
-					check_variable = {
-						global.num_comecon_member > 4
-					}
+				is_subject = no
+			}
+			target_trigger = {
+				FROM = {
+					check_variable = { THIS.economy_faction_var = 2 }
+					not = { is_in_tech_sharing_group = comecon_research_organization }
+					not = { has_war_with = ROOT }
 				}
 			}
-			days_remove = 14
+			days_remove = 7
 			ai_will_do = {
-				base = 100
+				base = 1000
 			}
-			cost = 100
-			fire_only_once = yes
+			cancel_trigger = {
+			}
+			cost = 10
+			days_re_enable = 30
+			fire_only_once = no
+			cancel_effect = {
+				add_political_power = 10
+			}
 			remove_effect = {
-				add_research_slot = 1
-				add_to_tech_sharing_group = comecon_research_organization
-				every_other_country = {
-					limit = {
-						is_in_faction_with = SOV
-						has_idea = SOV_comecon_buff
-					}
+				FROM = {
 					add_to_tech_sharing_group = comecon_research_organization
 				}
 			}
 		}
+
+		# SOV_establish_research_organization = {
+		# 	priority = 96
+		# 	visible = {
+		# 		has_dynamic_modifier = {
+		# 			modifier = SOV_comecon_leader
+		# 		}
+		# 	}
+		# 	available = {
+		# 		custom_trigger_tooltip = {
+		# 			tooltip = SOV_establish_research_organization_tt
+		# 			check_variable = {
+		# 				global.num_comecon_member > 4
+		# 			}
+		# 		}
+		# 	}
+		# 	days_remove = 14
+		# 	ai_will_do = {
+		# 		base = 100
+		# 	}
+		# 	cost = 100
+		# 	fire_only_once = yes
+		# 	remove_effect = {
+		# 		add_research_slot = 1
+		# 		add_to_tech_sharing_group = comecon_research_organization
+		# 		every_other_country = {
+		# 			limit = {
+		# 				is_in_faction_with = SOV
+		# 				has_idea = SOV_comecon_buff
+		# 			}
+		# 			add_to_tech_sharing_group = comecon_research_organization
+		# 		}
+		# 	}
+		# }
 
 	#经济援助
 		comecon_apply_for_financial_aid = {
@@ -6884,19 +6967,24 @@ Reunit_Tresen_decision_cate = {
 		visible = {
 		}
 		available = {
-			custom_trigger_tooltip = {
-				tooltip = control_all_Tresen_state
-				NOT = {
-					any_state = {
-						or = {
-							is_core_of = TAM
-							is_core_of = PER
-							is_core_of = AFG
-						}
-						NOT = { is_controlled_by = ROOT }
-					}
-				}
+			if = {
+				limit = { tag = TAM }
+				PER = { exists = no }
+				AFG = { exists = no }
 			}
+			if = {
+				limit = { tag = PER }
+				TAM = { exists = no }
+				AFG = { exists = no }
+			}
+			if = {
+				limit = { tag = AFG }
+				PER = { exists = no }
+				TAM = { exists = no }
+			}
+			controls_state = 407
+			controls_state = 266
+			controls_state = 267
 			has_war = no
 		}
 		fire_only_once = yes

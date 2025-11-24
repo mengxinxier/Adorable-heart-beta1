@@ -6145,10 +6145,7 @@ focus_tree = {
 		y = 15
 		cost = 2
 		available = {
-			OR = {
-				has_country_flag = SOV_select_support_Sakura_path
-				has_country_flag = SOV_select_terminate_Sakura_path
-			}
+			always = no
 		}
 		ai_will_do = {
 			factor = 10
@@ -6160,12 +6157,13 @@ focus_tree = {
 		search_filters = {FOCUS_FILTER_POLITICAL}
 
 		completion_reward = {
-			add_political_power = 50
-			add_popularity = {
-				ideology = communism
-				popularity = 0.05
-			}
 			unlock_decision_category_tooltip = The_comintern_international_aid_category
+			set_faction_manifest = faction_manifest_world_revolution
+			hidden_effect = {
+				news_event = {
+					id = SOV_news.14
+				}
+			}
 		}
 	}
 
@@ -6179,17 +6177,19 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_Host_Comintern_Congresses
 		}
-		cost = 4
+		cost = 2
 		ai_will_do = {
-			factor = 10
+			factor = 1000
 		}
 		available = {
+			is_faction_leader = yes
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			add_political_power = 50
 		}
 	}
 
@@ -6205,15 +6205,17 @@ focus_tree = {
 		}
 		cost = 4
 		ai_will_do = {
-			factor = 10
+			factor = 1000
 		}
 		available = {
+			is_faction_leader = yes
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			set_faction_rule = international_brigades_allowed
 		}
 	}
 
@@ -6232,12 +6234,20 @@ focus_tree = {
 			factor = 10
 		}
 		available = {
+			is_faction_leader = yes
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			effect_tooltip = {
+				swap_ideas = {
+					remove_idea = international_brigades_allowed
+					add_idea = international_brigades_allowed2
+				}
+			}
+			hidden_effect = { set_faction_rule = international_brigades_allowed2 }
 		}
 	}
 
@@ -6253,15 +6263,29 @@ focus_tree = {
 		}
 		cost = 4
 		ai_will_do = {
-			factor = 10
+			factor = 100
 		}
 		available = {
+			has_completed_focus = SOV_Establish_Council_for_Mutual_Economic_Assistance
+			custom_trigger_tooltip = {
+				tooltip = num_comecon_member_bigger_than_5
+				check_variable = { num_comecon_member > 5 }
+			}
+			is_faction_leader = yes
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			add_research_slot = 1
+			add_to_tech_sharing_group = comecon_research_organization
+			every_other_country = {
+				limit = {
+					check_variable = { THIS.economy_faction_var = 2 }
+				}
+				add_to_tech_sharing_group = comecon_research_organization
+			}
 		}
 	}
 
@@ -6280,12 +6304,14 @@ focus_tree = {
 			factor = 10
 		}
 		available = {
+			is_faction_leader = yes
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			set_faction_rule = faction_svarog_plan
 		}
 	}
 
@@ -6301,15 +6327,19 @@ focus_tree = {
 		}
 		cost = 4
 		ai_will_do = {
-			factor = 10
+			factor = 100
 		}
 		available = {
+			num_faction_members > 3
+			is_faction_leader = yes
 		}
-		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			set_variable = { global.num_comecon_member = 0 }
+			custom_effect_tooltip = SOV_formation_comecon_tooltip
+			add_ideas = SOV_comecon_buff
 		}
 	}
 
@@ -6328,12 +6358,27 @@ focus_tree = {
 			factor = 10
 		}
 		available = {
+			is_faction_leader = yes
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			custom_effect_tooltip = every_comecon_member
+			effect_tooltip = {
+				swap_ideas = {
+					remove_idea = SOV_comecon_buff
+					add_idea = SOV_comecon_buff2
+				}
+			}
+			hidden_effect = {
+				every_country = {
+					limit = { has_idea = SOV_comecon_buff }
+					remove_ideas = SOV_comecon_buff
+					add_ideas = SOV_comecon_buff2
+				}
+			}
 		}
 	}
 
@@ -6352,12 +6397,20 @@ focus_tree = {
 			factor = 10
 		}
 		available = {
+			is_faction_leader = yes
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			custom_effect_tooltip = SOV_Expand_Council_for_Mutual_Economic_Assistance_tt
+			hidden_effect = {
+				add_dynamic_modifier = {
+					modifier = SOV_comecon_leader
+				}
+				comecon_effect = yes   ##计算阵营相关
+			}
 		}
 	}
 
@@ -6389,13 +6442,6 @@ focus_tree = {
 
 		completion_reward = {
 			add_war_support = 0.05
-			activate_targeted_decision = { target = BAL decision = SOV_encourage_communist_rallies_in_dec }
-			BAL = {
-				add_popularity = {
-					ideology = communism
-					popularity = 0.05
-				}
-			}
 		}
 	}
 
@@ -6422,12 +6468,6 @@ focus_tree = {
 		}
 		
 		search_filters = { FOCUS_FILTER_INDUSTRY }
-		bypass = {
-			OR = {
-				NOT = { country_exists = DVL }
-				NOT = { country_exists = GER }
-			}
-		}
 		completion_reward = {
 			GER = { country_event = SOV_dip.16 }
 			custom_effect_tooltip = if_they_accept
@@ -6445,6 +6485,156 @@ focus_tree = {
 						active = yes
 					}
 				}
+			}
+		}
+	}
+
+	###联合伦敦
+	focus = {
+		id = SOV_Unite_London
+		icon = GFX_focus_chi_mission_to_german
+		x = -4
+		y = 1
+		relative_position_id = SOV_western_front_strategy
+		prerequisite = {
+			focus = SOV_western_front_strategy
+		}
+		mutually_exclusive = {
+			focus = SOV_restore_german_alliance
+			focus = SOV_Revive_Gensokyo_Russia_Alliance
+			focus = SOV_Ensure_Revolutionary_Purity
+		}
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+		}
+		
+		search_filters = {  }
+		bypass = {
+		}
+		completion_reward = {
+			ENG = { country_event = SOV_dip.52 }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				ENG = { 
+					give_military_access = ROOT 
+					diplomatic_relation = {
+						country = ROOT
+						relation = non_aggression_pact
+						active = yes
+					}
+					diplomatic_relation = {
+						country = SOV
+						relation = docking_rights
+						active = yes
+					}
+				}
+			}
+		}
+	}
+
+	###重提幻俄同盟
+	focus = {
+		id = SOV_Revive_Gensokyo_Russia_Alliance
+		icon = GFX_focus_chi_mission_to_german
+		x = -2
+		y = 1
+		relative_position_id = SOV_western_front_strategy
+		prerequisite = {
+			focus = SOV_western_front_strategy
+		}
+		mutually_exclusive = {
+			focus = SOV_restore_german_alliance
+			focus = SOV_Unite_London
+			focus = SOV_Ensure_Revolutionary_Purity
+		}
+		cost = 4
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+		}
+		
+		search_filters = {  }
+		bypass = {
+		}
+		completion_reward = {
+			FRA = { country_event = SOV_dip.52 }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				FRA = { 
+					give_military_access = ROOT 
+					diplomatic_relation = {
+						country = ROOT
+						relation = non_aggression_pact
+						active = yes
+					}
+					diplomatic_relation = {
+						country = SOV
+						relation = docking_rights
+						active = yes
+					}
+				}
+			}
+		}
+	}
+
+	###坦克联合研究
+	focus = {
+		id = SOV_Tank_Joint_Research
+		icon = GFX_focus_chi_mission_to_german
+		x = 0
+		y = 1
+		relative_position_id = SOV_restore_german_alliance
+		prerequisite = {
+			focus = SOV_restore_german_alliance
+			focus = SOV_Unite_London
+			focus = SOV_Revive_Gensokyo_Russia_Alliance
+		}
+		cost = 5
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			any_other_country = { has_country_flag  = Cooperate_with_SOV }
+		}
+		
+		search_filters = {  }
+		bypass = {
+		}
+		completion_reward = {
+			every_country = {
+				limit = { has_country_flag  = Cooperate_with_SOV }
+				country_event = {
+					id = SOV_dip.54
+				}
+				effect_tooltip = {
+					add_tech_bonus = {
+						name = SOV_soviet_german_trade
+						bonus = 0.5
+						category = armor
+						ahead_reduction = 1
+						uses = 1
+					}
+					add_tech_bonus = {
+						name = SOV_soviet_german_trade
+						bonus = 0.5
+						category = synth_resources
+						uses = 2
+					}
+					add_tech_bonus = {
+						name = SOV_soviet_german_trade
+						bonus = 0.5
+						category = artillery
+						ahead_reduction = 1
+						uses = 1
+					}
+				}
+			}
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
 				add_tech_bonus = {
 					name = SOV_soviet_german_trade
 					bonus = 0.5
@@ -6472,90 +6662,6 @@ focus_tree = {
 		}
 	}
 
-	###联合伦敦
-	focus = {
-		id = SOV_Unite_London
-		icon = GFX_focus_chi_mission_to_german
-		x = -4
-		y = 1
-		relative_position_id = SOV_western_front_strategy
-		prerequisite = {
-			focus = SOV_western_front_strategy
-		}
-		mutually_exclusive = {
-			focus = SOV_restore_german_alliance
-			focus = SOV_Revive_Gensokyo_Russia_Alliance
-			focus = SOV_Ensure_Revolutionary_Purity
-		}
-		cost = 4
-		ai_will_do = {
-			factor = 10
-		}
-		available = {
-		}
-		
-		search_filters = {  }
-		bypass = {
-		}
-		completion_reward = {
-		}
-	}
-
-	###重提幻俄同盟
-	focus = {
-		id = SOV_Revive_Gensokyo_Russia_Alliance
-		icon = GFX_focus_chi_mission_to_german
-		x = -2
-		y = 1
-		relative_position_id = SOV_western_front_strategy
-		prerequisite = {
-			focus = SOV_western_front_strategy
-		}
-		mutually_exclusive = {
-			focus = SOV_restore_german_alliance
-			focus = SOV_Unite_London
-			focus = SOV_Ensure_Revolutionary_Purity
-		}
-		cost = 4
-		ai_will_do = {
-			factor = 10
-		}
-		available = {
-		}
-		
-		search_filters = {  }
-		bypass = {
-		}
-		completion_reward = {
-		}
-	}
-
-	###坦克联合研究
-	focus = {
-		id = SOV_Tank_Joint_Research
-		icon = GFX_focus_chi_mission_to_german
-		x = 0
-		y = 1
-		relative_position_id = SOV_restore_german_alliance
-		prerequisite = {
-			focus = SOV_restore_german_alliance
-			focus = SOV_Unite_London
-			focus = SOV_Revive_Gensokyo_Russia_Alliance
-		}
-		cost = 4
-		ai_will_do = {
-			factor = 10
-		}
-		available = {
-		}
-		
-		search_filters = {  }
-		bypass = {
-		}
-		completion_reward = {
-		}
-	}
-
 	###确保革命纯洁性
 	focus = {
 		id = SOV_Ensure_Revolutionary_Purity
@@ -6573,7 +6679,7 @@ focus_tree = {
 		}
 		cost = 4
 		ai_will_do = {
-			factor = 10
+			factor = 0
 		}
 		available = {
 		}
@@ -6582,6 +6688,14 @@ focus_tree = {
 		bypass = {
 		}
 		completion_reward = {
+			add_to_variable = { SOV_party_democracy_army_org_factor = 0.1 }
+			add_to_variable = { SOV_party_democracy_stability_factor = 0.1 }
+			effect_tooltip = {
+				swap_ideas = {
+					remove_idea = SOV_party_democracy_idea_0
+					add_idea = SOV_party_democracy_idea_1
+				}
+			}
 		}
 	}
 	
@@ -6620,10 +6734,46 @@ focus_tree = {
 				factor = 100
 				date > 1942.1.1
 			}
+			modifier = {
+				factor = 0
+				date < 1941.1.1
+			}
 		}
 		available = {
 			is_subject = no
-			date > 1941.6.1
+			date > 1939.6.1
+			custom_trigger_tooltip = {
+				tooltip = DVL_subject_neighbor_with_root_tt
+				ROOT = {
+					or = {
+						any_home_area_neighbor_country = {
+							or = {
+								tag = DVL
+								is_subject_of = DVL
+								is_in_faction_with = DVL
+							}
+						}
+						any_subject_country = {
+							any_home_area_neighbor_country = {
+								or = {
+									tag = DVL
+									is_subject_of = DVL
+									is_in_faction_with = DVL
+								}
+							}
+						}
+						any_allied_country = {
+							any_home_area_neighbor_country = {
+								or = {
+									tag = DVL
+									is_subject_of = DVL
+									is_in_faction_with = DVL
+								}
+							}
+						}
+					}
+				}
+			}
 		}
 		
 		bypass = { 
@@ -6639,10 +6789,11 @@ focus_tree = {
 		will_lead_to_war_with = DVL
 
 		completion_reward = {
-			declare_war_on = {
-				target = DVL
-				type = annex_everything
+			if = {
+				limit = { not = { has_global_flag = second_weltkrieg_has_started } }
+				custom_effect_tooltip = this_will_lead_to_second_weltkrieg
 			}
+			activate_targeted_decision = { target = DVL decision = SOV_liberate_the_people_of_dec }
 		}
 	}
 
@@ -6661,12 +6812,20 @@ focus_tree = {
 			factor = 10
 		}
 		available = {
+			is_subject = no
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			every_country = {
+				limit = {
+					capital_scope = { is_on_continent = europe }
+					has_government = fascism
+				}
+				ROOT = { activate_targeted_decision = { target = PREV decision = SOV_liberate_the_people_of_dec } }
+			}
 		}
 	}
 
@@ -6727,17 +6886,6 @@ focus_tree = {
 					remove_ideas = SOV_aid_to_GER
 				}
 			}
-			activate_targeted_decision = { target = GER decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = SWI decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = NPT decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = ITA decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = SWI decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = FRA decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = ENG decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = ROM decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = POL decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = TUR decision = SOV_exterminate_fascism_in_Europe }
-			activate_targeted_decision = { target = GRE decision = SOV_exterminate_fascism_in_Europe }
 		}
 	}
 
@@ -6759,6 +6907,7 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
+			has_completed_focus = SOV_battle_for_Europe
 		}
 		
 		search_filters = { FOCUS_FILTER_INDUSTRY }
@@ -6817,6 +6966,7 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
+			has_completed_focus = SOV_all_the_way_east
 		}
 		
 		search_filters = { FOCUS_FILTER_INDUSTRY }
@@ -7112,6 +7262,10 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_Baltic_Revolution
 		}
+		mutually_exclusive = {
+			focus = SOV_secure_leningrad
+			focus = SOV_Second_Suomi_Revolution
+		}
 		cost = 4
 		ai_will_do = {
 			factor = 10
@@ -7133,7 +7287,11 @@ focus_tree = {
 		x = 0
 		y = 1
 		relative_position_id = SOV_Baltic_Revolution
-		cost = 2
+		mutually_exclusive = {
+			focus = SOV_Secure_Finlands_Stand
+			focus = SOV_Second_Suomi_Revolution
+		}
+		cost = 4
 		
 		ai_will_do = {
 			factor = 25
@@ -7198,6 +7356,10 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_Baltic_Revolution
 		}
+		mutually_exclusive = {
+			focus = SOV_Secure_Finlands_Stand
+			focus = SOV_secure_leningrad
+		}
 		cost = 4
 		ai_will_do = {
 			factor = 10
@@ -7232,6 +7394,7 @@ focus_tree = {
 			factor = 10
 		}
 		available = {
+			FIN = { is_subject_of = ROOT }
 		}
 		
 		search_filters = {  }
@@ -8035,11 +8198,6 @@ focus_tree = {
 		}
 
 		available = {
-			LAN = { 
-				NOT = { has_war_with = ROOT }
-				has_government = communism
-		 	}
-			is_subject = no
 		}
 		
 		search_filters = { FOCUS_FILTER_POLITICAL }
@@ -8458,6 +8616,10 @@ focus_tree = {
 					bonus = 0.5
 				}
 			}
+			if = {
+				limit = { JAP = { has_government = communism } }
+				activate_targeted_decision = { target = JAP decision = SOV_invite_dec_to_join_comecon_outside_allies }
+			}
 		}
 	}
 
@@ -8500,12 +8662,65 @@ focus_tree = {
 			factor = 10
 		}
 		available = {
+			count_triggers = {
+				amount = 2
+				JAP = {
+					is_in_third_international = yes
+				}
+				KOR = {
+					is_in_third_international = yes
+				}
+				PRC = {
+					is_in_third_international = yes
+				}
+				DPR = {
+					is_in_third_international = yes
+				}
+			}
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			every_other_country = {
+				limit = {
+					is_in_third_international = yes
+					any_controlled_state = {
+						or = {
+							has_state_flag = is_whole_chinese_state_area
+							is_core_of = KOR
+							is_core_of = JAP
+						}
+					}
+				}
+				if = {
+					limit = {
+						is_subject = yes
+					}
+					overlord = {
+						if = {
+							limit = {
+								not = { tag = SOV }
+							}
+							country_event = {
+								id = SOV_dip.58
+							}
+						}
+					}
+				}
+				else = {
+					country_event = {
+						id = SOV_dip.58
+					}
+				}
+			}
+			hidden_effect = {
+				country_event = {
+					id = SOV_dip.60
+					days = 10
+				}
+			}
 		}
 	}
 
@@ -8602,10 +8817,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			create_wargoal = {
-				target = MON
-				type = puppet_wargoal_focus
-			}
+			activate_targeted_decision = { target = MON decision = SOV_liberate_the_people_of_dec }
 		}
 	}
 
@@ -8621,15 +8833,17 @@ focus_tree = {
 		}
 		cost = 4
 		ai_will_do = {
-			factor = 10
+			factor = 0
 		}
 		available = {
+			MON = { is_subject_of = ROOT }
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			activate_targeted_decision = { target = MON decision = SOV_integration_FROM_SOV_member_state }
 		}
 	}
 
@@ -8746,7 +8960,7 @@ focus_tree = {
 
 	##干涉大东亚战争
 	focus = {
-		id = SOV_intervention_in_china
+		id = SOV_intervention_in_east_asia_war
 		icon = GFX_focus_chi_one_china_policy
 		prerequisite = { 
 			focus = SOV_two_red_flags 
@@ -8772,48 +8986,52 @@ focus_tree = {
 		}
 		available = {
 			is_subject = no
-			NOT = { has_non_aggression_pact_with = JAP }
-			NOT = { country_exists = DVL }
-			any_other_country = {
-				OR = {
-					tag = ROC
-					tag = MAN
-					tag = YUN
-					tag = CHI
-				}
-				has_war_with = JAP
+			custom_trigger_tooltip = {
+				tooltip = east_asia_war_going
+				JAP = { any_enemy_country = { is_chinese_country = yes } }
 			}
-			NOT = { JAP = { has_government = communism } }
-		}
-
-		bypass = {
-			ROC = { is_subject_of = JAP }
-		}
-		
-		search_filters = { FOCUS_FILTER_ANNEXATION }
-
-		will_lead_to_war_with = JAP
-
-		completion_reward = {
-			every_other_country = {
-				limit = {
-					OR = {
-						tag = ROC
-						tag = MAN
-						tag = YUN
-						tag = CHI
+			custom_trigger_tooltip = {
+				tooltip = WWI_eu_has_end
+				has_global_flag = second_weltkrieg_has_started
+				DVL = {
+					or = {
+						exists = no
+						is_subject = yes
 					}
 				}
-				add_opinion_modifier = {
-					target = ROOT
-					modifier = Soviet_aid_to_china
+			}
+		}
+		bypass = {
+		}
+		search_filters = { FOCUS_FILTER_ANNEXATION }
+		completion_reward = {
+			if = {
+				limit = {
+					JAP = {
+						has_government = communism
+						any_enemy_country = {
+							is_chinese_country = yes
+							has_government = communism
+						}
+					}
 				}
-				ROOT = { 
-					add_to_war = {
-						targeted_alliance = PREV
-						enemy = JAP
-					} 
+				country_event = {
+					id = SOV_dip.57
 				}
+			}
+			else_if = {
+				limit = {
+					JAP = { has_government = communism }
+				}
+				JAP = {
+					every_enemy_country = {
+						limit = { is_chinese_country = yes }
+						ROOT = { activate_targeted_decision = { target = PREV decision = SOV_liberate_the_people_of_dec } }
+					}
+				}
+			}
+			else = {
+				activate_targeted_decision = { target = JAP decision = SOV_liberate_the_people_of_dec }
 			}
 		}
 	}
@@ -8824,9 +9042,12 @@ focus_tree = {
 		icon = GFX_focus_chi_mission_to_german
 		x = -1
 		y = 1
-		relative_position_id = SOV_intervention_in_china
+		relative_position_id = SOV_intervention_in_east_asia_war
 		prerequisite = {
-			focus = SOV_intervention_in_china
+			focus = SOV_intervention_in_east_asia_war
+		}
+		mutually_exclusive = {
+			focus = SOV_Slay_the_Evil_Dragon
 		}
 		cost = 4
 		ai_will_do = {
@@ -8848,21 +9069,31 @@ focus_tree = {
 		icon = GFX_focus_chi_mission_to_german
 		x = 1
 		y = 1
-		relative_position_id = SOV_intervention_in_china
+		relative_position_id = SOV_intervention_in_east_asia_war
 		prerequisite = {
-			focus = SOV_intervention_in_china
+			focus = SOV_intervention_in_east_asia_war
+		}
+		mutually_exclusive = {
+			focus = SOV_Aid_Chinese_Communist_Party
 		}
 		cost = 4
 		ai_will_do = {
-			factor = 10
+			factor = 0
 		}
 		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = china_uniter_not_in_third_international
+				has_global_flag = CHI_REUNIT
+				event_target:china_uniter = { is_in_third_international = no }
+			}
 		}
 		
 		search_filters = {  }
 		bypass = {
 		}
 		completion_reward = {
+			activate_targeted_decision = { target = event_target:china_uniter decision = SOV_liberate_the_people_of_dec }
 		}
 	}
 
