@@ -3,6 +3,10 @@ LHS_start1 = {
         tag = LHS
     }
     ai_strategy = {
+        type = become_spymaster
+        value = 30  # 花费政治点数竞选间谍大师的权重值
+    }
+    ai_strategy = {
         type = force_defend_ally_borders
         id = "WRQ"
         value = -1000
@@ -26,7 +30,7 @@ LHS_start1 = {
         ordertype = front
         execution_type = rush
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = force_defend_ally_borders
@@ -76,10 +80,42 @@ LHS_start1 = {
         id = artillery
         value = 300
     }
+    ai_strategy = {
+        type = research_tech	#火炮
+        id = armor
+        value = 300
+    }
 
 
 }
+LHS_stop_disbanding_your_army = {#ai部署陆军倾向
+    allowed = {
+        original_tag = LHS
+    }
+    enable = {
+        num_divisions < 800
+    }
+    abort_when_not_enabled = yes
 
+    ai_strategy = {
+        type = ai_wanted_divisions_factor
+        value = 1000
+    }
+}
+LHS_stop_disbanding_your_army2 = {#ai部署陆军倾向2
+    allowed = {
+        original_tag = LHS
+    }
+    enable = {
+        num_divisions > 800
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = ai_wanted_divisions_factor
+        value = -2000
+    }
+}
 #1938年研究机动
 LHS_ai_research_jidong = { #机动
     allowed = {
@@ -862,13 +898,7 @@ LHS_unit_buffer_for_asian_threat = {#退守战场
         original_tag = LHS
     }
     enable = {
-        OR = { #Always have a small unit buffer along the railway, just in case asian fronts get dangerous
-            has_war = no
-            AND = {
-                has_war = yes
-                surrender_progress < 0.5
-            }
-        }
+        always = yes
     }
 
     abort_when_not_enabled = yes
@@ -877,7 +907,6 @@ LHS_unit_buffer_for_asian_threat = {#退守战场
         type = put_unit_buffers
 
         # ratio of total armeis in country to be buffered
-        ratio = 0.02
 
         # you can specify an order id. ratio of same orders ids will be share same ratio
         #order_id = 2
@@ -896,6 +925,14 @@ LHS_unit_buffer_for_asian_threat = {#退守战场
             1073
             848
         }
+        ratio = 0.1
+        area = europe
+        area = asia
+        area = africa
+        area = south_america
+        area = north_america
+        area = neighbor
+        area = faction
         # ai areas that the orders will use these buffers in
         # by default if you have orders in target areas, the buffer will request less units.
         # you can override this to disable the feature
@@ -1155,10 +1192,10 @@ LHS_state_is_zhanlue = {#老爷爷，我给你踩地来咯
     abort = {
         and = {
             or = {
-               strength_ratio = {
-                   tag = LHS
-                   ratio < 0.7
-               }
+                strength_ratio = {
+                    tag = LHS
+                    ratio < 0.7
+                }
             }
             not = {
                 has_war_with = PAU
@@ -1168,38 +1205,38 @@ LHS_state_is_zhanlue = {#老爷爷，我给你踩地来咯
 
     }
     ai_strategy = {
-         type = front_control
+        type = front_control
 
-         state_trigger = {
-             FROM = { has_war_with = FROM.FROM }
-             FROM = {
-                 divisions_in_state = { state = ROOT size = 0 }
-             }
-         }
-         priority = 9000
-         ordertype = front
-         execution_type = rush_weak
-         execute_order = yes
-     }
-     ai_strategy = {
-         type = front_control
+        state_trigger = {
+            FROM = { has_war_with = FROM.FROM }
+            FROM = {
+                divisions_in_state = { state = ROOT size = 0 }
+            }
+        }
+        priority = 9000
+        ordertype = front
+        execution_type = rush_weak
+        execute_order = yes
+    }
+    ai_strategy = {
+        type = front_control
 
-         state_trigger = {
-             FROM = { has_war_with = FROM.FROM }
-             any_province_building_level = {
-                 province = {
-                     all_provinces = yes
-                 }
-                 building = supply_node
-                 level > 0
-             }
-         }
+        state_trigger = {
+            FROM = { has_war_with = FROM.FROM }
+            any_province_building_level = {
+                province = {
+                    all_provinces = yes
+                }
+                building = supply_node
+                level > 0
+            }
+        }
 
 
-         priority = 8000
-         ordertype = front
-         execution_type = rush
-     }
+        priority = 8000
+        ordertype = front
+        execution_type = rush
+    }
 }
 LHS_end_pocket = {#包围快速歼灭
     allowed={
@@ -1507,10 +1544,10 @@ LHS_war_with_PAU0 = { #与军团开战
         subtract_fronts_from_need = yes #陆地前线不计入
     }
     ai_strategy = {
-            type = conquer
-            id = PAU
-            value = -200
-        }
+        type = conquer
+        id = PAU
+        value = -200
+    }
     ai_strategy = {
         type = front_control
         tag = PAU
@@ -1795,7 +1832,7 @@ LHS_war_with_PAU = { #与莉兰迪亚和军团开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_unit_request #前线部队
@@ -1874,7 +1911,7 @@ xyLHS_war_with_PAU = { #雪伊与莉兰迪亚和军团开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
 
     ai_strategy = {
@@ -1944,7 +1981,7 @@ xfLHS_war_with_PAU = { #晓枫线与莉兰迪亚和军团开战
         ordertype = front
         execution_type = careful
         manual_attack = no
-        
+
     }
 
     ai_strategy = {
@@ -2015,7 +2052,7 @@ hgLHS_war_with_PAU = { #禾果线与莉兰迪亚和军团开战
         ordertype = front
         execution_type = careful
         manual_attack = no
-        
+
     }
 
     ai_strategy = {
@@ -2089,7 +2126,7 @@ heguo_CHL_LHS_war_with_PAU = { #禾果线CHL与莉兰迪亚和军团开战
         ordertype = front
         execution_type = careful
         manual_attack = no
-        
+
     }
 
     ai_strategy = {
@@ -2163,7 +2200,7 @@ LHS_war_with_PAM = { #与莉兰迪亚开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
 
     ai_strategy = {
@@ -2575,7 +2612,7 @@ LHS_war_with_MGU = { #与魔法少女联盟开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_control
@@ -2779,7 +2816,7 @@ LHS_war1_with_PAQ = { #单独与阿德莱希开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_control
@@ -2838,7 +2875,7 @@ LHS_war_with_PAQ = { #与阿德莱希开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
         occupation_policy = 3
     }
     ai_strategy = {
@@ -2891,7 +2928,7 @@ LHS_war_with_nmgm = { #南美革命
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
 
     ai_strategy = {
@@ -2953,7 +2990,7 @@ LHS_war_with_PAY = { #与魔女之树开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = invasion_unit_request
@@ -3062,7 +3099,7 @@ LHS_war_with_ENG = { #与圣杯开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_control
@@ -3116,7 +3153,7 @@ LHS_war_with_USA = { #与精灵开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_control
@@ -3169,7 +3206,7 @@ LHS_war_with_NGD = { #与远洋开战
         ordertype = front
         execution_type =balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_control
@@ -3223,7 +3260,7 @@ LHS_war_with_NFA = { #与法兰西开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_control
@@ -3276,7 +3313,7 @@ LHS_war_with_FRG = { #与齐亚德开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_control
@@ -3330,7 +3367,7 @@ LHS_war_with_JAP = { #与日本开战
         ordertype = front
         execution_type = balanced
         manual_attack = no
-        
+
     }
     ai_strategy = {
         type = front_control
@@ -3911,6 +3948,11 @@ LHS_USA_is_friend = {
         value = 200
     }
     ai_strategy = {
+        type = send_lend_lease_desire
+        id = "USA"
+        value = 200
+    }
+    ai_strategy = {
         type = alliance
         id = "USA"
         value = 200
@@ -3954,6 +3996,11 @@ LHS_NGD_is_friend = {
         value = 200
     }
 
+    ai_strategy = {
+        type = send_lend_lease_desire
+        id = "NGD"
+        value = 200
+    }
     ai_strategy = { #帮填线
         type = force_defend_ally_borders
         id = "NGD"
@@ -3983,6 +4030,11 @@ LHS_FRG_is_friend = {
     abort_when_not_enabled = yes
     ai_strategy = {
         type = befriend
+        id = "FRG"
+        value = 200
+    }
+    ai_strategy = {
+        type = send_lend_lease_desire
         id = "FRG"
         value = 200
     }
@@ -4030,6 +4082,11 @@ LHS_PAN_is_friend = {
     }
     ai_strategy = {
         type = alliance
+        id = "PAN"
+        value = 200
+    }
+    ai_strategy = {
+        type = send_lend_lease_desire
         id = "PAN"
         value = 200
     }
@@ -4163,6 +4220,11 @@ LHS_SOV_is_friend = {
         value = 200
     }
     ai_strategy = {
+        type = send_lend_lease_desire
+        id = "SOV"
+        value = 200
+    }
+    ai_strategy = {
         type = alliance
         id = "SOV"
         value = 200
@@ -4232,7 +4294,11 @@ LHS_PRC_is_friend = {
         id = "PRC"
         value = 200
     }
-
+    ai_strategy = {
+        type = send_lend_lease_desire
+        id = "PRC"
+        value = 200
+    }
     ai_strategy = { #帮填线
         type = force_defend_ally_borders
         id = "PRC"
@@ -4944,7 +5010,7 @@ LHS_xp_upgrade_spending_land = {
 
     ai_strategy = {
         type = land_xp_spend_priority
-        id = upgrade_xp_cutoff
+        id = unlock_doctrine
         value = 100
     }
     ai_strategy = {
