@@ -1089,7 +1089,7 @@ focus_tree = {
         icon = GFX_kongju
         x = -1
         y = 5
-        cost = 5
+        cost = 3
         available = {
         }
         prerequisite = {
@@ -1121,7 +1121,7 @@ focus_tree = {
         icon = GFX_budui
         x = 1
         y = 5
-        cost = 5
+        cost = 3
         available = {
         }
         prerequisite = {
@@ -1213,7 +1213,7 @@ focus_tree = {
         icon = GFX_qiru
         x = 0
         y = 6
-        cost = 5
+        cost = 4
         available = {
         }
         prerequisite = {
@@ -1382,7 +1382,7 @@ focus_tree = {
         icon = GFX_zhuiji
         x = 0
         y = 7
-        cost = 5
+        cost = 2
         available = {
             and = {
                 not = {
@@ -1594,6 +1594,7 @@ focus_tree = {
         y = 8
         cost = 5
         available = {
+            date > 1939.1.1
             or = {
                 and = {
                     501 = {
@@ -1690,6 +1691,10 @@ focus_tree = {
                     is_ai = yes
                 }
                 add = -1000
+            }
+            modifier = {
+                date < 1939.1.1
+                add = -500
             }
             modifier = {
                 has_idea = PAO_zzjd
@@ -4185,6 +4190,9 @@ focus_tree = {
         prerequisite = {
             focus = LHS_wsfx			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
+        prerequisite = {
+            focus = LHS_jsgs			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+        }
         available = {
         }
         allow_branch = {
@@ -4214,6 +4222,120 @@ focus_tree = {
             }
         }
     }
+    #驱散残夜
+    focus = {
+        id = LHS_qscy
+        icon = GFX_qscy
+        x = 0
+        y = 8
+        cost = 2
+        prerequisite = {
+            focus = LHS_syjk			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+        }
+        prerequisite = {
+            focus = LHS_bywt			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+        }
+        available = {
+            and = {
+                301 = {
+                    owner = {
+                        not = {
+                            is_subject_of = LHS
+                        }
+                    }
+                }
+                301 = {
+                    owner = {
+                        not = {
+                            tag = LHS
+                        }
+                    }
+                }
+            }
+        }
+        allow_branch = {
+            has_country_flag = wldnys
+        }
+        bypass = {
+            OR = {
+                301 = {
+                    owner = {
+                        tag = LHS
+                    }
+                }
+                301 = {
+                    owner = {
+                        is_subject_of = LHS
+                    }
+                }
+            }
+        }
+        will_lead_to_war_with = PAO
+        ai_will_do = {
+            #ai点击国策的倾向
+            base = 150			#基础值
+        }
+        relative_position_id = LHS_zhutuo
+        completion_reward = {
+            PAO = {
+                every_core_state = {
+                    add_claim_by = LHS
+                }
+            }
+            if = {
+                limit = {
+                    and = {
+                        301 = {
+                            owner = {
+                                not = {
+                                    is_subject_of = LHS
+                                }
+                            }
+                        }
+                        301 = {
+                            owner = {
+                                not = {
+                                    tag = LHS
+                                }
+                            }
+                        }
+                    }
+                }
+                301 = {
+                    CONTROLLER = {
+                        hidden_effect = {
+                            diplomatic_relation = {
+                                country = LHS
+                                relation = military_access
+                                active = no
+                            }
+                        }
+                    }
+                    every_country = {
+                        limit = {
+                            controls_state = 301
+                        }
+                        LHS = {
+                            diplomatic_relation = {
+                                country = PREV
+                                relation = military_access
+                                active = no
+                            }
+                            declare_war_on = {
+                                target = PREV
+                                type = annex_everything
+                            }
+                            will_lead_to_war_with = PREV
+                        }
+                    }
+                }
+            }
+            add_to_variable = {
+                 LHS_zhaojixianzhi = 5
+             }
+             custom_effect_tooltip = zhaojiyoujidui
+        }
+    }
     #收音机里的哭声
     focus = {
         id = LHS_syjk
@@ -4225,6 +4347,7 @@ focus_tree = {
             focus = LHS_sgjb			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
         available = {
+            
         }
         allow_branch = {
             has_country_flag = wldnys
@@ -4254,6 +4377,9 @@ focus_tree = {
         prerequisite = {
             focus = LHS_syjk			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
+        prerequisite = {
+            focus = LHS_sgjb			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+        }
         available = {
         }
         allow_branch = {
@@ -4277,6 +4403,11 @@ focus_tree = {
                     add_claim_by = LHS
                 }
             }
+            LFC = {
+                every_core_state = {
+                    add_claim_by = LHS
+                }
+            }
             if = {
                 limit = {
                     MGU = {
@@ -4289,11 +4420,6 @@ focus_tree = {
                     every_core_state = {
                         add_claim_by = LHS
                     }
-                }
-            }
-            PAO = {
-                every_core_state = {
-                    add_claim_by = LHS
                 }
             }
             ELF = {
@@ -4311,10 +4437,6 @@ focus_tree = {
                     add_claim_by = LHS
                 }
             }
-            add_to_variable = {
-                LHS_zhaojixianzhi = 5
-            }
-            custom_effect_tooltip = zhaojiyoujidui
         }
     }
     #寻找那座灯塔
@@ -4322,12 +4444,18 @@ focus_tree = {
         id = LHS_xzdt
         icon = GFX_xzdt
         x = -1
-        y = 8
+        y = 9
         cost = 2
         prerequisite = {
-            focus = LHS_bywt			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+            focus = LHS_qscy			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
         available = {
+            PAO = {
+                or = {
+                    exists = no
+                    is_subject_of = LHS
+                }
+            }
             or = {
                 and = {
                     306 = {
@@ -4371,6 +4499,10 @@ focus_tree = {
             modifier = {
                 has_war = yes
                 add = -200
+            }
+            modifier = {
+                date < 1939.1.1
+                add = -500
             }
             #基础值
         }
@@ -4453,12 +4585,18 @@ focus_tree = {
         id = LHS_zfzl
         icon = GFX_zfzl
         x = 1
-        y = 8
+        y = 9
         cost = 2
         prerequisite = {
-            focus = LHS_bywt			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+            focus = LHS_qscy			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
         available = {
+            PAO = {
+                or = {
+                    exists = no
+                    is_subject_of = LHS
+                }
+            }
             or = {
                 and = {
                     1036 = {
@@ -4626,7 +4764,7 @@ focus_tree = {
         id = LHS_qpdy
         icon = GFX_qpdy
         x = 0
-        y = 9
+        y = 10
         cost = 4
         prerequisite = {
             focus = LHS_xzdt			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -4635,6 +4773,7 @@ focus_tree = {
             focus = LHS_zfzl			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
         available = {
+            date > 1939.1.1
             and = {
                 not = {
                     country_exists = PAQ
@@ -4642,22 +4781,6 @@ focus_tree = {
                 }
             }
             or = {
-                and = {
-                    301 = {
-                        owner = {
-                            not = {
-                                is_subject_of = LHS
-                            }
-                        }
-                    }
-                    301 = {
-                        owner = {
-                            not = {
-                                tag = LHS
-                            }
-                        }
-                    }
-                }
                 and = {
                     501 = {
                         owner = {
@@ -4696,18 +4819,6 @@ focus_tree = {
             has_country_flag = wldnys
         }
         bypass = {
-            OR = {
-                301 = {
-                    owner = {
-                        tag = LHS
-                    }
-                }
-                301 = {
-                    owner = {
-                        is_subject_of = LHS
-                    }
-                }
-            }
             OR = {
                 501 = {
                     owner = {
@@ -4751,61 +4862,12 @@ focus_tree = {
                 add = -200
             }
         }
-        will_lead_to_war_with = PAO
         will_lead_to_war_with = ELF
         will_lead_to_war_with = MGU
         select_effect = {
         }
         relative_position_id = LHS_zhutuo
         completion_reward = {
-            if = {
-                limit = {
-                    and = {
-                        301 = {
-                            owner = {
-                                not = {
-                                    is_subject_of = LHS
-                                }
-                            }
-                        }
-                        301 = {
-                            owner = {
-                                not = {
-                                    tag = LHS
-                                }
-                            }
-                        }
-                    }
-                }
-                301 = {
-                    CONTROLLER = {
-                        hidden_effect = {
-                            diplomatic_relation = {
-                                country = LHS
-                                relation = military_access
-                                active = no
-                            }
-                        }
-                    }
-                    every_country = {
-                        limit = {
-                            controls_state = 301
-                        }
-                        LHS = {
-                            diplomatic_relation = {
-                                country = PREV
-                                relation = military_access
-                                active = no
-                            }
-                            declare_war_on = {
-                                target = PREV
-                                type = annex_everything
-                            }
-                            will_lead_to_war_with = PREV
-                        }
-                    }
-                }
-            }
             if = {
                 limit = {
                     and = {
@@ -4936,7 +4998,7 @@ focus_tree = {
         id = LHS_cgyl
         icon = GFX_cgyl
         x = 0
-        y = 10
+        y = 11
         cost = 2
         prerequisite = {
             focus = LHS_qpdy			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5115,7 +5177,7 @@ focus_tree = {
         id = LHS_xkgh
         icon = GFX_xkgh
         x = 0
-        y = 12
+        y = 13
         cost = 5
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5161,7 +5223,7 @@ focus_tree = {
         id = LHS_ssyx
         icon = GFX_ssyx
         x = 0
-        y = 13
+        y = 14
         cost = 5
         prerequisite = {
             focus = LHS_xkgh			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5201,7 +5263,7 @@ focus_tree = {
         id = LHS_nyp
         icon = GFX_nyp
         x = 0
-        y = 14
+        y = 15
         cost = 5
         prerequisite = {
             focus = LHS_ssyx			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5231,7 +5293,7 @@ focus_tree = {
         id = LHS_wmss
         icon = GFX_wmss
         x = -1
-        y = 15
+        y = 16
         cost = 5
         prerequisite = {
             focus = LHS_nyp			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5264,7 +5326,7 @@ focus_tree = {
         id = LHS_cjmz
         icon = GFX_cjmz
         x = 1
-        y = 15
+        y = 16
         cost = 5
         prerequisite = {
             focus = LHS_nyp			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5297,7 +5359,7 @@ focus_tree = {
         id = LHS_wshg
         icon = GFX_wshg
         x = 0
-        y = 16
+        y = 17
         cost = 5
         prerequisite = {
             focus = LHS_cjmz			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5350,7 +5412,7 @@ focus_tree = {
         id = LHS_jwkk
         icon = GFX_jwkk
         x = 2
-        y = 13
+        y = 14
         cost = 5
         prerequisite = {
             focus = LHS_xkgh			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5381,7 +5443,7 @@ focus_tree = {
         id = LHS_cqsw
         icon = GFX_cqsw
         x = 3
-        y = 14
+        y = 15
         cost = 5
         prerequisite = {
             focus = LHS_jwkk			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5422,7 +5484,7 @@ focus_tree = {
         id = LHS_lddl
         icon = GFX_lddl
         x = -2
-        y = 13
+        y = 14
         cost = 5
         prerequisite = {
             focus = LHS_xkgh			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5465,7 +5527,7 @@ focus_tree = {
         id = LHS_cylq
         icon = GFX_cylq
         x = -3
-        y = 14
+        y = 15
         cost = 5
         prerequisite = {
             focus = LHS_lddl			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5518,7 +5580,7 @@ focus_tree = {
         id = LHS_nkxm
         icon = GFX_nkxm
         x = -3
-        y = 15
+        y = 16
         cost = 5
         prerequisite = {
             focus = LHS_cylq			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -5562,7 +5624,7 @@ focus_tree = {
         id = LHS_cyjb
         icon = GFX_cyjb
         x = 3
-        y = 15
+        y = 16
         cost = 5
         prerequisite = {
             focus = LHS_cqsw			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -6813,7 +6875,7 @@ focus_tree = {
         icon = GFX_zhuanyi
         x = 0
         y = 8
-        cost = 2
+        cost = 1
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
             focus = LHS_hebing
@@ -6888,7 +6950,7 @@ focus_tree = {
         icon = GFX_miwu
         x = 0
         y = 9
-        cost = 2
+        cost = 1
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
             focus = LHS_zhuanyi
@@ -6918,7 +6980,7 @@ focus_tree = {
         icon = GFX_jielu
         x = 0
         y = 10
-        cost = 2
+        cost = 1
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
@@ -6947,7 +7009,7 @@ focus_tree = {
         icon = GFX_qingyuan
         x = 2
         y = 11
-        cost = 2
+        cost = 1
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
             focus = LHS_jielu
@@ -6974,7 +7036,7 @@ focus_tree = {
         icon = GFX_qiyi
         x = -2
         y = 11
-        cost = 2
+        cost = 1
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
             focus = LHS_jielu
@@ -7001,7 +7063,7 @@ focus_tree = {
         icon = GFX_houqing
         x = 0
         y = 11
-        cost = 2
+        cost = 1
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
             focus = LHS_jielu
@@ -7028,7 +7090,7 @@ focus_tree = {
         icon = GFX_zhengzhuang
         x = 0
         y = 12
-        cost = 2
+        cost = 1
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
             focus = LHS_houqing
@@ -7066,7 +7128,7 @@ focus_tree = {
         icon = GFX_chetui
         x = 17
         y = 0
-        cost = 2
+        cost = 1
         available = {
         }
         bypass = {
@@ -7091,7 +7153,7 @@ focus_tree = {
         icon = GFX_shangu
         x = -2
         y = 1
-        cost = 2
+        cost = 1
         available = {
         }
         bypass = {
@@ -7121,7 +7183,7 @@ focus_tree = {
         icon = GFX_fanxiang
         x = 0
         y = 1
-        cost = 2
+        cost = 1
         available = {
         }
         bypass = {
@@ -7152,7 +7214,7 @@ focus_tree = {
         icon = GFX_jiliu
         x = 2
         y = 1
-        cost = 2
+        cost = 1
         available = {
         }
         bypass = {
@@ -7718,7 +7780,7 @@ focus_tree = {
     focus = {
         id = LHS_yjst
         icon = GFX_yjst
-        x = -1
+        x = -2
         y = 7
         cost = 2
         available = {
@@ -7796,7 +7858,7 @@ focus_tree = {
     focus = {
         id = LHS_yjzz
         icon = GFX_yjzz
-        x = 1
+        x = 2
         y = 7
         cost = 2
         available = {
@@ -7828,11 +7890,48 @@ focus_tree = {
         id = LHS_gkqy
         icon = GFX_gkqy
         x = 0
+        y = 7
+        cost = 2
+        available = {
+        }
+        bypass = {
+        }
+        prerequisite = {
+            #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+            focus = LHS_klsn
+        }
+        prerequisite = {
+            #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+            focus = LHS_kbzl
+        }
+        allow_branch = {
+            has_country_flag = LHS_xiaofengshengli
+        }
+        relative_position_id = LHS_chetui
+        ai_will_do = {
+            #ai点击国策的倾向
+            base = 150			#基础值
+        }
+        completion_reward = {
+            custom_effect_tooltip = LHS_qiyipgm
+            set_country_flag = LHS_qiyipgm
+        }
+    }
+
+    #尘归尘，土归土
+    focus = {
+        id = LHS_cgc
+        icon = GFX_cgc
+        x = 0
         y = 8
         cost = 3
         available = {
         }
         bypass = {
+        }
+        prerequisite = {
+            #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+            focus = LHS_gkqy
         }
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -7848,11 +7947,35 @@ focus_tree = {
         relative_position_id = LHS_chetui
         ai_will_do = {
             #ai点击国策的倾向
-            base = 150			#基础值
+            base = 500			#基础值
+        }
+        select_effect = {
+            if = {
+                limit = {
+                    has_country_flag = LHS_jiefangpao
+                }
+
+                LHS = { save_global_event_target_as = Adorable_heart_Accacker }
+                PAO = { save_global_event_target_as = Adorable_heart_Defender }
+                PAO = { set_country_flag = War_warning_window_visible }
+            }
         }
         completion_reward = {
-            custom_effect_tooltip = LHS_qiyipgm
-            set_country_flag = LHS_qiyipgm
+            set_global_flag = LHS_wlgm
+            if = {
+                limit = {
+                    has_country_flag = LHS_jiefangpao
+                }
+                declare_war_on = {
+                    target = PAO
+                    type = annex_everything
+                }
+            }
+            508 = {
+                remove_dynamic_modifier = {
+                    modifier = LHS_zhalan
+                }
+            }
         }
     }
     #革命终将到来
@@ -7863,12 +7986,18 @@ focus_tree = {
         y = 9
         cost = 4
         available = {
+            PAO = {
+                or = {
+                    exists = no
+                    is_subject_of = LHS
+                }
+            }
         }
         bypass = {
         }
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-            focus = LHS_gkqy
+            focus = LHS_cgc
         }
         allow_branch = {
             has_country_flag = LHS_xiaofengshengli
@@ -7880,7 +8009,7 @@ focus_tree = {
             modifier = {
                 or = {
                     num_divisions < 75
-                    date < 1939.2.1
+                    date < 1939.1.1
                 }
                 add = -1000
             }
@@ -7994,14 +8123,6 @@ focus_tree = {
                 }
                 will_lead_to_war_with = MGU
             }
-            if = {
-                limit = {
-                    has_country_flag = LHS_jiefangpao
-                }
-                declare_war_on = {
-                    target = PAO
-                    type = annex_everything
-                }
                 if = {
                     limit = {
                         has_country_flag = LHS_jiefangbra
@@ -8011,7 +8132,6 @@ focus_tree = {
                         decision = LHS_jiefang_FROM
                     }
                 }
-            }
             if = {
                 limit = {
                     has_country_flag = LHS_jiefangpaq
@@ -8033,11 +8153,6 @@ focus_tree = {
             hidden_effect = {
                 remove_ideas = LHS_xueyi_idea
                 add_ideas = LHS_xueyi2_idea
-            }
-            508 = {
-                remove_dynamic_modifier = {
-                    modifier = LHS_zhalan
-                }
             }
             add_ideas = LHS_gemingdaolai
         }
@@ -10205,13 +10320,13 @@ focus_tree = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
                 304 = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
                 373 = {
                     owner = {
@@ -10223,13 +10338,13 @@ focus_tree = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
                 361 = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
             }
         }
@@ -10830,31 +10945,31 @@ focus_tree = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
                 304 = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
                 373 = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
                 797 = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
                 361 = {
                     owner = {
                         has_government = communism
                     }
-                    is_subject_of = no
+                    is_subject = no
                 }
             }
         }
