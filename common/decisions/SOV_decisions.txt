@@ -4340,6 +4340,144 @@ SOV_dip_agitprop_category = {  ##输出革命
 		}
 	}
 
+	SOV_Intervene_Tresen_Civil_War = {  ##介入特雷森内战
+		priority = 2
+		allowed = { original_tag = sov }
+		visible = { 
+			has_completed_focus = SOV_Instigate_Tresen_Civil_War
+	    }
+		ai_will_do = {
+			base = 0
+		}
+		available = {
+			TAM = {
+				exists = yes 
+				has_war_with = PER
+				has_war_with = AFG
+			}
+			SOV = {
+				has_war = no
+			}
+		}
+		cost = 15
+		fire_only_once = yes
+		complete_effect = {
+			add_to_war = {
+				targeted_alliance = TAM
+				enemy = PER
+			}
+			activate_mission = SOV_special_operation_to_TAM
+		}
+	}
+
+	SOV_special_operation_to_TAM = {
+		priority = 3
+		icon = GFX_decision_hol_draw_up_staff_plans
+		activation = {   
+			always = no
+		}  
+		visible = {
+			tag = SOV
+		}    
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		cancel_trigger = {
+			PER = {
+				OR = {
+					exists = no
+					is_subject_of = SOV
+					is_subject_of = TAM
+				}
+			}
+			AFG = {
+				OR = {
+					exists = no
+					is_subject_of = SOV
+					is_subject_of = TAM
+				}
+			}
+		}
+		days_mission_timeout = 180
+		is_good = no
+		fire_only_once = yes
+		cancel_effect = {
+			SOV = {
+				custom_effect_tooltip = SOV_special_operation_to_TAM_tt 
+				hidden_effect = {
+					PER = { 
+						for_loop_effect = {
+							end = global.SOV_Intervene_Tresen_Civil_War_PER^num
+							value = v
+							transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_PER^v
+						}
+					}
+					AFG = { 
+						for_loop_effect = {
+							end = global.SOV_Intervene_Tresen_Civil_War_AFG^num
+							value = v
+							transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_AFG^v
+						}
+					}
+					TAM = { 
+						for_loop_effect = {
+							end = global.SOV_Intervene_Tresen_Civil_War_TAM^num
+							value = v
+							transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_TAM^v
+						}
+					}
+					clear_array = global.SOV_Intervene_Tresen_Civil_War_PER
+					clear_array = global.SOV_Intervene_Tresen_Civil_War_AFG
+					clear_array = global.SOV_Intervene_Tresen_Civil_War_TAM
+				}
+				puppet = TAM
+			}
+			
+		}
+		timeout_effect = {      
+			custom_effect_tooltip = SOV_special_operation_to_TAM_tt
+			add_political_power = -100
+			add_stability = -0.1
+			add_war_support = -0.1
+			white_peace = PER
+			white_peace = AFG
+			TAM = {
+				white_peace = PER
+				white_peace = AFG
+			}
+			hidden_effect = {
+				
+				PER = { 
+					for_loop_effect = {
+						end = global.SOV_Intervene_Tresen_Civil_War_PER^num
+						value = v
+						transfer_state = global.SOV_Intervene_Tresen_Civil_War_PER^v
+					}
+				}
+				AFG = { 
+					for_loop_effect = {
+						end = global.SOV_Intervene_Tresen_Civil_War_AFG^num
+						value = v
+						transfer_state = global.SOV_Intervene_Tresen_Civil_War_AFG^v
+					}
+				}
+				TAM = { 
+					for_loop_effect = {
+						end = global.SOV_Intervene_Tresen_Civil_War_TAM^num
+						value = v
+						transfer_state = global.SOV_Intervene_Tresen_Civil_War_TAM^v
+					}
+				}
+				clear_array = global.SOV_Intervene_Tresen_Civil_War_PER
+				clear_array = global.SOV_Intervene_Tresen_Civil_War_AFG
+				clear_array = global.SOV_Intervene_Tresen_Civil_War_TAM
+			}
+	    }
+		
+	}
+
 	SOV_uphold_dec_national_self_determination = {  ##颠覆[From.GetName]反动政府
 		priority = 98
 		allowed = { always = no }
