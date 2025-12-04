@@ -58,6 +58,11 @@ PAM_start1 = {
         id = basic_battery
         value = -200
     }
+    ai_strategy = { #反坦克炮
+        type = research_tech
+        id = interwar_antitank
+        value = 1000
+    }
     ai_strategy = {
         type = research_tech	#科技倾向
         id = magic_army_tech
@@ -69,8 +74,277 @@ PAM_start1 = {
         value = 200
     }
 }
+NANMEI_management_stop = {
+    enable = {
+        has_war = yes
+        has_manpower < 500
+        surrender_progress > 0.3
+    }
 
-LHSMore_Infantry_focus = {#多产枪
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        country_trigger = {
+            enemies_strength_ratio > 0.4
+        }
+        ordertype = front
+        execution_type = careful
+        execute_order = no
+        manual_attack = no
+    }
+}
+
+
+NANMEI_management_rush_desperation = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        has_war = yes
+        has_manpower < 500
+        surrender_progress > 0.4
+        enemies_strength_ratio < 0.8
+        NOT = { surrender_progress > 0.6 } # ensures extreme cases go to Stop instead
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+}
+
+
+NANMEI_management_rush_failing = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        has_war = yes
+        surrender_progress > 0.2
+        surrender_progress < 0.4
+        has_manpower > 499
+        enemies_strength_ratio < 0.9
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+}
+
+
+NANMEI_management_careful_failing = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        has_war = yes
+        surrender_progress > 0.2
+        surrender_progress < 0.4
+        has_manpower > 499
+        NOT = { enemies_strength_ratio < 0.9 }
+        enemies_strength_ratio < 1.3
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        ordertype = front
+        execution_type = careful
+        execute_order = yes
+        manual_attack = yes
+    }
+}
+
+
+NANMEI_management_rush = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        has_war = yes
+        any_enemy_country = { is_major = yes }
+        surrender_progress < 0.2
+        has_manpower > 499
+        enemies_strength_ratio < 1.6
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+}
+
+
+NANMEI_management_careful = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        has_war = yes
+        any_enemy_country = { is_major = yes }
+        surrender_progress < 0.2
+        has_manpower > 499
+        NOT = { enemies_strength_ratio < 1.6 }
+        enemies_strength_ratio < 3.0
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        ordertype = front
+        execution_type = careful
+        execute_order = yes
+        manual_attack = yes
+    }
+}
+
+
+NANMEI_management_rush_vs_minors = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        has_war = yes
+        is_major = yes
+        surrender_progress < 0.2
+        has_manpower > 499
+        enemies_strength_ratio < 3.0
+        NOT = { any_enemy_country = { is_major = yes } } # ensures only minors are enemies
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+}
+
+
+NANMEI_management_careful_vs_minors = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        has_war = yes
+        is_major = yes
+        surrender_progress < 0.2
+        has_manpower > 499
+        enemies_strength_ratio > 2.5
+        enemies_strength_ratio < 4.0
+        NOT = { any_enemy_country = { is_major = yes } } # ensures only minors are enemies
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        ordertype = front
+        execution_type = careful
+        execute_order = yes
+        manual_attack = yes
+    }
+}
+PAMMore_Infantry_focus = {#多产枪
     allowed = {
         original_tag = PAM
     }
@@ -90,7 +364,7 @@ LHSMore_Infantry_focus = {#多产枪
     }
 
 }
-LHSPAM_stop_disbanding_your_army = {#ai部署陆军倾向
+PAM_stop_disbanding_your_army = {#ai部署陆军倾向
     allowed = {
         original_tag = PAM
     }
@@ -104,7 +378,7 @@ LHSPAM_stop_disbanding_your_army = {#ai部署陆军倾向
         value = 1000
     }
 }
-LHSPAM_stop_disbanding_your_army2 = {#ai部署陆军倾向2
+PAM_stop_disbanding_your_army2 = {#ai部署陆军倾向2
     allowed = {
         original_tag = PAM
     }
@@ -118,7 +392,7 @@ LHSPAM_stop_disbanding_your_army2 = {#ai部署陆军倾向2
         value = -2000
     }
 }
-LHSMore_Infantry_focus_2 = {
+PAMMore_Infantry_focus_2 = {
     allowed = {
         original_tag = PAM
     }
@@ -137,7 +411,7 @@ LHSMore_Infantry_focus_2 = {
 
 
 
-LHSMore_Infantry_focus_3 = {
+PAMMore_Infantry_focus_3 = {
     allowed = {
         original_tag = PAM
     }
@@ -156,7 +430,7 @@ LHSMore_Infantry_focus_3 = {
 
 
 
-LHSMore_Support_focus = {
+PAMMore_Support_focus = {
     allowed = {
         original_tag = PAM
     }
@@ -173,8 +447,7 @@ LHSMore_Support_focus = {
     }
 }
 
-
-LHSMore_Support_focus_2 = {
+PAMMore_Support_focus_2 = {
     allowed = {
         original_tag = PAM
     }
@@ -190,7 +463,7 @@ LHSMore_Support_focus_2 = {
         value = 50
     }
 }
-LHSMore_Support_focus_3 = {
+PAMMore_Support_focus_3 = {
     allowed = {
         original_tag = PAM
     }
@@ -205,7 +478,7 @@ LHSMore_Support_focus_3 = {
         value = 100
     }
 }
-LHSLessAirForMass = {
+PAMLessAirForMass = {
     allowed = {
         original_tag = PAM
     }
@@ -220,7 +493,7 @@ LHSLessAirForMass = {
 }
 
 
-LHSIfyouhavethemusethem2 = {
+PAMIfyouhavethemusethem2 = {
     allowed = {
         original_tag = PAM
     }
@@ -245,7 +518,7 @@ LHSIfyouhavethemusethem2 = {
 
 
 
-LHSPushForMoreTONK = {
+PAMPushForMoreTONK = {
     allowed = {
         original_tag = PAM
     }
@@ -269,7 +542,7 @@ LHSPushForMoreTONK = {
 
 }
 
-LHSMajorsBuildTanksWithManpower = {
+PAMMajorsBuildTanksWithManpower = {
     allowed = {
         original_tag = PAM
     }
@@ -332,26 +605,26 @@ PAM_ai_research = {
         value = 2000
     }
     ai_strategy = { #火炮
-         type = research_tech
-         id = gw_artillery
-         value = 200
-     }
-     ai_strategy = { #火炮2
-         type = research_tech
-         id = interwar_artillery
-         value = 200
-     }
+        type = research_tech
+        id = gw_artillery
+        value = 200
+    }
+    ai_strategy = { #火炮2
+        type = research_tech
+        id = interwar_artillery
+        value = 200
+    }
 
-     ai_strategy = { #QF 25磅野战炮
-         type = research_tech
-         id = artillery1
-         value = 200
-     }
-     ai_strategy = { #QF 25磅野战炮
-         type = research_tech
-         id = artillery2
-         value = 200
-     }
+    ai_strategy = { #QF 25磅野战炮
+        type = research_tech
+        id = artillery1
+        value = 200
+    }
+    ai_strategy = { #QF 25磅野战炮
+        type = research_tech
+        id = artillery2
+        value = 200
+    }
     ai_strategy = { #工兵连 II
         type = research_tech
         id = tech_engineers2
@@ -725,6 +998,65 @@ PAM_if_we_can_build_nuclear_missiles_we_want_nuclear_missiles = {#生产核弹
     }
 }
 
+nanmei_naval_invasions = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        has_war = yes
+    }
+    abort_when_not_enabled = yes
+    ai_strategy = {
+        type = naval_mission_threshold
+        id = MISSION_CONVOY_RAIDING
+        value = 50
+    }
+    ai_strategy = {
+        type = naval_invasion_focus
+        value = 25
+    }
+}
+
+nanmei_this_one_came_from_here = {
+    allowed = {
+        or = {
+            original_tag = PAM
+            original_tag = PAO
+            original_tag = LHS
+            original_tag = ELF
+            original_tag = ELW
+            original_tag = EWW
+            original_tag = EFC
+            original_tag = ELG
+            original_tag = EDW
+            original_tag = EBS
+        }
+    }
+    enable = {
+        OR = {
+            threat > 0.80
+            has_war = yes
+        }
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = added_military_to_civilian_factory_ratio
+        value = 50
+    }
+}
 
 PAM_unit= { #单位倾向
     allowed = {
@@ -929,7 +1261,7 @@ always_prioritize_our_core = {
     enable = {
         surrender_progress > 0.05
     }
-    
+
     abort = {
         OR = {
             surrender_progress < 0.01
@@ -972,10 +1304,10 @@ PAM_state_is_zhanlue = {#老爷爷，我给你踩地来咯
     abort = {
         and = {
             or = {
-              strength_ratio = {
-                   tag = PAM
-                   ratio < 0.7
-               }
+                strength_ratio = {
+                    tag = PAM
+                    ratio < 0.7
+                }
             }
         }
 
