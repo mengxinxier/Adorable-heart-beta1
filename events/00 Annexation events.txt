@@ -57,7 +57,12 @@ country_event = {
     option = {
         name = annex.3.a #return all land
         ai_chance = {
-            factor = 1
+            base = 1
+            modifier = {
+                factor = 0
+                tag = ENG
+                date < 1937.1.1
+            }
         }
         clr_country_flag = KR_returning_land
         custom_effect_tooltip = KR_will_return_all
@@ -69,9 +74,6 @@ country_event = {
     }
     option = {
         name = annex.3.e #keep it all you pig
-        trigger = {
-            is_ai = no
-        }
         clr_country_flag = KR_returning_land
         custom_effect_tooltip = KR_will_not_return
         hidden_effect = {
@@ -85,6 +87,14 @@ country_event = {
                     NOT = { has_state_flag = KR_keeping_state@ROOT }
                 }
                 set_state_flag = KR_keeping_state@ROOT
+            }
+        }
+        ai_chance = {
+            base = 0
+            modifier = {
+                add = 1
+                tag = ENG
+                date < 1937.1.1
             }
         }
     }
@@ -14206,6 +14216,13 @@ country_event = {
         set_temp_variable = {
             tag_to_release = PA1
         }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_elfrieden_state_area
+            }
+            add_core_of = PA1
+        }
         release_targeted_tag = yes
         annexation_event_option_effect = yes
     }
@@ -14237,7 +14254,9 @@ country_event = {
     option = {
         name = Unleash_a_loyal_government
         trigger = {
+            PAM = { is_ally_of_ROOT = no }
             CHL = { is_ally_of_ROOT = no }
+            LHS = { is_ally_of_ROOT = no }
             NOT = { country_exists = CHL }
         }
         ai_chance = {
@@ -14247,30 +14266,80 @@ country_event = {
                 add = -100
             }
         }
-        CHL = {
-            every_state = {
-                limit = {
-                    is_core_of = LHS
-                }
-                add_core_of = CHL
-            }
-            hidden_effect = {
-                remove_ideas = LHS_lianhegongshi
-                remove_ideas = LHS_weile
-            }
-
-        }
         set_temp_variable = {
-            tag_to_release = CHL
+            tag_to_release = PAM
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_lilandia_state_area
+            }
+            add_core_of = PAM
         }
         release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        name = annex.transfer_to_CHL
+        trigger = {
+            CHL = { is_ally_of_ROOT = yes }
+        }
+        ai_chance = {
+            base = 100
+        }
+        every_owned_state = {
+            limit = {
+                has_state_flag = is_lilandia_state_area
+                is_claim_or_core_of_ROOT = no
+            }
+            add_core_of = CHL
+            transfer_state_to = CHL
+        }
+        annexation_event_option_effect = yes
+    }
+    option = {
+        name = annex.transfer_to_LHS
+        trigger = {
+            LHS = { is_ally_of_ROOT = yes }
+        }
+        ai_chance = {
+            base = 100
+        }
+        every_owned_state = {
+            limit = {
+                has_state_flag = is_lilandia_state_area
+                is_claim_or_core_of_ROOT = no
+            }
+            add_core_of = LHS
+            transfer_state_to = LHS
+        }
+        annexation_event_option_effect = yes
+    }
+    option = {
+        name = annex.transfer_to_PAM
+        trigger = {
+            PAM = { is_ally_of_ROOT = yes }
+        }
+        ai_chance = {
+            base = 100
+        }
+        every_owned_state = {
+            limit = {
+                has_state_flag = is_lilandia_state_area
+                is_claim_or_core_of_ROOT = no
+            }
+            add_core_of = PAM
+            transfer_state_to = PAM
+        }
         annexation_event_option_effect = yes
     }
     option = {
         #occupy
         name = annex.occupation
         trigger = {
+            PAM = { is_ally_of_ROOT = no }
             CHL = { is_ally_of_ROOT = no }
+            LHS = { is_ally_of_ROOT = no }
         }
         ai_chance = {
             base = 0
@@ -14285,11 +14354,11 @@ country_event = {
     }
 }
 
-#军团的命运
+#丛林区的命运
 country_event = {
     id = annex.1132
-    title = annexation_PAU_CONQ
-    desc = annexation_PAU_CONQ_desc
+    title = annexation_SAJ_CONQ
+    desc = annexation_SAJ_CONQ_desc
     is_triggered_only = yes
     immediate = {
         hidden_effect = {
@@ -14298,8 +14367,8 @@ country_event = {
     option = {
         name = Unleash_a_loyal_government
         trigger = {
-            PAU = { is_ally_of_ROOT = no }
-            NOT = { country_exists = PAU }
+            LFC = { is_ally_of_ROOT = no }
+            NOT = { country_exists = LFC }
         }
         ai_chance = {
             base = 100
@@ -14309,16 +14378,62 @@ country_event = {
             }
         }
         set_temp_variable = {
-            tag_to_release = PAU
+            tag_to_release = LFC
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_jungle_state_area
+            }
+            add_core_of = LFC
         }
         release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        name = annex.transfer_to_1191_owner
+        trigger = {
+            var:1191.owner = {
+                is_elf_tag = yes
+                is_ally_of_ROOT = yes
+            }
+        }
+        ai_chance = {
+            base = 100
+        }
+        every_owned_state = {
+            limit = {
+                has_state_flag = is_jungle_state_area
+                is_claim_or_core_of_ROOT = no
+            }
+            add_core_of = var:1191.owner
+            transfer_state_to = var:1191.owner
+        }
+        annexation_event_option_effect = yes
+    }
+    option = {
+        name = annex.transfer_to_MGU
+        trigger = {
+            MGU = { is_ally_of_ROOT = yes }
+        }
+        ai_chance = {
+            base = 100
+        }
+        every_owned_state = {
+            limit = {
+                has_state_flag = is_jungle_state_area
+                is_claim_or_core_of_ROOT = no
+            }
+            add_core_of = MGU
+            transfer_state_to = MGU
+        }
         annexation_event_option_effect = yes
     }
     option = {
         #occupy
         name = annex.occupation
         trigger = {
-            PAU = { is_ally_of_ROOT = no }
+            LFC = { is_ally_of_ROOT = no }
         }
         ai_chance = {
             base = 0
@@ -14328,7 +14443,7 @@ country_event = {
             }
         }
         occupy_medium_country = yes
-        set_country_flag = PAU_CONQ
+        set_country_flag = SAJ_CONQ
         annexation_event_option_effect = yes
     }
 }
@@ -14356,17 +14471,15 @@ country_event = {
                 add = -100
             }
         }
-        every_state = {
-            limit = {
-                or = {
-                    is_core_of = MGS
-                    is_core_of = MST
-                }
-            }
-            add_core_of = MGU
-        }
         set_temp_variable = {
             tag_to_release = MGU
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_mgu_state_area
+            }
+            add_core_of = MGU
         }
         release_targeted_tag = yes
         annexation_event_option_effect = yes
@@ -14416,6 +14529,13 @@ country_event = {
         set_temp_variable = {
             tag_to_release = PAO
         }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_PAO_state_area
+            }
+            add_core_of = PAO
+        }
         release_targeted_tag = yes
         annexation_event_option_effect = yes
     }
@@ -14464,6 +14584,13 @@ country_event = {
         set_temp_variable = {
             tag_to_release = PAQ
         }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_adlai_state_area
+            }
+            add_core_of = PAQ
+        }
         release_targeted_tag = yes
         annexation_event_option_effect = yes
     }
@@ -14486,11 +14613,11 @@ country_event = {
     }
 }
 
-#圣塞莉母巢的命运
+#妖精的命运
 country_event = {
     id = annex.1136
-    title = annexation_BRA_CONQ
-    desc = annexation_BRA_CONQ_desc
+    title = annexation_ELF_CONQ
+    desc = annexation_ELF_CONQ_desc
     is_triggered_only = yes
     immediate = {
         hidden_effect = {
@@ -14512,6 +14639,58 @@ country_event = {
         set_temp_variable = {
             tag_to_release = ELF
         }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_elf_state_area
+            }
+            add_core_of = ELF
+        }
+        release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        name = annex.1136.a
+        trigger = {
+            not = {
+                any_country = {
+                    is_independent_ally_of_ROOT = yes
+                    is_elf_tag = yes
+                }
+            }
+        }
+        ai_chance = {
+            base = 0
+        }
+        set_temp_variable = {
+            tag_to_release = ELF
+        }
+        remove_targeted_core = yes
+        ELF_state_country_core = yes
+        release_targeted_tag = yes
+        set_temp_variable = {
+            tag_to_release = EWW
+        }
+        release_targeted_tag = yes
+        set_temp_variable = {
+            tag_to_release = ELW
+        }
+        release_targeted_tag = yes
+        set_temp_variable = {
+            tag_to_release = ELG
+        }
+        release_targeted_tag = yes
+        set_temp_variable = {
+            tag_to_release = EDW
+        }
+        release_targeted_tag = yes
+        set_temp_variable = {
+            tag_to_release = EBS
+        }
+        release_targeted_tag = yes
+        set_temp_variable = {
+            tag_to_release = EFC
+        }
         release_targeted_tag = yes
         annexation_event_option_effect = yes
     }
@@ -14529,7 +14708,337 @@ country_event = {
             }
         }
         occupy_medium_country = yes
-        set_country_flag = BRA_CONQ
+        set_country_flag = ELF_CONQ
+        annexation_event_option_effect = yes
+    }
+}
+
+#风声河谷的命运
+country_event = {
+    id = annex.11361
+    title = annexation_EWW_CONQ
+    desc = annexation_EWW_CONQ_desc
+    is_triggered_only = yes
+    immediate = {
+        hidden_effect = {
+        }
+    }
+    option = {
+        name = Unleash_a_loyal_government
+        trigger = {
+            EWW = { is_ally_of_ROOT = no }
+            NOT = { country_exists = EWW }
+        }
+        ai_chance = {
+            base = 100
+            modifier = {
+                tag = PAY
+                add = -100
+            }
+        }
+        set_temp_variable = {
+            tag_to_release = EWW
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_EWW_state_area
+            }
+            add_core_of = EWW
+        }
+        release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        #occupy
+        name = annex.occupation
+        trigger = {
+            EWW = { is_ally_of_ROOT = no }
+        }
+        ai_chance = {
+            base = 0
+            modifier = {
+                tag = PAY
+                add = 100
+            }
+        }
+        occupy_large_country = yes
+        set_country_flag = EWW_CONQ
+        annexation_event_option_effect = yes
+    }
+}
+
+#叶落边境的命运
+country_event = {
+    id = annex.11362
+    title = annexation_ELW_CONQ
+    desc = annexation_ELW_CONQ_desc
+    is_triggered_only = yes
+    immediate = {
+        hidden_effect = {
+        }
+    }
+    option = {
+        name = Unleash_a_loyal_government
+        trigger = {
+            ELW = { is_ally_of_ROOT = no }
+            NOT = { country_exists = ELW }
+        }
+        ai_chance = {
+            base = 100
+            modifier = {
+                tag = PAY
+                add = -100
+            }
+        }
+        set_temp_variable = {
+            tag_to_release = ELW
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_ELW_state_area
+            }
+            add_core_of = ELW
+        }
+        release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        #occupy
+        name = annex.occupation
+        trigger = {
+            ELW = { is_ally_of_ROOT = no }
+        }
+        ai_chance = {
+            base = 0
+            modifier = {
+                tag = PAY
+                add = 100
+            }
+        }
+        occupy_large_country = yes
+        set_country_flag = ELW_CONQ
+        annexation_event_option_effect = yes
+    }
+}
+
+#曦光圣域的命运
+country_event = {
+    id = annex.11363
+    title = annexation_ELG_CONQ
+    desc = annexation_ELG_CONQ_desc
+    is_triggered_only = yes
+    immediate = {
+        hidden_effect = {
+        }
+    }
+    option = {
+        name = Unleash_a_loyal_government
+        trigger = {
+            ELG = { is_ally_of_ROOT = no }
+            NOT = { country_exists = ELG }
+        }
+        ai_chance = {
+            base = 100
+            modifier = {
+                tag = PAY
+                add = -100
+            }
+        }
+        set_temp_variable = {
+            tag_to_release = ELG
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_ELG_state_area
+            }
+            add_core_of = ELG
+        }
+        release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        #occupy
+        name = annex.occupation
+        trigger = {
+            ELG = { is_ally_of_ROOT = no }
+        }
+        ai_chance = {
+            base = 0
+            modifier = {
+                tag = PAY
+                add = 100
+            }
+        }
+        occupy_large_country = yes
+        set_country_flag = ELG_CONQ
+        annexation_event_option_effect = yes
+    }
+}
+
+#暮色林渊的命运
+country_event = {
+    id = annex.11364
+    title = annexation_EDW_CONQ
+    desc = annexation_EDW_CONQ_desc
+    is_triggered_only = yes
+    immediate = {
+        hidden_effect = {
+        }
+    }
+    option = {
+        name = Unleash_a_loyal_government
+        trigger = {
+            EDW = { is_ally_of_ROOT = no }
+            NOT = { country_exists = EDW }
+        }
+        ai_chance = {
+            base = 100
+            modifier = {
+                tag = PAY
+                add = -100
+            }
+        }
+        set_temp_variable = {
+            tag_to_release = EDW
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_EDW_state_area
+            }
+            add_core_of = EDW
+        }
+        release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        #occupy
+        name = annex.occupation
+        trigger = {
+            EDW = { is_ally_of_ROOT = no }
+        }
+        ai_chance = {
+            base = 0
+            modifier = {
+                tag = PAY
+                add = 100
+            }
+        }
+        occupy_large_country = yes
+        set_country_flag = EDW_CONQ
+        annexation_event_option_effect = yes
+    }
+}
+
+#无垠之海的命运
+country_event = {
+    id = annex.11365
+    title = annexation_EBS_CONQ
+    desc = annexation_EBS_CONQ_desc
+    is_triggered_only = yes
+    immediate = {
+        hidden_effect = {
+        }
+    }
+    option = {
+        name = Unleash_a_loyal_government
+        trigger = {
+            EBS = { is_ally_of_ROOT = no }
+            NOT = { country_exists = EBS }
+        }
+        ai_chance = {
+            base = 100
+            modifier = {
+                tag = PAY
+                add = -100
+            }
+        }
+        set_temp_variable = {
+            tag_to_release = EBS
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_EBS_state_area
+            }
+            add_core_of = EBS
+        }
+        release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        #occupy
+        name = annex.occupation
+        trigger = {
+            EBS = { is_ally_of_ROOT = no }
+        }
+        ai_chance = {
+            base = 0
+            modifier = {
+                tag = PAY
+                add = 100
+            }
+        }
+        occupy_large_country = yes
+        set_country_flag = EBS_CONQ
+        annexation_event_option_effect = yes
+    }
+}
+
+#希尔瓦尼亚城邦的命运
+country_event = {
+    id = annex.11366
+    title = annexation_EFC_CONQ
+    desc = annexation_EFC_CONQ_desc
+    is_triggered_only = yes
+    immediate = {
+        hidden_effect = {
+        }
+    }
+    option = {
+        name = Unleash_a_loyal_government
+        trigger = {
+            EFC = { is_ally_of_ROOT = no }
+            NOT = { country_exists = EFC }
+        }
+        ai_chance = {
+            base = 100
+            modifier = {
+                tag = PAY
+                add = -100
+            }
+        }
+        set_temp_variable = {
+            tag_to_release = EFC
+        }
+        remove_targeted_core = yes
+        every_state = {
+            limit = {
+                has_state_flag = is_EFC_state_area
+            }
+            add_core_of = EFC
+        }
+        release_targeted_tag = yes
+        annexation_event_option_effect = yes
+    }
+    option = {
+        #occupy
+        name = annex.occupation
+        trigger = {
+            EFC = { is_ally_of_ROOT = no }
+        }
+        ai_chance = {
+            base = 0
+            modifier = {
+                tag = PAY
+                add = 100
+            }
+        }
+        occupy_large_country = yes
+        set_country_flag = EFC_CONQ
         annexation_event_option_effect = yes
     }
 }
