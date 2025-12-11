@@ -378,7 +378,7 @@
 			ai_chance = {
 				base = 10
 				modifier = {
-					factor = 10
+					factor = 100
 					has_game_rule = {
 						rule = AH_NGD_ai_behavior_SELECTION
 						option = NGD_GAME_RULE_1
@@ -453,7 +453,7 @@
 			ai_chance = {
 				base = 10
 				modifier = {
-					factor = 10
+					factor = 100
 					has_game_rule = {
 						rule = AH_NGD_ai_behavior_SELECTION
 						option = NGD_GAME_RULE_1
@@ -536,7 +536,7 @@
 			ai_chance = {
 				base = 10
 				modifier = {
-					factor = 10
+					factor = 100
 					has_game_rule = {
 						rule = AH_NGD_ai_behavior_SELECTION
 						option = NGD_GAME_RULE_1
@@ -555,7 +555,7 @@
 			ai_chance = {
 				base = 10
 				modifier = {
-					factor = 10
+					factor = 100
 					has_game_rule = {
 						rule = AH_NGD_ai_behavior_SELECTION
 						option = NGD_GAME_RULE_2
@@ -954,6 +954,10 @@
 		is_triggered_only = yes
 		option = {
 			name = NGD_undercurrent.005.a
+			PHI = {
+				end_puppet_this = yes
+				drop_cosmetic_tag = yes
+			}
 			set_politics = {
 				ruling_party = communism
 				elections_allowed = no
@@ -1044,7 +1048,6 @@
 				limit = {
 					or = {
 						NGD_Republican_winning_trigger = yes
-						is_debug = yes
 						AND = {
 							is_ai = yes
 							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 }
@@ -1624,7 +1627,7 @@
 			add_political_power = -100
 			add_stability = -0.1
 			add_war_support = 0.1
-			create_faction = NGD_NATO
+			set_faction_manifest = faction_template_nato
 
 			ai_chance = {
 				base = 0
@@ -1835,6 +1838,133 @@
 			name = NGD_diplomacy.009.a
 			transfer_state = 100
 			transfer_state = 337
+		}
+	}
+	
+	#太平洋脱离控制
+	country_event = {
+		id = NGD_diplomacy.010
+		title = NGD_diplomacy.010.title
+		desc = NGD_diplomacy.010.desc
+		fire_only_once = yes
+		picture = GFX_NGD_Kokomi_event
+		trigger = {
+			tag = NGD
+			NGD = { has_war = yes }
+			any_enemy_country = {
+				is_north_american_tag = yes
+				is_subject = no
+			}
+			surrender_progress > 0.5
+			NOT = { has_global_flag = NGD_has_fallen }
+			PHI = { is_subject_of = NGD }
+			owns_state = 629
+		}
+		immediate = {
+			hidden_effect = {
+				set_global_flag = NGD_has_fallen
+				every_owned_state = {
+					limit = {
+						is_on_continent = australia
+						not = {
+							or = {
+								is_AST_state = yes
+								region = 157  #新西兰
+							}
+						}
+					}
+					add_core_of = HAW
+					transfer_state_to = HAW
+				}
+				PHI = {
+					end_puppet_this = yes
+					drop_cosmetic_tag = yes
+					if = {
+						limit = {
+							has_war_with = FRG
+						}
+						white_peace = FRG
+					}
+					if = {
+						limit = {
+							has_war_with = NFA
+						}
+						white_peace = NFA
+					}
+					if = {
+						limit = {
+							has_war_with = USA
+						}
+						white_peace = USA
+					}
+				}
+				NGD_Sangonomiya_Kokomi = { set_nationality = HAW }
+				HAW = {
+					inherit_technology = ROOT
+					NGD_Sangonomiya_Kokomi = {
+						add_country_leader_role = {
+							country_leader = {
+								desc = ""
+								ideology = Military_socialism
+								traits = {}
+								expire = "1999.1.1.1"
+								id = -1
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = ""
+								ideology = Guided_democracy
+								traits = {}
+								expire = "1999.1.1.1"
+								id = -1
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = ""
+								ideology = fascism_ideology
+								traits = {}
+								expire = "1999.1.1.1"
+								id = -1
+							}
+							promote_leader = yes
+						}
+						add_country_leader_role = {
+							country_leader = {
+								desc = ""
+								ideology = military_politicism
+								traits = {}
+								expire = "1999.1.1.1"
+								id = -1
+							}
+							promote_leader = yes
+						}
+					}
+				}
+			}
+		}
+		option = {
+			name = NGD_diplomacy.010.a
+			PHI = { change_tag_from_ROOT = yes }
+			ai_chance = {
+				base = 10
+			}
+		}
+		option = {
+			name = NGD_diplomacy.010.b
+			HAW = { change_tag_from_ROOT = yes }
+			ai_chance = {
+				base = 10
+			}
+		}
+		option = {
+			name = NGD_diplomacy.010.c
+			ai_chance = {
+				base = 10
+			}
 		}
 	}
 ### - 远洋外交 - ###
@@ -2131,38 +2261,6 @@ country_event = {
 	}
 }
 
-##结盟？
-country_event = {
-	id = NGD.0004
-	title = NGD.0004.title
-	desc = NGD.0004.desc
-	is_triggered_only = yes
-	option = {
-		name = NGD.0004.a
-		NGD = {
-			white_peace = {
-				tag = ROOT
-				message = NGD_white_peace_with_FRG
-			}
-			create_faction = Westrern_country_faction
-			add_to_faction = ROOT
-		}
-		ai_chance = {
-			base = 10
-		}
-	}
-	option = {
-		name = NGD.0004.b
-		NGD = {
-			country_event = {
-				id = generic.2009
-			}
-		}
-		ai_chance = {
-			base = 10
-		}
-	}
-}
 
 ##宋子雯胜选
 country_event = {
@@ -2285,7 +2383,6 @@ country_event = {
 		name = NGD.0007.c
 		promote_character = NGD_Keqing
 		mark_focus_tree_layout_dirty = yes
-		custom_effect_tooltip = Come_explore_later
 		ai_chance = {
 			base = 10
 			modifier = {
@@ -2301,7 +2398,6 @@ country_event = {
 			ideology = warm_syndicalism_group
 		}
 		mark_focus_tree_layout_dirty = yes
-		custom_effect_tooltip = Come_explore_later
 		ai_chance = {
 			base = 20
 			modifier = {
@@ -2314,7 +2410,6 @@ country_event = {
 		name = NGD.0007.b
 		promote_character = NGD_Hutao
 		mark_focus_tree_layout_dirty = yes
-		custom_effect_tooltip = Come_explore_later
 		ai_chance = {
 			base = 10
 			modifier = {
@@ -2334,7 +2429,7 @@ country_event = {
 	option = {
 		name = NGD.0008.a
 		FROM = {
-			change_tag_from = ROOT
+			change_tag_from_ROOT = yes
 			country_event = {
 				id = NGD.0009
 			}
@@ -2432,7 +2527,7 @@ country_event = {
 	option = {
 		name = NGD.0011.a
 		FROM = {
-			change_tag_from = ROOT
+			change_tag_from_ROOT = yes
 			country_event = {
 				id = NGD.0009
 			}

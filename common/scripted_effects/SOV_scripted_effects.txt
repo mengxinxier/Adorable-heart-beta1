@@ -2,6 +2,15 @@
 SOV_promote_regional_development = {
 	if = {
 		limit = {
+			has_state_category = twelve
+		}
+		add_extra_state_shared_building_slots = 1
+	}
+	else = {
+		custom_effect_tooltip = SOV_upgrading_area_type_tt
+	}
+	if = {
+		limit = {
 			has_state_category = zero_island
 		}
 	    set_state_category = one_island
@@ -86,12 +95,7 @@ SOV_promote_regional_development = {
 		}
 		set_state_category = twelve
 	}
-	else_if = {
-		limit = {
-			has_state_category = twelve
-		}
-		add_extra_state_shared_building_slots = 1
-	}
+	
 }
 
 #### 瘟疫削减 ####
@@ -238,13 +242,6 @@ SOV_ease_investment_shortage = {
 		limit = { has_idea = SOV_foreign_investment }
 		swap_ideas = {
 			remove_idea = SOV_foreign_investment
-			add_idea = SOV_foreign_investment2
-		}
-	}
-	else_if = {
-		limit = { has_idea = SOV_foreign_investment2 }
-		swap_ideas = {
-			remove_idea = SOV_foreign_investment2
 			add_idea = SOV_foreign_investment3
 		}
 	}
@@ -252,13 +249,6 @@ SOV_ease_investment_shortage = {
 		limit = { has_idea = SOV_foreign_investment3 }
 		swap_ideas = {
 			remove_idea = SOV_foreign_investment3
-			add_idea = SOV_foreign_investment4
-		}
-	}
-	else_if = {
-		limit = { has_idea = SOV_foreign_investment4 }
-		swap_ideas = {
-			remove_idea = SOV_foreign_investment4
 			add_idea = SOV_foreign_investment5
 		}
 	}
@@ -536,6 +526,9 @@ SOV_disintegration_of_the_Soviet_Union = {
 			stockpile_ratio = 0.5
 			army_ratio = 0.3
 			air_ratio = 0.8
+			keep_unit_leaders_trigger = {
+				always = yes
+			}
 		}
 	}
 	inherit_technology = SOV
@@ -563,6 +556,9 @@ SOV_disintegration_of_the_Soviet_Union = {
 			stockpile_ratio = 0.1
 			army_ratio = 0.2
 			air_ratio = 0.1
+			keep_unit_leaders_trigger = {
+				always = yes
+			}
 		}
 	}
 	inherit_technology = SOV
@@ -583,6 +579,7 @@ SOV_disintegration_of_the_Soviet_Union = {
 			transfer_state = 590
 			transfer_state = 402
 			transfer_state = 406
+			transfer_state = 1171
 		}
 	}
 	else = {
@@ -603,6 +600,9 @@ SOV_disintegration_of_the_Soviet_Union = {
 				stockpile_ratio = 0.2
 				army_ratio = 0.1
 				air_ratio = 0.1
+				keep_unit_leaders_trigger = {
+					always = yes
+				}
 			}
 		}
 		inherit_technology = SOV
@@ -629,7 +629,7 @@ SOV_exile_characters_to_SIB = {
 				OR = {
 					is_character = SOV_Willow
 					has_character_flag = SOV_military_academy_club_character
-					has_character_flag = SOV_magical_society_club_character
+					#has_character_flag = SOV_magical_society_club_character
 					has_character_flag = SOV_political_academy_club_character
 					has_character_flag = SOV_Talulah_club_character
 				}
@@ -641,14 +641,14 @@ SOV_exile_characters_to_SIB = {
 		SOV_Willow = {
 			promote_character = socialism
 		}
-		SOV_Nanoha = {
-			add_country_leader_role = {
-				country_leader = {
-					ideology = moderatism
-				}
-			}
-			promote_leader = yes
-		}
+		# SOV_Nanoha = {
+		# 	add_country_leader_role = {
+		# 		country_leader = {
+		# 			ideology = moderatism
+		# 		}
+		# 	}
+		# 	promote_leader = yes
+		# }
 		SOV_Katyusha = {
 			add_country_leader_role = {
 				country_leader = {
@@ -942,6 +942,19 @@ SOV_exile_characters_to_EAM = {
 	}
 }
 
+SOV_get_magical_society_club_characters = {
+	every_possible_country = {
+		limit = {
+			any_character = { has_character_flag = SOV_magical_society_club_character }
+		}
+		every_character = {
+			limit = { has_character_flag = SOV_magical_society_club_character }
+			set_nationality = ROOT
+		}
+	}
+	clr_country_flag = can_catch_SOV_Vivio_now
+}
+
 SOV_new_members_join_comecon = {
 	hidden_effect = {
 		add_to_variable = {
@@ -954,15 +967,15 @@ SOV_new_members_join_comecon = {
 		add_to_variable = {
 			ubs_save = 50
 		}
-		if = {
-			limit = {
-				is_in_array = { 
-					array = global.comecon_member
-					value = SOV
-				}
-			}
-			remove_from_array = { global.comecon_member = SOV }
-		}
+		# if = {
+		# 	limit = {
+		# 		is_in_array = { 
+		# 			array = global.comecon_member
+		# 			value = SOV
+		# 		}
+		# 	}
+		# 	remove_from_array = { global.comecon_member = SOV }
+		# }
 	}
 	custom_effect_tooltip = get_fifty_units_of_currency_tt
 }
@@ -1003,7 +1016,6 @@ SOV_flexible_economic_policy = {
 	if = {
 		limit = { 
 			date < 1941.1.1
-			has_political_power < 200 
 		}
 		set_variable = { SOV.ubs_to_pp = 10 }
 	}
@@ -1013,30 +1025,20 @@ SOV_flexible_economic_policy = {
 
 	if = {
 		limit = { 
-			date > 1940.1.1
-		}
-		set_variable = { SOV.pp_to_ubs = 1 }
-	}
-	else = {
-		set_variable = { SOV.pp_to_ubs = -10 }
-	}
-
-	if = {
-		limit = { 
 			OR = {
-				has_completed_focus = SOV_enlarge_cultivated_land
+				has_completed_focus = SOV_frozen_sprout
 				check_variable = { ubs_save > 1000 }
 			}
 		}
-		set_variable = { SOV.ubs_to_civ = 10 }
+		set_variable = { SOV.ubs_to_research = 10 }
 	}
 	else = {
-		set_variable = { SOV.ubs_to_civ = -10 }
+		set_variable = { SOV.ubs_to_research = -10 }
 	}
 
 	if = {
 		limit = { 
-			has_completed_focus = SOV_enlarge_cultivated_land
+			has_completed_focus = SOV_frozen_sprout
 		}
 		set_variable = { SOV.ubs_to_build_speed = 10 }
 	}
@@ -1048,7 +1050,7 @@ SOV_flexible_economic_policy = {
 		limit = { 
 			has_stability < 0.8
 		}
-		set_variable = { SOV.ubs_to_stability = 1 }
+		set_variable = { SOV.ubs_to_stability = 10 }
 	}
 	else = {
 		set_variable = { SOV.ubs_to_stability = -10 }
@@ -1058,10 +1060,23 @@ SOV_flexible_economic_policy = {
 		limit = { 
 			has_war_support < 0.8
 		}
-		set_variable = { SOV.ubs_to_ws = 1 }
+		set_variable = { SOV.ubs_to_ws = 10 }
 	}
 	else = {
 		set_variable = { SOV.ubs_to_ws = -10 }
+	}
+	
+	if = {
+		limit = { 
+			any_enemy_country = {
+				is_major = yes
+			}
+			has_manpower < 100000
+		}
+		set_variable = { SOV.ubs_to_manpower = 10 }
+	}
+	else = {
+		set_variable = { SOV.ubs_to_manpower = -10 }
 	}
 }
 
@@ -1354,3 +1369,195 @@ willow_AI_add_design_base_plate = {
 		obsolete = yes
 	}
 }
+
+SOV_CMEA_investment_button_click_effect = {
+	add_to_variable = { ROOT.ubs_save = -100 }
+	add_to_variable = { global.Comecon_Investment_pools_var = 100 }
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history = THIS
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_state = 1
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_time = global.date
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_financial_aid = 0
+	}
+}
+
+SOV_CMEA_apply_button_click_effect = {
+	set_variable = { ROOT.80_per_debt = ROOT.ubs_load }
+	multiply_variable = { ROOT.80_per_debt = 0.8 }
+	set_variable = { ROOT.Comecon_Investment_pools_var_cut = ROOT.80_per_debt }
+	clamp_variable = {
+		var = ROOT.Comecon_Investment_pools_var_cut
+		max = global.Comecon_Investment_pools_var
+	}
+	subtract_from_variable = { global.Comecon_Investment_pools_var = ROOT.Comecon_Investment_pools_var_cut }
+	subtract_from_variable = { ROOT.ubs_load = ROOT.Comecon_Investment_pools_var_cut }
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history = THIS
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_state = 2
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_time = global.date
+	}
+	add_to_array = {
+		global.SOV_CMEA_Investment_pools_history_financial_aid = ROOT.Comecon_Investment_pools_var_cut
+	}
+	clear_variable = ROOT.80_per_debt
+	clear_variable = ROOT.Comecon_Investment_pools_var_cut
+	set_country_flag = {
+		flag = apply_for_financial_aid
+		days = 365
+		value = 1
+	}
+}
+
+POL_obtaining_the_general_of_Eltolia = {
+
+	#阿米蒂埃·弗洛利安
+	add_corps_commander_role = {
+		character = ELT_Amitie
+		traits = { DEN_AUTOMETA career_officer engineer_officer urban_assault_specialist }
+		skill = 3
+		attack_skill = 2
+		defense_skill = 4
+		planning_skill = 2
+		logistics_skill = 2
+	}
+
+	#迪亚琪·K·库罗迪亚
+	add_field_marshal_role = {
+		character = ELT_Dearche
+		traits = { ETL_shitenikka engineer_officer harsh_leader bearer_of_artillery brilliant_strategist trait_reckless organizer logistics_wizard }
+		skill = 5
+		attack_skill = 5
+		defense_skill = 3
+		planning_skill = 3
+		logistics_skill = 5
+	}
+	add_advisor_role = {
+		character = ELT_Dearche
+		advisor = {
+			slot = high_command
+			idea_token = ELT_Dearche
+			traits = { Magic_Tactics_3 }
+			cost = 200
+			ai_will_do = {
+				base = 0
+			}
+		}
+	}
+
+	#尤莉·艾贝尔梵茵
+	add_corps_commander_role = {
+		character = ELT_Eberwein
+		traits = { order_mahoushojo inflexible_strategist trait_cautious career_officer armor_officer }
+		skill = 3
+		attack_skill = 3
+		defense_skill = 4
+		planning_skill = 1
+		logistics_skill = 3
+	}
+	add_advisor_role = {
+		character = ELT_Eberwein
+		advisor = {
+			slot = army_chief
+			idea_token = ELT_Eberwein
+			traits = { army_chief_defensive_2 }
+			cost = 150
+		}
+	}
+
+	#琦莉耶·弗洛利安
+	add_corps_commander_role = {
+		character = ELT_Kurie
+		traits = { DEN_AUTOMETA commando camouflage_expert cavalry_officer }
+		skill = 2
+		attack_skill = 3
+		defense_skill = 1
+		planning_skill = 1
+		logistics_skill = 2
+	}
+
+
+	#莱维·拉塞尔
+	add_corps_commander_role = {
+		character = ELT_Levi
+		traits = { ETL_shitenikka trait_reckless harsh_leader trait_engineer fortress_buster cavalry_officer }
+		skill = 2
+		attack_skill = 4
+		defense_skill = 1
+		planning_skill = 1
+		logistics_skill = 1
+	}
+	add_advisor_role = {
+		character = ELT_Levi
+		advisor = {
+			slot = army_chief
+			idea_token = ELT_Levi
+			traits = { army_chief_maneuver_3 }
+			cost = 200
+		}
+	}
+
+	#修缇露·斯达库斯
+	add_advisor_role = {
+		character = ELT_Stern
+		advisor = {
+			slot = air_chief
+			idea_token = ELT_Levi
+			traits = { air_chief_ground_support_3 }
+			cost = 200
+		}
+	}
+	add_advisor_role = {
+		character = ELT_Stern
+		advisor = {
+			slot = theorist
+			idea_token = ELT_Levi
+			traits = { air_warfare_theorist }
+			cost = 100
+		}
+	}
+	add_corps_commander_role = {
+		character = ELT_Stern
+		traits = { ETL_shitenikka bearer_of_artillery skilled_staffer trait_cautious  }
+		skill = 3
+		attack_skill = 3
+		defense_skill = 3
+		planning_skill = 4
+		logistics_skill = 1
+	}
+}
+
+###  经互会计算  ###
+comecon_effect = {
+	###  统计经济阵营成员数量
+	clear_array = global.comecon_member  ##成员所在的数组
+	set_variable = { global.num_comecon_member = 0 }  ##成员数量变量
+	every_country = {
+		limit = { check_variable = { THIS.economy_faction_var = 2 } }
+		add_to_array = { global.comecon_member = THIS }
+		add_to_variable = { global.num_comecon_member = 1 }
+	}
+	###  计算动态阵营buff（如果有）
+	comecon_leader_modifier_effect = yes
+	###  刷新经济阵营GDP
+	compute_global_gdp = yes
+}
+comecon_leader_modifier_effect = {
+	set_variable = { SOV.SOV_comecon_leader_production_speed_buildings_factor = global.num_comecon_member }
+	set_variable = { SOV.SOV_comecon_leader_research_speed_factor = global.num_comecon_member }
+	multiply_variable = { SOV.SOV_comecon_leader_production_speed_buildings_factor = 0.02 }
+	multiply_variable = { SOV.SOV_comecon_leader_research_speed_factor = 0.01 }
+}
+
+
+
+

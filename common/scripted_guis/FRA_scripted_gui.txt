@@ -660,7 +660,7 @@ scripted_gui = {
 	}
 	FRA_election_states_window_button = {
 		context_type = player_context
-		parent_window_token = top_bar
+		parent_window_token = politics_tab
 		window_name = "FRA_election_states_window_button"
 		visible = {
 			tag = FRA
@@ -681,7 +681,29 @@ scripted_gui = {
 				}
 				FRA_election_refresh = yes
 				FRA_ideology_calculation = yes
+				if = {
+					limit = {
+						not = { has_country_flag = FRA_election_arrows_alert_unvisible }
+					}
+					set_country_flag = FRA_election_arrows_alert_unvisible
+					set_variable = { FRA_election_state_name_elected = 19 }
+					FRA_ideology_calculation = yes
+				}
 			}
+		}
+	}
+	FRA_election_arrows_alert = {
+		context_type = player_context
+		parent_window_token = politics_tab
+		window_name = "FRA_election_arrows_alert"
+		visible = {
+			tag = FRA
+			has_country_flag = FRA_Elections_begin
+			not = { has_country_flag = FRA_election_arrows_alert_unvisible }
+		}
+		properties = {
+		}
+		effects = {
 		}
 	}
 	FRA_state_election_pie_window = {
@@ -1538,7 +1560,7 @@ scripted_gui = {
 		parent_window_token = politics_tab
 		visible = {
 			tag = FRA
-			always = no
+			is_subject = no
 		}
 		properties = {
 			FRA_election_pie_chart_purple = {
@@ -1565,64 +1587,33 @@ scripted_gui = {
 			FRA_election_pie_chart_brown = {
 				frame = support_of_GFN_pie_chart_var
 			}
+			FRA_election_pie_chart_light_green = {
+				frame = support_of_Sanae_pie_chart_var
+			}
 			FRA_election_pie_chart_black = {
+				frame = support_of_MNR_pie_chart_var
+			}
+			FRA_election_pie_chart_light_green = {
 				frame = 100
 			}
-			LCR_ICON = {
-				frame = 1
+			Ruling_coalition_member_ICON = {
+				frame = Ruling_coalition_id
 			}
-			PCG_ICON = {
-				frame = 2
-			}
-			PSG_ICON = {
-				frame = 3
-			}
-			PFG_ICON = {
-				frame = 4
-			}
-			IDU_ICON = {
-				frame = 5
-			}
-			GFN_ICON = {
-				frame = 6
-			}
-			MNR_ICON = {
-				frame = 7
-			}
-			GPM_ICON = {
-				frame = 9
-			}
-			KYR_ICON = {
-				frame = 8
+			Sanae_ICON = {
+				frame = 10
 			}
 		}
 		triggers = {
-			LCR_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 1 }
+			leading_pol_party_bg_visible = {
+				check_variable = { Ruling_coalition_id = FRA_Ruling_Party_VAR }
 			}
-			PCG_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 2 }
-			}
-			PSG_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 3 }
-			}
-			PFG_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 4 }
-			}
-			IDU_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 5 }
-			}
-			GFN_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 6 }
-			}
-			MNR_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 7 }
-			}
-			GPM_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 9 }
-			}
-			KYR_leading_pol_party_bg_visible = {
-				check_variable = { FRA_Ruling_Party_VAR = 8 }
+		}
+		dynamic_lists = {
+			Ruling_coalition_member = {
+				array = ROOT.Ruling_coalition_array
+				index = Ruling_coalition_i
+				value = Ruling_coalition_id
+				entry_container = Ruling_coalition_member_window
 			}
 		}
 	}
@@ -1645,6 +1636,7 @@ scripted_gui = {
 		}
 	}
 }
+##反幻想乡同盟
 scripted_gui = {
 	Anti_Gensokyo_Ally_gui = {
 		context_type = decision_category
@@ -1732,8 +1724,8 @@ scripted_gui = {
 			ROOT = { has_country_flag = FRA_oligarchy_window_visible }
 		}
 		properties = {
-			FRA_Credit_Agricole_button = {
-				frame = FRA_Credit_Agricole_button_var
+			FRA_Federal_Reserve_System_button = {
+				frame = FRA_Federal_Reserve_System_button_var
 			}
 			FRA_ENGIE_Group_button = {
 				frame = FRA_ENGIE_Group_button_var
@@ -1749,7 +1741,7 @@ scripted_gui = {
 			}
 		}
 		triggers = {
-			FRA_Credit_Agricole_button_click_enabled = {
+			FRA_Federal_Reserve_System_button_click_enabled = {
 				ROOT = { has_political_power > 49 }
 			}
 			FRA_ENGIE_Group_button_click_enabled = {
@@ -1764,8 +1756,8 @@ scripted_gui = {
 			Kappa_Heavy_Industries_button_click_enabled = {
 				ROOT = { has_political_power > 49 }
 			}
-			FRA_Credit_Agricole_PP_50_visible = {
-				check_variable = { FRA_Credit_Agricole_button_var = 1 }
+			FRA_Federal_Reserve_System_PP_50_visible = {
+				check_variable = { FRA_Federal_Reserve_System_button_var = 1 }
 			}
 			FRA_ENGIE_Group_PP_50_visible = {
 				check_variable = { FRA_ENGIE_Group_button_var = 1 }
@@ -1781,10 +1773,7 @@ scripted_gui = {
 			}
 		}
 		effects = {
-			FRA_Credit_Agricole_button_click = {
-				set_variable = {
-					FRA_Credit_Agricole_button_var = 2
-				}
+			FRA_Federal_Reserve_System_button_click = {
 				set_variable = {
 					FRA_ENGIE_Group_button_var = 1
 				}
@@ -1796,14 +1785,19 @@ scripted_gui = {
 				}
 				set_variable = {
 					Kappa_Heavy_Industries_button_var = 1
+				}
+				if = {
+					limit = { check_variable = { FRA_Federal_Reserve_System_button_var = 1 } }
+					FRA_remove_all_oligarchy_state_modifier = yes
+					THIS = { add_dynamic_modifier = { modifier = FRA_Federal_Reserve_System_modifier } }
+					FRA_compute_oligarchy_num = yes
+					ROOT = { add_political_power = -50 }
+					set_variable = { FRA_Federal_Reserve_System_button_var = 2 }
 				}
 			}
 			FRA_ENGIE_Group_button_click = {
 				set_variable = {
-					FRA_Credit_Agricole_button_var = 1
-				}
-				set_variable = {
-					FRA_ENGIE_Group_button_var = 2
+					FRA_Federal_Reserve_System_button_var = 1
 				}
 				set_variable = {
 					FRA_Renault_button_var = 1
@@ -1813,28 +1807,41 @@ scripted_gui = {
 				}
 				set_variable = {
 					Kappa_Heavy_Industries_button_var = 1
+				}
+				if = {
+					limit = { check_variable = { FRA_ENGIE_Group_button_var = 1 } }
+					FRA_remove_all_oligarchy_state_modifier = yes
+					THIS = { add_dynamic_modifier = { modifier = FRA_ENGIE_Group_modifier } }
+					FRA_compute_oligarchy_num = yes
+					ROOT = { add_political_power = -50 }
+					set_variable = { FRA_ENGIE_Group_button_var = 2 }
 				}
 			}
 			FRA_Renault_button_click = {
 				set_variable = {
-					FRA_Credit_Agricole_button_var = 1
+					FRA_Federal_Reserve_System_button_var = 1
 				}
 				set_variable = {
 					FRA_ENGIE_Group_button_var = 1
-				}
-				set_variable = {
-					FRA_Renault_button_var = 2
 				}
 				set_variable = {
 					FRA_TotalEnergies_button_var = 1
 				}
 				set_variable = {
 					Kappa_Heavy_Industries_button_var = 1
+				}
+				if = {
+					limit = { check_variable = { FRA_Renault_button_var = 1 } }
+					FRA_remove_all_oligarchy_state_modifier = yes
+					THIS = { add_dynamic_modifier = { modifier = FRA_Renault_modifier } }
+					FRA_compute_oligarchy_num = yes
+					ROOT = { add_political_power = -50 }
+					set_variable = { FRA_Renault_button_var = 2 }
 				}
 			}
 			FRA_TotalEnergies_button_click = {
 				set_variable = {
-					FRA_Credit_Agricole_button_var = 1
+					FRA_Federal_Reserve_System_button_var = 1
 				}
 				set_variable = {
 					FRA_ENGIE_Group_button_var = 1
@@ -1843,15 +1850,20 @@ scripted_gui = {
 					FRA_Renault_button_var = 1
 				}
 				set_variable = {
-					FRA_TotalEnergies_button_var = 2
-				}
-				set_variable = {
 					Kappa_Heavy_Industries_button_var = 1
+				}
+				if = {
+					limit = { check_variable = { FRA_TotalEnergies_button_var = 1 } }
+					FRA_remove_all_oligarchy_state_modifier = yes
+					THIS = { add_dynamic_modifier = { modifier = FRA_TotalEnergies_modifier } }
+					FRA_compute_oligarchy_num = yes
+					ROOT = { add_political_power = -50 }
+					set_variable = { FRA_TotalEnergies_button_var = 2 }
 				}
 			}
 			Kappa_Heavy_Industries_button_click = {
 				set_variable = {
-					FRA_Credit_Agricole_button_var = 1
+					FRA_Federal_Reserve_System_button_var = 1
 				}
 				set_variable = {
 					FRA_ENGIE_Group_button_var = 1
@@ -1862,8 +1874,99 @@ scripted_gui = {
 				set_variable = {
 					FRA_TotalEnergies_button_var = 1
 				}
-				set_variable = {
-					Kappa_Heavy_Industries_button_var = 2
+				if = {
+					limit = { check_variable = { Kappa_Heavy_Industries_button_var = 1 } }
+					FRA_remove_all_oligarchy_state_modifier = yes
+					THIS = { add_dynamic_modifier = { modifier = FRA_Kappa_Heavy_Industries_modifier } }
+					FRA_compute_oligarchy_num = yes
+					ROOT = { add_political_power = -50 }
+					set_variable = { Kappa_Heavy_Industries_button_var = 2 }
+				}
+			}
+		}
+		ai_enabled = {
+			always = yes
+		}
+		ai_test_interval = 10
+		ai_test_Variance = 0
+		ai_check = {
+		}
+		ai_check_scope = {
+		}
+		ai_weights = {
+			FRA_Federal_Reserve_System_button_click = {
+				ai_will_do = {
+					base = 1
+					modifier = {
+						factor = 0
+						or = {
+							check_variable = { FRA_Federal_Reserve_System_button_var = 2 }
+							check_variable = { FRA_ENGIE_Group_button_var = 2 }
+							check_variable = { FRA_Renault_button_var = 2 }
+							check_variable = { FRA_TotalEnergies_button_var = 2 }
+							check_variable = { Kappa_Heavy_Industries_button_var = 2 }
+						}
+					}
+				}
+			}
+			FRA_ENGIE_Group_button_click = {
+				ai_will_do = {
+					base = 1
+					modifier = {
+						factor = 0
+						or = {
+							check_variable = { FRA_Federal_Reserve_System_button_var = 2 }
+							check_variable = { FRA_ENGIE_Group_button_var = 2 }
+							check_variable = { FRA_Renault_button_var = 2 }
+							check_variable = { FRA_TotalEnergies_button_var = 2 }
+							check_variable = { Kappa_Heavy_Industries_button_var = 2 }
+						}
+					}
+				}
+			}
+			FRA_Renault_button_click = {
+				ai_will_do = {
+					base = 1
+					modifier = {
+						factor = 0
+						or = {
+							check_variable = { FRA_Federal_Reserve_System_button_var = 2 }
+							check_variable = { FRA_ENGIE_Group_button_var = 2 }
+							check_variable = { FRA_Renault_button_var = 2 }
+							check_variable = { FRA_TotalEnergies_button_var = 2 }
+							check_variable = { Kappa_Heavy_Industries_button_var = 2 }
+						}
+					}
+				}
+			}
+			FRA_TotalEnergies_button_click = {
+				ai_will_do = {
+					base = 1
+					modifier = {
+						factor = 0
+						or = {
+							check_variable = { FRA_Federal_Reserve_System_button_var = 2 }
+							check_variable = { FRA_ENGIE_Group_button_var = 2 }
+							check_variable = { FRA_Renault_button_var = 2 }
+							check_variable = { FRA_TotalEnergies_button_var = 2 }
+							check_variable = { Kappa_Heavy_Industries_button_var = 2 }
+						}
+					}
+				}
+			}
+			Kappa_Heavy_Industries_button_click = {
+				ai_will_do = {
+					base = 1
+					modifier = {
+						factor = 0
+						or = {
+							check_variable = { FRA_Federal_Reserve_System_button_var = 2 }
+							check_variable = { FRA_ENGIE_Group_button_var = 2 }
+							check_variable = { FRA_Renault_button_var = 2 }
+							check_variable = { FRA_TotalEnergies_button_var = 2 }
+							check_variable = { Kappa_Heavy_Industries_button_var = 2 }
+						}
+					}
 				}
 			}
 		}
@@ -1875,8 +1978,6 @@ scripted_gui = {
 		context_type = decision_category
 		window_name = "Kappa_Heavy_Industries_Institute_window"
 		visible = {
-			tag = FRA
-			#always = no
 		}
 		properties = {
 			FRA_Conventional_weapons_research_button = {
@@ -1971,12 +2072,12 @@ scripted_gui = {
 			FRA_Automechanical_Name_visible = {
 				check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
 			}
-			FRA_Helicopter_icon_visible = {
-				check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
-			}
-			FRA_Helicopter_Name_visible = {
-				check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
-			}
+			# FRA_Helicopter_icon_visible = {
+			# 	check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
+			# }
+			# FRA_Helicopter_Name_visible = {
+			# 	check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
+			# }
 			FRA_Rocket_unuse_visible = {
 				not = { has_completed_focus = FRA_Rocket_research }
 				check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
@@ -1989,10 +2090,10 @@ scripted_gui = {
 				not = { has_completed_focus = FRA_Automechanical_research }
 				check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
 			}
-			FRA_Helicopter_unuse_visible = {
-				not = { has_completed_focus = FRA_Research_on_new_types_of_aircraft }
-				check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
-			}
+			# FRA_Helicopter_unuse_visible = {
+			# 	not = { has_completed_focus = FRA_Research_on_new_types_of_aircraft }
+			# 	check_variable = { FRA_Miracle_weapons_research_button_Var = 1 }
+			# }
 		}
 		effects = {
 			FRA_Conventional_weapons_research_button_click = {
@@ -2091,13 +2192,13 @@ scripted_gui = {
 						category = naval_equipment
 					}
 				}
-				else = {
-					add_tech_bonus = {
-						bonus = 0.5
-						uses = 1
-						category = cat_helicopter
-					}
-				}
+				# else = {
+				# 	add_tech_bonus = {
+				# 		bonus = 0.5
+				# 		uses = 1
+				# 		category = cat_helicopter
+				# 	}
+				# }
 			}
 			FRA_Air_research_button_click = {
 				add_political_power = -100
@@ -2107,6 +2208,87 @@ scripted_gui = {
 					category = air_equipment
 				}
 			}
+		}
+	}
+}
+#老八实验室
+scripted_gui = {
+	FRA_Laboratory_window = {
+		context_type = decision_category
+		window_name = "FRA_Laboratory_window"
+		visible = {
+		}
+		properties = {
+			FRA_Laboratory_synthesis_material_icon = {
+				frame = FRA_Laboratory_synthesis_material_var_01
+			}
+			FRA_Laboratory_synthesis_material_icon_02 = {
+				frame = FRA_Laboratory_synthesis_material_var_02
+			}
+			FRA_Laboratory_material_icon = {
+				frame = FRA_Laboratory_optional_material_array^FRA_Laboratory_optional_material_i
+			}
+		}
+		triggers = {
+			FRA_Laboratory_material_button_click_enabled = {
+				not = { check_variable = { FRA_Laboratory_synthesis_material_var_01 = FRA_Laboratory_optional_material_array^FRA_Laboratory_optional_material_i } }
+				not = { check_variable = { FRA_Laboratory_synthesis_material_var_02 = FRA_Laboratory_optional_material_array^FRA_Laboratory_optional_material_i } }
+				or = {
+					check_variable = { FRA_Laboratory_synthesis_material_var_01 = 14 }
+					check_variable = { FRA_Laboratory_synthesis_material_var_02 = 14 }
+				}
+			}
+		}
+		dynamic_lists = {
+			FRA_Laboratory_optional_material = {
+				array = ROOT.FRA_Laboratory_optional_material_array
+				index = FRA_Laboratory_optional_material_i
+				value = FRA_Laboratory_optional_material_id
+				entry_container = FRA_Laboratory_optional_material_entry
+			}
+		}
+		effects = {
+			FRA_Laboratory_synthesis_material_bg_01_click = {
+				set_variable = { FRA_Laboratory_synthesis_material_var_01 = 14 }
+			}
+			FRA_Laboratory_synthesis_material_bg_02_click = {
+				set_variable = { FRA_Laboratory_synthesis_material_var_02 = 14 }
+			}
+			FRA_Laboratory_material_button_click = {
+				if = {
+					limit = {
+						check_variable = { ROOT.FRA_Laboratory_synthesis_material_var_01 = 14 }
+					}
+					set_variable = { ROOT.FRA_Laboratory_synthesis_material_var_01 = FRA_Laboratory_optional_material_array^FRA_Laboratory_optional_material_i }
+				}
+				else = {
+					set_variable = { ROOT.FRA_Laboratory_synthesis_material_var_02 = FRA_Laboratory_optional_material_array^FRA_Laboratory_optional_material_i }
+				}
+			}
+		}
+	}
+}
+#三头同盟
+scripted_gui = {
+	FRA_Triple_Alliance_window = {
+		context_type = decision_category
+		window_name = "FRA_Triple_Alliance_window"
+		visible = {
+		}
+		properties = {
+			FRA_Triple_Alliance_Kazami_Yuka_progress = {
+				frame = FRA_Triple_Alliance_Kazami_Yuka_Influence_var
+			}
+			FRA_Triple_Alliance_Alice_Margatroid_progress = {
+				frame = FRA_Triple_Alliance_Alice_Margatroid_Influence_var
+			}
+			FRA_Triple_Alliance_Watatsuki_no_Toyohime_progress = {
+				frame = FRA_Triple_Alliance_Watatsuki_no_Toyohime_Influence_var
+			}
+		}
+		triggers = {
+		}
+		effects = {
 		}
 	}
 }

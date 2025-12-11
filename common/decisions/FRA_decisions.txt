@@ -1,155 +1,4 @@
-FRA_UNITION = {
-	UNIT_KMK = {
-		visible = {
-			tag = FRA
-		}
-		allowed = {
-			TAG = FRA
-		}
-		cost = 50
-		ai_will_do = {
-			base = 50
-		}
-		available = {
-			is_subject = no
-			not = {
-				has_war_with = KMK
-			}
-			country_exists = KMK
-		}
-		fire_only_once = yes
-		days_remove = 30
-		remove_effect = {
-			declare_war_on = {
-				target = KMK
-				type = annex_everything
-			}
-			KMK = {
-				add_ideas = FRA_civili_war_1
-			}
-			FRA = {
-				add_ideas = FRA_civili_war_2
-			}
-		}
-		war_with_on_remove = KMK
-		complete_effect = {
-			KMK = {
-				country_event = {
-					id = generic.2010
-				}
-			}
-		}
-	}
-	UNIT_KMK_II = {
-		visible = {
-			tag = FRA
-		}
-		cost = 100
-		ai_will_do = {
-			factor = 100
-		}
-		available = {
-			controls_state = 925
-			not = {
-				country_exists = KMK
-			}
-		}
-		fire_only_once = yes
-		days_remove = 60
-		remove_effect = {
-			every_state = {
-				limit = {
-					is_core_of = KMK
-					not = {
-						is_core_of = FRA
-					}
-				}
-				add_core_of = FRA
-			}
-			KMK = {
-				every_character = {
-					set_nationality = FRA
-				}
-			}
-			if = {
-				limit = {
-					KMK = {
-						is_subject_of = FRA
-					}
-				}
-				annex_country = {
-					target = KMK
-					transfer_troops = yes
-				}
-			}
-		}
-	}
-	UNIT_MRY = {
-		visible = {
-			tag = FRA
-			MRY = {
-				exists = yes
-				is_subject_of = FRA
-			}
-		}
-		allowed = {
-			TAG = FRA
-		}
-		cost = 100
-		ai_will_do = {
-			factor = 100
-		}
-		available = {
-			#has_country_flag = FRA_ROAD
-		}
-		fire_only_once = yes
-		days_remove = 30
-		remove_effect = {
-			annex_country = {
-				target = MRY
-				transfer_troops = yes
-			}
-			MRY = {
-				every_character = {
-					set_nationality = FRA
-				}
-			}
-		}
-	}
-	UNIT_HKR = {
-		visible = {
-			tag = FRA
-			HKR = {
-				exists = yes
-				is_subject_of = FRA
-			}
-		}
-		allowed = {
-			TAG = FRA
-		}
-		cost = 100
-		ai_will_do = {
-			factor = 100
-		}
-		available = {
-			#has_country_flag = FRA_ROAD
-		}
-		fire_only_once = yes
-		days_remove = 30
-		remove_effect = {
-			annex_country = {
-				target = HKR
-				transfer_troops = yes
-			}
-			HKR = {
-				every_character = {
-					set_nationality = FRA
-				}
-			}
-		}
-	}
-}
-
+#第三国际西线外交
 FRA_third_international_westline = {
 	FRA_PROTCET = {
 		visible = {
@@ -306,6 +155,158 @@ FRA_govern_of_Kasen = {
 }
 
 FRA_foreign_ministry = {
+	
+	FRA_intervene_on_side_of_NPT = {
+		available = {
+			has_war_support > 0.25 
+			is_faction_leader = yes
+		}
+		fire_only_once = yes
+		visible = { 
+			has_completed_focus = FRA_Intervene_in_NPT_civil_war
+		}
+
+		target = { NPT }
+
+		target_trigger = { 
+			FROM = {
+				original_tag = NPT
+				OR = {
+					has_war_with = ARF
+					has_war_with = BLA
+				}
+			}
+		}
+
+		complete_effect = {
+			#This is not optimal, but it generates a beautiful tooltip
+			if = {
+				limit = { FROM = { tag = NPT } }
+				if = {
+					limit = { country_exists = ARF }
+					add_to_war = { targeted_alliance = NPT enemy = ARF hostility_reason = asked_to_join }
+				}
+				if = {
+					limit = {
+						NPT = {
+							has_war_with = MOR
+						}
+						country_exists = MOR 
+					}
+					add_to_war = { targeted_alliance = NPT enemy = MOR hostility_reason = asked_to_join }
+				}
+				if = {
+					limit = { country_exists = BLA }
+					add_to_war = { targeted_alliance = NPT enemy = BLA hostility_reason = asked_to_join }
+				}
+			}
+
+			effect_tooltip = {
+				give_military_access = FROM
+				FROM = { give_military_access = ROOT }
+			}
+			hidden_effect = {
+				diplomatic_relation = {
+					country = FROM
+					relation = military_access
+					active = yes
+				}
+				FROM = {
+					diplomatic_relation = {
+						country = ROOT
+						relation = military_access
+						active = yes
+					}
+				}
+			}
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				add_to_faction = FROM
+			}
+		}
+
+		cost = 25
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				has_war = yes
+				factor = 0
+			}
+			modifier = {
+				is_historical_focus_on = yes
+				factor = 0
+			}
+		}
+		
+	}
+	FRA_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
+			has_global_flag = second_weltkrieg_has_started
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = FRA_war_plan_going_on
+			}
+			any_home_area_neighbor_country = {
+				tag = FROM
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = FRA_war_plan_going_on
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
+			setup_decision_attack_AI = yes
+		}
+		remove_effect = {
+			clr_country_flag = FRA_war_plan_going_on
+			clear_decision_attack_AI = yes
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				FROM = {
+					any_allied_country = {
+						is_stronger_than_ROOT_and_not_vulnerable = yes
+					}
+				}
+				factor = 0
+			}
+		}
+	}
 	FRA_core_natural_boundaries = {
 		icon = GFX_decision_generic_nationalism
 		visible = {
@@ -343,6 +344,8 @@ FRA_foreign_ministry = {
 					tag = DEN
 					tag = SWE
 					tag = NOR
+					tag = UKR
+					tag = FOT
 				}
 				has_war = no
 				is_in_faction = no
@@ -383,11 +386,8 @@ FRA_foreign_ministry = {
 	}
 	FRA_Expand_collaboration_with_ENG_research = {
 		icon = GFX_decision_generic_political_discourse
-		target_trigger = {
-			FROM = {
-				or = {
-					tag = ENG
-				}
+		visible = {
+			ENG = {
 				is_faction_leader = yes
 				is_subject = no
 				has_government = democratic
@@ -396,7 +396,7 @@ FRA_foreign_ministry = {
 				has_completed_focus = FRA_Expand_collaboration_with_ENG
 				is_subject = no
 				has_government = democratic
-				is_in_faction_with = FROM
+				is_in_faction_with = ENG
 				NOT = { has_idea = FRA_Agreements_on_mutual_assistance_in_scientific_research_idea }
 			}
 		}
@@ -413,11 +413,8 @@ FRA_foreign_ministry = {
 	}
 	FRA_Expand_collaboration_with_ENG_Trade = {
 		icon = GFX_decision_generic_political_discourse
-		target_trigger = {
-			FROM = {
-				or = {
-					tag = ENG
-				}
+		visible = {
+			ENG = {
 				is_faction_leader = yes
 				is_subject = no
 				has_government = democratic
@@ -426,7 +423,7 @@ FRA_foreign_ministry = {
 				has_completed_focus = FRA_Expand_collaboration_with_ENG
 				is_subject = no
 				has_government = democratic
-				is_in_faction_with = FROM
+				is_in_faction_with = ENG
 				NOT = { has_idea = FRA_Mutual_Trade_Assistance_Agreement_idea }
 			}
 		}
@@ -476,6 +473,48 @@ FRA_foreign_ministry = {
 			}
 		}
 	}
+	FRA_Sanae_attck_FOT = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			tag = FRA
+			has_completed_focus = FRA_Continental_system
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		fire_only_once = yes
+		available = {
+			is_subject = no
+			not = {
+				FOT = {
+					is_subject = no
+					is_in_faction_with = ROOT
+				}
+			}
+		}
+		complete_effect = {
+			add_state_core = 1157
+			if = {
+				limit = { FOT = { is_subject_of = ROOT } }
+				annex_country = { target = FOT transfer_troops = yes }
+			}
+			else_if = {
+				limit = {
+					FOT = {
+						NOT = {
+							or = {
+								is_in_faction_with = ROOT
+								has_war_with = ROOT
+								is_subject_of = ROOT
+							}
+						}
+					}
+				}
+				declare_war_on = { target = FOT type = annex_everything }
+			}
+		}
+	}
 	FRA_Sanae_puppet_ENG = {
 		icon = GFX_decision_generic_form_nation
 		visible = {
@@ -522,12 +561,21 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				create_country_leader = {
+					name = FRA_Suwako
+					desc = ""
+					picture = "gfx/leaders/FRA/FRA_Suwako.dds"
+					expire = "1985.1.1"
+					ideology = Sanaeism_subideology
+					traits = {}
+				}
 			}
 			every_state = {
 				limit = {
 					is_on_continent = europe
-					is_core_of = ENG
+					has_state_flag = Britain_Reichskommissariat
 					not = { is_core_of = ROOT }
+					not = { is_claimed_by = ROOT }
 				}
 				add_core_of = FNG
 			}
@@ -612,7 +660,7 @@ FRA_foreign_ministry = {
 		}
 		complete_effect = {
 			FNT = {
-				transfer_state = 165
+				transfer_state = 41
 				set_politics = {
 					ruling_party = neutrality
 					last_election = "1936.1.1"
@@ -747,6 +795,14 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				create_country_leader = {
+					name = FRA_Kanako
+					desc = ""
+					picture = "gfx/leaders/FRA/FRA_Kanako.dds"
+					expire = "1985.1.1"
+					ideology = Sanaeism_subideology
+					traits = {}
+				}
 			}
 			every_state = {
 				limit = {
@@ -828,24 +884,32 @@ FRA_foreign_ministry = {
 		}
 		#fire_only_once = yes
 		available = {
-			TRB = {
-				or = {
-					exists = no
+			if = {
+				limit = {
+					TRB = {
+						is_subject_of = ROOT
+						NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
+					}
+				}
+				TRB = {
 					is_subject_of = ROOT
+					NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
 				}
 			}
-			custom_trigger_tooltip = {
-				tooltip = "TRB_dilate_tt"
-				any_state = {
-					is_core_of = TRB
-					not = { is_core_of = ROOT }
-					or = {
-						is_owned_and_controlled_by = ROOT
-						any_other_country = {
-							NOT = { tag = TRB }
-							is_subject_of = ROOT
-							controls_state = PREV
-							owns_state = PREV
+			else = {
+				custom_trigger_tooltip = {
+					tooltip = "TRB_dilate_tt"
+					any_state = {
+						is_core_of = TRB
+						not = { is_core_of = ROOT }
+						or = {
+							is_owned_and_controlled_by = ROOT
+							any_other_country = {
+								NOT = { tag = TRB }
+								is_subject_of = ROOT
+								controls_state = PREV
+								owns_state = PREV
+							}
 						}
 					}
 				}
@@ -867,6 +931,28 @@ FRA_foreign_ministry = {
 					}
 				}
 				TRB = { transfer_state = PREV }
+			}
+			TRB = {
+				drop_cosmetic_tag = yes
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "电车公主"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "电车公主"
+						desc = ""
+						picture = "gfx/leaders/TRB/Portrait_TRB_Dianchugongzhu.png"
+						expire = "1965.1.1"
+						ideology = despotism
+						traits = {
+						}
+					}
+				}
 			}
 			if = {
 				limit = {
@@ -923,6 +1009,14 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				create_country_leader = {
+					name = FRA_Alice_Margatroid
+					desc = ""
+					picture = "gfx/leaders/FRA/FRA_Alice_Margatroid.dds"
+					expire = "1985.1.1"
+					ideology = military_politicism
+					traits = {}
+				}
 			}
 			every_state = {
 				limit = {
@@ -937,6 +1031,8 @@ FRA_foreign_ministry = {
 							state = 68
 							state = 66
 							state = 67
+							state = 781
+							state = 42
 						}
 					}
 					not = { is_core_of = ROOT }
@@ -1010,30 +1106,38 @@ FRA_foreign_ministry = {
 		}
 		#fire_only_once = yes
 		available = {
-			AUS = {
-				or = {
-					exists = no
+			if = {
+				limit = {
+					AUS = {
+						is_subject_of = ROOT
+						NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
+					}
+				}
+				AUS = {
 					is_subject_of = ROOT
+					NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
 				}
 			}
-			custom_trigger_tooltip = {
-				tooltip = "AUS_dilate_tt"
-				any_state = {
-					region = 21
-					not = {
-						or = {
-							state = 783
-							state = 39
+			else = {
+				custom_trigger_tooltip = {
+					tooltip = "AUS_dilate_tt"
+					any_state = {
+						region = 21
+						not = {
+							or = {
+								state = 783
+								state = 39
+							}
 						}
-					}
-					not = { is_core_of = ROOT }
-					or = {
-						is_owned_and_controlled_by = ROOT
-						any_other_country = {
-							NOT = { tag = AUS }
-							is_subject_of = ROOT
-							controls_state = PREV
-							owns_state = PREV
+						not = { is_core_of = ROOT }
+						or = {
+							is_owned_and_controlled_by = ROOT
+							any_other_country = {
+								NOT = { tag = AUS }
+								is_subject_of = ROOT
+								controls_state = PREV
+								owns_state = PREV
+							}
 						}
 					}
 				}
@@ -1074,7 +1178,30 @@ FRA_foreign_ministry = {
 						}
 					}
 				}
+				AUS = { drop_cosmetic_tag = yes }
 				AUS = { transfer_state = PREV }
+			}
+			AUS = {
+				drop_cosmetic_tag = yes
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "奥特菲涅一世"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "奥特菲涅一世"
+						desc = ""
+						picture = "gfx/leaders/ELP/Portrait_ELP_Feinie.dds"
+						expire = "1965.1.1"
+						ideology = Absolute_monarchy
+						traits = {
+						}
+					}
+				}
 			}
 			if = {
 				limit = {
@@ -1101,24 +1228,32 @@ FRA_foreign_ministry = {
 		}
 		#fire_only_once = yes
 		available = {
-			CZE = {
-				or = {
-					exists = no
+			if = {
+				limit = {
+					CZE = {
+						is_subject_of = ROOT
+						NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
+					}
+				}
+				CZE = {
 					is_subject_of = ROOT
+					NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
 				}
 			}
-			custom_trigger_tooltip = {
-				tooltip = "CZE_dilate_tt"
-				any_state = {
-					is_core_of = CZE
-					not = { is_core_of = ROOT }
-					or = {
-						is_owned_and_controlled_by = ROOT
-						any_other_country = {
-							NOT = { tag = CZE }
-							is_subject_of = ROOT
-							controls_state = PREV
-							owns_state = PREV
+			else = {
+				custom_trigger_tooltip = {
+					tooltip = "CZE_dilate_tt"
+					any_state = {
+						is_core_of = CZE
+						not = { is_core_of = ROOT }
+						or = {
+							is_owned_and_controlled_by = ROOT
+							any_other_country = {
+								NOT = { tag = CZE }
+								is_subject_of = ROOT
+								controls_state = PREV
+								owns_state = PREV
+							}
 						}
 					}
 				}
@@ -1140,6 +1275,28 @@ FRA_foreign_ministry = {
 					}
 				}
 				CZE = { transfer_state = PREV }
+			}
+			CZE = {
+				drop_cosmetic_tag = yes
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "东风谷早苗"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "东风谷早苗"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Sanae.dds"
+						expire = "1965.1.1"
+						ideology = Sanaeism_subideology
+						traits = {
+						}
+					}
+				}
 			}
 			if = {
 				limit = {
@@ -1166,7 +1323,12 @@ FRA_foreign_ministry = {
 		}
 		fire_only_once = yes
 		available = {
-			POL = { exists = no }
+			POL = {
+				or = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
 			10 = {
 				or = {
 					is_owned_and_controlled_by = ROOT
@@ -1197,6 +1359,28 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				set_variable = { another_country_leader_group = 1 }
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = POL_FRA_flag
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "魂魄妖梦"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "魂魄妖梦"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Youmu.dds"
+						expire = "1965.1.1"
+						ideology = military_politicism
+						traits = {
+						}
+					}
+				}
 			}
 			every_state = {
 				limit = {
@@ -1222,6 +1406,12 @@ FRA_foreign_ministry = {
 						state = 67
 						region = 38
 						region = 155
+					}
+					not = {
+						or = {
+							state = 91
+							state = 89
+						}
 					}
 				}
 				set_state_flag = POL_FRA_state
@@ -1293,24 +1483,32 @@ FRA_foreign_ministry = {
 		}
 		#fire_only_once = yes
 		available = {
-			BLR = {
-				or = {
-					exists = no
+			if = {
+				limit = {
+					BLR = {
+						is_subject_of = ROOT
+						NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
+					}
+				}
+				BLR = {
 					is_subject_of = ROOT
+					NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
 				}
 			}
-			custom_trigger_tooltip = {
-				tooltip = "BLR_dilate_tt"
-				any_state = {
-					region = 39
-					not = { is_core_of = ROOT }
-					or = {
-						is_owned_and_controlled_by = ROOT
-						any_other_country = {
-							NOT = { tag = BLR }
-							is_subject_of = ROOT
-							controls_state = PREV
-							owns_state = PREV
+			else = {
+				custom_trigger_tooltip = {
+					tooltip = "BLR_dilate_tt"
+					any_state = {
+						region = 39
+						not = { is_core_of = ROOT }
+						or = {
+							is_owned_and_controlled_by = ROOT
+							any_other_country = {
+								NOT = { tag = BLR }
+								is_subject_of = ROOT
+								controls_state = PREV
+								owns_state = PREV
+							}
 						}
 					}
 				}
@@ -1341,6 +1539,29 @@ FRA_foreign_ministry = {
 				}
 				BLR = { transfer_state = PREV }
 			}
+			BLR = {
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = BLR_FRA_flag
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "东风谷早苗"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "东风谷早苗"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Sanae.dds"
+						expire = "1965.1.1"
+						ideology = Sanaeism_subideology
+						traits = {
+						}
+					}
+				}
+			}
 			if = {
 				limit = {
 					BLR = {
@@ -1366,24 +1587,32 @@ FRA_foreign_ministry = {
 		}
 		#fire_only_once = yes
 		available = {
-			BAL = {
-				or = {
-					exists = no
+			if = {
+				limit = {
+					BAL = {
+						is_subject_of = ROOT
+						NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
+					}
+				}
+				BAL = {
 					is_subject_of = ROOT
+					NOT = { has_autonomy_state = autonomy_Sanae_Military_occupying_power }
 				}
 			}
-			custom_trigger_tooltip = {
-				tooltip = "BAL_dilate_tt"
-				any_state = {
-					region = 37
-					not = { is_core_of = ROOT }
-					or = {
-						is_owned_and_controlled_by = ROOT
-						any_other_country = {
-							NOT = { tag = BAL }
-							is_subject_of = ROOT
-							controls_state = PREV
-							owns_state = PREV
+			else = {
+				custom_trigger_tooltip = {
+					tooltip = "BAL_dilate_tt"
+					any_state = {
+						region = 37
+						not = { is_core_of = ROOT }
+						or = {
+							is_owned_and_controlled_by = ROOT
+							any_other_country = {
+								NOT = { tag = BAL }
+								is_subject_of = ROOT
+								controls_state = PREV
+								owns_state = PREV
+							}
 						}
 					}
 				}
@@ -1413,6 +1642,29 @@ FRA_foreign_ministry = {
 					}
 				}
 				BAL = { transfer_state = PREV }
+			}
+			BAL = {
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = BAL_FRA_flag
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "东风谷早苗"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "东风谷早苗"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Sanae.dds"
+						expire = "1965.1.1"
+						ideology = Sanaeism_subideology
+						traits = {
+						}
+					}
+				}
 			}
 			if = {
 				limit = {
@@ -1470,6 +1722,27 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = UKR_FRA_flag
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "阿纳斯塔西娅"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "阿纳斯塔西娅"
+						desc = ""
+						picture = "gfx/leaders/UKR/Anastasia.dds"
+						expire = "1965.1.1"
+						ideology = Absolute_monarchy
+						traits = {
+						}
+					}
+				}
 			}
 			every_state = {
 				limit = {
@@ -1479,6 +1752,7 @@ FRA_foreign_ministry = {
 						state = 89
 						state = 80
 						state = 78
+						state = 91
 					}
 					not = { is_core_of = ROOT }
 				}
@@ -1581,6 +1855,15 @@ FRA_foreign_ministry = {
 				}
 				add_manpower = 40000
 				inherit_technology = ROOT
+				create_country_leader = {
+					name = "安德烈·弗拉索夫"
+					desc = ""
+					picture = "gfx/leaders/SOV/Vlasov.png"
+					expire = "1965.1.1"
+					ideology = military_politicism
+					traits = {
+					}
+				}
 			}
 			every_state = {
 				limit = {
@@ -1655,6 +1938,343 @@ FRA_foreign_ministry = {
 			}
 		}
 	}
+	FRA_Keine_puppet_ROV = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			tag = FRA
+			has_completed_focus = FRA_The_Recolonization_Movement
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		fire_only_once = yes
+		available = {
+			ROV = { exists = no }
+			controls_state = 750
+			controls_state = 856
+			controls_state = 826
+			controls_state = 286
+			controls_state = 827
+			controls_state = 670
+			controls_state = 671
+			controls_state = 857
+		}
+		complete_effect = {
+			every_state = {
+				limit = {
+					or = {
+						state = 750
+						state = 856
+						state = 826
+						state = 286
+						state = 827
+						state = 670
+						state = 671
+						state = 857
+					}
+					is_controlled_by = ROOT
+				}
+				transfer_state_to = ROV
+				if = {
+					limit = { not = { is_core_of = ROV } }
+					add_core_of = ROV
+				}
+				if = {
+					limit = { is_claimed_by = ROOT }
+					remove_claim_by = ROOT
+				}
+			}
+			puppet = ROV
+			ROV = { add_ideas = FRA_Expand_economic_control_idea }
+		}
+	}
+	FRA_Keine_puppet_NFA = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			tag = FRA
+			or = {
+				has_completed_focus = FRA_Take_Louisiana_home
+				has_completed_focus = FRA_The_Recolonization_Movement
+			}
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		fire_only_once = yes
+		available = {
+			LSA = {
+				or = {
+					is_subject_of = ROOT
+					exists = no
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_nfa
+				NOT = {
+					any_state = {
+						has_state_flag = NA_NFA_AREA
+						NOT = {
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+		}
+		complete_effect = {
+			every_state = {
+				limit = {
+					or = { has_state_flag = NA_NFA_AREA }
+					is_controlled_by = ROOT
+				}
+				transfer_state_to = LSA
+				if = {
+					limit = { not = { is_core_of = NFA } }
+					add_core_of = LSA
+				}
+				if = {
+					limit = { is_claimed_by = ROOT }
+					remove_claim_by = ROOT
+				}
+			}
+			puppet = LSA
+			LSA = {
+				add_ideas = FRA_Expand_economic_control_idea
+				drop_cosmetic_tag = yes
+				set_cosmetic_tag = NFA_FRA_flag
+				set_variable = { another_country_leader_group = 1 }
+				if = {
+					limit = {
+						not = {
+							has_country_leader = {
+								ruling_only = yes
+								name = "纯狐"
+							}
+						}
+					}
+					create_country_leader = {
+						name = "纯狐"
+						desc = ""
+						picture = "gfx/leaders/FRA/FRA_Junko.dds"
+						expire = "1965.1.1"
+						ideology = military_politicism
+						traits = {
+						}
+					}
+				}
+			}
+		}
+	}
+	FRA_Keine_puppet_FRG = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			tag = FRA
+			or = {
+				has_completed_focus = FRA_Take_Louisiana_home
+				has_completed_focus = FRA_The_Recolonization_Movement
+			}
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		fire_only_once = yes
+		available = {
+			LSA = { is_subject_of = ROOT }
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_rsm
+				NOT = {
+					any_state = {
+						has_state_flag = NA_FRG_AREA
+						NOT = {
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+		}
+		complete_effect = {
+			every_state = {
+				limit = {
+					or = { has_state_flag = NA_FRG_AREA }
+					is_controlled_by = ROOT
+				}
+				transfer_state_to = LSA
+				if = {
+					limit = { not = { is_core_of = LSA } }
+					add_core_of = LSA
+				}
+				if = {
+					limit = { is_claimed_by = ROOT }
+					remove_claim_by = ROOT
+				}
+			}
+		}
+	}
+	FRA_Keine_puppet_Quebec = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			tag = FRA
+			or = {
+				has_completed_focus = FRA_Take_Louisiana_home
+				has_completed_focus = FRA_The_Recolonization_Movement
+			}
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		fire_only_once = yes
+		available = {
+			LSA = { is_subject_of = ROOT }
+			controls_state = 468
+			controls_state = 466
+			controls_state = 832
+			controls_state = 332
+		}
+		complete_effect = {
+			every_state = {
+				limit = {
+					or = {
+						state = 468
+						state = 466
+						state = 832
+						state = 332
+					}
+					is_controlled_by = ROOT
+				}
+				transfer_state_to = LSA
+				if = {
+					limit = { not = { is_core_of = LSA } }
+					add_core_of = LSA
+				}
+				if = {
+					limit = { is_claimed_by = ROOT }
+					remove_claim_by = ROOT
+				}
+			}
+		}
+	}
+	FRA_Keine_puppet_MA = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			tag = FRA
+			or = {
+				has_completed_focus = FRA_Take_Louisiana_home
+				has_completed_focus = FRA_The_Recolonization_Movement
+			}
+			always = no
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		fire_only_once = yes
+		available = {
+			LSA = { is_subject_of = ROOT }
+			all_state = {
+				or = {
+					not = {
+						or = {
+							is_core_of = PAN
+							is_core_of = GUA
+							is_core_of = PAJ
+							is_core_of = CUB
+							is_core_of = PAS
+						}
+					}
+					is_controlled_by = ROOT
+				}
+			}
+		}
+		complete_effect = {
+			every_state = {
+				limit = {
+					or = {
+						is_core_of = PAN
+						is_core_of = GUA
+						is_core_of = PAJ
+						is_core_of = CUB
+						is_core_of = PAS
+					}
+					is_controlled_by = ROOT
+				}
+				transfer_state_to = LSA
+				if = {
+					limit = { not = { is_core_of = LSA } }
+					add_core_of = LSA
+				}
+				if = {
+					limit = { is_claimed_by = ROOT }
+					remove_claim_by = ROOT
+				}
+			}
+		}
+	}
+	FRA_Keine_puppet_CHI = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			tag = FRA
+			has_completed_focus = FRA_Keines_whimsy
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		fire_only_once = yes
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = not_other_competiter_for_China_reunification
+				not = {
+					any_other_country = {
+						has_country_flag = Participate_in_the_competition_for_China_reunification
+						is_subject = no
+					}
+				}
+			}
+			controls_state = 650
+			controls_state = 608
+			controls_state = 613
+			controls_state = 592
+			#controls_state = 743
+			controls_state = 1048
+			CHI = { exists = no }
+		}
+		complete_effect = {
+			every_state = {
+				limit = {
+					has_state_flag = is_whole_chinese_state_area
+					is_controlled_by = ROOT
+				}
+				if = {
+					limit = { is_claimed_by = ROOT }
+					remove_claim_by = ROOT
+				}
+				add_core_of = CHI
+				transfer_state_to = CHI
+			}
+			puppet = CHI
+			CHI = { add_ideas = FRA_Expand_economic_control_idea }
+			CHI = {
+				set_politics = { ruling_party = neutrality }
+				add_popularity = { ideology = neutrality popularity = 0.8 }
+				set_cosmetic_tag = CHI_FRA_Empire
+				create_country_leader = {
+					name = FRA_Kamishirasawa_Keine_emperor
+					desc = ""
+					picture = GFX_FRA_Kamishirasawa_Keine_emperor
+					expire = "1985.1.1"
+					ideology = Absolute_monarchy
+					traits = {}
+				}
+				set_variable = {
+					another_country_leader_group = 1
+				}
+			}
+		}
+	}
 }
 
 FRA_National_Assemblyy = {
@@ -1679,6 +2299,84 @@ FRA_National_Assemblyy = {
 			}
 		}
 		timeout_effect = {
+		}
+	}
+	FRA_submit_amendments_to_Ownership_Reform_Act_Mission = {
+		icon = ger_mefo_bills
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 7
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				check_variable = { FRA_Motions_voted_on_var = 0 }
+			}
+		}
+		timeout_effect = {
+			custom_effect_tooltip = FRA_submit_amendments_to_Ownership_Reform_Act_Mission_tt
+			FRA_Kasen = {
+				add_country_leader_role = {
+					country_leader = {
+						desc = "FRA_Kasen_leader_desc"
+						ideology = warm_syndicalism_group
+						traits = {
+						}
+						expire = "1999.1.1.1"
+						id = -1
+					}
+					promote_leader = yes
+				}
+			}
+			set_portraits = {
+				character = FRA_Kasen
+				civilian = {
+					large = "gfx/leaders/FRA/FRA_Ibaraki_Kasen_1.dds"
+				}
+			}
+			set_party_name = {
+				ideology = communism
+				long_name = Parti_Socialiste_Gensokyo
+				name = Parti_Socialiste_Gensokyo
+			}
+			set_politics = { ruling_party = communism }
+			add_popularity = { ideology = communism popularity = 0.15 }
+			FRA_Calculate_government_approval_rating = yes
+			FRA_Restore_default_status_of_National_Assembly = yes
+			hidden_effect = {
+				news_event = {
+					id = FRA_Gensokyo_news.014
+				}
+			}
+			add_to_variable = {
+				var = support_of_LCR
+				value = 5
+				tooltip = support_of_LCR_rose_5
+			}
+			add_to_variable = {
+				var = support_of_PCG
+				value = 5
+				tooltip = support_of_PCG_rose_5
+			}
+			add_to_variable = {
+				var = support_of_PSG
+				value = 5
+				tooltip = support_of_PSG_rose_5
+			}
+			add_to_variable = {
+				var = PSG_left_vate
+				value = 0.25
+				tooltip = PSG_left_vate_rose
+			}
+			FRA_change_to_hoi_pie_chart = yes
 		}
 	}
 	FRA_Formal_legislation_to_Labour_Code = {
@@ -2047,7 +2745,7 @@ FRA_National_Assemblyy = {
 					country_event = {
 						id = FRA_Gensokyo.024
 					}
-					activate_mission = FRA_An_army_on_move
+					#activate_mission = FRA_An_army_on_move
 				}
 			}
 			FRA_Calculate_government_approval_rating = yes
@@ -2955,6 +3653,12 @@ FRA_election_decision_categories = {
 
 
 FRA_Debug = {
+	remisdebug = {
+		complete_effect = {
+			FRA_Degree_of_unity_scripted_effects = yes
+			add_dynamic_modifier = { modifier = FRA_Degree_of_unity }
+		}
+	}
 	FRA_Ibaraki_Kasen_win_debug = {
 		complete_effect = {
 			set_country_flag = FRA_The_election_results_in
@@ -3064,8 +3768,15 @@ FRA_Debug = {
 			set_variable = { FRA_Ruling_Party_VAR = 10 }
 			FRA_set_rule_party_name = yes
 			mark_focus_tree_layout_dirty = yes
+			add_to_variable = {
+				var = support_of_Sanae
+				value = 50
+				tooltip = support_of_Sanae_rose_50
+			}
+			FRA_change_to_hoi_pie_chart = yes
 		}
 	}
 }
+
 
 

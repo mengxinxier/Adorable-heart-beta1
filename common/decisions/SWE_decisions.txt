@@ -379,7 +379,8 @@ SWE_urbanization_decision_cate = {
 			}
 		}
 		on_map_mode = map_only
-		cost = 120
+		target_array = owned_states
+		cost = SWE_urbanization_cost
 		days_remove = 80
 		remove_effect = {
 			FROM = {
@@ -387,7 +388,7 @@ SWE_urbanization_decision_cate = {
 			}
 		}
 		ai_will_do = {
-			bsae = 10
+			base = 10
 		}
 	}
 }
@@ -438,7 +439,8 @@ SWE_vinterkriget_decision_cate = {
 			FIN = { give_military_access = ROOT }
 			if = {
 				limit = { is_in_faction = no }
-				create_faction = Anti_Bolshevik_League
+				create_faction_from_template = faction_template_Anti_Bolshevik_League
+				hidden_effect = { add_to_faction = ROOT }
 				FIN = {
 					if = {
 						limit = { is_in_faction = no }
@@ -465,6 +467,7 @@ SWE_vinterkriget_decision_cate = {
 			else_if = {
 				limit = { is_faction_leader = yes }
 				set_faction_name = Anti_Bolshevik_League
+				set_faction_manifest = faction_manifest_containment_of_communism
 				FIN = {
 					if = {
 						limit = { is_in_faction = no }
@@ -513,7 +516,7 @@ SWE_vinterkriget_decision_cate = {
 				}
 			}
 			195 = {
-				owner = SOV
+				owner = { tag = SOV }
 			}
 			is_subject = no
 			is_faction_leader = yes
@@ -637,14 +640,14 @@ SWE_vinterkriget_decision_cate = {
 				}
 				146 = {
 					if = {
-						limit = { owner = FIN }
+						limit = { owner = { tag = FIN } }
 						transfer_state_to = SOV
 						add_core_of = SOV
 					}
 				}
 				722 = {
 					if = {
-						limit = { owner = FIN }
+						limit = { owner = { tag = FIN } }
 						transfer_state_to = SOV
 						add_core_of = SOV
 					}
@@ -840,6 +843,191 @@ SWE_Valhalla_decision_cate = {
 		selectable_mission = yes
 		timeout_effect = {
 			SWE_Valkyrie = { clr_character_flag = SWE_recruit_this_god }
+		}
+	}
+}
+
+##煽动芬兰白军起义
+SWE_Instigating_uprising_of_Finnish_White_Army = {
+	##成败在此一役
+	SWE_battle_to_make_or_break_it = {
+		icon = GFX_decision_generic_intelligence_operation
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 100
+		days_remove = 100
+		visible = {
+			is_subject = no
+			NOT = { has_war_with = SOV }
+			NOT = { has_war_with = FIN }
+		}
+		available = {
+			NOT = {
+				has_war_with = SOV
+				has_war_with = FIN
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			hidden_effect = {
+				FIW = { save_global_event_target_as = Adorable_heart_Accacker }
+				FROM = { save_global_event_target_as = Adorable_heart_Defender }
+				FROM = { set_country_flag = War_warning_window_visible }
+				every_country = {
+					limit = {
+						OR = {
+							is_ally_with = ROOT
+							has_guaranteed = ROOT
+							civilwar_target = ROOT
+							is_subject_of = ROOT
+						}
+						NOT = { tag = ROOT }
+					}
+					set_country_flag = War_warning_window_visible
+				}
+				every_country = {
+					limit = {
+						OR = {
+							is_ally_with = FROM
+							has_guaranteed = FROM
+							civilwar_target = FROM
+							is_subject_of = FROM
+						}
+						#NOT = { is_ally_with = FROM }
+					}
+					set_country_flag = War_warning_window_visible
+				}
+			}
+		}
+		remove_effect = {
+			hidden_effect = {
+				FIN = {
+					every_core_state = { add_core_of = FIW }
+				}
+			}
+			every_character = {
+				limit = {
+					OR = {
+						is_character = FIN_Kuria
+						is_character = FIN_Liddy
+						is_character = FIN_Erica
+						is_character = FIN_yoko
+						is_character = FIN_Mikko
+						is_character = FIN_Somi
+					}
+				}
+				set_nationality = FIW
+			}
+			FIW = {
+				transfer_state = 148
+				transfer_state = 844
+				add_ideas = SWE_Suomi_Civil_War
+			}
+			FIN = {
+				add_ideas = SWE_Suomi_Civil_War
+			}
+			hidden_effect = {
+				FIN = {
+					transfer_units_fraction = {
+						target = FIW
+						size = 0.35
+						stockpile_ratio = 0.35
+						army_ratio = 0.35
+						navy_ratio = 0.35
+						air_ratio = 0.35
+						keep_unit_leaders_trigger = {
+							always = yes
+						}
+					}
+				}
+				FIW = {
+					inherit_technology = FIN
+					FIN_Somi = {
+						add_country_leader_role = {
+							country_leader = {
+								desc = ""
+								ideology = military_politicism
+								traits = {
+									AH_great_war_hero
+								}
+								expire = "1999.1.1.1"
+								id = -1
+							}
+							promote_leader = yes
+						}
+					}
+					set_politics = { ruling_party = neutrality }
+					add_popularity = { ideology = neutrality popularity = 0.6 }
+					set_party_name = { ideology = neutrality long_name = FIN_neutrality_party_long name = FIN_neutrality_party }
+					inherit_technology = ROOT
+					add_manpower = 800000
+				}
+			}
+			FIN = {
+				declare_war_on = { target = FIW type = annex_everything }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	##干涉索米内战
+	SWE_Intervention_in_Somi_Civil_War = {
+		icon = GFX_decision_generic_intelligence_operation
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 15
+		days_remove = 15
+		visible = {
+			is_subject = no
+		}
+		available = {
+			FIN = { has_war_with = FIW }
+		}
+		fire_only_once = yes
+		complete_effect = {
+			FIW = { remove_ideas = SWE_Suomi_Civil_War }
+			FIN = { remove_ideas = SWE_Suomi_Civil_War }
+			add_to_war = {
+				targeted_alliance = FIW
+				enemy = FIN
+				hostility_reason = asked_to_join
+			}
+			puppet = FIW
+		}
+		ai_will_do = {
+			base = 10
+		}
+	}
+	##整合索米白军
+	SWE_Integrate_Somi_White_Army = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = {
+			original_tag = SWE
+		}
+		cost = 200
+		days_remove = 150
+		visible = {
+			is_subject = no
+		}
+		available = {
+			FIW = { is_subject_of = ROOT }
+			has_global_flag = FIN_reunit
+		}
+		fire_only_once = yes
+		complete_effect = {
+			FIW = {
+				every_core_state = {
+					add_core_of = ROOT
+				}
+				every_character = { set_nationality = ROOT }
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+			}
+		}
+		ai_will_do = {
+			base = 1000
 		}
 	}
 }
@@ -1355,7 +1543,10 @@ SWE_Nordic_integration = {
 			factor = 1
 		}
 		complete_effect = {
-			set_cosmetic_tag = Kalma
+			if = {
+				limit = { not = { has_cosmetic_tag = Heaven_on_earth } }
+				set_cosmetic_tag = Kalma
+			}
 			hidden_effect = {
 				news_event = {
 					id = SWE_news.003
@@ -1366,9 +1557,14 @@ SWE_Nordic_integration = {
 	}
 	SWE_Nordic_integration_attck_FROM = {
 		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
 		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
 			FROM = {
-				has_country_flag = can_be_attack_by_SWE
 				not = {
 					or = {
 						has_war_with = ROOT
@@ -1377,16 +1573,8 @@ SWE_Nordic_integration = {
 					}
 				}
 			}
-			ROOT = {
-				is_subject = no
-			}
-		}
-		available = {
 			not = {
 				has_country_flag = SWE_war_plan_going_on
-			}
-			not = {
-				is_in_faction_with = FROM
 			}
 			any_home_area_neighbor_country = {
 				tag = FROM
@@ -1397,18 +1585,19 @@ SWE_Nordic_integration = {
 		war_with_target_on_remove = yes
 		complete_effect = {
 			set_country_flag = SWE_war_plan_going_on
-			FROM = {
-				country_event = {
-					id = generic.2010
-				}
-			}
+			setup_decision_attack_AI = yes
+			FROM = { THIS_country_is_defender_and_ROOT_is_accacker = yes }
 		}
 		remove_effect = {
+			clear_decision_attack_AI = yes
 			clr_country_flag = SWE_war_plan_going_on
 			declare_war_on = {
 				target = FROM
 				type = annex_everything
 			}
+		}
+		cancel_effect = {
+			clear_decision_attack_AI = yes
 		}
 		ai_will_do = {
 			base = 1000
@@ -1467,37 +1656,6 @@ SWE_Nordic_integration = {
 		}
 		ai_will_do = {
 			base = 1000
-		}
-	}
-	SWE_Nordic_integration_CORE = {
-		#icon = GFX_decision_generic_ignite_civil_war
-		icon = generic_nationalism
-		target_trigger = {
-			FROM = {
-				NOT = {
-					is_core_of = ROOT
-				}
-				or = {
-					has_state_flag = DEN_state_area
-					has_state_flag = SWE_state_area
-					has_state_flag = NOR_state_area
-					has_state_flag = FIN_state_area
-					has_state_flag = KMS_state_area
-				}
-			}
-		}
-		state_target = yes
-		on_map_mode = map_and_decisions_view
-		target_array = controlled_states
-		cost = 20
-		days_remove = 30
-		ai_will_do = {
-			factor = 10
-		}
-		remove_effect = {
-			FROM = {
-				add_core_of_ROOT = yes
-			}
 		}
 	}
 }
@@ -2172,10 +2330,10 @@ SWE_Five_year_plan = {
 				limit = {
 					check_variable = { SWE_Five_year_plan_task_03 = 2 }
 				}
-				arms_factory > 100
+				arms_factory > 150
 			}
 			else = {
-				arms_factory > 50
+				arms_factory > 75
 			}
 		}
 		priority = 18
@@ -2727,7 +2885,7 @@ SWE_Dragoon_regiment = {
 			}
 			add_equipment_to_stockpile = {
 				type = dragon_rider_equipment_0
-				amount = 10
+				amount = var:SWE_dragon_training_num
 				producer = SWE
 			}
 			custom_effect_tooltip = SWE_dragon_training_TT
@@ -2858,90 +3016,6 @@ SWE_Amu_bop_category = {
 		}
 		ai_will_do = {
 			base = 0
-		}
-	}
-}
-
-###星灵感应
-SWE_Starry_sky_sensing_d_c = {
-	#发射人造卫星
-	SWE_Launch_of_Sputnik = {
-		allowed = {
-			original_tag = SWE
-		}
-		cost = 0
-		days_remove = 200
-		visible = {
-		}
-		available = {
-			num_of_civilian_factories_available_for_projects > 49
-			has_tech = modern_rocket_engines
-			not = {
-				has_country_flag = arrive_the_space
-			}
-		}
-		modifier = {
-			civilian_factory_use = 50
-		}
-		remove_effect = {
-			if = {
-				limit = {
-					DVL = {
-						exists = yes
-						is_subject = no
-					}
-				}
-				custom_modifier_tooltip = SWE_Launch_of_Sputnik_tt
-				hidden_effect = {
-					news_event = {
-						id = SWE_news.007
-					}
-					every_country = {
-						country_event = {
-							id = SWE.047
-							days = 1
-						}
-					}
-				}
-			}
-			else = {
-				set_country_flag = arrive_the_space
-				hidden_effect = {
-					news_event = {
-						id = SWE_news.008
-					}
-				}
-			}
-		}
-		ai_will_do = {
-			base = 10
-		}
-	}
-	#投资火箭研究
-	SWE_Invest_in_rocket_research = {
-		allowed = {
-			original_tag = SWE
-		}
-		cost = 200
-		days_remove = 100
-		visible = {
-		}
-		available = {
-			num_of_civilian_factories_available_for_projects > 9
-		}
-		modifier = {
-			civilian_factory_use = 10
-		}
-		remove_effect = {
-			add_tech_bonus = {
-				bonus = 1.0
-				ahead_reduction = 4
-				uses = 1
-				category = rocketry
-			}
-		}
-		ai_will_do = {
-			base = 10
 		}
 	}
 }
@@ -3119,6 +3193,98 @@ SWE_Bloodline_fiefdoms_d_c = {
 	}
 }
 
+SWE_rebuild_North_Sea_empire = {
+	SWE_announec_rebuild_NSE = {
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_of_all_NOR_core
+				NOT = {
+					any_state = {
+						is_core_of = NOR
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_of_all_DEN_core
+				NOT = {
+					any_state = {
+						is_core_of = DEN
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			controls_state = 121
+			controls_state = 130
+			controls_state = 131
+			controls_state = 132
+			controls_state = 128
+			controls_state = 129
+			controls_state = 338
+			controls_state = 123
+			controls_state = 125
+			controls_state = 126
+			controls_state = 127
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_cosmetic_tag = North_Sea_empire
+			set_global_flag = build_North_Sea_empire
+		}
+	}
+}
+
+FIW_unit_FIN = {
+	Unit_FIN_decision = {
+		allowed = {
+		}
+		visible = {
+		}
+		available = {
+			840 = { is_owned_and_controlled_by = ROOT }
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_need_state
+				NOT = {
+					any_state = {
+						has_state_flag = fin_orginal_state
+						NOT = {
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+			FIN = { exists = no }
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			FIN = {
+				every_character = { set_nationality = ROOT }
+			}
+			set_cosmetic_tag = FIN
+			set_global_flag = FIN_reunit
+			if = {
+				limit = { controls_state = 840 }
+				set_capital = {
+					state = 840
+					remember_old_capital = no
+				}
+			}
+			SWE = { puppet = ROOT }
+		}
+	}
+}
 
 
 
