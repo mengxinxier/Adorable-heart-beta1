@@ -2207,6 +2207,237 @@ country_event = {
         }
     }
 }
+
+country_event = {
+    id = PAM.62
+    title = PAM.62.t
+    desc = PAM.62.d
+    picture = GFX_report_event_diplomatic_pressure
+    is_triggered_only = yes
+
+    # 对手出红骨
+    option = {
+        name = PAM.62.a
+        ai_chance = {
+            base = 10
+            modifier = { factor = 2 has_government = fascism }
+        }
+        set_country_flag = pam_ai_chose_red
+        # 告诉索拉娜我已经选好了
+       hidden_effect = {FROM = { country_event = { id = PAM.63 } }}
+    }
+
+    # 对手出金骨
+    option = {
+        name = PAM.62.b
+        ai_chance = {
+            base = 10
+            modifier = { factor = 2 has_government = democratic }
+            modifier = { factor = 1.5 has_government = neutrality }
+        }
+        set_country_flag = pam_ai_chose_gold
+       hidden_effect = {FROM = { country_event = { id = PAM.63 } }}
+    }
+
+    # 选项C：对手出黑骨
+    option = {
+        name = PAM.62.c
+        ai_chance = {
+            base = 10
+            modifier = { factor = 2 has_government = communism }
+        }
+        set_country_flag = pam_ai_chose_black
+        hidden_effect = {FROM = { country_event = { id = PAM.63 } }}
+    }
+}
+
+#玩家后手下注阶段
+country_event = {
+    id = PAM.63
+    title = PAM.63.t
+    desc = PAM.63.d
+    picture = GFX_report_event_cards_fanned
+    is_triggered_only = yes
+
+    # 玩家出红骨
+    option = {
+        name = PAM.63.a # 出红骨
+        # 判定胜负
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_red } }
+            hidden_effect = {
+                country_event = { id = PAM.66 } # 平局
+                FROM = {
+                    country_event = { id = PAM.66 }
+                }
+            }
+        }
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_gold } }
+            hidden_effect = {
+                country_event = { id = PAM.64 }# 胜利
+                FROM = {
+                    country_event = { id = PAM.65 }
+                }
+            }
+        }
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_black } }
+            hidden_effect = {
+                country_event = { id = PAM.65 } # 战败
+                FROM = {
+                    country_event = { id = PAM.64 }
+                }
+            }
+        }
+    }
+
+    # 玩家出金骨
+    option = {
+        name = PAM.63.b # 出金骨
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_red } }
+            hidden_effect = {
+                country_event = { id = PAM.65 }# 战败
+                FROM = {
+                    country_event = { id = PAM.64 }
+                }
+            }
+        }
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_gold } }
+            hidden_effect = {
+                country_event = { id = PAM.66 }# 平局
+                FROM = {
+                    country_event = { id = PAM.66 }
+                }
+            }
+        }
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_black } }
+            hidden_effect = {
+                country_event = { id = PAM.64 }# 胜利
+                FROM = {
+                    country_event = { id = PAM.65 }
+                }
+            }
+        }
+    }
+
+    # 玩家出黑骨
+    option = {
+        name = PAM.63.c # 出黑骨
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_red } }
+            hidden_effect = {
+                country_event = { id = PAM.64 }# 胜利
+                FROM = {
+                    country_event = { id = PAM.65 }
+                }
+            }
+        }
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_gold } }
+            hidden_effect = {
+                country_event = { id = PAM.65 }# 战败
+                FROM = {
+                    country_event = { id = PAM.64 }
+                }
+            }
+        }
+        if = {
+            limit = { FROM = { has_country_flag = pam_ai_chose_black } }
+            hidden_effect = {
+                country_event = { id = PAM.66 } # 平局
+                FROM = {
+                    country_event = { id = PAM.66 }
+                }
+            }
+        }
+    }
+}
+
+#结果结算
+# 胜利
+country_event = {
+    id = PAM.64
+    title = PAM.64.t
+    desc = PAM.64.d
+    picture = GFX_report_event_chest_of_gold
+    is_triggered_only = yes
+
+    immediate = {
+        # 让对手受损
+        FROM.FROM = {
+            # 清理 Flag 以便下次再玩
+            clr_country_flag = pam_ai_chose_red
+            clr_country_flag = pam_ai_chose_gold
+            clr_country_flag = pam_ai_chose_black
+        }
+    }
+    option = {
+        name = OK
+        add_political_power = 100
+        add_manpower = 5000
+        FROM.FROM = {
+            add_political_power = -50
+            add_stability = -0.05
+        }
+    }
+}
+
+# 战败
+country_event = {
+    id = PAM.65
+    title = PAM.65.t
+    desc = PAM.65.d
+    picture = GFX_report_event_skeleton_laugh
+    is_triggered_only = yes
+
+    immediate = {
+        FROM.FROM = {
+            # 清理 Flag
+            clr_country_flag = pam_ai_chose_red
+            clr_country_flag = pam_ai_chose_gold
+            clr_country_flag = pam_ai_chose_black
+        }
+    }
+    option = {
+        name = OK
+        add_political_power = -50
+        add_stability = -0.05
+        FROM.FROM = {
+            add_political_power = 100
+            add_manpower = 5000
+        }
+    }
+}
+
+# 平局
+country_event = {
+    id = PAM.66
+    title = PAM.66.t
+    desc = PAM.66.d
+    picture = GFX_report_event_spies_handshake
+    is_triggered_only = yes
+
+    immediate = {
+        # 双方都没什么损失
+        FROM.FROM = {
+            # 清理 Flag
+            clr_country_flag = pam_ai_chose_red
+            clr_country_flag = pam_ai_chose_gold
+            clr_country_flag = pam_ai_chose_black
+        }
+    }
+    option = {
+        name = OK
+        add_political_power = 25
+        FROM.FROM = {
+            add_political_power = 25
+        }
+    }
+}
 news_event = {
     id = PAM_news.1
     title = PAM_news.1.t
