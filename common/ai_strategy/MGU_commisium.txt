@@ -1,0 +1,288 @@
+# befriend
+# conquer
+# antagonize
+# build_ship
+# build_army
+# unit_ratio
+# build_building
+# research_tech
+# garrison
+# protect
+# influence
+MGU_unit_production  = {
+	enable = {
+		original_tag = MGU
+		has_government = communism
+	}
+	ai_strategy = {
+		type = role_ratio	#模板倾向
+		id = MGU_infantry
+		value = 40
+	}
+	ai_strategy = {
+		type = template_prio	#训练模板倾向
+		id = MGU_infantry
+		value = 40
+	}
+	ai_strategy = {
+		type = role_ratio	#模板倾向
+		id = MGU_armor
+		value = 60
+	}
+	ai_strategy = {
+		type = template_prio	#训练模板倾向
+		id = MGU_armor
+		value = 60
+	}
+}
+MGU_equipment_production = { #默认装备
+	allowed = {
+		original_tag = MGU
+	}
+	enable = {
+		always = yes
+	}
+	ai_strategy = {
+		type = equipment_production_factor	#装备倾向
+		id = infantry_weapons		
+		value = 40
+	}
+	ai_strategy = {
+		type = research_tech	#科技倾向
+		id = artillery
+		value = 3000
+	}
+	ai_strategy = {
+		type = research_tech	#科技倾向
+		id = armor
+		value = 800
+	}
+	ai_strategy = {
+		type = research_tech	#科技倾向
+		id = construction_tech
+		value = 200
+	}
+	ai_strategy = {
+		type = research_tech	#科技倾向
+		id = industry
+		value = 1000
+	}
+	ai_strategy = {
+		type = research_tech	#科技倾向
+		id = electronics
+		value = 200
+	}
+	ai_strategy = {
+		type = equipment_production_min_factories
+		id = land_light_tank
+		value = 1
+	}
+	ai_strategy = {
+		type = equipment_production_min_factories
+		id = land_medium_tank
+		value = 1
+	}
+}
+
+MGU_stop_disbanding_your_army = {#ai部署陆军倾向
+    allowed = {
+        original_tag = MGU
+		has_government = communism
+    }
+    enable = {
+        num_divisions < 500
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = ai_wanted_divisions_factor
+        value = 1000
+    }
+}
+MGU_stop_disbanding_your_army2 = {#ai部署陆军倾向2
+    allowed = {
+        original_tag = MGU
+		has_government = communism
+    }
+    enable = {
+        num_divisions > 500
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = ai_wanted_divisions_factor
+        value = -2000
+    }
+}
+
+	MGU_home_land_is_safe = { #不驻扎
+		allowed = {
+			original_tag = MGU
+		}
+
+		enable = {
+			always = yes
+		}
+
+   		 ai_strategy = { #驻军
+     	   type = role_ratio
+       	 	id = garrison
+        	value = 0
+    	}
+
+	}
+
+	MGU_rush_all = {
+		allowed = {
+			original_tag = MGU
+		}
+
+		enable = {
+			has_war = yes
+		}		
+	
+		ai_strategy = {
+			type = front_control
+			tag = PAO
+			tag = LFC
+			tag = PAQ
+			tag = EWW
+			tag = ELF
+			ratio > 0.10
+			priority = 50
+			ordertype = front
+			execution_type = rush
+			manual_attack = no
+		}
+	
+	}
+
+#情报机构
+
+	MGU_the_more_powerful_KGB = {
+		allowed = {
+			original_tag = MGU
+		}
+		enable = {
+			has_completed_focus = MTK_com_spy_16
+		}
+
+		abort = {
+			always = no
+		}
+
+		ai_strategy = {
+			type = intelligence_agency_usable_factories
+			value = 1000
+		}
+
+		ai_strategy = {
+			type = intelligence_agency_branch_desire_factor
+			id = branch_defense
+			value = 1500
+		}
+		ai_strategy = {
+			type = intelligence_agency_branch_desire_factor
+			id = branch_crypto
+			value = 2000
+		}
+
+		ai_strategy = {
+			type = intelligence_agency_usable_factories
+			value = 20
+		}
+
+		ai_strategy = {
+			type = operation_equipment_priority
+			value = 100
+		}
+
+	}
+
+	MGU_Willows_own_son = {
+
+		allowed = {
+			tag = MGU
+		}
+
+		enable = {
+			date < 1939.6.1
+		}
+
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = operative_mission
+			mission = build_intel_network
+			value = 2500
+			mission_target = AHM
+		}
+
+		ai_strategy = {
+			type = operative_operation
+			value = 2500
+			operation = operation_infiltrate_civilian
+			operation_target = AHM
+		}
+
+		ai_strategy = {
+			type = operative_operation
+			value = 5000
+			operation = operation_steal_tech_civilian
+			operation_target = AHM
+		}
+	}
+
+#外交
+
+	MGU_dont_mess_with_volunteers_for_no_communism_nations = { # Reverse strategy
+
+		reversed = yes
+
+		allowed = {
+			original_tag = MGU
+		}
+
+		enable = {
+			NOT = {
+				has_government = communism
+				has_war_with = MGU
+			}
+		}
+
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = support
+			id = "MGU"
+			value = -10
+		}
+
+		ai_strategy = {
+			type = send_volunteers_desire
+			id = "MGU"
+			value = -10
+		}
+
+	}
+
+	MGU_send_volunteers = { # Reverse strategy
+
+		reversed = yes
+
+		allowed = {
+			original_tag = MGU
+		}
+
+		enable = {
+			has_completed_focus = MTK_com_33	
+		}
+
+		abort_when_not_enabled = yes
+
+		ai_strategy = {
+			type = send_volunteers_desire
+			id = "MGU"
+			value = 100
+		}
+	}
