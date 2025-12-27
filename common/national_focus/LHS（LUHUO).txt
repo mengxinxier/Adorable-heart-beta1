@@ -667,6 +667,7 @@ focus_tree = {
                 }
             }
             hidden_effect = {
+                remove_ideas = LHS_weile
                 if = {
                     limit = {
                         is_ai = yes
@@ -1767,8 +1768,8 @@ focus_tree = {
     focus = {
         id = LHS_jiaomie
         icon = GFX_jiaomie
-        x = 1
-        y = 8
+        x = 0
+        y = 9
         cost = 5
         available = {
             or = {
@@ -1808,7 +1809,7 @@ focus_tree = {
         }
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-            focus = LHS_zhuiji
+            focus = LHS_guitu
         }
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
@@ -1847,46 +1848,13 @@ focus_tree = {
         ai_will_do = {
             base = 0
             modifier = {
-                has_completed_focus = LHS_zongjie
-                OR = {
-                    not = {
-                        country_exists = PAO
-                    }
-                    PAO = {
-                        is_subject_of = LHS
-                    }
-                    MGU = {
-                        is_subject_of = LHS
+                PAQ = {
+                    or = {
+                        is_subject = yes
+                        exists = no
                     }
                 }
-                add = 1000
-            }
-            modifier = {
-                num_divisions < 60
-                PAO = {
-                    is_ai = yes
-                }
-                add = -1000
-            }
-            modifier = {
-                date < 1939.1.1
-                add = -10000
-            }
-            modifier = {
-                has_idea = PAO_zzjd
-                add = -50000
-            }
-            modifier = {
-                has_completed_focus = LHS_zongjie
-                OR = {
-                    PAO = {
-                        surrender_progress > 60
-                    }
-                    MGU = {
-                        is_subject_of = LHS
-                    }
-                }
-                add = 1000
+                add = 500
             }
         }
         completion_reward = {
@@ -2011,8 +1979,8 @@ focus_tree = {
     focus = {
         id = LHS_guitu
         icon = GFX_guitu
-        x = 0
-        y = 9
+        x = 1
+        y = 8
         cost = 5
         available = {
             or = {
@@ -2068,11 +2036,11 @@ focus_tree = {
         }
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-            focus = LHS_jiaomie
+            focus = LHS_zhuijiwangling
         }
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-            focus = LHS_zhuijiwangling
+            focus = LHS_zhuiji
         }
         bypass = {
             OR = {
@@ -2118,18 +2086,45 @@ focus_tree = {
         relative_position_id = LHS_shengxia
         ai_will_do = {
             base = 0
-            modifier = {
-                has_completed_focus = LHS_zongjie
-                OR = {
-                    not = {
-                        country_exists = MGU
-                    }
-                    MGU = {
-                        is_in_faction_with = LHS
-                    }
-                }
-                add = 1000
-            }
+             modifier = {
+                 has_completed_focus = LHS_zongjie
+                 OR = {
+                     not = {
+                         country_exists = PAO
+                     }
+                     PAO = {
+                         is_subject_of = LHS
+                     }
+                     MGU = {
+                         is_subject_of = LHS
+                     }
+                 }
+                 add = 1000
+             }
+             modifier = {
+                 num_divisions < 60
+                 add = -1000
+             }
+             modifier = {
+                 date < 1939.1.1
+                 add = -10000
+             }
+             modifier = {
+                 has_idea = PAO_zzjd
+                 add = -50000
+             }
+             modifier = {
+                 has_completed_focus = LHS_zongjie
+                 OR = {
+                     PAO = {
+                         surrender_progress > 60
+                     }
+                     MGU = {
+                         is_in_faction_with = LHS
+                     }
+                 }
+                 add = 1000
+             }
         }
         will_lead_to_war_with = PAQ
         will_lead_to_war_with = PGM
@@ -2190,7 +2185,10 @@ focus_tree = {
                                 relation = military_access
                                 active = no
                             }
-                            activate_targeted_decision = { target = PREV decision = LHS_jiefang_FROM }
+                            declare_war_on = {
+                                target = PAQ
+                                type = annex_everything
+                            }
                         }
                     }
                 }
@@ -2310,7 +2308,7 @@ focus_tree = {
         }
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-            focus = LHS_guitu
+            focus = LHS_jiaomie
         }
         bypass = {
             has_cosmetic_tag = LHS_tongyi_communism
@@ -2395,7 +2393,7 @@ focus_tree = {
         }
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-            focus = LHS_guitu
+            focus = LHS_jiaomie
         }
         bypass = {
             has_cosmetic_tag = LHS_tongyi_communism
@@ -8304,24 +8302,14 @@ focus_tree = {
             }
         }
         select_effect = {
-
             if = {
                 limit = {
-                    has_country_flag = LHS_jiefangpao
+                    has_country_flag = LHS_jiefangpaq
                 }
 
                 LHS = { save_global_event_target_as = Adorable_heart_Accacker }
-                PAO = { save_global_event_target_as = Adorable_heart_Defender }
-                PAO = { set_country_flag = War_warning_window_visible }
-            }
-            if = {
-                limit = {
-                    has_country_flag = LHS_jiefangmgu
-                }
-
-                LHS = { save_global_event_target_as = Adorable_heart_Accacker }
-                MGU = { save_global_event_target_as = Adorable_heart_Defender }
-                MGU = { set_country_flag = War_warning_window_visible }
+                PAQ = { save_global_event_target_as = Adorable_heart_Defender }
+                PAQ = { set_country_flag = War_warning_window_visible }
             }
         }
         completion_reward = {
@@ -8402,9 +8390,9 @@ focus_tree = {
                 limit = {
                     has_country_flag = LHS_jiefangmgu
                 }
-                declare_war_on = {
+                activate_targeted_decision = {
                     target = MGU
-                    type = annex_everything
+                    decision = LHS_jiefang_FROM
                 }
             }
             if = {
@@ -8420,9 +8408,9 @@ focus_tree = {
                 limit = {
                     has_country_flag = LHS_jiefangpaq
                 }
-                activate_targeted_decision = {
+                declare_war_on = {
                     target = PAQ
-                    decision = LHS_jiefang_FROM
+                    type = annex_everything
                 }
             }
             if = {
