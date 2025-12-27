@@ -8,6 +8,11 @@ PAM_start1 = {
         value = -1000
     }
     ai_strategy = {
+        type = force_defend_ally_borders
+        id = "PAO"
+        value = -1000
+    }
+    ai_strategy = {
         type = become_spymaster
         value = 30  # 花费政治点数竞选间谍大师的权重值
     }
@@ -52,11 +57,6 @@ PAM_start1 = {
         type = research_tech	#科技倾向
         id = tech_support
         value = 200
-    }
-    ai_strategy = {
-        type = research_weight_factor	#科技倾向
-        id = basic_battery
-        value = -200
     }
     ai_strategy = { #反坦克炮
         type = research_tech
@@ -499,6 +499,7 @@ PAMIfyouhavethemusethem2 = {
     }
     enable = {
         has_equipment = { medium_tank_chassis > 1 }
+        has_tech = improved_medium_tank_chassis
     }
     abort_when_not_enabled = yes
 
@@ -527,6 +528,7 @@ PAMPushForMoreTONK = {
         has_manpower < 1500000
         arms_factory > 45
         has_equipment = {infantry_equipment > 25000}
+        has_tech = improved_medium_tank_chassis
     }
     abort_when_not_enabled = yes
     ai_strategy = {
@@ -549,6 +551,7 @@ PAMMajorsBuildTanksWithManpower = {
     enable = {
         is_major = yes
         has_equipment = {infantry_equipment > 1}
+        has_tech = improved_medium_tank_chassis
     }
     abort_when_not_enabled = yes
     ai_strategy = {
@@ -605,15 +608,15 @@ PAM_ai_research = {
         value = 2000
     }
     ai_strategy = { #中坦
-         type = research_tech
-         id = basic_medium_tank_chassis
-         value = 800
-     }
-     ai_strategy = { #邪恶的坦克
-         type = research_tech
-         id = basic_heavy_tank_chassis
-         value = 800
-     }
+        type = research_tech
+        id = basic_medium_tank_chassis
+        value = 800
+    }
+    ai_strategy = { #邪恶的坦克
+        type = research_tech
+        id = basic_heavy_tank_chassis
+        value = 800
+    }
     ai_strategy = { #火炮
         type = research_tech
         id = gw_artillery
@@ -1335,8 +1338,13 @@ PAM_state_is_zhanlue = {#老爷爷，我给你踩地来咯
                 ratio > 0.7
             }
         }
-        LHS = {
-            is_ai = no
+        or = {
+            LHS = {
+                is_ai = no
+            }
+            LHS = {
+                exists = no
+            }
         }
     }
     abort = {
@@ -2363,21 +2371,13 @@ PAM_war_with_BRA_MGU = { #与妖精和魔法少女联盟开战
     }
 
 }
-PAM_war1_with_PAQ = { #单独与阿德莱希开战
+PAM_war_with_PAQ = { #与阿德莱希开战
     allowed = {
         original_tag = PAM
     }
     enable = {
         AND = {
             has_war_with = PAQ
-        }
-        not = {
-            OR = {
-                has_war_with = ELF
-                has_war_with = MGU
-                has_war_with = PAM
-                has_war_with = PA1
-            }
         }
 
     }
@@ -2419,11 +2419,6 @@ PAM_war1_with_PAQ = { #单独与阿德莱希开战
         type = front_armor_score
         id = PAQ
         value = 100
-    }
-    ai_strategy = {
-        type = front_unit_request #前线部队
-        tag = PAQ
-        value = 9999 # lets put more units, should be safe
     }
     ai_strategy = {
         type = garrison
@@ -2602,7 +2597,7 @@ PAM_zhunbei_WL1 = { #提前准备攻打躁动亡灵
         tag = PAM
         OR = {
             focus_progress = {
-                focus = PAM_wlcj
+                focus = PAM_cztm
                 progress > 0
             }
 

@@ -1,33 +1,148 @@
 on_actions = {
+    on_declare_war = {
+        effect = {
+            #南美大围猎
+            if = {
+                limit = {
+                    ROOT = {
+                        has_completed_focus = PAM_lqslzs
+                        or = {
+                            has_war_together_with = PAM
+                            tag = PAM
+                            is_in_faction_with = PAM
+                            is_subject_of = PAM
+                        }
+                    }
+                    FROM = {
+                        or = {
+                            tag = PAO
+                            is_in_faction_with = PAO
+                            tag = PAQ
+                            is_in_faction_with = PAQ
+                            tag = MGU
+                            is_in_faction_with = ELF
+                        }
+                    }
+                    not = {
+                        has_global_flag = LHS_nmgm
+                    }
+                }
+                hidden_effect = {
+                    set_global_flag = LHS_nmgm
+                    news_event = {
+                        id = PAM_news.1
+                        days = 0
+                    }
+                }
+            }
+
+            #最后一餐
+             if = {
+                 limit = {
+                     ROOT = {
+                         has_completed_focus = PAM_devour_the_old_world
+                         or = {
+                             has_war_together_with = PAM
+                             tag = PAM
+                             is_in_faction_with = PAM
+                             is_subject_of = PAM
+                         }
+                     }
+                     FROM = {
+                         capital_scope = { is_on_continent = europe }
+                     }
+                     not = {
+                         has_global_flag = PAM_last_war
+                     }
+                 }
+                 hidden_effect = {
+                     set_global_flag = PAM_last_war
+                     news_event = {
+                         id = PAM_news.2
+                         days = 0
+                     }
+                 }
+             }
+        }
+    }
     on_annex = {
         effect = {
             if = {
                 #战胜亡灵
                 limit = {
                     ROOT = {
-                        tag = PAM
-                        has_completed_focus = PAM_cztm
+                        PAM = {has_completed_focus = PAM_cztm}
+                        not = {has_country_flag = PAM_zswl}
                     }
                     FROM = {
                         tag = ZDW
                     }
                 }
                 PAM = {
+                    set_country_flag = PAM_zswl
                         country_event = {
                             hours = 6
                             id = PAM.13
                         }
                     }
                 }
+                if = {
+                    #战胜魔法少女联盟
+                    limit = {
+                        ROOT = {
+                            tag = PAM
+                            has_completed_focus = PAM_zsblgz
+                        }
+                        FROM = {
+                            tag = MGU
+                        }
+                    }
+                    PAM = {
+                        country_event = {
+                            hours = 6
+                            id = PAM.30
+                        }
+                    }
+                }
             }
         }
-    }
     on_capitulation = {
         effect = {
-
+            if = {
+                #战胜躁动的亡者
+                limit = {
+                    ROOT = {
+                        tag = ZDW
+                        is_subject = no
+                        NOT = {
+                            any_enemy_country = {
+                                NOT = {
+                                    tag = PAM
+                                    has_war_together_with = PAM
+                                }
+                            }
+                        }
+                    }
+                    FROM = {
+                        NOT = {has_country_flag = PAM_zswl2}
+                        or = {
+                            tag = PAO
+                        }
+                    }
+                }
+                ZDW = {
+                   add_equipment_to_stockpile = {
+                       type = wangling_equipment
+                       amount = -1500000
+                   }
+                }
+                PAM = {
+                    set_country_flag = PAM_zswl2
+                }
+            }
 
         }
     }
 
-
+}
 

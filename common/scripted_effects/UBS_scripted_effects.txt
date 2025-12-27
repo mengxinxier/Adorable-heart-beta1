@@ -33,11 +33,19 @@ AHES_Refresh_income_indus = {
     ##工业税
     set_variable = { AHES_Industrial_tax_income = num_of_civilian_factories_available_for_projects }  ##工业税
     multiply_variable = { AHES_Industrial_tax_income = 1.7 }
+    set_variable = { temp_AHES_Industrial_tax_income = 1 }
+    add_to_variable = { temp_AHES_Industrial_tax_income = modifier@hcp_Industrial_tax_factor_monthly }
+    multiply_variable = { AHES_Industrial_tax_income = temp_AHES_Industrial_tax_income }
+    round_variable = AHES_Industrial_tax_income
     ##消费税
     set_variable = { AHES_num_of_CGCF = num_of_civilian_factories }  ##消费品民工
     subtract_from_variable = { AHES_num_of_CGCF = num_of_civilian_factories_available_for_projects }
     set_variable = { AHES_Consumption_tax_income = AHES_num_of_CGCF }  ##消费税收入
     multiply_variable = { AHES_Consumption_tax_income = 2.2 }
+    set_variable = { temp_AHES_Consumption_tax_income = 1 }
+    add_to_variable = { temp_AHES_Consumption_tax_income = modifier@hcp_Consumption_tax_factor_monthly }
+    multiply_variable = { AHES_Consumption_tax_income = temp_AHES_Consumption_tax_income }
+    round_variable = AHES_Consumption_tax_income
     ##添加到总收入中
     add_to_variable = { AHES_Total_income = AHES_Industrial_tax_income }
     add_to_variable = { AHES_Total_income = AHES_Consumption_tax_income }
@@ -68,6 +76,8 @@ AHES_Refresh_income_dipol_factor = {
         subtract_from_variable = { AHES_diplo_income_correction_coefficient = modifier@hcp_income_for_CHI_factor_monthly }
         set_variable = { temp_outcome_for_overlord = AHES_Total_income }
         multiply_variable = { temp_outcome_for_overlord = temp_income_multiply_factor }
+        round_variable = temp_outcome_for_overlord
+        round_variable = temp_outcome_for_CHI
         CHI = { add_to_variable = { AHES_diplo_exincome = PREV.temp_outcome_for_overlord } }
     }
     else_if = {
@@ -76,6 +86,8 @@ AHES_Refresh_income_dipol_factor = {
         subtract_from_variable = { AHES_diplo_income_correction_coefficient = modifier@hcp_income_for_overlord_factor_monthly }
         set_variable = { temp_outcome_for_overlord = AHES_Total_income }
         multiply_variable = { temp_outcome_for_overlord = temp_income_multiply_factor }
+        round_variable = temp_outcome_for_overlord
+        round_variable = temp_outcome_for_CHI
         overlord = { add_to_variable = { AHES_diplo_exincome = PREV.temp_outcome_for_overlord } }
     }
     else_if = {
@@ -84,6 +96,8 @@ AHES_Refresh_income_dipol_factor = {
         subtract_from_variable = { AHES_diplo_income_correction_coefficient = modifier@hcp_income_for_CHI_factor_monthly }
         set_variable = { temp_outcome_for_CHI = AHES_Total_income }
         multiply_variable = { temp_outcome_for_CHI = temp_income_multiply_factor }
+        round_variable = temp_outcome_for_overlord
+        round_variable = temp_outcome_for_CHI
         CHI = { add_to_variable = { AHES_diplo_exincome = PREV.temp_outcome_for_CHI } }
     }
     add_to_variable = { AHES_diplo_outcome = temp_outcome_for_overlord }
@@ -96,6 +110,7 @@ AHES_Refresh_income_dipol_factor = {
 AHES_Refresh_exincome = {
     set_variable = { AHES_other_exincome = exincome }
     add_to_variable = { AHES_other_exincome = modifier@hcp_exincome_monthly }
+    round_variable = AHES_other_exincome
     set_variable = { AHES_total_exincome = AHES_other_exincome }
     add_to_variable = { AHES_total_exincome = AHES_diplo_exincome }
     add_to_variable = { AHES_Total_income = AHES_total_exincome }
@@ -173,6 +188,7 @@ AHES_Refresh_outcome_army = {
     add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@magic_assault }
     add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@wangling2 }
     add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@wangling3 }
+    add_to_variable = { AHES_num_of_special_forces = num_battalions_with_type@bamboo_grove_squad }
     set_variable = { AHES_num_of_Artifact = 0 }
     add_to_variable = { AHES_num_of_Artifact = num_battalions_with_type@Artifact_USER }
     add_to_variable = { AHES_num_of_Artifact = num_battalions_with_type@Artifact_Holylance }
@@ -266,6 +282,7 @@ AHES_Refresh_outcome_army = {
     set_variable = { temp_AHES_Army_outcome_factor = 1 }
     add_to_variable = { temp_AHES_Army_outcome_factor = AHES_Army_outcome_factor }
     multiply_variable = { AHES_Army_outcome = temp_AHES_Army_outcome_factor }
+    round_variable = AHES_Army_outcome
     add_to_variable = { AHES_Total_outcome = AHES_Army_outcome }
 }
 
@@ -319,6 +336,7 @@ AHES_Refresh_outcome_navy = {
     set_variable = { temp_AHES_Navy_outcome_factor = 1 }
     add_to_variable = { temp_AHES_Navy_outcome_factor = AHES_Navy_outcome_factor }
     multiply_variable = { AHES_Navy_outcome = temp_AHES_Navy_outcome_factor }
+    round_variable = AHES_Navy_outcome
     add_to_variable = { AHES_Total_outcome = AHES_Navy_outcome }
 }
 
@@ -333,8 +351,11 @@ AHES_Refresh_outcome_administration = {
     divide_variable = { AHES_Core_outcome = 4 }
     add_to_variable = { AHES_Administration_outcome = AHES_Garrison_outcome }
     add_to_variable = { AHES_Administration_outcome = AHES_Core_outcome }
-    add_to_variable = { AHES_Total_outcome = AHES_Garrison_outcome }
-    add_to_variable = { AHES_Total_outcome = AHES_Core_outcome }
+    set_variable = { temp_AHES_Administration_outcome_factor = 1 }
+    add_to_variable = { temp_AHES_Administration_outcome_factor = modifier@hcp_Administration_outcome_factor }
+    multiply_variable = { AHES_Administration_outcome = temp_AHES_Administration_outcome_factor }
+    round_variable = AHES_Administration_outcome
+    add_to_variable = { AHES_Total_outcome = AHES_Administration_outcome }
 }
 
 ###  刷新支出-外交支出
@@ -344,16 +365,19 @@ AHES_Refresh_outcome_dipol = {
         limit = { is_subject_of = CHI }
         add_to_variable = { AHES_income_for_overlord = modifier@hcp_AHES_income_for_overlord_monthly }
         add_to_variable = { AHES_income_for_overlord = modifier@hcp_income_for_CHI_monthly }
+        round_variable = AHES_income_for_overlord
         overlord = { add_to_variable = { THIS.AHES_diplo_exincome = PREV.AHES_income_for_overlord } }
     }
     else_if = {
         limit = { is_subject = yes }
         add_to_variable = { AHES_income_for_overlord = modifier@hcp_AHES_income_for_overlord_monthly }
+        round_variable = AHES_income_for_overlord
         overlord = { add_to_variable = { THIS.AHES_diplo_exincome = PREV.AHES_income_for_overlord } }
     }
     else_if = {
         limit = { CHI = { is_subject = no } }
         add_to_variable = { AHES_income_for_overlord = modifier@hcp_income_for_CHI_monthly }
+        round_variable = AHES_income_for_overlord
         CHI = { add_to_variable = { THIS.AHES_diplo_exincome = PREV.AHES_income_for_overlord } }
     }
     add_to_variable = { AHES_Administration_outcome = AHES_income_for_overlord }
@@ -374,6 +398,7 @@ AHES_Refresh_outcome_factor = {
 AHES_Refresh_exoutcome = {
     set_variable = { AHES_total_exoutcome = exoutcome }
     add_to_variable = { AHES_total_exoutcome = modifier@hcp_exoutcome_monthly }
+    round_variable = AHES_total_exoutcome
     add_to_variable = { AHES_Total_outcome = AHES_total_exoutcome }
 }
 
@@ -810,387 +835,401 @@ AHES_Refresh_income_and_outcome = {
     generate_econ_rankings = yes
 }
 
-#教育经费
-education_fund_up_effet = {
-    if = {
-        limit = {
-            has_idea = education_fund_1
-        }
-        swap_ideas = {
-            remove_idea = education_fund_1
-            add_idea = education_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = education_fund_2
-        }
-        swap_ideas = {
-            remove_idea = education_fund_2
-            add_idea = education_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = education_fund_3
-        }
-        swap_ideas = {
-            remove_idea = education_fund_3
-            add_idea = education_fund_4
-        }
-    }
-    else_if = {
-        limit = {
-            not = {
-                has_idea = education_fund_4
-            }
-        }
-        add_ideas = education_fund_1
-    }
-}
-education_fund_down_effet = {
-    if = {
-        limit = {
-            has_idea = education_fund_4
-        }
-        swap_ideas = {
-            remove_idea = education_fund_4
-            add_idea = education_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = education_fund_3
-        }
-        swap_ideas = {
-            remove_idea = education_fund_3
-            add_idea = education_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = education_fund_2
-        }
-        swap_ideas = {
-            remove_idea = education_fund_2
-            add_idea = education_fund_1
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = education_fund_1
-        }
-        remove_ideas = education_fund_1
-        set_variable = {
-            level_of_education_fund = 0
-        }
-    }
+remove_all_education_fund_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			education_fund_1
+			education_fund_2
+			education_fund_3
+			education_fund_4
+			education_fund_5
+			education_fund_6
+			education_fund_7
+			education_fund_8
+			education_fund_9
+			education_fund_10
+			education_fund_11
+		}
+	}
 }
 
-#行政经费
-administrative_fund_up_effet = {
-    if = {
-        limit = {
-            has_idea = administrative_fund_1
-        }
-        swap_ideas = {
-            remove_idea = administrative_fund_1
-            add_idea = administrative_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = administrative_fund_2
-        }
-        swap_ideas = {
-            remove_idea = administrative_fund_2
-            add_idea = administrative_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = administrative_fund_3
-        }
-        swap_ideas = {
-            remove_idea = administrative_fund_3
-            add_idea = administrative_fund_4
-        }
-    }
-    else_if = {
-        limit = {
-            not = {
-                has_idea = administrative_fund_4
-            }
-        }
-        add_ideas = administrative_fund_1
-    }
-}
-administrative_fund_down_effet = {
-    if = {
-        limit = {
-            has_idea = administrative_fund_4
-        }
-        swap_ideas = {
-            remove_idea = administrative_fund_4
-            add_idea = administrative_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = administrative_fund_3
-        }
-        swap_ideas = {
-            remove_idea = administrative_fund_3
-            add_idea = administrative_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = administrative_fund_2
-        }
-        swap_ideas = {
-            remove_idea = administrative_fund_2
-            add_idea = administrative_fund_1
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = administrative_fund_1
-        }
-        remove_ideas = administrative_fund_1
-        set_variable = {
-            level_of_administrative_fund = 0
-        }
-    }
+remove_all_administrative_fund_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			administrative_fund_1
+			administrative_fund_2
+			administrative_fund_3
+			administrative_fund_4
+			administrative_fund_5
+			administrative_fund_6
+			administrative_fund_7
+			administrative_fund_8
+			administrative_fund_9
+			administrative_fund_10
+			administrative_fund_11
+		}
+	}
 }
 
-#陆军经费
-army_fund_up_effet = {
-    if = {
-        limit = {
-            has_idea = army_fund_1
-        }
-        swap_ideas = {
-            remove_idea = army_fund_1
-            add_idea = army_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = army_fund_2
-        }
-        swap_ideas = {
-            remove_idea = army_fund_2
-            add_idea = army_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = army_fund_3
-        }
-        swap_ideas = {
-            remove_idea = army_fund_3
-            add_idea = army_fund_4
-        }
-    }
-    else_if = {
-        limit = {
-            not = {
-                has_idea = army_fund_4
-            }
-        }
-        add_ideas = army_fund_1
-    }
-}
-army_fund_down_effet = {
-    if = {
-        limit = {
-            has_idea = army_fund_4
-        }
-        swap_ideas = {
-            remove_idea = army_fund_4
-            add_idea = army_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = army_fund_3
-        }
-        swap_ideas = {
-            remove_idea = army_fund_3
-            add_idea = army_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = army_fund_2
-        }
-        swap_ideas = {
-            remove_idea = army_fund_2
-            add_idea = army_fund_1
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = army_fund_1
-        }
-        remove_ideas = army_fund_1
-        set_variable = {
-            level_of_army_fund = 0
-        }
-    }
+remove_all_Livelihood_fund_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			Livelihood_fund_1
+			Livelihood_fund_2
+			Livelihood_fund_3
+			Livelihood_fund_4
+			Livelihood_fund_5
+			Livelihood_fund_6
+			Livelihood_fund_7
+			Livelihood_fund_8
+			Livelihood_fund_9
+			Livelihood_fund_10
+			Livelihood_fund_11
+		}
+	}
 }
 
-#海军经费
-navy_fund_up_effet = {
-    if = {
-        limit = {
-            has_idea = navy_fund_1
-        }
-        swap_ideas = {
-            remove_idea = navy_fund_1
-            add_idea = navy_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = navy_fund_2
-        }
-        swap_ideas = {
-            remove_idea = navy_fund_2
-            add_idea = navy_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = navy_fund_3
-        }
-        swap_ideas = {
-            remove_idea = navy_fund_3
-            add_idea = navy_fund_4
-        }
-    }
-    else_if = {
-        limit = {
-            not = {
-                has_idea = navy_fund_4
-            }
-        }
-        add_ideas = navy_fund_1
-    }
-}
-navy_fund_down_effet = {
-    if = {
-        limit = {
-            has_idea = navy_fund_4
-        }
-        swap_ideas = {
-            remove_idea = navy_fund_4
-            add_idea = navy_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = navy_fund_3
-        }
-        swap_ideas = {
-            remove_idea = navy_fund_3
-            add_idea = navy_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = navy_fund_2
-        }
-        swap_ideas = {
-            remove_idea = navy_fund_2
-            add_idea = navy_fund_1
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = navy_fund_1
-        }
-        remove_ideas = navy_fund_1
-        set_variable = {
-            level_of_navy_fund = 0
-        }
-    }
+remove_all_army_fund_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			army_fund_1
+			army_fund_2
+			army_fund_3
+			army_fund_4
+			army_fund_5
+			army_fund_6
+			army_fund_7
+			army_fund_8
+			army_fund_9
+			army_fund_10
+			army_fund_11
+		}
+	}
 }
 
-#民生经费
-Livelihood_fund_up_effet = {
-    if = {
-        limit = {
-            has_idea = Livelihood_fund_1
-        }
-        swap_ideas = {
-            remove_idea = Livelihood_fund_1
-            add_idea = Livelihood_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = Livelihood_fund_2
-        }
-        swap_ideas = {
-            remove_idea = Livelihood_fund_2
-            add_idea = Livelihood_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = Livelihood_fund_3
-        }
-        swap_ideas = {
-            remove_idea = Livelihood_fund_3
-            add_idea = Livelihood_fund_4
-        }
-    }
-    else_if = {
-        limit = {
-            not = {
-                has_idea = Livelihood_fund_4
-            }
-        }
-        add_ideas = Livelihood_fund_1
-    }
+remove_all_navy_fund_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			navy_fund_1
+			navy_fund_2
+			navy_fund_3
+			navy_fund_4
+			navy_fund_5
+			navy_fund_6
+			navy_fund_7
+			navy_fund_8
+			navy_fund_9
+			navy_fund_10
+			navy_fund_11
+		}
+	}
 }
-Livelihood_fund_down_effet = {
-    if = {
-        limit = {
-            has_idea = Livelihood_fund_4
-        }
-        swap_ideas = {
-            remove_idea = Livelihood_fund_4
-            add_idea = Livelihood_fund_3
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = Livelihood_fund_3
-        }
-        swap_ideas = {
-            remove_idea = Livelihood_fund_3
-            add_idea = Livelihood_fund_2
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = Livelihood_fund_2
-        }
-        swap_ideas = {
-            remove_idea = Livelihood_fund_2
-            add_idea = Livelihood_fund_1
-        }
-    }
-    else_if = {
-        limit = {
-            has_idea = Livelihood_fund_1
-        }
-        remove_ideas = Livelihood_fund_1
-        set_variable = {
-            level_of_Livelihood_fund = 0
-        }
-    }
+
+remove_all_Industrial_investment_ideas = {
+	hidden_effect = {
+		remove_ideas = {
+			Industrial_investment_1
+			Industrial_investment_2
+			Industrial_investment_3
+			Industrial_investment_4
+			Industrial_investment_5
+			Industrial_investment_6
+			Industrial_investment_7
+			Industrial_investment_8
+			Industrial_investment_9
+			Industrial_investment_10
+			Industrial_investment_11
+		}
+	}
 }
+
+economy_top_button_click_effect = {
+				if = {
+					limit = {
+						not = { has_country_flag = economy_top_button_arrows_alert_unvisible }
+					}
+					set_country_flag = economy_top_button_arrows_alert_unvisible
+				}
+				if = {
+					limit = {
+						not = {
+							has_country_flag = adorable_heart_econmic_window_visible
+						}
+					}
+					set_country_flag = adorable_heart_econmic_window_visible
+				}
+				else = {
+					clr_country_flag = adorable_heart_econmic_window_visible
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var1 } }
+					set_variable = { education_fund_progress_bar_ball_var1 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var2 } }
+					set_variable = { education_fund_progress_bar_ball_var2 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var3 } }
+					set_variable = { education_fund_progress_bar_ball_var3 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var4 } }
+					set_variable = { education_fund_progress_bar_ball_var4 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var5 } }
+					set_variable = { education_fund_progress_bar_ball_var5 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var6 } }
+					set_variable = { education_fund_progress_bar_ball_var6 = 2 }
+					add_ideas = education_fund_6
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var7 } }
+					set_variable = { education_fund_progress_bar_ball_var7 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var8 } }
+					set_variable = { education_fund_progress_bar_ball_var8 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var9 } }
+					set_variable = { education_fund_progress_bar_ball_var9 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var10 } }
+					set_variable = { education_fund_progress_bar_ball_var10 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = education_fund_progress_bar_ball_var11 } }
+					set_variable = { education_fund_progress_bar_ball_var11 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var1 } }
+					set_variable = { administrative_fund_progress_bar_ball_var1 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var2 } }
+					set_variable = { administrative_fund_progress_bar_ball_var2 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var3 } }
+					set_variable = { administrative_fund_progress_bar_ball_var3 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var4 } }
+					set_variable = { administrative_fund_progress_bar_ball_var4 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var5 } }
+					set_variable = { administrative_fund_progress_bar_ball_var5 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var6 } }
+					set_variable = { administrative_fund_progress_bar_ball_var6 = 2 }
+					add_ideas = administrative_fund_6
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var7 } }
+					set_variable = { administrative_fund_progress_bar_ball_var7 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var8 } }
+					set_variable = { administrative_fund_progress_bar_ball_var8 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var9 } }
+					set_variable = { administrative_fund_progress_bar_ball_var9 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var10 } }
+					set_variable = { administrative_fund_progress_bar_ball_var10 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = administrative_fund_progress_bar_ball_var11 } }
+					set_variable = { administrative_fund_progress_bar_ball_var11 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var1 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var1 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var2 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var2 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var3 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var3 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var4 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var4 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var5 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var5 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var6 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var6 = 2 }
+					add_ideas = Livelihood_fund_6
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var7 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var7 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var8 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var8 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var9 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var9 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var10 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var10 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Livelihood_fund_progress_bar_ball_var11 } }
+					set_variable = { Livelihood_fund_progress_bar_ball_var11 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var1 } }
+					set_variable = { army_fund_progress_bar_ball_var1 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var2 } }
+					set_variable = { army_fund_progress_bar_ball_var2 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var3 } }
+					set_variable = { army_fund_progress_bar_ball_var3 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var4 } }
+					set_variable = { army_fund_progress_bar_ball_var4 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var5 } }
+					set_variable = { army_fund_progress_bar_ball_var5 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var6 } }
+					set_variable = { army_fund_progress_bar_ball_var6 = 2 }
+					add_ideas = army_fund_6
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var7 } }
+					set_variable = { army_fund_progress_bar_ball_var7 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var8 } }
+					set_variable = { army_fund_progress_bar_ball_var8 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var9 } }
+					set_variable = { army_fund_progress_bar_ball_var9 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var10 } }
+					set_variable = { army_fund_progress_bar_ball_var10 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = army_fund_progress_bar_ball_var11 } }
+					set_variable = { army_fund_progress_bar_ball_var11 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var1 } }
+					set_variable = { navy_fund_progress_bar_ball_var1 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var2 } }
+					set_variable = { navy_fund_progress_bar_ball_var2 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var3 } }
+					set_variable = { navy_fund_progress_bar_ball_var3 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var4 } }
+					set_variable = { navy_fund_progress_bar_ball_var4 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var5 } }
+					set_variable = { navy_fund_progress_bar_ball_var5 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var6 } }
+					set_variable = { navy_fund_progress_bar_ball_var6 = 2 }
+					add_ideas = navy_fund_6
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var7 } }
+					set_variable = { navy_fund_progress_bar_ball_var7 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var8 } }
+					set_variable = { navy_fund_progress_bar_ball_var8 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var9 } }
+					set_variable = { navy_fund_progress_bar_ball_var9 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var10 } }
+					set_variable = { navy_fund_progress_bar_ball_var10 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = navy_fund_progress_bar_ball_var11 } }
+					set_variable = { navy_fund_progress_bar_ball_var11 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var1 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var1 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var2 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var2 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var3 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var3 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var4 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var4 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var5 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var5 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var6 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var6 = 2 }
+					add_ideas = Industrial_investment_6
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var7 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var7 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var8 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var8 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var9 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var9 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var10 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var10 = 1 }
+				}
+				if = {
+					limit = { not = { has_variable = Industrial_investment_progress_bar_ball_var11 } }
+					set_variable = { Industrial_investment_progress_bar_ball_var11 = 1 }
+				}
+}
+

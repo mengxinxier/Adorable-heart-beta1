@@ -1100,17 +1100,29 @@ country_event = {
                     limit = {
                         is_in_faction = yes
                         is_faction_leader = no
+                        NOT = {
+                            is_in_faction_with = LHS
+                        }
                     }
                     leave_faction = yes
                     ROOT = { add_to_faction = PREV }
                 }
                 else_if = {
-                    limit = { is_faction_leader = yes }
-                    dismantle_faction = yes
+                    limit = {
+                        is_faction_leader = yes NOT = {
+                            is_in_faction_with = LHS
+                        }
+                    }
                     ROOT = { add_to_faction = PREV }
                 }
             }
             else = { ROOT = { add_to_faction = PREV } }
+        }
+        if = {
+            limit = {
+                is_in_faction = no
+            }
+            ROOT = { add_to_faction = FROM }
         }
         if = {
             limit = {
@@ -1315,142 +1327,154 @@ country_event = {
                     limit = {
                         is_in_faction = yes
                         is_faction_leader = no
+                        NOT = {
+                            is_in_faction_with = LHS
+                        }
                     }
                     leave_faction = yes
                     ROOT = { add_to_faction = PREV }
                 }
                 else_if = {
-                    limit = { is_faction_leader = yes }
-                    dismantle_faction = yes
-                    ROOT = { add_to_faction = PREV }
-                }
-            }
-            else = { ROOT = { add_to_faction = PREV } }
-        }
-        if = {
-            limit = {
-                not = {
-                    has_country_flag = LHS_tuanjiechufa
-                }
-                or = {
-                    and = {
-                        PAN = {
-                            is_in_faction_with = LHS
-                        }
-                        USA = {
-                            is_in_faction_with = LHS
-                        }
-                    }
-                    and = {
-                        PAN = {
-                            is_in_faction_with = LHS
-                        }
-                        NGD = {
-                            is_in_faction_with = LHS
-                        }
-                    }
-                    and = {
-                        PAN = {
-                            is_in_faction_with = LHS
-                        }
-                        FRG = {
-                            is_in_faction_with = LHS
-                        }
-                    }
-                }
-            }
-            set_country_flag = LHS_tuanjiechufa
-            news_event = {
-                id = LHS_news.6
-                days = 1
-            }
-            hidden_effect = {
-                remove_opinion_modifier = {
-                    target = FROM
-                    modifier = faction_traitor
-                }
-                every_country = {
-                    limit = {
+                    limit = { is_faction_leader = yes
+                    NOT = {
                         is_in_faction_with = LHS
                     }
-                    remove_opinion_modifier = {
-                        target = PREV
-                        modifier = faction_traitor
+                }
+                ROOT = { add_to_faction = PREV }
+            }
+        }
+        else = { ROOT = { add_to_faction = PREV } }
+    }
+    if = {
+        limit = {
+            is_in_faction = no
+        }
+        ROOT = { add_to_faction = FROM }
+    }
+    if = {
+        limit = {
+            not = {
+                has_country_flag = LHS_tuanjiechufa
+            }
+            or = {
+                and = {
+                    PAN = {
+                        is_in_faction_with = LHS
+                    }
+                    USA = {
+                        is_in_faction_with = LHS
+                    }
+                }
+                and = {
+                    PAN = {
+                        is_in_faction_with = LHS
+                    }
+                    NGD = {
+                        is_in_faction_with = LHS
+                    }
+                }
+                and = {
+                    PAN = {
+                        is_in_faction_with = LHS
+                    }
+                    FRG = {
+                        is_in_faction_with = LHS
                     }
                 }
             }
         }
-    }
-    option = {
-        name = LHS.1143.a2
-        trigger = {
-            NOT = {
-                FROM = {has_country_flag = LHS_central_America_success}
-            }
+        set_country_flag = LHS_tuanjiechufa
+        news_event = {
+            id = LHS_news.6
+            days = 1
         }
-        add_war_support = 0.05
-    }
-    option = {
-        name = LHS.1143.a3
-        trigger = {
-            FROM = {has_country_flag = LHS_central_America_success}
-            FROM = {
-                TAG = SOV
+        hidden_effect = {
+            remove_opinion_modifier = {
+                target = FROM
+                modifier = faction_traitor
             }
-        }
-        add_war_support = 0.1
-        every_country = {
-            limit = {
-                is_in_faction_with = LHS
-                not = {
-                    is_subject_of = FROM
+            every_country = {
+                limit = {
+                    is_in_faction_with = LHS
+                }
+                remove_opinion_modifier = {
+                    target = PREV
+                    modifier = faction_traitor
                 }
             }
-            SOV = {
-                add_to_faction = PREV
+        }
+    }
+}
+option = {
+    name = LHS.1143.a2
+    trigger = {
+        NOT = {
+            FROM = {has_country_flag = LHS_central_America_success}
+        }
+    }
+    add_war_support = 0.05
+}
+option = {
+    name = LHS.1143.a3
+    trigger = {
+        FROM = {has_country_flag = LHS_central_America_success}
+        FROM = {
+            TAG = SOV
+        }
+    }
+    add_war_support = 0.1
+    every_country = {
+        limit = {
+            is_in_faction_with = LHS
+            not = {
+                is_subject_of = FROM
             }
         }
         SOV = {
-            add_to_faction = LHS
+            add_to_faction = PREV
         }
     }
-    option = {
-        name = LHS.1143.a4
-        trigger = {
-            FROM = {has_country_flag = LHS_central_America_success}
-            FROM = {
-                TAG = PRC
-            }
+    SOV = {
+        add_to_faction = LHS
+    }
+}
+option = {
+    name = LHS.1143.a4
+    trigger = {
+        FROM = {has_country_flag = LHS_central_America_success}
+        FROM = {
+            TAG = PRC
         }
-        add_war_support = 0.1
-        hidden_effect = {
-            if = {
-                limit = {
-                    FROM = {
-                        OR = {
-                            is_in_faction_with = ENG
-                            is_in_faction_with = GER
-                            is_in_faction_with = DVL
-                            is_in_faction_with = SOV
-                        }
+    }
+    add_war_support = 0.1
+    hidden_effect = {
+        if = {
+            limit = {
+                FROM = {
+                    OR = {
+                        is_in_faction_with = ENG
+                        is_in_faction_with = GER
+                        is_in_faction_with = DVL
+                        is_in_faction_with = SOV
                     }
                 }
-                leave_faction = yes
             }
-        }
-        every_country = {
-            limit = {
-                is_in_faction_with = PRC
-                is_subject = no
-            }
-            LHS = {
-                add_to_faction = PREV
-            }
-        }
-        LHS = {
-            add_to_faction = PRC
+            leave_faction = yes
         }
     }
+    every_country = {
+        limit = {
+            is_in_faction_with = PRC
+            is_subject = no
+        }
+        LHS = {
+            add_to_faction = PREV
+        }
+    }
+    LHS = {
+        add_to_faction = PRC
+    }
+}
 }
 #北美洲的同志
 country_event = {
@@ -2935,16 +2959,29 @@ country_event = {
                 limit = {
                     is_in_faction = yes
                     is_faction_leader = no
+                    NOT = {
+                        is_in_faction_with = LHS
+                    }
                 }
                 leave_faction = yes
                 FROM = { add_to_faction = PREV }
             }
             else_if = {
-                limit = { is_faction_leader = yes }
-                dismantle_faction = yes
+                limit = {
+                    is_faction_leader = yes
+                    NOT = {
+                        is_in_faction_with = LHS
+                    }
+                }
                 FROM = { add_to_faction = PREV }
             }
             else = { FROM = { add_to_faction = PREV } }
+        }
+        if = {
+            limit = {
+                is_in_faction = no
+            }
+            FROM = { add_to_faction = root }
         }
         LHS = {
             PA1 = {
@@ -5431,28 +5468,33 @@ country_event = {
                 limit = {
                     is_in_faction = yes
                     is_faction_leader = no
+                    NOT = {
+                        is_in_faction_with = LHS
+                    }
                 }
                 leave_faction = yes
                 LHS = { add_to_faction = PREV }
             }
             else_if = {
-                limit = { is_faction_leader = yes }
-                dismantle_faction = yes
-                LHS = { add_to_faction = PREV }
+                limit = { is_faction_leader = yes NOT = {
+                    is_in_faction_with = LHS
+                }
             }
-            else = { LHS = { add_to_faction = PREV } }
+            LHS = { add_to_faction = PREV }
         }
+        else = { LHS = { add_to_faction = PREV } }
+    }
+    swap_ideas = {
+        remove_idea = LHS_yyql
+        add_idea = LHS_yyql2
+    }
+    LHS = {
         swap_ideas = {
             remove_idea = LHS_yyql
             add_idea = LHS_yyql2
         }
-        LHS = {
-            swap_ideas = {
-                remove_idea = LHS_yyql
-                add_idea = LHS_yyql2
-            }
-        }
     }
+}
 }
 
 #矿灯下的争论
@@ -6002,6 +6044,248 @@ country_event = {
         }
 
     }
+}
+
+#步话机里的红色频道
+country_event = {
+    id = LHS.122
+    title = LHS.122.t
+    desc = LHS.122.d
+    picture = GFX_event_xueyi
+    major = no
+    is_triggered_only = yes
+    fire_only_once = yes
+    option = {
+        name = LHS.122.a
+        every_country = {
+             limit = {
+                 is_in_faction_with = ROOT
+                 is_subject = no
+             }
+             if = {
+                 limit = {
+                     is_in_faction = yes
+                     is_faction_leader = no
+                     NOT = {
+                         is_in_faction_with = PAO
+                     }
+                 }
+                 leave_faction = yes
+                 FROM = { add_to_faction = PREV }
+             }
+             else_if = {
+                 limit = { is_faction_leader = yes NOT = {
+                     is_in_faction_with = PAO
+                 }
+             }
+
+             FROM = { add_to_faction = PREV }
+         }
+         else = { FROM = { add_to_faction = PREV } }
+         }
+         if = {
+             limit = {
+                 is_in_faction = no
+             }
+             FROM = { add_to_faction = root }
+         }
+         add_ideas = LHS_materialism_of_miracles
+        ai_chance = {
+            base = 100
+        }
+
+    }
+    option = {
+        name = LHS.122.b
+        ai_chance = {
+            base = 0
+        }
+        add_ideas = LHS_materialism_of_miracles
+    }
+}
+
+#关于奇迹的唯物辩证
+country_event = {
+    id = LHS.123
+    title = LHS.123.t
+    desc = LHS.123.d
+    picture = GFX_event_xf
+    major = no
+    is_triggered_only = yes
+    fire_only_once = yes
+    option = {
+        name = LHS.123.a
+        every_country = {
+            limit = {
+                is_in_faction_with = ROOT
+                is_subject = no
+            }
+            if = {
+                limit = {
+                    is_in_faction = yes
+                    is_faction_leader = no
+                    NOT = {
+                        is_in_faction_with = PAO
+                    }
+                }
+                leave_faction = yes
+                FROM = { add_to_faction = PREV }
+            }
+            else_if = {
+                limit = { is_faction_leader = yes NOT = {
+                    is_in_faction_with = PAO
+                }
+            }
+
+            FROM = { add_to_faction = PREV }
+        }
+        else = { FROM = { add_to_faction = PREV } }
+    }
+    if = {
+        limit = {
+            is_in_faction = no
+        }
+        FROM = { add_to_faction = root }
+    }
+    add_ideas = LHS_materialism_of_miracles
+    ai_chance = {
+        base = 100
+    }
+
+}
+option = {
+    name = LHS.123.b
+    ai_chance = {
+        base = 0
+    }
+    add_ideas = LHS_materialism_of_miracles
+}
+}
+
+#暴雨中的纸船
+country_event = {
+    id = LHS.124
+    title = LHS.124.t
+    desc = LHS.124.d
+    picture = GFX_event_hongguohai
+    major = no
+    is_triggered_only = yes
+    fire_only_once = yes
+    immediate = {
+        hidden_effect = {
+            scoped_play_song = "雨"
+        }
+    }
+    option = {
+        name = LHS.124.a
+        every_country = {
+            limit = {
+                is_in_faction_with = ROOT
+                is_subject = no
+            }
+            if = {
+                limit = {
+                    is_in_faction = yes
+                    is_faction_leader = no
+                    NOT = {
+                        is_in_faction_with = PAO
+                    }
+                }
+                leave_faction = yes
+                FROM = { add_to_faction = PREV }
+            }
+            else_if = {
+                limit = { is_faction_leader = yes NOT = {
+                    is_in_faction_with = PAO
+                }
+            }
+
+            FROM = { add_to_faction = PREV }
+        }
+        else = { FROM = { add_to_faction = PREV } }
+    }
+    if = {
+        limit = {
+            is_in_faction = no
+        }
+        FROM = { add_to_faction = root }
+    }
+    add_ideas = LHS_materialism_of_miracles
+    ai_chance = {
+        base = 100
+    }
+
+}
+option = {
+    name = LHS.124.b
+    ai_chance = {
+        base = 0
+    }
+    add_ideas = LHS_materialism_of_miracles
+}
+}
+
+#致那些拒绝凋零的女主角
+country_event = {
+    id = LHS.125
+    title = LHS.125.t
+    desc = LHS.125.d
+    picture = GFX_event_PAO_lxly10
+    major = no
+    is_triggered_only = yes
+    fire_only_once = yes
+    immediate = {
+        hidden_effect = {
+            scoped_play_song = "雨"
+        }
+    }
+    option = {
+        name = LHS.125.a
+        every_country = {
+            limit = {
+                is_in_faction_with = ROOT
+                is_subject = no
+            }
+            if = {
+                limit = {
+                    is_in_faction = yes
+                    is_faction_leader = no
+                    NOT = {
+                        is_in_faction_with = PAO
+                    }
+                }
+                leave_faction = yes
+                FROM = { add_to_faction = PREV }
+            }
+            else_if = {
+                limit = { is_faction_leader = yes NOT = {
+                    is_in_faction_with = PAO
+                }
+            }
+
+            FROM = { add_to_faction = PREV }
+        }
+        else = { FROM = { add_to_faction = PREV } }
+    }
+    if = {
+        limit = {
+            is_in_faction = no
+        }
+        FROM = { add_to_faction = root }
+    }
+    add_ideas = LHS_materialism_of_miracles
+    ai_chance = {
+        base = 100
+    }
+
+}
+option = {
+    name = LHS.125.b
+    ai_chance = {
+        base = 0
+    }
+    add_ideas = LHS_materialism_of_miracles
+}
 }
 
 ##士兵投诚
