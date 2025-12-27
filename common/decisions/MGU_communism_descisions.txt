@@ -89,7 +89,7 @@ MTK_south_amrican = {
 						}
                     }
                 }
-                add_core_of = ROOT
+                enable_country_integration_50_compliance = yes
             }
 			if = {
 				limit = {
@@ -261,12 +261,17 @@ MTK_Five_Year_Plan = {
 		activation = {       	                 
 			has_completed_focus = MTK_com_eco_01
 		}                                    
-		available = {                           
-			has_country_flag = MTK_Five_Year_Plan_finish_1
-			has_country_flag = MTK_Five_Year_Plan_finish_2
-			has_country_flag = MTK_Five_Year_Plan_finish_3
-			has_country_flag = MTK_Five_Year_Plan_finish_4
-			has_country_flag = MTK_Five_Year_Plan_finish_5
+		available = {                  
+			OR = {
+				AND = {
+					has_country_flag = MTK_Five_Year_Plan_finish_1
+					has_country_flag = MTK_Five_Year_Plan_finish_2
+					has_country_flag = MTK_Five_Year_Plan_finish_3
+					has_country_flag = MTK_Five_Year_Plan_finish_4
+					has_country_flag = MTK_Five_Year_Plan_finish_5
+				}
+				has_country_flag = MTK_Five_Year_Plan_finish_early
+			}         		
 		}
 		
 		is_good = no                    
@@ -280,8 +285,20 @@ MTK_Five_Year_Plan = {
 		}
 		complete_effect = {    
 			#custom_effect_tooltip = MTK_Five_Year_Plan_reword
+				if = {
+					limit = {
+						has_country_flag = MTK_Five_Year_Plan_finish_early
+					}
+					add_ideas = MTK_five_years_idea_reward_3
+					if = {
+						limit = {
+							is_ai = no
+						}
+						add_research_slot = 1
+					}		
+				}
 
-				if ={
+				else_if ={
 					limit ={
 						check_variable = {
 							MGU_5years < 364
@@ -316,6 +333,7 @@ MTK_Five_Year_Plan = {
 					}
 					add_ideas = MTK_five_years_idea_reward_4
 				}
+
 			}
 		
 	}
@@ -1222,6 +1240,10 @@ MTK_Five_Year_Plan = {
 				var = MTK_Five_Year_Plan_2_check_over
 				value = 300
 			}
+			clamp_variable = {
+				var = MTK_Five_Year_Plan_2_check_over
+				max = 0.15
+			}
 			add_to_variable = {
 				var = MTK_economy_research_speed_factor
 				value = MTK_Five_Year_Plan_2_check_over
@@ -1240,6 +1262,10 @@ MTK_Five_Year_Plan = {
 			divide_temp_variable = {
 				var = MTK_Five_Year_Plan_2_check_over
 				value = 300
+			}
+			clamp_variable = {
+				var = MTK_Five_Year_Plan_2_check_over
+				max = 0.20
 			}
 			add_to_variable = {
 				var = MTK_economy_research_speed_factor
@@ -1967,7 +1993,7 @@ MTK_Five_Year_Plan = {
 		}
 		complete_effect = {    
 			set_country_flag = MTK_Five_Year_Plan_finish_5
-			custom_effect_tooltip = MTK_Five_Year_Plan_5_reward
+			custom_effect_tooltip = MTK_Five_Year_Plan_5_reward		
 		}
 	}
 
@@ -1998,7 +2024,10 @@ MTK_Five_Year_Plan = {
 		icon = ger_mefo_bills
 		
 		visible = {
-			has_country_flag = MTK_Five_Year_Plan_finish_4
+			OR = {
+				has_country_flag = MTK_Five_Year_Plan_finish_4
+				has_country_flag = MTK_Five_Year_Plan_finish_3			
+			}
 		}
 		available = {
 			has_war = yes
@@ -2014,7 +2043,7 @@ MTK_Five_Year_Plan = {
 		
 
 		complete_effect = {		
-			set_country_flag = MTK_Five_Year_Plan_finish_5
+			set_country_flag = MTK_Five_Year_Plan_finish_early
 		}
 	}
 
@@ -2511,6 +2540,35 @@ MTK_AI_aizuo_xiaobi = {
 		}
 
 	}	
+	MTK_AI_3 = {     
+		icon = ger_mefo_bills
+		
+		available = {
+			original_tag = MGU
+			has_government = communism
+			has_war = yes
+			has_equipment = { infantry_equipment > 20000 }
+			MGU = { is_in_faction_with = LHS }
+		}
+		visible = {
+			is_ai = yes
+		}
+
+		cost = 0
+
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 1000	
+		}	
+		complete_effect = {
+			send_equipment = {
+				equipment = infantry_equipment
+				amount = 10000
+				target = LHS
+			}	
+		}
+	}		
 	MTK_AI_5 = {     
 		icon = ger_mefo_bills
 		
@@ -2537,9 +2595,12 @@ MTK_AI_aizuo_xiaobi = {
 			activate_advisor = MGU_homura
 			activate_advisor = MGU_Tomoe_Mami
 			activate_advisor = MGU_Tamaki_Iroha	
-			activate_advisor = MGU_shiqi_shaxu	
+			activate_advisor = MGU_Togame_Momoko
+			activate_advisor = MGU_Sakura_Kyouko
+			activate_advisor = MGU_guangjiang_qianchun
+			activate_advisor = MGU_Amane_Tsukasa
+			add_political_power = -300
 		}
-
 	}		
 	MTK_AI_6 = {     
 		icon = ger_mefo_bills
@@ -2547,7 +2608,13 @@ MTK_AI_aizuo_xiaobi = {
 		available = {
 			original_tag = MGU
 			has_government = communism
-			date > 1937.1.1
+			date > 1938.1.1
+			NOT = {
+        		AND = {
+					has_tech = interwar_artillery
+					has_tech = tech_logistics_company
+				}     			
+			}			
 		}
 		visible = {
 			is_ai = yes
@@ -2562,11 +2629,53 @@ MTK_AI_aizuo_xiaobi = {
 			
 		}	
 		complete_effect = {
-			set_technology = { interwar_artillery = 1 }
-			set_technology = { tech_logistics_company = 1 }
+			if = {
+				limit = {
+					NOT = { has_tech = interwar_artillery }
+				}
+				set_technology = { interwar_artillery = 1 }
+			}
+			if = {
+				limit = {
+					NOT = { has_tech = tech_logistics_company }
+				}
+				set_technology = { tech_logistics_company = 1 }
+			}			
 			army_experience = 100			
+			custom_effect_tooltip = "唐完了"
 		}
 
 	}	
+	MTK_AI_7 = {     
+		icon = ger_mefo_bills
+		
+		available = {
+			original_tag = MGU
+			has_government = communism
+			date > 1942.1.1
+			NOT = {
+				has_tech = basic_medium_tank_chassis		
+			}
+		}
+		visible = {
+			is_ai = yes
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			
+		}	
+		complete_effect = {
+			set_technology = { basic_medium_tank_chassis = 1 }
+			custom_effect_tooltip = "牛魔AI"
+
+		}
+
+	}	
+
 }
 
