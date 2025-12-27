@@ -1,5 +1,5 @@
 add_namespace = PA1_pol
-
+add_namespace = PA1_for
 
 #####  政治事件  #####
 	country_event = {
@@ -10,7 +10,9 @@ add_namespace = PA1_pol
 		is_triggered_only = yes
 		option = {
 			name = PA1_pol.01.a
-			add_stability = 0.05
+			hidden_effect = {
+				country_event = { id = PA1_pol.02 days = 1 }
+			}
 		}
 	}
 	
@@ -22,7 +24,6 @@ add_namespace = PA1_pol
 		is_triggered_only = yes
 		option = {
 			name = PA1_pol.02.a
-			add_stability = 0.05
 		}
 	}
 		
@@ -35,6 +36,10 @@ add_namespace = PA1_pol
 		option = {
 			name = PA1_pol.03.a
 			add_stability = 0.05
+			add_war_support = 0.05
+			hidden_effect = {
+				country_event = { id = PA1_pol.04 days = 7 }
+			}
 		}
 	}
 		
@@ -46,6 +51,274 @@ add_namespace = PA1_pol
 		is_triggered_only = yes
 		option = {
 			name = PA1_pol.04.a
-			add_stability = 0.05
+			add_advisor_role = {
+				character = PA1_Clarice
+				advisor = {
+					slot = political_advisor
+					idea_token = PA1_Clarice
+					traits = { arfoire_praise_virtue }
+					cost = 150
+				}
+			}
+			add_advisor_role = {
+				character = PA1_Hakua_Kuomi
+				advisor = {
+					slot = political_advisor
+					idea_token = PA1_Hakua_Kuomi
+					traits = { GER_monarchist_jurist }
+					cost = 150
+				}
+			}
 		}
 	}
+			
+	country_event = {
+		id = PA1_pol.05
+		title = PA1_pol.05.t
+		desc = PA1_pol.05.d
+		
+		is_triggered_only = yes
+		option = {
+			name = PA1_pol.05.a
+			add_advisor_role = {
+				character = PA1_Clarice
+				advisor = {
+					slot = political_advisor
+					idea_token = PA1_Clarice
+					traits = { arfoire_praise_virtue }
+					cost = 150
+				}
+			}
+			add_advisor_role = {
+				character = PA1_Hakua_Kuomi
+				advisor = {
+					slot = political_advisor
+					idea_token = PA1_Hakua_Kuomi
+					traits = { GER_monarchist_jurist }
+					cost = 150
+				}
+			}
+		}
+	}
+			
+	country_event = {
+		id = PA1_for.01
+		title = PA1_for.01.t
+		desc = PA1_for.01.d
+		
+		is_triggered_only = yes
+		trigger = {
+			MOT = { has_war_with = PAQ }
+			has_idea = PA1_imperial_taxation
+		}
+		option = {
+			name = PA1_pol.01.a
+			add_stability = -0.05
+			add_to_variable = { ubs_load = 200 }
+			custom_effect_tooltip = DEN_increase_200_debt
+			hidden_effect = {
+				country_event = { id = PA1_for.01 days = 180 }
+				PAQ = { country_event = { id = PA1_for.02 days = 3 } }
+			}
+		}
+	}
+				
+	country_event = {
+		id = PA1_for.02
+		title = PA1_for.02.t
+		desc = PA1_for.02.d
+		
+		is_triggered_only = yes
+		option = {
+			name = PA1_pol.02.a
+			add_to_variable = { ubs_save = 200 }
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+		}
+	}
+					
+	country_event = {
+		id = PA1_for.03
+		title = PA1_for.03.t
+		desc = PA1_for.03.d
+		
+		is_triggered_only = yes
+		option = {
+			name = PA1_pol.03.a
+			ai_chance = { base = 7 }
+			add_to_variable = { ubs_save = 100 }
+			custom_effect_tooltip = SOV_get_100_add_to_reserve
+			hidden_effect = {
+				set_variable = { PA1_seeking_trade_partners_var = 1 }
+				FROM = { country_event = { id = PA1_for.04 days = 3 } }
+			}
+		}
+		option = {
+			name = PA1_pol.03.b
+			ai_chance = { base = 3 }
+			hidden_effect = {
+				set_variable = { PA1_seeking_trade_partners_var = 0 }
+				FROM = { country_event = { id = PA1_for.04 days = 3 } }
+			}
+		}
+	}
+						
+	country_event = {
+		id = PA1_for.04
+		title = PA1_for.04.t
+		desc = {
+			text = PA1_for.04.d1
+			trigger = {
+				check_variable = { FROM.PA1_seeking_trade_partners_var = 1 }
+			}
+		}
+		desc = {
+			text = PA1_for.04.d2
+			trigger = {
+				check_variable = { FROM.PA1_seeking_trade_partners_var = 0 }
+			}
+		}
+		
+		is_triggered_only = yes
+		option = {
+			name = PA1_pol.04.a
+			trigger = {
+				check_variable = { FROM.PA1_seeking_trade_partners_var = 1 }
+			}
+			add_political_power = 50
+			add_to_variable = { ubs_save = 100 }
+			custom_effect_tooltip = SOV_get_100_add_to_reserve
+		}
+		option = {
+			name = PA1_pol.04.b
+			trigger = {
+				check_variable = { FROM.PA1_seeking_trade_partners_var = 0 }
+			}
+		}
+	}
+						
+	country_event = {
+		id = PA1_for.05
+		title = PA1_for.05.t
+		desc = PA1_for.05.d
+		
+		is_triggered_only = yes
+		option = {
+			name = PA1_pol.05.a
+			ai_chance = { base = 7 }
+			FROM = {
+				give_resource_rights = {
+					receiver = ROOT
+					state = 852
+					resources = { originium }
+				}
+			}
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = PA1_gemstone_buyer_allowed
+					country_event = { id = PA1_for.06 days = 3 } 
+				}
+			}
+		}
+		option = {
+			name = PA1_pol.05.b
+			ai_chance = { base = 3 }
+			hidden_effect = {
+				FROM = { country_event = { id = PA1_for.06 days = 3 } }
+			}
+		}
+	}
+							
+	country_event = {
+		id = PA1_for.06
+		title = PA1_for.06.t
+		desc = {
+			text = PA1_for.06.d1
+			trigger = {
+				has_country_flag = PA1_gemstone_buyer_allowed
+			}
+		}
+		desc = {
+			text = PA1_for.06.d2
+			trigger = {
+				NOT = { has_country_flag = PA1_gemstone_buyer_allowed }
+			}
+		}
+		
+		is_triggered_only = yes
+		option = {
+			name = PA1_pol.06.a
+			trigger = {
+				has_country_flag = PA1_gemstone_buyer_allowed
+			}
+			add_political_power = 50
+			add_to_variable = { ubs_save = 200 }
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			add_ideas = PA1_selling_gemstone_mines
+		}
+		option = {
+			name = PA1_pol.06.b
+			trigger = {
+				NOT = { has_country_flag = PA1_gemstone_buyer_allowed }
+			}
+		}
+	}
+							
+	country_event = {
+		id = PA1_for.07
+		title = PA1_for.07.t
+		desc = PA1_for.07.d
+		
+		is_triggered_only = yes
+		option = {
+			name = PA1_pol.07.a
+			ai_chance = { base = 7 }
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = PA1_success_relying_on_imperial_trade
+					country_event = { id = PA1_for.08 days = 3 } 
+				}
+			}
+		}
+		option = {
+			name = PA1_pol.07.b
+			ai_chance = { base = 3 }
+			hidden_effect = {
+				FROM = { country_event = { id = PA1_for.08 days = 3 } }
+			}
+		}
+	}
+							
+	country_event = {
+		id = PA1_for.08
+		title = PA1_for.08.t
+		desc = {
+			text = PA1_for.08.d1
+			trigger = {
+				has_country_flag = PA1_success_relying_on_imperial_trade
+			}
+		}
+		desc = {
+			text = PA1_for.08.d2
+			trigger = {
+				NOT = { has_country_flag = PA1_success_relying_on_imperial_trade }
+			}
+		}
+		
+		is_triggered_only = yes
+		option = {
+			name = PA1_pol.08.a
+			trigger = {
+				has_country_flag = PA1_success_relying_on_imperial_trade
+			}
+			add_political_power = 50
+			add_to_variable = { ubs_save = 200 }
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+		}
+		option = {
+			name = PA1_pol.08.b
+			trigger = {
+				NOT = { has_country_flag = PA1_success_relying_on_imperial_trade }
+			}
+		}
+	}
+
