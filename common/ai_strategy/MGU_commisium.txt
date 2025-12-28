@@ -13,38 +13,47 @@
 MGU_unit_production = {
     enable = {
         original_tag = MGU
+       
+    }
+    enable = {
         has_government = communism
+        date < 1940.1.1
     }
     abort = {
-        date > 1940.1.1
+        
     }
     ai_strategy = {
         type = role_ratio	#模板倾向
         id = MGU_infantry
-        value = 100
+        value = 1000
     }
     ai_strategy = {
         type = template_prio	#训练模板倾向
         id = MGU_infantry
-        value = 100
+        value = 1000
     }
     ai_strategy = {
         type = role_ratio	#模板倾向
         id = MGU_armor
-        value = 10
+        value = 0
     }
     ai_strategy = {
         type = template_prio	#训练模板倾向
         id = MGU_armor
-        value = 10
+        value = 0
     }
 }
 
 MGU_unit_production_2 = {
-    enable = {
+    allowed = {
         original_tag = MGU
-        has_government = communism
-        date > 1940.1.1
+    }
+    enable = {        
+        has_government = communism    
+        OR = {
+			has_tech = basic_medium_tank
+			has_tech = basic_medium_tank_chassis
+		}  
     }
     abort = {
         
@@ -62,22 +71,21 @@ MGU_unit_production_2 = {
     ai_strategy = {
         type = role_ratio	#模板倾向
         id = MGU_armor
-        value = 100
+        value = 1000
     }
     ai_strategy = {
         type = template_prio	#训练模板倾向
         id = MGU_armor
-        value = 100
+        value = 1000
     }
 }
 
 MGU_equipment_production = { #默认装备
     allowed = {
         original_tag = MGU
-        has_government = communism
     }
     enable = {
-        always = yes
+       has_government = communism
     }
     ai_strategy = {
         type = equipment_production_factor	#装备倾向
@@ -92,7 +100,7 @@ MGU_equipment_production = { #默认装备
     ai_strategy = {
         type = research_tech	#科技倾向
         id = armor
-        value = 800
+        value = 2000
     }
     ai_strategy = {
         type = research_tech	#科技倾向
@@ -109,46 +117,76 @@ MGU_equipment_production = { #默认装备
         id = electronics
         value = 200
     }
+}
+
+MGU_equipment_production_2 = { #默认装备
+    allowed = {
+        original_tag = MGU
+    }
+    enable = {
+         OR = {
+			has_tech = basic_medium_tank
+			has_tech = basic_medium_tank_chassis
+		}      
+        has_government = communism
+    }
     ai_strategy = {
         type = equipment_production_min_factories
         id = land_medium_tank
-        value = 1
+        value = 10
     }
 }
 
-	MGU_wants_civ = { #39年前优先造民工到200
-		allowed = {
-			original_tag = MGU
-			has_government = communism
-		}
-		enable = {
-			has_country_flag = MTK_Five_Year_Plan_finish_1
-			num_of_civilian_factories < 200
-		}
-		abort = {
-			has_country_flag = MTK_Five_Year_Plan_finish_3
-		}
-		abort_when_not_enabled = yes
-        ai_strategy = { type = building_target id = industrial_complex value = 200 }
+MGU_wants_civ = {
+	allowed = {
+		original_tag = MGU
 	}
-
-	MGU_wants_arms_factory = { #39年后补军工到200
-		allowed = {
-			original_tag = MGU
-            has_government = communism
-		}
-		enable = {
-			has_country_flag = MTK_Five_Year_Plan_finish_3
-		}
-		abort = {
-			num_of_military_factories > 100
-		}
-        abort_when_not_enabled = yes
-        ai_strategy = { type = building_target id = arms_factory value = 200 }
-	    ai_strategy = { type = build_army id = infantry value = 500 }
-	    ai_strategy = { type = force_build_armies value = 300 }
+	enable = {
+		date < 1937.6.1
+		has_war = no
+        has_government = communism
 	}
+	abort_when_not_enabled = yes
+	
+	ai_strategy = {
+		type = building_target
+		id = industrial_complex
+		value = 10000
+	}
+}
 
+MGU_prio_military_even_at_peace = {
+    allowed = {
+		original_tag = MGU
+	}
+	enable = {
+		date > 1937.6.1
+		date < 1942.1.1
+        has_government = communism
+	}
+	abort_when_not_enabled = yes
+	
+	ai_strategy = {
+		type = building_target
+		id = arms_factory
+		value = 10000
+	}
+}
+
+MGU_no_wants_dockyard  = { #别造船厂
+    allowed = {
+        original_tag = MGU
+    }
+    enable = {
+        always = yes
+    }
+    abort_when_not_enabled = yes
+    ai_strategy = {
+        type = building_target 
+        id = dockyard
+        value = -999
+    }
+}
 
 MGU_naval_role_ratios_historical = { #海军
     allowed = {
@@ -276,6 +314,48 @@ MGU_home_land_is_safe = { #不驻扎
 
 }
 
+LHS_unit_buffer_for_asian_threat = {#退守战场
+    allowed = {
+        original_tag = MGU
+    }
+    enable = {
+        has_government = communism
+    }
+
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = put_unit_buffers
+
+        # ratio of total armeis in country to be buffered
+
+        # you can specify an order id. ratio of same orders ids will be share same ratio
+        #order_id = 2
+
+        # states to put garrison orders (if no state is friendly, strat is invalid)
+        states = {
+            501
+            500
+            503
+            894
+        }
+        ratio = 0.2
+        area = europe
+        area = asia
+        area = africa
+        area = south_america
+        area = north_america
+        area = neighbor
+        area = faction
+        # ai areas that the orders will use these buffers in
+        # by default if you have orders in target areas, the buffer will request less units.
+        # you can override this to disable the feature
+        subtract_invasions_from_need = no
+        subtract_fronts_from_need = no
+    }
+}
+
+
 MGU_rush_all = {
     allowed = {
         original_tag = MGU
@@ -314,7 +394,7 @@ MGU_rush_all = {
         type = front_control
         tag = PAQ
         ratio > 0.10
-        priority = 50
+        priority = 100
         ordertype = front
         execution_type = rush
         manual_attack = no
@@ -343,7 +423,7 @@ MGU_AI_brain_up = {
 	    value = 0  # 值=30
     }
     ai_strategy = {
-	    type = defend_ally_borders  # 类型=不防守盟国边境
+	    type = force_defend_ally_borders  # 类型=不防守盟国边境
 	    id = LHS  # ID=意大利
 	    value = 100  # 该策略为二元制，值>0时激活，≤0时停用。
     }
@@ -406,9 +486,9 @@ MGU_AI_to_PAO = {
         NOT = { country_exists = PAQ }
     }
 
-	ai_strategy = { #不要在雨林吃大分
+	ai_strategy = { #不要躲在雨林吃大分
 		type = force_concentration_target_weight
-		value = -100
+		value = -1000
 		
 		state = 504
 		state = 505
