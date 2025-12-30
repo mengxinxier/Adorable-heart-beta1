@@ -11,7 +11,6 @@ PAM_undead_gambling_category = {
             }
         }
         days_remove = 60
-        fire_only_once = yes
 
         #修正
         modifier = {
@@ -52,7 +51,6 @@ PAM_undead_gambling_category = {
             }
         }
         days_remove = 45
-        fire_only_once = yes
 
         #修正
         modifier = {
@@ -77,6 +75,46 @@ PAM_undead_gambling_category = {
         }
     }
 
+    PAM_exchange_bad_luck = {
+        icon = GFX_exchange_bad_luck
+        visible = {
+            has_completed_focus = PAM_lessons_from_scars
+        }
+        available = {
+            custom_trigger_tooltip = {
+                tooltip =PAM_pj_tt
+                check_variable = { pam_pj > 4 }
+            }
+            custom_trigger_tooltip = {
+                tooltip =PAM_sb_tt
+                check_variable = { pam_sb > 4 }
+            }
+        }
+        days_remove = 15
+
+        #修正
+        modifier = {
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+        }
+        complete_effect = {
+            add_to_variable = { var = pam_pj value = -5 }
+            custom_effect_tooltip = PAM_pj_tt2
+            add_to_variable = { var = pam_sb value = -5 }
+            custom_effect_tooltip = PAM_sb_tt2
+        }
+        remove_effect = {
+            add_to_variable = { var = pam_sl value = 1 }
+            custom_effect_tooltip = PAM_sl_tt4
+        }
+        cancel_trigger = {
+
+        }
+        ai_will_do = {
+            factor = 100
+        }
+    }
+
     PAM_cash_in_military_luck = {
         icon = GFX_cash_in_military_luck
         visible = {
@@ -89,7 +127,6 @@ PAM_undead_gambling_category = {
             }
         }
         days_remove = 60
-        fire_only_once = yes
 
         #修正
         modifier = {
@@ -135,6 +172,9 @@ PAM_undead_gambling_category = {
                     }
                 }
                 NOT = {
+                    TAG = ZDW
+                    TAG = SAJ
+                    TAG = WL1
                     is_in_faction_with = ROOT
                     has_war_with = PAM
                     TAG = CHL
@@ -167,10 +207,10 @@ PAM_undead_pacification_category = {
         }
         cost = 50
         days_remove = 15
-        fire_only_once = yes
 
         #修正
         modifier = {
+            industrial_capacity_factory = -0.1
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
         }
@@ -228,6 +268,7 @@ PAM_undead_pacification_category = {
 
         #修正
         modifier = {
+            industrial_capacity_factory = -0.05
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
         }
@@ -273,15 +314,8 @@ PAM_undead_pacification_category = {
             }
         }
         remove_effect = {
-            random_owned_controlled_state = {
-                limit = {
-                    is_core_of = ROOT
-                }
-                add_resource = {
-                    type = Essence
-                    amount = 2
-                }
-            }
+            add_to_variable = { var = Essence value = 2 }
+            custom_effect_tooltip = Essence_TT
         }
         cancel_trigger = {
         }
@@ -333,7 +367,6 @@ PAM_undead_pacification_category = {
             has_equipment = {wangling_equipment > 4999}
         }
         days_remove = 30
-        fire_only_once = yes
 
         #修正
         modifier = {
@@ -343,17 +376,19 @@ PAM_undead_pacification_category = {
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
         }
         complete_effect = {
+            add_ideas = PAM_mobilize_undead_looters
             add_equipment_to_stockpile = {
                 type = wangling_equipment
                 amount = -5000
             }
         }
         remove_effect = {
+            remove_ideas = PAM_mobilize_undead_looters
             add_unit_bonus = {
                 xrkl = {
-                    max_organisation = 1
                     soft_attack = 0.01
                     hard_attack = 0.01
+                    max_organisation = 1
                 }
             }
             add_to_variable = {
@@ -391,14 +426,6 @@ PAM_undead_pacification_category = {
         #修正
         modifier = {
             production_speed_air_base_factor = 0.25
-            equipment_bonus = {
-                infantry_equipment = {
-                    build_cost_ic = -0.2
-                    breakthrough = 0.1
-                    reliability = -0.2
-                    instant = yes
-                }
-            }
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
         }
@@ -426,27 +453,36 @@ PAM_undead_pacification_category = {
         }
         available = {
             has_equipment = {wangling_equipment > 4999}
+            custom_trigger_tooltip = {
+                tooltip =Essence_tt
+                check_variable = { Essence > 9 }
+            }
         }
-        days_remove = 90
-        fire_only_once = yes
+        days_remove = 180
 
         #修正
         modifier = {
-            industrial_capacity_factory = -0.1
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
         }
         complete_effect = {
+            add_ideas = PAM_forge_soul_armor
             add_equipment_to_stockpile = {
                 type = wangling_equipment
                 amount = -5000
             }
+            add_to_variable = { var = Essence value = -10 }
+            custom_effect_tooltip = Essence_TT2
+            if = {
+                limit = {
+                    not = {has_country_flag = PAM_ynzj}
+                }
+                country_event = { id = PAM.67 }
+            }
+            set_country_flag = PAM_ynzj
         }
         remove_effect = {
-            set_technology = {
-                wangling_armor = 1
-            }
-            custom_effect_tooltip = wangling_armor_tt
+            remove_ideas = PAM_forge_soul_armor
         }
         cancel_trigger = {
 
@@ -463,27 +499,36 @@ PAM_undead_pacification_category = {
         }
         available = {
             has_equipment = {wangling_equipment > 4999}
+            custom_trigger_tooltip = {
+                tooltip =Essence_tt
+                check_variable = { Essence > 9 }
+            }
         }
-        days_remove = 90
-        fire_only_once = yes
+        days_remove = 180
 
         #修正
         modifier = {
-            industrial_capacity_factory = -0.1
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
         }
         complete_effect = {
+            add_ideas = PAM_weaving_death_shroud
             add_equipment_to_stockpile = {
                 type = wangling_equipment
                 amount = -5000
             }
+            add_to_variable = { var = Essence value = -10 }
+            custom_effect_tooltip = Essence_TT2
         }
         remove_effect = {
-            set_technology = {
-                air_undead_skin = 1
+            remove_ideas = PAM_weaving_death_shroud
+            if = {
+                limit = {
+                    not = {has_country_flag = PAM_swwm}
+                }
+                country_event = { id = PAM.68 }
             }
-            custom_effect_tooltip = air_undead_skin_tt
+            set_country_flag = PAM_swwm
         }
         cancel_trigger = {
 
@@ -500,27 +545,37 @@ PAM_undead_pacification_category = {
         }
         available = {
             has_equipment = {wangling_equipment > 4999}
+            custom_trigger_tooltip = {
+                tooltip =Essence_tt
+                check_variable = { Essence > 9 }
+            }
         }
-        days_remove = 90
-        fire_only_once = yes
+        days_remove = 180
 
         #修正
         modifier = {
-            industrial_capacity_factory = -0.1
+
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
         }
         complete_effect = {
+            add_ideas = PAM_laying_bone_keel
             add_equipment_to_stockpile = {
                 type = wangling_equipment
                 amount = -5000
             }
+            add_to_variable = { var = Essence value = -10 }
+            custom_effect_tooltip = Essence_TT2
         }
         remove_effect = {
-            set_technology = {
-                ship_undead_keel = 1
+            remove_ideas = PAM_laying_bone_keel
+            if = {
+                limit = {
+                    not = {has_country_flag = PAM_hgjj}
+                }
+                country_event = { id = PAM.69 }
             }
-            custom_effect_tooltip = ship_undead_keel_tt
+            set_country_flag = PAM_hgjj
         }
         cancel_trigger = {
 
@@ -529,7 +584,6 @@ PAM_undead_pacification_category = {
             factor = 100
         }
     }
-
 }
 
 PAM_lueduo = {
@@ -604,6 +658,11 @@ PAM_lueduo = {
         custom_cost_text = decision_cost_CP_20
         custom_cost_trigger = {
             command_power > 20
+        }
+        complete_effect = {
+            hidden_effect = {
+                add_command_power = -20
+            }
         }
         days_remove = 7
         target_trigger = {
@@ -701,6 +760,11 @@ PAM_lueduo = {
         modifier = {
         }
         targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+        }
+        complete_effect = {
+            hidden_effect = {
+                add_command_power = -20
+            }
         }
         remove_effect = {
             add_to_variable = {
@@ -842,6 +906,129 @@ PAM_lueduo = {
             factor = 1000
         }
     }
+    PAM_feed_the_struggling_wolves = {
+        allowed = {
+            original_tag = PAM
+        }
+        icon = GFX_feed_the_struggling_wolves
+        days_remove = 30
+        available = {
+            has_equipment = {infantry_equipment > 4999}
+            FROM = {
+                has_defensive_war = yes
+                is_subject = no
+                not = {
+                    has_war_with = PAM
+                }
+                or = {
+                    has_government = fascism
+                    has_government = communism
+                }
+            }
+        }
+        target_trigger = {
+            FROM = {
+                has_defensive_war = yes
+                is_subject = no
+                not = {
+                    has_war_with = PAM
+                }
+                or = {
+                    has_government = fascism
+                    has_government = communism
+                }
+            }
+        }
+        visible = {
+            has_completed_focus = PAM_wydxsw
+        }
+        complete_effect = {
+            if = {
+                limit = {
+                    FROM = {
+                        has_government = communism
+                    }
+                }
+                add_unit_bonus = {
+                    youjibudui = {
+                        soft_attack = 0.02
+                        defense = 0.02
+                    }
+                }
+                effect_tooltip = {
+                    PAM = {
+                        send_equipment = {
+                            amount = 5000
+                            type = infantry_equipment
+                            target = FROM
+                        }
+                    }
+                }
+                FROM = {
+                    country_event = { id = PAM.73 }
+                }
+            }
+            if = {
+                limit = {
+                    FROM = {
+                        has_government = fascism
+                    }
+                }
+                add_unit_bonus = {
+                    wanglng2 = {
+                        soft_attack = 0.02
+                        defense = 0.02
+                    }
+                }
+                effect_tooltip = {
+                    PAM = {
+                        send_equipment = {
+                            amount = 5000
+                            type = infantry_equipment
+                            target = FROM
+                        }
+                    }
+                }
+                FROM = {
+                    country_event = { id = PAM.73 }
+                }
+            }
+        }
+        remove_effect = {
+            if = {
+                limit = {
+                    FROM = {
+                        has_government = communism
+                    }
+                }
+                custom_effect_tooltip = PAM.73_TT
+                hidden_effect = {
+                    add_unit_bonus = {
+                        youjibudui = {
+                            soft_attack = -0.02
+                            defense = -0.02
+                        }
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    FROM = {
+                        has_government = fascism
+                    }
+                }
+                custom_effect_tooltip = PAM.73_TT2
+                hidden_effect = {
+                    add_unit_bonus = {
+                        wangling2 = {
+                            soft_attack = -0.02
+                            defense = -0.02
+                        }
+                    }
+                }
+            }
+        }
+    }
     PAM_jingong_FROM = {
         priority = 9999
         icon = GFX_PAM_Wolf
@@ -959,4 +1146,124 @@ PAM_lueduo = {
         cancel_effect = {
         }
     }
+}
+PAM_galgame = {
+    PAM_mission_delegate_command = {
+        icon = GFX_mission_delegate_command
+        visible = {
+            has_country_flag = PAM_yehuorw1
+        }
+        available = {
+
+        }
+        custom_cost_text = decision_cost_CP_20
+        custom_cost_trigger = {
+            command_power > 20
+        }
+        days_remove = 30
+        fire_only_once = yes
+        #修正
+        modifier = {
+        }
+        targeted_modifier = { 
+            tag = ZDW
+            defense_bonus_against = 0.2
+            #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+        }
+        complete_effect = {
+            hidden_effect = {
+                add_command_power = -20
+            }
+            army_experience = 50
+        }
+        remove_effect = {
+            add_to_variable = {
+                affection_of_xiaofeng_var = 15
+                tooltip = affection_of_xiaofeng_var_tt
+            }
+        }
+        cancel_trigger = {
+        }
+        ai_will_do = {
+            factor = 100
+        }
+    }
+
+    PAM_mission_feed_the_mad_dog = {
+        icon = GFX_mission_feed_the_mad_dog
+        visible = {
+            has_country_flag = PAM_yehuorw1
+        }
+        available = {
+            has_equipment = {
+                infantry_equipment >499
+            }
+        }
+        cost = 25
+        days_remove = 30
+        fire_only_once = yes
+        #修正
+        modifier = {
+            army_morale_factor = 0.2
+            org_loss_at_low_org_factor = -0.2
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+        }
+        complete_effect = {
+            add_equipment_to_stockpile = {
+                type =infantry_equipment
+                amount = -500
+            }
+        }
+        remove_effect = {
+            add_to_variable = {
+                affection_of_xueyi_var = 10
+                tooltip = affection_of_xueyi_var_tt
+            }
+        }
+        cancel_trigger = {
+        }
+        ai_will_do = {
+            factor = 100
+        }
+    }
+
+    PAM_mission_candy_and_recon = {
+        icon = GFX_mmission_candy_and_recon
+        visible = {
+            has_country_flag = PAM_yehuorw1
+        }
+        available = {
+        }
+        COST = 10
+        days_remove = 30
+        fire_only_once = yes
+        #修正
+        modifier = {
+            intel_from_combat_factor = 0.2
+            army_intel_factor = 0.2
+            intel_network_gain_factor = 0.2
+        }
+        targeted_modifier = {
+
+            #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+        }
+        complete_effect = {
+            hidden_effect = {
+                add_command_power = -20
+            }
+        }
+        remove_effect = {
+            add_to_variable = {
+                affection_of_xiaoguo_var = 20
+                tooltip = affection_of_xiaoguo_var_tt
+            }
+        }
+        cancel_trigger = {
+        }
+        ai_will_do = {
+            factor = 100
+        }
+    }
+
 }

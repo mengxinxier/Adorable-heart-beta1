@@ -27,7 +27,41 @@ LFC_decision_l_0_debug = { #debug决议
 
 		}
 		complete_effect = {  
-
+			add_equipment_to_stockpile = { #卡车
+				type = motorized_equipment
+				amount = 2000
+				producer = ENG
+			}
+			add_equipment_to_stockpile = { #骑士装甲
+				type = construct_knight_equipment
+				amount = 100
+				producer = ENG
+			}
+			add_equipment_to_stockpile = { #步枪
+				type = infantry_equipment
+				amount = 10000
+				producer = ENG
+			}
+			add_equipment_to_stockpile = { #火炮
+				type = artillery_equipment
+				amount = 2000
+				producer = ENG
+			}
+			add_equipment_to_stockpile = { #支援装备
+				type = support_equipment
+				amount = 2000
+				producer = ENG
+			}
+			add_equipment_to_stockpile = { #at炮
+				type = anti_tank_equipment
+				amount = 2000
+				producer = ENG
+			}
+			add_equipment_to_stockpile = { #防空
+				type = anti_air_equipment
+				amount = 2000
+				producer = ENG
+			}
 		}
 		remove_effect = {
 		}
@@ -45,7 +79,7 @@ LFC_decision_l_1_ai = { #ai决议
 			factor = 1000			
 		}
 		available = {
-			date > 1938.1.1													
+			date > 1937.1.1													
 		}
 		complete_effect = {  
 			every_state = {
@@ -64,9 +98,224 @@ LFC_decision_l_1_ai = { #ai决议
 					
 		}
 	}
+	LFC_decision_ai_tunbingyaojing = {	#吞并妖精
+		icon = GFX_decision_generic_decision		
+		cost = 0
+		fire_only_once = yes				
+		ai_will_do = {
+			factor = 1000			
+		}
+		available = {
+			date > 1936.12.1	
+			ELF = {
+				has_war_with = PAQ
+			}												
+		}
+		complete_effect = {  
+			every_state = {
+				limit = {
+					or = {
+						is_core_of = EDW
+						is_core_of = EBS
+						state = 1033
+						state = 1195
+					}
+				}
+				add_core_of = LFC			
+			}
+
+			annex_country = { 
+				target = EDW 
+				transfer_troops = no 
+			}
+			annex_country = { 
+				target = EBS 
+				transfer_troops = no 
+			}
+			LFC = {
+				transfer_state = 1033
+				transfer_state = 1195
+			}
+		}
+		remove_effect = {
+					
+		}
+	}
+	LFC_decision_ai_zyjianzhenying = {	#组建阵营
+		icon = GFX_decision_generic_decision		
+		cost = 0
+		fire_only_once = yes				
+		ai_will_do = {
+			factor = 1000			
+		}
+		available = {
+			date > 1936.1.3	
+			MGU = {
+				or = {
+					has_government = democratic
+					has_government = neutrality
+				}			
+			}							
+		}
+		complete_effect = {  
+			create_faction_from_template = faction_template_Paris_Entente
+			set_faction_name = "神滨-新安普顿协定"
+
+			MGU = {
+				country_event = LFC_event.1
+			}
+		}
+		remove_effect = {
+					
+		}
+	}
 
 
 
 }
 
+LFC_decision_l_2_Rainforest_Exploration = {  #雨林探索  
+ #debug
+	LFC_decision_forest_debug_Rainforest_Acting = { #debug开始雨林探索
+		icon = GFX_decision_gre_investment_decisions
+		cost = 0
+		days_remove = 0
+		fire_only_once = no
 
+		ai_will_do = {
+			factor = 0			
+		} 
+
+		visible = { 
+			is_debug = yes
+		} 
+
+		available = { 
+			is_debug = yes
+		} 
+ 
+		complete_effect = {  		
+			set_country_flag = FLAG_LFC_Rainforest_Acting
+		}   
+      
+		modifier = { 
+      
+	   	}      
+ 
+		remove_effect = { 
+						 
+		} 
+	}  
+	LFC_decision_forest_debug_Rainforest_clr = { #debug取消雨林探索
+		icon = GFX_decision_gre_investment_decisions
+		cost = 0
+		days_remove = 0
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 0			
+		}
+
+		visible = { 
+			is_debug = yes
+		} 
+
+		available = {
+			is_debug = yes
+		}
+ 
+		complete_effect = {  		
+			clr_country_flag = FLAG_LFC_Rainforest_Acting
+		}
+
+		modifier = {
+
+	   	}
+
+		remove_effect = {
+						
+		}
+	} 
+
+ #雨林勘探
+ 	LFC_decision_forest_yulinkantan = { #派出勘探队
+		icon = GFX_decision_generic_construction
+		fire_only_once = yes		
+		days_remove = 0
+		cost = 20
+		on_map_mode = map_and_decisions_view
+		state_target = yes
+		visible = {
+			FROM = {
+				any_neighbor_state = {
+					is_core_of = LFC				
+				}
+				has_dynamic_modifier = LFC_state_dynamic_modifier_Rainforest_wktdq
+			}
+			or = {
+				check_variable = {
+					VAR_LFC_gui_Rainforest_ylts_button = 1
+				}
+				is_ai = yes
+			}
+		}	
+		ai_will_do = {
+			factor = 1000
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					state = 1203
+					state = 1204
+					state = 1205
+					#state = 1206
+					state = 1207
+					state = 1208
+					#state = 504
+					#state = 505
+					state = 280
+				}			
+			}
+		}
+		available = {
+			not = {
+				has_country_flag = FLAG_LFC_Rainforest_Acting
+			}
+			custom_trigger_tooltip = {
+				tooltip = ENG_tooltip_var_hcp_dayu_100
+				check_variable = {
+					ubs_save > 100
+				}
+			}
+			has_equipment = {
+				infantry_equipment > 1000
+			}	
+			has_equipment = {
+				support_equipment > 40
+			}	
+			has_manpower > 2000 
+		}
+		complete_effect = {  
+			country_event = LFC_event_forest.1
+			#set_country_flag = FLAG_LFC_Rainforest_Acting
+			if = {
+				limit = {
+					FROM = {
+						state = 1203
+					}
+				}
+				set_variable = {
+					VAR_LFC_Rainforest_state = 1203
+				}
+			}
+		}	
+		modifier = {
+
+	   	}
+		remove_effect = {
+			
+		}
+	}
+
+
+}

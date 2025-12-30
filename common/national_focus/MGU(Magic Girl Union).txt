@@ -12,6 +12,7 @@ focus_tree = {
 	
 	default = no
 	#shared_focus = AUF_NFA_American_Unification
+	shared_focus = MGU_LHS_shared_focus_open 
 	
 	continuous_focus_position = {
 		x = 200
@@ -324,8 +325,31 @@ focus_tree = {
 		cancelable = no
 		completion_reward = {
 		set_global_flag = MGU_Homura_COUP
-		#	clr_country_flag = MST_SL_Kaname_Madoka
-		#	set_country_flag = MST_SL_Kaname_Madoka_COUP
+
+			hidden_effect = {
+				remove_country_leader_role = {
+                	character = MGU_Tomoe_Mami
+                	ideology = military_politicism
+          	  	}
+			}
+            add_country_leader_role = {
+                character = "MGU_akemi_homura"
+				country_leader = {
+                    ideology = military_politicism
+                    desc = "POLITICS__DESC"
+                    expire = "1960.1.1.1"
+                    traits = {
+                        MST_Arms_reserves
+                        MST_The_maze_of_engraved_return
+                        MST_The_struggle_against_fate
+                    }
+                }
+                promote_leader = yes
+            }
+			clr_country_flag = MGU_qihai_baqiandai_flag
+			set_country_flag = MST_SL_Kaname_Madoka_COUP
+			hidden_effect = { add_ideas = MGU_hidden_idea_007 }
+
 		set_variable = { global.MGU_homura_tired = 170 }
 		MST = {
 			MGU_Akemi_Homura = { set_nationality = MGU }
@@ -757,13 +781,14 @@ focus_tree = {
 		}
 		cancelable = no
 		available = {
+			has_country_flag = MGU_yuki_stop
 			MGS = {
 				OR = {
 					exists = no
 					is_subject_of = MGU
 				}
-			}
-		}
+			}	
+	}
 		allow_branch = {
 			
 		}
@@ -842,8 +867,43 @@ focus_tree = {
                 country_event = MGU_event.8
             #    country_event = { id = magicunion.1185 days = 21 }
 			}
+			IF = {#如果爆炸案发生
+				limit = {
+					NOT = {
+						has_country_flag = MGU_yuki_enter
+					}
+				}
 			country_event = { id = MGU_event.9 days = 7 }
             #    country_event = { id = magicunion.11611 days = 35 }
+		}
+	}
+	}
+	focus = {
+		id = MGU_yuki_enter_the_focus_tree
+		icon = MGU_yuki_enter_the_focus_tree
+		x = 5
+		y = 5
+		cost = 2
+		ai_will_do = {
+			factor = 15
+		}
+		prerequisite = {
+			focus = MGU_Send
+		}
+		cancelable = no
+		available = {
+			has_country_flag = MGU_yuki_enter
+		}
+		allow_branch = {
+			has_completed_focus = MGU_yuki_enter_the_focus_tree
+		}
+		completion_reward = {
+			custom_effect_tooltip = MGU_yuki_enter_the_focus_tree_name
+			country_event = {
+				id = yuki.8
+				days = 2
+			}
+			mark_focus_tree_layout_dirty = yes
 		}
 	}
 
@@ -2032,7 +2092,7 @@ focus_tree = {
 		   focus = MGU_Next
 		}
 		allow_branch = {
-			has_country_flag = MGU_load_democratic
+			always = no # 这里禁用了 这里这里这里
 		}
 
 		available = {
@@ -2069,7 +2129,7 @@ focus_tree = {
 		   focus = MGU_Next
 		}
 		allow_branch = {
-			has_country_flag = MGU_load_democratic
+			always = no # 这里禁用了 这里这里这里
 		}
 		available = {
 		    has_completed_focus = MGU_Next
@@ -2105,7 +2165,7 @@ focus_tree = {
 		   focus = MGU_Next
 		}
 		allow_branch = {
-			has_country_flag = MGU_load_democratic
+			always = no # 这里禁用了 这里这里这里
 		}
 		available = {
 		    has_completed_focus = MGU_Next
@@ -2141,7 +2201,7 @@ focus_tree = {
 		   focus = MGU_Next
 		}
 		allow_branch = {
-			has_country_flag = MGU_load_democratic
+			always = no # 这里禁用了 这里这里这里
 		}
 		available = {
 		    has_completed_focus = MGU_Next
@@ -2386,7 +2446,7 @@ focus_tree = {
             focus = TBMGU_MZ_0
 		}
 		allow_branch = {
-		#    has_country_flag = MGU_Pres_Nana_flag
+		    has_country_flag = MGU_Pres_Kana_flag
 		}
 		available = {
 		    has_completed_focus = MGU_Next
@@ -2412,7 +2472,7 @@ focus_tree = {
             focus = TBMGU_MZ_0
 		}
 		allow_branch = {
-		#    has_country_flag = MGU_Pres_Nana_flag
+		#    has_country_flag = MGU_Pres_Kana_flag
 		}
 		available = {
 		    has_completed_focus = MGU_Next
@@ -2438,7 +2498,7 @@ focus_tree = {
             focus = TBMGU_MZ_0
 		}
 		allow_branch = {
-		#    has_country_flag = MGU_Pres_Nana_flag
+		#    has_country_flag = MGU_Pres_Kana_flag
 		}
 		available = {
 		    has_completed_focus = MGU_Next
@@ -2498,7 +2558,7 @@ focus_tree = {
             focus = TBMGU_MZ_0
 		}
 		allow_branch = {
-		#    has_country_flag = MGU_Pres_Nana_flag
+		    has_country_flag = MGU_Pres_Nana_flag
 		}
 		available = {
 		    has_completed_focus = MGU_Next
@@ -2603,7 +2663,11 @@ focus_tree = {
 			has_country_flag = MGU_load_democratic
 		}
 		available = {
-		    has_completed_focus = MGU_Next
+			AND = {
+				has_country_flag = MGU_yuki_stop
+				has_completed_focus = MGU_Next
+			}
+		    
         #    custom_trigger_tooltip = {
         #        tooltip = MGU_Next_2_txt
         #        has_country_flag = MGU_Next_2_txt_flag
@@ -2979,7 +3043,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-           create_wargoal = { target = CHL type = take_state_focus }
+           create_wargoal = { target = LHS type = take_state_focus }
 		}
 	}
 	focus = { #摄冠
@@ -4437,7 +4501,7 @@ focus_tree = {
 		bypass = {
 		}
 		completion_reward = {
-			add_stability = 0.20
+			add_stability = 0.10
 			set_capital = {
 				state = 501
 			}
@@ -4452,10 +4516,10 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_02
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_shiqiye_01
 		x = 10
 		y = 4
-		cost = 2
+		cost = 1
 		ai_will_do = {
 			factor = 1
 		}
@@ -4480,7 +4544,9 @@ focus_tree = {
 
 		completion_reward = {
 			country_event = MTK_event.33
-			
+			add_war_support = 0.05
+			add_stability = 0.05
+			add_political_power = 75
 			if = {
 				limit =  {  has_idea = MTK_tired_people }
 				hidden_effect = {
@@ -4498,10 +4564,10 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_04
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_168_02
 		x = 22
 		y = 4
-		cost = 2
+		cost = 1
 		ai_will_do = {
 			factor = 1
 		}
@@ -4529,6 +4595,8 @@ focus_tree = {
 
 		completion_reward = {
 			country_event = MTK_event.30
+			add_stability = 0.05
+			add_political_power = 75
 			MST = {
 				MGU_Chizu_Ranka = { set_nationality = MGU }
 			}
@@ -4555,7 +4623,7 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_05
-		icon = GFX_focus_unknown
+		icon = GFX_qiru
 		x = 13
 		y = 5
 		cost = 2
@@ -4585,6 +4653,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_political_power = 50
 			add_ideas = MTK_lixin_for_heart
 			if = {
 				limit =  {  has_idea = MTK_tired_people }
@@ -4604,7 +4673,7 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_06
-		icon = GFX_focus_unknown
+		icon = GFX_qilai
 		x = 19
 		y = 5
 		cost = 2
@@ -4634,6 +4703,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_political_power = 50
 			add_ideas = MTK_liming_for_people
 			if = {
 				limit =  {  has_idea = MTK_tired_people }
@@ -4687,6 +4757,8 @@ focus_tree = {
 
 		completion_reward = {
 			set_cosmetic_tag = MGU_MGC_commisium
+			add_stability = 0.10
+			add_war_support = 0.10
 		}
 	}
 	
@@ -4723,6 +4795,8 @@ focus_tree = {
 
 		completion_reward = {
 			remove_ideas = MGU_D_crisis_of_confidence_0
+			add_stability = 0.05
+			add_war_support = 0.05
 			if = {
 				limit =  {  has_idea = MTK_tired_people }
 				hidden_effect = {
@@ -4733,14 +4807,21 @@ focus_tree = {
 				}
 				custom_effect_tooltip = MTK_tired_people_reduced_by_90_days
 			}
-			
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}			
+			}
 		}
 	}
 
 
 	focus = { 
 		id = MTK_com_09
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_shiqiye_03
 		x = 12
 		y = 6
 		cost = 1
@@ -4791,7 +4872,7 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_10
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_168_01
 		x = 20
 		y = 6
 		cost = 1
@@ -4840,10 +4921,10 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_11
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_shiqiye_04
 		x = 14
 		y = 7
-		cost = 3
+		cost = 2
 		ai_will_do = {
 			factor = 1
 		}
@@ -4887,10 +4968,10 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_12
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_xiaowolf
 		x = 13
 		y = 8
-		cost = 2
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -4917,6 +4998,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_stability = 0.05
 			if = {
 				limit =  {  has_idea = MTK_tired_people }
 				hidden_effect = {
@@ -4927,15 +5009,23 @@ focus_tree = {
 				}
 				custom_effect_tooltip = MTK_tired_people_reduced_by_90_days
 			}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+					add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}			
+			}			
 		}
 	}
 
 	focus = { 
 		id = MTK_com_13
-		icon = GFX_focus_unknown
+		icon = GFX_dlhy
 		x = 15
 		y = 8
-		cost = 2
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -4962,6 +5052,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_stability = 0.05
 			if = {
 				limit =  {  has_idea = MTK_tired_people }
 				hidden_effect = {
@@ -4972,16 +5063,24 @@ focus_tree = {
 				}
 				custom_effect_tooltip = MTK_tired_people_reduced_by_90_days
 			}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+					add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes 
+				}			
+			}			
 		}
 	}
 
 
 	focus = { 
 		id = MTK_com_15
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_168_03
 		x = 18
 		y = 7
-		cost = 3
+		cost = 2
 		ai_will_do = {
 			factor = 1
 		}
@@ -5032,10 +5131,10 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_16
-		icon = GFX_focus_unknown
+		icon = GFX_lgch
 		x = 17
 		y = 8
-		cost = 2
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -5063,6 +5162,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_stability = 0.05
 			if = {
 				limit =  {  has_idea = MTK_tired_people }
 				hidden_effect = {
@@ -5073,15 +5173,23 @@ focus_tree = {
 				}
 				custom_effect_tooltip = MTK_tired_people_reduced_by_90_days
 			}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+					add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes 
+				}			
+			}			
 		}
 	}
 
 	focus = { 
 		id = MTK_com_17
-		icon = GFX_focus_unknown
+		icon = GFX_ghgs
 		x = 19
 		y = 8
-		cost = 2
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -5109,6 +5217,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_stability = 0.05
 			if = {
 				limit =  {  has_idea = MTK_tired_people }
 				hidden_effect = {
@@ -5118,6 +5227,14 @@ focus_tree = {
 					}
 				}
 				custom_effect_tooltip = MTK_tired_people_reduced_by_90_days
+			}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+					add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}			
 			}
 		}
 	}
@@ -5128,7 +5245,7 @@ focus_tree = {
 		icon = GFX_focus_focus_fra_revolution_utmost
 		x = 16
 		y = 9
-		cost = 5
+		cost = 4
 		ai_will_do = {
 			factor = 1
 		}
@@ -5136,7 +5253,11 @@ focus_tree = {
             always = yes
            
 		}
-
+		select_effect = {
+			hidden_effect = {
+				scoped_play_song = "致以无名的抗争者"	
+			}
+		}
 
 		allow_branch = {
 			
@@ -5162,18 +5283,7 @@ focus_tree = {
 		
 
 		completion_reward = {
-			if = {			
-				limit = {
-					has_idea = MTK_resist_to_the_last_idea_3
-				}
-				swap_ideas = {
-					remove_idea = MTK_resist_to_the_last_idea_3
-					add_idea = MTK_resist_to_the_last_idea_6
-				}	
-			}
-			else = {
-				add_ideas = MTK_resist_to_the_last_idea_3
-			}
+			add_ideas = MTK_resist_to_the_last_idea_3
 		}
 	}
 
@@ -5182,7 +5292,7 @@ focus_tree = {
 		icon = GFX_focus_generic_join_comintern
 		x = 15
 		y = 10
-		cost = 3
+		cost = 1
 		ai_will_do = {
 			factor = 1
 		}
@@ -5238,20 +5348,21 @@ focus_tree = {
 			factor = 1
 		}
 		available = {
-            always = yes
-           
+            has_global_flag = lwnygm
 		}
 
 		allow_branch = {
 			
 		}
 
+		bypass = {	
+			MGU = { is_in_faction_with = LHS }	
+		}
+
 		prerequisite = {
 			focus = MTK_com_19
 		}
 
-
-		
 		mutually_exclusive = {
            
 		}
@@ -5287,8 +5398,6 @@ focus_tree = {
 
 		prerequisite = {
 			focus = MTK_com_27
-		}
-		prerequisite = {
 			focus = MTK_com_20
 		}
 
@@ -5303,22 +5412,17 @@ focus_tree = {
 		
 
 		completion_reward = {
-			if = {			
-				limit = {
-					has_idea = MTK_resist_to_the_last_idea_5
-				}
-				swap_ideas = {
-					remove_idea = MTK_resist_to_the_last_idea_5
-					add_idea = MTK_resist_to_the_last_idea_7
-				}	
-			}
-			else = {
-				add_ideas = MTK_resist_to_the_last_idea_5
-			}
+
+			add_ideas = MTK_resist_to_the_last_idea_5
+
 			every_army_leader = {
 				add_attack = 1	
 				add_max_trait = 1
 			}
+			swap_ideas = {
+				remove_idea = MTK_magic_bad
+				add_idea = MTK_resist_magic_bad
+			}			
 		}
 	}
 
@@ -5407,7 +5511,7 @@ focus_tree = {
 		icon = GFX_focus_NOR_empower_sivorg
 		x = 0
 		y = 1
-		cost = 3
+		cost = 2
 		ai_will_do = {
 			factor = 1
 		}
@@ -5444,8 +5548,8 @@ focus_tree = {
 		id = MTK_com_eco_02
 		icon = GFX_focus_generic_land_reclamation
 		x = -4
-		y = 2
-		cost = 2
+		y = 3
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -5459,7 +5563,7 @@ focus_tree = {
 		}
 
 		prerequisite = {
-			focus = MTK_com_eco_01
+			focus = MTK_com_eco_30
 		}
 		
 		mutually_exclusive = {
@@ -5481,6 +5585,14 @@ focus_tree = {
 			add_to_variable = {	MTK_economy_production_speed_infrastructure_factor = 0.05}
 			add_to_variable = {	MTK_economy_consumer_goods_factor = 0.025}
 			add_to_variable = {	MTK_economy_production_factory_start_efficiency_factor = 0.025}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}			
+			}
 		}
 	}	   
 	   
@@ -5488,8 +5600,8 @@ focus_tree = {
 		id = MTK_com_eco_03
 		icon = GFX_focus_generic_military_industry
 		x = 0
-		y = 2
-		cost = 2
+		y = 3
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -5503,7 +5615,7 @@ focus_tree = {
 		}
 
 		prerequisite = {
-			focus = MTK_com_eco_01
+			focus = MTK_com_eco_30
 		}
 		
 		mutually_exclusive = {
@@ -5522,9 +5634,15 @@ focus_tree = {
 					add_idea = MTK_economy_idea_7
 				}
 			}
-			add_to_variable = {	MTK_economy_supply_consumption_factor = -0.05}
-			add_to_variable = {	MTK_economy_supply_factor = 0.10}
-			add_to_variable = {	MTK_economy_supply_node_range = 0.10}
+			add_to_variable = {	MTK_economy_supply_consumption_factor = 0.05 }
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+					add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes 
+				}			
+			}
 		}
 	}	   
 	
@@ -5532,8 +5650,8 @@ focus_tree = {
 		id = MTK_com_eco_04
 		icon = GFX_focus_generic_modernize_industry
 		x = 4
-		y = 2
-		cost = 2
+		y = 3
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -5547,7 +5665,7 @@ focus_tree = {
 		}
 
 		prerequisite = {
-			focus = MTK_com_eco_01
+			focus = MTK_com_eco_30
 		}
 		
 		mutually_exclusive = {
@@ -5568,15 +5686,23 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_economy_production_speed_industrial_complex_factor = 0.025}
 			add_to_variable = {	MTK_economy_consumer_goods_factor = 0.05}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+					add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}			
+			}
 		}
 	}	   
 
    	focus = { 
 		id = MTK_com_eco_05
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_shiqiye_02
 		x = -4
-		y = 3
-		cost = 2
+		y = 4
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -5605,10 +5731,10 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = available_political_advisor
 			activate_advisor = MGU_hequan_shiqiye_idea
-			random_owned_controlled_state = { 
+			501 = { 
 					add_building_construction = {
 					type = infrastructure
-					level = 5
+					level = 2
 					instant_build = yes 
 				}			
 			}
@@ -5619,7 +5745,7 @@ focus_tree = {
 		id = MTK_com_eco_06
 		icon = GFX_focus_SOV_breadbasket_of_the_union
 		x = -4
-		y = 4
+		y = 5
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -5676,15 +5802,21 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_economy_political_power_cost = 0.13}
 			random_owned_controlled_state = { add_extra_state_shared_building_slots = 3 }
-			every_state = {
-				limit = {
-					is_core_of = MGU
-				}
-				add_building_construction = {
-					type = infrastructure
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+					type = industrial_complex
 					level = 1
 					instant_build = yes 
-				}
+				}			
+			}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}			
 			}
 		}
 	}	
@@ -5693,7 +5825,7 @@ focus_tree = {
 		id = MTK_com_eco_07
 		icon = GFX_focus_BRA_ethical_internationalism
 		x = -5
-		y = 5
+		y = 6
 		cost = 3
 		ai_will_do = {
 			factor = 1
@@ -5729,6 +5861,14 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_economy_line_change_production_efficiency_factor = 0.05}
 			add_to_variable = {	MTK_economy_global_building_slots_factor = 0.05}
+			501 =  {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}		
+			}
 		}
 	}	
 
@@ -5736,7 +5876,7 @@ focus_tree = {
 		id = MTK_com_eco_08
 		icon = GFX_focus_CHL_domestic_production_of_the_willys_mb
 		x = -3
-		y = 5
+		y = 6
 		cost = 3
 		ai_will_do = {
 			factor = 1
@@ -5782,7 +5922,7 @@ focus_tree = {
 		id = MTK_com_eco_09
 		icon = GFX_goal_navy_funding
 		x = -5
-		y = 6
+		y = 7
 		cost = 3
 		ai_will_do = {
 			factor = 1
@@ -5826,7 +5966,7 @@ focus_tree = {
 		id = MTK_com_eco_10
 		icon = GFX_focus_SWE_state_paid_vacation
 		x = -3
-		y = 6
+		y = 7
 		cost = 3
 		ai_will_do = {
 			factor = 1
@@ -5869,7 +6009,7 @@ focus_tree = {
 		id = MTK_com_eco_11
 		icon = GFX_focus_AUS_danubian_socialist_communes
 		x = -4
-		y = 7
+		y = 8
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -5907,19 +6047,6 @@ focus_tree = {
 				}
 			}
 			add_to_variable = {	MTK_economy_production_lack_of_resource_penalty_factor = -0.1}
-			501 =  {
-				add_extra_state_shared_building_slots = 5
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes 
-				}		
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes 
-				}	
-			}
 			500 =  {
 				add_extra_state_shared_building_slots = 3
 				add_building_construction = {
@@ -5946,7 +6073,7 @@ focus_tree = {
 					instant_build = yes 
 				}	
 			}
-			501 = {	#省份id
+			500 = {	#省份id
 				add_building_construction = {
 					type = dam
 					level = 1
@@ -5964,55 +6091,10 @@ focus_tree = {
 	}	
 
    	focus = { 
-		id = MTK_com_eco_12
-		icon = GFX_goal_generic_promote_ruralism
-		x = -4
-		y = 8
-		cost = 2
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-            always = yes
-           
-		}
-
-		allow_branch = {
-			
-		}
-
-		prerequisite = {
-			focus = MTK_com_eco_11
-		}
-
-		mutually_exclusive = {
-           
-		}
-
-		bypass = {
-		}
-
-		
-
-		completion_reward = {
-			effect_tooltip = {
-				swap_ideas = {
-					remove_idea = MTK_economy_idea
-					add_idea = MTK_economy_idea_7
-				}
-			}
-			add_to_variable = {	MTK_economy_supply_consumption_factor = -0.05}
-			add_to_variable = {	MTK_economy_supply_factor = 0.10}
-			add_to_variable = {	MTK_economy_supply_node_range = 0.05}
-		}
-	
-	}	
-
-   	focus = { 
 		id = MTK_com_eco_13
 		icon = GFX_focus_AUS_courting_the_princess_of_industry
 		x = 0
-		y = 3
+		y = 4
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -6067,8 +6149,23 @@ focus_tree = {
 				}
 			}
 			add_to_variable = {	MTK_economy_supply_consumption_factor = -0.05}
-			add_to_variable = {	MTK_economy_supply_factor = 0.10}
-			add_to_variable = {	MTK_economy_supply_node_range = 0.05}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}			
+			}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes 
+				}			
+			}
+
 		}
 	}	
 
@@ -6076,7 +6173,7 @@ focus_tree = {
 		id = MTK_com_eco_14
 		icon = GFX_focus_SOV_organize_wreckers
 		x = -1
-		y = 4
+		y = 5
 		cost = 4
 		ai_will_do = {
 			factor = 1
@@ -6112,7 +6209,14 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_economy_production_factory_max_efficiency_factor= 0.05}
 			add_to_variable = {	MTK_economy_production_factory_efficiency_gain_factor = 0.10}
-		
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes 
+				}			
+			}		
 
 		}
 	}	
@@ -6121,7 +6225,7 @@ focus_tree = {
 		id = MTK_com_eco_15
 		icon = GFX_focus_SOV_merge_plants
 		x = 1
-		y = 4
+		y = 5
 		cost = 4
 		ai_will_do = {
 			factor = 1
@@ -6155,8 +6259,16 @@ focus_tree = {
 					add_idea = MTK_economy_idea_9
 				}
 			}
-			add_to_variable = {	MTK_economy_industrial_capacity_factory = 0.10}
+			add_to_variable = {	MTK_economy_industrial_capacity_factory = 0.05}
 			add_to_variable = {	MTK_economy_local_resources_factor = 0.10}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes 
+				}			
+			}			
 		}
 	}	
 
@@ -6164,7 +6276,7 @@ focus_tree = {
 		id = MTK_com_eco_16
 		icon = GFX_focus_PER_construct_air_defenses
 		x = 0
-		y = 5
+		y = 6
 		cost = 3
 		ai_will_do = {
 			factor = 1
@@ -6196,7 +6308,18 @@ focus_tree = {
 
 		completion_reward = {
 			unlock_decision_category_tooltip = MTK_future_technology
-
+			add_tech_bonus = {
+				name = tech_5
+				bonus = 1.75
+				uses = 2
+				category = industry
+			}
+			if = {
+				limit = {
+					is_ai = yes
+				}
+				add_research_slot = 1
+			}
 		}
 	}	
 
@@ -6204,8 +6327,8 @@ focus_tree = {
 		id = MTK_com_eco_17
 		icon = GFX_focus_BEL_poudreries_reunies_de_belgique
 		x = 0
-		y = 6
-		cost = 3
+		y = 7
+		cost = 5
 		ai_will_do = {
 			factor = 1
 		}
@@ -6240,7 +6363,46 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_economy_conversion_cost_civ_to_mil_factor = -0.15}
 			add_to_variable = {	MTK_economy_production_speed_arms_factory_factor = 0.15}
-			add_to_variable = {	MTK_economy_production_speed_industrial_complex_factor = -0.30 }
+			add_to_variable = {	MTK_economy_production_speed_industrial_complex_factor = -0.15 }
+			random_owned_controlled_state = {
+				limit = {
+					industrial_complex > 1
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					industrial_complex > 1
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					industrial_complex > 1
+				}
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+				}
+			}			
 		}
 	}	
 
@@ -6248,7 +6410,7 @@ focus_tree = {
 		id = MTK_com_eco_18
 		icon = GFX_goal_generic_soviet_construction
 		x = 0
-		y = 7
+		y = 8
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -6284,58 +6446,32 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_economy_production_factory_max_efficiency_factor = 0.05}
 			add_to_variable = {	MTK_economy_line_change_production_efficiency_factor = 0.05}
-		}
-	}	
-
-   	focus = { 
-		id = MTK_com_eco_19
-		icon = GFX_focus_CHL_connect_the_northern_railways
-		x = 0
-		y = 8
-		cost = 2
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-            always = yes
-           
-		}
-
-		allow_branch = {
-			
-		}
-
-		prerequisite = {
-			focus = MTK_com_eco_18
-		}
-
-		mutually_exclusive = {
-           
-		}
-
-		bypass = {
-		}
-
-		
-
-		completion_reward = {
-			effect_tooltip = {
-				swap_ideas = {
-					remove_idea = MTK_economy_idea
-					add_idea = MTK_economy_idea_13
-				}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+					add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes 
+				}			
 			}
-			add_to_variable = {	MTK_economy_supply_combat_penalties_on_core_factor = -0.2}
-			add_to_variable = {	MTK_economy_supply_node_max_level_terrain_limit = 1}
+			random_owned_controlled_state = { 
+				add_extra_state_shared_building_slots = 1 
+					add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes 
+				}			
+			}			
 		}
 	}	
+
 
    	focus = { 
 		id = MTK_com_eco_20
-		icon = GFX_focus_unknown
+		icon = GFX_MGU_ririko_01
 		x = 4
-		y = 3
-		cost = 2
+		y = 4
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -6362,10 +6498,10 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = available_political_advisor
 			activate_advisor = MGU_Chisaki_Riko_idea
-			random_owned_controlled_state = { 
-					add_building_construction = {
+			500 = { 
+				add_building_construction = {
 					type = infrastructure
-					level = 5
+					level = 2
 					instant_build = yes 
 				}			
 			}
@@ -6376,7 +6512,7 @@ focus_tree = {
 		id = MTK_com_eco_21
 		icon = GFX_focus_ARG_women_in_industry
 		x = 4
-		y = 4
+		y = 5
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -6432,7 +6568,7 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_economy_consumer_goods_factor = -0.15}
 			random_owned_controlled_state = { 
-				add_extra_state_shared_building_slots = 2
+				add_extra_state_shared_building_slots = 1
 					add_building_construction = {
 					type = industrial_complex
 					level = 1
@@ -6440,7 +6576,7 @@ focus_tree = {
 				}			
 			}
 			random_owned_controlled_state = { 
-				add_extra_state_shared_building_slots = 2
+				add_extra_state_shared_building_slots = 1
 					add_building_construction = {
 					type = industrial_complex
 					level = 1
@@ -6455,7 +6591,7 @@ focus_tree = {
 		id = MTK_com_eco_22
 		icon = GFX_focus_BRA_us_of_south_america
 		x = 3
-		y = 5
+		y = 6
 		cost = 3
 		ai_will_do = {
 			factor = 1
@@ -6502,8 +6638,8 @@ focus_tree = {
 		id = MTK_com_eco_23
 		icon = GFX_focus_NORDIC_dem_selector_civilian
 		x = 3
-		y = 6
-		cost = 3
+		y = 7
+		cost = 4
 		ai_will_do = {
 			factor = 1
 		}
@@ -6530,14 +6666,6 @@ focus_tree = {
 		
 
 		completion_reward = {
-			501 =  {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-					instant_build = yes 
-				}		
-			}
 			498 =  {
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
@@ -6561,7 +6689,7 @@ focus_tree = {
 		id = MTK_com_eco_24
 		icon = GFX_focus_PER_iranian_gendarmerie
 		x = 5
-		y = 5
+		y = 6
 		cost = 3
 		ai_will_do = {
 			factor = 1
@@ -6603,14 +6731,6 @@ focus_tree = {
 					instant_build = yes 
 				}			
 			}
-			random_owned_controlled_state = { 
-				add_extra_state_shared_building_slots = 1 
-					add_building_construction = {
-					type = industrial_complex
-					level = 1
-					instant_build = yes 
-				}			
-			}
 		}
 	}	
 
@@ -6618,7 +6738,7 @@ focus_tree = {
 		id = MTK_com_eco_25
 		icon = GFX_focus_NORDIC_mon_capstone_materiel
 		x = 5
-		y = 6
+		y = 7
 		cost = 3
 		ai_will_do = {
 			factor = 1
@@ -6646,8 +6766,7 @@ focus_tree = {
 		
 
 		completion_reward = {
-			add_offsite_building = { type = industrial_complex level = 1 }
-			add_offsite_building = { type = dockyard level = 3 }
+			add_offsite_building = { type = industrial_complex level = 2 }
 			effect_tooltip = {
 				swap_ideas = {
 					remove_idea = MTK_economy_idea
@@ -6663,7 +6782,7 @@ focus_tree = {
 		id = MTK_com_eco_26
 		icon = GFX_focus_BRA_reach_out_to_military_dem
 		x = 4
-		y = 7
+		y = 8
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -6699,62 +6818,46 @@ focus_tree = {
 					remove_idea = MTK_economy_idea
 					add_idea = MTK_economy_idea_20
 				}
-			}
-			add_to_variable = {	MTK_economy_supply_factor = 0.05}			
+			}			
 			add_to_variable = {	MTK_economy_conversion_cost_mil_to_civ_factor = -0.15}
-			add_to_variable = {	MTK_economy_supply_node_range = 0.05}
-		}
-	}	
-
-   	focus = { 
-		id = MTK_com_eco_27
-		icon = GFX_focus_NORDIC_com_selector_material
-		x = 4
-		y = 8
-		cost = 2
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-            always = yes
-           
-		}
-
-		allow_branch = {
-			
-		}
-
-		prerequisite = {
-			focus = MTK_com_eco_26
-		}
-
-
-		mutually_exclusive = {
-           
-		}
-
-		bypass = {
-		}
-
-		
-
-		completion_reward = {
-			effect_tooltip = {
-				swap_ideas = {
-					remove_idea = MTK_economy_idea
-					add_idea = MTK_economy_idea_21
+			501 =  {
+				add_extra_state_shared_building_slots = 5
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes 
+				}		
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes 
+				}	
+			}
+			501 = {	#省份id
+				add_building_construction = {
+					type = dam
+					level = 1
+					instant_build = yes
+					province = {
+						id = 5112 
+					}
+				}
+				custom_effect_tooltip = {
+					localization_key = building_state_modifier|dam
+					INDENT = "    "
 				}
 			}
-			add_to_variable = {	MTK_economy_global_building_slots_factor = 0.05}	
+
 		}
 	}	
+
 
    	focus = { 
 		id = MTK_com_eco_28
 		icon = GFX_focus_PER_take_regional_tour
 		x = -2
 		y = 9
-		cost = 3
+		cost = 5
 		ai_will_do = {
 			factor = 1
 		}
@@ -6767,13 +6870,11 @@ focus_tree = {
 			
 		}
 		prerequisite = {
-			focus = MTK_com_eco_27
-		}	
-		prerequisite = {
-			focus = MTK_com_eco_12
+			focus = MTK_com_eco_11
 		}
 		prerequisite = {
-			focus = MTK_com_eco_19
+			focus = MTK_com_eco_26
+			focus = MTK_com_eco_18
 		}
 
 		mutually_exclusive = {
@@ -6795,7 +6896,7 @@ focus_tree = {
 		icon = GFX_focus_por_workers_of_iberia
 		x = 2
 		y = 9
-		cost = 3
+		cost = 5
 		ai_will_do = {
 			factor = 1
 		}
@@ -6809,13 +6910,11 @@ focus_tree = {
 		}
 
 		prerequisite = {
-			focus = MTK_com_eco_27
+			focus = MTK_com_eco_26
 		}
 		prerequisite = {
-			focus = MTK_com_eco_19
-		}
-		prerequisite = {
-			focus = MTK_com_eco_12
+			focus = MTK_com_eco_18
+			focus = MTK_com_eco_11
 		}
 
 		mutually_exclusive = {
@@ -6836,14 +6935,13 @@ focus_tree = {
 		id = MTK_com_eco_30
 		icon = GFX_focus_AFG_integrate_tajik_and_uzbek_republics
 		x = 0
-		y = 10
+		y = 2
 		cost = 5
 		ai_will_do = {
 			factor = 1
 		}
 		available = {
-            num_of_factories > 300
-           
+            always = yes     
 		}
 
 		allow_branch = {
@@ -6851,10 +6949,7 @@ focus_tree = {
 		}
 
 		prerequisite = {
-			focus = MTK_com_eco_28
-		}
-		prerequisite = {
-			focus = MTK_com_eco_29
+			focus = MTK_com_eco_01
 		}
 
 
@@ -6902,6 +6997,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			army_experience = 50
 			add_doctrine_cost_reduction = {
 				name = land_doc_bonus
 				cost_reduction = 0.5
@@ -6927,7 +7023,6 @@ focus_tree = {
 				}			
 				division_template = {
 					name = "伯西尔骑兵旅"	#Infantry Division
-					#division_names_group = MGU_INF_01
 
 					regiments = {
 						cavalry = { x = 0 y = 0 }
@@ -6940,8 +7035,7 @@ focus_tree = {
 				}
 				division_template = {
 					name = "伯西尔工农红军"	#Infantry Division
-					#division_names_group = MGU_INF_01
-					division_names_group = "MGU_Infantry_1"
+					division_names_group = MGU_MTK_Infantry_1
 					regiments = {
 						infantry = { x = 0 y = 0 }
 						infantry = { x = 0 y = 1 }
@@ -6952,7 +7046,7 @@ focus_tree = {
 						infantry = { x = 2 y = 0 }
 						infantry = { x = 2 y = 1 }
 						infantry = { x = 2 y = 2 }						
-						light_sp_artillery_brigade = { x = 3 y = 0 }
+						artillery_brigade = { x = 3 y = 0 }
 					}
 					support = {
         				artillery = { x = 0 y = 0 }
@@ -6986,6 +7080,15 @@ focus_tree = {
 				500 = {	create_unit = { division = "name = \"伯西尔工农红军第五军第二师\" division_template = \"伯西尔工农红军\" start_experience_factor = 0.3 start_equipment_factor = 0.4"  owner = MGU count = 1 } }
 				1217 = { create_unit = { division = "name = \"伯西尔工农红军第五军第三师\" division_template = \"伯西尔工农红军\" start_experience_factor = 0.3 start_equipment_factor = 0.3"  owner = MGU count = 1 } }		
 				894 = {	create_unit = { division = "name = \"伯西尔工农红军第五军第四师\" division_template = \"伯西尔工农红军\" start_experience_factor = 0.2 start_equipment_factor = 0.4"  owner = MGU count = 1 } }
+				random_owned_controlled_state = { 
+					add_extra_state_shared_building_slots = 1
+						add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes 
+					}			
+				}
+			
 			}
 		}
 	}
@@ -7022,28 +7125,16 @@ focus_tree = {
 
 		completion_reward = {
 			MGU_Akemi_Homura = {
-				add_timed_unit_leader_trait = {
-					trait = MTK_gm
-					days = 130
-				}
+				add_unit_leader_trait = MTK_gm
 			}
 			MGU_Tomoe_Mami = {
-				add_timed_unit_leader_trait = {
-					trait = MTK_gm
-					days = 130
-				}
+				add_unit_leader_trait = MTK_gm
 			}
 			MGU_Miki_Sayaka = {
-				add_timed_unit_leader_trait = {
-					trait = MTK_gm
-					days = 130
-				}
+				add_unit_leader_trait = MTK_gm
 			}
 			MGU_Sakura_Kyouko = {
-				add_timed_unit_leader_trait = {
-					trait = MTK_gm
-					days = 130
-				}
+				add_unit_leader_trait = MTK_gm
 			}			
 			effect_tooltip = {
 				swap_ideas = {
@@ -7051,6 +7142,7 @@ focus_tree = {
 					add_idea = MTK_red_army_2
 				}
 			}
+			army_experience = 75	
 			add_to_variable = {	MTK_red_army_experience_gain_army_factor = 0.10}
 			add_to_variable = {	MTK_red_army_army_chief_cost_factor = -0.20}
 			add_to_variable = {	MTK_red_army_high_command_cost_factor = -0.20}
@@ -7064,7 +7156,7 @@ focus_tree = {
    					track = 0
 				}
 				set_sub_doctrine = {
-    				sub_doctrine = SELF_PROPELLED_SUPPORT
+    				sub_doctrine = FIELD_ENGINEERING
    					folder = land
    					track = 1
 				}
@@ -7084,7 +7176,7 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_spy_03
-		icon = GFX_focus_unknown
+		icon = GFX_chetui
 		x = 28
 		y = 2
 		cost = 2
@@ -7113,6 +7205,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			army_experience = 5
 			effect_tooltip = {
 				swap_ideas = {
 					remove_idea = MTK_red_army
@@ -7128,7 +7221,7 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_spy_04
-		icon = GFX_focus_unknown
+		icon = GFX_lhzz
 		x = 30
 		y = 2
 		cost = 2
@@ -7157,6 +7250,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			army_experience = 5
 			effect_tooltip = {
 				swap_ideas = {
 					remove_idea = MTK_red_army
@@ -7172,7 +7266,7 @@ focus_tree = {
 
 	focus = { 
 		id = MTK_com_spy_05
-		icon = GFX_focus_unknown
+		icon = GFX_youqi
 		x = 32
 		y = 2
 		cost = 2
@@ -7201,6 +7295,7 @@ focus_tree = {
 		
 
 		completion_reward = {
+			army_experience = 5
 			effect_tooltip = {
 				swap_ideas = {
 					remove_idea = MTK_red_army
@@ -7219,7 +7314,7 @@ focus_tree = {
 		icon = GFX_goal_generic_army_mass_assault
 		x = 30
 		y = 3
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -7252,16 +7347,7 @@ focus_tree = {
 		
 
 		completion_reward = {
-			if = {
-				limit = {
-					NOT = { has_idea = MTK_resist_to_the_last_idea_4 }
-				}
-				add_ideas = MTK_resist_to_the_last_idea_4
-			
-			}
-			else = {
-				add_ideas = MTK_resist_to_the_last_idea_8
-			}		
+			add_ideas = MTK_resist_to_the_last_idea_4
 		}
 	}
 
@@ -7270,7 +7356,7 @@ focus_tree = {
 		icon = GFX_goal_red_army
 		x = 34
 		y = 1
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -7307,7 +7393,7 @@ focus_tree = {
 		icon = GFX_goal_generic_left_militia
 		x = 34
 		y = 2
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -7341,8 +7427,10 @@ focus_tree = {
 					add_idea = MTK_red_army_6
 				}
 			}
-			add_to_variable = {	MTK_red_army_training_time_army_factor = -1}			
-
+			add_to_variable = {	MTK_red_army_supply_consumption_factor = -0.1 }			
+			add_to_variable = {	MTK_red_army_army_defence_factor = 0.05 }
+			add_to_variable = {	MTK_red_army_coordination_bonus = 0.05 }
+			add_to_variable = {	MTK_red_army_army_org_factor = 0.05 }
 		}
 	}
 
@@ -7388,8 +7476,8 @@ focus_tree = {
 			}
 			army_experience = 15			
 			mio:MTK_jianlongyuan_junxie_mio = {
-				add_mio_size = 5
-				add_mio_funds = 2000
+				add_mio_size = 2
+				add_mio_funds = 800
 				
 				add_mio_research_bonus = 0.05
 				add_mio_design_team_assign_cost = -0.05
@@ -7439,8 +7527,8 @@ focus_tree = {
 				category = artillery
 			}
 			mio:shenbin_huopao_mio = {
-				add_mio_size = 5
-				add_mio_funds = 2000
+				add_mio_size = 2
+				add_mio_funds = 800
 				
 				add_mio_research_bonus = 0.05
 				add_mio_design_team_assign_cost = -0.05
@@ -7505,7 +7593,7 @@ focus_tree = {
 		icon = GFX_focus_ETH_freedom_at_gunpoint
 		x = 37
 		y = 3
-		cost = 5
+		cost = 4
 		ai_will_do = {
 			factor = 1
 		}
@@ -7554,7 +7642,7 @@ focus_tree = {
 		icon = GFX_goal_generic_army_motorized
 		x = 34
 		y = 4
-		cost = 1
+		cost = 5
 		ai_will_do = {
 			factor = 1
 		}
@@ -7586,7 +7674,7 @@ focus_tree = {
 
 		completion_reward = {
 			add_tech_bonus = {
-				name = motorized_bonus
+				name = cat_mechanized_equipment
 				bonus = 1
 				uses = 2
 				technology = motorised_infantry
@@ -7598,8 +7686,8 @@ focus_tree = {
 				track = operations			
 			}
 			mio:MTK_ermu_jidong_mio = {
-				add_mio_size = 5
-				add_mio_funds = 2000
+				add_mio_size = 2
+				add_mio_funds = 800
 				
 				add_mio_research_bonus = 0.05
 				add_mio_design_team_assign_cost = -0.05
@@ -7720,7 +7808,7 @@ focus_tree = {
 		icon = GFX_goal_generic_communist_pride
 		x = 39
 		y = 1
-		cost = 3
+		cost = 2
 		ai_will_do = {
 			factor = 1
 		}
@@ -7761,7 +7849,7 @@ focus_tree = {
 		icon = GFX_goal_communist_revolt
 		x = 39
 		y = 2
-		cost = 4
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -7789,29 +7877,12 @@ focus_tree = {
 		
 
 		completion_reward = {
-			if = {
-				limit = {
-					is_ai = no
-				}
-				swap_ideas = {
-					remove_idea = MTK_BICI 
-					add_idea = MTK_BICI_2
-				}
+			swap_ideas = {
+				remove_idea = MTK_BICI 
+				add_idea = MTK_BICI_2
 			}
-			else = {
-				add_to_variable = { MTK_red_army_army_core_defence_factor = 0.30 }
-				add_to_variable = { MTK_red_army_army_core_attack_factor = 0.30 }
-				add_to_variable = { MTK_red_army_experience_gain_army_factor = 0.10 }
-				add_to_variable = { MTK_red_army_army_org_factor = 0.05 }
-				add_to_variable = { MTK_red_army_army_morale_factor = 0.15 }
-				add_to_variable = { MTK_red_army_command_power_gain_mult = 0.50 }
-				add_to_variable = { MTK_red_army_special_forces_training_time_factor = -24.5 }
-				add_to_variable = { MTK_red_army_mobilization_speed = 0.50 }
-				}
-			
-			}
-
 		}
+	}
 	
 
 	focus = { 
@@ -7819,7 +7890,7 @@ focus_tree = {
 		icon = GFX_goal_generic_council_communism
 		x = 39
 		y = 3
-		cost = 10
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -7847,24 +7918,10 @@ focus_tree = {
 		
 
 		completion_reward = {
-			if = {
-				limit = {
-					is_ai = no
-				}
 				swap_ideas = {
 					remove_idea = MTK_BICI_2
 					add_idea = MTK_BICI_3
 				}
-			}
-			else = {
-				add_to_variable = { MTK_red_army_army_org_factor = 0.10 }
-				add_to_variable = { MTK_red_army_army_infantry_attack_factor = 0.10 }
-				add_to_variable = { MTK_red_army_army_infantry_defence_factor = 0.10 }
-				add_to_variable = { MTK_red_army_army_attack_factor = 0.05 }
-				add_to_variable = { MTK_red_army_army_defence_factor = 0.10 }
-				add_to_variable = { MTK_red_army_army_attack_against_major_factor = 0.05 }
-				add_to_variable = { MTK_red_army_land_reinforce_rate = 0.05 }
-			}
 		}
 	}
 
@@ -7967,9 +8024,6 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_red_army_command_power_gain_mult = 0.5}
 			add_to_variable = {	MTK_red_army_experience_gain_army_factor = 0.05}
-			add_to_variable = {	MTK_red_army_mobilization_speed = 0.25}		
-
-
 		}
 	}
 
@@ -7978,7 +8032,7 @@ focus_tree = {
 		icon = GFX_focus_NORDIC_com_selector_army
 		x = 33
 		y = 2
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8012,7 +8066,6 @@ focus_tree = {
 			}
 			add_to_variable = {	MTK_red_army_army_core_attack_factor = 0.10 }
 			add_to_variable = {	MTK_red_army_army_core_defence_factor = 0.10 }
-			add_to_variable = {	MTK_red_army_mobilization_speed = 0.25 }		
 			add_to_variable = {	MTK_red_army_army_morale_factor = 0.10 }		
 		}
 	}
@@ -8022,7 +8075,7 @@ focus_tree = {
 		icon = GFX_focus_NORDIC_com_army
 		x = 35
 		y = 2
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8069,7 +8122,7 @@ focus_tree = {
 		icon = GFX_focus_NORDIC_com_materiel
 		x = 37
 		y = 2
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8101,8 +8154,8 @@ focus_tree = {
 					add_idea = MTK_red_army_11
 				}
 			}
-			add_to_variable = {	MTK_red_army_army_core_attack_factor = 0.25 }
-			add_to_variable = {	MTK_red_army_army_core_defence_factor = 0.25 }
+			add_to_variable = {	MTK_red_army_army_core_attack_factor = 0.10 }
+			add_to_variable = {	MTK_red_army_army_core_defence_factor = 0.10 }
 			add_to_variable = {	MTK_red_army_experience_gain_army_factor = 0.05 }
 			add_to_variable = {	MTK_red_army_army_defence_factor = 0.05 }		
 		
@@ -8115,7 +8168,7 @@ focus_tree = {
 		icon = GFX_focus_ARG_the_war_machine
 		x = 35
 		y = 3
-		cost = 3
+		cost = 5
 		ai_will_do = {
 			factor = 1
 		}
@@ -8158,29 +8211,13 @@ focus_tree = {
 			add_to_variable = {	MTK_red_army_special_forces_training_time_factor = -10}
 			add_tech_bonus = {
 				name = armor
-				ahead_reduction = 2
-				bonus = 1
+				bonus = 2
 				uses = 1
 				category = armor
 			}
 			add_tech_bonus = {
-				name = infantry_weapons
-				ahead_reduction = 2
-				bonus = 1
-				uses = 1
-				category = infantry_weapons
-			}
-			add_tech_bonus = {
-				name = support_tech
-				ahead_reduction = 2
-				bonus = 1
-				uses = 1
-				category = support_tech
-			}
-			add_tech_bonus = {
 				name = artillery
-				ahead_reduction = 2
-				bonus = 1
+				bonus = 2
 				uses = 1
 				category = artillery
 			}
@@ -8188,15 +8225,10 @@ focus_tree = {
 			army_experience = 50
 			add_doctrine_cost_reduction = {
 				name = land_doc_bonus
-				cost_reduction = 0.5
+				cost_reduction = 1
 				uses = 1
 				category = land_doctrine
 			}
-
-
-
-
-
 		}
 	}
 
@@ -8234,7 +8266,28 @@ focus_tree = {
 		
 
 		completion_reward = {
-			add_ideas = NTK_xdjg_idea_1		
+			add_ideas = NTK_xdjg_idea_1
+			if = {
+				limit = {
+					NOT = { has_completed_focus = MTK_com_spy_09 }
+				}
+				mio:MTK_jianlongyuan_junxie_mio = {
+					add_mio_size = 2
+					add_mio_funds = 800
+					add_mio_research_bonus = 0.05
+					add_mio_design_team_assign_cost = -0.05
+					add_mio_funds_gain_factor = 0.05
+					add_mio_design_team_change_cost = -0.05
+				}					
+			}			
+			mio:MTK_pocky_mio = {
+				add_mio_size = 2
+				add_mio_funds = 800	
+				add_mio_research_bonus = 0.05
+				add_mio_design_team_assign_cost = -0.05
+				add_mio_funds_gain_factor = 0.05
+				add_mio_design_team_change_cost = -0.05
+			}							
 		}
 	}
 
@@ -8243,7 +8296,7 @@ focus_tree = {
 		icon = GFX_focus_generic_industry_3
 		x = 32
 		y = 5
-		cost = 4
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8272,10 +8325,22 @@ focus_tree = {
 		
 
 		completion_reward = {
-			custom_effect_tooltip = mio_xianqianzhe
 			swap_ideas = {
 				remove_idea = NTK_xdjg_idea_1
 				add_idea = NTK_xdjg_idea_2
+			}
+			if = {
+				limit = {
+					NOT = { has_completed_focus = MTK_com_spy_10 }
+				}
+				mio:shenbin_huopao_mio = {
+					add_mio_size = 2
+					add_mio_funds = 800	
+					add_mio_research_bonus = 0.05
+					add_mio_design_team_assign_cost = -0.05
+					add_mio_funds_gain_factor = 0.05
+					add_mio_design_team_change_cost = -0.05
+				}				
 			}
 
 		}
@@ -8286,7 +8351,7 @@ focus_tree = {
 		icon = GFX_focus_generic_reorient_production
 		x = 32
 		y = 6
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8312,14 +8377,21 @@ focus_tree = {
 		bypass = {
 		}
 
-		
-
 		completion_reward = {
 			swap_ideas = {
-				custom_effect_tooltip = mio_xianqianzhe
 				remove_idea = NTK_xdjg_idea_2
 				add_idea = NTK_xdjg_idea_3
 			}
+			mio:MTK_jianlongyuan_bubing_tanks = {
+				add_mio_size = 5
+				add_mio_funds = 2000
+				add_mio_research_bonus = 0.05
+				add_mio_design_team_assign_cost = -0.05
+				add_mio_funds_gain_factor = 0.05
+				add_mio_design_team_change_cost = -0.05
+			}					
+
+
 		}
 	}
 
@@ -8379,7 +8451,6 @@ focus_tree = {
 			add_to_variable = {	MTK_red_army_army_armor_attack_factor = 0.05 }
 			add_to_variable = {	MTK_red_army_army_armor_defence_factor = 0.05 }
 			add_to_variable = {	MTK_red_army_army_armor_speed_factor = 0.05 }
-			add_to_variable = {	MTK_red_army_unit_medium_armor_design_cost_factor = -0.10 }
 		}
 	}
 
@@ -8388,7 +8459,7 @@ focus_tree = {
 		icon = GFX_focus_generic_tank_assault
 		x = 34
 		y = 5
-		cost = 4
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8424,8 +8495,8 @@ focus_tree = {
 				}
 			}
 			add_to_variable = {	MTK_red_army_recon_factor = 0.15 }
-			add_to_variable = {	MTK_red_army_planning_speed = 0.10 }
-			add_to_variable = {	MTK_red_army_max_planning = 0.05 }
+			add_to_variable = {	MTK_red_army_army_armor_attack_factor = 0.05 }
+			add_to_variable = {	MTK_red_army_army_armor_defence_factor = 0.05 }
 		}
 	}
 
@@ -8434,7 +8505,7 @@ focus_tree = {
 		icon = GFX_focus_SOV_the_glory_of_the_red_army_communism
 		x = 34
 		y = 6
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8472,7 +8543,6 @@ focus_tree = {
 			add_to_variable = {	MTK_red_army_army_armor_attack_factor = 0.05 }
 			add_to_variable = {	MTK_red_army_army_armor_defence_factor = 0.05 }
 			add_to_variable = {	MTK_red_army_army_armor_speed_factor = 0.05 }
-			add_to_variable = {	MTK_red_army_unit_medium_armor_design_cost_factor = -0.10 }
 		}
 	}
 
@@ -8526,14 +8596,13 @@ focus_tree = {
 			effect_tooltip = {
 				swap_ideas = {
 					remove_idea = MTK_red_army
-					add_idea = MTK_red_army_15
-				}
+					add_idea = MTK_red_army_21
+				} 
 			}
-			add_to_variable = {	MTK_red_army_army_artillery_attack_factor = 0.05 }
-			add_to_variable = {	MTK_red_army_army_artillery_defence_factor = 0.05 }
-			add_to_variable = {	MTK_red_army_unit_artillery_brigade_design_cost_factor = -0.10 }
-			add_to_variable = {	MTK_red_army_unit_mot_artillery_brigade_design_cost_factor = -0.10 }
-			add_to_variable = {	MTK_red_army_unit_rocket_artillery_brigade_design_cost_factor = -0.10 }						
+			add_to_variable = {	MTK_red_army_army_artillery_attack_factor = 0.01 }
+			add_to_variable = {	MTK_red_army_army_artillery_defence_factor = 0.06 }
+			add_to_variable = {	MTK_red_army_supply_consumption_factor = -0.04 }
+					
 		}
 	}
 
@@ -8542,7 +8611,7 @@ focus_tree = {
 		icon = GFX_focus_generic_railway_gun
 		x = 36
 		y = 5
-		cost = 4
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8577,11 +8646,9 @@ focus_tree = {
 					add_idea = MTK_red_army_15
 				}
 			}
-			add_to_variable = {	MTK_red_army_army_artillery_attack_factor = 0.05 }
-			add_to_variable = {	MTK_red_army_army_artillery_defence_factor = 0.05 }
-			add_to_variable = {	MTK_red_army_unit_artillery_brigade_design_cost_factor = -0.10 }
-			add_to_variable = {	MTK_red_army_unit_mot_artillery_brigade_design_cost_factor = -0.10 }
-			add_to_variable = {	MTK_red_army_unit_rocket_artillery_brigade_design_cost_factor = -0.10 }		
+			add_to_variable = {	MTK_red_army_army_artillery_attack_factor = 0.07 }
+			add_to_variable = {	MTK_red_army_army_artillery_defence_factor = 0.07 }
+			add_to_variable = {	MTK_red_army_supply_consumption_factor = -0.03 }
 		}
 	}
 
@@ -8590,7 +8657,7 @@ focus_tree = {
 		icon = GFX_focus_generic_torpedo_production
 		x = 36
 		y = 6
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8632,11 +8699,9 @@ focus_tree = {
 					add_idea = MTK_red_army_15
 				}
 			}
-			add_to_variable = {	MTK_red_army_army_artillery_attack_factor = 0.05 }
-			add_to_variable = {	MTK_red_army_army_artillery_defence_factor = 0.05 }
-			add_to_variable = {	MTK_red_army_unit_artillery_brigade_design_cost_factor = -0.10 }
-			add_to_variable = {	MTK_red_army_unit_mot_artillery_brigade_design_cost_factor = -0.10 }
-			add_to_variable = {	MTK_red_army_unit_rocket_artillery_brigade_design_cost_factor = -0.10 }					
+			add_to_variable = {	MTK_red_army_army_artillery_attack_factor = 0.07 }
+			add_to_variable = {	MTK_red_army_army_artillery_defence_factor = 0.07 }
+			add_to_variable = {	MTK_red_army_supply_consumption_factor = -0.03 }
 		}
 	}
 
@@ -8676,22 +8741,9 @@ focus_tree = {
 		completion_reward = {
 			add_tech_bonus = {
 				name = infantry_weapons
-				bonus = 1
-				uses = 1
+				bonus = 0.5
+				uses = 2
 				category = infantry_weapons
-			}
-			add_tech_bonus = {
-				name = support_tech
-				bonus = 1
-				uses = 1
-				category = support_tech
-			}
-			
-			add_doctrine_cost_reduction = {
-				name = land_doc_bonus
-				cost_reduction = 0.5
-				uses = 3
-				category = cat_grand_battle_plan
 			}
 			effect_tooltip = {
 				swap_ideas = {
@@ -8699,7 +8751,7 @@ focus_tree = {
 					add_idea = MTK_red_army_16
 				}
 			}
-			add_to_variable = {	MTK_red_army_army_infantry_attack_factor = 0.05 }
+			add_to_variable = {	MTK_red_army_army_infantry_attack_factor = 0.10 }
 			add_to_variable = {	MTK_red_army_land_reinforce_rate = 0.05 }					
 		}
 	}
@@ -8709,7 +8761,7 @@ focus_tree = {
 		icon = GFX_focus_generic_little_entente
 		x = 38
 		y = 5
-		cost = 4
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8748,7 +8800,7 @@ focus_tree = {
 			add_to_variable = {	MTK_red_army_army_morale_factor = 0.05 }
 			add_to_variable = {	MTK_red_army_army_infantry_defence_factor = 0.05 }
 			add_to_variable = {	MTK_red_army_org_loss_when_moving = -0.05 }
-			add_to_variable = {	MTK_red_army_cas_damage_reduction = 0.05 }	
+			add_to_variable = {	MTK_red_army_cas_damage_reduction = 0.15 }	
 
 
 		}
@@ -8759,7 +8811,7 @@ focus_tree = {
 		icon = GFX_focus_generic_purchase_mechanized_equipment
 		x = 38
 		y = 6
-		cost = 5
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -8794,8 +8846,8 @@ focus_tree = {
 					add_idea = MTK_red_army_18
 				}
 			}
-			add_to_variable = {	MTK_red_army_mechanized_attack_factor = 0.15 }
-			add_to_variable = {	MTK_red_army_mechanized_defence_factor = 0.15 }
+			add_to_variable = {	MTK_red_army_army_infantry_attack_factor = 0.10 }
+			add_to_variable = {	MTK_red_army_army_infantry_defence_factor = 0.10 }
 			add_to_variable = {	MTK_red_army_TRUCK_ATTRITION_FACTOR = -0.05 }
 			add_to_variable = {	MTK_red_army_army_speed_factor = 0.05 }
 		}
@@ -8821,14 +8873,8 @@ focus_tree = {
 
 		prerequisite = {
 			focus = MTK_com_army_09
-		}
-		prerequisite = {
 			focus = MTK_com_army_12
-		}
-		prerequisite = {
 			focus = MTK_com_army_15
-		}
-		prerequisite = {
 			focus = MTK_com_army_18
 		}
 
@@ -8861,12 +8907,12 @@ focus_tree = {
 		icon = GFX_focus_SWE_refuge_for_revolutionaries
 		x = 33
 		y = 8
-		cost = 10
+		cost = 7
 		ai_will_do = {
 			factor = 1
 		}
 		available = {
-            has_army_experience > 299
+            has_army_experience > 199
 		}
 
 		allow_branch = {
@@ -8892,25 +8938,13 @@ focus_tree = {
 		completion_reward = {
 
 			add_daily_mastery = {
-				amount = 1
-				days = 100
+				amount = 2
+				days = 50
 				name =  CHI_know_thy_self
 				folder = land #在陆军学说文件夹
 				grand_doctrine = mass_assault #人海突击			
 			}
-
-			if = {
-				limit = {
-					NOT = { has_tech = mass_assault  }
-				}
-
-				set_technology = { 
-					mass_assault = 1 
-				}
-				army_experience = -300
-			}
-			
-			
+			army_experience = -200		
 		}
 	}
 
@@ -8919,12 +8953,12 @@ focus_tree = {
 		icon = GFX_focus_CONGO_copper_cartridges
 		x = 35
 		y = 8
-		cost = 10
+		cost = 7
 		ai_will_do = {
 			factor = 1
 		}
 		available = {
-         	 has_army_experience > 299
+         	 has_army_experience > 199
 		}
 
 		allow_branch = {
@@ -8949,22 +8983,13 @@ focus_tree = {
 
 		completion_reward = {
 			add_daily_mastery = {
-				amount = 1
-				days = 100
+				amount = 2
+				days = 50
 				name =  CHI_know_thy_self
 				folder = land #在陆军学说文件夹
 				grand_doctrine = superior_firepower #大学说			
 			}
-			if = {
-				limit = {
-					NOT = { has_tech = superior_firepower  }
-				}
-
-				set_technology = { 
-					superior_firepower = 1
-				}
-				army_experience = -300
-			}
+			army_experience = -200
 		}
 	}
 
@@ -8973,12 +8998,12 @@ focus_tree = {
 		icon = GFX_goal_generic_occupy_states_ongoing_war
 		x = 37
 		y = 8
-		cost = 10
+		cost = 7
 		ai_will_do = {
 			factor = 1
 		}
 		available = {
-          	has_army_experience > 299
+          	has_army_experience > 199
 		}
 
 		allow_branch = {
@@ -9003,23 +9028,13 @@ focus_tree = {
 
 		completion_reward = {
 			add_daily_mastery = {
-				amount = 1
-				days = 100
+				amount = 2
+				days = 50
 				name =  CHI_know_thy_self
 				folder = land #在陆军学说文件夹
 				grand_doctrine = GRAND_BATTLEPLAN #大学说			
 			}
-			if = {
-				limit = {
-					NOT = { has_tech = trench_warfare  }
-				}
-
-				set_technology = { 
-					trench_warfare = 1
-				}
-				army_experience = -300
-			}
-
+			army_experience = -200
 		}
 	}
 
@@ -9060,7 +9075,7 @@ focus_tree = {
 			every_army_leader = {
 				add_timed_unit_leader_trait = {
 					trait = Pioneer_of_the_proletarian_revolution
-					days = 365
+					days = 720
 				}
 			}
 		}
@@ -9104,12 +9119,12 @@ focus_tree = {
 		completion_reward = {
 			add_breakthrough_progress = {
 				specialization = specialization_air
-				value = 5
+				value = 0.5
 			}
 			add_doctrine_cost_reduction = {
 				name = air_doc_bonus
 				cost_reduction = 0.5
-				uses = 2
+				uses = 1
 				category = air_doctrine
 			}
 		}
@@ -9155,17 +9170,17 @@ focus_tree = {
 			}
 				add_building_construction = {
 					type = air_base
-					level = 5
+					level = 1
 					instant_build = yes
 				}
 				add_building_construction = {
 					type = radar_station
-					level = 5
+					level = 1
 					instant_build = yes
                 }
 				add_building_construction = {
 					type = anti_air_building
-					level = 5
+					level = 1
 					instant_build = yes
                 }
 			}
@@ -9178,86 +9193,41 @@ focus_tree = {
 			}
 				add_building_construction = {
 					type = air_base
-					level = 5
+					level = 1
 					instant_build = yes
 				}
 				add_building_construction = {
 					type = radar_station
-					level = 5
+					level = 1
 					instant_build = yes
                 }
 				add_building_construction = {
 					type = anti_air_building
-					level = 5
+					level = 1
 					instant_build = yes
                 }
 			}
 			random_state = {
-			limit = { any_neighbor_state = { controller = { not = { tag = root is_ally_with = root } } } 
+			limit = { 
+				any_neighbor_state = { controller = { not = { tag = root is_ally_with = root } } } 
 				or = { is_owned_and_controlled_by = root controller = { is_subject_of = root } }
-			NOT = {
+				NOT = {
 					state = PREV
 					}
 			}
 				add_building_construction = {
 					type = air_base
-					level = 5
+					level = 1
 					instant_build = yes
 				}
 				add_building_construction = {
 					type = radar_station
-					level = 5
+					level = 1
 					instant_build = yes
                 }
 				add_building_construction = {
 					type = anti_air_building
-					level = 5
-					instant_build = yes
-                }
-			}
-			random_state = {
-			limit = { any_neighbor_state = { controller = { not = { tag = root is_ally_with = root } } } 
-				or = { is_owned_and_controlled_by = root controller = { is_subject_of = root } }
-			NOT = {
-					state = PREV
-					}
-			}
-				add_building_construction = {
-					type = air_base
-					level = 5
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = radar_station
-					level = 5
-					instant_build = yes
-                }
-				add_building_construction = {
-					type = anti_air_building
-					level = 5
-					instant_build = yes
-                }
-			}
-			random_state = {
-			limit = { any_neighbor_state = { controller = { not = { tag = root is_ally_with = root } } } 
-				or = { is_owned_and_controlled_by = root controller = { is_subject_of = root } }
-			NOT = {
-					state = PREV
-					}
-			}
-				add_building_construction = {
-					type = air_base
-					level = 5
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = radar_station
-					level = 5
-					instant_build = yes
-                }
-				add_building_construction = {
-					type = anti_air_building
-					level = 5
+					level = 1
 					instant_build = yes
                 }
 			}
@@ -9298,20 +9268,14 @@ focus_tree = {
 		
 
 		completion_reward = {
-			add_doctrine_cost_reduction = {
-				name = air_doc_bonus
-				cost_reduction = 0.5
-				uses = 3
-				category = air_doctrine
-			}
-			air_experience = 100
+			air_experience = 150
 		}
 	}
 
 
 	focus = { 
-		id = MTK_com_air_04
-		icon = GFX_focus_unknown
+		id = MTK_com_air_05
+		icon = GFX_focus_PER_the_peoples_airforce
 		x = 28
 		y = 4
 		cost = 5
@@ -9332,79 +9296,7 @@ focus_tree = {
 		}
 		prerequisite = {
 			focus =  MTK_com_air_03
-		}
-
-
-		mutually_exclusive = {
-            
-		}
-
-		bypass = {
-		}
-
-		completion_reward = {
-			add_tech_bonus = {
-				name = light_fighter
-				bonus = 1
-				uses = 2
-				category = light_fighter
-			}
-
-			if = {
-				limit = {
-					has_dlc = "By Blood Alone"
-					country_exists = SOV
-					NOT = {
-						has_war_with = SOV
-					}
-				}
-				add_equipment_to_stockpile = {
-					type = small_plane_airframe
-					amount = 200
-					producer = SOV
-				}
-			}
-			if = {
-				limit = {
-					NOT = {
-						has_dlc = "By Blood Alone"
-					}
-					country_exists = SOV
-					NOT = {
-						has_war_with = SOV
-					}
-				}
-			    add_equipment_to_stockpile = {
-					type = fighter_equipment_1
-					amount = 200
-					producer = SOV
-				}
-			}
-
-		}
-	}
-
-	focus = { 
-		id = MTK_com_air_05
-		icon = GFX_focus_PER_the_peoples_airforce
-		x = 28
-		y = 5
-		cost = 5
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-            always = yes
-           
-		}
-
-		allow_branch = {
-			
-		}
-
-		prerequisite = {
-			focus =  MTK_com_air_04
-		}
+		}		
 
 
 
@@ -9426,7 +9318,7 @@ focus_tree = {
 		id = MTK_com_air_06
 		icon = GFX_focus_generic_cas_aircraft
 		x = 27
-		y = 6
+		y = 5
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -9466,7 +9358,7 @@ focus_tree = {
 		id = MTK_com_air_07
 		icon = GFX_focus_generic_air_defense
 		x = 29
-		y = 6
+		y = 5
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -9507,7 +9399,7 @@ focus_tree = {
 		id = MTK_com_air_08
 		icon = GFX_focus_generic_copy_plane_designs
 		x = 28
-		y = 7
+		y = 6
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -9550,7 +9442,7 @@ focus_tree = {
 		id = MTK_com_air_09
 		icon = GFX_goal_generic_air_bomber
 		x = 27
-		y = 8
+		y = 7
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -9580,10 +9472,16 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_daily_mastery = {
+				amount = 0.05
+				days = 100
+				name =  CHI_know_thy_self
+				folder = air #在陆军学说文件夹	
+			}
 			add_tech_bonus = {
 				name = tactical_bomber
 				bonus = 1
-				uses = 2
+				uses = 1
 				category = tactical_bomber
 			}
 		}
@@ -9593,7 +9491,7 @@ focus_tree = {
 		id = MTK_com_air_10
 		icon = GFX_focus_generic_jet_planes
 		x = 29
-		y = 8
+		y = 7
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -9623,10 +9521,16 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_daily_mastery = {
+				amount = 0.05
+				days = 100
+				name =  CHI_know_thy_self
+				folder = air #在陆军学说文件夹	
+			}
 			add_tech_bonus = {
 				name = rocketry
 				bonus = 1
-				uses = 2
+				uses = 1
 				category = rocketry
 			}
 		}
@@ -9636,7 +9540,7 @@ focus_tree = {
 		id = MTK_com_air_11
 		icon = GFX_goal_generic_occupy_start_war
 		x = 27
-		y = 9
+		y = 8
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -9666,10 +9570,16 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_daily_mastery = {
+				amount = 0.05
+				days = 100
+				name =  CHI_know_thy_self
+				folder = air #在陆军学说文件夹	
+			}
 			add_tech_bonus = {
 				name = cat_strategic_bomber
 				bonus = 1
-				uses = 2
+				uses = 1
 				category = cat_strategic_bomber
 			}
 		}
@@ -9679,7 +9589,7 @@ focus_tree = {
 		id = MTK_com_air_12
 		icon = GFX_focus_unknown
 		x = 29
-		y = 9
+		y = 8
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -9709,10 +9619,16 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_daily_mastery = {
+				amount = 0.05
+				days = 100
+				name =  CHI_know_thy_self
+				folder = air #在陆军学说文件夹	
+			}
 			add_tech_bonus = {
 				name = jet_technology
 				bonus = 1
-				uses = 2
+				uses = 1
 				category = jet_technology
 			}
 		}
@@ -9722,7 +9638,7 @@ focus_tree = {
 		id = MTK_com_air_13
 		icon = GFX_focus_GER_amerikabomber
 		x = 28
-		y = 10
+		y = 9
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -9754,6 +9670,12 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_daily_mastery = {
+				amount = 0.5
+				days = 150
+				name =  CHI_know_thy_self
+				folder = air #在陆军学说文件夹	
+			}	
 			swap_ideas = {
 				remove_idea = MTK_air_idea_4
 				add_idea = MTK_air_idea_1
@@ -9798,12 +9720,12 @@ focus_tree = {
 		completion_reward = {
 			add_breakthrough_progress = {
 				specialization = specialization_naval
-				value = 5
+				value = 0.5
 			}
 		    add_doctrine_cost_reduction = {
 				name = naval_doc_bonus
 				cost_reduction = 0.5
-				uses = 2
+				uses = 1
 				category = naval_doctrine
 			}
 		}
@@ -9845,91 +9767,87 @@ focus_tree = {
 		
 
 		completion_reward = {
-				random_controlled_state = {
-					limit = {
-						is_coastal = yes
-						is_core_of = root
-						free_building_slots = {
-							building = dockyard
-							size > 0
-							include_locked = yes
-						}
+			random_controlled_state = {
+				limit = {
+					is_coastal = yes
+					is_core_of = root
+					free_building_slots = {
+						building = dockyard
+						size > 0
+						include_locked = yes
 					}
-					add_extra_state_shared_building_slots = 5
-					add_building_construction = {
-						type = dockyard
-						level = 5
-						instant_build = yes
-					}
-					add_building_construction = {
-				    type = naval_base
-				    province = {
-					all_provinces = yes
-					limit_to_coastal = yes
-				    }
-			        level = 1
-				    instant_build = yes
-			        }
 				}
-				random_controlled_state = {
-					limit = {
-						is_coastal = yes
-						is_core_of = root
-						free_building_slots = {
-							building = dockyard
-							size > 0
-							include_locked = yes
-						}
-						NOT = {
-					state = PREV
-					}
-					}
-					add_extra_state_shared_building_slots = 5
-					add_building_construction = {
-						type = dockyard
-						level = 5
-						instant_build = yes
-					}
-					add_building_construction = {
-				    type = naval_base
-				    province = {
-					all_provinces = yes
-					limit_to_coastal = yes
-				    }
-			        level = 1
-				    instant_build = yes
-			        }
+				add_extra_state_shared_building_slots = 1
+
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
 				}
-				random_controlled_state = {
-					limit = {
-						is_coastal = yes
-						is_core_of = root
-						free_building_slots = {
-							building = dockyard
-							size > 0
-							include_locked = yes
-						}
-						NOT = {
-					state = PREV
-					}
-					}
-					add_extra_state_shared_building_slots = 5
-					add_building_construction = {
-						type = dockyard
-						level = 5
-						instant_build = yes
-					}
-					add_building_construction = {
-				    type = naval_base
-				    province = {
-					all_provinces = yes
-					limit_to_coastal = yes
+				add_building_construction = {
+					type = naval_base
+				 	province = {
+						all_provinces = yes
+						limit_to_coastal = yes
 				    }
-			        level = 1
+			       	level = 1
 				    instant_build = yes
-			        }
+			    }
+			}	
+			random_controlled_state = {
+				limit = {
+					is_coastal = yes
+					is_core_of = root
+					free_building_slots = {
+						building = dockyard
+						size > 0
+						include_locked = yes
+					}
 				}
-		
+				add_extra_state_shared_building_slots = 1
+
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = naval_base
+				 	province = {
+						all_provinces = yes
+						limit_to_coastal = yes
+				    }
+			       	level = 1
+				    instant_build = yes
+			    }
+			}	
+			random_controlled_state = {
+				limit = {
+					is_coastal = yes
+					is_core_of = root
+					free_building_slots = {
+						building = dockyard
+						size > 0
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = naval_base
+				 	province = {
+						all_provinces = yes
+						limit_to_coastal = yes
+				    }
+			       	level = 1
+				    instant_build = yes
+			    }
+			}	
 		}
 	}
 
@@ -9967,19 +9885,13 @@ focus_tree = {
 		
 
 		completion_reward = {
-			add_doctrine_cost_reduction = {
-				name = naval_doc_bonus
-				cost_reduction = 0.5
-				uses = 3
-				category = naval_doctrine
-			}
-			navy_experience = 100
+			navy_experience = 150
 		}
 	}
 
 	focus = { 
-		id = MTK_com_sea_04
-		icon = GFX_focus_generic_coastal_fort
+		id = MTK_com_sea_05
+		icon = GFX_focus_PER_the_peoples_navy
 		x = 42
 		y = 4
 		cost = 5
@@ -10001,94 +9913,6 @@ focus_tree = {
 		prerequisite = {
 			focus = MTK_com_sea_03
 		}
-
-
-		mutually_exclusive = {
-            
-		}
-
-		bypass = {
-		}
-
-		
-
-		completion_reward = {
-
-			501 = {
-					add_building_construction = {
-						type = anti_air_building
-						level = 2
-						instant_build = yes
-					}
-					add_building_construction = {
-						type = naval_base
-						level = 5
-						instant_build = yes
-						province = 10000
-					}
-					add_building_construction = {
-						type = coastal_bunker
-						level = 5
-						instant_build = yes
-						province = 10000
-					}
-					add_extra_state_shared_building_slots = 5
-					add_building_construction = {
-						type = dockyard
-						level = 5
-						instant_build = yes
-					}
-			}
-			498 = {
-					add_building_construction = {
-						type = anti_air_building
-						level = 2
-						instant_build = yes
-					}
-					add_building_construction = {
-						type = naval_base
-						level = 5
-						instant_build = yes
-						province = 10000
-					}
-					add_building_construction = {
-						type = coastal_bunker
-						level = 5
-						instant_build = yes
-						province = 10000
-					}
-					add_extra_state_shared_building_slots = 5
-					add_building_construction = {
-						type = dockyard
-						level = 5
-						instant_build = yes
-					}
-			}
-		}
-	}
-
-	focus = { 
-		id = MTK_com_sea_05
-		icon = GFX_focus_PER_the_peoples_navy
-		x = 42
-		y = 5
-		cost = 5
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-            always = yes
-           
-		}
-
-		allow_branch = {
-			
-		}
-
-		prerequisite = {
-			focus = MTK_com_sea_04
-		}
-
 
 
 		mutually_exclusive = {
@@ -10123,7 +9947,7 @@ focus_tree = {
 		id = MTK_com_sea_06
 		icon = GFX_focus_generic_cruiser2
 		x = 41
-		y = 6
+		y = 5
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -10156,7 +9980,7 @@ focus_tree = {
 			add_tech_bonus = {
 				name = special_forces_bonus
 				bonus = 1
-				uses = 3
+				uses = 2
 				technology = marines
 				technology = marines2
 				technology = marines3
@@ -10168,7 +9992,7 @@ focus_tree = {
 		id = MTK_com_sea_07
 		icon = GFX_goal_generic_navy_cruiser
 		x = 43
-		y = 6
+		y = 5
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -10201,19 +10025,13 @@ focus_tree = {
 			add_tech_bonus = {
 				name = dd_tech
 				bonus = 1
-				uses = 2
+				uses = 1
 				category = dd_tech
-			}
-			add_tech_bonus = {
-				name = cl_tech
-				bonus = 1
-				uses = 2
-				category = cl_tech
 			}
 			add_tech_bonus = {
 				name = ca_tech
 				bonus = 1
-				uses = 2
+				uses = 1
 				category = ca_tech
 			}
 		}
@@ -10223,7 +10041,7 @@ focus_tree = {
 		id = MTK_com_sea_08
 		icon = GFX_focus_generic_merchant_fleet
 		x = 42
-		y = 7
+		y = 6
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -10258,16 +10076,10 @@ focus_tree = {
 		completion_reward = {
 			add_tech_bonus = {
 				name = naval_equipment
-				ahead_reduction = 2
+				ahead_reduction = 1
 				bonus = 1
-				uses = 2
+				uses = 1
 				category = naval_equipment
-			}
-			add_doctrine_cost_reduction = {
-				name = naval_doctrine
-				cost_reduction = 0.5
-				uses = 3
-				category = naval_doctrine
 			}
 			swap_ideas = {
 				remove_idea = MTK_ship_idea_2
@@ -10280,7 +10092,7 @@ focus_tree = {
 		id = MTK_com_sea_09
 		icon = GFX_focus_generic_africa_naval
 		x = 41
-		y = 8
+		y = 7
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -10311,34 +10123,12 @@ focus_tree = {
 		
 
 		completion_reward = {
-			add_doctrine_cost_reduction = {
-				name = naval_doc_bonus
-				cost_reduction = 0.5
-				uses = 1
-				category = naval_doctrine
-			}
-			add_doctrine_cost_reduction = {
-				name = naval_doc_bonus
-				cost_reduction = 0.5
-				uses = 1
-				category = fleet_in_being_tree
-			}
-			random_owned_controlled_state = { 
-				add_extra_state_shared_building_slots = 1 
-					add_building_construction = {
-					type = dockyard
-					level = 1
-					instant_build = yes 
-				}			
-			}
-			random_owned_controlled_state = { 
-				add_extra_state_shared_building_slots = 1 
-					add_building_construction = {
-					type = dockyard
-					level = 1
-					instant_build = yes 
-				}			
-			}				
+			add_daily_mastery = {
+				amount = 0.05
+				days = 100
+				name =  CHI_know_thy_self
+				folder = naval #在陆军学说文件夹	
+			}	
 			random_owned_controlled_state = { 
 				add_extra_state_shared_building_slots = 1 
 					add_building_construction = {
@@ -10370,7 +10160,7 @@ focus_tree = {
 		id = MTK_com_sea_10
 		icon = GFX_focus_ARG_study_the_battle_of_the_river_plate
 		x = 43
-		y = 8
+		y = 7
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -10401,11 +10191,11 @@ focus_tree = {
 		
 
 		completion_reward = {
-            add_doctrine_cost_reduction = {
-				name = naval_doc_bonus
-				cost_reduction = 0.5
-				uses = 1
-				category = fleet_in_being_tree
+			add_daily_mastery = {
+				amount = 0.05
+				days = 100
+				name =  CHI_know_thy_self
+				folder = naval #在陆军学说文件夹	
 			}
 			add_tech_bonus = {
 				name = bc_tech
@@ -10426,7 +10216,7 @@ focus_tree = {
 		id = MTK_com_sea_11
 		icon = GFX_focus_generic_midget_submarines
 		x = 41
-		y = 9
+		y = 8
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -10457,11 +10247,11 @@ focus_tree = {
 		
 
 		completion_reward = {
-			add_doctrine_cost_reduction = {
-				name = naval_doc_bonus
-				cost_reduction = 0.5
-				uses = 1
-				category = cat_trade_interdiction
+			add_daily_mastery = {
+				amount = 0.05
+				days = 100
+				name =  CHI_know_thy_self
+				folder = naval #在陆军学说文件夹	
 			}
 			add_tech_bonus = {
 				name = ss_tech
@@ -10476,7 +10266,7 @@ focus_tree = {
 		id = MTK_com_sea_12
 		icon = GFX_focus_generic_air_carrier
 		x = 43
-		y = 9
+		y = 8
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -10507,11 +10297,11 @@ focus_tree = {
 		
 
 		completion_reward = {
-			add_doctrine_cost_reduction = {
-				name = naval_doc_bonus
-				cost_reduction = 0.5
-				uses = 1
-				category = cat_base_strike
+			add_daily_mastery = {
+				amount = 0.05
+				days = 100
+				name =  CHI_know_thy_self
+				folder = naval #在陆军学说文件夹	
 			}
 			add_tech_bonus = {
 				name = bc_tech
@@ -10532,7 +10322,7 @@ focus_tree = {
 		id = MTK_com_sea_13
 		icon = GFX_focus_SWE_coastal_support
 		x = 42
-		y = 10
+		y = 9
 		cost = 5
 		ai_will_do = {
 			factor = 1
@@ -10565,6 +10355,12 @@ focus_tree = {
 		
 
 		completion_reward = {
+			add_daily_mastery = {
+				amount = 0.5
+				days = 150
+				name =  CHI_know_thy_self
+				folder = naval #在陆军学说文件夹	
+			}	
 			swap_ideas = {
 				remove_idea = MTK_ship_idea_3
 				add_idea = MTK_ship_idea_1
