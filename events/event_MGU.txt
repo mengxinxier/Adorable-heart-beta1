@@ -4345,6 +4345,9 @@ country_event = {
 	        tag = MGU
             date > 1937.1.1
             MRB = { exists = yes }
+			NOT = {
+				has_country_flag =  MGU_yuki_enter
+			}
             NOT = { has_completed_focus = TBMGU_PJ_A1 }
         }
 	immediate = {
@@ -16144,7 +16147,7 @@ country_event = {
 		name = yuki.14.a
 	}
 }
-country_event = {
+country_event = {#多余的事件
 	id = yuki.15
 	title = yuki.15.t
 	desc = yuki.15.d
@@ -16458,6 +16461,51 @@ country_event = {
 		 MRB = {
 			 load_oob = MGU_load_1
 		 }
+		 diplomatic_relation = {
+			country = MST
+			relation = guarantee
+			active = no
+		 }
+		 if = {
+			limit = {
+				has_country_flag = MGU_magius_annex
+			}
+			every_state = {
+				limit = {
+					is_core_of = MGS
+				}
+				add_core_of = MRB
+			}
+			MRB = {
+				annex_country = {
+				target =  MGS 
+				 transfer_troops = yes
+			}
+			}
+		 }
+		 if = {
+			limit = {
+				NOT = {
+					has_country_flag = MGU_magius_annex
+				}
+			}
+			MST = {
+				set_autonomy = {
+					target = MGS
+					autonomy_state = autonomy_puppet
+				}
+			}
+		 }
+		 add_country_leader_role = {
+			character = "MGU_nanjin_liangzi"
+			country_leader={
+				ideology =  interim_government_subtype_f
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
 		 if = {
 			limit = {
 				has_country_flag = Army_two
@@ -16500,6 +16548,88 @@ country_event = {
 			load_focus_tree = eneric_focus
 		}
 		 }
+		 MRB = {
+			country_event = {
+				id = yuki.17
+				days = 10
+			}
+		 }
+	}
+}
+country_event = {
+	#宣战事件
+	id = yuki.17
+	title = yuki.17.t
+	desc = yuki.17.d
+	picture = yuki.17.p
+	is_triggered_only = yes
+	option = {
+		name = yuki.17.a
+		MST = {
+			declare_war_on = {
+				target = MRB
+				type = annex_everything
+			}
+		}
+	}
+}
+country_event = {
+	#内战结束
+	id = yuki.19
+	title = yuki.19.t
+	desc = yuki.19.d
+	picture = yuki.19.p
+	trigger = {
+		original_tag = MRB
+		country_exists = MRB
+		NOT = {
+			country_exists = MST
+		}
+	}
+	fire_only_once = yes
+	option = {
+		name = yuki.18.a
+		hidden_effect = {
+			MGU = {
+				load_focus_tree = MGU_yuki_focus
+				complete_national_focus = MGU_yuki_love
+			}
+			MRB = { MGU_Yuki = { set_nationality = MGU } }
+	     promote_character = MGU_Yuki
+		MGU = {
+			change_tag_from = MRB
+		}
+		MRB = {
+			every_unit_leader = {
+                set_nationality = MGU
+            }
+		}
+		 MST = { MGU_Akemi_Homura = { set_nationality = ENG } }
+		 promote_character = MGU_Akemi_Homura
+		MST = {
+			every_unit_leader = {
+                set_nationality = MGU
+            }
+		}
+		MGU = {
+		add_country_leader_role = {
+			character = "MGU_Yuki"
+			country_leader={
+				ideology =  yuki_idealism
+				#traits = { }
+				expire = "1999.1.1.1"
+				id = -1
+			}
+			promote_leader = yes
+		}
+	}
+		MGU = {
+		annex_country = {
+            target = MRB
+            transfer_troops = yes
+        }
+		}
+	}
 	}
 }
 country_event = {
