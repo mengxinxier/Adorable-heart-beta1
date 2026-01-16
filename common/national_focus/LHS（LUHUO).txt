@@ -190,7 +190,7 @@ focus_tree = {
         icon = GFX_kangzheng
         x = 17
         y = 0
-        cost = 5
+        cost = 4
         available = {
         }
         bypass = {
@@ -208,14 +208,14 @@ focus_tree = {
             set_sub_doctrine = LHS_guerilla_war
             add_mastery_bonus = {
                 bonus = 0.1
-                days = 3650
+                days = 1825
                 name = LHS_WOMENG
 
                 sub_doctrine = youji_on_end
             }
             add_mastery_bonus = {
                 bonus = 0.1
-                days = 3650
+                days = 1825
                 name = LHS_WOMENG
 
                 sub_doctrine = LHS_guerilla_war
@@ -547,9 +547,9 @@ focus_tree = {
         bypass = {
         }
         relative_position_id = LHS_WOMENG
-        ai_will_do = {
+        ai_will_do = { 
             #ai点击国策的倾向
-            base = 150
+            base = 150 #基础值
             modifier = {
                 has_game_rule = {
                     rule = AH_LHS_ai_behavior_SELECTION
@@ -557,7 +557,10 @@ focus_tree = {
                 }
                 add = -50
             }
-            #基础值
+            modifier = {
+                has_country_flag = LHS_xfjjsw
+                add = 1000
+            }
         }
         completion_reward = {
             set_variable = {
@@ -609,6 +612,10 @@ focus_tree = {
                 has_completed_focus = LHS_dongyuan
                 add = 90
             }
+            modifier = {
+                has_country_flag = LHS_xfjjsw
+                add = 1000
+            }
         }
         completion_reward = {
             add_ideas = LHS_chizhi_warfare_spirit
@@ -647,6 +654,7 @@ focus_tree = {
         completion_reward = {
             custom_effect_tooltip = zuizhonglianhe
             add_research_slot = 1
+            set_faction_rule = war_declaration_rule_independent_countries_only
             add_equipment_to_stockpile = {
                 type = infantry_equipment_1
                 amount = 2000
@@ -848,13 +856,31 @@ focus_tree = {
         relative_position_id = LHS_WOMENG
         ai_will_do = {
             #ai点击国策的倾向
-            base = 150			#基础值
+            base = 250			#基础值
         }
         completion_reward = {
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_kuangwu
+                cost = 14
+            }
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_zhihui
+                cost = 14
+            }
             remove_ideas = LHS_tongji
             swap_ideas = {
                 remove_idea = LHS_lianhegongshi
                 add_idea = LHS_zuizhong
+            }
+            if = {
+                limit = {
+                    PAM = {
+                        is_ai = yes
+                    }
+                }
+                PAM = {
+                    add_ideas = LHS_jiasu
+                }
             }
             hidden_effect = {
                 delete_unit_template_and_units = {
@@ -887,7 +913,7 @@ focus_tree = {
         icon = GFX_kaixuan
         x = 0
         y = 9
-        cost = 2
+        cost = 0
         prerequisite = {
             #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
             focus = LHS_zuizhong
@@ -897,6 +923,9 @@ focus_tree = {
                 country_exists = PAM
             }
         }
+		select_effect = {
+			complete_national_focus = LHS_kaixuan
+		}
         allow_branch = {
         }
         bypass = {
@@ -904,9 +933,17 @@ focus_tree = {
         relative_position_id = LHS_WOMENG
         ai_will_do = {
             #ai点击国策的倾向
-            base = 150			#基础值
+            base = 200			#基础值
         }
         completion_reward = {
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_youji
+                cost = 14
+            }
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_shengchan
+                cost = 14
+            }
             add_timed_idea = {
                 idea = LHS_shengli
                 days = 365
@@ -1096,7 +1133,7 @@ focus_tree = {
                 not = {
                     has_completed_focus = LHS_zongjie
                 }
-                add = -500
+                factor = 0
             }
         }
         completion_reward = {
@@ -1159,6 +1196,7 @@ focus_tree = {
             base = 500			#基础值
         }
         completion_reward = {
+            add_stability = 0.05
             add_ideas = LHS_xuechou
             country_event = {
                 days = 1
@@ -1190,6 +1228,7 @@ focus_tree = {
             base = 500		#基础值
         }
         completion_reward = {
+            add_stability = 0.05
             swap_ideas = {
                 remove_idea = LHS_xuechou
                 add_idea = LHS_xuechou2
@@ -1224,6 +1263,7 @@ focus_tree = {
             base = 500		#基础值
         }
         completion_reward = {
+            add_stability = 0.1
             swap_ideas = {
                 remove_idea = LHS_xuechou2
                 add_idea = LHS_xuechou3
@@ -1232,6 +1272,11 @@ focus_tree = {
                 LHS_zhaojixianzhi = 2
             }
             custom_effect_tooltip = zhaojiyoujidui
+            hidden_effect = {
+                LHS = {
+                    remove_ideas = LHS_jiasu
+                }
+            }
         }
     }
     #爆破袭击
@@ -1259,7 +1304,10 @@ focus_tree = {
         }
         completion_reward = {
             PAM = {
-                add_ideas = LHS_baopo
+                swap_ideas = {
+                    remove_idea = LHS_jiasu
+                    add_idea = LHS_baopo
+                }
             }
         }
     }
@@ -1921,10 +1969,7 @@ focus_tree = {
                                 relation = military_access
                                 active = no
                             }
-                            declare_war_on = {
-                                target = PREV
-                                type = annex_everything
-                            }
+                            activate_targeted_decision = { target = PREV decision = LHS_jiefang_FROM }
                         }
                     }
                 }
@@ -2112,11 +2157,11 @@ focus_tree = {
              }
              modifier = {
                  date < 1939.1.1
-                 add = -10000
+                 add = -5000
              }
              modifier = {
                  has_war_with = PAQ
-                 add = 1000
+                 add = 10000
              }
              modifier = {
                  has_idea = PAO_zzjd
@@ -2136,7 +2181,6 @@ focus_tree = {
              }
         }
         will_lead_to_war_with = PAQ
-        will_lead_to_war_with = PGM
         completion_reward = {
             PAQ = {
                 every_core_state = {
@@ -2288,6 +2332,7 @@ focus_tree = {
                     }
                 }
             }
+            add_ideas = LHS_gemingdaolai
         }
     }
     #斯塔之誓
@@ -14094,7 +14139,7 @@ focus_tree = {
         icon = GFX_xueyizhanshu
         x = 0
         y = 2
-        cost = 5
+        cost = 4
         prerequisite = {
             focus = LHS_youji			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
@@ -14119,8 +14164,24 @@ focus_tree = {
             remove_ideas = LHS_chizhi_warfare_spirit
             add_ideas = LHS_jianmie_warfare_spirit
             reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_shengxia
+                cost = 7
+            }
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_zuoshen
+                cost = 7
+            }
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_dedao
+                cost = 7
+            }
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_qilai
+                cost = 7
+            }
+            reduce_focus_completion_cost = { #减少指定国策完成时间
                 focus = LHS_xueyijianshe
-                cost = 15
+                cost = 14
             }
         }
     }
@@ -14130,7 +14191,7 @@ focus_tree = {
         icon = GFX_youqi
         x = 0
         y = 3
-        cost = 5
+        cost = 4
         prerequisite = {
             focus = LHS_xueyizhanshu			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
@@ -14290,7 +14351,7 @@ focus_tree = {
         icon = GFX_zongjie
         x = 0
         y = 4
-        cost = 5
+        cost = 4
         prerequisite = {
             focus = LHS_youqi			#前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
@@ -14314,20 +14375,20 @@ focus_tree = {
                 add_idea = LHS_koudai2
             }
             reduce_focus_completion_cost = { #减少指定国策完成时间
-                focus = LHS_shengxia
-                cost = 10
+                focus = LHS_zhachang
+                cost = 7
             }
             reduce_focus_completion_cost = { #减少指定国策完成时间
-                focus = LHS_zuoshen
-                cost = 10
+                focus = LHS_kongju
+                cost = 7
             }
             reduce_focus_completion_cost = { #减少指定国策完成时间
-                focus = LHS_dedao
-                cost = 10
+                focus = LHS_budui
+                cost = 7
             }
             reduce_focus_completion_cost = { #减少指定国策完成时间
-                focus = LHS_qilai
-                cost = 10
+                focus = LHS_qiru
+                cost = 7
             }
         }
     }
@@ -14351,6 +14412,12 @@ focus_tree = {
         ai_will_do = {
             #ai点击国策的倾向
             base = 80			#基础值
+            modifier = {
+                PAM = {
+                    country_exists = PAM
+                }
+                factor = 0
+            }
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
@@ -14454,6 +14521,10 @@ focus_tree = {
                 has_completed_focus = LHS_mofashaonv
                 add = 100
             }
+            modifier = {
+                has_war_with = PAQ
+                add = 1000
+            }
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
@@ -14487,6 +14558,12 @@ focus_tree = {
         ai_will_do = {
             #ai点击国策的倾向
             base = 20			#基础值
+            modifier = {
+                PAM = {
+                    country_exists = PAM
+                }
+                factor = 0
+            }
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
@@ -14673,6 +14750,10 @@ focus_tree = {
         ai_will_do = {
             #ai点击国策的倾向
             base = 20			#基础值
+             modifier = {
+                 date < 1939.1.1
+                 factor = 0
+             }
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
@@ -15449,7 +15530,7 @@ focus_tree = {
             }
             reduce_focus_completion_cost = { #减少指定国策完成时间
                 focus = LHS_xueyizhanshu
-                cost = 15
+                cost = 14
             }
         }
     }
@@ -15507,7 +15588,7 @@ focus_tree = {
         }
         ai_will_do = {
             #ai点击国策的倾向
-            base = 20			#基础值
+            base = 50			#基础值
         }
         relative_position_id = LHS_kuangwu
         completion_reward = {
@@ -15533,7 +15614,7 @@ focus_tree = {
         }
         ai_will_do = {
             #ai点击国策的倾向
-            base = 20			#基础值
+            base = 50			#基础值
         }
         relative_position_id = LHS_kuangwu
         completion_reward = {
