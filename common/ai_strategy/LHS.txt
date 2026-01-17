@@ -321,6 +321,72 @@ MajorsBuildTanksWithManpower = {
         value = 50
     }
 }
+LHS_avoid_thin_lines = {
+    allowed = { original_tag = LHS }
+    enable = {
+        has_war = yes
+    }
+
+    ai_strategy = {
+        type = front_unit_request
+        state_trigger = {
+            is_controlled_by = LHS
+            check_variable = {
+                num_enemy_neighbor_states > 2
+            }
+        }
+        value = 100
+    }
+
+
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            NOT = { is_core_of = FROM } #
+            check_variable = { state_strategic_value < 10 }
+        }
+        execution_type = careful
+        priority = -50
+    }
+}
+LHS_political_spending = {
+    allowed = { original_tag = LHS }
+    enable = { always = yes }
+
+    # 优先找加攻防的军事顾问
+    ai_strategy = {
+        type = advisor_promotion
+        id = army_chief
+        value = 200
+    }
+}
+LHS_spy_missions = {
+    allowed = { original_tag = LHS }
+    enable = {
+        num_of_operatives > 1
+    }
+
+    # 渗透敌军
+    ai_strategy = {
+        type = operation_priority
+        id = operation_infiltrate_armed_forces_civilian
+        value = 500
+    }
+
+    # 偷窃蓝图
+    ai_strategy = {
+        type = operation_priority
+        id = operation_steal_tech_mechanical_engineering
+        value = 300
+    }
+
+    # 建立合作政府
+    ai_strategy = {
+        type = operation_priority
+        id = operation_prepare_collaboration_government
+        value = 200
+    }
+}
 #1938年研究机动
 LHS_ai_research_jidong = { #机动
     allowed = {
@@ -1292,34 +1358,34 @@ LHS_air_production = { #空军生产
 LHS_and_CHL={ #保护野火
     allowed={
         original_tag = CHL
-}
-enable = {
-    LHS = {
-        exists = yes
     }
-}
-ai_strategy = {
-    type=protect
-    tag="CHL"
-    value = 10000
-}
+    enable = {
+        LHS = {
+            exists = yes
+        }
+    }
+    ai_strategy = {
+        type=protect
+        tag="CHL"
+        value = 10000
+    }
 }
 LHS_and_CHL1={ #保护莉兰迪亚公社
     allowed={
         original_tag = CHL
-}
-enable = {
-    LHS = {
-        exists = yes
-
     }
-}
-abort_when_not_enabled = yes
-ai_strategy = {
-    type=befriend
-    tag="LHS"
-    value = 10000
-}
+    enable = {
+        LHS = {
+            exists = yes
+
+        }
+    }
+    abort_when_not_enabled = yes
+    ai_strategy = {
+        type=befriend
+        tag="LHS"
+        value = 10000
+    }
 }
 always_prioritize_our_core = {
     allowed={
@@ -1421,22 +1487,31 @@ LHS_state_is_zhanlue = {#老爷爷，我给你踩地来咯
     }
     ai_strategy = {
         type = front_control
-
         state_trigger = {
-            FROM = { has_war_with = FROM.FROM }
-            any_province_building_level = {
-                province = {
-                    all_provinces = yes
+            controller = { has_war_with = LHS }
+            OR = {
+                any_province_building_level = {
+                    province = { all_provinces = yes }
+                    building = supply_node
+                    level > 0
                 }
-                building = supply_node
-                level > 0
+                is_coastal = yes
             }
         }
-
-
         priority = 8000
         ordertype = front
         execution_type = rush
+        manual_attack = yes
+    }
+
+    # 集中装甲力量突破
+    ai_strategy = {
+        type = front_armor_score
+        state_trigger = {
+            controller = { has_war_with = LHS }
+            check_variable = { state_strategic_value > 5 } # 只在有价值的地方用坦克
+        }
+        value = 200 # 让坦克师优先去这些地方
     }
 }
 LHS_end_pocket = {#包围快速歼灭
@@ -1719,7 +1794,53 @@ LHS_war_with_PAU0 = { #与军团开战
 }
 
 
+LHS_protect_supply_lines = { #死守补给点
+    allowed = {
+        original_tag = LHS
+    }
+    enable = {
+        has_war = yes
+    }
+    abort_when_not_enabled = yes
 
+
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            is_controlled_by = LHS
+            any_province_building_level = {
+                province = { all_provinces = yes }
+                building = supply_node
+                level > 0
+            }
+
+            any_neighbor_state = {
+                controller = { has_war_with = LHS }
+            }
+        }
+        priority = 5000
+        ordertype = front
+        execution_type = careful
+        manual_attack = no
+    }
+
+
+    ai_strategy = {
+        type = front_unit_request
+        state_trigger = {
+            is_controlled_by = LHS
+            any_province_building_level = {
+                province = { all_provinces = yes }
+                building = supply_node
+                level > 0
+            }
+            any_neighbor_state = {
+                controller = { has_war_with = LHS }
+            }
+        }
+        value = 50
+    }
+}
 
 LHS_check_omega_lul = { #部队逻辑
     allowed = {
@@ -1731,36 +1852,42 @@ LHS_check_omega_lul = { #部队逻辑
     abort = {
         always = no
     }
-    ai_strategy = {#不待没补给的地方
-        type = front_unit_request
-        state_trigger = {
-            is_controlled_by = FROM.FROM
-            any_province_building_level = {
-                province = {
-                    all_provinces = yes
-                }
-                building = supply_node
-                level > 0
-            }
-        }
-        value = 15
-    }
-    ai_strategy = {
-        type = front_unit_request
-        state_trigger = {
-            is_controlled_by = FROM
-            NOT = {
+    ai_strategy = {#不待烂地
+         type = front_control
+         state_trigger = {
+             is_controlled_by = LHS
+             NOT = { is_core_of = LHS }
+             NOT = { 
+                 any_province_building_level = {
+                     province = { all_provinces = yes }
+                     building = supply_node
+                     level > 0
+                 }
+             }
+             NOT = { is_capital = yes }
+         }
+         priority = 10 
+         ordertype = front
+         execution_type = careful
+     }
+
+     #告诉AI从这些垃圾地块把兵抽走
+     ai_strategy = {
+         type = front_unit_request
+         state_trigger = {
+             is_controlled_by = LHS
+             NOT = { is_core_of = LHS }
+            NOT = { #没有补给站
                 any_province_building_level = {
-                    province = {
-                        all_provinces = yes
-                    }
+                    province = { all_provinces = yes }
                     building = supply_node
                     level > 0
                 }
             }
-        }
-        value = -15
-    }
+            NOT = { is_capital = yes }
+         }
+         value = -50 
+     }
     ai_strategy = {#保护首都
         type = front_unit_request
         state_trigger = {
@@ -2944,7 +3071,7 @@ LHS_war_with_BRA_MGU = { #与妖精和魔法少女联盟开战
 #            }
 #        }
 #    }
- #   abort = {
+#   abort = {
 #        not = { country_exists = PAQ }
 #    }
 #    ai_strategy = {
