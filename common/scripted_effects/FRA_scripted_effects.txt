@@ -25,6 +25,59 @@ FRA_remove_all_ideas = {
 	}
 }
 
+FRA_remove_all_WOHS_ideas = {
+	hidden_effect = {
+		if = {
+			limit = { has_idea = FRA_great_blessing_idea }
+			remove_ideas = FRA_great_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_blessing_idea }
+			remove_ideas = FRA_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_moderate_blessing_idea }
+			remove_ideas = FRA_moderate_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_minor_blessing_idea }
+			remove_ideas = FRA_minor_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_slight_blessing_idea }
+			remove_ideas = FRA_slight_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_half_blessing_idea }
+			remove_ideas = FRA_half_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_minimal_blessing_idea }
+			remove_ideas = FRA_minimal_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_minor_misfortune_idea }
+			remove_ideas = FRA_minor_misfortune_idea
+		}
+		if = {
+			limit = { has_idea = FRA_half_misfortune_idea }
+			remove_ideas = FRA_half_misfortune_idea
+		}
+		if = {
+			limit = { has_idea = FRA_slight_misfortune_idea }
+			remove_ideas = FRA_slight_misfortune_idea
+		}
+		if = {
+			limit = { has_idea = FRA_misfortune_idea }
+			remove_ideas = FRA_misfortune_idea
+		}
+		if = {
+			limit = { has_idea = FRA_great_misfortune_idea }
+			remove_ideas = FRA_great_misfortune_idea
+		}
+	}
+}
+
 #计算当地意识形态
 FRA_Calculate_local_ideology = {
 	set_variable = { THIS.Total_local_ideology_var = 0 }
@@ -3653,6 +3706,27 @@ COST_200_UBS_LOAD = {
 		}
 	}
 }
+COST_100_UBS_LOAD = {
+	custom_effect_tooltip = COST_100_UBS_LOAD
+	hidden_effect = {
+		if = {
+			limit = {
+				not = {
+					check_variable = { ubs_save < 100 }
+				}
+			}
+			add_to_variable = { ubs_save = -100 }
+		}
+		else = {
+			add_to_variable = { ubs_save = -100 }
+			subtract_from_variable = { ubs_load = ubs_save }
+			clamp_variable = {
+				var = ubs_save
+				min = 0
+			}
+		}
+	}
+}
 COST_50_UBS_LOAD = {
 	custom_effect_tooltip = COST_50_UBS_LOAD
 	hidden_effect = {
@@ -4334,4 +4408,63 @@ WSDO_effect = {
 	}
 	###  刷新经济阵营GDP
 	compute_global_gdp = yes
+}
+
+###  抽幻存神签
+FRA_Extract_WOHS = {
+	hidden_effect = {
+		#FRA_remove_all_WOHS_ideas = yes
+		set_variable = { cycle_days = cycle_days_temp }
+		random_list = {
+			0 = {
+				modifier = {
+					add = modifier@WOHS_Fortune_factor
+				}
+				random_list = {
+					8 = { add_timed_idea = { idea = FRA_minimal_blessing_idea days = cycle_days } }
+					24 = { add_timed_idea = { idea = FRA_half_blessing_idea days = cycle_days } }
+					20 = { add_timed_idea = { idea = FRA_slight_blessing_idea days = cycle_days } }
+					18 = { add_timed_idea = { idea = FRA_minor_blessing_idea days = cycle_days } }
+					16 = { add_timed_idea = { idea = FRA_moderate_blessing_idea days = cycle_days } }
+					10 = { add_timed_idea = { idea = FRA_blessing_idea days = cycle_days } }
+					4 = { add_timed_idea = { idea = FRA_great_blessing_idea days = cycle_days } }
+				}
+			}
+			100 = {
+				modifier = {
+					set_temp_variable = { t = modifier@WOHS_Fortune_factor }
+					divide_temp_variable = { t = -1 }
+					add = t
+				}
+				random_list = {
+					32 = { add_timed_idea = { idea = FRA_minor_misfortune_idea days = cycle_days } }
+					38 = { add_timed_idea = { idea = FRA_half_misfortune_idea days = cycle_days } }
+					16 = { add_timed_idea = { idea = FRA_slight_misfortune_idea days = cycle_days } }
+					10 = { add_timed_idea = { idea = FRA_misfortune_idea days = cycle_days } }
+					4 = { add_timed_idea = { idea = FRA_great_misfortune_idea days = cycle_days } }
+				}
+			}
+		}
+	}
+}
+
+###  不死鸟之焰
+FRA_EPR_effect = {
+	hidden_effect = {
+		set_variable = { EPR_army_strength_factor = casualties_k }
+		divide_variable = { EPR_army_strength_factor = 20000 }
+		clamp_variable = {  ##限定最大/最小值（单次效果，非永久）
+			var = EPR_army_strength_factor
+			min = 0
+			max = 0.25
+		}
+		if = {
+			limit = { has_completed_focus = FRA_GFN_The_Eternal_Crimson_Lotus_Flame }
+			set_variable = { EPR_army_attack_factor = EPR_army_strength_factor }
+		}
+		if = {
+			limit = { has_completed_focus = FRA_GFN_The_March_Defying_Death }
+			set_variable = { EPR_army_speed_factor = EPR_army_strength_factor }
+		}
+	}
 }
