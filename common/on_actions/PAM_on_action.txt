@@ -1,6 +1,10 @@
 on_actions = {
 	on_startup = {
 		effect = {
+			every_state = {
+				limit = { is_core_of = PAM }
+				set_state_flag = PAM_orgin_core_state
+			}
 
         }
     }
@@ -73,8 +77,33 @@ on_actions = {
     on_annex = {
         effect = {
             if = {
+                limit = { #野火小果子线时击败亡灵会同步吞并无政府地区
+                    ROOT = {
+                        tag = PAM
+                        has_war_with = LHS
+                    }
+                    FROM = {
+                        tag = ZDW
+                    }
+                    LHS = {
+                        is_ai = yes
+                    }
+                }
+                PAM = {
+                    annex_country = {
+                        target = WRQ
+                        transfer_troops = no
+                    }
+                }
+            }
+            if = {
                 #战胜亡灵
                 limit = {
+                    PAM = {
+                        NOT = {
+                            has_country_flag = PAM_cishawldn #野火ai小果子线时不会触发之后的事件
+                        }
+                    }
                     ROOT = {
                         PAM = {has_completed_focus = PAM_cztm}
                         not = {has_country_flag = PAM_zswl}
