@@ -1547,34 +1547,12 @@ THIS_country_is_defender_and_ROOT_is_accacker = {
 
 FROM_country_is_defender_and_ROOT_is_accacker = {
 	hidden_effect = {
-		ROOT = { save_global_event_target_as = Adorable_heart_Accacker }
-		FROM = { save_global_event_target_as = Adorable_heart_Defender }
-		FROM = { set_country_flag = War_warning_window_visible }
-		every_country = {
-			limit = {
-				OR = {
-					is_ally_with = ROOT
-					has_guaranteed = ROOT
-					civilwar_target = ROOT
-					is_subject_of = ROOT
-				}
-				NOT = { tag = ROOT }
-			}
-			set_country_flag = War_warning_window_visible
-		}
-		every_country = {
-			limit = {
-				OR = {
-					is_ally_with = FROM
-					has_guaranteed = FROM
-					civilwar_target = FROM
-					is_subject_of = FROM
-				}
-				#NOT = { is_ally_with = FROM }
-			}
-			set_country_flag = War_warning_window_visible
-		}
+		FROM = { incoming_war_notification_effect = yes }
 	}
+}
+
+incoming_war_notification_effect = {
+	hidden_effect = { country_event = generic.2025 } #warning event
 }
 
 test = {
@@ -2633,3 +2611,167 @@ generic_economy_faction_effect = {
 	###  刷新经济阵营GDP
 	compute_global_gdp = yes
 }
+
+#requires a temp variable target
+clear_embargo_TARGET = {
+	if = {
+		limit = { var:target = { PREV = { has_country_flag = embargoed_@PREV } } }
+		hidden_effect = {
+			var:target = {
+				clr_country_flag = embargoed_@PREV
+				diplomatic_relation = {
+					country = PREV
+					relation = embargo
+					active = no
+				}
+				remove_opinion_modifier = {
+					modifier = embargo
+					target = PREV
+				}
+				PREV = {
+					clr_country_flag = embargoed_@PREV
+					diplomatic_relation = {
+						country = PREV
+						relation = embargo
+						active = no
+					}
+					remove_opinion_modifier = {
+						modifier = embargo
+						target = PREV
+					}
+				}
+			}
+		}
+		effect_tooltip = {
+			meta_effect = {
+				text = {
+					if = {
+						limit = { has_dlc_bba = yes }
+						diplomatic_relation = {
+							country = [TARGET]
+							relation = embargo
+							active = no
+						}
+					}
+					else = {
+						remove_opinion_modifier = {
+							modifier = embargo
+							target = [TARGET]
+						}
+					}
+					[TARGET] = {
+						if = {
+							limit = { has_dlc_bba = yes }
+							diplomatic_relation = {
+								country = PREV
+								relation = embargo
+								active = no
+							}
+						}
+						else = {
+							remove_opinion_modifier = {
+								modifier = embargo
+								target = PREV
+							}
+						}
+					}
+				}
+				TARGET = "[?target.GetTag]"
+			}
+		}
+	}
+}
+
+embargo_ROOT = {
+	set_temp_variable = { target = ROOT }
+	embargo_TARGET = yes
+}
+
+clear_embargo_ROOT = {
+	set_temp_variable = { target = ROOT }
+	clear_embargo_TARGET = yes
+}
+
+embargo_PREV = {
+	set_temp_variable = { target = PREV }
+	embargo_TARGET = yes
+}
+
+clear_embargo_PREV = {
+	set_temp_variable = { target = PREV }
+	clear_embargo_TARGET = yes
+}
+
+embargo_FROM = {
+	set_temp_variable = { target = FROM }
+	embargo_TARGET = yes
+}
+
+clear_embargo_FROM = {
+	set_temp_variable = { target = FROM }
+	clear_embargo_TARGET = yes
+}
+
+remove_all_AI_templates = {
+	hidden_effect = {
+		for_loop_effect = {
+			start = 1
+			end = 20
+			compare = less_than_or_equals
+
+			meta_effect = {
+				text = {
+					if = {
+						limit = { has_template = "Infantry template [COUNT]" }
+						delete_unit_template_and_units = { division_template = "Infantry template [COUNT]" }
+					}
+					if = {
+						limit = { has_template = "Light Tank template [COUNT]" }
+						delete_unit_template_and_units = { division_template = "Light Tank template [COUNT]" }
+					}
+					if = {
+						limit = { has_template = "Medium Tank template [COUNT]" }
+						delete_unit_template_and_units = { division_template = "Medium Tank template [COUNT]" }
+					}
+					if = {
+						limit = { has_template = "Modern Tank template [COUNT]" }
+						delete_unit_template_and_units = { division_template = "Modern Tank template [COUNT]" }
+					}
+					if = {
+						limit = { has_template = "Marines template [COUNT]" }
+						delete_unit_template_and_units = { division_template = "Marines template [COUNT]" }
+					}
+					if = {
+						limit = { has_template = "Mountaineers template [COUNT]" }
+						delete_unit_template_and_units = { division_template = "Mountaineers template [COUNT]" }
+					}
+				}
+				COUNT = "[?v]"
+			}
+		}
+	}
+}
+
+destroy_all_ships = {
+	destroy_ships = {
+		type = ship_hull_light
+		count = all
+	}
+	destroy_ships = {
+		type = ship_hull_cruiser
+		count = all
+	}
+	destroy_ships = {
+		type = ship_hull_heavy
+		count = all
+	}
+	destroy_ships = {
+		type = ship_hull_submarine
+		count = all
+	}
+	destroy_ships = {
+		type = ship_hull_carrier
+		count = all
+	}
+}
+

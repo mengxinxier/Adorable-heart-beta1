@@ -25,6 +25,59 @@ FRA_remove_all_ideas = {
 	}
 }
 
+FRA_remove_all_WOHS_ideas = {
+	hidden_effect = {
+		if = {
+			limit = { has_idea = FRA_great_blessing_idea }
+			remove_ideas = FRA_great_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_blessing_idea }
+			remove_ideas = FRA_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_moderate_blessing_idea }
+			remove_ideas = FRA_moderate_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_minor_blessing_idea }
+			remove_ideas = FRA_minor_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_slight_blessing_idea }
+			remove_ideas = FRA_slight_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_half_blessing_idea }
+			remove_ideas = FRA_half_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_minimal_blessing_idea }
+			remove_ideas = FRA_minimal_blessing_idea
+		}
+		if = {
+			limit = { has_idea = FRA_minor_misfortune_idea }
+			remove_ideas = FRA_minor_misfortune_idea
+		}
+		if = {
+			limit = { has_idea = FRA_half_misfortune_idea }
+			remove_ideas = FRA_half_misfortune_idea
+		}
+		if = {
+			limit = { has_idea = FRA_slight_misfortune_idea }
+			remove_ideas = FRA_slight_misfortune_idea
+		}
+		if = {
+			limit = { has_idea = FRA_misfortune_idea }
+			remove_ideas = FRA_misfortune_idea
+		}
+		if = {
+			limit = { has_idea = FRA_great_misfortune_idea }
+			remove_ideas = FRA_great_misfortune_idea
+		}
+	}
+}
+
 #计算当地意识形态
 FRA_Calculate_local_ideology = {
 	set_variable = { THIS.Total_local_ideology_var = 0 }
@@ -1189,6 +1242,8 @@ FRA_change_to_hoi_pie_chart = {
 		add_to_variable = { ROOT.support_of_GFN_pie_chart_var = ROOT.support_of_IDU_pie_chart_var }
 		set_variable = { ROOT.support_of_MNR_pie_chart_var = support_of_MNR }
 		add_to_variable = { ROOT.support_of_MNR_pie_chart_var = ROOT.support_of_GFN_pie_chart_var }
+		set_variable = { ROOT.support_of_Sanae_pie_chart_var = support_of_Sanae }
+		add_to_variable = { ROOT.support_of_Sanae_pie_chart_var = ROOT.support_of_MNR_pie_chart_var }
 		#康米
 		set_variable = { ROOT.temp_popularity_of_communism = support_of_LCR }
 		add_to_variable = { ROOT.temp_popularity_of_communism = support_of_PCG }
@@ -3653,6 +3708,27 @@ COST_200_UBS_LOAD = {
 		}
 	}
 }
+COST_100_UBS_LOAD = {
+	custom_effect_tooltip = COST_100_UBS_LOAD
+	hidden_effect = {
+		if = {
+			limit = {
+				not = {
+					check_variable = { ubs_save < 100 }
+				}
+			}
+			add_to_variable = { ubs_save = -100 }
+		}
+		else = {
+			add_to_variable = { ubs_save = -100 }
+			subtract_from_variable = { ubs_load = ubs_save }
+			clamp_variable = {
+				var = ubs_save
+				min = 0
+			}
+		}
+	}
+}
 COST_50_UBS_LOAD = {
 	custom_effect_tooltip = COST_50_UBS_LOAD
 	hidden_effect = {
@@ -4334,4 +4410,375 @@ WSDO_effect = {
 	}
 	###  刷新经济阵营GDP
 	compute_global_gdp = yes
+}
+
+###  抽幻存神签
+FRA_Extract_WOHS = {
+	hidden_effect = {
+		#FRA_remove_all_WOHS_ideas = yes
+		set_variable = { cycle_days = cycle_days_temp }
+		random_list = {
+			0 = {
+				modifier = {
+					add = modifier@WOHS_Fortune_factor
+				}
+				random_list = {
+					8 = { add_timed_idea = { idea = FRA_minimal_blessing_idea days = cycle_days } }
+					24 = { add_timed_idea = { idea = FRA_half_blessing_idea days = cycle_days } }
+					20 = { add_timed_idea = { idea = FRA_slight_blessing_idea days = cycle_days } }
+					18 = { add_timed_idea = { idea = FRA_minor_blessing_idea days = cycle_days } }
+					16 = { add_timed_idea = { idea = FRA_moderate_blessing_idea days = cycle_days } }
+					10 = { add_timed_idea = { idea = FRA_blessing_idea days = cycle_days } }
+					4 = { add_timed_idea = { idea = FRA_great_blessing_idea days = cycle_days } }
+				}
+			}
+			100 = {
+				modifier = {
+					set_temp_variable = { t = modifier@WOHS_Fortune_factor }
+					divide_temp_variable = { t = -1 }
+					add = t
+				}
+				random_list = {
+					32 = { add_timed_idea = { idea = FRA_minor_misfortune_idea days = cycle_days } }
+					38 = { add_timed_idea = { idea = FRA_half_misfortune_idea days = cycle_days } }
+					16 = { add_timed_idea = { idea = FRA_slight_misfortune_idea days = cycle_days } }
+					10 = { add_timed_idea = { idea = FRA_misfortune_idea days = cycle_days } }
+					4 = { add_timed_idea = { idea = FRA_great_misfortune_idea days = cycle_days } }
+				}
+			}
+		}
+		hidden_effect = { country_event = generic.2027 }
+	}
+}
+
+###  不死鸟之焰
+FRA_EPR_effect = {
+	hidden_effect = {
+		set_variable = { EPR_army_strength_factor = casualties_k }
+		divide_variable = { EPR_army_strength_factor = 10000 }
+		clamp_variable = {  ##限定最大/最小值（单次效果，非永久）
+			var = EPR_army_strength_factor
+			min = 0
+			max = 0.5
+		}
+		if = {
+			limit = { has_completed_focus = FRA_GFN_The_Eternal_Crimson_Lotus_Flame }
+			set_variable = { EPR_army_attack_factor = EPR_army_strength_factor }
+		}
+		if = {
+			limit = { has_completed_focus = FRA_GFN_The_March_Defying_Death }
+			set_variable = { EPR_army_speed_factor = EPR_army_strength_factor }
+		}
+	}
+}
+
+###  合成
+FRA_Laboratory_synthesis_effect = {
+	hidden_effect = {
+		add_political_power = -50
+		set_variable = { temp = FRA_Laboratory_synthesis_material_var_01 }
+		multiply_variable = { temp = 16 }
+		add_to_variable = { temp = FRA_Laboratory_synthesis_material_var_02 }
+		set_variable = { FRA_Laboratory_potion_array^temp = 1 }
+		#
+		set_variable = { temp = FRA_Laboratory_synthesis_material_var_02 }
+		multiply_variable = { temp = 16 }
+		add_to_variable = { temp = FRA_Laboratory_synthesis_material_var_01 }
+		set_variable = { FRA_Laboratory_potion_array^temp = 1 }
+		#
+		if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 8 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 13 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 13 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 8 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 1 }
+			add_ideas = FRA_Cryogenic_Order_Fluid
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 10 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 14 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 14 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 10 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 2 }
+			add_ideas = FRA_Singularity_Drive_Fuel
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 7 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 9 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 9 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 7 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 3 }
+			add_ideas = FRA_Miracle_Probability_Amplifier
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 12 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 15 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 15 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 12 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 4 }
+			add_ideas = FRA_Sovereign_Covenant_of_Fate_Realignment
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 1 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 4 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 4 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 1 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 5 }
+			add_ideas = FRA_Necro_Vitality_Reagent
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 11 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 16 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 16 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 11 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 6 }
+			add_ideas = FRA_Acoustic_Cognitive_Nullification
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 5 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 6 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 6 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 5 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 7 }
+			add_ideas = FRA_Superhuman_Scripture_Fuel
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 2 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 3 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 3 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 2 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 8 }
+			add_ideas = FRA_Powder_of_Nullified_Existence
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 1 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 9 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 9 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 1 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 9 }
+			add_ideas = FRA_Expired_Divinity_Chowder
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 4 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 16 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 16 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 4 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 10 }
+			add_ideas = FRA_Desiccated_Bio_Archive
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 10 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 13 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 13 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 10 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 11 }
+			add_ideas = FRA_Supersonic_Data_Processing_Fluid
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 6 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 11 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 11 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 6 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 12 }
+			add_ideas = FRA_Namu_Sanzu_Nightingale_Ode
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 2 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 12 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 12 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 2 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 13 }
+			add_ideas = FRA_The_Redacted_True_History
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 3 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 16 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 16 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 3 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 14 }
+			add_ideas = FRA_Cryo_Ghost_Condensate
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 4 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 14 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 14 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 4 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 15 }
+			add_ideas = FRA_Hyper_Density_Bio_Armor
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 2 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 7 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 7 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 2 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 16 }
+			add_ideas = FRA_Causality_Severance_Stealth_Oil
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 9 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 15 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 15 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 9 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 17 }
+			add_ideas = FRA_Boiling_Agent_of_Divine_Destiny
+		}
+		else_if = {
+			limit = {
+				or = {
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 1 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 8 }
+					}
+					and = {
+						check_variable = { FRA_Laboratory_synthesis_material_var_01 = 8 }
+						check_variable = { FRA_Laboratory_synthesis_material_var_02 = 1 }
+					}
+				}
+			}
+			set_variable = { FRA_Laboratory_potion_var = 18 }
+			add_ideas = FRA_Absolute_Avarice_Singularity
+		}
+		else = {
+			set_variable = { FRA_Laboratory_potion_var = 19 }
+		}
+		#
+		set_variable = { FRA_Laboratory_synthesis_material_var_01 = 17 }
+		set_variable = { FRA_Laboratory_synthesis_material_var_02 = 17 }
+	}
 }
