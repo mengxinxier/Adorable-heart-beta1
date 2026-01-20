@@ -18,67 +18,7 @@ scripted_gui = {
 			}
 		}
 	}
-	#阵营
-	faction_joining_window = {
-		window_name = "faction_joining_window"
-		context_type = player_context
-		visible = {
-			has_global_flag = faction_joining_window_visible
-            is_ai = no
-		}
-		effects = {
-			faction_joining_alert_close_button_click = {
-				sound_effect = "click_close"
-				clr_global_flag = faction_joining_window_visible
-				clear_global_event_target = Adorable_heart_faction_member
-				clear_global_event_target = Adorable_heart_faction_leader
-            }
-		}
-		triggers = {
-		}
-		dynamic_lists = {
-		}
-		properties = {
-		}
-		ai_enabled = {
-			always = no
-		}
-		ai_check = {
-		}
-		ai_weights = {
-		}
-	}
-	#战争预警
-	War_warning_window = {
-		window_name = "War_warning_window"
-		context_type = player_context
-		visible = {
-			has_country_flag = War_warning_window_visible
-            is_ai = no
-		}
-		effects = {
-			War_warning_alert_close_button_click = {
-				sound_effect = "click_close"
-				clr_country_flag = War_warning_window_visible
-				clear_global_event_target = Adorable_heart_Accacker
-				clear_global_event_target = Adorable_heart_Defender
-            }
-		}
-		triggers = {
-		}
-		dynamic_lists = {
-		}
-		properties = {
-		}
-		ai_enabled = {
-			always = no
-		}
-		ai_check = {
-		}
-		ai_weights = {
-		}
-	}
-	##核心
+	##提示框
 	Adorable_heart_alerts_window = {
 		context_type = player_context
 		window_name = "Adorable_heart_alerts_window"
@@ -87,21 +27,90 @@ scripted_gui = {
 			always = no
 		}
 		dynamic_lists = {
+			faction_joining_alerts_grid = {
+				array = global.faction_joining_alerts
+				change_scope = yes
+				country_scope_entry_container = faction_joining_alert
+			}
 			state_integration_alerts_grid = {
 				array = state_integration_alerts
 				entry_container = state_integration_alert
 				value = integrated_state
 			}
+			country_integration_alerts_grid = {
+				array = country_integration_alerts
+				entry_container = country_integration_alert
+				value = integrated_country
+			}
+			incoming_war_alerts_grid = {
+				array = incoming_war_alerts
+				change_scope = yes
+				country_scope_entry_container = incoming_war_alert
+			}
+			overly_indebted_alerts_grid = {
+				array = overly_indebted_alerts
+				entry_container = overly_indebted_alert
+				value = alert
+			}
+			FRA_WOHS_Fortune_alerts_grid = {
+				array = FRA_WOHS_Fortune_alerts
+				entry_container = FRA_WOHS_Fortune_alert
+				value = alert
+			}
 		}
 		effects = {
+			faction_joining_bg_right_click = {
+				clear_faction_joining_alert = yes
+			}
 			state_integration_bg_right_click = {
 				set_temp_variable = { target = integrated_state }
 				clear_integration_alert = yes
 			}
+			country_integration_bg_right_click = {
+				set_temp_variable = { target = integrated_country }
+				clear_integration_alert = yes
+			}
+			incoming_war_ok_button_click = {
+				clear_variable = ROOT.alert_war_target_@THIS
+				remove_from_array = { ROOT.incoming_war_alerts = THIS }
+				set_variable_to_random = global.Adorable_heart_alerts_dirty
+			}
+			overly_indebted_ok_button_click = {
+				remove_from_array = { overly_indebted_alerts = alert }
+				set_variable_to_random = global.Adorable_heart_alerts_dirty
+			}
+			FRA_WOHS_Fortune_ok_button_click = {
+				remove_from_array = { FRA_WOHS_Fortune_alerts = alert }
+				set_variable_to_random = global.Adorable_heart_alerts_dirty
+			}
 		}
 		properties = {
+			faction_joining_sender_flag = {
+				image = "[THIS.GetFlag]"
+			}
+			faction_joining_receiver_flag = {
+				image = "[?faction_leader.GetFlag]"
+			}
+			faction_joining_alert_progressbar = {
+				x = faction_joining_progressbar_value
+			}
 			state_integration_alert_progressbar = {
 				x = integration_progressbar_value_@var:integrated_state
+			}
+			country_integration_sender_flag = {
+				image = "[?integrated_country.GetFlag]"
+			}
+			country_integration_receiver_flag = {
+				image = "[ROOT.GetFlag]"
+			}
+			country_integration_alert_progressbar = {
+				x = integration_progressbar_value_@var:integrated_country
+			}
+			incoming_war_sender_flag = {
+				image = "[THIS.GetFlag]"
+			}
+			incoming_war_receiver_flag = {
+				image = "[?ROOT.alert_war_target_@THIS.GetFlag]"
 			}
 		}
 	}
