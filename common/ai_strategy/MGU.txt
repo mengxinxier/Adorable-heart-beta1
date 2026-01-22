@@ -91,11 +91,11 @@
             id = armor
             value = -50
         }
-        ai_strategy = {#不研究坦克
-            type = research_tech	#科技倾向
-            id = armor
-            value = -800
-        }
+        #ai_strategy = {#不研究坦克
+        #    type = research_tech	#科技倾向
+         #   id = armor
+         #   value = -800
+        #}
 	}
 
 	MGU_more_magic = {
@@ -242,6 +242,12 @@
 				num_divisions > 120
 			}
 		}
+        abort_when_not_enabled = yes
+
+        ai_strategy = {
+            type = ai_wanted_divisions_factor
+            value = 400
+        }
 		ai_strategy = {
 			type = build_army
 			id = infantry
@@ -339,11 +345,11 @@
             id = armor
             value = -50
         }
-        ai_strategy = {#不研究坦克
-            type = research_tech	#科技倾向
-            id = armor
-            value = -800
-        }
+        #ai_strategy = {#不研究坦克
+        #    type = research_tech	#科技倾向
+         #   id = armor
+         #   value = -800
+        #}
 	}
 
 	#魔联征募（蓝魔联）
@@ -365,6 +371,12 @@
 				num_divisions > 180
 			}
 		}
+        abort_when_not_enabled = yes
+
+        ai_strategy = {
+            type = ai_wanted_divisions_factor
+            value = 500
+        }
 		ai_strategy = {
 			type = build_army
 			id = infantry
@@ -382,6 +394,7 @@ MGU_Military_Command_HQ_def = {#防线收缩 守家
         has_global_flag = MGU_Homura_COUP
         surrender_progress > 0.2
     }
+	abort_when_not_enabled = yes	#下划线：平时关掉
 	ai_strategy = {
 		type = theatre_distribution_demand_increase #在神滨市部署更多兵力
 		value = 20
@@ -451,9 +464,12 @@ MGU_hold_up_in = { #We got this far but there are bigger targets to worry about 
 		date > 1938.1.1
 		date < 1942.1.1
 		has_global_flag = MGU_Homura_COUP
+		NOT = { has_country_flag = MGU_qiangxi_RUA_flag }
 	}
 	abort = {
 		has_government = communism
+		date > 1942.1.1
+		has_country_flag = MGU_qiangxi_RUA_flag
 	}
 
 	ai_strategy = { #别乱冲 人力都冲光了
@@ -515,6 +531,85 @@ MGU_hold_up_in = { #We got this far but there are bigger targets to worry about 
 
 }
 
+MGU_qiangxi_RUA_AI = { #We got this far but there are bigger targets to worry about for a while
+	allowed = {
+		original_tag = MGU
+	}
+
+	enable = {
+		has_country_flag = MGU_qiangxi_RUA_flag
+	}
+	abort = {
+		NOT = { has_country_flag = MGU_qiangxi_RUA_flag }
+	}
+
+	ai_strategy = { #冲锋
+		type = front_control
+		tag = PAU
+		ratio > 0.1
+		priority = 100
+		ordertype = front
+		execution_type = balanced
+		execute_order = yes
+	}
+	ai_strategy = { #冲锋
+		type = front_control
+		tag = CHL
+		ratio > 0.1
+		priority = 100
+		ordertype = front
+		execution_type = careful
+		execute_order = yes
+	}
+	ai_strategy = { #冲锋
+		type = front_control
+		tag = LHS
+		ratio > 0.1
+		priority = 100
+		ordertype = front
+		execution_type = balanced
+		execute_order = yes
+	}
+	ai_strategy = { #冲锋
+		type = front_control
+		tag = PAJ
+		ratio > 0.1
+		priority = 100
+		ordertype = front
+		execution_type = balanced
+		execute_order = yes
+	}
+	ai_strategy = { #冲锋
+		type = front_control
+		tag = PAN
+		ratio > 0.1
+		priority = 100
+		ordertype = front
+		execution_type = balanced
+		execute_order = yes
+	}
+	ai_strategy = { #冲锋
+		type = front_control
+		tag = PAQ
+		ratio > 0.1
+		priority = 100
+		ordertype = front
+		execution_type = balanced
+		execute_order = yes
+	}
+	ai_strategy = { #冲锋
+		type = front_control
+		tag = PA1
+		ratio > 0.1
+		priority = 100
+		ordertype = front
+		execution_type = balanced
+		execute_order = yes
+	}
+
+}
+
+
 MS1_rush_weak = { #攻击！攻击！
 	allowed = {
 		original_tag = MS1
@@ -568,3 +663,26 @@ MS1_rush_weak = { #攻击！攻击！
 		}
 
 	}
+
+#下划线：对抗帝国时去帮猎帅填线，专心应对帝国
+MGU_help_LFC = {
+	allowed = {
+		original_tag = MGU
+	}
+	enable = {
+		is_in_faction_with = LFC
+		has_war_with = PAQ
+		not = { has_government = communism }
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = force_defend_ally_borders
+		id = "LFC"
+		value = 5000
+	}
+	ai_strategy = {
+		type = front_unit_request
+		id = "PAQ"			
+		value = 200
+	}
+}

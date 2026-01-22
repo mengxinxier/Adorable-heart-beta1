@@ -1,5 +1,36 @@
 ﻿add_namespace = LHS
 add_namespace = LHS_news
+add_namespace = LHS_joint
+
+# 街垒繁花
+country_event = {
+    id = LHS_joint.001
+    title = LHS_joint.001.t
+    desc = LHS_joint.001.d
+    picture = GFX_event_PAO_yh
+    is_triggered_only = yes
+
+    option = {
+        name = LHS_joint.001.a
+        add_war_support = 0.10
+        add_political_power = 50
+    }
+}
+
+#不再孤独的祈祷
+country_event = {
+    id = LHS_joint.2
+    title = LHS_joint.002.t
+    desc = LHS_joint.002.d
+    picture = GFX_event_mfsn
+    is_triggered_only = yes
+
+    option = {
+        name = LHS_joint.002.a
+        add_war_support = 0.10
+        add_political_power = 50
+    }
+}
 #神秘来信？
 country_event = {
     id = LHS.1
@@ -123,6 +154,16 @@ country_event = {
         }
         mark_focus_tree_layout_dirty = yes
         hidden_effect = {
+            if = {
+                limit = {
+                    LHS = {
+                        is_ai = yes
+                    }
+                }
+                LHS = {
+                    add_ideas = LHS_jiasu
+                }
+            }
             ZDW = {
                 add_to_variable = {
                     var = ubs_save
@@ -455,7 +496,7 @@ country_event = {
             clr_country_flag = shunlixiaomie
             set_country_flag = xueyi
             division_template = {
-                name = "洛维尼亚红军"
+                name = "莉兰迪亚红军"
                 regiments = {
                     infantry = {
                         x = 0
@@ -512,7 +553,7 @@ country_event = {
             }
             512 = {
                 create_unit = {
-                    division = "name = \"洛维尼亚红军\" division_template = \"洛维尼亚红军\" start_experience_factor = 0.7 start_equipment_factor = 0.6"
+                    division = "name = \"莉兰迪亚红军\" division_template = \"莉兰迪亚红军\" start_experience_factor = 0.7 start_equipment_factor = 0.6"
                     count = 12
                     owner = LHS
                 }
@@ -1090,34 +1131,93 @@ country_event = {
             FROM = {has_country_flag = LHS_central_America_success}
         }
         add_war_support = 0.1
+        ##改
         every_country = {
             limit = {
                 is_in_faction_with = FROM
                 is_subject = no
             }
-            FROM = {
-                if = {
-                    limit = {
-                        is_in_faction = yes
-                        is_faction_leader = no
-                        NOT = {
-                            is_in_faction_with = LHS
+            if = {
+                limit = {
+                    FROM = {
+                        or = {
+                            tag = USA
+                            tag = NGD
+                            tag = NFA
+                            tag = FRG
                         }
                     }
-                    leave_faction = yes
+                }
+                ROOT = { add_to_faction = FROM }
+            }
+            else_if = {
+                if = {
+                    limit = {
+                        FROM = { tag = PAN }
+                        FROM = { is_faction_leader = yes }
+                    }
+                    every_other_country = {
+                        limit = {
+                            is_in_faction_with = FROM
+                       }
+                        ROOT = { add_to_faction = PREV }
+                    }
                     ROOT = { add_to_faction = PREV }
                 }
                 else_if = {
                     limit = {
-                        is_faction_leader = yes NOT = {
-                            is_in_faction_with = LHS
-                        }
+                        FROM = { tag = PAN }
+                        PAN = { is_faction_leader = no }
                     }
-                    ROOT = { add_to_faction = PREV }
+                    if = {
+                        limit = {
+                            FROM = {
+                                is_in_faction_with = CUB
+                            }
+                        }
+                        LHS = { add_to_faction = CUB }
+                    }
+                    if = {
+                        limit = {
+                            FROM = {
+                                is_in_faction_with = PAJ
+                            }
+                        }
+                        LHS = { add_to_faction = PAJ }
+                    }
+                    ROOT = { add_to_faction = PAN }
+                    ROOT = { add_to_faction = PAS }
                 }
             }
-            else = { ROOT = { add_to_faction = PREV } }
         }
+#        every_country = {
+#            limit = {
+#                is_in_faction_with = FROM
+#                is_subject = no
+#            }
+#            FROM = {
+#                if = {
+#                    limit = {
+#                        is_in_faction = yes
+#                        is_faction_leader = no
+#                        NOT = {
+#                            is_in_faction_with = LHS
+#                        }
+#                    }
+#                    leave_faction = yes
+#                    ROOT = { add_to_faction = PREV }
+#                }
+#                else_if = {
+#                    limit = {
+#                        is_faction_leader = yes NOT = {
+#                            is_in_faction_with = LHS
+#                        }
+#                    }
+#                    ROOT = { add_to_faction = PREV }
+#                }
+#            }
+#            else = { ROOT = { add_to_faction = PREV } }
+#        }
         if = {
             limit = {
                 is_in_faction = no
@@ -1317,34 +1417,94 @@ country_event = {
             }
         }
         add_war_support = 0.1
+        ##改
         every_country = {
             limit = {
                 is_in_faction_with = FROM
                 is_subject = no
             }
-            FROM = {
-                if = {
-                    limit = {
-                        is_in_faction = yes
-                        is_faction_leader = no
-                        NOT = {
-                            is_in_faction_with = LHS
+            if = {
+                limit = {
+                    FROM = {
+                        or = {
+                            tag = USA
+                            tag = NGD
+                            tag = NFA
+                            tag = FRG
                         }
                     }
-                    leave_faction = yes
+                }
+                ROOT = { add_to_faction = FROM }
+            }
+            else_if = {
+                if = {
+                    limit = {
+                        FROM = { tag = PAN }
+                        FROM = { is_faction_leader = yes }
+                    }
+                    every_other_country = {
+                        limit = {
+                            is_in_faction_with = FROM
+                       }
+                        ROOT = { add_to_faction = PREV }
+                    }
                     ROOT = { add_to_faction = PREV }
                 }
                 else_if = {
-                    limit = { is_faction_leader = yes
-                    NOT = {
-                        is_in_faction_with = LHS
+                    limit = {
+                        FROM = { tag = PAN }
+                        PAN = { is_faction_leader = no }
                     }
+                    if = {
+                        limit = {
+                            FROM = {
+                                is_in_faction_with = CUB
+                            }
+                        }
+                        LHS = { add_to_faction = CUB }
+                    }
+                    if = {
+                        limit = {
+                            FROM = {
+                                is_in_faction_with = PAJ
+                            }
+                        }
+                        LHS = { add_to_faction = PAJ }
+                    }
+                    ROOT = { add_to_faction = PAN }
+                    ROOT = { add_to_faction = PAS }
                 }
-                ROOT = { add_to_faction = PREV }
             }
         }
-        else = { ROOT = { add_to_faction = PREV } }
-    }
+        #原
+#        every_country = {
+#            limit = {
+#                is_in_faction_with = FROM
+#                is_subject = no
+#            }
+#            FROM = {
+#                if = {
+#                    limit = {
+#                        is_in_faction = yes
+#                        is_faction_leader = no
+#                        NOT = {
+#                            is_in_faction_with = LHS
+#                        }
+#                    }
+#                    leave_faction = yes
+#                    ROOT = { add_to_faction = PREV }
+#                }
+#                else_if = {
+#                    limit = { is_faction_leader = yes
+#                    NOT = {
+#                        is_in_faction_with = LHS
+#                    }
+#                }
+#                ROOT = { add_to_faction = PREV }
+#            }
+#        }
+#        else = { ROOT = { add_to_faction = PREV } }
+#    }
     if = {
         limit = {
             is_in_faction = no
@@ -1455,25 +1615,44 @@ option = {
                         is_in_faction_with = ENG
                         is_in_faction_with = GER
                         is_in_faction_with = DVL
+                    }
+                }
+            }
+            FROM = {
+                leave_faction = yes
+            }
+        }
+    }
+        if = {
+            limit = {
+                FROM = { 
+                    is_faction_leader = no 
+                    not = {
                         is_in_faction_with = SOV
                     }
                 }
             }
-            leave_faction = yes
+            LHS = {
+                add_to_faction = PRC
+            }
         }
-    }
-    every_country = {
-        limit = {
-            is_in_faction_with = PRC
-            is_subject = no
+        else_if = {
+            limit = {
+                FROM = { is_faction_leader = yes }
+            }
+            every_country = {
+                limit = {
+                    is_in_faction_with = PRC
+                    is_subject = no
+                }
+                LHS = {
+                    add_to_faction = PREV
+                }
+            }
+            LHS = {
+                add_to_faction = PRC
+            }
         }
-        LHS = {
-            add_to_faction = PREV
-        }
-    }
-    LHS = {
-        add_to_faction = PRC
-    }
 }
 }
 #北美洲的同志
@@ -1486,6 +1665,13 @@ country_event = {
     is_triggered_only = yes
     fire_only_once = yes
     option = {
+        trigger = {
+            not = {
+                USA = {
+                    has_war_with = LHS
+                }
+            }
+        }
         name = LHS.beimei.a
         add_political_power = 200
         every_state = {
@@ -1647,6 +1833,13 @@ country_event = {
     }
 
     option = {
+        trigger = {
+            not = {
+                NGD = {
+                    has_war_with = LHS
+                }
+            }
+        }
         name = LHS.beimei.b
         add_political_power = 200
         every_state = {
@@ -1807,6 +2000,13 @@ country_event = {
         }
     }
     option = {
+        trigger = {
+            not = {
+                FRG = {
+                    has_war_with = LHS
+                }
+            }
+        }
         name = LHS.beimei.c
 
         add_political_power = 200
@@ -1970,6 +2170,13 @@ country_event = {
     }
 
     option = {
+        trigger = {
+            not = {
+                NFA = {
+                    has_war_with = LHS
+                }
+            }
+        }
         name = LHS.beimei.e
 
         add_political_power = 200
@@ -3086,6 +3293,34 @@ country_event = {
     }
 }
 
+#人民武装
+country_event = {
+    id = LHS.501
+    title = LHS.501.t
+    desc = LHS.501.d
+    picture = GFX_event_taiyang
+    major = no
+    is_triggered_only = yes
+    fire_only_once = yes
+    option = {
+        name = LHS.501.a
+        ai_chance = {
+            base = 100
+        }
+        add_political_power = 100
+    }
+    option = {
+        name = LHS.501.b
+        ai_chance = {
+            base = 0
+        }
+        set_technology = {
+            youji_zjc = 1
+            armored_car1 = 1
+        }
+        custom_effect_tooltip = youji_zjc_tt
+    }
+}
 #最高指示
 country_event = {
     id = LHS.51
@@ -3465,6 +3700,7 @@ country_event = {
 
         PAJ = {
             every_character = {
+                limit = { is_general_advisor = no }
                 set_nationality = PAN
             }
         }
@@ -3927,6 +4163,7 @@ country_event = {
                     division_template = "亡灵"
                     disband = yes
                 }
+                remove_ideas = LHS_zdwl
             }
             remove_ideas = LHS_xiaofeng_idea
             set_country_flag = xiaofengsiwang
@@ -6058,50 +6295,50 @@ country_event = {
     option = {
         name = LHS.122.a
         every_country = {
-             limit = {
-                 is_in_faction_with = ROOT
-                 is_subject = no
-             }
-             if = {
-                 limit = {
-                     is_in_faction = yes
-                     is_faction_leader = no
-                     NOT = {
-                         is_in_faction_with = PAO
-                     }
-                 }
-                 leave_faction = yes
-                 FROM = { add_to_faction = PREV }
-             }
-             else_if = {
-                 limit = { is_faction_leader = yes NOT = {
-                     is_in_faction_with = PAO
-                 }
-             }
+            limit = {
+                is_in_faction_with = ROOT
+                is_subject = no
+            }
+            if = {
+                limit = {
+                    is_in_faction = yes
+                    is_faction_leader = no
+                    NOT = {
+                        is_in_faction_with = PAO
+                    }
+                }
+                leave_faction = yes
+                FROM = { add_to_faction = PREV }
+            }
+            else_if = {
+                limit = { is_faction_leader = yes NOT = {
+                    is_in_faction_with = PAO
+                }
+            }
 
-             FROM = { add_to_faction = PREV }
-         }
-         else = { FROM = { add_to_faction = PREV } }
-         }
-         if = {
-             limit = {
-                 is_in_faction = no
-             }
-             FROM = { add_to_faction = root }
-         }
-         add_ideas = LHS_materialism_of_miracles
-        ai_chance = {
-            base = 100
+            FROM = { add_to_faction = PREV }
         }
+        else = { FROM = { add_to_faction = PREV } }
+    }
+    if = {
+        limit = {
+            is_in_faction = no
+        }
+        FROM = { add_to_faction = root }
+    }
+    add_ideas = LHS_materialism_of_miracles
+    ai_chance = {
+        base = 100
+    }
 
+}
+option = {
+    name = LHS.122.b
+    ai_chance = {
+        base = 0
     }
-    option = {
-        name = LHS.122.b
-        ai_chance = {
-            base = 0
-        }
-        add_ideas = LHS_materialism_of_miracles
-    }
+    add_ideas = LHS_materialism_of_miracles
+}
 }
 
 #关于奇迹的唯物辩证
@@ -6438,7 +6675,7 @@ country_event = {
             10 = {
                 LHS = {
                     division_template = {
-                        name = "洛维尼亚起义军"
+                        name = "莉兰迪亚起义军"
                         is_locked = no
                         regiments = {
                             youjibudui = {
@@ -6476,7 +6713,7 @@ country_event = {
                     }
                     random_owned_controlled_state = {
                         create_unit = {
-                            division = "name = \"洛维尼亚起义军\" division_template = \"洛维尼亚起义军\" start_experience_factor = 0.7"
+                            division = "name = \"莉兰迪亚起义军\" division_template = \"莉兰迪亚起义军\" start_experience_factor = 0.7"
                             count = 1
                             owner = LHS
                         }

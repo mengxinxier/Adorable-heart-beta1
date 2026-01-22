@@ -13,6 +13,7 @@
 #第六节：进步党
 #第七节：外交
 #第八节：新闻
+#第九节：归乡
 
 #Section 06: 
 #Section 07: 
@@ -27,6 +28,7 @@
 	add_namespace = NGD_Democratic
 	add_namespace = NGD_diplomacy
 	add_namespace = NGD_news
+	add_namespace = NGD_Ming
 ### - 第一节：命名空间 - ###
 
 ### - 第二节：开局引入 - ###
@@ -757,7 +759,10 @@
 					}
 					AND = {
 						is_ai = yes
-						has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
+						or = {
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_5 }
+						}
 					}
 				}
 			}
@@ -877,7 +882,10 @@
 				#Cheaty, cheaty gamerules
 				if = {
 					limit = {
-						has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
+						or = {
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
+							has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_5 }
+						}
 					}
 					hidden_effect = { country_event = { id = NGD_undercurrent.004 days = 1 } }
 				}
@@ -903,46 +911,42 @@
 		is_triggered_only = yes
 		option = {
 			name = NGD_undercurrent.004.a
-			# if = {
-			# 	limit = {
-			# 		OR = {
-			# 			has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = DEFAULT } #NOT HAVING THE DEFAULT GAMERULE RIGS THE OUTCOME OF THE GAME FOR THE AI
-			# 			is_ai = no
-			# 		}
-			# 	}
-			# 	if = {
-			# 		limit = {
-			# 			check_variable = {
-			# 				var = NGD_radicalism_var
-			# 				value = NGD_extremist_var
-			# 				compare = greater_than_or_equals
-			# 			}
-			# 		}
-			# 		hidden_effect = { country_event = { id = NGD_undercurrent.005 days = 1 } } #共产主义者的胜利
-			# 	}
-			# 	else = {
-			# 		hidden_effect = { country_event = { id = NGD_undercurrent.006 days = 1 } } #君主主义者的胜利
-			# 	}
-			# }
-			# else = {
-			# 	#Cheaty, cheaty gamerules
-			# 	if = {
-			# 		limit = {
-			# 			OR = {
-			# 				has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_2 }
-			# 				has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_3 }
-			# 				has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
-			# 			}
-			# 		}
-			# 		hidden_effect = { country_event = { id = NGD_undercurrent.005 days = 1 } }
-			# 	}
-			# 	# else_if = {
-			# 	# 	limit = { has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_1 } }
-			# 	# 	hidden_effect = { country_event = { id = NGD_undercurrent.007 days = 1 } }
-			# 	# }
-			# }
-			hidden_effect = { country_event = { id = NGD_undercurrent.005 days = 1 } }
-			remove_ideas = NGD_undercurrent_surge_idea
+			if = {
+				limit = {
+					OR = {
+						has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = DEFAULT } #NOT HAVING THE DEFAULT GAMERULE RIGS THE OUTCOME OF THE GAME FOR THE AI
+						is_ai = no
+					}
+				}
+				if = {
+					limit = {
+						check_variable = {
+							var = NGD_radicalism_var
+							value = NGD_extremist_var
+							compare = greater_than_or_equals
+						}
+					}
+					hidden_effect = { country_event = { id = NGD_undercurrent.005 days = 1 } } #共产主义者的胜利
+				}
+				else = {
+					hidden_effect = { country_event = { id = NGD_undercurrent.006 days = 1 } } #君主主义者的胜利
+				}
+			}
+			else = {
+				#Cheaty, cheaty gamerules
+				if = {
+					limit = {
+						has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_4 }
+					}
+					hidden_effect = { country_event = { id = NGD_undercurrent.005 days = 1 } }
+				}
+				else_if = {
+					limit = { has_game_rule = { rule = AH_NGD_ai_behavior_SELECTION option = NGD_GAME_RULE_5 } }
+					hidden_effect = { country_event = { id = NGD_undercurrent.006 days = 1 } }
+				}
+			}
+			# hidden_effect = { country_event = { id = NGD_undercurrent.005 days = 1 } }
+			# remove_ideas = NGD_undercurrent_surge_idea
 		}
 	}
 
@@ -984,7 +988,6 @@
 		is_triggered_only = yes
 		option = {
 			name = NGD_undercurrent.006.a
-			remove_ideas = NGD_the_royalist_riot_idea
 			set_politics = {
 				ruling_party = fascism
 				elections_allowed = no
@@ -994,11 +997,13 @@
 			}
 			swap_ideas = {
 				remove_idea = NGD_Jingyuan_idea
-				add_idea = NDG_king_of_yunayang_idea
+				add_idea = NGD_Qin_Liangyu_idea
 			}
 			remove_ideas = NGD_undercurrent_surge_idea
 			remove_ideas = NGD_Rigid_political_system
 			remove_ideas = NGD_the_royalist_riot_idea
+			complete_national_focus = NGD_end_of_republic
+			add_ideas = NGD_end_of_republic_idea
 		}
 	}
 
@@ -1968,7 +1973,228 @@
 		}
 	}
 ### - 远洋外交 - ###
-	
+
+### - 第九节：归乡 - ###
+	#御座空悬
+	country_event = {
+		id = NGD_Ming.001
+		title = NGD_Ming.001.title
+		desc = NGD_Ming.001.desc
+		is_triggered_only = yes
+		option = {
+			name = NGD_Ming.001.a
+			country_event = {
+				id = NGD_Ming.002
+				days = 3
+			}
+		}
+	}
+	#请继统以安社稷表
+	country_event = {
+		id = NGD_Ming.002
+		title = NGD_Ming.002.title
+		desc = NGD_Ming.002.desc
+		is_triggered_only = yes
+		option = {
+			name = NGD_Ming.002.a
+			country_event = {
+				id = NGD_Ming.003
+				days = 15
+			}
+		}
+	}
+	#传闻
+	country_event = {
+		id = NGD_Ming.003
+		title = NGD_Ming.003.title
+		desc = NGD_Ming.003.desc
+		is_triggered_only = yes
+		option = {
+			name = NGD_Ming.003.a
+			country_event = {
+				id = NGD_Ming.004
+				days = 5
+			}
+		}
+		option = {
+			name = NGD_Ming.003.b
+			country_event = {
+				id = NGD_Ming.005
+				days = 5
+			}
+		}
+	}
+	#找到
+	country_event = {
+		id = NGD_Ming.004
+		title = NGD_Ming.004.title
+		desc = NGD_Ming.004.desc
+		is_triggered_only = yes
+		option = {
+			name = NGD_Ming.004.a
+			if = {
+				limit = {
+					NOT = {
+						has_country_leader = NGD_Piaobozhe
+					}
+				}
+				NGD_Piaobozhe = {
+					add_country_leader_role = {
+						country_leader = {
+							desc = NGD_Piaobozhe_desc
+							expire = "1999.1.1"
+							ideology = Absolute_monarchy
+							traits = {
+							
+							}
+						}
+						promote_leader = yes
+					}
+					custom_effect_tooltip = NGD_Piaobozhe_0
+				}
+				set_politics = {
+					ruling_party = neutrality
+					elections_allowed = no
+				}
+			}
+			set_cosmetic_tag = NGD_Ming
+			complete_national_focus = NGD_chosen_one
+			hidden_effect = {
+				if = {
+					limit = {
+						has_completed_focus = NGD_fire_keeper
+					}
+					uncomplete_national_focus = {
+						focus = NGD_fire_keeper
+					}
+				}
+				remove_ideas = NGD_Qin_Liangyu_idea
+				add_ideas = NGD_Zheng_Chenggong_idea
+			}
+		}
+	}
+	#未找到
+	country_event = {
+		id = NGD_Ming.005
+		title = NGD_Ming.005.title
+		desc = NGD_Ming.005.desc
+		is_triggered_only = yes
+		option = {
+			name = NGD_Ming.005.a
+			if = {
+				limit = {
+					NOT = {
+						has_country_leader = NGD_Zheng_Chenggong
+					}
+				}
+				NGD_Zheng_Chenggong = {
+					add_country_leader_role = {
+						country_leader = {
+							desc = NGD_Zheng_Chenggong_desc
+							expire = "1999.1.1"
+							ideology = Absolute_monarchy
+							traits = {
+							
+							}
+						}
+					}
+				}
+				set_politics = {
+					ruling_party = fascism
+					elections_allowed = no
+				}
+			}
+			set_country_leader_ideology = militarism_subtype
+			set_cosmetic_tag = NGD_Ming
+			complete_national_focus = NGD_fire_keeper
+			hidden_effect = {
+				if = {
+					limit = {
+						has_completed_focus = NGD_chosen_one
+					}
+					uncomplete_national_focus = {
+						focus = NGD_chosen_one
+					}
+				}
+				if = {
+					limit = {
+						NOT = {
+							has_idea = NGD_Qin_Liangyu_idea
+						}
+					}
+					add_ideas = NGD_Qin_Liangyu_idea
+				}
+			}
+		}
+	}
+	#换装
+	country_event = {
+		id = NGD_Ming.006
+		title = NGD_Ming.006.title
+		desc = NGD_Ming.006.desc
+		is_triggered_only = yes
+		option = {
+			name = NGD_Ming.006.a
+			custom_effect_tooltip = NGD_Piaobozhe_1
+			set_portraits = {
+				character = NGD_Piaobozhe
+				civilian = {
+					large = "GFX_NGD_Piaobozhe_1"
+				}
+			}
+		}
+		option = {
+			name = NGD_Ming.006.b
+			custom_effect_tooltip = NGD_Piaobozhe_2
+			set_portraits = {
+				character = NGD_Piaobozhe
+				civilian = {
+					large = "GFX_NGD_Piaobozhe_2"
+				}
+			}
+		}
+		option = {
+			name = NGD_Ming.006.c
+			custom_effect_tooltip = NGD_Piaobozhe_3
+			set_portraits = {
+				character = NGD_Piaobozhe
+				civilian = {
+					large = "GFX_NGD_Piaobozhe_3"
+				}
+			}
+		}
+		option = {
+			name = NGD_Ming.006.d
+			custom_effect_tooltip = NGD_Piaobozhe_4
+			set_portraits = {
+				character = NGD_Piaobozhe
+				civilian = {
+					large = "GFX_NGD_Piaobozhe_4"
+				}
+			}
+		}
+		option = {
+			name = NGD_Ming.006.e
+			custom_effect_tooltip = NGD_Piaobozhe_5
+			set_portraits = {
+				character = NGD_Piaobozhe
+				civilian = {
+					large = "GFX_NGD_Piaobozhe_5"
+				}
+			}
+		}
+		option = {
+			name = NGD_Ming.006.f
+			custom_effect_tooltip = NGD_Piaobozhe_0
+			set_portraits = {
+				character = NGD_Piaobozhe
+				civilian = {
+					large = "GFX_NGD_Piaobozhe"
+				}
+			}
+		}
+	}
+### - 第九节：归乡 - ###
 	
 ### - 远洋新闻 - ###
 	#朱德
@@ -2261,6 +2487,38 @@ country_event = {
 	}
 }
 
+##结盟？
+country_event = {
+	id = NGD.0004
+	title = NGD.0004.title
+	desc = NGD.0004.desc
+	is_triggered_only = yes
+	option = {
+		name = NGD.0004.a
+		NGD = {
+			white_peace = {
+				tag = ROOT
+				message = NGD_white_peace_with_FRG
+			}
+			create_faction = Westrern_country_faction
+			add_to_faction = ROOT
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = NGD.0004.b
+		NGD = {
+			country_event = {
+				id = generic.2009
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
 
 ##宋子雯胜选
 country_event = {

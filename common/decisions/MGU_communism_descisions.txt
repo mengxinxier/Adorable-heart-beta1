@@ -17,6 +17,23 @@ MGU_debug_text_1 = {
 			mark_focus_tree_layout_dirty = yes
 		}
 	}
+	MGU_decision_debug_load_communism_focus = {	
+		icon = GFX_decision_generic_decision
+		visible = {
+            is_debug = yes
+		}
+		available = {
+			is_ai = no
+		}
+		cost = 0
+		fire_only_once = no				
+		ai_will_do = {
+			factor = 0			
+		}
+		complete_effect = { 	
+			country_event = MTK.5
+		}
+	}	
 }
 
 
@@ -109,9 +126,12 @@ MTK_south_amrican = {
 						NOT = {
 							is_core_of = LHS
 						}
+						NOT = {
+							is_core_of = MGU
+						}						
                     }
                 }
-                enable_country_integration_50_compliance = yes
+                enable_country_integration_50_compliance = yes		
             }
 			if = {
 				limit = {
@@ -130,12 +150,11 @@ MTK_south_amrican = {
 				
 				every_state = {
               	  	limit = {
-              	      	is_core_of = LHS
+              	      	is_core_of = LHS 
               	  	}
                		remove_core_of = MGU
         	    }
 			}
-
 			
 		}
 
@@ -172,6 +191,7 @@ MTK_south_amrican = {
         remove_effect = {#结束后效果
 			ENG = { country_event = MTK.100 }
     		MGU = { add_state_core = 685 }
+			set_major = no
         }
 
         ai_will_do = {
@@ -274,9 +294,99 @@ MTK_south_amrican = {
 		}
 
 	}
+	MTK_can_send_volunteers_with_LHS = {
+		icon = ger_mefo_bills
+		available = {
+			LHS = { has_war = yes }
+		}
+		visible = {
+			
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 1000
+		}	
+
+		complete_effect = {
+			set_country_flag = zhiyuanlwny
+			set_country_flag = MGU_help_LHS_we_together
+			custom_effect_tooltip = "MGU_zhiyuanlwny"
+		}		
+	}
+	MTK_can_send_infantry_equipment_with_LHS = {
+		icon = ger_mefo_bills
+		available = {
+			LHS = { has_war = yes }
+			has_equipment = { infantry_equipment > 5000 }
+		}
+		visible = {
+			LHS = { has_war = yes }
+		}
+
+		cost = 0
+
+		days_remove = 7
+
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				has_equipment = { infantry_equipment > 9999 }
+				factor = 100
+			}			
+			modifier = {
+				has_equipment = { infantry_equipment < 5000 }
+				factor = 0
+			}
+
+		}	
+
+		complete_effect = {
+			country_event = MTK.7
+			add_political_power = 10
+		}		
+	}	
+
+	MTK_can_send_artillery_equipment_with_LHS = {
+		icon = ger_mefo_bills
+		available = {
+			LHS = { has_war = yes }
+			has_equipment = { artillery_equipment > 1000 }
+		}
+		visible = {
+			LHS = { has_war = yes }
+		}
+
+		cost = 0
+
+		days_remove = 30
+
+		fire_only_once = no
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				has_equipment = { artillery_equipment > 9999 }
+				factor = 100
+			}	
+			modifier = {
+				has_equipment = { artillery_equipment < 1000 }
+				factor = 0
+			}
+		}	
+
+		complete_effect = {
+			country_event = MTK.11
+			add_political_power = 20
+		}		
+	}		
+
 }
-
-
 
 MTK_Five_Year_Plan = { 
 	MTK_Five_Year_Plan_deadline_all = {     
@@ -355,8 +465,15 @@ MTK_Five_Year_Plan = {
 					}
 					add_ideas = MTK_five_years_idea_reward_4
 				}
-
+			hidden_effect = {
+				if = {
+					limit = {
+						is_in_faction_with = LHS
+					}
+					ROOT = { set_major = yes }
+				}	
 			}
+		}
 		
 	}
 
@@ -1242,7 +1359,7 @@ MTK_Five_Year_Plan = {
 			has_country_flag = MTK_Five_Year_Plan_finish_1
 		}                                    
 		available = {   
-			industrial_complex > MTK_Five_Year_Plan_2_check		
+			num_of_civilian_factories > MTK_Five_Year_Plan_2_check		
 		}
 		
 		is_good = no                    
@@ -1256,13 +1373,13 @@ MTK_Five_Year_Plan = {
 			set_country_flag = MTK_Five_Year_Plan_2_defeat
 			set_temp_variable ={
 				var = MTK_Five_Year_Plan_2_check_over
-				value = MTK_Five_Year_Plan_2_check
+				value = num_of_civilian_factories
 			}
 			divide_temp_variable = {
 				var = MTK_Five_Year_Plan_2_check_over
 				value = 300
 			}
-			clamp_variable = {
+			clamp_temp_variable = {
 				var = MTK_Five_Year_Plan_2_check_over
 				max = 0.15
 			}
@@ -1279,13 +1396,13 @@ MTK_Five_Year_Plan = {
 
 			set_temp_variable ={
 				var = MTK_Five_Year_Plan_2_check_over
-				value = MTK_Five_Year_Plan_2_check
+				value = num_of_civilian_factories
 			}
 			divide_temp_variable = {
 				var = MTK_Five_Year_Plan_2_check_over
 				value = 300
 			}
-			clamp_variable = {
+			clamp_temp_variable = {
 				var = MTK_Five_Year_Plan_2_check_over
 				max = 0.20
 			}
@@ -1825,7 +1942,7 @@ MTK_Five_Year_Plan = {
 					instant_build = yes 
 				}
 			}
-			add_to_variable = {
+			set_variable = {
 				var = MTK_Five_Year_Plan_4_check
 				value = num_of_military_factories
 			} 
@@ -1842,8 +1959,12 @@ MTK_Five_Year_Plan = {
 		activation = {                         
 			has_country_flag = MTK_Five_Year_Plan_finish_3
 		}                                    
-		available = {         
-			arms_factory > MTK_Five_Year_Plan_4_check	
+		available = {   
+			OR = {
+				arms_factory > MTK_Five_Year_Plan_4_check	
+				has_country_flag = MTK_Five_Year_Plan_finish_early
+			}      
+			
 		}
 		
 		is_good = no                    
@@ -1857,11 +1978,15 @@ MTK_Five_Year_Plan = {
 			set_country_flag = MTK_Five_Year_Plan_4_defeat
 			set_temp_variable ={
 				var = MTK_Five_Year_Plan_4_check_over
-				value = MTK_Five_Year_Plan_4_check
+				value = num_of_military_factories
 			}
 			divide_temp_variable = {
-				var = MTK_Five_Year_Plan_4_check_over
+				var = MTK_Five_Year_Plan_4_check_over	
 				value = -200
+			}
+			clamp_temp_variable = {
+				var = MTK_Five_Year_Plan_4_check_over
+				max = 0.3
 			}
 			add_to_variable = {
 				var = MTK_economy_consumer_goods_factor
@@ -1869,17 +1994,21 @@ MTK_Five_Year_Plan = {
 			}
 			set_temp_variable ={
 				var = MTK_Five_Year_Plan_4_check_over_2
-				value = MTK_Five_Year_Plan_4_check
+				value = num_of_military_factories
 			}
 			divide_temp_variable = {
 				var = MTK_Five_Year_Plan_4_check_over_2
 				value = 500
 			}
+			clamp_temp_variable = {
+				var = MTK_Five_Year_Plan_4_check_over_2
+				max = 0.15
+			}
 			add_to_variable = {
 				var = MTK_economy_production_speed_buildings_factor
 				value = MTK_Five_Year_Plan_4_check_over_2
 			}
-
+			clear_variable = MTK_Five_Year_Plan_4_check	
 		}
 		complete_effect = {    
 			set_country_flag = MTK_Five_Year_Plan_finish_4
@@ -1887,11 +2016,15 @@ MTK_Five_Year_Plan = {
 
 			set_temp_variable ={
 				var = MTK_Five_Year_Plan_4_check_over
-				value = MTK_Five_Year_Plan_4_check
+				value = num_of_military_factories
 			}
 			divide_temp_variable = {
-				var = MTK_Five_Year_Plan_4_check_over
+				var = MTK_Five_Year_Plan_4_check_over	
 				value = -200
+			}
+			clamp_temp_variable = {
+				var = MTK_Five_Year_Plan_4_check_over
+				max = 0.3
 			}
 			add_to_variable = {
 				var = MTK_economy_consumer_goods_factor
@@ -1899,19 +2032,21 @@ MTK_Five_Year_Plan = {
 			}
 			set_temp_variable ={
 				var = MTK_Five_Year_Plan_4_check_over_2
-				value = MTK_Five_Year_Plan_4_check
+				value = num_of_military_factories
 			}
 			divide_temp_variable = {
 				var = MTK_Five_Year_Plan_4_check_over_2
 				value = 500
 			}
+			clamp_temp_variable = {
+				var = MTK_Five_Year_Plan_4_check_over_2
+				max = 0.15
+			}
 			add_to_variable = {
 				var = MTK_economy_production_speed_buildings_factor
 				value = MTK_Five_Year_Plan_4_check_over_2
 			}
-
 			clear_variable = MTK_Five_Year_Plan_4_check	
-
 		}
 	}
 
@@ -2019,8 +2154,6 @@ MTK_Five_Year_Plan = {
 		}
 	}
 
-
-
 	MTK_Five_Year_Plan_Active_finish_3 = {     
 		icon = ger_mefo_bills
 		
@@ -2052,7 +2185,8 @@ MTK_Five_Year_Plan = {
 			}
 		}
 		available = {
-			has_war = yes
+			has_war_with = PAQ
+			is_in_faction_with = LHS
 		}
 
 		cost = 0
@@ -2067,6 +2201,170 @@ MTK_Five_Year_Plan = {
 		complete_effect = {		
 			set_country_flag = MTK_Five_Year_Plan_finish_early
 		}
+	}
+
+	MTK_Five_Year_Plan_1_decision_1 = {     
+		icon = ger_mefo_bills
+		
+		visible = {
+			has_completed_focus = MTK_com_eco_01
+		}
+		available = {
+			has_war = no
+			has_completed_focus = MTK_com_eco_22 
+			industrial_complex > 15
+		}
+
+		cost = 100
+
+		days_remove = 60
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		modifier = {
+			civilian_factory_use = 15
+	   	}		
+
+		complete_effect = {		
+			add_political_power = -100
+		}
+		remove_effect = {
+			build_railway = { #铺设铁路
+				path = { 
+					8179 5107
+				} #（铁路沿线地块代码）
+			} 
+			build_railway = { #铺设铁路
+				path = { 
+					2228 13345 13333 5153 13324 13318 5204 13292 5174 13273 2190 2218 12923 12977 10945 12937 10994 1583 4587 5178 13242 5110 1585 4575
+				} 
+			}		
+			build_railway = { #铺设铁路
+				path = { 
+					5172 10432 5112 
+				} #（铁路沿线地块代码）
+			} 			
+			build_railway = { #铺设铁路
+				path = { 
+					5112 5167 7553 8181 4533 10405 4548 12396 10447
+				} #（铁路沿线地块代码）
+			} 			
+			
+			1218 = {
+				add_building_construction = {
+					type = supply_node
+					level = 1
+					instant_build = yes
+					province = 12937
+				}
+			}			
+		}
+
+	}
+
+	MTK_Five_Year_Plan_1_decision_2 = {     
+		icon = ger_mefo_bills
+		
+		visible = {
+			has_completed_focus = MTK_com_eco_01
+		}
+		available = {
+			has_war = no
+			has_completed_focus = MTK_com_eco_22 
+			industrial_complex > 10
+			685 = { is_controlled_by = MGU }
+			895 = { is_controlled_by = MGU }
+		}
+
+		cost = 50
+
+		days_remove = 15
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		modifier = {
+			civilian_factory_use = 10
+	   	}		
+
+		complete_effect = {		
+			add_political_power = -100
+		}
+		remove_effect = {
+			build_railway = { #铺设铁路
+				path = { 
+					10946 8197 10419 11002 13261 8196 10999 
+				} #（铁路沿线地块代码）
+			} 
+			build_railway = { #铺设铁路
+				path = { 
+					13725 10447
+				} #（铁路沿线地块代码）
+			} 									
+		}
+	}
+
+	MTK_Five_Year_Plan_2_decision_1 = {     
+		icon = ger_mefo_bills
+		
+		visible = {
+			has_country_flag = MTK_Five_Year_Plan_finish_1
+		}
+		available = {
+			has_war = no
+		}
+
+		cost = 150
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}	
+
+		complete_effect = {		
+			501 = {
+				add_dynamic_modifier = {
+					modifier = MGU_JLY_25factory
+				}
+			}
+		}
+
+	}
+
+	MTK_Five_Year_Plan_4_decision_1 = {     
+		icon = ger_mefo_bills
+		
+		visible = {
+			has_country_flag = MTK_Five_Year_Plan_finish_3
+		}
+		available = {
+			has_war = no
+		}
+
+		cost = 150
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+		}	
+
+		complete_effect = {		
+			500 = {
+				add_dynamic_modifier = {
+					modifier = MGU_SB_25factory
+				}
+			}
+		}
+
 	}
 
 }
@@ -2325,35 +2623,6 @@ MTK_future_technology = { #未来科技
 	}
 }
 
-MTK_change_army_land = { #
-	MTK_change_army_land_dec_1 = {     
-		icon = ger_mefo_bills
-		
-		available = {
-			has_completed_focus = MTK_com_spy_06
-		}
-		visible = {
-		}
-
-		cost = 0
-
-		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 100
-			
-		}	
-
-		complete_effect = {
-			set_country_flag = FLAG_MTK_focus_id_com_4
-			clr_country_flag = FLAG_MTK_focus_id_com_3
-			mark_focus_tree_layout_dirty = yes	
-			custom_effect_tooltip = "切换军事线"
-		}	
-	}
-
-}
-
 MTK_we_not_want_war = {
 
 	MTK_we_not_want_war_1 = {     
@@ -2439,7 +2708,62 @@ MTK_sun_rising = {
 			} 
 		}	
 	}
-	
+
+	MTK_another_view = {     
+		icon = ger_mefo_bills
+		
+		available = {
+			has_country_flag = MGU_Walpurgis_last_chance
+		}
+		visible = {
+			has_country_flag = MTK_Walpurgis_coming	
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 1000
+		}	
+
+		complete_effect = {
+			country_event = {
+				id = MTK_event.5
+				days = 3	
+			} 
+			country_event = {
+				id = MTK_event.7
+				days = 6	
+			} 
+
+		}	
+	}	
+	MTK_general_offensive = {     
+		icon = ger_mefo_bills
+		
+		available = {
+			has_country_flag = MGU_Walpurgis_general_offensive_flag
+		}
+		visible = {
+			has_country_flag = MTK_Walpurgis_coming	
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 1000
+		}	
+
+		complete_effect = {
+			country_event = {
+				id = MTK_event.11
+				days = 1
+			} 
+		}	
+	}	
 
 }
 
@@ -2470,65 +2794,62 @@ MTK_AI_aizuo_xiaobi = {
 
 		remove_effect = {
 			501 = {	
-				add_building_construction = {
-				type = infrastructure
-				level = 5
-				instant_build = yes
+				set_building_level = {
+					type = infrastructure
+					level = 5
 				}
 			} 
 			500 = {	
-				add_building_construction = {
-				type = infrastructure
-				level = 5
-				instant_build = yes
+				set_building_level = {
+					type = infrastructure
+					level = 5
 				}
 			} 
 			503 = {	
-				add_building_construction = {
-				type = infrastructure
-				level = 5
-				instant_build = yes
+				set_building_level = {
+					type = infrastructure
+					level = 5
 				}
 			} 
 			497 = {	
 				add_building_construction = {
 				type = infrastructure
-				level = 2
+				level = 1
 				instant_build = yes
 				}
 			}
 			498 = {	
 				add_building_construction = {
 				type = infrastructure
-				level = 2
+				level = 1
 				instant_build = yes
 				}
 			}
 			499 = {	
 				add_building_construction = {
 				type = infrastructure
-				level = 2
+				level = 1
 				instant_build = yes
 				}
 			}			
 			1210 = {	
 				add_building_construction = {
 				type = infrastructure
-				level = 2
+				level = 1
 				instant_build = yes
 				}
 			}			
 			1214 = {	
 				add_building_construction = {
 				type = infrastructure
-				level = 2
+				level = 1
 				instant_build = yes
 				}
 			}
 			1215 = {	
 				add_building_construction = {
 				type = infrastructure
-				level = 2
+				level = 1
 				instant_build = yes
 				}
 			}		
@@ -2590,40 +2911,7 @@ MTK_AI_aizuo_xiaobi = {
 				target = LHS
 			}	
 		}
-	}		
-	MTK_AI_5 = {     
-		icon = ger_mefo_bills
-		
-		available = {
-			original_tag = MGU
-			has_government = communism
-			has_completed_focus = MTK_com_eco_05
-			has_completed_focus = MTK_com_eco_20
-		}
-		visible = {
-			is_ai = yes
-		}
-
-		cost = 0
-
-		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 10
-			
-		}	
-		complete_effect = {
-			activate_advisor = MGU_Hiratsuka_muyuan_idea
-			activate_advisor = MGU_homura
-			activate_advisor = MGU_Tomoe_Mami
-			activate_advisor = MGU_Tamaki_Iroha	
-			activate_advisor = MGU_Togame_Momoko
-			activate_advisor = MGU_Sakura_Kyouko
-			activate_advisor = MGU_guangjiang_qianchun
-			activate_advisor = MGU_Amane_Tsukasa
-			add_political_power = -300
-		}
-	}		
+	}			
 	MTK_AI_6 = {     
 		icon = ger_mefo_bills
 		

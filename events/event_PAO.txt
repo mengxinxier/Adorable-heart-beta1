@@ -328,6 +328,10 @@ country_event = {
     picture = GFX_event_PAO_xingkong
     trigger = {
         TAG = AHM
+        has_game_rule = {
+            rule = AH_lw_war_ai_behavior_SELECTION
+            option = lw_war_GAME_RULE_2
+        }
         LHS = {
             is_ai = yes
         }
@@ -3547,9 +3551,10 @@ country_event = {
             add_logistics = 1
         }
         LHS = {
-            every_character = {
-                set_nationality = PAO
-            }
+			every_character = {
+				limit = { is_general_advisor = no }
+				set_nationality = PAO
+			}
         }
         hidden_effect = {
             scoped_sound_effect = "燃烧"
@@ -4682,9 +4687,10 @@ country_event = {
                 add_claim_by = PAO
                 add_compliance = 10
             }
-            every_character = {
-                set_nationality = PAO
-            }
+			every_character = {
+				limit = { is_general_advisor = no }
+				set_nationality = PAO
+			}
         }
         PAO = {
             ROOT = { enable_country_integration_80_compliance = yes }
@@ -5206,25 +5212,70 @@ country_event = {
             }
             if = {
                 limit = {
-                    is_in_faction = yes
-                    is_faction_leader = no
-                    NOT = {
-                        is_in_faction_with = PAO
+                    ROOT = { 
+                        tag = PAN
+                        is_faction_leader = yes 
                     }
                 }
-                leave_faction = yes
+                every_other_country = {
+                    limit = {
+                        is_in_faction_with = ROOT
+                    }
+                    FROM = { add_to_faction = PREV }
+                }
                 FROM = { add_to_faction = PREV }
             }
             else_if = {
-                limit = { is_faction_leader = yes NOT = {
-                    is_in_faction_with = PAO
+                limit = {
+                    ROOT = { tag = PAN }
+                    PAN = { is_faction_leader = no }
                 }
+                if = {
+                    limit = {
+                        ROOT = {
+                            is_in_faction_with = CUB
+                        }
+                    }
+                    PAO = { add_to_faction = CUB }
+                }
+                if = {
+                    limit = {
+                        ROOT = {
+                            is_in_faction_with = PAJ
+                        }
+                    }
+                    PAO = { add_to_faction = PAJ }
+                }
+                FROM = { add_to_faction = PAN }
+                FROM = { add_to_faction = PAS }
             }
-
-            FROM = { add_to_faction = PREV }
         }
-        else = { FROM = { add_to_faction = PREV } }
-    }
+#        every_country = {
+#            limit = {
+#                is_in_faction_with = ROOT
+#                is_subject = no
+#            }
+#            if = {
+#                limit = {
+#                    is_in_faction = yes
+#                    is_faction_leader = no
+#                    NOT = {
+#                        is_in_faction_with = PAO
+#                    }
+#                }
+#                leave_faction = yes
+#                FROM = { add_to_faction = PREV }
+#            }
+#            else_if = {
+#                limit = { is_faction_leader = yes NOT = {
+#                    is_in_faction_with = PAO
+#                }
+#            }
+#
+#            FROM = { add_to_faction = PREV }
+#        }
+#        else = { FROM = { add_to_faction = PREV } }
+#    }
     if = {
         limit = {
             is_in_faction = no
