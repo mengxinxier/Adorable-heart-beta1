@@ -124,6 +124,12 @@ country_event = {
         LHS_Nymph = {
             add_unit_leader_trait = PAM_ygl
         }
+        hidden_effect = {
+            country_event = {
+                id = PAM.85
+                days = 5
+            }
+        }
     }
 }
 
@@ -249,6 +255,12 @@ country_event = {
         LHS_xueyi = {
             add_unit_leader_trait = PAM_ygl
         }
+        hidden_effect = {
+            country_event = {
+                id = PAM.86
+                days = 5
+            }
+        }
     }
 }
 
@@ -361,6 +373,12 @@ country_event = {
         add_to_variable = { var = num_of_failed_xiaoguo_tasks_var value = 1 }
         LHS_xiaoguo = {
             add_unit_leader_trait = PAM_ygl2
+        }
+        hidden_effect = {
+            country_event = {
+                id = PAM.87
+                days = 5
+            }
         }
     }
 }
@@ -496,6 +514,12 @@ country_event = {
         add_to_variable = { var = num_of_failed_lili_tasks_var value = 1 }
         PAO_lili = {
             add_unit_leader_trait = PAM_ygl
+        }
+        hidden_effect = {
+            country_event = {
+                id = PAM.88
+                days = 5
+            }
         }
     }
 }
@@ -638,6 +662,12 @@ country_event = {
         add_to_variable = { var = num_of_failed_bln_tasks_var value = 1 }
         PAM_bln = {
             add_unit_leader_trait = PAM_ygl
+        }
+        hidden_effect = {
+            country_event = {
+                id = PAM.89
+                days = 5
+            }
         }
     }
 }
@@ -1728,8 +1758,6 @@ country_event = {
         add_dynamic_modifier = {
             modifier = PAM_jsc
         }
-        set_country_flag = PAM_liliaf
-        unlock_decision_tooltip = PAM_mission_lilianas_lullaby
         add_to_variable = {
             num_of_pending_lili_tasks_var = 1
         }
@@ -1833,8 +1861,6 @@ country_event = {
             affection_of_bln_var = 30
             tooltip = affection_of_bln_var_tt
         }
-        set_country_flag = PAM_blnsc
-        unlock_decision_tooltip = PAM_mission_scavengers_cleanup
         add_to_variable = {
             num_of_pending_bln_tasks_var = 1
         }
@@ -2751,6 +2777,10 @@ country_event = {
             amount = 1000 # 基础数量
         }
         add_stability = 0.05
+        add_to_variable = {
+            affection_of_lili_var = 10
+            tooltip = affection_of_lili_var_tt
+        }
     }
 }
 
@@ -2769,8 +2799,10 @@ country_event = {
     }
     option = {
         name = PAM.57.a
-        hidden_effect = {scoped_sound_effect = "Noise"
-        scoped_sound_effect = "微笑"}
+        hidden_effect = {
+            scoped_sound_effect = "Noise"
+            scoped_sound_effect = "微笑"
+        }
         random_owned_controlled_state = {
             limit = {
                 is_core_of = ROOT
@@ -2778,6 +2810,7 @@ country_event = {
                 NOT = { is_capital = yes }
             }
             ZDW = {
+                # ... (师模板定义部分保持不变，省略以节省空间) ...
                 division_template = {
                     name = "躁动的亡灵"
                     is_locked = yes
@@ -2875,12 +2908,17 @@ country_event = {
                         }
                     }
                 }
+
                 transfer_state = PREV
 
+                # 【修正步骤 1】：在 ZDW 作用域内，获取 ROOT 的愤怒等级变量
+                # 直接读取 ROOT 的持久变量 pam_undead_anger_level
+                set_temp_variable = { var = local_spawn_count value = ROOT.pam_undead_anger_level }
+
                 while_loop_effect = {
-                    # 只要临时变量 > 0，就继续执行
+                    # 【修正步骤 2】：检查 ZDW 自己的临时变量 local_spawn_count
                     limit = {
-                        check_variable = { var = temp_spawn_count value > 0 }
+                        check_variable = { var = local_spawn_count value > 0 }
                     }
 
                     # 生成 1 个师
@@ -2891,8 +2929,8 @@ country_event = {
                         }
                     }
 
-                    # 临时变量 - 1
-                    subtract_from_temp_variable = { var = temp_spawn_count value = 1 }
+                    # 【修正步骤 3】：扣除 ZDW 的临时变量
+                    subtract_from_temp_variable = { var = local_spawn_count value = 1 }
                 }
             }
         }
@@ -3703,6 +3741,217 @@ country_event = {
         }
     }
 }
+#来自四号仓库的电话
+country_event = {
+    id = PAM.80
+    title = PAM.80.t
+    desc = PAM.80.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.80.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        set_country_flag = PAM_xfchip
+        unlock_decision_tooltip = PAM_mission_xiaofeng_chip_exchange_proposal
+    }
+}
+#听筒里的呼吸声
+country_event = {
+    id = PAM.81
+    title = PAM.81.t
+    desc = PAM.81.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.81.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        set_country_flag = PAM_liliaf
+        unlock_decision_tooltip = PAM_mission_lilianas_lullaby
+    }
+}
+#来自下水道的低语
+country_event = {
+    id = PAM.82
+    title = PAM.82.t
+    desc = PAM.82.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.82.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        set_country_flag = PAM_blnsc
+        unlock_decision_tooltip = PAM_mission_scavengers_cleanup
+    }
+}
+#来自海浪的咆哮
+country_event = {
+    id = PAM.83
+    title = PAM.83.t
+    desc = PAM.83.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.83.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        set_country_flag = PAM_ghozc
+        unlock_decision_tooltip = PAM_mission_build_nest_for_seagull
+    }
+}
+#来自靶场的咆哮
+country_event = {
+    id = PAM.84
+    title = PAM.84.t
+    desc = PAM.84.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.84.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        unlock_decision_tooltip = PAM_mission_xueyi_iron_umbrella
+        set_country_flag = PAM_ntts
+    }
+}
+#来自档案室的电话
+country_event = {
+    id = PAM.85
+    title = PAM.85.t
+    desc = PAM.85.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.85.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+#来自宪兵队的直线
+country_event = {
+    id = PAM.86
+    title = PAM.86.t
+    desc = PAM.86.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.86.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+#来自海平面的潮声
+country_event = {
+    id = PAM.87
+    title = PAM.87.t
+    desc = PAM.87.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.87.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+#来自壁炉旁的连线
+country_event = {
+    id = PAM.88
+    title = PAM.88.t
+    desc = PAM.88.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.88.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+#来自黑色快艇的低频信号
+country_event = {
+    id = PAM.89
+    title = PAM.89.t
+    desc = PAM.89.d
+    is_triggered_only = yes
+    picture = GFX_event_xf
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.89.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+
 #第三个杯子
 country_event = {
     id = PAM.69
