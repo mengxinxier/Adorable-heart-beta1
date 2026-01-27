@@ -520,7 +520,12 @@ form_MGU_Silver_Court_category = {#银之庭院
 			owns_state = 501
 			controls_state = 501
 			has_global_flag = MGU_Silver_Court_1_standing_by_flag
-			has_idea = MGU_Magic_Doll_army_3_7
+			OR = {
+			    has_idea = MGU_Magic_Doll_army_3_7
+			    has_idea = MGU_Magic_Doll_army_3_8
+			    has_idea = MGU_Magic_Doll_army_3_9
+			    has_idea = MGU_Magic_Doll_army_3_10
+			}
 			has_idea = jixiemonv
 			has_war = no
 		}
@@ -999,24 +1004,12 @@ MGU_homura_industrious_0 = {#晓美焰恢复疲劳
 				modifier = MGU_aftermath_of_the_coup
 			}
 			add_victory_points = {
-				province = 5107
-				value = -5
-			}
-			add_victory_points = {
-				province = 10098
+				province = 10980
 				value = -5
 			}
 			add_victory_points = {
 				province = 1719
 				value = 5
-			}
-			add_victory_points = {
-				province = 13268
-				value = -2
-			}
-			add_victory_points = {
-				province = 12933
-				value = -1
 			}
             set_country_flag = MGU_MGU_homura_industrious_e_on_flag
 		}
@@ -1429,6 +1422,7 @@ MGU_homura_industrious_0 = {#晓美焰恢复疲劳
             custom_effect_tooltip = MGU_homura_tired_add_50_txt
             set_country_flag = MGU_homura_working_flag
             set_country_flag = MGU_homura_industrious_13_flag
+            set_variable = { global.MGU_MAD = 0 }
 		}
 		remove_effect = {
             clr_country_flag = MGU_homura_working_flag
@@ -2458,7 +2452,7 @@ MGU_Heart_Democracy_category = {
                     		}
 		}
 	}
-	MGU_Heart_Democracy_1 = {买稳定 民主事业
+	MGU_Heart_Democracy_1 = {#买稳定 民主事业
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             has_completed_focus = TBMGU_MZ_9
@@ -2495,7 +2489,7 @@ MGU_Heart_Democracy_category = {
 			custom_effect_tooltip = MGU_Heart_Democracy_1_txt
 		}
 	}
-	MGU_Heart_Democracy_2 = {民主王牌
+	MGU_Heart_Democracy_2 = {#民主王牌
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
@@ -2531,7 +2525,7 @@ MGU_Heart_Democracy_category = {
 
 		}
 	}
-	MGU_Heart_Democracy_3 = {民主宣传
+	MGU_Heart_Democracy_3 = {#民主宣传
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
@@ -2566,7 +2560,7 @@ MGU_Heart_Democracy_category = {
 
 		}
 	}
-	MGU_Heart_Democracy_4 = {封禁非法广播
+	MGU_Heart_Democracy_4 = {#封禁非法广播
 		icon = GFX_decision_duihuan_gongchang_1
         visible = {
             has_global_flag = form_MGU_Heart_Democracy_Deploy_flag
@@ -4895,7 +4889,7 @@ MGU_Walpurgisnacht_warning_category  = {#魔女之夜NEW
                 date > 1937.3.1
                 MGU = { exists = yes }
                 MGU = { is_ai = no }
-            #    has_global_flag = MGU_Homura_COUP
+            #   has_global_flag = MGU_Homura_COUP
                 NOT = { has_global_flag = MGU_Witch_Night_befall }
 		    }
             available = {
@@ -7813,7 +7807,9 @@ form_MGU_mofagongyeyuanqu_category = {
             		}
             		visible = {
                         has_country_flag = MGU_homura_industrious_13_flag
-                        global.MGU_MAD < 2
+        				check_variable = {
+        					 global.MGU_MAD < 2
+        				}
             		}
             		cost = 100
             		days_remove = 120
@@ -9454,7 +9450,39 @@ form_MGU_mofagongyeyuanqu_category = {
 
 
     }
+        ##################################################
+            ##################################################
+                ##################################################
+    form_MGU_Rumors_of_Witch_Night_category = {
+    	form_MGU_Rumors_of_Witch_Night_0 = { #魔女之夜即将到来
+            		icon = generic_decision
+            allowed = {#获得条件
+                tag = MGU
+            	}
+		    activation = {
+                date > 1940.1.1
+                MGU = { exists = yes }
+                MGU = { is_ai = no }
+                always = no
+                has_global_flag = MGU_Homura_COUP
+                NOT = { has_global_flag = MGU_Witch_Night_befall }
+		    }
+            available = {
+                has_global_flag = MGU_Witch_Night_befall
+            }
+            is_good = no
+            days_mission_timeout = 730
+            timeout_effect = {
+                country_event = magicunion.10670_MGU
+            }
+            complete_effect = {
 
+            }
+        }
+    }
+        ##################################################
+            ##################################################
+                ##################################################
     form_MGU_ATTACK_of_Witch_Night_category = {
 
     form_MGU_ATTACK_of_Witch_Night_0 = { #魔女之夜的攻势
@@ -9472,11 +9500,7 @@ form_MGU_mofagongyeyuanqu_category = {
                         has_war_with = ROOT
                     }
                 }
-
-                    FROM = {
-                        TAG = MGU
-                    }
-
+            MGU = { is_ai = no }
             }
 		target_trigger = {
 			FROM = {
@@ -10190,9 +10214,11 @@ form_MGU_mofagongyeyuanqu_category = {
 		        fire_only_once = yes
             		available = {
                         PAO = { has_completed_focus = PAO_zjhy }
+                        PAO = { has_war_with = LHS }
             		}
             		visible = {
                         country_exists = PAO
+                        country_exists = LHS
             		}
             		cost = 25
             		days_remove = 3
@@ -10202,6 +10228,78 @@ form_MGU_mofagongyeyuanqu_category = {
             		}
             		remove_effect = {#结束后效果
                     declare_war_on = { target = LHS type = take_state_focus }
+            		}
+            		ai_will_do = {
+            			factor = 0
+            		}
+            	}
+    	form_MGU_Protecting_Rest_Peace_2 = { #夺回夜莺之心（未完成）
+            		icon = generic_decision
+            allowed = {#获得条件
+                tag = MGU
+            	}
+		        fire_only_once = yes
+            		available = {
+                        PAO = { has_completed_focus = PAO_zjhy }
+                        PAO = { has_war_with = LHS }
+            		}
+            		visible = {
+                        country_exists = PAO
+                        country_exists = PAM
+                        NOT = { country_exists = LHS }
+                        always = no
+            		}
+            		cost = 25
+            		days_remove = 3
+		            modifier = {#进行中效果
+	   	            }
+            		complete_effect = {
+            		}
+            		remove_effect = {#结束后效果
+                    #    if = {
+                    #        limit = {
+                    #            is_in_faction = no
+                    #        }
+                    #        create_faction_from_template = faction_template_Magical_Girl_Union
+                    #    }
+
+            		}
+            		ai_will_do = {
+            			factor = 0
+            		}
+            	}
+    	form_MGU_Protecting_Rest_Peace_3 = { #阻止索拉娜搞事（未完成）
+            		icon = generic_decision
+            allowed = {#获得条件
+                tag = MGU
+            	}
+		        fire_only_once = yes
+            		available = {
+                        PAO = { has_completed_focus = PAO_zjhy }
+                        PAO = { has_war_with = LHS }
+
+
+            		}
+            		visible = {
+                        country_exists = PAO
+                        NOT = { country_exists = LHS }
+                        NOT = { country_exists = PAM }
+                        always = no
+            		}
+            		cost = 25
+            		days_remove = 3
+		            modifier = {#进行中效果
+	   	            }
+            		complete_effect = {
+            		}
+            		remove_effect = {#结束后效果
+                    #    if = {
+                    #        limit = {
+                    #            is_in_faction = no
+                    #        }
+                    #        create_faction_from_template = faction_template_Magical_Girl_Union
+                    #    }
+
             		}
             		ai_will_do = {
             			factor = 0
@@ -11294,7 +11392,9 @@ form_MGU_science_expansion_category = {
 		available = {#
 			has_global_flag = MGU_science_expansion_flag
             has_completed_focus = TBMGU_712
-			has_tech = transport_plane_equipment_3
+					has_equipment = {
+						transport_plane_equipment_3 > 0
+					}
 		}
 		visible = {#显示条件
 			has_global_flag = MGU_science_expansion_flag
