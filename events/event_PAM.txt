@@ -124,6 +124,12 @@ country_event = {
         LHS_Nymph = {
             add_unit_leader_trait = PAM_ygl
         }
+        hidden_effect = {
+            country_event = {
+                id = PAM.85
+                days = 5
+            }
+        }
     }
 }
 
@@ -249,6 +255,12 @@ country_event = {
         LHS_xueyi = {
             add_unit_leader_trait = PAM_ygl
         }
+        hidden_effect = {
+            country_event = {
+                id = PAM.86
+                days = 5
+            }
+        }
     }
 }
 
@@ -361,6 +373,12 @@ country_event = {
         add_to_variable = { var = num_of_failed_xiaoguo_tasks_var value = 1 }
         LHS_xiaoguo = {
             add_unit_leader_trait = PAM_ygl2
+        }
+        hidden_effect = {
+            country_event = {
+                id = PAM.87
+                days = 5
+            }
         }
     }
 }
@@ -496,6 +514,12 @@ country_event = {
         add_to_variable = { var = num_of_failed_lili_tasks_var value = 1 }
         PAO_lili = {
             add_unit_leader_trait = PAM_ygl
+        }
+        hidden_effect = {
+            country_event = {
+                id = PAM.88
+                days = 5
+            }
         }
     }
 }
@@ -638,6 +662,12 @@ country_event = {
         add_to_variable = { var = num_of_failed_bln_tasks_var value = 1 }
         PAM_bln = {
             add_unit_leader_trait = PAM_ygl
+        }
+        hidden_effect = {
+            country_event = {
+                id = PAM.89
+                days = 5
+            }
         }
     }
 }
@@ -1142,6 +1172,22 @@ country_event = {
                 id = PAM.14
             }
         }
+        add_to_variable = {
+            affection_of_xiaofeng_var = 10
+            tooltip = affection_of_xiaofeng_var_tt
+        }
+        add_to_variable = {
+            affection_of_xueyi_var = 10
+            tooltip = affection_of_xueyi_var_tt
+        }
+        add_to_variable = {
+            affection_of_xiaoguo_var = 10
+            tooltip = affection_of_xiaoguo_var_tt
+        }
+        add_to_variable = {
+            affection_of_lili_var = 10
+            tooltip = affection_of_lili_var_tt
+        }
     }
 }
 
@@ -1386,7 +1432,7 @@ country_event = {
     title = PAM.21.t
     desc = PAM.21.d
     is_triggered_only = yes
-    picture = GFX_event_chongchao
+    picture = GFX_event_gz
     immediate = {
         hidden_effect = {
             scoped_play_song = "幻听"
@@ -1413,7 +1459,7 @@ country_event = {
     title = PAM.22.t
     desc = PAM.22.d
     is_triggered_only = yes
-    picture = GFX_event_chongchao
+    picture = GFX_event_gz
     immediate = {
         hidden_effect = {
             scoped_play_song = "幻听"
@@ -1661,10 +1707,19 @@ country_event = {
                 }
             }
             MGU = {
-                every_character = {
-                    limit = { is_general_advisor = no }
-                    set_nationality = PAM
+                if = {
+                    limit = {
+                      NOT = { MGU = { has_government = communism } }
+                    }               
+                    every_character = {
+                        limit = { is_general_advisor = no }
+                        set_nationality = PAM
+                    }
                 }
+            }
+            if = {
+                limit = { MGU = { has_government = communism } }
+                custom_effect_tooltip = MGU_commisium_MTK_tip
             }
             hidden_effect = {
                 PAM = {
@@ -1728,8 +1783,6 @@ country_event = {
         add_dynamic_modifier = {
             modifier = PAM_jsc
         }
-        set_country_flag = PAM_liliaf
-        unlock_decision_tooltip = PAM_mission_lilianas_lullaby
         add_to_variable = {
             num_of_pending_lili_tasks_var = 1
         }
@@ -1833,8 +1886,6 @@ country_event = {
             affection_of_bln_var = 30
             tooltip = affection_of_bln_var_tt
         }
-        set_country_flag = PAM_blnsc
-        unlock_decision_tooltip = PAM_mission_scavengers_cleanup
         add_to_variable = {
             num_of_pending_bln_tasks_var = 1
         }
@@ -1932,7 +1983,7 @@ country_event = {
     option = {
         name = PAM.38.a
         ai_chance = {
-            base = 100
+            base = 0
             modifier = {
                 or = {
                     is_in_faction_with = DVL
@@ -1941,6 +1992,13 @@ country_event = {
                     is_in_faction_with = ENG
                 }
                 factor = 0
+            }
+            modifier = {
+                or = {
+                    is_in_faction_with = PAN
+                    TAG = PAN
+                }
+                factor = 100
             }
             modifier = {
                 not = {
@@ -1967,69 +2025,101 @@ country_event = {
             }
             if = {
                 limit = {
-                    is_in_faction = yes
-                    is_faction_leader = no
+                    ROOT = {
+                        is_faction_leader = yes
+                    }
                     NOT = {
                         is_in_faction_with = PAM
                     }
                 }
-                leave_faction = yes
+                every_other_country = {
+                    limit = {
+                        is_in_faction_with = ROOT
+                    }
+                    FROM = { add_to_faction = PREV }
+                }
                 FROM = { add_to_faction = PREV }
             }
             else_if = {
-                limit = { is_faction_leader = yes NOT = {
-                    is_in_faction_with = PAM
+                limit = {
+                    ROOT = { is_faction_leader = no }
+                    NOT = {
+                        is_in_faction_with = PAM
+                    }
                 }
+                FROM = { add_to_faction = ROOT }
             }
-
-            FROM = { add_to_faction = PREV }
         }
-        else = { FROM = { add_to_faction = PREV } }
-    }
-    if = {
-        limit = {
-            is_in_faction = no
-        }
-        FROM = { add_to_faction = root }
-    }
-    if = {
-        every_country = {
+        #        every_country = {
+        #            limit = {
+        #                is_in_faction_with = ROOT
+        #                is_subject = no
+        #            }
+        #            if = {
+        #                limit = {
+        #                    is_in_faction = yes
+        #                    is_faction_leader = no
+        #                    NOT = {
+        #                        is_in_faction_with = PAM
+        #                    }
+        #                }
+        #                leave_faction = yes
+        #                FROM = { add_to_faction = PREV }
+        #            }
+        #            else_if = {
+        #                limit = { is_faction_leader = yes NOT = {
+        #                    is_in_faction_with = PAM
+        #                }
+        #            }
+        #
+        #            FROM = { add_to_faction = PREV }
+        #        }
+        #        else = { FROM = { add_to_faction = PREV } }
+        #    }
+        if = {
             limit = {
-                has_war_with = root
-                is_in_faction_with = ROOT
+                is_in_faction = no
             }
+            FROM = { add_to_faction = root }
         }
-        white_peace = PREV
-    }
-    add_ideas = PAM_lqfs
-    set_country_flag = PAM_jieshou
-    custom_effect_tooltip = PAM_lqfs_tt
-}
-option = {
-    name = PAM.38.b
-    ai_chance = {
-        base = 10
-        modifier = {
-            not = {
-                or = {
-                    has_government = communism
-                    has_government = fascism
+        if = {
+            every_country = {
+                limit = {
+                    has_war_with = root
+                    is_in_faction_with = ROOT
                 }
             }
-            add = 100
+            white_peace = PREV
         }
+        add_ideas = PAM_lqfs
+        set_country_flag = PAM_jieshou
+        custom_effect_tooltip = PAM_lqfs_tt
     }
-    if = {
-        limit = {
-            not = {
-                has_global_flag = PAM_xyyq
+    option = {
+        name = PAM.38.b
+        ai_chance = {
+            base = 10
+            modifier = {
+                not = {
+                    or = {
+                        has_government = communism
+                        has_government = fascism
+                    }
+                }
+                add = 100
             }
         }
-        set_global_flag = PAM_xyyq
+        if = {
+            limit = {
+                not = {
+                    has_global_flag = PAM_xyyq
+                }
+            }
+            set_global_flag = PAM_xyyq
+        }
+        set_country_flag = PAM_jujue
+        add_war_support = 0.2
     }
-    set_country_flag = PAM_jujue
-    add_war_support = 0.2
-}
 }
 
 #淌着油的红利
@@ -2277,7 +2367,10 @@ country_event = {
                 factor = 0
             }
             modifier = {
-                tag = JAP
+                or = {
+                    tag = JAP
+                    is_in_faction_with = JAP
+                }
                 factor = 0
             }
             modifier = {
@@ -2315,93 +2408,125 @@ country_event = {
             }
             if = {
                 limit = {
-                    is_in_faction = yes
-                    is_faction_leader = no
+                    ROOT = {
+                        is_faction_leader = yes
+                    }
                     NOT = {
                         is_in_faction_with = PAM
                     }
                 }
-                leave_faction = yes
+                every_other_country = {
+                    limit = {
+                        is_in_faction_with = ROOT
+                    }
+                    FROM = { add_to_faction = PREV }
+                }
                 FROM = { add_to_faction = PREV }
             }
             else_if = {
-                limit = { is_faction_leader = yes NOT = {
-                    is_in_faction_with = PAM
+                limit = {
+                    ROOT = { is_faction_leader = no }
+                    NOT = {
+                        is_in_faction_with = PAM
+                    }
                 }
+                FROM = { add_to_faction = ROOT }
             }
-
-            FROM = { add_to_faction = PREV }
         }
-        else = { FROM = { add_to_faction = PREV } }
-    }
-    if = {
-        limit = {
-            is_in_faction = no
-        }
-        FROM = { add_to_faction = root }
-    }
-    if = {
-        every_country = {
+        #        every_country = {
+        #            limit = {
+        #                is_in_faction_with = ROOT
+        #                is_subject = no
+        #            }
+        #            if = {
+        #                limit = {
+        #                    is_in_faction = yes
+        #                    is_faction_leader = no
+        #                    NOT = {
+        #                        is_in_faction_with = PAM
+        #                    }
+        #                }
+        #                leave_faction = yes
+        #                FROM = { add_to_faction = PREV }
+        #            }
+        #            else_if = {
+        #                limit = { is_faction_leader = yes NOT = {
+        #                    is_in_faction_with = PAM
+        #                }
+        #            }
+        #
+        #            FROM = { add_to_faction = PREV }
+        #        }
+        #        else = { FROM = { add_to_faction = PREV } }
+        #    }
+        if = {
             limit = {
-                has_war_with = root
-                is_in_faction_with = ROOT
+                is_in_faction = no
             }
+            FROM = { add_to_faction = root }
         }
-        white_peace = PREV
-    }
-}
-option = {
-    trigger = {
-        capital_scope = { is_on_continent = europe }
-        not = {
-            tag = PAM
-        }
-    }
-    ai_chance = {
-        base = 10
-    }
-    name = PAM_47.b
-    add_war_support = 0.1
-}
-option = {
-    trigger = {
-        not = {
-            capital_scope = { is_on_continent = europe }
-            tag = PAM
-        }
-    }
-    ai_chance = {
-        base = 10
-        modifier = {
-            not = {
-                or = {
-                    has_government = communism
-                    has_government = fascism
+        if = {
+            every_country = {
+                limit = {
+                    has_war_with = root
+                    is_in_faction_with = ROOT
                 }
             }
-            add = 1000
+            white_peace = PREV
         }
-        modifier = {
-            or = {
-                has_war_with = PAM
-                tag = JAP
+    }
+    option = {
+        trigger = {
+            capital_scope = { is_on_continent = europe }
+            not = {
+                tag = PAM
             }
-            add = 1000
         }
+        ai_chance = {
+            base = 10
+        }
+        name = PAM_47.b
+        add_war_support = 0.1
     }
-    name = PAM_47.c
-    add_war_support = 0.1
-}
-option = {
-    trigger = {
-        tag = PAM
+    option = {
+        trigger = {
+            not = {
+                capital_scope = { is_on_continent = europe }
+                tag = PAM
+            }
+        }
+        ai_chance = {
+            base = 10
+            modifier = {
+                not = {
+                    or = {
+                        has_government = communism
+                        has_government = fascism
+                    }
+                }
+                add = 1000
+            }
+            modifier = {
+                or = {
+                    has_war_with = PAM
+                    tag = JAP
+                }
+                add = 1000
+            }
+        }
+        name = PAM_47.c
+        add_war_support = 0.1
     }
-    ai_chance = {
-        base = 10
+    option = {
+        trigger = {
+            tag = PAM
+        }
+        ai_chance = {
+            base = 10
+        }
+        name = PAM_47.desc
+        add_war_support = 0.1
     }
-    name = PAM_47.desc
-    add_war_support = 0.1
-}
 }
 
 #狼与狗的区别
@@ -2751,6 +2876,10 @@ country_event = {
             amount = 1000 # 基础数量
         }
         add_stability = 0.05
+        add_to_variable = {
+            affection_of_lili_var = 10
+            tooltip = affection_of_lili_var_tt
+        }
     }
 }
 
@@ -2769,8 +2898,10 @@ country_event = {
     }
     option = {
         name = PAM.57.a
-        hidden_effect = {scoped_sound_effect = "Noise"
-        scoped_sound_effect = "微笑"}
+        hidden_effect = {
+            scoped_sound_effect = "Noise"
+            scoped_sound_effect = "微笑"
+        }
         random_owned_controlled_state = {
             limit = {
                 is_core_of = ROOT
@@ -2778,6 +2909,7 @@ country_event = {
                 NOT = { is_capital = yes }
             }
             ZDW = {
+                # ... (师模板定义部分保持不变，省略以节省空间) ...
                 division_template = {
                     name = "躁动的亡灵"
                     is_locked = yes
@@ -2875,12 +3007,17 @@ country_event = {
                         }
                     }
                 }
+
                 transfer_state = PREV
 
+                # 【修正步骤 1】：在 ZDW 作用域内，获取 ROOT 的愤怒等级变量
+                # 直接读取 ROOT 的持久变量 pam_undead_anger_level
+                set_temp_variable = { var = local_spawn_count value = ROOT.pam_undead_anger_level }
+
                 while_loop_effect = {
-                    # 只要临时变量 > 0，就继续执行
+                    # 【修正步骤 2】：检查 ZDW 自己的临时变量 local_spawn_count
                     limit = {
-                        check_variable = { var = temp_spawn_count value > 0 }
+                        check_variable = { var = local_spawn_count value > 0 }
                     }
 
                     # 生成 1 个师
@@ -2891,8 +3028,8 @@ country_event = {
                         }
                     }
 
-                    # 临时变量 - 1
-                    subtract_from_temp_variable = { var = temp_spawn_count value = 1 }
+                    # 【修正步骤 3】：扣除 ZDW 的临时变量
+                    subtract_from_temp_variable = { var = local_spawn_count value = 1 }
                 }
             }
         }
@@ -2999,6 +3136,10 @@ country_event = {
         hidden_effect = {
             scoped_sound_effect = "燃烧"
         }
+        add_to_variable = {
+            affection_of_xiaoguo_var = 10
+            tooltip = affection_of_xiaoguo_var_tt
+        }
     }
 }
 
@@ -3014,7 +3155,7 @@ country_event = {
         name = PAM.62.a
         ai_chance = {
             base = 10
-            modifier = { factor = 2 has_government = fascism }
+            modifier = { factor = 10 has_government = communism }
         }
         set_country_flag = pam_ai_chose_red
         # 告诉索拉娜我已经选好了
@@ -3026,8 +3167,8 @@ country_event = {
         name = PAM.62.b
         ai_chance = {
             base = 10
-            modifier = { factor = 2 has_government = democratic }
-            modifier = { factor = 1.5 has_government = neutrality }
+            modifier = { factor = 10 has_government = democratic }
+            modifier = { factor = 15 has_government = neutrality }
         }
         set_country_flag = pam_ai_chose_gold
         hidden_effect = {FROM = { country_event = { id = PAM.63 } }}
@@ -3038,7 +3179,7 @@ country_event = {
         name = PAM.62.c
         ai_chance = {
             base = 10
-            modifier = { factor = 2 has_government = communism }
+            modifier = { factor = 10 has_government = fascism }
         }
         set_country_flag = pam_ai_chose_black
         hidden_effect = {FROM = { country_event = { id = PAM.63 } }}
@@ -3058,7 +3199,13 @@ country_event = {
         name = PAM.63.a # 出红骨
         # 判定胜负
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_red } }
+            limit = {
+                FROM = { has_country_flag = pam_ai_chose_red }
+                not = {
+                    is_fully_decrypted = FROM
+                    FROM = {is_ai = no}
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.66 } # 平局
                 FROM = {
@@ -3067,7 +3214,15 @@ country_event = {
             }
         }
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_gold } }
+            limit = {
+                or = {
+                    FROM = { has_country_flag = pam_ai_chose_gold }
+                    and = {
+                        is_fully_decrypted = FROM
+                        FROM = {is_ai = yes}
+                    }
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.64 }# 胜利
                 FROM = {
@@ -3076,7 +3231,13 @@ country_event = {
             }
         }
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_black } }
+            limit = {
+                FROM = { has_country_flag = pam_ai_chose_black }
+                not = {
+                    is_fully_decrypted = FROM
+                    FROM = {is_ai = no}
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.65 } # 战败
                 FROM = {
@@ -3090,7 +3251,13 @@ country_event = {
     option = {
         name = PAM.63.b # 出金骨
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_red } }
+            limit = {
+                FROM = { has_country_flag = pam_ai_chose_red }
+                not = {
+                    is_fully_decrypted = FROM
+                    FROM = {is_ai = no}
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.65 }# 战败
                 FROM = {
@@ -3099,7 +3266,13 @@ country_event = {
             }
         }
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_gold } }
+            limit = {
+                FROM = { has_country_flag = pam_ai_chose_gold }
+                not = {
+                    is_fully_decrypted = FROM
+                    FROM = {is_ai = no}
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.66 }# 平局
                 FROM = {
@@ -3108,7 +3281,15 @@ country_event = {
             }
         }
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_black } }
+            limit = {
+                or = {
+                    FROM = { has_country_flag = pam_ai_chose_black }
+                    and = {
+                        is_fully_decrypted = FROM
+                        FROM = {is_ai = yes}
+                    }
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.64 }# 胜利
                 FROM = {
@@ -3122,7 +3303,15 @@ country_event = {
     option = {
         name = PAM.63.c # 出黑骨
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_red } }
+            limit = {
+                or = {
+                    FROM = { has_country_flag = pam_ai_chose_red }
+                    and = {
+                        is_fully_decrypted = FROM
+                        FROM = {is_ai = yes}
+                    }
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.64 }# 胜利
                 FROM = {
@@ -3131,7 +3320,13 @@ country_event = {
             }
         }
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_gold } }
+            limit = {
+                FROM = { has_country_flag = pam_ai_chose_gold }
+                not = {
+                    is_fully_decrypted = FROM
+                    FROM = {is_ai = no}
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.65 }# 战败
                 FROM = {
@@ -3140,7 +3335,13 @@ country_event = {
             }
         }
         if = {
-            limit = { FROM = { has_country_flag = pam_ai_chose_black } }
+            limit = {
+                FROM = { has_country_flag = pam_ai_chose_black }
+                not = {
+                    is_fully_decrypted = FROM
+                    FROM = {is_ai = no}
+                }
+            }
             hidden_effect = {
                 country_event = { id = PAM.66 } # 平局
                 FROM = {
@@ -3185,9 +3386,7 @@ country_event = {
             add_to_variable = { var = pam_sl value = 1 }
             custom_effect_tooltip = PAM_sl_tt4
         }
-        add_political_power = 75
-        add_command_power = 50
-        add_manpower = 5000
+        add_political_power = 25
     }
 }
 
@@ -3215,9 +3414,6 @@ country_event = {
             custom_effect_tooltip = PAM_sl_tt3
             add_to_variable = { var = pam_sb value = 1 }
         }
-        add_political_power = -50
-        add_command_power = -20
-        add_stability = -0.005
     }
 }
 
@@ -3244,7 +3440,7 @@ country_event = {
             limit = { tag = PAM }
             add_to_variable = { var = pam_pj value = 1 }
         }
-        add_political_power = 35
+        add_political_power = 10
     }
 }
 
@@ -3600,7 +3796,7 @@ country_event = {
     title = PAM.79.t
     desc = PAM.79.d
     is_triggered_only = yes
-    picture = GFX_event_rsfz
+    picture = GFX_event_fzhy
     immediate = {
         hidden_effect = {
             scoped_play_song = "雨"
@@ -3703,6 +3899,237 @@ country_event = {
         }
     }
 }
+#来自四号仓库的电话
+country_event = {
+    id = PAM.80
+    title = PAM.80.t
+    desc = PAM.80.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.80.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        set_country_flag = PAM_xfchip
+        unlock_decision_tooltip = PAM_mission_xiaofeng_chip_exchange_proposal
+        add_to_variable = {
+            affection_of_xiaofeng_var = 10
+            tooltip = affection_of_xiaofeng_var_tt
+        }
+    }
+}
+#听筒里的呼吸声
+country_event = {
+    id = PAM.81
+    title = PAM.81.t
+    desc = PAM.81.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.81.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        set_country_flag = PAM_liliaf
+        unlock_decision_tooltip = PAM_mission_lilianas_lullaby
+        add_to_variable = {
+            affection_of_lili_var = 10
+            tooltip = affection_of_lili_var_tt
+        }
+    }
+}
+#来自下水道的低语
+country_event = {
+    id = PAM.82
+    title = PAM.82.t
+    desc = PAM.82.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.82.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        set_country_flag = PAM_blnsc
+        unlock_decision_tooltip = PAM_mission_scavengers_cleanup
+        add_to_variable = {
+            affection_of_bln_var = 10
+            tooltip = affection_of_bln_var_tt
+        }
+    }
+}
+#来自海浪的咆哮
+country_event = {
+    id = PAM.83
+    title = PAM.83.t
+    desc = PAM.83.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.83.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        set_country_flag = PAM_ghozc
+        unlock_decision_tooltip = PAM_mission_build_nest_for_seagull
+        add_to_variable = {
+            affection_of_xiaoguo_var = 10
+            tooltip = affection_of_xiaoguo_var_tt
+        }
+    }
+}
+#来自靶场的咆哮
+country_event = {
+    id = PAM.84
+    title = PAM.84.t
+    desc = PAM.84.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.84.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+        unlock_decision_tooltip = PAM_mission_xueyi_iron_umbrella
+        set_country_flag = PAM_ntts
+        add_to_variable = {
+            affection_of_xueyi_var = 10
+            tooltip = affection_of_xueyi_var_tt
+        }
+    }
+}
+#来自档案室的电话
+country_event = {
+    id = PAM.85
+    title = PAM.85.t
+    desc = PAM.85.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.85.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+#来自宪兵队的直线
+country_event = {
+    id = PAM.86
+    title = PAM.86.t
+    desc = PAM.86.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.86.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+#来自海平面的潮声
+country_event = {
+    id = PAM.87
+    title = PAM.87.t
+    desc = PAM.87.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.87.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+#来自壁炉旁的连线
+country_event = {
+    id = PAM.88
+    title = PAM.88.t
+    desc = PAM.88.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.88.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+#来自黑色快艇的低频信号
+country_event = {
+    id = PAM.89
+    title = PAM.89.t
+    desc = PAM.89.d
+    is_triggered_only = yes
+    picture = GFX_event_dh
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "电话铃"
+        }
+    }
+    option = {
+        name = PAM.89.a
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = 50
+    }
+}
+
 #第三个杯子
 country_event = {
     id = PAM.69

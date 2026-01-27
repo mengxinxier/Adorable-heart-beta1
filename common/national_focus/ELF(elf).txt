@@ -1416,9 +1416,301 @@ focus_tree = {
                    }
                 }
             }
+            set_country_flag = EWW_weiya4
+            custom_effect_tooltip = jiesuoguoce
+            mark_focus_tree_layout_dirty = yes
             hidden_effect = {
                 add_ideas = EWW_lf_idea
             }
+        }
+    }
+
+    #西陲的落日余烬
+    focus = {
+        id = EWW_sunset_embers_of_west
+        icon = GFX_sunset_embers_of_west
+        x = 30
+        y = 0
+        cost = 5
+        prerequisite = {
+            #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+        }
+        available = {
+            not = {
+                has_war_with = PAQ
+            }
+            PAQ = {
+                has_idea = PAQ_jdxrhl_buff
+            }
+        }
+        allow_branch = {
+            has_country_flag = EWW_weiya4
+        }
+        bypass = {
+        }
+        select_effect = {
+        }
+        ai_will_do = {
+            #ai点击国策的倾向
+            base = 200		#基础值
+        }
+        completion_reward = {
+           add_political_power = 100
+           add_ideas = EWW_NB_PAQ_SB
+           add_intel = {
+               target = PAQ
+               civilian_intel = 80
+               army_intel = 50
+               navy_intel = 50
+               airforce_intel = 50
+           }
+           PAQ = {
+            diplomatic_relation = {
+                country = EWW
+                relation = non_aggression_pact
+                active = yes
+            }
+            hidden_effect = {
+                diplomatic_relation = {
+                    country = ELF
+                    relation = non_aggression_pact
+                    active = yes
+                }
+            }
+           }
+        }
+    }
+
+    #治愈大地的伤痕
+    focus = {
+        id = EWW_healing_the_scars
+        icon = GFX_goal_generic_construction 
+        x = 30
+        y = 1
+        cost = 10 
+        prerequisite = {
+            focus = EWW_sunset_embers_of_west
+        }
+        available = {
+        }
+        completion_reward = {
+            add_political_power = 120
+            add_stability = 0.10
+
+            every_owned_state = {
+                limit = {
+                    is_core_of = ROOT
+                    free_building_slots = {
+                        building = industrial_complex
+                        size > 0
+                    }
+                }
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 1
+                    instant_build = yes
+                }
+                add_building_construction = {
+                    type = infrastructure
+                    level = 2
+                    instant_build = yes
+                }
+            }
+        }
+    }
+
+    #聆听南风的呜咽
+    focus = {
+        id = EWW_listening_to_southern_wind
+        icon = GFX_goal_generic_intelligence
+        x = 30
+        y = 2
+        cost = 5
+        prerequisite = {
+            focus = EWW_healing_the_scars
+        }
+        completion_reward = {
+            add_command_power = 50
+
+            IF = {
+                limit = { country_exists = LHS }
+                add_intel = {
+                    target = LHS
+                    civilian_intel = 25
+                    army_intel = 25
+                }
+            }
+            IF = {
+                limit = { country_exists = PAM }
+                add_intel = {
+                    target = PAM
+                    civilian_intel = 25
+                    army_intel = 25
+                }
+            }
+            IF = {
+                limit = { country_exists = PAO }
+                add_intel = {
+                    target = PAO
+                    civilian_intel = 25
+                    army_intel = 25
+                }
+            }
+
+            add_tech_bonus = {
+                name = "电子学"
+                bonus = 1.0
+                uses = 1
+                category = electronics
+            }
+        }
+    }
+
+    #野火燎原的警示
+    focus = {
+        id = EWW_warning_of_wildfire
+        icon = GFX_goal_generic_political_pressure
+        x = 28
+        y = 3
+        cost = 5
+        prerequisite = {
+            focus = EWW_listening_to_southern_wind
+        }
+        mutually_exclusive = {
+            focus = EWW_hunger_from_abyss
+        }
+        available = {
+            country_exists = LHS
+        }
+        completion_reward = {
+            add_stability = 0.15
+            add_political_power = 200
+
+            add_popularity = {
+                ideology = communism
+                popularity = -0.2
+            }
+
+            add_tech_bonus = {
+                name = "步枪研究卡"
+                bonus = 1.0
+                uses = 2
+                category = infantry_weapons
+            }
+
+            ROOT = {
+                add_opinion_modifier = {
+                    target = LHS
+                    modifier = hostile_status
+                }
+            }
+            LHS = {
+                add_opinion_modifier = {
+                    target = ROOT
+                    modifier = hostile_status
+                }
+            }
+        }
+    }
+
+    #来自深渊的饥饿
+    focus = {
+        id = EWW_hunger_from_abyss
+        icon = GFX_goal_generic_defense
+        x = 32
+        y = 3
+        cost = 5
+        prerequisite = {
+            focus = EWW_listening_to_southern_wind
+        }
+        mutually_exclusive = {
+            focus = EWW_warning_of_wildfire
+        }
+        available = {
+            OR = {
+                country_exists = PAM
+                country_exists = PAO
+            }
+        }
+        completion_reward = {
+            add_war_support = 0.15
+
+            every_state = {
+                limit = {
+                    OR = {
+                        state = 1141
+                        state = 1040
+                        state = 855
+                        state = 1197
+                        state = 1033
+                    }
+                }
+                add_building_construction = {
+                    type = bunker
+                    level = 3
+                    province = {
+                        id = 13842
+                        id = 13853
+                        id = 13854
+                        id = 13897
+
+                        id = 13530
+                        id = 13524
+                        id = 10960
+                        id = 13525
+
+                        id = 13820
+                        id = 13816
+                        id = 13319
+                        id = 13535
+                        id = 13527
+                    }
+                    instant_build = yes
+                }
+            }
+
+            add_tech_bonus = {
+                name = "火炮研究卡"
+                bonus = 1.0
+                uses = 2
+                category = artillery
+            }
+        }
+    }
+
+    # 5. 万叶之盾，四季长城 - 最终防御准备
+    focus = {
+        id = EWW_shield_of_leaves
+        icon = GFX_goal_generic_army_doctrines
+        x = 30
+        y = 4
+        cost = 10
+        prerequisite = {
+            focus = EWW_warning_of_wildfire
+            focus = EWW_hunger_from_abyss
+        }
+        completion_reward = {
+            army_experience = 100
+
+            every_unit_leader = {
+                add_skill_level = 1
+                add_max_attack = 1
+                add_max_defense = 1
+            }
+
+            add_mastery_bonus = {
+                 bonus = 0.25
+                 days = 365
+                 name = "万叶之盾"
+                 folder = land
+                 index = 1
+             }
+
+            # 增加人力，代表全族动员
+            add_manpower = 50000
+
+            # 触发事件，提示玩家准备迎接南方战争
+            # country_event = { id = EWW.99 days = 1 } # 假设的事件ID
         }
     }
 
