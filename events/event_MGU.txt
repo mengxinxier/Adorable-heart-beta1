@@ -2,6 +2,8 @@ add_namespace = MGU_event
 add_namespace = magicunion
 add_namespace = TBMGUprisoner
 add_namespace = magicunion_test
+
+add_namespace = MGU_news
 add_namespace = MTK
 add_namespace = MTK_news
 add_namespace = MTK_event
@@ -1685,6 +1687,96 @@ country_event = {
 		}
 	}
 }
+
+country_event = {
+	##进击的叛军
+	id = magicunion.1063_MGU
+	title = magicunion.1063_MGU.t
+	desc = magicunion.1063_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	    trigger = {
+	        tag = MGU
+            date > 1937.1.1
+            MRB = { exists = yes }
+			NOT = {
+				has_country_flag =  MGU_yuki_enter
+			}
+            NOT = { has_completed_focus = TBMGU_PJ_A1 }
+        }
+	immediate = {
+		        MRB = {
+			    declare_war_on = { target = MGC type = annex_everything }
+			    declare_war_on = { target = MGU type = annex_everything }
+			    declare_war_on = { target = MST type = annex_everything }
+		        }
+	}
+    option = {
+    		name = magicunion.1063_MGU.a
+		    ai_chance = {
+			    base = 100
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+    	}
+}
+country_event = {
+	##政变阴云
+	id = magicunion.1064_MGU
+	title = magicunion.1064_MGU.t
+	desc = magicunion.1064_MGU.desc
+	 picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = no
+	    trigger = {
+	        tag = MGU
+	        has_global_flag = MGU_Homura_COUP
+            date > 1938.3.1
+            NOT = { has_completed_focus = TBMGU_YH_1 }
+        }
+	immediate = {
+        set_country_flag = MGU_COUP_COUP_flag
+	}
+    option = {
+    		name = magicunion.1064_MGU.a
+
+		    ai_chance = {
+			    base = 100
+		    }
+    		trigger = {
+    			tag = MGU
+            }
+            country_event = { id = MGU_event.18 days = 30 }
+            if = {
+                limit = {
+                    is_faction_leader = yes
+                }
+                MGU = { dismantle_faction = yes }
+            }
+            if = {
+                limit = {
+                is_faction_leader = no
+                is_in_faction = yes
+                }
+                MGU = { leave_faction = yes }
+            }
+            set_party_name = { ideology = fascism long_name = "magius之翼" name = "magius之翼" }
+            set_party_name = { ideology = democratic long_name = "魔联-自由派" name = "魔联-自由派" }
+            set_party_name = { ideology = communism long_name = "魔联-温和派" name = "魔联-温和派" }
+            set_party_name = { ideology = neutrality long_name = "魔联-建制派" name = "魔联-建制派" }
+
+            hidden_effect = {
+                add_popularity = { ideology = fascism popularity = 1.0 }
+                add_popularity = { ideology = democratic popularity = 0.5 }
+                add_popularity = { ideology = communism popularity = 0.33 }
+                add_popularity = { ideology = neutrality popularity = 0.25 }
+            }
+	}
+}
+
 
 country_event = {
 	##少女密室 少女的密室
@@ -10969,45 +11061,6 @@ country_event = {
 }
 
 country_event = {
-	##谈判
-	id = magicunion.1264
-	title = magicunion.1264.t
-	desc = magicunion.1264.desc
-	picture = GFX_event_MGU_envelope
-	major = no
-	fire_only_once = yes
-	is_triggered_only = yes
-	option = {
-		#开始谈判
-		name = magicunion.1264.a
-		add_ideas = LHS_MGU_talks_afoot
-		MGU = {
-			add_ideas = MGU_LHS_talks_afoot
-		}
-		ai_chance = {
-			base = 10
-		}
-		trigger = {
-			tag = LHS
-		}
-	}
-	option = {
-		#拒绝和谈
-		name = magicunion.1264.b
-		add_political_power = 20
-		MGU = {
-			remove_ideas = MGU_LHS_talks_try
-		}
-		ai_chance = {
-			base = 10
-		}
-		trigger = {
-			tag = LHS
-		}
-	}
-}
-
-country_event = {
 	##梓美冬科研事件
 	id = magicunion.1265
 	title = magicunion.1265.t
@@ -11210,394 +11263,50 @@ country_event = {
 	}
 }
 
-###############魔联事件结束#################
-###################事件结束↑↑################
-########魔联监禁调教#######
+#哈基米监禁俘虏
 news_event = {
-	id = TBMGUprisoner.80
-	title = TBMGUprisoner.80.t
-	desc = TBMGUprisoner.80.d
-	picture = GFX_news_event_MGU_PRISONER_1
+	id = MGU_news.1
+	title = MGU_news.1.t
+	desc = MGU_news.1.d
+	picture = GFX_news_event_MGU_DEMON
 	major = yes
 	trigger = {
-		MGU = {
-			exists = no
-		}
-		MST = {
-			exists = no
-		}
-		NOT = {
-			has_global_flag = adorable_heart_FALL_OF_TBMGU
-		}
-		OR = {
-			NOT = {
-				has_global_flag = MGU_homura_run_eng
-			}
-			ENG = {
-				exists = no
-			}
-			ENG = {
-				is_subject = yes
-			}
-		}
-		# has_global_flag = MGU_Homura_COUP
+		wants_world_news = yes
 	}
-	immediate = {
-		set_global_flag = adorable_heart_FALL_OF_TBMGU
-	}
-	option = {
-		name = TBMGUprisoner.80.a
-		trigger = {
-			controls_state = 501
-		}
-		set_country_flag = MGU_TBMGUprisoner_owner
-		remove_unit_leader_role = MGU_Akemi_Homura
-	}
-	option = {
-		name = TBMGUprisoner.80.b
-		trigger = {
-			NOT = {
-				controls_state = 501
-			}
-		}
-	}
-}
-
-country_event = {
-	id = TBMGUprisoner.81
-	title = TBMGUprisoner.81.t
-	desc = TBMGUprisoner.81.d
-	picture = GFX_event_PRISONER_anfu
 	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.11.a
-		hidden_effect = {
-			country_event = {
-				id = TBMGUprisoner.85
-			}
-		}
-		ai_chance = {
-			factor = 25
-		}
-	}
-	option = {
-		name = TBMGUprisoner.11.b
-		hidden_effect = {
-			country_event = {
-				id = TBMGUprisoner.85
-			}
-		}
-		ai_chance = {
-			factor = 25
-		}
-	}
-	option = {
-		name = TBMGUprisoner.11.c
-		hidden_effect = {
-			country_event = {
-				id = TBMGUprisoner.85
-			}
-		}
-		ai_chance = {
-			factor = 25
-		}
-	}
-	option = {
-		name = TBMGUprisoner.11.d
-		hidden_effect = {
-			country_event = {
-				id = TBMGUprisoner.85
-			}
-		}
-		ai_chance = {
-			factor = 25
-		}
-	}
-}
-
-country_event = {
-	id = TBMGUprisoner.85
-	title = TBMGUprisoner.85.t
-	desc = TBMGUprisoner.85.d
-	picture = GFX_event_MGU_PRISONER_1
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.85.a
-		clr_country_flag = MGU_PRISON_RUNNING
-	}
-}
-
-country_event = {
-	id = TBMGUprisoner.82
-	title = TBMGUprisoner.82.t
-	desc = TBMGUprisoner.82.d
-	picture = GFX_event_PRISONER_xingxun
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.12.a
-		hidden_effect = {
-			random_list = {
-				0 = {
-					country_event = {
-						id = TBMGUprisoner.86
+		option = {
+			name = MGU_news.1.a
+			trigger = {
+				or = {
+					and = {
+						controls_state = 501
+						is_subject = no
 					}
+					any_subject_country = { controls_state = 501 }
 				}
-				100 = {
-					country_event = {
-						id = TBMGUprisoner.89
+			}
+			set_country_flag = MGU_prisoner_owner
+		}
+		option = {
+			name = MGU_news.1.b
+			trigger = {
+				not = {
+					or = {
+						and = {
+							controls_state = 501
+							is_subject = no
+						}
+						any_subject_country = { controls_state = 501 }
 					}
 				}
 			}
 		}
-	}
-	option = {
-		name = TBMGUprisoner.12.b
-		hidden_effect = {
-			random_list = {
-				20 = {
-					country_event = {
-						id = TBMGUprisoner.86
-					}
-				}
-				#		20 = {
-				#			country_event = {
-				#				id = TBMGUprisoner.87
-				#			}
-				#		}
-				80 = {
-					country_event = {
-						id = TBMGUprisoner.89
-					}
-				}
-			}
-		}
-	}
-	option = {
-		name = TBMGUprisoner.12.c
-		hidden_effect = {
-			random_list = {
-				60 = {
-					country_event = {
-						id = TBMGUprisoner.86
-					}
-				}
-				40 = {
-					country_event = {
-						id = TBMGUprisoner.87
-					}
-				}
-			}
-		}
-	}
 }
 
-country_event = {
-	id = TBMGUprisoner.86
-	title = TBMGUprisoner.86.t
-	desc = TBMGUprisoner.86.d
-	picture = GFX_event_MGU_PRISONER_2
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.86.a
-		clr_country_flag = MGU_TBMGUprisoner_owner
-		clr_country_flag = MGU_PRISON_RUNNING
-		#recruit_character = MGU_error_error_error
-		MST = {
-			MGU_error_error_error = {
-				set_nationality = ROOT
-			}
-		}
-		add_field_marshal_role = {
-			character = "MGU_error_error_error"
-			traits = {
-				trait_reckless
-			}
-			skill = 3
-			attack_skill = 10
-			defense_skill = 1
-			planning_skill = 1
-			logistics_skill = 1
-		}
-	}
-}
 
-country_event = {
-	id = TBMGUprisoner.87
-	title = TBMGUprisoner.87.t
-	desc = TBMGUprisoner.87.d
-	picture = GFX_event_MGU_PRISONER_3
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.87.a
-		clr_country_flag = MGU_TBMGUprisoner_owner
-		clr_country_flag = MGU_PRISON_RUNNING
-	}
-}
 
-country_event = {
-	id = TBMGUprisoner.89
-	title = TBMGUprisoner.89.t
-	desc = TBMGUprisoner.89.d
-	picture = GFX_event_MGU_PRISONER_4
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.89.a
-		clr_country_flag = MGU_PRISON_RUNNING
-	}
-}
 
-country_event = {
-	id = TBMGUprisoner.83
-	title = TBMGUprisoner.83.t
-	desc = TBMGUprisoner.83.d
-	picture = GFX_event_MGU_PRISONER_5
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.83.a
-		set_country_flag = MGU_TBMGUprisoner_owner_emohomura
-		clr_country_flag = MGU_TBMGUprisoner_owner
-		clr_country_flag = MGU_PRISON_RUNNING
-		MGU = {
-			MGU_Akemi_Homura = {
-				set_nationality = ROOT
-			}
-		}
-		set_portraits = {
-			character = MGU_Akemi_Homura
-			civilian = {
-				large = "gfx/leaders/MGU/MGU_Akemi_Homura_Demon.dds"
-			}
-		}
-		add_field_marshal_role = {
-			character = "MGU_Akemi_Homura"
-			traits = {
-				MGU_emodemon
-				organizer
-				logistics_wizard
-				thorough_planner
-				brilliant_strategist
-				offensive_doctrine
-				aggressive_assaulter
-			}
-			skill = 6
-			attack_skill = 6
-			defense_skill = 6
-			planning_skill = 6
-			logistics_skill = 6
-		}
-	}
-}
 
-country_event = {
-	id = TBMGUprisoner.84
-	title = TBMGUprisoner.84.t
-	desc = TBMGUprisoner.84.d
-	picture = GFX_event_MGU_PRISONER_5
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.84.a
-		clr_country_flag = MGU_TBMGUprisoner_owner
-		clr_country_flag = MGU_PRISON_RUNNING
-		MGU = {
-			MGU_Akemi_Homura = {
-				set_nationality = ROOT
-			}
-		}
-		set_portraits = {
-			character = MGU_Akemi_Homura
-			civilian = {
-				large = "gfx/leaders/MGU/MGU_Akemi_Homura_Demon.dds"
-			}
-		}
-		add_field_marshal_role = {
-			character = "MGU_Akemi_Homura"
-			traits = {
-				demon
-				organizer
-				logistics_wizard
-				thorough_planner
-				brilliant_strategist
-				offensive_doctrine
-				aggressive_assaulter
-			}
-			skill = 9
-			attack_skill = 8
-			defense_skill = 8
-			planning_skill = 9
-			logistics_skill = 9
-		}
-	}
-}
-
-country_event = {
-	id = TBMGUprisoner.90
-	title = TBMGUprisoner.90.t
-	desc = TBMGUprisoner.90.d
-	picture = GFX_event_PRISONER_xingxun
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.90.a
-		clr_country_flag = MGU_PRISON_RUNNING
-	}
-}
-
-country_event = {
-	id = TBMGUprisoner.91
-	title = TBMGUprisoner.91.t
-	desc = TBMGUprisoner.91.d
-	picture = GFX_event_PRISONER_xingxun
-	is_triggered_only = yes
-	option = {
-		name = TBMGUprisoner.91.a
-		clr_country_flag = MGU_PRISON_RUNNING
-		clr_country_flag = MGU_TBMGUprisoner_owner
-		MGU = {
-			MGU_Akemi_Homura = {
-				set_nationality = ROOT
-			}
-		}
-		hidden_effect = {
-			MST = {
-				MGU_Akemi_Homura = {
-					set_nationality = ROOT
-				}
-			}
-			ENG = {
-				MGU_Akemi_Homura = {
-					set_nationality = ROOT
-				}
-			}
-			add_field_marshal_role = {
-				Character = MGU_Akemi_Homura
-				traits = {
-					chaos_mahoushojo
-					organizer
-					logistics_wizard
-					trait_engineer
-					thorough_planner
-					scavenger
-				}
-				skill = 5
-				attack_skill = 5
-				defense_skill = 3
-				planning_skill = 7
-				logistics_skill = 8
-				legacy_id = 10111
-			}
-			add_advisor_role = {
-				character = MGU_Akemi_Homura
-				advisor = {
-					slot = political_advisor
-					idea_token = MGU_homura
-					traits = {
-						war_industrialist
-					}
-					cost = 100
-				}
-			}
-		}
-	}
-}
 
 ########################################################################################
 ##############################红魔联事件（包含新闻）######################################
@@ -13065,6 +12774,10 @@ country_event = {
 		name = MTK.15.a
 		ai_chance = {
 			base = 10
+			modifier = {
+			 	LHS = { is_ai = no }
+				add = -10
+			}
 		}			
 		MGU = {
 			every_state = {
@@ -13139,6 +12852,46 @@ country_event = {
 }
 
 country_event = {
+	id = MTK.111
+	title = MTK.111.t
+	desc = MTK.111.d
+	is_triggered_only = yes
+	option = {
+		name = MTK.111.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				MGU = {
+					has_opinion = {
+						target = ROOT
+						value > 79
+					}
+				}
+				add = 10
+			}
+			modifier = {
+				fighting_army_strength_ratio = {
+					tag = FROM
+					ratio < 0.7
+				}
+				add = 20
+			}
+		}
+		MGU = { annex_country = { target = PAN transfer_troops = no } }
+		MGU = { annex_country = { target = PAS transfer_troops = no } }
+		MGU = { annex_country = { target = CUB transfer_troops = no } }
+		MGU = { annex_country = { target = PAJ transfer_troops = no } }	
+	}
+	option = {
+		name = MTK.110.b
+		ai_chance = {
+			base = 5
+		}
+		MGU = { country_event = MTK.107 }
+	}	
+}
+
+country_event = {
 	id = MTK.107
 	title = MTK.107.t
 	desc = MTK.107.d
@@ -13178,6 +12931,27 @@ country_event = {
 }
 
 country_event = {
+	id = MTK.110
+	title = MTK.110.t
+	desc = MTK.110.d
+	is_triggered_only = yes
+	option = {
+		name = MTK.110.a
+		ai_chance = {
+			base = 100
+		}
+		LHS = { add_to_faction = MGU }	
+	}
+	option = {
+		name = MTK.110.b
+		ai_chance = {
+			base = 0
+		}
+	}	
+}
+
+
+country_event = {
 	id = MTK.1001
 	title = MTK.1001.t
 	desc = MTK.1001.d
@@ -13203,6 +12977,9 @@ news_event = {
 	desc = MTK_news.2.d
 	picture = [MTK_LHS_super_event]
 	major = yes
+	trigger = {
+		wants_world_news = yes
+	}	
 	is_triggered_only = yes
 	option = {
 		name = MTK_news.2.a
@@ -13260,6 +13037,9 @@ news_event = {
 	desc = MTK_news.3.d
 	picture = GFX_MTK_super_news_3
 	major = yes
+	trigger = {
+		wants_world_news = yes
+	}	
 	is_triggered_only = yes
 	option = {
 		name = MTK_news.3.a
@@ -13287,6 +13067,9 @@ news_event = {
 	desc = MTK_news.6.d
 	picture = GFX_MTK_super_news_6
 	major = yes
+	trigger = {
+		wants_world_news = yes
+	}	
 	is_triggered_only = yes
 	option = {
 		name = MTK_news.6.a
