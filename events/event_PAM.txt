@@ -971,15 +971,6 @@ country_event = {
         set_country_flag = unlock_PAM_galgame_xiaofeng
         set_country_flag = unlock_PAM_galgame_xueyi
         set_country_flag = unlock_PAM_galgame_xiaoguo
-        add_to_variable = {
-            num_of_pending_xiaofeng_tasks_var = 1
-        }
-        add_to_variable = {
-            num_of_pending_xueyi_tasks_var = 1
-        }
-        add_to_variable = {
-            num_of_pending_xiaoguo_tasks_var = 1
-        }
         CHL = {
             LHS_xueyi = {
                 set_nationality = ROOT
@@ -998,6 +989,15 @@ country_event = {
         unlock_decision_tooltip = PAM_mission_feed_the_mad_dog
         unlock_decision_tooltip = PAM_mission_delegate_command
         unlock_decision_tooltip = PAM_mission_candy_and_recon
+        add_to_variable = {
+            num_of_pending_xiaofeng_tasks_var = 1
+        }
+        add_to_variable = {
+            num_of_pending_xueyi_tasks_var = 1
+        }
+        add_to_variable = {
+            num_of_pending_xiaoguo_tasks_var = 1
+        }
         hidden_effect = {
             scoped_sound_effect = "燃烧"
 
@@ -1216,9 +1216,6 @@ country_event = {
         }
         set_country_flag = unlock_PAM_galgame_lili
         set_country_flag = PAM_lilirw1
-        add_to_variable = {
-            num_of_pending_lili_tasks_var = 1
-        }
         #副领袖
         set_variable = {
             another_country_leader_group = 14
@@ -1258,6 +1255,9 @@ country_event = {
             wangling2_tech = 1
         }
         unlock_decision_tooltip = PAM_mission_song_of_silence
+        add_to_variable = {
+            num_of_pending_lili_tasks_var = 1
+        }
         add_research_slot = 1
         custom_effect_tooltip = PAO_axhl_tt
         custom_effect_tooltip = jiesuoguoce
@@ -1633,20 +1633,29 @@ country_event = {
         }
         random_owned_controlled_state = {
             limit = {
-                arms_factory > 1
-            }
-            remove_building = {
-                type = arms_factory
-                level = 1
-            }
-        }
-        random_owned_controlled_state = {
-            limit = {
                 industrial_complex > 1
             }
             remove_building = {
                 type = industrial_complex
                 level = 1
+            }
+        }
+        if = {
+            limit = {
+                FROM = {
+                    any_controlled_state = {
+                        dockyard > 1
+                    }
+                }
+            }
+            random_owned_controlled_state = {
+                limit = {
+                    dockyard > 1
+                }
+                remove_building = {
+                    type = dockyard
+                    level = 1
+                }
             }
         }
         hidden_effect = {
@@ -1709,8 +1718,8 @@ country_event = {
             MGU = {
                 if = {
                     limit = {
-                      NOT = { MGU = { has_government = communism } }
-                    }               
+                        NOT = { MGU = { has_government = communism } }
+                    }
                     every_character = {
                         limit = { is_general_advisor = no }
                         set_nationality = PAM
@@ -1784,9 +1793,6 @@ country_event = {
             modifier = PAM_jsc
         }
         add_to_variable = {
-            num_of_pending_lili_tasks_var = 1
-        }
-        add_to_variable = {
             affection_of_bln_var = 10
             tooltip = affection_of_bln_var_tt
         }
@@ -1816,6 +1822,12 @@ country_event = {
             base = 10
         }
         add_political_power = 100
+        set_country_flag = unlock_PAM_galgame_bln
+        WRQ = {
+            PAM_bln = {
+                set_nationality = PAM
+            }
+        }
         add_to_variable = {
             affection_of_bln_var = 10
             tooltip = affection_of_bln_var_tt
@@ -1844,11 +1856,6 @@ country_event = {
         PAM_bln = {
             add_skill_level = 1
         }
-        WRQ = {
-            PAM_bln = {
-                add_skill_level = 1
-            }
-        }
         add_to_variable = {
             affection_of_bln_var = 10
             tooltip = affection_of_bln_var_tt
@@ -1875,19 +1882,12 @@ country_event = {
         ai_chance = {
             base = 10
         }
-        set_country_flag = unlock_PAM_galgame_bln
-        WRQ = {
-            PAM_bln = {
-                set_nationality = PAM
-                add_skill_level = 1
-            }
+        PAM_bln = {
+            add_skill_level = 1
         }
         add_to_variable = {
             affection_of_bln_var = 30
             tooltip = affection_of_bln_var_tt
-        }
-        add_to_variable = {
-            num_of_pending_bln_tasks_var = 1
         }
     }
 }
@@ -2080,12 +2080,12 @@ country_event = {
             limit = {
                 is_in_faction = no
             }
-            FROM = { add_to_faction = root }
+            FROM = { add_to_faction = ROOT }
         }
         if = {
             every_country = {
                 limit = {
-                    has_war_with = root
+                    has_war_with = ROOT
                     is_in_faction_with = ROOT
                 }
             }
@@ -2463,12 +2463,12 @@ country_event = {
             limit = {
                 is_in_faction = no
             }
-            FROM = { add_to_faction = root }
+            FROM = { add_to_faction = ROOT }
         }
         if = {
             every_country = {
                 limit = {
-                    has_war_with = root
+                    has_war_with = ROOT
                     is_in_faction_with = ROOT
                 }
             }
@@ -2873,7 +2873,7 @@ country_event = {
         # 获得装备：死者的利箭
         add_equipment_to_stockpile = {
             type = wangling_equipment
-            amount = 1000 # 基础数量
+            amount = 2000 # 基础数量
         }
         add_stability = 0.05
         add_to_variable = {
@@ -2894,145 +2894,292 @@ country_event = {
         hidden_effect = {
             add_to_variable = { var = pam_undead_anger_level value = 1 }
             set_temp_variable = { var = temp_spawn_count value = pam_undead_anger_level }
+            scoped_sound_effect = "Noise"
+            random_list = {
+                50 = {
+                    scoped_sound_effect = "微笑"
+                }
+                50 = {
+                    scoped_sound_effect = "大笑"
+                }
+            }
+        }
+        if = {
+            limit = {
+                not = {
+                    ZDW = {
+                        controls_state = 302
+                    }
+                }
+            }
+            302 = {
+                limit = {
+                    is_core_of = ROOT
+                    is_controlled_by = ROOT
+                    NOT = { is_capital = yes }
+                }
+                ZDW = {
+                    # ... (师模板定义部分保持不变，省略以节省空间) ...
+                    division_template = {
+                        name = "躁动的亡灵"
+                        is_locked = yes
+                        regiments = {
+                            wangling = {
+                                x = 0
+                                y = 0
+                            }
+                            wangling = {
+                                x = 0
+                                y = 1
+                            }
+                            wangling = {
+                                x = 0
+                                y = 2
+                            }
+                            wangling = {
+                                x = 0
+                                y = 3
+                            }
+                            wangling = {
+                                x = 1
+                                y = 0
+                            }
+                            wangling = {
+                                x = 1
+                                y = 1
+                            }
+                            wangling = {
+                                x = 1
+                                y = 2
+                            }
+                            wangling = {
+                                x = 1
+                                y = 3
+                            }
+                            wangling = {
+                                x = 2
+                                y = 0
+                            }
+                            wangling = {
+                                x = 2
+                                y = 1
+                            }
+                            wangling = {
+                                x = 2
+                                y = 2
+                            }
+                            wangling = {
+                                x = 2
+                                y = 3
+                            }
+                            wangling = {
+                                x = 3
+                                y = 0
+                            }
+                            wangling = {
+                                x = 3
+                                y = 1
+                            }
+                            wangling = {
+                                x = 3
+                                y = 2
+                            }
+                            wangling = {
+                                x = 3
+                                y = 3
+                            }
+                            wangling = {
+                                x = 4
+                                y = 0
+                            }
+                            wangling = {
+                                x = 4
+                                y = 1
+                            }
+                            wangling = {
+                                x = 4
+                                y = 2
+                            }
+                            wangling = {
+                                x = 4
+                                y = 3
+                            }
+                        }
+                        support = {
+                            #支援连
+                            engineer = {
+                                x = 0
+                                y = 0
+                            }
+                            recon = {
+                                x = 0
+                                y = 1
+                            }
+                        }
+                    }
+
+                    transfer_state = PREV
+
+                    # 【修正步骤 1】：在 ZDW 作用域内，获取 ROOT 的愤怒等级变量
+                    # 直接读取 ROOT 的持久变量 pam_undead_anger_level
+                    set_temp_variable = { var = local_spawn_count value = ROOT.pam_undead_anger_level }
+
+                    while_loop_effect = {
+                        # 【修正步骤 2】：检查 ZDW 自己的临时变量 local_spawn_count
+                        limit = {
+                            check_variable = { var = local_spawn_count value > 0 }
+                        }
+
+                        # 生成 1 个师
+                        random_owned_controlled_state = {
+                            create_unit = {
+                                division = "name = \"躁动的亡灵\" division_template = \"躁动的亡灵\" start_experience_factor = 1"
+                                owner = ZDW
+                            }
+                        }
+
+                        # 【修正步骤 3】：扣除 ZDW 的临时变量
+                        subtract_from_temp_variable = { var = local_spawn_count value = 1 }
+                    }
+                }
+            }
+        }
+        else = {
+            random_owned_controlled_state = {
+                limit = {
+                    is_core_of = ROOT
+                    is_controlled_by = ROOT
+                    NOT = { is_capital = yes }
+                }
+                ZDW = {
+                    # ... (师模板定义部分保持不变，省略以节省空间) ...
+                    division_template = {
+                        name = "躁动的亡灵"
+                        is_locked = yes
+                        regiments = {
+                            wangling = {
+                                x = 0
+                                y = 0
+                            }
+                            wangling = {
+                                x = 0
+                                y = 1
+                            }
+                            wangling = {
+                                x = 0
+                                y = 2
+                            }
+                            wangling = {
+                                x = 0
+                                y = 3
+                            }
+                            wangling = {
+                                x = 1
+                                y = 0
+                            }
+                            wangling = {
+                                x = 1
+                                y = 1
+                            }
+                            wangling = {
+                                x = 1
+                                y = 2
+                            }
+                            wangling = {
+                                x = 1
+                                y = 3
+                            }
+                            wangling = {
+                                x = 2
+                                y = 0
+                            }
+                            wangling = {
+                                x = 2
+                                y = 1
+                            }
+                            wangling = {
+                                x = 2
+                                y = 2
+                            }
+                            wangling = {
+                                x = 2
+                                y = 3
+                            }
+                            wangling = {
+                                x = 3
+                                y = 0
+                            }
+                            wangling = {
+                                x = 3
+                                y = 1
+                            }
+                            wangling = {
+                                x = 3
+                                y = 2
+                            }
+                            wangling = {
+                                x = 3
+                                y = 3
+                            }
+                            wangling = {
+                                x = 4
+                                y = 0
+                            }
+                            wangling = {
+                                x = 4
+                                y = 1
+                            }
+                            wangling = {
+                                x = 4
+                                y = 2
+                            }
+                            wangling = {
+                                x = 4
+                                y = 3
+                            }
+                        }
+                        support = {
+                            #支援连
+                            engineer = {
+                                x = 0
+                                y = 0
+                            }
+                            recon = {
+                                x = 0
+                                y = 1
+                            }
+                        }
+                    }
+
+                    transfer_state = PREV
+
+                    # 【修正步骤 1】：在 ZDW 作用域内，获取 ROOT 的愤怒等级变量
+                    # 直接读取 ROOT 的持久变量 pam_undead_anger_level
+                    set_temp_variable = { var = local_spawn_count value = ROOT.pam_undead_anger_level }
+
+                    while_loop_effect = {
+                        # 【修正步骤 2】：检查 ZDW 自己的临时变量 local_spawn_count
+                        limit = {
+                            check_variable = { var = local_spawn_count value > 0 }
+                        }
+
+                        # 生成 1 个师
+                        random_owned_controlled_state = {
+                            create_unit = {
+                                division = "name = \"躁动的亡灵\" division_template = \"躁动的亡灵\" start_experience_factor = 1"
+                                owner = ZDW
+                            }
+                        }
+
+                        # 【修正步骤 3】：扣除 ZDW 的临时变量
+                        subtract_from_temp_variable = { var = local_spawn_count value = 1 }
+                    }
+                }
+            }
         }
     }
     option = {
         name = PAM.57.a
-        hidden_effect = {
-            scoped_sound_effect = "Noise"
-            scoped_sound_effect = "微笑"
-        }
-        random_owned_controlled_state = {
-            limit = {
-                is_core_of = ROOT
-                is_controlled_by = ROOT
-                NOT = { is_capital = yes }
-            }
-            ZDW = {
-                # ... (师模板定义部分保持不变，省略以节省空间) ...
-                division_template = {
-                    name = "躁动的亡灵"
-                    is_locked = yes
-                    regiments = {
-                        wangling = {
-                            x = 0
-                            y = 0
-                        }
-                        wangling = {
-                            x = 0
-                            y = 1
-                        }
-                        wangling = {
-                            x = 0
-                            y = 2
-                        }
-                        wangling = {
-                            x = 0
-                            y = 3
-                        }
-                        wangling = {
-                            x = 1
-                            y = 0
-                        }
-                        wangling = {
-                            x = 1
-                            y = 1
-                        }
-                        wangling = {
-                            x = 1
-                            y = 2
-                        }
-                        wangling = {
-                            x = 1
-                            y = 3
-                        }
-                        wangling = {
-                            x = 2
-                            y = 0
-                        }
-                        wangling = {
-                            x = 2
-                            y = 1
-                        }
-                        wangling = {
-                            x = 2
-                            y = 2
-                        }
-                        wangling = {
-                            x = 2
-                            y = 3
-                        }
-                        wangling = {
-                            x = 3
-                            y = 0
-                        }
-                        wangling = {
-                            x = 3
-                            y = 1
-                        }
-                        wangling = {
-                            x = 3
-                            y = 2
-                        }
-                        wangling = {
-                            x = 3
-                            y = 3
-                        }
-                        wangling = {
-                            x = 4
-                            y = 0
-                        }
-                        wangling = {
-                            x = 4
-                            y = 1
-                        }
-                        wangling = {
-                            x = 4
-                            y = 2
-                        }
-                        wangling = {
-                            x = 4
-                            y = 3
-                        }
-                    }
-                    support = {
-                        #支援连
-                        engineer = {
-                            x = 0
-                            y = 0
-                        }
-                        recon = {
-                            x = 0
-                            y = 1
-                        }
-                    }
-                }
-
-                transfer_state = PREV
-
-                # 【修正步骤 1】：在 ZDW 作用域内，获取 ROOT 的愤怒等级变量
-                # 直接读取 ROOT 的持久变量 pam_undead_anger_level
-                set_temp_variable = { var = local_spawn_count value = ROOT.pam_undead_anger_level }
-
-                while_loop_effect = {
-                    # 【修正步骤 2】：检查 ZDW 自己的临时变量 local_spawn_count
-                    limit = {
-                        check_variable = { var = local_spawn_count value > 0 }
-                    }
-
-                    # 生成 1 个师
-                    random_owned_controlled_state = {
-                        create_unit = {
-                            division = "name = \"躁动的亡灵\" division_template = \"躁动的亡灵\" start_experience_factor = 1"
-                            owner = ZDW
-                        }
-                    }
-
-                    # 【修正步骤 3】：扣除 ZDW 的临时变量
-                    subtract_from_temp_variable = { var = local_spawn_count value = 1 }
-                }
-            }
-        }
         # 向该地宣战
         ROOT = {
             declare_war_on = {
@@ -3580,6 +3727,38 @@ country_event = {
                 target = ROOT
             }
         }
+        if = {
+            limit = {
+                ROOT = {
+                    has_government = communism
+                }
+            }
+            FROM = {
+                custom_effect_tooltip = PAM_lqjj_tt
+                add_to_variable = { 
+                    PAM_lqjj_research_speed_factor = 0.01
+                    tooltip = research_speed_factor_tt
+                }
+            }
+        }
+        if = {
+            limit = {
+                ROOT = {
+                    has_government = fascism
+                }
+            }
+            FROM = {
+                custom_effect_tooltip = PAM_lqjj_tt
+                add_to_variable = {
+                    PAM_lqjj_production_factory_efficiency_gain_factor = 0.005
+                    tooltip = production_factory_efficiency_gain_factor_tt
+                }
+                add_to_variable = {
+                    PAM_lqjj_line_change_production_efficiency_factor = 0.005
+                    tooltip = line_change_production_efficiency_factor_tt
+                }
+            }
+        }
     }
 }
 
@@ -3894,6 +4073,7 @@ country_event = {
             base = 10
         }
         hidden_effect = {
+            scoped_sound_effect = "bookclose"
             set_country_flag = Adorable_Heart_End_window_view
             scoped_play_song = "days"
         }
@@ -3919,6 +4099,9 @@ country_event = {
         add_political_power = 50
         set_country_flag = PAM_xfchip
         unlock_decision_tooltip = PAM_mission_xiaofeng_chip_exchange_proposal
+        add_to_variable = {
+            num_of_pending_xiaofeng_tasks_var = 1
+        }
         add_to_variable = {
             affection_of_xiaofeng_var = 10
             tooltip = affection_of_xiaofeng_var_tt
@@ -3946,6 +4129,9 @@ country_event = {
         set_country_flag = PAM_liliaf
         unlock_decision_tooltip = PAM_mission_lilianas_lullaby
         add_to_variable = {
+            num_of_pending_lili_tasks_var = 1
+        }
+        add_to_variable = {
             affection_of_lili_var = 10
             tooltip = affection_of_lili_var_tt
         }
@@ -3971,6 +4157,9 @@ country_event = {
         add_political_power = 50
         set_country_flag = PAM_blnsc
         unlock_decision_tooltip = PAM_mission_scavengers_cleanup
+        add_to_variable = {
+            num_of_pending_bln_tasks_var = 1
+        }
         add_to_variable = {
             affection_of_bln_var = 10
             tooltip = affection_of_bln_var_tt
@@ -3998,6 +4187,9 @@ country_event = {
         set_country_flag = PAM_ghozc
         unlock_decision_tooltip = PAM_mission_build_nest_for_seagull
         add_to_variable = {
+            num_of_pending_xiaoguo_tasks_var = 1
+        }
+        add_to_variable = {
             affection_of_xiaoguo_var = 10
             tooltip = affection_of_xiaoguo_var_tt
         }
@@ -4022,6 +4214,9 @@ country_event = {
         }
         add_political_power = 50
         unlock_decision_tooltip = PAM_mission_xueyi_iron_umbrella
+        add_to_variable = {
+            num_of_pending_xueyi_tasks_var = 1
+        }
         set_country_flag = PAM_ntts
         add_to_variable = {
             affection_of_xueyi_var = 10
@@ -4127,6 +4322,68 @@ country_event = {
             base = 10
         }
         add_political_power = 50
+    }
+}
+
+#纸页的摩擦声
+country_event = {
+    id = PAM.90
+    title = PAM.90.t
+    desc = PAM.90.d
+    trigger = {
+        has_country_flag = PAM_yehuorw1
+        has_completed_custom_achievement = {
+            mod = 02_AdorableHeart_achievements_america
+            achievement = AH_achievements_GALGAME_gaoshou_emperor
+        }
+    }
+    fire_only_once = yes
+    picture = GFX_event_riji
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "翻书"
+            scoped_play_song = "雨"
+        }
+    }
+    option = {
+        name = PAM.90.a
+        ai_chance = {
+            base = 10
+        }
+        hidden_effect = {
+            scoped_sound_effect = "燃烧"
+        }
+    }
+}
+
+#我们的故事从未结束
+country_event = {
+    id = PAM.91
+    title = PAM.91.t
+    desc = PAM.91.d
+    trigger = {
+        has_completed_focus = PAM_wydxsw
+        has_completed_custom_achievement = {
+            mod = 02_AdorableHeart_achievements_america
+            achievement = AH_achievements_GALGAME_gaoshou_emperor
+        }
+    }
+    fire_only_once = yes
+    picture = GFX_event_riji
+    immediate = {
+        hidden_effect = {
+            scoped_sound_effect = "翻书"
+            scoped_play_song = "雨"
+        }
+    }
+    option = {
+        name = PAM.91.a
+        ai_chance = {
+            base = 10
+        }
+        hidden_effect = {
+            scoped_sound_effect = "翻书"
+        }
     }
 }
 
