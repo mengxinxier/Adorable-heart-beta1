@@ -127,6 +127,7 @@ add_namespace = mon_news
 		option = {
 			name = mon_flavor.3.a
 			set_country_flag = xuanze_menggudiguo
+			set_country_flag = MON_is_mge_flag
 			mark_focus_tree_layout_dirty = yes
 			set_capital = {
 				state = 608
@@ -177,6 +178,73 @@ add_namespace = mon_news
 		
 			news_event = {
 					id = mon_news.12
+					days = 1
+				}		
+		}
+		}		
+		option = {
+			name = mon_flavor.3.b
+			set_country_flag = xuanze_eluosi
+			mark_focus_tree_layout_dirty = yes
+			MON_ai = { retire = yes }
+		custom_effect_tooltip = huanan_rus_tip
+		MON_dimituoli = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = interim_government_subtype
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = interim_government_subtype
+						traits = { RAJ_GOE_visionary_maharaja }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+		unlock_decision_tooltip = MON_dec_ally_with_jap
+		set_politics = {
+			ruling_party = neutrality
+			elections_allowed = no
+		}
+		add_popularity = { ideology = neutrality popularity = 0.35 }
+		set_cosmetic_tag = MON_RUS
+		set_party_name = { ideology = neutrality long_name = MON_white_party_long name = MON_white_party }
+		every_other_country = {
+				limit = {
+					is_chinese_country = yes
+					not = {
+						or = {
+							is_subject_of = ROOT
+							is_in_faction_with = ROOT
+							has_war_with = ROOT
+						}
+					}
+				}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = MON_dec_attack
+						}
+				}
+			}
+		ROOT_get_in_the_competition_for_MGE_reunification = yes
+			every_state = {
+				limit = {
+					is_core_of = SOV
+				}
+				add_claim_by = ROOT
+			}
+		hidden_effect = {
+		
+			news_event = {
+					id = mon_news.17
 					days = 1
 				}		
 		}
@@ -880,11 +948,7 @@ add_namespace = mon_news
 		}
 		option = {
 			name = mon_flavor.26.a
-			610 = { add_core_of = ROOT }	
-			715 = { add_core_of = ROOT }	
-			884 = { add_core_of = ROOT }	
-			transfer_state = 610
-			transfer_state = 715
+			884 = { add_core_of = ROOT }
 			transfer_state = 884
 			MAN = {
 				transfer_units_fraction = {
@@ -1477,8 +1541,22 @@ add_namespace = mon_news
 		is_triggered_only = yes
 		option = {
 			name = mon_flavor.50.a
-			complete_tooltip = {
+			effect_tooltip = {
 			NGD = { add_ideas = MON_hanrendezuihouxiwang_idea }
+			}
+		}
+	}
+#反动宣传
+	country_event = {
+		id = mon_flavor.52
+		title = mon_flavor.52.t
+		desc = mon_flavor.52.d
+		picture = GFX_report_event_gathering_protest
+		is_triggered_only = yes
+		option = {
+			name = mon_flavor.52.a
+			effect_tooltip = {
+			add_timed_idea = { idea = MON_yulunganrao_idea days = 365 }
 			}
 		}
 	}
@@ -1489,11 +1567,13 @@ add_namespace = mon_news
 		title = mon_politics.1.t
 		desc = mon_politics.1.d
 		picture = GFX_CHI_Forbidden_City_Fire_event
+		is_triggered_only = no
 		fire_only_once = yes
 		is_triggered_only = yes
 		option = {
 			name = mon_politics.1.a
 			set_global_flag = mon_shijiyidao
+			custom_effect_tooltip = MON_dudangtishi_tip
 			country_event = { id = mon_politics.6 days = 3 }
 		}
 	}
@@ -1959,12 +2039,12 @@ add_namespace = mon_news
 			if = {
 				limit = {
 					NOT = {
-						has_ideology = Strasserism
+						has_ideology = wolfpack_survivalism
 					}
 				}
 				add_country_leader_role = {
 					country_leader = {
-						ideology = Strasserism
+						ideology = wolfpack_survivalism
 						traits = { silent_workhorse }
 						expire = "1965.1.1"
 					}
@@ -2455,12 +2535,36 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.24.a
-			1050 = { set_demilitarized_zone = yes }
-			606 = { set_demilitarized_zone = yes }
-			1014 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_pangyu = { set_nationality = MN1 }
+			MN1 = {
+			transfer_state = 1050
+			transfer_state = 606
+			transfer_state = 1014
+			set_cosmetic_tag = HJJ_1
+		GXC_pangyu = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.25 days = 2 }
-			}			
+			}	
 		}
 	}
 #陈克拿上海
@@ -2473,9 +2577,38 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.25.a
-			743 = { set_demilitarized_zone = yes }
-			596 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_chenke = { set_nationality = MN2 }
+			MN2 = {
+			transfer_state = 743
+			transfer_state = 596
+			set_cosmetic_tag = HJJ_2
+		set_politics = {
+			ruling_party = communism
+			elections_allowed = no
+		}
+		add_popularity = { ideology = communism popularity = 0.8 }
+		GXC_chenke = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = Radical_socialism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = Radical_socialism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.26 days = 2 }
 			}
 		}
@@ -2490,11 +2623,37 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.26.a
-			996 = { set_demilitarized_zone = yes }
-			1065 = { set_demilitarized_zone = yes }
-			744 = { set_demilitarized_zone = yes }
-			1064 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_chenxin = { set_nationality = MN3 }
+			GXC_liuminyou = { set_nationality = MN3 }
+			MN3 = {
+			set_variable = { another_country_leader_group = 5 }
+			transfer_state = 996
+			transfer_state = 1065
+			transfer_state = 744
+			transfer_state = 1064
+			set_cosmetic_tag = HJJ_3
+		GXC_chenxin = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.27 days = 2 }
 			}
 		}
@@ -2509,10 +2668,34 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.27.a
-			605 = { set_demilitarized_zone = yes }
-			650 = { set_demilitarized_zone = yes }
-			661 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_dengming = { set_nationality = MN4 }
+			MN4 = {
+			transfer_state = 605
+			transfer_state = 650
+			transfer_state = 661
+			set_cosmetic_tag = HJJ_4
+		GXC_dengming = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.28 days = 2 }
 			}
 		}
@@ -2527,12 +2710,36 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.28.a
-			595 = { set_demilitarized_zone = yes }
-			1066 = { set_demilitarized_zone = yes }
-			747 = { set_demilitarized_zone = yes }
-			802 = { set_demilitarized_zone = yes }
-			1046 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_huangshi = { set_nationality = MN5 }
+			MN5 = {
+			transfer_state = 595
+			transfer_state = 1066
+			transfer_state = 747
+			transfer_state = 802
+			transfer_state = 1046
+			set_cosmetic_tag = HJJ_5
+		GXC_huangshi = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.29 days = 2 }
 			}
 		}
@@ -2547,8 +2754,32 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.29.a
-			611 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_wangdou = { set_nationality = MN6 }
+			MN6 = {
+			transfer_state = 611
+			set_cosmetic_tag = HJJ_6
+		GXC_wangdou = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.30 days = 2 }
 			}
 		}
@@ -2563,11 +2794,35 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.30.a
-			1044 = { set_demilitarized_zone = yes }
-			1045 = { set_demilitarized_zone = yes }
-			600 = { set_demilitarized_zone = yes }
-			1145 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_zhaohan = { set_nationality = MN7 }
+			MN7 = {
+			transfer_state = 1044
+			transfer_state = 1045
+			transfer_state = 600
+			transfer_state = 1145
+			set_cosmetic_tag = HJJ_7
+		GXC_zhaohan = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.31 days = 2 }
 			}
 		}
@@ -2582,8 +2837,36 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.31.a
-			591 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_wendesi = { set_nationality = MN8 }
+			GXC_maqianzhu = { set_nationality = MN8 }
+			GXC_wangluobin = { set_nationality = MN8 }
+			GXC_xiaozishan = { set_nationality = MN8 }
+			MN8 = {
+			set_variable = { another_country_leader_group = 5 }
+			transfer_state = 591
+			set_cosmetic_tag = HJJ_8
+		GXC_wendesi = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.32 days = 2 }
 			}
 		}
@@ -2598,9 +2881,35 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.32.a
-			1058 = { set_demilitarized_zone = yes }
-			1059 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			GXC_zhaojiu = { set_nationality = MN9 }
+			GXC_yangyizhong = { set_nationality = MN9 }
+			MN9 = {
+			set_variable = { another_country_leader_group = 5 }
+			transfer_state = 1058
+			transfer_state = 1059
+			set_cosmetic_tag = HJJ_9
+		GXC_zhaojiu = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.33 days = 2 }
 			}
 		}
@@ -2615,8 +2924,34 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.33.a
-			622 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			MON_mansui = { set_nationality = M10 }
+			MON_liang = { set_nationality = M10 }
+			M10 = {
+			set_variable = { another_country_leader_group = 5 }
+			transfer_state = 622
+			set_cosmetic_tag = HJJ_10
+		MON_mansui = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.34 days = 2 }
 			}
 		}
@@ -2631,8 +2966,44 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.34.a
-			1015 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+		every_possible_country = {
+				limit = {
+					has_character = PRC_liyunlong
+				}
+				PRC_liyunlong = { set_nationality = M11 }
+			}
+		every_possible_country = {
+				limit = {
+					has_character = ROC_chuyunfei
+				}
+				ROC_chuyunfei = { set_nationality = M11 }
+			}
+			M11 = {
+			set_variable = { another_country_leader_group = 5 }
+			transfer_state = 1015
+			set_cosmetic_tag = HJJ_11
+		ROC_chuyunfei = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = Three_Principles_of_the_People_n
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = Three_Principles_of_the_People_n
+						traits = {  }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.35 days = 2 }
 			}
 		}
@@ -2647,11 +3018,37 @@ add_namespace = mon_news
 		fire_only_once = yes
 		option = {
 			name = mon_politics.35.a
-			1047 = { set_demilitarized_zone = yes }
-			598 = { set_demilitarized_zone = yes }
-			613 = { set_demilitarized_zone = yes }
-			1075 = { set_demilitarized_zone = yes }
 			hidden_effect = {
+			MON_zhangwei = { set_nationality = M12 }
+			GXC_leihuo = { set_nationality = M12 }
+			M12 = {
+			set_variable = { another_country_leader_group = 5 }
+			transfer_state = 1047
+			transfer_state = 598
+			transfer_state = 613
+			transfer_state = 1075
+			set_cosmetic_tag = HJJ_12
+		MON_zhangwei = {
+			if = {
+				limit = {
+					NOT = {
+						has_ideology = military_politicism
+					}
+				}
+				add_country_leader_role = {
+					country_leader = {
+						ideology = military_politicism
+						traits = { nationalist_symbol }
+						expire = "1965.1.1"
+					}
+					promote_leader = yes
+				}
+			}
+			else = {
+				promote_character = yes
+			}
+		}
+			}
 			country_event = { id = mon_politics.23 days = 5 }
 			}
 		}
@@ -2699,7 +3096,7 @@ add_namespace = mon_news
 				legacy_id = -1
 			}
 		}
-		MON_manrenyingxiang = yes
+		add_ideas = MON_manrenyingxiangli_idea_1
 		}
 	}
 #文字狱
@@ -2801,6 +3198,194 @@ add_namespace = mon_news
 			}
 		}
 		set_cosmetic_tag = MON_QIE
+		}
+	}
+#俄罗斯的未来
+	country_event = {
+		id = mon_politics.42
+		title = mon_politics.42.t
+		desc = mon_politics.42.d
+		picture = GFX_report_event_UKR_26
+		is_triggered_only = yes
+		option = {
+			name = mon_politics.42.a
+			set_country_flag = MON_jiuguozhizhu_flag
+		}		
+		option = {
+			name = mon_politics.42.b
+			set_country_flag = MON_jiuguozhizhu_flag
+			set_country_flag = MON_chongjiandiguo_flag
+			set_cosmetic_tag = russia_green
+			custom_effect_tooltip = MON_renminghuangnv_tip
+			MON_remove_second_leader_idea = yes
+			every_possible_country = {
+					limit = {
+						has_character = SOV_Anastasia
+					}
+					SOV_Anastasia = { set_nationality = ROOT }
+			}
+			hidden_effect = {
+			add_ideas = MON_bingzhihuangnv_idea
+			}
+		}
+	}
+#中国的命运
+	country_event = {
+		id = mon_politics.43
+		title = mon_politics.43.t
+		desc = mon_politics.43.d
+		picture = GFX_CHI_Forbidden_City_Fire_event
+		is_triggered_only = yes
+		option = {
+			name = mon_politics.43.a
+		every_owned_state = {
+				limit = {
+				OR = {
+				region = 215
+				region = 216
+				region = 213
+				region = 214
+				region = 217
+				region = 212
+				region = 210
+				region = 209
+				region = 211
+					}
+				}
+				add_core_of = DH1
+			DH1 = {
+				transfer_state = PREV
+			}
+			}
+			set_autonomy = {
+						target = DH1
+						autonomy_state = autonomy_puppet
+					}
+		DH1 = {
+			set_cosmetic_tag = CHI_federation
+		}
+		}
+		option = {
+			name = mon_politics.43.b
+		every_owned_state = {
+				limit = {
+				OR = {
+				region = 215
+				region = 216
+				region = 213
+				region = 214
+				region = 217
+				region = 212
+				region = 210
+				region = 209
+				region = 211
+					}
+				}
+				add_core_of = DH1
+			DH1 = {
+				transfer_state = PREV
+			}
+			}
+			set_autonomy = {
+						target = DH1
+						autonomy_state = chi_duhufu_puppet
+					}
+		DH1 = {
+			set_cosmetic_tag = MON_qidanzongdufu
+		create_country_leader = {
+			name = "伏拉夫"
+			picture = "gfx/leaders/MAN/FUL.dds"
+			ideology = military_politicism
+			}
+		}	
+		}
+	}
+#选择副手
+	country_event = {
+		id = mon_politics.44
+		title = mon_politics.44.t
+		desc = mon_politics.44.d
+		is_triggered_only = yes
+		option = {
+			name = mon_politics.44.a
+			set_country_flag = MON_renmingduwu_flag
+			custom_effect_tooltip = MON_renmingduwu_tip
+			hidden_effect = {
+			add_ideas = MON_zhongxingenggeng_idea
+			}
+		}
+		option = {
+			name = mon_politics.44.b
+			set_country_flag = MON_renmingyinggulite_flag
+			custom_effect_tooltip = MON_renmingyinggulite_tip	
+			hidden_effect = {
+			add_ideas = MON_qishijingshen_idea
+			}			
+		}		
+		option = {
+			name = mon_politics.44.c
+			set_country_flag = MON_renmingxierte_flag
+			custom_effect_tooltip = MON_renmingxierte_tip		
+			hidden_effect = {
+			add_ideas = MON_caihuadadao_idea
+			}			
+		}		
+		option = {
+			name = mon_politics.44.e
+			set_country_flag = MON_renmingfeilikesi_flag
+			custom_effect_tooltip = MON_renmingfeilikesi_tip	
+			hidden_effect = {
+			add_ideas = MON_wushidewuren_idea
+			}			
+		}
+	}
+#与樱花合作
+	country_event = {
+		id = mon_politics.45
+		title = mon_politics.45.t
+		desc = mon_politics.45.d
+		is_triggered_only = yes
+		option = {
+			name = mon_politics.45.a
+			JAP = { country_event = generic.2 }
+		}
+		option = {
+			name = mon_politics.45.b		
+		}
+	}
+#与樱花断绝关系
+	country_event = {
+		id = mon_politics.46
+		title = mon_politics.46.t
+		desc = mon_politics.46.d
+		is_triggered_only = yes
+		option = {
+			name = mon_politics.46.a
+			leave_faction = yes
+			JAP = { country_event = generic.2 }
+		}
+		option = {
+			name = mon_politics.46.b		
+		}
+	}
+#俄国撕毁合作条约
+	country_event = {
+		id = mon_politics.47
+		title = mon_politics.47.t
+		desc = mon_politics.47.d
+		is_triggered_only = yes
+		option = {
+			name = mon_politics.47.a
+			ai_chance = {
+				base = 0
+			}
+			create_wargoal = { target = MON type = annex_everything }
+		}
+		option = {
+			name = mon_politics.47.b
+			ai_chance = {
+				base = 10
+			}			
 		}
 	}
 	
@@ -2948,7 +3533,7 @@ add_namespace = mon_news
 		id = gxc_hjj.8
 		title = gxc_hjj.8.t
 		desc = gxc_hjj.8.d
-		picture = GFX_report_event_MON_29
+		picture = GFX_report_event_MON_30
 		is_triggered_only = yes
 		fire_only_once = yes
 		option = {
@@ -2968,7 +3553,7 @@ add_namespace = mon_news
 		id = gxc_hjj.9
 		title = gxc_hjj.9.t
 		desc = gxc_hjj.9.d
-		picture = GFX_report_event_MON_29
+		picture = GFX_report_event_MON_31
 		is_triggered_only = yes
 		fire_only_once = yes
 		option = {
@@ -2988,7 +3573,7 @@ add_namespace = mon_news
 		id = gxc_hjj.10
 		title = gxc_hjj.10.t
 		desc = gxc_hjj.10.d
-		picture = GFX_report_event_MON_29
+		picture = GFX_report_event_MON_32
 		is_triggered_only = yes
 		fire_only_once = yes
 		option = {
@@ -3008,7 +3593,7 @@ add_namespace = mon_news
 		id = gxc_hjj.11
 		title = gxc_hjj.11.t
 		desc = gxc_hjj.11.d
-		picture = GFX_report_event_MON_29
+		picture = GFX_report_event_MON_33
 		is_triggered_only = yes
 		fire_only_once = yes
 		option = {
@@ -3498,6 +4083,51 @@ news_event = {
 		adorable_heart_fire_super_event = yes
 		trigger = {
 		NOT = { original_tag = GXC }
+		}
+	}
+}
+#帝弥托利政变
+news_event = {
+	id = mon_news.17
+	title = mon_news.17.t
+	desc = mon_news.17.d
+	picture = GFX_MON_news_event_017
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = mon_news.17.a
+		trigger = {
+			original_tag = MON
+		}
+	}
+	option = {
+		name = mon_news.17.b
+		trigger = {
+		NOT = { original_tag = MON }
+		}
+	}
+}
+#白军重返莫斯科
+news_event = {
+	id = mon_news.18
+	title = mon_news.18.t
+	desc = mon_news.18.d
+	picture = GFX_news_Moscow
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = mon_news.18.a
+		set_country_flag = super_event_MON_whitearmy_win_flag
+		set_country_flag = adorable_heart_Super_Event_Visible
+		adorable_heart_fire_super_event = yes
+		trigger = {
+			original_tag = MON
+		}
+	}
+	option = {
+		name = mon_news.18.b
+		trigger = {
+		NOT = { original_tag = MON }
 		}
 	}
 }
