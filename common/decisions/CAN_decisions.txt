@@ -1084,9 +1084,9 @@ CAN_freedom_home_cat = {
 		timeout_effect = {
 			random_owned_controlled_state = {
 				add_manpower = 10000
-				#Ëæ×Å¹ú²ß½øÐÐÌáÉýÈËÁ¦ºÍ¸ø¹¤ÒµµÄ¼¸ÂÊ
-				#¸ø¿¨
-				#³­Ò»ÏÂ°ÍÎ÷¹ú²ß
+				#ï¿½ï¿½ï¿½Å¹ï¿½ï¿½ß½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¸ï¿½ï¿½ï¿½Òµï¿½Ä¼ï¿½ï¿½ï¿½
+				#ï¿½ï¿½ï¿½ï¿½
+				#ï¿½ï¿½Ò»ï¿½Â°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			}
 		}
 		ai_will_do = {
@@ -1098,7 +1098,7 @@ CAN_freedom_home_cat = {
 
 
 
-##############ÄÚÕ½ÎÊÌâ#################
+##############ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½#################
 
 
 CAN_independent_war_cat = {
@@ -1146,7 +1146,7 @@ CAN_opposition_civil_war_preparations_cat = {
 
 
 
-###Ä£°å###
+###Ä£ï¿½ï¿½###
 #Disarm_mobilization_economic = {
 #		activation = {
 #			or = {
@@ -1186,3 +1186,51 @@ CAN_opposition_civil_war_preparations_cat = {
 #			base = 1000
 #		}
 #	}
+CAN_land_reform_decisions = {
+	CAN_conduct_census_and_attract = {
+		icon = generic_population
+		state_target = yes
+		
+		# Only select states controlled and cored by us, and not already boosted
+		target_trigger = {
+			FROM = {
+				is_controlled_by = ROOT
+				is_core_of = ROOT
+				NOT = { has_dynamic_modifier = CAN_land_reform_population_growth }
+			}
+		}
+
+		cost = 20
+		fire_only_once = no
+		days_re_enable = 30 # Cooldown to prevent spamming all at once? No, re-enable applies to the specific target if state_targeted?
+		# Actually for state targeted choices, usually the decision remains available for other states.
+		# But to prevent re-taking it on the SAME state immediately, we rely on the target_trigger (NOT has_dynamic_modifier).
+		
+		visible = {
+			has_country_flag = CAN_land_reform_enabled
+		}
+
+		complete_effect = {
+			pp = -20
+			FROM = {
+				add_dynamic_modifier = {
+					modifier = CAN_land_reform_population_growth
+					days = 365
+				}
+			}
+			log = "[GetDateText]: [Root.GetName]: Census decision taken in [From.GetName]"
+		}
+		
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 2
+				FROM = { state_population > 500000 }
+			}
+			modifier = {
+				factor = 0
+				pp < 50 # AI saves PP
+			}
+		}
+	}
+}
