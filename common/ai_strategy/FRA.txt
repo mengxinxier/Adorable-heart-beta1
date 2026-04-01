@@ -478,3 +478,88 @@ dont_get_sucked_into_FRA_and_die = {
 		value = 70
 	}
 }
+
+#守大结界但不进攻
+FRA_why_push_into_germany_their_food_is_horrible = {
+	allowed = {
+		original_tag = FRA
+	}
+	enable = {
+		date < 1941.1.1  # Deactivate after some time
+		surrender_progress < 0.01 # We haven't lost territories 
+		
+		# Once Germany launches some kind of attack on the low countries, or if they go somewhere dangerous, we can try if we want to
+		DVL = { NOT = { has_war_with = GER } }
+		DVL = { NOT = { has_war_with = KMK } }
+		DVL = { NOT = { has_war_with = CZE } }
+		DVL = { NOT = { has_war_with = AUS } }
+		DVL = { NOT = { has_war_with = SOV } }
+		DVL = { NOT = { has_war_with = ITA } }
+		DVL = { NOT = { has_war_with = ALS } }
+
+		DVL = { # Alsace-Lorraine
+			is_fully_controlled_by = ROOT
+		}
+
+		42 = { # Moselland
+			is_controlled_by = DVL
+		}
+		780 = { # Baden
+			is_controlled_by = DVL
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = force_concentration_front_factor
+		state = 42  # Moselland
+		state = 780  # Baden
+		ratio = 0.95  # Only if > 95 % of the front consists of these states. This should make it deactivate if the frontline extends around the maginot
+		value = -100
+	}
+
+	ai_strategy = {
+		type = front_control
+
+		state = 42 # Moselland
+		state = 780 # Baden
+
+		ratio = 0.8
+
+		priority = 100
+		ordertype = front
+		execution_type = careful
+		execute_order = no  # This should block France from attacking, It's a bit digital, but as the strategy should cancel if they do something weird, it should be fine
+		manual_attack = no
+	}
+}
+
+#兵力集中在大结界
+FRA_protect_maqinuo_ore = {
+	allowed = {
+		original_tag = FRA
+	}
+	enable = {
+ 		16 = { is_fully_controlled_by = ROOT }
+	}
+	abort_when_not_enabled = yes
+
+	 ai_strategy = {
+	 	type = put_unit_buffers
+
+		# ratio of total armeis in country to be buffered
+	 	ratio = 1.0
+
+		# you can specify an order id. ratio of same orders ids will be share same ratio
+	 	order_id = 1
+
+	 	# states to put garrison orders (if no state is friendly, strat is invalid)
+	 	states = {
+	 		28
+	 	} 
+
+		# ai areas that the orders will use these buffers in
+	 	area = europe
+	 }
+	
+}
