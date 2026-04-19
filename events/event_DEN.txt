@@ -1044,6 +1044,283 @@ add_namespace = den_test
 			}
 		}
 	}
+	##魔导国的援助
+	country_event = {
+		id = denmark.041
+		title = denmark.041.t
+		desc = denmark.041.d
+		is_triggered_only = yes
+		picture = GFX_event_Supreme_and_Guardians
+		option = {
+			name = denmark.041.a
+			add_political_power = 100
+			add_manpower = 20000
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 3000
+				producer = DVL
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 1000
+				producer = DVL
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 500
+				producer = DVL
+			}
+			hidden_effect = {
+				add_to_variable = {
+					ubs_save = 200
+				}
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			add_ideas = DEN_loyalty_reward
+		}
+	}
+
+	#[FROM.Getname]请求我们援助装备
+	country_event = {
+		id = denmark.042
+		title = denmark.042.title
+		desc = denmark.042.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_report_event_DEN_Heath
+		option = {
+			name = denmark.042.a
+			FROM = { country_event = denmark.043 }
+			effect_tooltip = {
+				send_equipment = {
+					amount = 2500
+					type = infantry_equipment
+					target = FROM
+				}
+				send_equipment = {
+					amount = 300
+					target = FROM
+					type = artillery_equipment
+				}	
+			}
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -2500
+				}
+				add_equipment_to_stockpile = {
+					type = artillery_equipment
+					amount = -300
+				}
+			}
+			ai_chance = {
+				base = 0
+				modifier = {
+					add = 1.0
+					OR = {
+						check_variable = {
+							FROM.num_equipment@infantry_equipment < 0
+						}
+						check_variable = {
+							FROM.num_equipment@artillery_equipment < 0
+						}
+					}
+				}
+				modifier = {
+					add = 0.5
+					FROM = {
+						has_war = yes
+					}
+				}
+				modifier = {
+					factor = 100
+					has_equipment = {
+						infantry_equipment > 5000
+					}
+					has_equipment = {
+						artillery_equipment > 500
+					}
+				}
+			}
+		}
+		option = {
+			name = denmark.042.b
+			FROM = { country_event = denmark.044 }
+			ai_chance = {
+				base = 1
+			}
+		}
+	}
+
+	#[FROM.GetName]送来一批武器
+	country_event = {
+		id = denmark.043
+		title = denmark.043.title
+		desc = denmark.043.desc
+		is_triggered_only = yes
+		option = {
+			name = denmark.043.a
+			add_political_power = 15
+			gain_comintern_arms_aid_from_FROM = yes
+		}
+	}
+
+	#[FROM.Getname]拒绝了
+	country_event = {
+		id = denmark.044
+		title = denmark.044.title
+		desc = denmark.044.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_report_event_SOV_Sakura_monologue
+		option = {
+			name = denmark.044.a
+			ai_chance = {
+				base = 1
+			}
+		}
+	}
+
+	#[FROM.Getname]请求我们援助工业设备
+	country_event = {
+		id = denmark.045
+		title = denmark.045.title
+		desc = denmark.045.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_report_event_DEN_Heath
+		option = {
+			name = denmark.045.a
+			FROM = { country_event = denmark.046 }
+			add_timed_idea = {
+				idea = SOV_Aid_PRC_idea
+				days = 30
+			}
+			effect_tooltip = {
+				FROM = {
+					random_list = {
+						50 = {
+							random_owned_controlled_state = {
+								add_extra_state_shared_building_slots = 1
+								add_building_construction = {
+									type = industrial_complex
+									level = 1
+									instant_build = yes
+								}
+							}
+						}
+						50 = {
+							random_owned_controlled_state = {
+								add_extra_state_shared_building_slots = 1
+								add_building_construction = {
+									type = arms_factory
+									level = 1
+									instant_build = yes
+								}
+							}
+						}
+					}
+					add_to_variable = {
+						var = China_Industrial_Points_Var
+						value = 10
+						tooltip = China_Industrial_Points_Var_up_10_tt
+					}
+					clamp_variable = {
+						var = China_Industrial_Points_Var
+						min = 0
+						max = 500
+					}
+				}
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+		option = {
+			name = denmark.045.b
+			FROM = { country_event = denmark.044 }
+			ai_chance = {
+				base = 1
+			}
+		}
+	}
+
+	#[FROM.GetName]送来工业设备
+	country_event = {
+		id = denmark.046
+		title = denmark.046.title
+		desc = denmark.046.desc
+		is_triggered_only = yes
+		option = {
+			name = denmark.046.a
+			add_political_power = 15
+			random_list = {
+				50 = {
+					random_owned_controlled_state = {
+						add_extra_state_shared_building_slots = 1
+						add_building_construction = {
+							type = industrial_complex
+							level = 1
+							instant_build = yes
+						}
+					}
+				}
+				50 = {
+					random_owned_controlled_state = {
+						add_extra_state_shared_building_slots = 1
+						add_building_construction = {
+							type = arms_factory
+							level = 1
+							instant_build = yes
+						}
+					}
+				}
+			}
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 10
+				tooltip = China_Industrial_Points_Var_up_10_tt
+			}
+			clamp_variable = {
+				var = China_Industrial_Points_Var
+				min = 0
+				max = 500
+			}
+			ai_chance = {
+				base = 1
+			}
+		}
+	}
+	
+	#[FROM.Getname]请求忠于我们
+	country_event = {
+		id = denmark.047
+		title = denmark.047.title
+		desc = denmark.047.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_report_event_DEN_Heath
+		option = {
+			name = denmark.047.a
+			FROM = { set_country_flag = is_special_vassals }
+			DVL = {
+				set_autonomy = {
+					target = FROM
+					autonomy_state = autonomy_DVL_special_reichskommissariat
+				}
+			}
+			ai_chance = {
+				base = 1
+			}
+		}
+		option = {
+			name = denmark.047.b
+			FROM = { country_event = denmark.044 }
+			ai_chance = {
+				base = 0
+			}
+		}
+	}
 
 #经济危机事件
 
@@ -2354,6 +2631,9 @@ add_namespace = den_test
 			clr_country_flag = DEN_Mako_head_of_government
 			add_ideas = DVL_CZ2128_idea
 			set_party_name = { ideology = fascism long_name = DEN_neia_party_long name = DEN_neia_party }
+			mark_focus_tree_layout_dirty = yes
+			add_ideas = DEN_communist_rebellion_0
+			add_ideas = DEN_germany_rebellion_0
 		}
 	}
 							
