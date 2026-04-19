@@ -1384,12 +1384,12 @@ DEN_the_fourth_D_S_war_category = {
 				division_template = {
 					name = "大洗军校国防生"
 					regiments = {
-						KEI_AUTO_META_units = { x = 0 y = 0 }
-						KEI_AUTO_META_units = { x = 0 y = 1 }
-						KEI_AUTO_META_units = { x = 0 y = 2 }
-						KEI_AUTO_META_units = { x = 1 y = 0 }
-						KEI_AUTO_META_units = { x = 1 y = 1 }
-						KEI_AUTO_META_units = { x = 1 y = 2 }
+						auto_meta_units = { x = 0 y = 0 }
+						auto_meta_units = { x = 0 y = 1 }
+						auto_meta_units = { x = 0 y = 2 }
+						auto_meta_units = { x = 1 y = 0 }
+						auto_meta_units = { x = 1 y = 1 }
+						auto_meta_units = { x = 1 y = 2 }
 					}
 					support = {
 						engineer = { x = 0 y = 0 }
@@ -2340,4 +2340,486 @@ DEN_prospect_for_resources_category = {
 
 DEN_coalition_government_balance_category = {
 	
+}
+
+DEN_Land_of_Magic_and_Gears = {
+	##进攻
+	DEN_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = DVL_war_plan_going_on
+			}
+			or = {
+				if = {
+					limit = { FROM = { tag = TUR } }
+					or = {  ##君宝
+						controls_state = 773
+						any_allied_country = { controls_state = 773 }
+					}
+				}
+				any_home_area_neighbor_country = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				any_allied_country = {
+					any_home_area_neighbor_country = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = DVL_war_plan_going_on value = 1 days = 17 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		remove_effect = {
+			clr_country_flag = DVL_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+					not = { tag = DEN }
+					not = { tag = ITA }
+					not = { tag = ALS }
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = { is_in_third_international = yes }
+				date < 1941.6.1
+				factor = 0
+			}
+		}
+	}
+	##请求魔导国援助装备
+	DEN_ask_for_DVL_equipment = {
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = DEN }
+		visible = {
+			DVL = {
+				is_faction_leader = yes
+				exists = yes
+				not = { has_war_with = ROOT }
+			}
+		}
+		available = {
+		}
+		cost = 15
+		days_remove = 15
+		days_re_enable = 120
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			DVL = { country_event = { id = denmark.042 } }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				add_political_power = 15
+				gain_comintern_arms_aid = yes
+			}
+		}
+	}
+	##请求魔导国援助工业设施
+	DEN_ask_for_DVL_industrial = {
+		icon = GFX_decision_generic_factory
+		allowed = { tag = DEN }
+		visible = {
+			DVL = {
+				is_faction_leader = yes
+				exists = yes
+				not = { has_war_with = ROOT }
+			}
+		}
+		available = {
+		}
+		cost = 15
+		days_remove = 15
+		days_re_enable = 120
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			DVL = { country_event = { id = denmark.045 } }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				add_political_power = 15
+				random_list = {
+					50 = {
+						random_owned_controlled_state = {
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = {
+								type = industrial_complex
+								level = 1
+								instant_build = yes
+							}
+						}
+					}
+					50 = {
+						random_owned_controlled_state = {
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = {
+								type = arms_factory
+								level = 1
+								instant_build = yes
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	##忠于柏林
+	DEN_loyal_to_berlin = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = { tag = DEN }
+		visible = {
+			DVL = {
+				is_faction_leader = yes
+				exists = yes
+				not = { has_war_with = ROOT }
+				not = { is_in_faction_with = ROOT }
+			}
+		}
+		available = {
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			custom_effect_tooltip = DEN_join_DVL_tt
+			DVL = { country_event = { id = denmark.042 } }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				set_country_flag = is_special_vassals
+				DVL = {
+					set_autonomy = {
+						target = ROOT
+						autonomy_state = autonomy_DVL_special_reichskommissariat
+					}
+				}
+			}
+		}
+	}
+	##请求加入[DVL.Getfactionname]
+	DEN_join_DVL = {
+		icon = GFX_decision_concessions
+		visible = {
+			is_in_faction = no
+			DVL = { is_faction_leader = yes }
+		}
+		fire_only_once = yes
+		cost = 0
+		days_remove = 10
+		available = {
+			NOT = { has_country_flag = FACTION_ASKING }
+			is_in_faction = no
+			is_subject = no
+			DVL = {
+				exists = yes
+				is_faction_leader = yes
+				has_government = ROOT
+			}
+		}
+		complete_effect = {
+			set_country_flag = FACTION_ASKING
+		}
+		remove_effect = {
+			custom_effect_tooltip = DEN_join_DVL_tt
+			clr_country_flag = FACTION_ASKING
+			DVL = {
+				country_event = generic.2002
+			}
+		}
+		ai_will_do = {
+			base = 0
+		}
+	}
+	##重建魔导国
+	DEN_rebuild_DVL = {
+		icon = GFX_decision_CHL_nacista_coup_attempt
+		allowed = { tag = DEN }
+		visible = {
+			DVL = { exists = no }
+		}
+		available = {
+			DVL = { exists = no }
+			has_full_control_of_state = 64
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_cosmetic_tag = DEN_Overlord
+			DVL = {
+				every_character = { set_nationality = ROOT }
+			}
+			custom_effect_tooltip = new_foucs_is_ready
+			mark_focus_tree_layout_dirty = yes
+			every_state = {
+				limit = { has_state_flag = G_GER }
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_50_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			remove_ideas = DVL_CZ2128_idea
+			add_ideas = DVL_Ainz_Ooal_Gown_idea
+		}
+	}
+	DEN_Magic_Crop_Breeding = {  ##魔法作物育种
+		icon = GFX_decision_originium
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Introduce_characteristic_animal_husbandry_of_DVL
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			add_ideas = DEN_Magic_Crop_Breeding_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_Promotion_of_Steam_Powered_Farm_Machinery = {  ##推广蒸汽农机
+		icon = GFX_decision_railroads
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Introduce_characteristic_animal_husbandry_of_DVL
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			add_ideas = DEN_Promotion_of_Steam_Powered_Farm_Machinery_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_Construction_of_Meteorological_Intervention_Towers = {  ##建设气象干预塔
+		icon = GFX_decision_generic_wreckers
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Introduce_characteristic_animal_husbandry_of_DVL
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			add_ideas = DEN_Construction_of_Meteorological_Intervention_Towers_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_introduce_automated_skeleton = {  ##引进魔导国自动化骷髅
+		icon = GFX_decision_eng_blackshirt_march
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_open_borders
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			add_ideas = DEN_introduce_automated_skeleton_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_build_new_production_line = {  ##建设新型产线
+		icon = GFX_decision_generic_factory
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_centralized_mechanical_workshop
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			add_ideas = DEN_build_new_production_line_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_excellent_automaton = {  ##卓越自动机
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_automatic_machinery_supply
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		remove_effect = {
+			add_ideas = DEN_excellent_automaton_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_Suppress_Red_Bandits_decision = {  ##压制赤匪
+		icon = GFX_decision_generic_civil_support
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Suppress_Red_Bandits
+			or = {
+				has_idea = DEN_communist_rebellion_0
+				has_idea = DEN_communist_rebellion_1
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 50
+		days_remove = 30
+		remove_effect = {
+			if = {
+				limit =  {  has_idea = DEN_communist_rebellion_0 }
+				swap_ideas = {
+					remove_idea = DEN_communist_rebellion_0
+					add_idea = DEN_communist_rebellion_1
+				}
+			}
+			else = { remove_ideas = DEN_communist_rebellion_1 }
+		}
+	}
+	DEN_Dealing_with_German_pie_decision = {  ##处理德国派
+		icon = GFX_decision_generic_civil_support
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Dealing_with_German_pie
+			or = {
+				has_idea = DEN_germany_rebellion_0
+				has_idea = DEN_germany_rebellion_1
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 50
+		days_remove = 30
+		remove_effect = {
+			if = {
+				limit =  {  has_idea = DEN_germany_rebellion_0 }
+				swap_ideas = {
+					remove_idea = DEN_germany_rebellion_0
+					add_idea = DEN_germany_rebellion_1
+				}
+			}
+			else = { remove_ideas = DEN_germany_rebellion_1 }
+		}
+	}
 }
