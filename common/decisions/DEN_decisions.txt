@@ -2612,6 +2612,7 @@ DEN_Land_of_Magic_and_Gears = {
 			DVL = { exists = no }
 		}
 		available = {
+			is_subject = no
 			DVL = { exists = no }
 			has_full_control_of_state = 64
 		}
@@ -2623,6 +2624,39 @@ DEN_Land_of_Magic_and_Gears = {
 		}
 		complete_effect = {
 			set_cosmetic_tag = DEN_Overlord
+			if = {
+				limit = {
+					ENG = {
+						not = {
+							is_in_faction_with = ROOT
+							is_subject_of = ROOT
+							has_war_with = ROOT
+						}
+						exists = yes
+					}
+				}
+				custom_effect_tooltip = ENG_will_attack_DEN
+			}
+			if = {
+				limit = {
+					SOV = {
+						not = {
+							is_in_faction_with = ROOT
+							is_subject_of = ROOT
+							has_war_with = ROOT
+						}
+						exists = yes
+					}
+				}
+				custom_effect_tooltip = SOV_will_attack_DEN
+			}
+			ENG = {
+				activate_mission = ENGandSOV_Operation_Thunderstorm
+			}
+			SOV = {
+				activate_mission = ENGandSOV_Operation_Thunderstorm
+			}
+			activate_mission = DEN_An_imminent_invasion
 			DVL = {
 				every_character = { set_nationality = ROOT }
 			}
@@ -2864,6 +2898,140 @@ DEN_Land_of_Magic_and_Gears = {
 	}
 }
 
+##苏德冲突
+ENGandSOV_DEN_conflict = {
+	ENGandSOV_Operation_Thunderstorm = {
+		icon = GFX_decision_category_SOV_civil_puppet_interaction
+		available = {
+			always = no
+		}
+		priority = 10
+		days_mission_timeout = 1095
+		fire_only_once = yes
+		activation = {
+			always = no
+		}
+		visible = {
+			or = {
+				tag = SOV
+				tag = ENG
+			}
+			is_subject = no
+		}
+		cancel_trigger = {
+			has_war_with = DEN
+		}
+		is_good = no
+		timeout_effect = {
+			add_timed_idea = {
+				idea = ENGandSOV_Operation_Thunderstormidea
+				days = 180
+			}
+			if = {
+				limit = {
+					DEN = {
+						exists = yes
+					}
+				}
+				declare_war_on = {
+					target = DEN
+					type = liberate_wargoal
+				}
+			}
+		}
+		war_with_on_timeout = DEN
+		complete_effect = {
+			if = {
+				limit = {
+					DEN = {
+						exists = yes
+					}
+				}
+				DEN = { 
+					THIS_country_is_defender_and_ROOT_is_accacker = yes
+				}
+			}
+		}
+	}
+	DEN_An_imminent_invasion = {
+		icon = GFX_decision_generic_break_treaty
+		available = {
+			always = no
+		}
+		priority = 10
+		days_mission_timeout = 1095
+		fire_only_once = yes
+		is_good = no
+		activation = {
+			always = no
+		}
+		visible = {
+			tag = DEN
+		}
+		cancel_trigger = {
+			and = {
+				or = {
+					SOV = {
+						exists = no
+						is_subject_of = ROOT
+						has_war_with = SOV
+					}
+				}
+				or = {
+					ENG = {
+						exists = no
+						is_subject_of = ROOT
+						has_war_with = ENG
+					}
+				}
+			}
+		}
+		timeout_effect = {
+			effect_tooltip = {
+				SOV = {
+					add_timed_idea = {
+						idea = ENGandSOV_Operation_Thunderstormidea
+						days = 180
+					}
+					if = {
+						limit = {
+							DEN = {
+								not = {
+									is_in_faction_with = SOV
+								}
+								exists = yes
+							}
+						}
+						declare_war_on = {
+							target = DEN
+							type = liberate_wargoal
+						}
+					}
+				}
+				ENG = {
+					add_timed_idea = {
+						idea = ENGandSOV_Operation_Thunderstormidea
+						days = 180
+					}
+					if = {
+						limit = {
+							DEN = {
+								not = {
+									is_in_faction_with = SOV
+								}
+								exists = yes
+							}
+						}
+						declare_war_on = {
+							target = DEN
+							type = liberate_wargoal
+						}
+					}
+				}
+			}
+		}
+	}
+}
 DEN_steamtank_secondary_gun = {
 	DEN_get_secondary_gun_tank_magic_howitzer_1 = {
 		icon = GFX_decision_generic_tank
