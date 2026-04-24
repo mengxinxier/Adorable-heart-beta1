@@ -2,6 +2,7 @@ add_namespace = denmark
 add_namespace = den_crisis
 add_namespace = den_strait
 add_namespace = den_line
+add_namespace = den_test
 
 #内部事件
 	country_event = {
@@ -320,7 +321,7 @@ add_namespace = den_line
 			add_country_leader_role = {
 				character = DEN_RyuZU
 				country_leader = { 
-					ideology = oligarchism
+					ideology = techno_authoritarianism_subtype
 					traits = { DEN_machine_No1 }
 				}
 				promote_leader = yes
@@ -328,11 +329,11 @@ add_namespace = den_line
 			hidden_effect = {
 				if = {
 					limit = {
-						DEN_Juliet = { has_ideology = despotism }
+						DEN_Juliet = { has_ideology = techno_authoritarianism_subtype }
 					}
 					remove_country_leader_role = {
 						character = DEN_Juliet
-						ideology = despotism
+						ideology = techno_authoritarianism_subtype
 					}
 				}
 				set_country_flag = DEN_Naoto_advisor_visible
@@ -393,7 +394,7 @@ add_namespace = den_line
 			# 	NOT = { has_doctrine = new_mobile_warfare }
 			# }
 			set_technology = {
-				special_forces_Second = 1
+				special_forces_autometa = 1
 			}
 		}
 		
@@ -486,7 +487,7 @@ add_namespace = den_line
 			custom_effect_tooltip = SOV_get_400_add_to_reserve
 			add_tech_bonus = {
 				name = DEN_collaborative_research_on_mecha
-				category = AUTO_META
+				category = auto_meta_tech
 				uses = 1
 				bonus = 0.5
 				ahead_reduction = 1.5
@@ -1040,6 +1041,262 @@ add_namespace = den_line
 				type = artillery_equipment
 				amount = 500
 				producer = FROM
+			}
+		}
+	}
+	##魔导国的援助
+	country_event = {
+		id = denmark.041
+		title = denmark.041.t
+		desc = denmark.041.d
+		is_triggered_only = yes
+		picture = GFX_event_Supreme_and_Guardians
+		option = {
+			name = denmark.041.a
+			add_political_power = 100
+			add_manpower = 20000
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 3000
+				producer = DVL
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 1000
+				producer = DVL
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 500
+				producer = DVL
+			}
+			hidden_effect = {
+				add_to_variable = {
+					ubs_save = 200
+				}
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			add_ideas = DEN_loyalty_reward
+		}
+	}
+
+	#[FROM.Getname]请求我们援助装备
+	country_event = {
+		id = denmark.042
+		title = denmark.042.t
+		desc = denmark.042.d
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_report_event_DEN_Heath
+		option = {
+			name = denmark.042.a
+			FROM = { country_event = denmark.043 }
+			effect_tooltip = {
+				send_equipment = {
+					amount = 2500
+					type = infantry_equipment
+					target = FROM
+				}
+				send_equipment = {
+					amount = 300
+					target = FROM
+					type = artillery_equipment
+				}	
+			}
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -2500
+				}
+				add_equipment_to_stockpile = {
+					type = artillery_equipment
+					amount = -300
+				}
+			}
+			ai_chance = {
+				base = 0
+				modifier = {
+					add = 1.0
+					OR = {
+						check_variable = {
+							FROM.num_equipment@infantry_equipment < 0
+						}
+						check_variable = {
+							FROM.num_equipment@artillery_equipment < 0
+						}
+					}
+				}
+				modifier = {
+					add = 0.5
+					FROM = {
+						has_war = yes
+					}
+				}
+				modifier = {
+					factor = 100
+					has_equipment = {
+						infantry_equipment > 5000
+					}
+					has_equipment = {
+						artillery_equipment > 500
+					}
+				}
+			}
+		}
+		option = {
+			name = denmark.042.b
+			FROM = { country_event = denmark.044 }
+			ai_chance = {
+				base = 1
+			}
+		}
+	}
+
+	#[FROM.GetName]送来一批武器
+	country_event = {
+		id = denmark.043
+		title = denmark.043.t
+		desc = denmark.043.d
+		is_triggered_only = yes
+		option = {
+			name = denmark.043.a
+			add_political_power = 15
+			gain_comintern_arms_aid_from_FROM = yes
+		}
+	}
+
+	#[FROM.Getname]拒绝了
+	country_event = {
+		id = denmark.044
+		title = denmark.044.t
+		desc = denmark.044.d
+		is_triggered_only = yes
+		fire_only_once = no
+		option = {
+			name = denmark.044.a
+			ai_chance = {
+				base = 1
+			}
+		}
+	}
+
+	#[FROM.Getname]请求我们援助工业设备
+	country_event = {
+		id = denmark.045
+		title = denmark.045.t
+		desc = denmark.045.d
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_report_event_DEN_Heath
+		option = {
+			name = denmark.045.a
+			FROM = { country_event = denmark.046 }
+			add_timed_idea = {
+				idea = SOV_Aid_PRC_idea
+				days = 30
+			}
+			effect_tooltip = {
+				FROM = {
+					random_list = {
+						50 = {
+							random_owned_controlled_state = {
+								add_extra_state_shared_building_slots = 1
+								add_building_construction = {
+									type = industrial_complex
+									level = 1
+									instant_build = yes
+								}
+							}
+						}
+						50 = {
+							random_owned_controlled_state = {
+								add_extra_state_shared_building_slots = 1
+								add_building_construction = {
+									type = arms_factory
+									level = 1
+									instant_build = yes
+								}
+							}
+						}
+					}
+				}
+			}
+			ai_chance = {
+				base = 10
+			}
+		}
+		option = {
+			name = denmark.045.b
+			FROM = { country_event = denmark.044 }
+			ai_chance = {
+				base = 1
+			}
+		}
+	}
+
+	#[FROM.GetName]送来工业设备
+	country_event = {
+		id = denmark.046
+		title = denmark.046.t
+		desc = denmark.046.d
+		is_triggered_only = yes
+		option = {
+			name = denmark.046.a
+			add_political_power = 15
+			random_list = {
+				50 = {
+					random_owned_controlled_state = {
+						add_extra_state_shared_building_slots = 1
+						add_building_construction = {
+							type = industrial_complex
+							level = 1
+							instant_build = yes
+						}
+					}
+				}
+				50 = {
+					random_owned_controlled_state = {
+						add_extra_state_shared_building_slots = 1
+						add_building_construction = {
+							type = arms_factory
+							level = 1
+							instant_build = yes
+						}
+					}
+				}
+			}
+			ai_chance = {
+				base = 1
+			}
+		}
+	}
+	
+	#[FROM.Getname]请求忠于我们
+	country_event = {
+		id = denmark.047
+		title = denmark.047.t
+		desc = denmark.047.d
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_report_event_DEN_Heath
+		option = {
+			name = denmark.047.a
+			FROM = { set_country_flag = is_special_vassals }
+			DVL = {
+				set_autonomy = {
+					target = FROM
+					autonomy_state = autonomy_DVL_special_reichskommissariat
+				}
+			}
+			ai_chance = {
+				base = 1
+			}
+		}
+		option = {
+			name = denmark.047.b
+			FROM = { country_event = denmark.044 }
+			ai_chance = {
+				base = 0
 			}
 		}
 	}
@@ -2346,6 +2603,22 @@ add_namespace = den_line
 				}
 			}
 			complete_national_focus = DEN_comprehensive_martial_law
+			clr_country_flag = DEN_Breguet_head_of_government
+			clr_country_flag = DEN_Akane_head_of_government
+			clr_country_flag = DEN_Repart_head_of_government
+			clr_country_flag = DEN_Nao_head_of_government
+			clr_country_flag = DEN_Mako_head_of_government
+			add_ideas = DVL_CZ2128_idea
+			set_party_name = { ideology = fascism long_name = DEN_neia_party_long name = DEN_neia_party }
+			mark_focus_tree_layout_dirty = yes
+			add_ideas = DEN_communist_rebellion_0
+			add_ideas = DEN_germany_rebellion_0
+			hidden_effect = {
+				country_event = {
+					id = denmark.041
+					days = 7
+				}
+			}
 		}
 	}
 							
@@ -2497,7 +2770,7 @@ add_namespace = den_line
 				add_country_leader_role = {
 					character = DEN_RyuZU
 					country_leader = {
-						ideology = oligarchism
+						ideology = techno_authoritarianism_subtype
 						traits = { DEN_machine_No1 }
 					}
 					promote_leader = yes
@@ -2597,6 +2870,7 @@ add_namespace = den_line
 			add_political_power = -200
 			add_to_variable = { DEN.DEN_strait_influence_from_DVL = 100 }
 			custom_effect_tooltip = DEN_defeated_Kalmar_tt
+			set_country_flag = DEN_defeated_Kalmar_flag
 		}
 	}
 #路线斗争
@@ -3254,3 +3528,16 @@ add_namespace = den_line
 		}
 	}
 #
+	country_event = {
+		id = den_test.001
+		title = den_test.001.t
+		desc = den_test.001.d
+		picture = GFX_report_event_DEN_Suride
+
+		is_triggered_only = yes
+
+		option = {
+			name = den_test.001.a
+			set_technology = { steampunk_tank_tech = 1 }
+		}
+	}

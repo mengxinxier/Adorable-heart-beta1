@@ -7631,13 +7631,14 @@ focus_tree = {
             every_state = {
                 limit = {
                     or = {
-                        is_core_of = PAQ
+                        is_controlled_by = PAQ
                         is_core_of = PAO
                         is_core_of = PAM
                         is_core_of = CHL
                         is_core_of = LFC
                         is_core_of = MGU
                         is_core_of = PA1
+                        is_core_of = ELF
                     }
                     NOT = {
                         is_core_of = LHS
@@ -7646,6 +7647,8 @@ focus_tree = {
                 add_claim_by = LHS
                 
             }
+            complete_national_focus = LHS_zhihui
+            complete_national_focus = LHS_shengchan
             set_country_flag = LHS_mumian2
             clr_country_flag = kaiduan
             clr_country_flag = zhanzhengkaishi
@@ -7844,7 +7847,7 @@ focus_tree = {
                     add_building_construction = {
                         type = bunker
                         level = 4
-                        province = 10493
+                        province = 10943
                         instant_build = yes
                     }
                     add_building_construction = {
@@ -7901,6 +7904,13 @@ focus_tree = {
             has_country_flag = LHS_mumian2
         }
         bypass = {
+                MGU = {
+                    or = {
+                    has_government = communism
+                    has_country_flag = MGU_pledged_to_burn_PAQ
+                    has_war_together_with = LHS
+                    }
+                }
         }
         relative_position_id = LHS_Bones_And_Rabid_Dogs
         ai_will_do = {
@@ -7973,6 +7983,11 @@ focus_tree = {
         bypass = {
             has_war_with = MGU
         }
+        bypass_effect = {
+            hidden_effect = {
+                set_country_flag = pass_LHS_Unite_All_Breathing
+            }
+        }
         relative_position_id = LHS_Bones_And_Rabid_Dogs
         ai_will_do = {
             #ai点击国策的倾向
@@ -8020,6 +8035,33 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+            activate_targeted_decision = {
+                target = ENG
+                decision = LHS_jiefang_FROM
+            }
+            activate_targeted_decision = {
+                target = LFC
+                decision = LHS_jiefang_FROM
+            }
+            activate_targeted_decision = {
+                target = PGM
+                decision = LHS_jiefang_FROM
+            }
+            if = {
+                limit = {
+                    has_country_flag = pass_LHS_Unite_All_Breathing
+                }
+                activate_targeted_decision = {
+                    target = PAQ
+                    decision = LHS_jiefang_FROM
+                }
+            }
+            every_country = {
+                limit = {
+                    is_ally_with = LHS
+                }
+                add_ideas =  LHS_Landlord_Collects_Rent
+            }
         }
     }
 
@@ -8048,6 +8090,14 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+            every_state = {
+                limit = {
+                    is_controlled_by = LHS
+                }
+                add_dynamic_modifier = {
+                    modifier = LHS_Drag_Them_Into_Mud
+                }
+            }
             country_event = {
                 id = LHS.144
                 hours =6
@@ -8066,7 +8116,22 @@ focus_tree = {
             focus = LHS_Drag_Them_Into_Mud  #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
         available = {
-
+            LFC = {
+                or = {
+                    surrender_progress > 0.75
+                    exists = no
+                }
+            }
+            895 = {
+                owner = {
+                    tag = LHS
+                }
+            }
+            685 = {
+                controller = {
+                    tag = LHS
+                }
+            }
         }
         allow_branch = {
             has_country_flag = LHS_mumian2
@@ -8080,7 +8145,57 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
-
+            every_country = {
+                limit = {
+                    is_ally_with = LHS
+                }
+                remove_ideas = LHS_Disease_Not_God
+            }
+            every_country = {
+                limit = {
+                    is_ally_with = LHS
+                }
+                remove_ideas = LHS_Landlord_Collects_Rent
+            }
+            every_state = {
+                limit = {
+                    is_controlled_by = LHS
+                    has_dynamic_modifier = LHS_Drag_Them_Into_Mud
+                }
+                remove_dynamic_modifier = {
+                    modifier = LHS_Drag_Them_Into_Mud
+                }
+            }
+            add_political_power = 500
+            add_stability = 0.2
+            every_country = {
+                limit = {
+                    has_war_with = LHS
+                    NOT = {
+                        OR = {
+                            tag = LFC
+                            tag = PGM
+                            tag = PAQ
+                            tag = PAO
+                            tag = MGU
+                            is_in_faction_with = ELF
+                            tag = MGC
+                        }
+                    }
+                }
+                LHS = {
+                    white_peace = PREV
+                }
+            }
+            annex_country = {
+                target = LFC
+                transfer_troops = no
+            }
+            annex_country = {
+                target = PGM
+                transfer_troops = no
+            }
+            transfer_state = 685
         }
     }
 
@@ -8349,8 +8464,80 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+            set_variable = { var = red_soil_seeds value = 10 }
+            custom_effect_tooltip = LHS_SEEDS_ADD_10_tt
             country_event = {
                 id = LHS.145
+                hours =6
+            }
+        }
+    }
+
+    #先塞满最饿的嘴
+    focus = {
+        id = LHS_Measuring_Suffering
+        icon = GFX_Measuring_Suffering
+        x = 1
+        y = 11
+        cost = 5
+        prerequisite = {
+            focus = LHS_Barefoot_On_Scorched_Earth #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+        }
+        available = {
+
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian3
+        }
+        bypass = {
+        }
+        relative_position_id = LHS_Bones_And_Rabid_Dogs
+        ai_will_do = {
+            #ai点击国策的倾向
+            base = 150
+            #基础值
+        }
+        completion_reward = {
+        add_to_variable = { var = red_soil_fertilizer value = 10 }
+        add_to_variable = { var = red_soil_seeds value = 5 }
+        custom_effect_tooltip = LHS_FERTILIZER_ADD_10_tt
+        custom_effect_tooltip = LHS_SEEDS_ADD_5_tt
+            country_event = {
+                id = LHS.147
+                hours =6
+            }
+        }
+    }
+
+    #撕开这发黑的血痂
+    focus = {
+        id = LHS_Tearing_The_Scab
+        icon = GFX_Tearing_The_Scab
+        x = -1
+        y = 11
+        cost = 5
+        prerequisite = {
+            focus = LHS_Barefoot_On_Scorched_Earth #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+        }
+        available = {
+
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian3
+        }
+        bypass = {
+        }
+        relative_position_id = LHS_Bones_And_Rabid_Dogs
+        ai_will_do = {
+            #ai点击国策的倾向
+            base = 150
+            #基础值
+        }
+        completion_reward = {
+            add_to_variable = { var = red_soil_weeds value = 10 }
+            custom_effect_tooltip = LHS_WEEDS_ADD_10_tt
+            country_event = {
+                id = LHS.148
                 hours =6
             }
         }
@@ -8384,72 +8571,10 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+        add_to_variable = { var = red_soil_weeds value = 5 }
+        custom_effect_tooltip = LHS_WEEDS_ADD_5_tt
             country_event = {
                 id = LHS.146
-                hours =6
-            }
-        }
-    }
-
-    #先塞满最饿的嘴
-    focus = {
-        id = LHS_Measuring_Suffering
-        icon = GFX_Measuring_Suffering
-        x = 1
-        y = 11
-        cost = 5
-        prerequisite = {
-            focus = LHS_Barefoot_On_Scorched_Earth #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-        }
-        available = {
-
-        }
-        allow_branch = {
-            has_country_flag = LHS_mumian3
-        }
-        bypass = {
-        }
-        relative_position_id = LHS_Bones_And_Rabid_Dogs
-        ai_will_do = {
-            #ai点击国策的倾向
-            base = 150
-            #基础值
-        }
-        completion_reward = {
-            country_event = {
-                id = LHS.147
-                hours =6
-            }
-        }
-    }
-
-    #撕开这发黑的血痂
-    focus = {
-        id = LHS_Tearing_The_Scab
-        icon = GFX_Tearing_The_Scab
-        x = -1
-        y = 11
-        cost = 5
-        prerequisite = {
-            focus = LHS_Barefoot_On_Scorched_Earth #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
-        }
-        available = {
-
-        }
-        allow_branch = {
-            has_country_flag = LHS_mumian3
-        }
-        bypass = {
-        }
-        relative_position_id = LHS_Bones_And_Rabid_Dogs
-        ai_will_do = {
-            #ai点击国策的倾向
-            base = 150
-            #基础值
-        }
-        completion_reward = {
-            country_event = {
-                id = LHS.148
                 hours =6
             }
         }
@@ -8463,7 +8588,7 @@ focus_tree = {
         y = 13
         cost = 5
         prerequisite = {
-            focus = LHS_Tearing_The_Scab #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
+            focus = LHS_Hand_Over_The_Ledger #前置国策 下述表示 你需要同时完成两个国策 才可进行下面的国策
         }
         available = {
 
@@ -8480,6 +8605,10 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+        subtract_from_variable = { var = red_soil_weeds value = 10 }
+        add_to_variable = { var = red_soil_seeds value = 5 }
+        custom_effect_tooltip = LHS_WEEDS_SUB_10_tt
+        custom_effect_tooltip = LHS_SEEDS_ADD_5_tt
             country_event = {
                 id = LHS.149
                 hours =6
@@ -8512,6 +8641,10 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+        add_to_variable = { var = red_soil_fertilizer value = 5 }
+        add_to_variable = { var = red_soil_weeds value = 5 }
+        custom_effect_tooltip = LHS_FERTILIZER_ADD_5_tt
+        custom_effect_tooltip = LHS_WEEDS_ADD_5_tt
             country_event = {
                 id = LHS.150
                 hours =6
@@ -8544,6 +8677,10 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+            multiply_variable = { var = red_soil_seeds value = 2 }
+            multiply_variable = { var = red_soil_fertilizer value = 2 }
+            multiply_variable = { var = red_soil_weeds value = 2 }
+            custom_effect_tooltip = LHS_GREAT_RAIN_tt
             country_event = {
                 id = LHS.151
                 hours =6
@@ -8576,6 +8713,12 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+        add_to_variable = { var = red_soil_harvest_points value = var:red_soil_seeds }
+        add_to_variable = { var = red_soil_harvest_points value = var:red_soil_fertilizer }
+        subtract_from_variable = { var = red_soil_harvest_points value = var:red_soil_weeds }
+        set_variable = { var = global.LHS_harvest_bonus_multiplier value = var:red_soil_harvest_points }
+        multiply_variable = { var = global.LHS_harvest_bonus_multiplier value = 0.005 }
+        custom_effect_tooltip = LHS_HARVEST_SEASON_tt
             country_event = {
                 id = LHS.152
                 hours =6
@@ -8583,7 +8726,7 @@ focus_tree = {
         }
     }
 
-    #缝合破碎的赤土
+    #咱们，又活过来了
     focus = {
         id = LHS_Suturing_The_Broken_Clay
         icon = GFX_Suturing_The_Broken_Clay
@@ -8615,7 +8758,7 @@ focus_tree = {
         }
     }
 
-    #沉入海底的铁冠
+    #把昨天埋得深一些
     focus = {
         id = LHS_Sunken_Iron_Crown
         icon = GFX_Sunken_Iron_Crown
@@ -8647,7 +8790,7 @@ focus_tree = {
         }
     }
 
-    #迎着前方的骄阳
+    #迎着太阳，大步向前！
     focus = {
         id = LHS_Facing_Equatorial_Sun
         icon = GFX_Facing_Equatorial_Sun
@@ -8685,7 +8828,7 @@ focus_tree = {
         }
     }
 
-    # 扯断那条天鹅绒
+    #扯断那条天鹅绒
     focus = {
         id = LHS_The_Velvet_Chokehold
         icon = GFX_The_Velvet_Chokehold
@@ -8740,7 +8883,7 @@ focus_tree = {
         }
     }
 
-    # 收紧的银色大网
+    #然后，星星坠入了大海
     focus = {
         id = LHS_The_Silver_Net_Closes
         icon = GFX_The_Silver_Net_Closes
@@ -8766,7 +8909,7 @@ focus_tree = {
         }
     }
 
-    # 撕碎那封香水信
+    #撕碎一切傲慢
     focus = {
         id = LHS_The_Empires_Condolence
         icon = GFX_The_Empires_Condolence
@@ -8818,7 +8961,7 @@ focus_tree = {
         }
     }
 
-    #击碎王座的琉璃
+    #老爷们，我们来送终了
     focus = {
         id = LHS_Shattering_The_Glaze
         icon = GFX_Shattering_The_Glaze
@@ -8867,7 +9010,7 @@ focus_tree = {
         }
     }
 
-    #晚安，属于大家的明天
+    #晚安，大伙儿
     focus = {
         id = LHS_Goodnight_Tomorrow
         icon = GFX_Goodnight_Tomorrow
@@ -8876,6 +9019,12 @@ focus_tree = {
         cost = 5
         prerequisite = {
             focus = LHS_Sunflowers_On_Ruins
+        }
+        prerequisite = {
+            focus = LHS_This_Is_Called_Living
+        }
+        prerequisite = {
+            focus = LHS_Rough_Thread_Drives_Cold
         }
         available = {
         }
@@ -8886,22 +9035,212 @@ focus_tree = {
         }
         relative_position_id = LHS_Facing_Equatorial_Sun
         completion_reward = {
+            set_country_flag = LHS_mumian5
+            mark_focus_tree_layout_dirty = yes
+            custom_effect_tooltip = jiesuoguoce
+        }
+    }
+    #木棉个人线
+    #金衣包裹的旧伤
+    focus = {
+        id = LHS_Golden_Foil_Relic
+        icon = GFX_Golden_Foil_Relic
+        x = -5
+        y = 10
+        cost = 5
+        prerequisite = {
+            focus = LHS_Goodnight_Tomorrow
+        }
+        available = {
+        }
+        bypass = {
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian5
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Facing_Equatorial_Sun
+        completion_reward = {
             country_event = {
-                id = LHS.161
+                id = LHS.175
                 hours =6
             }
         }
     }
+
+    #白昼的潜行者
+    focus = {
+        id = LHS_Phantom_Of_The_Cellar
+        icon = GFX_Phantom_Of_The_Cellar
+        x = 2
+        y = -1
+        cost = 5
+        prerequisite = {
+            focus = LHS_Golden_Foil_Relic
+        }
+        prerequisite = {
+            focus = LHS_Goodnight_Tomorrow
+        }
+        available = {
+        }
+        bypass = {
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian5
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Golden_Foil_Relic
+        completion_reward = {
+            country_event = {
+                id = LHS.176
+                hours =6
+            }
+        }
+    }
+
+    #那头挑水的狼
+    focus = {
+        id = LHS_Wolfs_Snarl_And_Silence
+        icon = GFX_Wolfs_Snarl_And_Silence
+        x = 4
+        y = 0
+        cost = 5
+        prerequisite = {
+            focus = LHS_Phantom_Of_The_Cellar
+        }
+        prerequisite = {
+            focus = LHS_Goodnight_Tomorrow
+        }
+        available = {
+        }
+        bypass = {
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian5
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Golden_Foil_Relic
+        completion_reward = {
+            country_event = {
+                id = LHS.177
+                hours =6
+            }
+        }
+    }
+
+    #木屑里的传承
+    focus = {
+        id = LHS_Carving_The_Legacy
+        icon = GFX_Carving_The_Legacy
+        x = 6
+        y = -1
+        cost = 5
+        prerequisite = {
+            focus = LHS_Wolfs_Snarl_And_Silence
+        }
+        prerequisite = {
+            focus = LHS_Goodnight_Tomorrow
+        }
+        available = {
+        }
+        bypass = {
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian5
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Golden_Foil_Relic
+        completion_reward = {
+            country_event = {
+                id = LHS.178
+                hours =6
+            }
+        }
+    }
+
+    #尝尝，这果子真酸
+    focus = {
+        id = LHS_Final_Taste_Of_Apple
+        icon = GFX_Final_Taste_Of_Apple
+        x = 8
+        y = -1
+        cost = 5
+        prerequisite = {
+            focus = LHS_Carving_The_Legacy
+        }
+        prerequisite = {
+            focus = LHS_Goodnight_Tomorrow
+        }
+        available = {
+        }
+        bypass = {
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian5
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Golden_Foil_Relic
+        completion_reward = {
+            country_event = {
+                id = LHS.179
+                hours =6
+            }
+        }
+    }
+    
+    #睡吧，天快黑了
+    focus = {
+        id = LHS_The_Long_Slumber
+        icon = GFX_The_Long_Slumber
+        x = 10
+        y = 0
+        cost = 5
+        prerequisite = {
+            focus = LHS_Final_Taste_Of_Apple
+        }
+        prerequisite = {
+            focus = LHS_Goodnight_Tomorrow
+        }
+        available = {
+        }
+        bypass = {
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian5
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Golden_Foil_Relic
+        completion_reward = {
+            country_event = {
+                id = LHS.180
+                hours =6
+            }
+        }
+    }
+
+    
     #索拉娜改造线
     # 旧账该怎么算
     focus = {
         id = LHS_Reckoning_Old_Scores
         icon = GFX_Reckoning_Old_Scores
-        x = 0
-        y = 15
+        x = 6
+        y = 9
         cost = 5
         prerequisite = {
-            
+            focus = LHS_Muddy_Water_Flow
         }
         available = {
         }
@@ -9051,6 +9390,202 @@ focus_tree = {
             country_event = {
                 id = LHS.158
                 hours =6
+            }
+        }
+    }
+
+
+     #木棉外交线
+    #越洋斟满焦糖浆
+    focus = {
+        id = LHS_Brew_Caramel_Across_Ocean
+        icon = GFX_Brew_Caramel_Across_Ocean
+        x = 17
+        y = 11
+        cost = 5
+        prerequisite = {
+            focus = LHS_When_Kapok_Burns_Red
+        }
+        available = {
+        }
+        bypass = {
+        }
+        allow_branch = {
+            has_country_flag = LHS_mumian3
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_zhihui
+        completion_reward = {
+            PAN = {
+                country_event = {
+                    id = LHS.170
+                    hours =6
+                }
+            }
+        }
+    }
+
+    #钝刀劈开傲慢骨
+    focus = {
+        id = LHS_Cleave_Arrogant_Bones
+        icon = GFX_Cleave_Arrogant_Bones
+        x = 0
+        y = 1
+        cost = 5
+        prerequisite = {
+            focus = LHS_Brew_Caramel_Across_Ocean
+        }
+        available = {
+        }
+        bypass = {
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Brew_Caramel_Across_Ocean
+        completion_reward = {
+            
+        }
+    }
+
+    #泥靴践踏天鹅绒
+    focus = {
+        id = LHS_Muddy_Boots_Trample_Velvet
+        icon = GFX_Muddy_Boots_Trample_Velvet
+        x = -1
+        y = 2
+        cost = 5
+        prerequisite = {
+            focus = LHS_Cleave_Arrogant_Bones
+        }
+        available = {
+        }
+        bypass = {
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Brew_Caramel_Across_Ocean
+        completion_reward = {
+            every_country = {
+                    limit = {
+                        OR = {
+                            TAG = NGD
+                            TAG = NFA
+                            TAG = FRG
+                            TAG = USA
+                        }
+                        not = {
+                            has_government = communism
+                        }
+                    }
+                    PREV = {
+                        country_event = {
+                            id = LHS.171
+                            hours =6
+                        }
+                    }
+            }
+
+        }
+    }
+
+    #饱满金粒填空腹
+    focus = {
+        id = LHS_Plump_Grains_Fill_Stomachs
+        icon = GFX_Plump_Grains_Fill_Stomachs
+        x = 1
+        y = 2
+        cost = 5
+        prerequisite = {
+            focus = LHS_Cleave_Arrogant_Bones
+        }
+        available = {
+        }
+        bypass = {
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Brew_Caramel_Across_Ocean
+        completion_reward = {
+            every_country = {
+                limit = {
+                    OR = {
+                        TAG = NGD
+                        TAG = NFA
+                        TAG = FRG
+                        TAG = USA
+                    }
+                        has_government = communism
+                }
+                PREV = {
+                    country_event = {
+                        id = LHS.172
+                        hours =6
+                    }
+                }
+        }
+        }
+    }
+
+    #粗纺红线驱极寒
+    focus = {
+        id = LHS_Rough_Thread_Drives_Cold
+        icon = GFX_Rough_Thread_Drives_Cold
+        x = 0
+        y = 3
+        cost = 5
+        prerequisite = {
+            focus = LHS_Muddy_Boots_Trample_Velvet
+        }
+        prerequisite = {
+            focus = LHS_Plump_Grains_Fill_Stomachs
+        }
+        available = {
+        }
+        bypass = {
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Brew_Caramel_Across_Ocean
+        completion_reward = {
+            SOV = {
+                country_event = {
+                    id = LHS.173
+                    hours =6
+                }
+            }
+        }
+    }
+
+    #捧起赤土祭同袍
+    focus = {
+        id = LHS_Rough_Thread_Drives_Cold
+        icon = GFX_Rough_Thread_Drives_Cold
+        x = 0
+        y = 4
+        cost = 5
+        prerequisite = {
+            focus = LHS_Rough_Thread_Drives_Cold
+        }
+        available = {
+        }
+        bypass = {
+        }
+        ai_will_do = {
+            base = 100
+        }
+        relative_position_id = LHS_Brew_Caramel_Across_Ocean
+        completion_reward = {
+            PRC = {
+                country_event = {
+                    id = LHS.174
+                    hours =6
+                }
             }
         }
     }
@@ -14158,7 +14693,7 @@ focus_tree = {
         y = 1
         cost = 5
         prerequisite = {
-            focus = LHS_youji
+            focus = LHS_zhihui
         }
         available = {
         }
@@ -14540,6 +15075,9 @@ focus_tree = {
         y = 7
         cost = 5
         prerequisite = {
+            focus = LHS_Back_To_The_Sea
+        }
+        prerequisite = {
             focus = LHS_Muddy_Water_Flow
         }
         available = {
@@ -14785,6 +15323,7 @@ focus_tree = {
         y = 7
         cost = 5
         prerequisite = { focus = LHS_When_Kapok_Burns_Red }
+        prerequisite = { focus = LHS_Red_Clay_Commune }
         relative_position_id = LHS_kuangwu
         completion_reward = { }
     }

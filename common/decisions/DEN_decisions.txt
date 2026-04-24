@@ -1384,12 +1384,12 @@ DEN_the_fourth_D_S_war_category = {
 				division_template = {
 					name = "大洗军校国防生"
 					regiments = {
-						KEI_AUTO_META_units = { x = 0 y = 0 }
-						KEI_AUTO_META_units = { x = 0 y = 1 }
-						KEI_AUTO_META_units = { x = 0 y = 2 }
-						KEI_AUTO_META_units = { x = 1 y = 0 }
-						KEI_AUTO_META_units = { x = 1 y = 1 }
-						KEI_AUTO_META_units = { x = 1 y = 2 }
+						auto_meta_units = { x = 0 y = 0 }
+						auto_meta_units = { x = 0 y = 1 }
+						auto_meta_units = { x = 0 y = 2 }
+						auto_meta_units = { x = 1 y = 0 }
+						auto_meta_units = { x = 1 y = 1 }
+						auto_meta_units = { x = 1 y = 2 }
 					}
 					support = {
 						engineer = { x = 0 y = 0 }
@@ -1508,6 +1508,7 @@ DEN_gateway_to_baltic_sea_category = {
 						option = AH_DEN_ai_behavior_SELECTION_4
 					}
 				}
+				else = { always = no }
 			}
 		}
 		fire_only_once = no
@@ -1548,6 +1549,7 @@ DEN_gateway_to_baltic_sea_category = {
 				clr_country_flag = DEN_apply_pressure_on_strait_flag
 				set_country_flag = DEN_apply_pressure_on_strait_flag
 			}
+			DEN_set_difference_var_in_baltic_sea = yes
 		}
 	}
 	#圣杯正在施加影响力
@@ -1618,16 +1620,21 @@ DEN_gateway_to_baltic_sea_category = {
 		}
 		remove_effect = {
 			custom_effect_tooltip = "[ENG.GetNameWithFlag]"
-			random_list = {
-				30 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 1 } custom_effect_tooltip = DEN_increase_1_strait_influence }
-				30 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 3 } custom_effect_tooltip = DEN_increase_3_strait_influence }
-				30 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
+			if = {
+				limit = { is_ai = yes }
+				random_list = {
+					30 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 1 } custom_effect_tooltip = DEN_increase_1_strait_influence }
+					30 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 3 } custom_effect_tooltip = DEN_increase_3_strait_influence }
+					30 = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
+				}
 			}
+			else = { add_to_variable = { DEN.DEN_strait_influence_from_ENG = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
 			hidden_effect = {
 				clr_country_flag = DEN_promotion_in_progress
 				clr_country_flag = DEN_pro_ENG_propaganda_flag
 				set_country_flag = DEN_pro_ENG_propaganda_flag
 			}
+			DEN_set_difference_var_in_baltic_sea = yes
 		}
 	}
 	#杜伦布：亲柏林宣传
@@ -1669,16 +1676,21 @@ DEN_gateway_to_baltic_sea_category = {
 		}
 		remove_effect = {
 			custom_effect_tooltip = "[DVL.GetNameWithFlag]"
-			random_list = {
-				30 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 1 } custom_effect_tooltip = DEN_increase_1_strait_influence }
-				30 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 3 } custom_effect_tooltip = DEN_increase_3_strait_influence }
-				30 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
+			if = {
+				limit = { is_ai = yes }
+				random_list = {
+					30 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 1 } custom_effect_tooltip = DEN_increase_1_strait_influence }
+					30 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 3 } custom_effect_tooltip = DEN_increase_3_strait_influence }
+					30 = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
+				}
 			}
+			else = { add_to_variable = { DEN.DEN_strait_influence_from_DVL = 5 } custom_effect_tooltip = DEN_increase_5_strait_influence }
 			hidden_effect = {
 				clr_country_flag = DEN_promotion_in_progress
 				clr_country_flag = DEN_pro_DVL_propaganda_flag
 				set_country_flag = DEN_pro_DVL_propaganda_flag
 			}
+			DEN_set_difference_var_in_baltic_sea = yes
 		}
 	}
 	#杜伦布正在亲圣杯宣传
@@ -2340,4 +2352,1182 @@ DEN_prospect_for_resources_category = {
 
 DEN_coalition_government_balance_category = {
 	
+}
+
+DEN_Land_of_Magic_and_Gears = {
+	##进攻
+	DEN_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = DVL_war_plan_going_on
+			}
+			or = {
+				if = {
+					limit = { FROM = { tag = TUR } }
+					or = {  ##君宝
+						controls_state = 773
+						any_allied_country = { controls_state = 773 }
+					}
+				}
+				any_home_area_neighbor_country = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				any_allied_country = {
+					any_home_area_neighbor_country = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					is_in_faction = yes
+					is_faction_leader = no
+				}
+				has_global_flag = second_weltkrieg_has_started
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = DVL_war_plan_going_on value = 1 days = 17 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		remove_effect = {
+			clr_country_flag = DVL_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+					not = { tag = DEN }
+					not = { tag = ITA }
+					not = { tag = ALS }
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = { is_in_third_international = yes }
+				factor = 0
+			}
+		}
+	}
+	##请求魔导国援助装备
+	DEN_ask_for_DVL_equipment = {
+		icon = GFX_decision_generic_prepare_civil_war
+		allowed = { tag = DEN }
+		visible = {
+			DVL = {
+				is_faction_leader = yes
+				exists = yes
+				not = { has_war_with = ROOT }
+			}
+		}
+		available = {
+		}
+		cost = 15
+		days_remove = 15
+		days_re_enable = 120
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			DVL = { country_event = { id = denmark.042 } }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				add_political_power = 15
+				gain_DVL_arms_aid = yes
+			}
+		}
+	}
+	##请求魔导国援助工业设施
+	DEN_ask_for_DVL_industrial = {
+		icon = GFX_decision_generic_factory
+		allowed = { tag = DEN }
+		visible = {
+			DVL = {
+				is_faction_leader = yes
+				exists = yes
+				not = { has_war_with = ROOT }
+			}
+		}
+		available = {
+		}
+		cost = 15
+		days_remove = 15
+		days_re_enable = 120
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			DVL = { country_event = { id = denmark.045 } }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				add_political_power = 15
+				random_list = {
+					50 = {
+						random_owned_controlled_state = {
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = {
+								type = industrial_complex
+								level = 1
+								instant_build = yes
+							}
+						}
+					}
+					50 = {
+						random_owned_controlled_state = {
+							add_extra_state_shared_building_slots = 1
+							add_building_construction = {
+								type = arms_factory
+								level = 1
+								instant_build = yes
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	##忠于柏林
+	DEN_loyal_to_berlin = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = { tag = DEN }
+		visible = {
+			DVL = {
+				is_faction_leader = yes
+				exists = yes
+				not = { has_war_with = ROOT }
+				not = { is_in_faction_with = ROOT }
+			}
+		}
+		available = {
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			custom_effect_tooltip = DEN_join_DVL_tt
+			DVL = { country_event = { id = denmark.047 } }
+			custom_effect_tooltip = if_they_accept
+			effect_tooltip = {
+				set_country_flag = is_special_vassals
+				DVL = {
+					set_autonomy = {
+						target = ROOT
+						autonomy_state = autonomy_DVL_special_reichskommissariat
+					}
+				}
+			}
+		}
+	}
+	##请求加入[DVL.Getfactionname]
+	DEN_join_DVL = {
+		icon = GFX_decision_concessions
+		visible = {
+			is_in_faction = no
+			DVL = { is_faction_leader = yes }
+		}
+		fire_only_once = yes
+		cost = 0
+		days_remove = 10
+		available = {
+			NOT = { has_country_flag = FACTION_ASKING }
+			is_in_faction = no
+			is_subject = no
+			DVL = {
+				exists = yes
+				is_faction_leader = yes
+				has_government = ROOT
+			}
+		}
+		complete_effect = {
+			set_country_flag = FACTION_ASKING
+		}
+		remove_effect = {
+			custom_effect_tooltip = DEN_join_DVL_tt
+			clr_country_flag = FACTION_ASKING
+			DVL = {
+				country_event = generic.2002
+			}
+		}
+		ai_will_do = {
+			base = 0
+		}
+	}
+	##重建魔导国
+	DEN_rebuild_DVL = {
+		icon = GFX_decision_CHL_nacista_coup_attempt
+		allowed = { tag = DEN }
+		visible = {
+			DVL = { exists = no }
+		}
+		available = {
+			is_subject = no
+			DVL = { exists = no }
+			has_full_control_of_state = 64
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_cosmetic_tag = DEN_Overlord
+			if = {
+				limit = {
+					ENG = {
+						not = {
+							is_in_faction_with = ROOT
+							is_subject_of = ROOT
+							has_war_with = ROOT
+						}
+						exists = yes
+					}
+				}
+				custom_effect_tooltip = ENG_will_attack_DEN
+			}
+			if = {
+				limit = {
+					SOV = {
+						not = {
+							is_in_faction_with = ROOT
+							is_subject_of = ROOT
+							has_war_with = ROOT
+						}
+						exists = yes
+					}
+				}
+				custom_effect_tooltip = SOV_will_attack_DEN
+			}
+			ENG = {
+				activate_mission = ENGandSOV_Operation_Thunderstorm
+			}
+			SOV = {
+				activate_mission = ENGandSOV_Operation_Thunderstorm
+			}
+			activate_mission = DEN_An_imminent_invasion
+			DVL = {
+				every_character = { set_nationality = ROOT }
+			}
+			custom_effect_tooltip = new_foucs_is_ready
+			mark_focus_tree_layout_dirty = yes
+			every_state = {
+				limit = { has_state_flag = G_GER }
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_50_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			remove_ideas = DVL_CZ2128_idea
+			add_ideas = DVL_Ainz_Ooal_Gown_idea
+			create_faction_from_template = {
+				template = faction_template_Ainz_Ooal_Gown_Federation
+				name = Ainz_Ooal_Gown_Federation
+			}
+			add_research_slot = 1
+		}
+	}
+	DEN_Magic_Crop_Breeding = {  ##魔法作物育种
+		icon = GFX_decision_originium
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Introduce_characteristic_animal_husbandry_of_DVL
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			add_ideas = DEN_Magic_Crop_Breeding_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_Promotion_of_Steam_Powered_Farm_Machinery = {  ##推广蒸汽农机
+		icon = GFX_decision_railroads
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Introduce_characteristic_animal_husbandry_of_DVL
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			add_ideas = DEN_Promotion_of_Steam_Powered_Farm_Machinery_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_Construction_of_Meteorological_Intervention_Towers = {  ##建设气象干预塔
+		icon = GFX_decision_generic_wreckers
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Introduce_characteristic_animal_husbandry_of_DVL
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			add_ideas = DEN_Construction_of_Meteorological_Intervention_Towers_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_introduce_automated_skeleton = {  ##引进魔导国自动化骷髅
+		icon = GFX_decision_eng_blackshirt_march
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_open_borders
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			add_ideas = DEN_introduce_automated_skeleton_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_build_new_production_line = {  ##建设新型产线
+		icon = GFX_decision_generic_factory
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_centralized_mechanical_workshop
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			add_ideas = DEN_build_new_production_line_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_excellent_automaton = {  ##卓越自动机
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_automatic_machinery_supply
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 100
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			add_ideas = DEN_excellent_automaton_idea
+			add_to_variable = {
+				DEN_Land_of_Magic_and_Gears_var = 10
+				tooltip = DEN_Land_of_Magic_and_Gears_var_change_tt
+			}
+			DEN_Land_of_Magic_and_Gears_effect = yes
+			DEN_Land_of_Magic_and_Gears_modifier_effect = yes
+		}
+	}
+	DEN_Suppress_Red_Bandits_decision = {  ##压制赤匪
+		icon = GFX_decision_generic_civil_support
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Suppress_Red_Bandits
+			or = {
+				has_idea = DEN_communist_rebellion_0
+				has_idea = DEN_communist_rebellion_1
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 50
+		days_remove = 30
+		remove_effect = {
+			if = {
+				limit =  {  has_idea = DEN_communist_rebellion_0 }
+				swap_ideas = {
+					remove_idea = DEN_communist_rebellion_0
+					add_idea = DEN_communist_rebellion_1
+				}
+			}
+			else = { 
+				remove_ideas = DEN_communist_rebellion_1 
+				effect_tooltip = {
+					remove_ideas = DEN_Durham_thieves
+				}
+				hidden_effect = {
+					remove_ideas = DEN_Durham_thieves
+					remove_ideas = DEN_Durham_thieves2
+					remove_ideas = DEN_Durham_thieves3
+					remove_ideas = DEN_Durham_thieves4
+				}
+			}
+		}
+	}
+	DEN_Dealing_with_German_pie_decision = {  ##处理德国派
+		icon = GFX_decision_generic_civil_support
+		allowed = {
+		}
+		visible = {
+			has_completed_focus = DEN_Dealing_with_German_pie
+			or = {
+				has_idea = DEN_germany_rebellion_0
+				has_idea = DEN_germany_rebellion_1
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 50
+		days_remove = 30
+		remove_effect = {
+			if = {
+				limit =  {  has_idea = DEN_germany_rebellion_0 }
+				swap_ideas = {
+					remove_idea = DEN_germany_rebellion_0
+					add_idea = DEN_germany_rebellion_1
+				}
+			}
+			else = { remove_ideas = DEN_germany_rebellion_1 }
+		}
+	}
+}
+
+##苏德冲突
+ENGandSOV_DEN_conflict = {
+	ENGandSOV_Operation_Thunderstorm = {
+		icon = GFX_decision_category_SOV_civil_puppet_interaction
+		available = {
+			always = no
+		}
+		priority = 10
+		days_mission_timeout = 1095
+		fire_only_once = yes
+		activation = {
+			always = no
+		}
+		visible = {
+			or = {
+				tag = SOV
+				tag = ENG
+			}
+			is_subject = no
+		}
+		cancel_trigger = {
+			has_war_with = DEN
+		}
+		is_good = no
+		timeout_effect = {
+			add_timed_idea = {
+				idea = ENGandSOV_Operation_Thunderstormidea
+				days = 180
+			}
+			if = {
+				limit = {
+					DEN = {
+						exists = yes
+					}
+				}
+				declare_war_on = {
+					target = DEN
+					type = liberate_wargoal
+				}
+			}
+		}
+		war_with_on_timeout = DEN
+		complete_effect = {
+			if = {
+				limit = {
+					DEN = {
+						exists = yes
+					}
+				}
+				DEN = { 
+					THIS_country_is_defender_and_ROOT_is_accacker = yes
+				}
+			}
+		}
+	}
+	DEN_An_imminent_invasion = {
+		icon = GFX_decision_generic_break_treaty
+		available = {
+			always = no
+		}
+		priority = 10
+		days_mission_timeout = 1095
+		fire_only_once = yes
+		is_good = no
+		activation = {
+			always = no
+		}
+		visible = {
+			tag = DEN
+		}
+		cancel_trigger = {
+			and = {
+				or = {
+					SOV = {
+						exists = no
+						is_subject_of = ROOT
+						has_war_with = SOV
+					}
+				}
+				or = {
+					ENG = {
+						exists = no
+						is_subject_of = ROOT
+						has_war_with = ENG
+					}
+				}
+			}
+		}
+		timeout_effect = {
+			effect_tooltip = {
+				SOV = {
+					add_timed_idea = {
+						idea = ENGandSOV_Operation_Thunderstormidea
+						days = 180
+					}
+					if = {
+						limit = {
+							DEN = {
+								not = {
+									is_in_faction_with = SOV
+								}
+								exists = yes
+							}
+						}
+						declare_war_on = {
+							target = DEN
+							type = liberate_wargoal
+						}
+					}
+				}
+				ENG = {
+					add_timed_idea = {
+						idea = ENGandSOV_Operation_Thunderstormidea
+						days = 180
+					}
+					if = {
+						limit = {
+							DEN = {
+								not = {
+									is_in_faction_with = SOV
+								}
+								exists = yes
+							}
+						}
+						declare_war_on = {
+							target = DEN
+							type = liberate_wargoal
+						}
+					}
+				}
+			}
+		}
+	}
+}
+DEN_steamtank_secondary_gun = {
+	DEN_get_secondary_gun_tank_magic_howitzer_1 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = magic_artillery2 }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_magic_howitzer_1_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_magic_howitzer_2 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = magic_artillery4 }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_magic_howitzer_2_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_magic_howitzer_3 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = magic_artillery6 }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_magic_howitzer_3_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_anti_air_cannon_3 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = antiair5 }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_anti_air_cannon_3_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_high_velocity_cannon_2 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = antitank3
+				has_tech = antitank4
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_high_velocity_cannon_2_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_high_velocity_cannon_3 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = antitank5 }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_high_velocity_cannon_3_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_high_velocity_cannon_4 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = antiair_c
+				has_tech = antiair_d
+				has_tech = antitank_c
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_high_velocity_cannon_4_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_medium_cannon = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = artillery1
+				has_tech = antitank1
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_medium_cannon_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_medium_cannon_2 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = artillery4
+				has_tech = antitank3
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_medium_cannon_2_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_medium_cannon_3 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = artillery_a
+				has_tech = antitank5
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_medium_cannon_3_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_medium_cannon_4 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = artillery_d
+				has_tech = antiair_c
+				has_tech = antitank_c
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_medium_cannon_4_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_medium_howitzer = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = interwar_artillery }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_medium_howitzer_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_medium_howitzer_2 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = artillery1
+				has_tech = artillery3
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_medium_howitzer_2_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_rocket_launcher = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = rocket_artillery }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_rocket_launcher_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_rocket_launcher_2 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = rocket_artillery4 }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_rocket_launcher_2_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_heavy_cannon = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = interwar_antiair
+				has_tech = interwar_antitank
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_heavy_cannon_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_heavy_cannon_2 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = antiair3
+				has_tech = antitank2
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_heavy_cannon_2_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_heavy_cannon_3 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = antiair5
+				has_tech = antitank5
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_heavy_cannon_3_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_heavy_cannon_4 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = {
+			or = {
+				has_tech = antiair_c
+				has_tech = antitank_c
+			}
+		}
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_heavy_cannon_4_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_heavy_howitzer = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = artillery5 }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_heavy_howitzer_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_heavy_howitzer_2 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = artillery_a }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_heavy_howitzer_2_tech = 1
+				popup = no
+			}
+		}
+	}
+	DEN_get_secondary_gun_tank_heavy_howitzer_3 = {
+		icon = GFX_decision_generic_tank
+		allowed = {
+		}
+		visible = { has_tech = artillery_c }
+		available = {
+		}
+		ai_will_do = {
+			base = 100
+		}
+		cost = 0
+		days_remove = 0
+		fire_only_once = yes
+		complete_effect = {
+			set_technology = {
+				secondary_gun_tank_heavy_howitzer_3_tech = 1
+				popup = no
+			}
+		}
+	}
 }
