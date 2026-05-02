@@ -14859,9 +14859,9 @@ focus_tree = {
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
-                add_ideas = {
-                    LHS_a3
-                }
+            add_ideas = {
+                LHS_a3
+            }
             custom_effect_tooltip = LHS_abab_tt
             add_to_variable = {
                 LHS_lqjj_supply_consumption_factor = -0.1
@@ -14896,9 +14896,9 @@ focus_tree = {
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
-                add_ideas = {
-                    LHS_a4
-                }
+            add_ideas = {
+                LHS_a4
+            }
         }
     }
 
@@ -15149,9 +15149,9 @@ focus_tree = {
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
-                add_ideas = {
-                    LHS_a8
-                }
+            add_ideas = {
+                LHS_a8
+            }
         }
     }
 
@@ -15182,9 +15182,9 @@ focus_tree = {
                 photo_reconnaisance = 1
                 popup = yes
             }
-                add_ideas = {
-                    LHS_a9
-                }
+            add_ideas = {
+                LHS_a9
+            }
             custom_effect_tooltip = LHS_abab_tt
             add_to_variable = {
                 LHS_abab_civilian_intel_factor = 0.1
@@ -15239,16 +15239,16 @@ focus_tree = {
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
-                unlock_tactic = tactic_human_wave_tactics
-                custom_effect_tooltip = LHS_abab_tt
-                add_to_variable = {
-                    LHS_abab_land_reinforce_rate = 0.05
-                    tooltip = land_reinforce_rate_tt
-                }
-                add_to_variable = {
-                    LHS_abab_initiative_factor = 0.2
-                    tooltip = initiative_factor_tt
-                }
+            unlock_tactic = tactic_human_wave_tactics
+            custom_effect_tooltip = LHS_abab_tt
+            add_to_variable = {
+                LHS_abab_land_reinforce_rate = 0.05
+                tooltip = land_reinforce_rate_tt
+            }
+            add_to_variable = {
+                LHS_abab_initiative_factor = 0.2
+                tooltip = initiative_factor_tt
+            }
         }
     }
 
@@ -15303,11 +15303,11 @@ focus_tree = {
                 custom_effect_tooltip = LHS_Steel_With_Heartbeat_tt1
                 set_country_flag = LHS_steel_heartbeat1
                 hidden_effect = {
-				    uncomplete_national_focus = {
-				    	focus = LHS_Steel_With_Heartbeat
-				    	uncomplete_children = yes
-				    	refund_political_power = no
-				    }
+                    uncomplete_national_focus = {
+                        focus = LHS_Steel_With_Heartbeat
+                        uncomplete_children = yes
+                        refund_political_power = no
+                    }
                 }
             }
             else_if = {
@@ -15333,18 +15333,18 @@ focus_tree = {
                 }
                 custom_effect_tooltip = LHS_Steel_With_Heartbeat_tt2
                 hidden_effect = {
-				    uncomplete_national_focus = {
-				    	focus = LHS_Steel_With_Heartbeat
-				    	uncomplete_children = yes
-				    	refund_political_power = no
-				    }
+                    uncomplete_national_focus = {
+                        focus = LHS_Steel_With_Heartbeat
+                        uncomplete_children = yes
+                        refund_political_power = no
+                    }
                 }
             }
         }
     }
 
     #木棉经济线
-    # 堵住漏水的桶
+    # 先补锅，再添柴
     focus = {
         id = LHS_Patch_The_Economic_Leaks
         icon = GFX_Patch_The_Economic_Leaks
@@ -15354,10 +15354,28 @@ focus_tree = {
         prerequisite = { focus = LHS_kuangwu }
         allow_branch = { has_country_flag = LHS_mumian2 }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            # 初始化所有变量为0
+            set_variable = { kapok_infrastructure = 0 }
+            set_variable = { kapok_welfare = 0 }
+            set_variable = { kapok_education = 0 }
+            set_variable = { kapok_industry = 0 }
+            set_variable = { kapok_balance_penalty = 0 }
+            add_dynamic_modifier = {
+                modifier = LHS_kapok_economic_miracle
+            }
+            # 基建+5
+            add_to_variable = { kapok_infrastructure = 5 }
+            LHS_calculate_infrastructure_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_patch_leaks_tt
+        }
     }
 
-    # 翻越安第斯的电网
+    #让大河翻山
     focus = {
         id = LHS_Grid_Over_The_Andes
         icon = GFX_Grid_Over_The_Andes
@@ -15366,10 +15384,30 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Patch_The_Economic_Leaks }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_infrastructure = 5 }
+            add_to_variable = { kapok_industry = 3 }  # 能源也算产业基础
+            LHS_calculate_infrastructure_bonus = yes
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            random_owned_controlled_state = {
+                limit = { has_state_flag = lhs_main_power_grid }
+                add_extra_state_shared_building_slots = 2
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 1
+                    instant_build = yes
+                }
+            }
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_grid_andes_tt
+        }
     }
 
-    # 这一口鲜甜
+    #锁住我们的夏日
     focus = {
         id = LHS_Tropical_Preservation
         icon = GFX_Tropical_Preservation
@@ -15378,10 +15416,23 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Patch_The_Economic_Leaks }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_industry = 5 }  # 食品加工业
+            add_to_variable = { kapok_welfare = 3 }  # 吃得好=福利
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            # 额外：出口收入
+            add_offsite_building = { type = industrial_complex level = 1 }
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_tropical_preservation_tt
+        }
     }
 
-    # 红泥标准
+    # 自家扳手拧自家螺丝
     focus = {
         id = LHS_Standard_Of_The_Red_Clay
         icon = GFX_Standard_Of_The_Red_Clay
@@ -15390,10 +15441,20 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Patch_The_Economic_Leaks }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_industry = 5 }  # 工业标准化
+            add_to_variable = { kapok_infrastructure = 3 }  # 互换性也算基建
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_infrastructure_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_red_clay_standard_tt
+        }
     }
 
-    # 棉花里的尊严
+    # 先织衣，再铸剑
     focus = {
         id = LHS_Cotton_And_Dignity
         icon = GFX_Cotton_And_Dignity
@@ -15402,10 +15463,22 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Grid_Over_The_Andes }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_welfare = 5 }  # 轻工业=民生
+            add_to_variable = { kapok_industry = 3 }
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            add_stability = 0.1
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_cotton_dignity_tt
+        }
     }
 
-    # 先盖学校，再起高炉
+    # 先磨人，再炼钢
     focus = {
         id = LHS_Schools_Before_Foundries
         icon = GFX_Schools_Before_Foundries
@@ -15414,10 +15487,20 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Grid_Over_The_Andes focus = LHS_Standard_Of_The_Red_Clay }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_education = 10 }  # 教育投资
+            LHS_calculate_education_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            add_research_slot = 1
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_schools_foundries_tt
+        }
     }
 
-    # 雨林里的听诊器
+    # 在蚊虫堆里抢人命
     focus = {
         id = LHS_Clinic_In_Jungle
         icon = GFX_Clinic_In_Jungle
@@ -15426,10 +15509,22 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Standard_Of_The_Red_Clay focus = LHS_Tropical_Preservation }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_welfare = 5 }  # 医疗卫生
+            add_to_variable = { kapok_education = 3 }  # 医学也是科学
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_education_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            add_manpower = 100000
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_clinic_jungle_tt
+        }
     }
 
-    # 糖分是最好的燃料
+    # 人是铁，饭是钢
     focus = {
         id = LHS_Sugar_Is_Fuel
         icon = GFX_Sugar_Is_Fuel
@@ -15438,10 +15533,22 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Tropical_Preservation }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_stability = 0.05
+            add_war_support = 0.05
+            add_to_variable = { kapok_welfare = 5 }  # 营养改善
+            add_to_variable = { kapok_industry = 5 }  # 食品工业
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_sugar_fuel_tt
+        }
     }
 
-    # 海湾里的巨兽
+    # 教铁龙下海
     focus = {
         id = LHS_The_Shipyard_In_Bay
         icon = GFX_The_Shipyard_In_Bay
@@ -15450,10 +15557,31 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Cotton_And_Dignity }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_industry = 7 }  # 造船
+            add_to_variable = { kapok_education = 5 }  # 需要高技术
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_education_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            # 额外：造船厂
+            random_owned_controlled_state = {
+                limit = { is_coastal = yes }
+                add_extra_state_shared_building_slots = 3
+                add_building_construction = {
+                    type = dockyard
+                    level = 3
+                    instant_build = yes
+                }
+            }
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_shipyard_bay_tt
+        }
     }
 
-    # 收回大地的血脉
+    # 把大地攥紧
     focus = {
         id = LHS_Nationalize_The_Veins
         icon = GFX_Nationalize_The_Veins
@@ -15462,7 +15590,34 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Schools_Before_Foundries }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_industry = 5 }
+            add_to_variable = { kapok_infrastructure = 5 }
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_infrastructure_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            every_state = {
+                limit = {
+                    OR = {
+                        is_core_of = PAM
+                        is_core_of = PAU
+                        is_core_of = CHL
+                    }
+                }
+                add_resource = {
+                    type = steel
+                    amount = 1
+                }
+                add_resource = {
+                    type = coal
+                    amount = 1
+                }
+            }
+            custom_effect_tooltip = LHS_nationalize_veins_tt
+        }
     }
 
     # 卖金子不如卖首饰
@@ -15474,10 +15629,28 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Schools_Before_Foundries focus = LHS_Clinic_In_Jungle }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_industry = 8 }  # 产业链升级
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            add_offsite_building = { type = industrial_complex level = 2 }
+            capital_scope = {
+                add_extra_state_shared_building_slots = 2
+                add_building_construction = {
+                    type = industrial_complex
+                    level = 2
+                    instant_build = yes
+                }
+            }
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_refining_not_selling_tt
+        }
     }
 
-    # 不再求人的油箱
+    # 不再看人脸色的油箱
     focus = {
         id = LHS_Oil_Independence
         icon = GFX_Oil_Independence
@@ -15486,10 +15659,37 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Clinic_In_Jungle }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+             random_owned_controlled_state = {
+                prioritize = { 12798 }
+                add_extra_state_shared_building_slots = 1
+                add_building_construction = {
+                    type = synthetic_refinery
+                    level = 1
+                }
+            }
+            random_owned_controlled_state = {
+                prioritize = { 8199 }
+                add_extra_state_shared_building_slots = 1
+                add_building_construction = {
+                    type = synthetic_refinery
+                    level = 1
+                }
+            }
+            add_to_variable = { kapok_industry = 5 }
+            add_to_variable = { kapok_infrastructure = 5 }
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_infrastructure_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_oil_independence_tt
+
+        }
     }
 
-    # 仰望星空的权利
+    # 我们有权仰望星空
     focus = {
         id = LHS_Letters_To_Stars
         icon = GFX_Letters_To_Stars
@@ -15498,10 +15698,27 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Sugar_Is_Fuel }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_education = 8 }  # 基础科研
+            add_to_variable = { kapok_welfare = 5 }  # 精神福利
+            LHS_calculate_education_bonus = yes
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            add_tech_bonus = {
+                name = LHS_star_observation
+                bonus = 1.25
+                uses = 5
+                category = electronics
+            }
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_letters_stars_tt
+        }
     }
 
-    # 能耕地也能冲锋
+    # 闲时耕地，战时披甲
     focus = {
         id = LHS_Dual_Use_Tractors
         icon = GFX_Dual_Use_Tractors
@@ -15510,10 +15727,21 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_The_Shipyard_In_Bay focus = LHS_Nationalize_The_Veins }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_industry = 7 }  # 军民两用
+            add_to_variable = { kapok_infrastructure = 5 }
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_infrastructure_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_dual_use_tractors_tt
+        }
     }
 
-    # 南十字星市场
+    # 南风知暖意
     focus = {
         id = LHS_Market_Of_The_South
         icon = GFX_Market_Of_The_South
@@ -15522,10 +15750,22 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Oil_Independence focus = LHS_Letters_To_Stars }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_industry = 7 }  # 贸易网络
+            add_to_variable = { kapok_welfare = 5 }  # 贸易繁荣=福利
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_balance_bonus = yes
+
+            add_offsite_building = { type = industrial_complex level = 3 }
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_market_south_tt
+        }
     }
 
-    # 打不断的血管
+    # 心连着心，血融着血
     focus = {
         id = LHS_The_Unbreakable_Logistics
         icon = GFX_The_Unbreakable_Logistics
@@ -15534,10 +15774,18 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Refining_Not_Selling }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_infrastructure = 10 }  #后勤网络
+            LHS_calculate_infrastructure_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            custom_effect_tooltip = LHS_unbreakable_logistics_tt
+        }
     }
 
-    # 藏富于民
+    # 把钱塞回大伙儿的兜里
     focus = {
         id = LHS_Wealth_In_People
         icon = GFX_Wealth_In_People
@@ -15551,6 +15799,26 @@ focus_tree = {
         }
         relative_position_id = LHS_kuangwu
         completion_reward = {
+            add_to_variable = { kapok_welfare = 15 }  # 终极福利
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            custom_effect_tooltip = LHS_wealth_people_tt
+            # 检查平衡奖励
+            if = {
+                limit = { check_variable = { kapok_balance_penalty < 10 } }
+                add_political_power = 150
+                custom_effect_tooltip = LHS_balance_perfect_tt
+                #民工军工差距<10
+            }
+            else_if = {
+                limit = { check_variable = { kapok_balance_penalty < 20 } }
+                add_political_power = 75
+                custom_effect_tooltip = LHS_balance_good_tt
+                #民工军工差距<20
+            }
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
             country_event = {
                 id = LHS.189
                 hours =  6
@@ -15567,7 +15835,24 @@ focus_tree = {
         cost = 5
         prerequisite = { focus = LHS_Wealth_In_People }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            # 所有指数暴涨
+            add_to_variable = { kapok_infrastructure = 10 }
+            add_to_variable = { kapok_welfare = 10 }
+            add_to_variable = { kapok_education = 10 }
+            add_to_variable = { kapok_industry = 10 }
+
+            LHS_calculate_infrastructure_bonus = yes
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_education_bonus = yes
+            LHS_calculate_industry_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+
+            custom_effect_tooltip = LHS_kapok_burns_red_tt
+        }
     }
 
     #今天不干活啦，放假！
@@ -15583,7 +15868,32 @@ focus_tree = {
             has_completed_focus = LHS_Goodnight_Tomorrow
         }
         relative_position_id = LHS_kuangwu
-        completion_reward = { }
+        completion_reward = {
+            add_to_variable = { kapok_welfare = 20 }  # 超模
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_balance_bonus = yes
+            custom_effect_tooltip = LHS_carnival_tt
+            # 平衡奖励最终检查
+            if = {
+                limit = { check_variable = { kapok_balance_penalty < 5 } }
+                add_political_power = 300
+                add_stability = 0.10
+                custom_effect_tooltip = LHS_carnival_perfect_tt
+            }
+            LHS_calculate_bottleneck = yes
+            LHS_calculate_synergy_bonus = yes
+            LHS_check_milestones = yes
+            if = {
+                limit = {
+                    check_variable = { kapok_balance_penalty < 5 }
+                    check_variable = { kapok_infrastructure > 59 }
+                    check_variable = { kapok_welfare > 59 }
+                    check_variable = { kapok_education > 59 }
+                    check_variable = { kapok_industry > 59 }
+                }
+                country_event = { id = LHS.210 days = 6 }
+            }
+        }
     }
     #禾果军事线
     #我们曾是这样战斗的
