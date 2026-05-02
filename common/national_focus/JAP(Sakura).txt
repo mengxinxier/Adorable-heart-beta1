@@ -146,7 +146,7 @@ focus_tree = {
 				add_extra_state_shared_building_slots = 4
 				add_building_construction = {
 					type = industrial_complex
-					level = 2
+					level = 4
 					instant_build = yes
 				}
 			}
@@ -185,7 +185,7 @@ focus_tree = {
 				add_extra_state_shared_building_slots = 2
 				add_building_construction = {
 					type = arms_factory
-					level = 1
+					level = 2
 					instant_build = yes
 				}
 			}
@@ -724,7 +724,7 @@ focus_tree = {
 		x = 3
 		y = 1
 		relative_position_id = JAP_7
-		cost = 10
+		cost = 6
 		prerequisite = {
 			focus = JAP_5
 		}
@@ -6169,80 +6169,56 @@ focus_tree = {
 			not = { has_war_with = DPR }
 		}
 		bypass = {
-			OR = {
-				AND = {
-					608 = {
-						NOT = {
-							is_controlled_by = CHI
-							is_controlled_by = PRC
-							is_controlled_by = ROC
-						}
-					}
-					609 = {
-						NOT = {
-							is_controlled_by = CHI
-							is_controlled_by = PRC
-							is_controlled_by = ROC
-						}
-					}
-					597 = {
-						NOT = {
-							is_controlled_by = CHI
-							is_controlled_by = PRC
-							is_controlled_by = ROC
-						}
-					}
-					614 = {
-						NOT = {
-							is_controlled_by = CHI
-							is_controlled_by = PRC
-							is_controlled_by = ROC
-						}
-					}
-				}
-				has_war_with = CHI
-			}
+			#OR = {
+			#	AND = {
+			#		608 = {
+			#			NOT = {
+			#				is_controlled_by = CHI
+			#				is_controlled_by = PRC
+			#				is_controlled_by = ROC
+			#			}
+			#		}
+			#		609 = {
+			#			NOT = {
+			#				is_controlled_by = CHI
+			#				is_controlled_by = PRC
+			#				is_controlled_by = ROC
+			#			}
+			#		}
+			#		597 = {
+			#			NOT = {
+			#				is_controlled_by = CHI
+			#				is_controlled_by = PRC
+			#				is_controlled_by = ROC
+			#			}
+			#		}
+			#		614 = {
+			#			NOT = {
+			#				is_controlled_by = CHI
+			#				is_controlled_by = PRC
+			#				is_controlled_by = ROC
+			#			}
+			#		}
+			#	}
+			#	has_war_with = CHI
+			#}
 		}
 		will_lead_to_war_with = CHI
 		will_lead_to_war_with = ROC
 		will_lead_to_war_with = PRC
 		completion_reward = {
-			if = {
+			every_other_country = {
 				limit = {
-					CHI = {
-						controls_state = 608
-					}
+					controls_state = 608
 				}
-				CHI = {
-					country_event = jap.100
-				}
+				country_event = jap.100
 			}
 			if = {
 				limit = {
-					ROC = {
-						controls_state = 608
-					}
+					has_idea = JAP_sywh
 				}
-				ROC = {
-					country_event = jap.100
-				}
-			}
-			if = {
-				limit = {
-					PRC = {
-						controls_state = 608
-					}
-				}
-				PRC = {
-					country_event = jap.100
-				}
-			}
-			if = {
-			limit = {
-			has_idea = JAP_sywh
-			}
-			custom_effect_tooltip = JAP_ewaizengyi_tips
-			country_event = { id = jap.89 days = 1 }
+				custom_effect_tooltip = JAP_ewaizengyi_tips
+				country_event = { id = jap.89 days = 1 }
 			}
 		}
 	}
@@ -6274,24 +6250,28 @@ focus_tree = {
 				size > 1999999
 			}
 			OR = {
-			has_idea = JAP_bjl
-			if = {
-			or = {
-			CHI = { is_subject_of = JAP }
-			not = { country_exists = CHI }
-			}
-			or = {
-			PRC = { is_subject_of = JAP }
-			not = { country_exists = PRC }
-			}
-			or = {
-			ROC = { is_subject_of = JAP }
-			not = { country_exists = ROC }
-			}
-			not = { has_war_with = ENG }
-			not = { has_war_with = USA }
-			not = { has_war_with = NGD }
-			}
+				has_idea = JAP_bjl
+				AND = {
+					OR = {
+						CHI = { is_subject_of = JAP }
+						not = { country_exists = CHI }
+					}
+					OR = {
+						PRC = { is_subject_of = JAP }
+						not = { country_exists = PRC }
+					}
+					OR = {
+						ROC = { is_subject_of = JAP }
+						not = { country_exists = ROC }
+					}
+					OR = {
+						MON = { is_subject_of = JAP }
+						not = { country_exists = MON }
+					}
+					not = { has_war_with = ENG }
+					not = { has_war_with = USA }
+					not = { has_war_with = NGD }
+				}
 			}
 			not = { has_country_flag = JAP_Sakura_out }
 			not = { has_war_with = RJE }
@@ -6870,12 +6850,14 @@ focus_tree = {
 			clr_country_flag = SOV_paranoia_do_not_cancel_focus_flag
 			set_cosmetic_tag = JAP_exemire
 			custom_effect_tooltip = JAP_hexinhuayazhoudikuai
-			every_state = {
-			limit = {
-			is_on_continent = asia
-			is_controlled_by = JAP
-			}
-			add_core_of = JAP
+			every_controlled_state = {
+				limit = {
+					or = {
+						is_on_continent = asia
+						is_on_continent = india #南亚
+					}
+				}
+				add_core_of = JAP
 			}
 			
 			custom_effect_tooltip = JAP_italian_hegemony_subjects_tt
@@ -7438,7 +7420,7 @@ focus_tree = {
 				add_extra_state_shared_building_slots = 4
 				add_building_construction = {
 					type = dockyard
-					level = 2
+					level = 4
 					instant_build = yes
 				}
 			}
@@ -7502,6 +7484,14 @@ focus_tree = {
 					instant_build = yes
 				}
 			}
+			random_core_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 	}
 	
@@ -7510,7 +7500,7 @@ focus_tree = {
 		icon = GFX_goal_stock_exchange
 		x = 0
 		y = 1
-		cost = 10
+		cost = 6
 		ai_will_do = {
 			factor = 2
 		}
@@ -7543,7 +7533,7 @@ focus_tree = {
 		icon = GFX_goal_generic_construction_tools
 		x = -1
 		y = 1
-		cost = 8
+		cost = 10
 		ai_will_do = {
 			factor = 100
 		}
@@ -7571,6 +7561,14 @@ focus_tree = {
 				}
 			}
 			536 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			531 = {
 				add_extra_state_shared_building_slots = 2
 				add_building_construction = {
 					type = industrial_complex
@@ -7854,7 +7852,7 @@ focus_tree = {
 		icon = GFX_goal_JAP_Army
 		x = -3
 		y = 3
-		cost = 5
+		cost = 3
 		relative_position_id = JAP_new105
 		ai_will_do = {
 			factor = 10
@@ -7896,7 +7894,7 @@ focus_tree = {
 		icon = GFX_goal_JAP_Mobilize_Daitoa_Seisen
 		x = -2
 		y = 1
-		cost = 5
+		cost = 4
 		prerequisite = { focus = JAP_new110 }
 		relative_position_id = JAP_new110
 		mutually_exclusive = { focus = JAP_new112 }
@@ -7920,7 +7918,7 @@ focus_tree = {
 		icon = GFX_goal_JAP_Uphold_Masahiges_Loyalty
 		x = 2
 		y = 1
-		cost = 5
+		cost = 4
 		prerequisite = { focus = JAP_new110 }
 		relative_position_id = JAP_new110
 		mutually_exclusive = { focus = JAP_new111 }
@@ -8546,7 +8544,7 @@ focus_tree = {
 		icon = GFX_goal_JAP_Army_Air
 		x = 2
 		y = 1
-		cost = 7
+		cost = 5
 		prerequisite = { focus = JAP_new118 }
 		prerequisite = { focus = JAP_new132 }
 		relative_position_id = JAP_new118
@@ -8804,7 +8802,7 @@ focus_tree = {
 		icon = GFX_goal_JAP_expand_the_snlf
 		x = 13
 		y = 0
-		cost = 5
+		cost = 3
 		relative_position_id = JAP_new110
 		ai_will_do = {
 			factor = 5
@@ -9054,7 +9052,7 @@ focus_tree = {
 		icon = GFX_focus_generic_destroyer
 		x = 1
 		y = 1
-		cost = 8
+		cost = 5
 		prerequisite = { focus = JAP_new130 }
 		prerequisite = { focus = JAP_new131 }
 		relative_position_id = JAP_new130
@@ -9237,7 +9235,7 @@ focus_tree = {
 		icon = GFX_focus_generic_navy_research_bonus
 		x = 1
 		y = 1
-		cost = 10
+		cost = 5
 		prerequisite = { focus = JAP_new133 }
 		prerequisite = { focus = JAP_new134 }
 		relative_position_id = JAP_new133
@@ -9282,7 +9280,7 @@ focus_tree = {
 		icon = GFX_focus_GER_graf_zeppelin
 		x = 1
 		y = 1
-		cost = 7
+		cost = 6
 		prerequisite = { focus = JAP_new135 }
 		prerequisite = { focus = JAP_new134 }
 		relative_position_id = JAP_new134
@@ -9645,7 +9643,7 @@ focus_tree = {
 		icon = GFX_focus_jinbuli
 		x = 1
 		y = 1
-		cost = 10
+		cost = 5
 		prerequisite = { focus = JAP_new139 }
 		prerequisite = { focus = JAP_new140 }
 		relative_position_id = JAP_new139
@@ -10221,7 +10219,7 @@ focus_tree = {
 		x = 0
 		y = 1
 		relative_position_id = JAP_9
-		cost = 10
+		cost = 5
 		prerequisite = {
 			focus = JAP_9
 		}
