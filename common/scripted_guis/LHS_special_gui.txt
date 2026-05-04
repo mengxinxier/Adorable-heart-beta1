@@ -1,0 +1,206 @@
+#红泥账本
+scripted_gui = {
+    Red_Ledger_window = {
+        window_name = "Red_Ledger_window"
+        visible = {
+            tag = LHS
+            has_dynamic_modifier = LHS_kapok_economic_miracle
+            has_country_flag = Red_Ledger_window_visible
+        }
+        properties = {
+            Red_Ledger_balance = {
+                frame = Red_Ledger_balance_var
+            }
+        }
+        triggers = {
+            Red_Ledger_balance_click_enabled = {
+            }
+            Red_Ledger_point_allocation_alert_visible = {
+                not = { has_country_flag = Red_Ledger_point_allocation_alert_unvisible }
+            }
+        }
+        effects = {
+            Red_Ledger_balance_click = {
+            }
+            Red_Ledger_point_allocation_button_click = {
+                if = {
+                    limit = {
+                        has_country_flag = Red_Ledger_point_allocation_window_visible
+                    }
+                    clr_country_flag = Red_Ledger_point_allocation_window_visible
+                }
+                else = {
+                    set_country_flag = Red_Ledger_point_allocation_window_visible
+                }
+                if = {
+                    limit = {
+                        not = { has_country_flag = Red_Ledger_point_allocation_alert_unvisible }
+                    }
+                    set_country_flag = Red_Ledger_point_allocation_alert_unvisible
+                }
+            }
+            close_button_click = {
+                if = {
+                    limit = {
+                        has_country_flag = Red_Ledger_window_visible
+                    }
+                    clr_country_flag = Red_Ledger_window_visible
+                }
+                else = {
+                    set_country_flag = Red_Ledger_window_visible
+                }
+            }
+        }
+    }
+    Red_Ledger_point_allocation_window = {
+        context_type = player_context
+        parent_window_name = Red_Ledger_container
+        window_name = "Red_Ledger_point_allocation_window"
+        visible = {
+            tag = LHS
+            has_country_flag = Red_Ledger_point_allocation_window_visible
+        }
+        triggers = {
+            Red_Ledger_infrastructure_buildings_bonus_up_button_click_enabled = {
+                check_variable = { kapok_generic_point > 0 }
+            }
+            Red_Ledger_welfare_consumer_goods_penalty_up_button_click_enabled = {
+                check_variable = { kapok_generic_point > 0 }
+            }
+            Red_Ledger_education_research_bonus_up_button_click_enabled = {
+                check_variable = { kapok_generic_point > 0 }
+            }
+            Red_Ledger_industry_output_bonus_up_button_click_enabled = {
+                check_variable = { kapok_generic_point > 0 }
+            }
+
+            Red_Ledger_infrastructure_buildings_bonus_down_button_click_enabled = {
+                check_variable = { kapok_infrastructure > 0 }
+            }
+            Red_Ledger_welfare_consumer_goods_penalty_down_button_click_enabled = {
+                check_variable = { kapok_welfare > 0 }
+            }
+            Red_Ledger_education_research_bonus_down_button_click_enabled = {
+                check_variable = { kapok_education > 0 }
+            }
+            Red_Ledger_industry_output_bonus_down_button_click_enabled = {
+                check_variable = { kapok_industry > 0 }
+            }
+        }
+        effects = {
+            Red_Ledger_infrastructure_buildings_bonus_up_button_click = {
+                add_to_variable = { kapok_generic_point = -1 }
+                add_to_variable = { kapok_infrastructure = 1 }
+                LHS_calculate_infrastructure_bonus = yes
+            }
+            Red_Ledger_infrastructure_buildings_bonus_down_button_click = {
+                add_to_variable = { kapok_generic_point = 1 }
+                add_to_variable = { kapok_infrastructure = -1 }
+                add_dynamic_modifier = {
+                            modifier = LHS_reallocation_chaos
+                            days = 90
+                        }
+                add_to_variable = { LHS_reallocation_chaos = -0.01}
+				add_to_variable = { LHS_reallocation_chaos2 = 0.01}
+                LHS_calculate_infrastructure_bonus = yes
+            }
+            Red_Ledger_welfare_consumer_goods_penalty_up_button_click = {
+                add_to_variable = { kapok_generic_point = -1 }
+                add_to_variable = { kapok_welfare = 1 }
+                LHS_calculate_welfare_bonus = yes
+            }
+            Red_Ledger_welfare_consumer_goods_penalty_down_button_click = {
+                add_to_variable = { kapok_generic_point = 1 }
+                add_to_variable = { kapok_welfare = -1 }
+                add_dynamic_modifier = {
+                            modifier = LHS_reallocation_chaos
+                            days = 90
+                        }
+
+                add_to_variable = { LHS_reallocation_chaos = -0.01}
+				add_to_variable = { LHS_reallocation_chaos2 = 0.01}
+                LHS_calculate_infrastructure_bonus = yes
+                LHS_calculate_welfare_bonus = yes
+            }
+            Red_Ledger_education_research_bonus_up_button_click = {
+                add_to_variable = { kapok_generic_point = -1 }
+                add_to_variable = { kapok_education = 1 }
+                LHS_calculate_education_bonus = yes
+            }
+            Red_Ledger_education_research_bonus_down_button_click = {
+                add_to_variable = { kapok_generic_point = 1 }
+                add_to_variable = { kapok_education = -1 }
+                add_dynamic_modifier = {
+                            modifier = LHS_reallocation_chaos
+                            days = 90
+                        }
+                add_to_variable = { LHS_reallocation_chaos = -0.01}
+				add_to_variable = { LHS_reallocation_chaos2 = 0.01}
+                LHS_calculate_infrastructure_bonus = yes
+                LHS_calculate_education_bonus = yes
+            }
+            Red_Ledger_industry_output_bonus_up_button_click = {
+                add_to_variable = { kapok_generic_point = -1 }
+                add_to_variable = { kapok_industry = 1 }
+                LHS_calculate_industry_bonus = yes
+            }
+            Red_Ledger_industry_output_bonus_down_button_click = {
+                add_to_variable = { kapok_generic_point = 1 }
+                add_to_variable = { kapok_industry = -1 }
+                add_dynamic_modifier = {
+                            modifier = LHS_reallocation_chaos
+                            days = 90
+                        }
+                add_to_variable = { LHS_reallocation_chaos = -0.01}
+				add_to_variable = { LHS_reallocation_chaos2 = 0.01}
+                LHS_calculate_infrastructure_bonus = yes
+                LHS_calculate_industry_bonus = yes
+            }
+            close_button_click = {
+                if = {
+                    limit = {
+                        has_country_flag = Red_Ledger_point_allocation_window_visible
+                    }
+                    clr_country_flag = Red_Ledger_point_allocation_window_visible
+                }
+                else = {
+                    set_country_flag = Red_Ledger_point_allocation_window_visible
+                }
+            }
+        }
+    }
+    Red_Ledger_open_button_window = {
+        window_name = "Red_Ledger_open_button_window"
+        parent_window_token = politics_tab
+        visible = {
+            tag = LHS
+            has_dynamic_modifier = LHS_kapok_economic_miracle
+        }
+        properties = {
+        }
+        effects = {
+            Red_Ledger_open_button_click = {
+                if = {
+                    limit = {
+                        has_country_flag = Red_Ledger_window_visible
+                    }
+                    clr_country_flag = Red_Ledger_window_visible
+                }
+                else = {
+                    set_country_flag = Red_Ledger_window_visible
+                }
+            }
+        }
+    }
+}
+
+#种树
+scripted_gui = {
+    LHS_farm_window = {
+        window_name = "LHS_farm_window"
+        visible = {
+            tag = LHS
+            always = no
+        }
+    }
+}
