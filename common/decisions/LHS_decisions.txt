@@ -5692,7 +5692,9 @@ LHS_luhuoweiji = {
             TAG = LHS
             has_country_flag = payyihe
             has_war_with = PAY
-
+            not = {
+                has_country_flag = LHS_mumian2
+            }
         }
 
         available = {
@@ -6672,6 +6674,100 @@ LHS_hongni_jueyi_cate = {
         cancel_effect = {
         }
     }
+
+LHS_call_to_arms = {
+    icon = GFX_decision_call_to_arms
+    on_map_mode = map_and_decisions_view
+
+    allowed = { tag = LHS }
+    visible = { has_completed_focus = LHS_Hold_Up_Red_Soil }
+
+    available = {
+        LHS = {has_war = yes}
+        custom_trigger_tooltip = {
+                tooltip = muddy_diplomacy_trust_tt
+                check_variable = { muddy_diplomacy_trust > 1 }
+            }
+        FROM = { has_opinion = { target = LHS value > 50 }}
+    }
+    target_trigger = {
+        FROM = {
+            exists = yes
+            NOT = { tag = LHS }
+            NOT = { has_war_with = LHS }
+            NOT = { has_war_together_with = LHS }
+            NOT = { is_in_faction_with = LHS }
+            AND = {
+                    LHS = { has_government = communism }
+                    has_government = communism
+                }
+            OR = {
+                is_faction_leader = yes
+                is_in_faction = no
+            }
+        }
+    }
+    cost = 0
+
+    complete_effect = {
+        add_to_variable = { muddy_diplomacy_trust = -2 }
+        custom_effect_tooltip = muddy_diplomacy_trust_tt2
+        add_to_variable = { muddy_diplomacy_bonds = 1 }
+        LHS_calculate_muddy_diplomacy_bonus = yes
+        custom_effect_tooltip = LHS_Brew_Caramel_Across_Ocean_tt
+        set_variable = { var = red_soil_seeds value = 5 }
+        custom_effect_tooltip = LHS_SEEDS_ADD_5_tt
+        FROM = {
+            country_event = { id = LHS.212 days = 2 }
+        }
+    }
+}
+
+LHS_request_endorsement = {
+    icon = GFX_request_endorsement
+    on_map_mode = map_and_decisions_view
+
+    allowed = { tag = LHS }
+    visible = { has_completed_focus = LHS_Hold_Up_Red_Soil }
+
+    available = {
+        custom_trigger_tooltip = {
+                tooltip = muddy_diplomacy_trust_tt3
+                check_variable = { muddy_diplomacy_trust > 0 }
+            }
+        FROM = { has_opinion = { target = LHS value > 30 }}
+    }
+    target_trigger = {
+        FROM = {
+            or = {
+                is_major = yes
+                tag = AHM
+            }
+            exists = yes
+            NOT = { tag = LHS }
+            NOT = { has_war_with = LHS }
+            AND = {
+                    LHS = { has_government = communism }
+                    has_government = communism
+                }
+        }
+        FROM = {not = {has_country_flag = LHS_request_endorsement}}
+    }
+    cost = 0
+
+    complete_effect = {
+        add_to_variable = { muddy_diplomacy_trust = -1 }
+        custom_effect_tooltip = muddy_diplomacy_trust_tt4
+        add_to_variable = { muddy_diplomacy_bonds = 1 }
+        LHS_calculate_muddy_diplomacy_bonus = yes
+        custom_effect_tooltip = LHS_Brew_Caramel_Across_Ocean_tt
+        FROM = {
+            country_event = { id = LHS.214 days = 2 }
+            set_country_flag = LHS_request_endorsement
+        }
+        custom_effect_tooltip = LHS_request_endorsement_tt
+    }
+}
 
 
 

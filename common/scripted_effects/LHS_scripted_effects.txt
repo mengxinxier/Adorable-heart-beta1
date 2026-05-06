@@ -1,35 +1,35 @@
-# === 计算基建加成 ===
-# 每1点基建指数 = 0.2% 建造速度，0.2% 工厂槽位，-0.2% 补给消耗
+#=== 计算基建加成 ===
+#每1点基建指数 = 0.2% 建造速度，0.2% 工厂槽位，-0.2% 补给消耗
 LHS_calculate_infrastructure_bonus = {
     set_variable = { kapok_infrastructure_buildings_bonus = kapok_infrastructure }
-    multiply_variable = { kapok_infrastructure_buildings_bonus = 0.002 }  # 1点+0.2%建造速度
+    multiply_variable = { kapok_infrastructure_buildings_bonus = 0.002 }  #1点+0.2%建造速度
     
     set_variable = { kapok_infrastructure_slots_bonus = kapok_infrastructure }
     multiply_variable = { kapok_infrastructure_slots_bonus = 0.002 }
     
     set_variable = { kapok_infrastructure_supply_bonus = kapok_infrastructure }
-    multiply_variable = { kapok_infrastructure_supply_bonus = -0.002 }  # 负数=减少消耗
+    multiply_variable = { kapok_infrastructure_supply_bonus = -0.002 }  #负数=减少消耗
 }
 
-# === 计算福利加成===
+#=== 计算福利加成===
 LHS_calculate_welfare_bonus = {
-    # Debuff部分
+    #Debuff部分
     set_variable = { kapok_welfare_consumer_goods_penalty = kapok_welfare }
-    multiply_variable = { kapok_welfare_consumer_goods_penalty = 0.002 }  # 每1点+0.2%消费品
+    multiply_variable = { kapok_welfare_consumer_goods_penalty = 0.002 }  #每1点+0.2%消费品
     
-    # Buff部分（超过debuff的补偿）
+    #Buff部分（超过debuff的补偿）
     set_variable = { kapok_welfare_population_bonus = kapok_welfare }
-    multiply_variable = { kapok_welfare_population_bonus = 0.005 }  # 每1点+0.005%每日顺从度增长
+    multiply_variable = { kapok_welfare_population_bonus = 0.005 }  #每1点+0.005%每日顺从度增长
     
     set_variable = { kapok_welfare_stability_bonus = kapok_welfare }
-    multiply_variable = { kapok_welfare_stability_bonus = 0.002 }  # 每1点+0.2%稳定
+    multiply_variable = { kapok_welfare_stability_bonus = 0.002 }  #每1点+0.2%稳定
     
     set_variable = { kapok_welfare_efficiency_bonus = kapok_welfare }
-    multiply_variable = { kapok_welfare_efficiency_bonus = 0.003 }  # 每1点+0.3%生产效率增长
+    multiply_variable = { kapok_welfare_efficiency_bonus = 0.003 }  #每1点+0.3%生产效率增长
 }
 
-# === 计算教育加成 ===
-# 每1点教育 = +3% 科研速度，+2% 效率上限
+#=== 计算教育加成 ===
+#每1点教育 = +3% 科研速度，+2% 效率上限
 LHS_calculate_education_bonus = {
     set_variable = { kapok_education_research_bonus = kapok_education }
     multiply_variable = { kapok_education_research_bonus = 0.003 }
@@ -38,8 +38,8 @@ LHS_calculate_education_bonus = {
     multiply_variable = { kapok_education_max_efficiency_bonus = 0.002 }
 }
 
-# === 计算产业加成 ===
-# 每1点产业 = +2% 工厂产出，+5% 效率保持
+#=== 计算产业加成 ===
+#每1点产业 = +2% 工厂产出，+5% 效率保持
 LHS_calculate_industry_bonus = {
     set_variable = { kapok_industry_output_bonus = kapok_industry }
     multiply_variable = { kapok_industry_output_bonus = 0.002 }
@@ -48,14 +48,14 @@ LHS_calculate_industry_bonus = {
     multiply_variable = { kapok_industry_retention_bonus = 0.005 }
 }
 
-# === 计算平衡奖励 ===
-# 检测民工和军工的差距，差距越小奖励越大
+#=== 计算平衡奖励 ===
+#检测民工和军工的差距，差距越小奖励越大
 LHS_calculate_balance_bonus = {
-    # 计算失衡惩罚值
+    #计算失衡惩罚值
     set_variable = { temp_civ = num_of_civilian_factories }
     set_variable = { temp_mil = num_of_military_factories }
     
-    # 如果民工>军工
+    #如果民工>军工
     if = {
         limit = { 
             check_variable = { temp_civ > temp_mil }
@@ -72,7 +72,7 @@ LHS_calculate_balance_bonus = {
         }
         else = { set_variable = { Red_Ledger_balance_var = 3 } }
     }
-    # 如果军工>民工
+    #如果军工>民工
     else = {
         set_variable = { kapok_balance_penalty = temp_mil }
         subtract_from_variable = { kapok_balance_penalty = temp_civ }
@@ -87,15 +87,15 @@ LHS_calculate_balance_bonus = {
         else = { set_variable = { Red_Ledger_balance_var = 3 } }
     }
     
-    # 计算奖励（差距越小，奖励越大）
+    #计算奖励（差距越小，奖励越大）
     
-    set_variable = { kapok_balance_political_power = 20 }  # 基础20
+    set_variable = { kapok_balance_political_power = 20 }  #基础20
     subtract_from_variable = { kapok_balance_political_power = kapok_balance_penalty }
     if = {
         limit = { check_variable = { kapok_balance_political_power < 0 } }
         set_variable = { kapok_balance_political_power = 0 }
     }
-    multiply_variable = { kapok_balance_political_power = 0.03 }  # 0-20转为0-0.6
+    multiply_variable = { kapok_balance_political_power = 0.03 }  #0-20转为0-0.6
     
     set_variable = { kapok_balance_civilian_bonus = 20 }
     subtract_from_variable = { kapok_balance_civilian_bonus = kapok_balance_penalty }
@@ -103,24 +103,24 @@ LHS_calculate_balance_bonus = {
         limit = { check_variable = { kapok_balance_civilian_bonus < 0 } }
         set_variable = { kapok_balance_civilian_bonus = 0 }
     }
-    multiply_variable = { kapok_balance_civilian_bonus = 0.01 }  # 0-20转为0-0.2
+    multiply_variable = { kapok_balance_civilian_bonus = 0.01 }  #0-20转为0-0.2
     
-    set_variable = { kapok_balance_military_bonus = kapok_balance_civilian_bonus }  # 军工奖励=民工奖励
+    set_variable = { kapok_balance_military_bonus = kapok_balance_civilian_bonus }  #军工奖励=民工奖励
 }
 
 
 # ==========================================
-# 协同加成：两两指数联动红利
-# 教育+产业 > 99 → 额外基础生产效率（上限+5%）
-# 福利+基建 > 99 → 额外顺从度增长速度（上限+5%）
-# 全指数均 > 49   → 触发结算事件（仅一次）
+#协同加成：两两指数联动红利
+#教育+产业 > 99 → 额外基础生产效率（上限+5%）
+#福利+基建 > 99 → 额外顺从度增长速度（上限+5%）
+#全指数均 > 49   → 触发结算事件（仅一次）
 # ==========================================
 LHS_calculate_synergy_bonus = {
 
     set_variable = { kapok_synergy_research_bonus = 0 }
     set_variable = { kapok_synergy_population_bonus = 0 }
 
-    # --- 教育 × 产业 协同 ---
+    #教育 × 产业 协同
     set_variable = { kapok_temp_sum = kapok_education }
     add_to_variable = { kapok_temp_sum = kapok_industry }
 
@@ -135,7 +135,7 @@ LHS_calculate_synergy_bonus = {
         }
     }
 
-    # --- 福利 × 基建 协同 ---
+    #福利 × 基建协同 
     set_variable = { kapok_temp_sum = kapok_welfare }
     add_to_variable = { kapok_temp_sum = kapok_infrastructure }
 
@@ -150,7 +150,7 @@ LHS_calculate_synergy_bonus = {
         }
     }
 
-    # --- 全指数 > 49：事件检定（仅触发一次）---
+    #全指数 > 49：事件检定（仅触发一次）
     if = {
         limit = {
             check_variable = { kapok_infrastructure > 49 }
@@ -166,7 +166,7 @@ LHS_calculate_synergy_bonus = {
 
 LHS_check_milestones = {
 
-    # === 基建里程碑 ===
+    #基建里程碑
     if = {
         limit = {
             check_variable = { kapok_infrastructure > 24 }
@@ -192,7 +192,7 @@ LHS_check_milestones = {
         country_event = { id = LHS.194 hours = 12 }
     }
 
-    # === 福利里程碑 ===
+    #福利里程碑
     if = {
         limit = {
             check_variable = { kapok_welfare > 24 }
@@ -218,7 +218,7 @@ LHS_check_milestones = {
         country_event = { id = LHS.197 hours = 12 }
     }
 
-    # === 教育里程碑 ===
+    #教育里程碑
     if = {
         limit = {
             check_variable = { kapok_education > 24 }
@@ -270,4 +270,33 @@ LHS_check_milestones = {
         country_event = { id = LHS.203 hours = 12 }
     }
 
+}
+
+#变量说明
+#muddy_diplomacy_bonds (外交指数):每个国策+1，最多6
+#muddy_diplomacy_trust (信任指数):累积的互助价值
+LHS_calculate_muddy_diplomacy_bonus = {
+    set_variable = { muddy_diplomacy_justify_time = muddy_diplomacy_bonds }
+    multiply_variable = { muddy_diplomacy_justify_time = 0.02 }  #每条+2%
+    
+    set_variable = { muddy_diplomacy_opinion_gain = muddy_diplomacy_bonds }
+    multiply_variable = { muddy_diplomacy_opinion_gain = 0.02 }
+    
+    set_variable = { muddy_diplomacy_volunteer_threshold = muddy_diplomacy_bonds }
+    multiply_variable = { muddy_diplomacy_volunteer_threshold = -0.02 }
+    
+    set_variable = { muddy_diplomacy_stability = muddy_diplomacy_bonds }
+    multiply_variable = { muddy_diplomacy_stability = 0.01 }  #每条+1%
+    
+    set_variable = { muddy_diplomacy_political_power = muddy_diplomacy_bonds }
+    multiply_variable = { muddy_diplomacy_political_power = 0.01 }  #每条+0.01/日
+    
+    set_variable = { muddy_diplomacy_trade_opinion = muddy_diplomacy_bonds }
+    multiply_variable = { muddy_diplomacy_trade_opinion = 0.03 }
+    
+    set_variable = { muddy_diplomacy_org = muddy_diplomacy_bonds }
+    multiply_variable = { muddy_diplomacy_org = 0.015 }  #每条+1.5%
+    
+    set_variable = { muddy_diplomacy_exp_gain = muddy_diplomacy_bonds }
+    multiply_variable = { muddy_diplomacy_exp_gain = -0.01 }
 }
