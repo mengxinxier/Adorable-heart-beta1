@@ -3266,7 +3266,7 @@ LHS_youjidui = {
         visible = {
             has_completed_focus = LHS_Screaming_Pipes
         }
-        icon = GFX_youji_on_me2
+        icon = GFX_LHS_cxss
         available = {
         }
         ai_will_do = {
@@ -6946,6 +6946,11 @@ LHS_call_to_arms = {
                 check_variable = { muddy_diplomacy_trust > 1 }
             }
         FROM = { has_opinion = { target = LHS value > 50 }}
+        not = {
+            any_enemy_country = {
+                has_government = communism
+            }
+        }
     }
     target_trigger = {
         FROM = {
@@ -6972,7 +6977,19 @@ LHS_call_to_arms = {
         add_to_variable = { muddy_diplomacy_bonds = 1 }
         LHS_calculate_muddy_diplomacy_bonus = yes
         custom_effect_tooltip = LHS_Brew_Caramel_Across_Ocean_tt
-        set_variable = { var = red_soil_seeds value = 5 }
+            add_to_variable = { #设置果实buff
+                var = red_soil_harvest_points 
+                value = 5
+            }
+            add_to_variable = { #设置果实buff
+                var = global.LHS_harvest_bonus_multiplier 
+                value = var:red_soil_harvest_points 
+            }
+            multiply_variable = { var = global.LHS_harvest_bonus_multiplier value = 0.002 }
+            add_days_mission_timeout  = {
+                mission = LHS_sow_next_spring
+                days = 15
+            }
         custom_effect_tooltip = LHS_SEEDS_ADD_5_tt
         FROM = {
             country_event = { id = LHS.212 days = 2 }
@@ -7018,15 +7035,76 @@ LHS_request_endorsement = {
         add_to_variable = { muddy_diplomacy_bonds = 1 }
         LHS_calculate_muddy_diplomacy_bonus = yes
         custom_effect_tooltip = LHS_Brew_Caramel_Across_Ocean_tt
+        custom_effect_tooltip = LHS_request_endorsement_tt
         FROM = {
             country_event = { id = LHS.214 days = 2 }
             set_country_flag = LHS_request_endorsement
         }
-        custom_effect_tooltip = LHS_request_endorsement_tt
+        add_days_mission_timeout  = {
+            mission = LHS_sow_next_spring
+            days = 15
+        }
     }
 }
 
 
+	LHS_get_kapok_infrastructure_dec1 = {
+		allowed = {
+            original_tag = LHS 
+		}
+		icon = GFX_decision_generic_factory
+		fire_only_once = no
+		priority = 92
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 14
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+		}
+        visible = { 
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+		days_remove = 120
+		modifier = {
+			civilian_factory_use = 15
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+            add_to_variable = { kapok_infrastructure = 2 }
+            custom_effect_tooltip = LHS_get_kapok_infrastructure_dec1_tt
+		}
+	}
+
+	LHS_get_kapok_infrastructure_dec2 = {
+		allowed = {
+            original_tag = LHS 
+		}
+		icon = GFX_decision_generic_factory
+		fire_only_once = no
+		priority = 92
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 49
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+		}
+        visible = { 
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+		days_remove = 120
+		modifier = {
+			civilian_factory_use = 50
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+            add_to_variable = { kapok_infrastructure = 5 }
+            custom_effect_tooltip = LHS_get_kapok_infrastructure_dec2_tt
+		}
+	}
 
 
 
