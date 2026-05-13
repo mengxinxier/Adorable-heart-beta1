@@ -150,15 +150,18 @@ on_actions = {
                         }
                     }
                     LHS_calculate_balance_bonus = yes
-                    # === 军民工失衡警告 ===
-                    if = {
-                        limit = {
-                            check_variable = { kapok_balance_penalty > 20 }
-                            NOT = { has_country_flag = LHS_balance_warning_cd }
+                }
+                # === 军民工失衡警告 ===
+                if = {
+                    limit = {
+                        has_dynamic_modifier = {
+                            modifier = LHS_kapok_economic_miracle
                         }
-                        set_country_flag = { flag = LHS_balance_warning_cd days = 180 }
-                        country_event = { id = LHS.208 hours = 6 }
+                        check_variable = { kapok_balance_penalty > 20 }
+                        NOT = { has_country_flag = LHS_balance_warning_cd }
                     }
+                    set_country_flag = { flag = LHS_balance_warning_cd value = 1 days = 180 }
+                    country_event = { id = LHS.208 hours = 6 }
                 }
                 if = {
                     limit = {
@@ -479,6 +482,41 @@ on_actions = {
             }
         }
     }
+
+    on_declare_war = {
+        effect = {
+            #世界革命战争(木棉)
+            if = {
+                limit = {
+                    ROOT = {
+                        has_completed_focus = LHS_Igniting_The_World_Fire
+                        or = {
+                            has_war_together_with = LHS
+                            tag = LHS
+                            is_in_faction_with = LHS
+                            is_subject_of = LHS
+                        }
+                    }
+                    FROM = {
+                        or = {
+                            tag = ENG
+                            is_in_faction_with = ENG
+                        }
+                    }
+                    not = {
+                        has_global_flag = LHS_SJGM
+                    }
+                }
+                hidden_effect = {
+                    set_global_flag = LHS_SJGM
+                    news_event = {
+                        id = LHS_news.21
+                        days = 0
+                    }
+                }
+            }
+        }
+    }
     on_declare_war = {
         effect = {
             #黑日远征
@@ -594,7 +632,7 @@ on_actions = {
                 }
             }
             if = {
-                #错误得战胜莉兰迪亚
+                #错误得战胜莉兰迪亚 变更为木棉线
                 limit = {
                     ROOT = {
                         tag = PAM
@@ -640,6 +678,63 @@ on_actions = {
                     country_event = {
                         hours = 6
                         id = LHS.126
+                    }
+                }
+            }
+            if = {
+                #木棉线战胜军团
+                limit = {
+                    ROOT = {
+                        tag = PAU
+                        is_subject = no
+                        NOT = {
+                            any_enemy_country = {
+                                NOT = {
+                                    tag = LHS
+                                    has_war_together_with = LHS
+                                }
+                            }
+                        }
+                    }
+                    FROM = {
+                        or = {
+                            tag = LHS
+                            tag = CHL
+                        }
+                        LHS = {
+                            has_country_flag = LHS_mumian
+                        }
+                    }
+                }
+                LHS = {
+                    clr_country_flag = LHS_zhaoji
+                    mark_focus_tree_layout_dirty = yes
+                    white_peace = {
+                        tag = PAU
+                        message = LHS_win_PAU
+                    }
+                    if = {
+                        limit = {
+                            LHS = {
+                                is_ai = no
+                            }
+                        }
+                        annex_country = {
+                            target = PAU
+                            transfer_troops = yes
+                        }
+                    }
+                    set_global_flag = lwnygm
+                    if = {
+                        limit = {
+                            LHS = {
+                                is_ai = yes
+                            }
+                        }
+                        annex_country = {
+                            target = PAU
+                            transfer_troops = yes
+                        }
                     }
                 }
             }
@@ -967,6 +1062,13 @@ on_actions = {
                             tag = LHS
                             tag = CHL
                         }
+                        LHS = {
+                            not = {
+                                or = {
+                                    has_country_flag = LHS_mumian
+                                }
+                            }
+                        }
                     }
                 }
                 CHL = {
@@ -1039,6 +1141,13 @@ on_actions = {
                         or = {
                             tag = LHS
                             tag = CHL
+                        }
+                        LHS = {
+                            not = {
+                                or = {
+                                    has_country_flag = LHS_mumian
+                                }
+                            }
                         }
                     }
                 }
