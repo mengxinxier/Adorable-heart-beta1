@@ -383,12 +383,10 @@ FRA_end_pocket = {#包围快速歼灭
         id = branch_defense  #反间谍
         value = 1500
     }
+
     ai_strategy = {
         type = front_control
         state_trigger = {
-            NOT = {
-                is_coastal = yes
-            }
             OR = {
                 AND = {
                     is_controlled_by = FROM.FROM
@@ -444,22 +442,130 @@ FRA_end_pocket = {#包围快速歼灭
         value = 40
     }
 }
-
-FRA_relentless_pursuit = {#别让骨头架子跑了！
+FRA_victory_phase1_crack = {
     allowed = { original_tag = FRA }
     enable = {
         has_war = yes
         any_enemy_country = {
-            OR = {
-                surrender_progress > 0.35
-                AND = {
-                    surrender_progress > 0.15
-                    num_divisions < 50
-                }
-            }
+            surrender_progress > 0.05
+            surrender_progress < 0.20
         }
         NOT = { surrender_progress > 0.15 }
-		has_country_flag = KNM_ai
+        has_country_flag = KNM_ai
+        is_in_faction_with = KNM
+    }
+    abort_when_not_enabled = yes
+    ai_strategy = {
+        type = front_armor_score
+        state_trigger = {
+            controller = { has_war_with = FRA }
+            any_province_building_level = {
+                province = { all_provinces = yes }
+                building = supply_node
+                level > 0
+            }
+        }
+        value = 500
+    }
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            controller = { has_war_with = FRA }
+            any_province_building_level = {
+                province = { all_provinces = yes }
+                building = supply_node
+                level > 0
+            }
+            any_neighbor_state = { is_controlled_by = FRA }
+        }
+        priority = 12000
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+    ai_strategy = {
+        type = garrison
+        value = -150
+    }
+    ai_strategy = {
+        type = spare_unit_factor
+        value = -20
+    }
+}
+
+FRA_victory_phase2_exploit = {
+    allowed = { original_tag = FRA }
+    enable = {
+        has_war = yes
+        any_enemy_country = {
+            surrender_progress > 0.20
+            surrender_progress < 0.45
+        }
+        NOT = { surrender_progress > 0.15 }
+        has_country_flag = KNM_ai
+        is_in_faction_with = KNM
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            owner = {
+                has_war_with = FRA
+                surrender_progress > 0.20
+            }
+            is_capital = yes
+            any_neighbor_state = { is_controlled_by = FRA }
+        }
+        priority = 40000
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            controller = {
+                has_war_with = FRA
+                surrender_progress > 0.20
+            }
+        }
+        priority = 15000
+        ordertype = front
+        execution_type = rush_weak
+        execute_order = yes
+        manual_attack = yes
+    }
+    ai_strategy = {
+        type = front_armor_score
+        state_trigger = {
+            controller = {
+                has_war_with = FRA
+                surrender_progress > 0.20
+            }
+            is_capital = yes
+        }
+        value = 800
+    }
+    ai_strategy = {
+        type = spare_unit_factor
+        value = -40
+    }
+    ai_strategy = {
+        type = garrison
+        value = -200
+    }
+}
+
+FRA_victory_phase3_annihilate = {
+    allowed = { original_tag = FRA }
+    enable = {
+        has_war = yes
+        any_enemy_country = { surrender_progress > 0.45 }
+        NOT = { surrender_progress > 0.15 }
+        has_country_flag = KNM_ai
         is_in_faction_with = KNM
     }
     abort_when_not_enabled = yes
@@ -469,39 +575,38 @@ FRA_relentless_pursuit = {#别让骨头架子跑了！
         state_trigger = {
             controller = {
                 has_war_with = FRA
-                OR = {
-                    surrender_progress > 0.35
-                    num_divisions < 50
-                }
+                surrender_progress > 0.45
             }
         }
-        priority = 30000
-        ratio = 0.90
+        priority = 60000
+        ratio = 0.95
         ordertype = front
         execution_type = rush_weak
         execute_order = yes
         manual_attack = yes
     }
-
     ai_strategy = {
         type = front_armor_score
         state_trigger = {
             controller = {
                 has_war_with = FRA
-                surrender_progress > 0.15
+                surrender_progress > 0.45
             }
+            is_capital = yes
         }
-        value = 800
+        value = 1500
     }
-
     ai_strategy = {
         type = spare_unit_factor
         value = -100
     }
-
     ai_strategy = {
         type = garrison
         value = -300
+    }
+    ai_strategy = {
+        type = ai_wanted_divisions_factor
+        value = 300
     }
 }
 FRA_strategic_withdrawal = {#主动收缩

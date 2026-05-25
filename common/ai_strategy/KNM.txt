@@ -96,6 +96,8 @@ KNM_start1 = {
         value = 100
     }
 }
+
+
 nanmei_the_more_powerful_jiandie = {
     allowed = {
         original_tag = KNM
@@ -469,14 +471,69 @@ KNM_avoid_thin_lines = {
     }
 
 
+}
+
+KNM_push_enemy_capital = {#冲首都
+    allowed = { original_tag = KNM }
+    enable = {
+        has_war = yes
+        any_enemy_country = { surrender_progress > 0.1 }
+    }
+    abort_when_not_enabled = yes
     ai_strategy = {
         type = front_control
         state_trigger = {
-            NOT = { is_core_of = FROM } #
-            check_variable = { state_strategic_value < 10 }
+            owner = { has_war_with = KNM }
+            is_capital = yes
+            any_neighbor_state = { is_controlled_by = KNM }
         }
-        execution_type = careful
-        priority = -50
+        priority = 50000
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+    ai_strategy = {
+        type = front_unit_request
+        state_trigger = {
+            owner = { has_war_with = KNM }
+            is_capital = yes
+        }
+        value = 300
+    }
+
+    ai_strategy = {
+        type = invasion_unit_request
+        state_trigger = {
+            controller = { has_war_with = KNM }
+            is_coastal = yes
+            any_province_building_level = {
+                province = { all_provinces = yes }
+                building = supply_node
+                level > 0
+            }
+        }
+        value = 50
+    }
+    ai_strategy = {
+        type = front_armor_score
+        state_trigger = {
+            controller = { has_war_with = KNM }
+            is_capital = yes
+        }
+        value = 600
+    }
+    ai_strategy = {
+        type = front_armor_score
+        state_trigger = {
+            controller = { has_war_with = KNM }
+            any_province_building_level = {
+                province = { all_provinces = yes }
+                building = supply_node
+                level > 0
+            }
+        }
+        value = 400
     }
 }
 KNM_political_spending = {
@@ -1805,6 +1862,41 @@ KNM_capital_shield = {#身后就是幻想乡
         subtract_invasions_from_need = yes
     }
 }
+
+#识别可被包围的敌军并优先切断
+KNM_encirclement_hunter = {
+    allowed = { original_tag = KNM }
+    enable = {
+        has_war = yes
+        num_of_military_factories > 60
+        num_divisions > 200
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            controller = { has_war_with = KNM }
+            NOT = { is_coastal = yes }
+            any_neighbor_state = { is_controlled_by = KNM }
+            check_variable = { num_enemy_neighbor_states < 2 }
+        }
+        priority = 25000
+        ordertype = front
+        execution_type = rush_weak
+        execute_order = yes
+        manual_attack = yes
+    }
+    ai_strategy = {
+        type = front_unit_request
+        state_trigger = {
+            controller = { has_war_with = KNM }
+            NOT = { is_coastal = yes }
+            check_variable = { num_enemy_neighbor_states < 2 }
+        }
+        value = 60
+    }
+}
 KNM_end_pocket = {#包围快速歼灭
     allowed={
         original_tag = KNM
@@ -1813,14 +1905,9 @@ KNM_end_pocket = {#包围快速歼灭
         always = yes
     }
 
-    abort_when_not_enabled = yes
-
     ai_strategy = {
         type = front_control
         state_trigger = {
-            NOT = {
-                is_coastal = yes
-            }
             OR = {
                 AND = {
                     is_controlled_by = FROM.FROM
@@ -1892,19 +1979,124 @@ KNM_concentrate_troops = {#集中突破
     }
 
 }
-KNM_relentless_pursuit = {#宜将剩勇追穷寇
+KNM_victory_phase1_crack = {
     allowed = { original_tag = KNM }
     enable = {
         has_war = yes
         any_enemy_country = {
-            OR = {
-                surrender_progress > 0.35
-                AND = {
-                    surrender_progress > 0.15
-                    num_divisions < 50
-                }
+            surrender_progress > 0.05
+            surrender_progress < 0.20
+        }
+        NOT = { surrender_progress > 0.15 }
+    }
+    abort_when_not_enabled = yes
+    ai_strategy = {
+        type = front_armor_score
+        state_trigger = {
+            controller = { has_war_with = KNM }
+            any_province_building_level = {
+                province = { all_provinces = yes }
+                building = supply_node
+                level > 0
             }
         }
+        value = 500
+    }
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            controller = { has_war_with = KNM }
+            any_province_building_level = {
+                province = { all_provinces = yes }
+                building = supply_node
+                level > 0
+            }
+            any_neighbor_state = { is_controlled_by = KNM }
+        }
+        priority = 12000
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+    ai_strategy = {
+        type = garrison
+        value = -150
+    }
+    ai_strategy = {
+        type = spare_unit_factor
+        value = -20
+    }
+}
+
+KNM_victory_phase2_exploit = {
+    allowed = { original_tag = KNM }
+    enable = {
+        has_war = yes
+        any_enemy_country = {
+            surrender_progress > 0.20
+            surrender_progress < 0.45
+        }
+        NOT = { surrender_progress > 0.15 }
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            owner = {
+                has_war_with = KNM
+                surrender_progress > 0.20
+            }
+            is_capital = yes
+            any_neighbor_state = { is_controlled_by = KNM }
+        }
+        priority = 40000
+        ordertype = front
+        execution_type = rush
+        execute_order = yes
+        manual_attack = yes
+    }
+    ai_strategy = {
+        type = front_control
+        state_trigger = {
+            controller = {
+                has_war_with = KNM
+                surrender_progress > 0.20
+            }
+        }
+        priority = 15000
+        ordertype = front
+        execution_type = rush_weak
+        execute_order = yes
+        manual_attack = yes
+    }
+    ai_strategy = {
+        type = front_armor_score
+        state_trigger = {
+            controller = {
+                has_war_with = KNM
+                surrender_progress > 0.20
+            }
+            is_capital = yes
+        }
+        value = 800
+    }
+    ai_strategy = {
+        type = spare_unit_factor
+        value = -40
+    }
+    ai_strategy = {
+        type = garrison
+        value = -200
+    }
+}
+
+KNM_victory_phase3_annihilate = {
+    allowed = { original_tag = KNM }
+    enable = {
+        has_war = yes
+        any_enemy_country = { surrender_progress > 0.45 }
         NOT = { surrender_progress > 0.15 }
     }
     abort_when_not_enabled = yes
@@ -1914,39 +2106,38 @@ KNM_relentless_pursuit = {#宜将剩勇追穷寇
         state_trigger = {
             controller = {
                 has_war_with = KNM
-                OR = {
-                    surrender_progress > 0.35
-                    num_divisions < 50
-                }
+                surrender_progress > 0.45
             }
         }
-        priority = 30000
-        ratio = 0.90
+        priority = 60000
+        ratio = 0.95
         ordertype = front
         execution_type = rush_weak
         execute_order = yes
         manual_attack = yes
     }
-
     ai_strategy = {
         type = front_armor_score
         state_trigger = {
             controller = {
                 has_war_with = KNM
-                surrender_progress > 0.15
+                surrender_progress > 0.45
             }
+            is_capital = yes
         }
-        value = 800
+        value = 1500
     }
-
     ai_strategy = {
         type = spare_unit_factor
         value = -100
     }
-
     ai_strategy = {
         type = garrison
         value = -300
+    }
+    ai_strategy = {
+        type = ai_wanted_divisions_factor
+        value = 300
     }
 }
 KNM_strategic_withdrawal = {#主动收缩
