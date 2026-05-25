@@ -206,6 +206,619 @@ KNM_Debug = {
 	Activate_KNM_unit_FRA_war = {
 		complete_effect = { activate_mission = KNM_unit_FRA_war }
 	}
+	lilibai = {
+		complete_effect = {
+			set_country_flag = KNM_Lilywhite
+			set_country_flag = KNM_Lilywhite2
+			set_country_flag = KNM_Lilywhite3
+			set_country_flag = KNM_Lilywhite4
+			set_country_flag = KNM_Lilywhite5
+			mark_focus_tree_layout_dirty = yes
+        	custom_effect_tooltip = jiesuoguoce
+		}
+	}
+}
+
+FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
+	
+		comecon_purchase_infantry_equipment = { #购买步兵装备
+			priority = 6
+			icon = generic_industry
+			allowed = {
+				tag = KNM
+				has_completed_focus = KNM_ydnghqtz
+			}
+			visible = {
+				has_completed_focus = KNM_ydnghqtz
+				or = {
+					is_subject_of = FRA
+					is_in_faction_with = FRA
+				}
+			}
+
+			available = {
+				num_of_civilian_factories_available_for_projects > 0
+				NOT = { has_country_flag = KNM_buy_infantry_equipment_flag }
+				NOT = { has_war_with = FRA }
+			}
+
+			cancel_trigger = {
+				has_war_with = FRA
+				FRA = {
+					exists = no
+				}
+			}
+			days_remove = 7
+
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						has_equipment = {
+							infantry_equipment > 1500
+						}
+					}
+				}
+			}
+
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = KNM_buy_infantry_equipment_flag
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+			}
+			cancel_effect = {
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clr_country_flag = KNM_buy_infantry_equipment_flag
+			}
+			remove_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 1500
+					producer = KNM
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clr_country_flag = KNM_buy_infantry_equipment_flag
+			}
+		}
+
+		comecon_purchase_artillery = { #购买火炮类装备
+
+			priority = 5
+
+			icon = ger_military_buildup
+			allowed = {
+				tag = KNM
+				has_completed_focus = KNM_ydnghqtz
+			}
+			visible = {
+				has_completed_focus = KNM_ydnghqtz
+				or = {
+					is_subject_of = FRA
+					is_in_faction_with = FRA
+				}
+			}
+
+			available = {
+				num_of_civilian_factories_available_for_projects > 0
+				NOT = { has_country_flag = KNM_buy_artillery_flag }
+				NOT = { has_war_with = FRA }
+			}
+
+			cancel_trigger = {
+				has_war_with = FRA
+				FRA = {
+					exists = no
+				}
+			}
+
+			days_remove = 7
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						AND = {
+							has_equipment = {
+								artillery_equipment > 100
+							}
+							if = {
+								limit = {
+									has_tech = interwar_antiair
+								}
+								has_equipment = {
+									anti_air_equipment > 100
+								}
+							}
+							if = {
+								limit = {
+									has_tech = interwar_antitank
+								}
+								has_equipment = {
+									anti_tank_equipment > 100
+								}
+							}
+						}
+					}
+				}
+			}
+
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = KNM_buy_artillery_flag
+				hidden_effect = {
+					country_event = KNM_buy.1
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				custom_effect_tooltip = comecon_purchase_artillery_tt
+			}
+			cancel_effect = {
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = KNM_buy_artillery_type
+				clr_country_flag = KNM_buy_artillery_flag
+			}
+			remove_effect = {
+				add_equipment_to_stockpile = {
+					type = var:KNM_buy_artillery_type
+					amount = 200
+					producer = KNM
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = KNM_buy_artillery_type
+				clr_country_flag = KNM_buy_artillery_flag
+			}
+		}
+
+		comecon_purchase_military_vehicles = { #购买卡车类装备
+
+			priority = 4
+
+			icon = generic_decision
+			allowed = {
+				tag = KNM
+				has_completed_focus = KNM_ydnghqtz
+			}
+			visible = {
+				has_completed_focus = KNM_ydnghqtz
+				or = {
+					is_subject_of = FRA
+					is_in_faction_with = FRA
+				}
+			}		
+
+			available = {
+				num_of_civilian_factories_available_for_projects > 0
+				NOT = { has_country_flag = KNM_buy_military_vehicles_flag }
+				NOT = { has_war_with = FRA }
+			}
+
+			cancel_trigger = {
+				has_war_with = FRA
+				FRA = {
+					exists = no
+				}
+			}
+
+			days_remove = 7
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						has_equipment = {
+							mechanized_equipment > 100
+						}
+					}
+				}
+			}
+
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = KNM_buy_military_vehicles_flag
+				hidden_effect = {
+					country_event = KNM_buy.1
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				hidden_effect = {
+					add_to_variable = {
+						ubs_save = -50
+					}
+				}
+				custom_effect_tooltip = comecon_purchase_vehicles_tt
+			}
+			cancel_effect = {
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = KNM_buy_vehicles_type
+				clr_country_flag = KNM_buy_military_vehicles_flag
+				clr_country_flag = KNM_buy_motorized
+				clr_country_flag = KNM_buy_mechanized
+			}
+			remove_effect = {
+				if = {
+					limit = {
+						has_country_flag = KNM_buy_motorized
+					}
+					add_equipment_to_stockpile = {
+						type = KNM_buy_vehicles_type
+						amount = 200
+						producer = KNM
+					}
+					clr_country_flag = KNM_buy_motorized
+				}
+				else_if = {
+					limit = {
+						has_country_flag = KNM_buy_mechanized
+					}
+					add_equipment_to_stockpile = {
+						type = KNM_buy_vehicles_type
+						amount = 100
+						producer = KNM
+					}
+					clr_country_flag = KNM_buy_mechanized
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = KNM_buy_vehicles_type
+				clr_country_flag = KNM_buy_military_vehicles_flag
+			}
+		}
+
+		comecon_purchase_armor = { #购买坦克类装备
+
+			priority = 3
+
+			icon = generic_tank
+			allowed = {
+				tag = KNM
+				has_completed_focus = KNM_ydnghqtz
+			}
+			visible = {
+				has_completed_focus = KNM_ydnghqtz
+				or = {
+					is_subject_of = FRA
+					is_in_faction_with = FRA
+				}
+			}
+
+			available = {
+				num_of_civilian_factories_available_for_projects > 0
+				NOT = { has_country_flag = KNM_buy_armor_flag }
+				NOT = { has_war_with = FRA }
+			}
+
+			cancel_trigger = {
+				has_war_with = FRA
+				FRA = {
+					exists = no
+				}
+			}
+
+			days_remove = 7
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						AND = {
+							has_equipment = {
+								light_tank_chassis > 10
+							}
+							has_equipment = {
+								medium_tank_chassis > 10
+							}
+						}
+					}
+				}
+			}
+
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = KNM_buy_armor_flag
+				hidden_effect = {
+					country_event = KNM_buy.3
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+				}
+				custom_effect_tooltip = comecon_purchase_armor_tt
+			}
+			cancel_effect = {
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = KNM_buy_armor_type
+				clr_country_flag = KNM_buy_armor_flag
+				clr_country_flag = KNM_buy_light_armor_flag
+				clr_country_flag = KNM_buy_medium_armor_flag
+				clr_country_flag = KNM_buy_heavy_armor_flag
+			}
+			remove_effect = {
+				if = {
+					limit = {
+						has_country_flag = KNM_buy_light_armor_flag
+					}
+					add_equipment_to_stockpile = {
+						type = var:KNM_buy_armor_type
+						amount = 80
+						producer = KNM
+					}
+					clr_country_flag = KNM_buy_light_armor_flag
+				}
+				else_if = {
+					limit = {
+						has_country_flag = KNM_buy_medium_armor_flag
+					}
+					add_equipment_to_stockpile = {
+						type = var:KNM_buy_armor_type
+						amount = 65
+						producer = KNM
+					}
+					clr_country_flag = KNM_buy_medium_armor_flag
+				}
+				else_if = {
+					limit = {
+						has_country_flag = KNM_buy_heavy_armor_flag
+					}
+					add_equipment_to_stockpile = {
+						type = var:KNM_buy_armor_type
+						amount = 40
+						producer = KNM
+					}
+					clr_country_flag = KNM_buy_heavy_armor_flag 
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = KNM_buy_armor_type
+				clr_country_flag = KNM_buy_armor_flag
+			}
+		}
+
+		comecon_purchase_aircraft = { #购买飞机类装备
+
+			priority = 2
+
+			icon = generic_air
+			allowed = {
+				tag = KNM
+				has_completed_focus = KNM_ydnghqtz
+			}
+			visible = {
+				has_completed_focus = KNM_ydnghqtz
+				or = {
+					is_subject_of = FRA
+					is_in_faction_with = FRA
+				}
+			}
+
+			available = {
+				num_of_civilian_factories_available_for_projects > 0
+				NOT = { has_country_flag = KNM_buy_aircraft_flag }
+				NOT = { has_war_with = FRA }
+			}
+
+			cancel_trigger = {
+				has_war_with = FRA
+				FRA = {
+					exists = no
+				}
+			}
+
+			days_remove = 7
+			fire_only_once = no
+
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0
+					OR = {
+						num_of_civilian_factories < 2
+						AND = {
+							stockpile_ratio = { 
+								archetype = small_plane_airframe
+								ratio > 0.75
+							}
+							stockpile_ratio = { 
+								archetype = small_plane_naval_bomber_airframe
+								ratio > 0.75
+							}
+							stockpile_ratio = { 
+								archetype = medium_plane_airframe
+								ratio > 0.75
+							}
+						}
+					}
+				}
+			}
+
+			modifier = {
+				civilian_factory_use = 1
+			}
+			
+			complete_effect = {
+				set_country_flag = KNM_buy_aircraft_flag
+				hidden_effect = {
+					country_event = KNM_buy.4
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = 1
+					}
+
+				}
+				hidden_effect = {
+					add_to_variable = {
+						ubs_save = -50
+					}
+				}
+				custom_effect_tooltip = comecon_purchase_aircraft_tt
+			}
+			cancel_effect = {
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = KNM_buy_air_type
+				clr_country_flag = KNM_buy_aircraft_flag
+				clr_country_flag = KNM_buy_fighters_flag
+				clr_country_flag = KNM_buy_fighters_cas_flag
+			}
+			remove_effect = {
+				if = {
+					limit = {
+						has_country_flag = KNM_buy_fighters_flag
+					}
+					add_equipment_to_stockpile = {
+						type = var:KNM_buy_air_type
+						amount = 80
+						producer = KNM
+					}
+					clr_country_flag = KNM_buy_fighters_flag
+				}
+				else_if = {
+					limit = {
+						has_country_flag = KNM_buy_fighters_cas_flag
+					}
+					if = {
+						limit = {
+							has_tech = modern_small_airframe 
+						}
+						add_equipment_to_stockpile = {
+							type = small_plane_cas_airframe_4
+							amount = 60
+							producer = KNM
+						}
+					}
+					else_if = {
+						limit = {
+							has_tech = advanced_small_airframe 
+						}
+						add_equipment_to_stockpile = {
+							type = small_plane_cas_airframe_3
+							amount = 60
+							producer = KNM
+						}
+					}
+					else_if = {
+						limit = {
+							has_tech = improved_small_airframe 
+						}
+						add_equipment_to_stockpile = {
+							type = small_plane_cas_airframe_2
+							amount = 60
+							producer = KNM
+						}
+					}
+					else_if = {
+						limit = {
+							has_tech = basic_small_airframe 
+						}
+						add_equipment_to_stockpile = {
+							type = small_plane_cas_airframe_1
+							amount = 60
+							producer = KNM
+						}
+					}
+					else = {
+						add_equipment_to_stockpile = {
+							type = small_plane_cas_airframe
+							amount = 60
+							producer = KNM
+						}
+					}
+					clr_country_flag = KNM_buy_fighters_cas_flag
+				}
+				FRA = {
+					add_offsite_building = {
+						type = industrial_complex
+						level = -1
+					}
+				}
+				clear_variable = KNM_buy_air_type
+				clr_country_flag = KNM_buy_aircraft_flag
+			}
+		}
+
 }
 
 
