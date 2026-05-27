@@ -24,6 +24,7 @@ ROC_reunit_of_china_d_c = {
 		}
 		remove_effect = {
 			set_global_flag = CHI_REUNIT
+			save_global_event_target_as = china_uniter
 			hidden_effect = {
 				if = {
 					limit = {
@@ -55,6 +56,133 @@ ROC_reunit_of_china_d_c = {
 			}
 		}
 	}
+	##联合北伐
+	ROC_attck_CHI_with_PRC = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+		}
+		targets = { CHI }
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				has_war_with = PRC
+			}
+			has_country_flag = Cooperation_between_KMT_and_CCP
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = CHI_war_plan_going_on
+			}
+			FROM_subject_neighbor_with_root = yes
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 17 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		remove_effect = {
+			clr_country_flag = CHI_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHH }
+				factor = 0
+			}
+		}
+	}
+	##联合北伐
+	ROC_attck_CHI_with_KMT = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+		}
+		targets = { CHI }
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				any_enemy_country = { has_country_flag = KMT_country }
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = CHI_war_plan_going_on
+			}
+			FROM_subject_neighbor_with_root = yes
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 17 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		remove_effect = {
+			clr_country_flag = CHI_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHH }
+				factor = 0
+			}
+		}
+	}
 	##进攻
 	ROC_attck_FROM = {
 		icon = GFX_decision_generic_ignite_civil_war
@@ -67,7 +195,7 @@ ROC_reunit_of_china_d_c = {
 				not = {
 					or = {
 						has_war_with = ROOT
-						is_in_faction_with = ROOT
+						#is_in_faction_with = ROOT
 						is_subject_of = ROOT
 					}
 				}
@@ -92,7 +220,7 @@ ROC_reunit_of_china_d_c = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = CHI_war_plan_going_on
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 17 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
@@ -101,14 +229,6 @@ ROC_reunit_of_china_d_c = {
 			declare_war_on = {
 				target = FROM
 				type = annex_everything
-			}
-			if = {
-				limit = {
-					tag = ROC
-					has_country_flag = Cooperation_between_KMT_and_CCP
-					FROM = { tag = CHI }
-				}
-				PRC = { country_event = { id = roc.68 } }
 			}
 		}
 		ai_will_do = {
@@ -122,11 +242,19 @@ ROC_reunit_of_china_d_c = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
 			modifier = {
 				FROM = { is_subject_of = JAP }
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHH }
 				factor = 0
 			}
 		}
@@ -168,7 +296,7 @@ ROC_reunit_of_china_d_c = {
 		days_remove = 30
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = CHI_war_plan_going_on
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 32 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 			FROM = { country_event = { id = china_generic.008 } }
 		}
@@ -213,11 +341,19 @@ ROC_reunit_of_china_d_c = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
 			modifier = {
 				FROM = { is_subject_of = JAP }
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHH }
 				factor = 0
 			}
 		}
@@ -255,6 +391,7 @@ ROC_reunit_of_china_d_c = {
 		}
 		cost = 10
 		days_remove = 10
+		fire_only_once = yes
 		complete_effect = {
 		}
 		remove_effect = {
@@ -288,7 +425,10 @@ ROC_reunit_of_china_d_c = {
 				every_core_state = {
 					add_core_of = ROOT
 				}
-				every_character = { set_nationality = ROOT }
+				every_character = {
+					limit = { is_general_advisor = no }
+					set_nationality = ROOT
+				}
 				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 			}
 		}

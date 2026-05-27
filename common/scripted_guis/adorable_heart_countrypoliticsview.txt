@@ -47,8 +47,44 @@ scripted_gui = {
 				image = "[pol_view_bg_picture]"
 			}
 		}
+		triggers = {
+			AH_debug_buff_rank_visible = { is_debug = yes }
+		}
 		visible = {
 			always = yes
+		}
+		effects = {
+			AH_debug_buff_rank_click = {
+				if = {
+					limit = {
+						not = { has_country_flag = Adorable_Heart_buff_rank_window_visible }
+					}
+					set_country_flag = Adorable_Heart_buff_rank_window_visible
+				}
+				clear_array = global.countries_buff
+				set_variable = { global.countries_buff_index = 0 }
+				every_country = {
+					set_variable = { temp_rank_buff_var = num_of_factories }
+					add_to_array = {
+						global.countries_buff = THIS
+					}
+				}
+				get_sorted_scored_countries = {
+					scorer = Buff_rank_scorer
+					array = global.countries_buff
+				}
+				# Set up ranking positions
+				for_each_scope_loop = {
+					array = global.countries_buff
+					add_to_variable = {
+						global.countries_buff_index = 1
+					}
+					set_variable = {
+						econ_ranking = global.countries_buff_index
+					}
+				}
+				clear_variable = global.countries_buff_index
+			}
 		}
 	}
 }
@@ -65,9 +101,6 @@ scripted_gui = {
 			#always = no
 		}
 	}
-}
-
-scripted_gui = {
 	no_governemnt_Diplomacy_window = {
 		context_type = selected_country_context
 		parent_window_token = selected_country_view_diplomacy
@@ -77,6 +110,58 @@ scripted_gui = {
 		visible = {
 			FROM = {
 				has_country_flag = no_government_situation
+			}
+		}
+	}
+}
+
+scripted_gui = {
+	Jungle_window = {
+		context_type = player_context
+		window_name = "Jungle_window"
+		parent_window_token = politics_tab
+		properties = {
+		}
+		visible = {
+			has_country_flag = Jungle_Area
+			#always = no
+		}
+	}
+	Jungle_Diplomacy_window = {
+		context_type = selected_country_context
+		parent_window_token = selected_country_view_diplomacy
+		window_name = "Jungle_Diplomacy_window"
+		properties = {
+		}
+		visible = {
+			FROM = {
+				has_country_flag = Jungle_Area
+			}
+		}
+	}
+}
+
+scripted_gui = {
+	Garden_of_the_Sun_window = {
+		context_type = player_context
+		window_name = "Garden_of_the_Sun_window"
+		parent_window_token = politics_tab
+		properties = {
+		}
+		visible = {
+			has_country_flag = Garden_of_the_Sun_Area
+			#always = no
+		}
+	}
+	Garden_of_the_Sun_Diplomacy_window = {
+		context_type = selected_country_context
+		parent_window_token = selected_country_view_diplomacy
+		window_name = "Garden_of_the_Sun_Diplomacy_window"
+		properties = {
+		}
+		visible = {
+			FROM = {
+				has_country_flag = Garden_of_the_Sun_Area
 			}
 		}
 	}

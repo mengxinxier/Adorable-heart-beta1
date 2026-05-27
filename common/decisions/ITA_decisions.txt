@@ -488,7 +488,11 @@ ITALIA = {
 		available = {
 			FRA = {
 				all_core_state = {
-					is_controlled_by = ITA
+					OR = {
+						state = 28 
+						state = 8 
+						is_controlled_by = ITA
+					}
 				}
 			}
 		}
@@ -496,6 +500,10 @@ ITALIA = {
 			every_state = {
 				limit = {
 					is_core_of = FRA
+					NOT = { 
+						state = 28 
+						state = 8 
+					}
 				}
 				add_core_of = ITA
 			}
@@ -509,21 +517,33 @@ ITALIA = {
 		allowed = {
 			original_tag = ITA
 		}
-		available = {
-			OR = {
+		available = { 
+			AND = {
 			NPT = {
 				all_core_state = {
-					is_controlled_by = ITA
+					OR = {
+						state = 118 
+						state = 968 
+						is_controlled_by = ITA
+					}
 				}
 			}
 			ARF = {
 				all_core_state = {
-					is_controlled_by = ITA
+					OR = {
+						state = 118 
+						state = 968 
+						is_controlled_by = ITA
+					}
 				}
 			}
 			BLA = {
 				all_core_state = {
-					is_controlled_by = ITA
+					OR = {
+						state = 118 
+						state = 968 
+						is_controlled_by = ITA
+					}
 				}
 			}
 			}
@@ -532,18 +552,30 @@ ITALIA = {
 			every_state = {
 				limit = {
 					is_core_of = NPT
+					NOT = { 
+						state = 118  
+						state = 968 
+					}
 				}
 				add_core_of = ITA
 			}
 			every_state = {
 				limit = {
 					is_core_of = ARF
+					NOT = { 
+						state = 118  
+						state = 968 
+					}
 				}
 				add_core_of = ITA
 			}
 			every_state = {
 				limit = {
 					is_core_of = BLA
+					NOT = { 
+						state = 118   
+						state = 968 
+					}
 				}
 				add_core_of = ITA
 			}
@@ -1019,6 +1051,59 @@ ITA_reunnit_decison = {
 			}
 		}
 	}
+	RCE_declare_ITA_reunit = {
+		name = ITA_declare_ITA_reunit
+		icon = generic_form_nation
+		allowed = {
+		}
+		visible = {
+			tag = RCE
+		}
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = ALL_CONTROL_need_state
+				NOT = {
+					any_state = {
+						or = {
+							has_state_flag = is_ITA_state_area
+							has_state_flag = is_ALS_state_area
+							has_state_flag = is_RMC_state_area
+							has_state_flag = is_MOW_state_area
+						}
+						NOT = {
+							is_controlled_by = ROOT
+						}
+					}
+				}
+			}
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_cosmetic_tag = ALS_ITA
+			load_focus_tree = als_ita_focus
+			hidden_effect = {
+				ITA = {
+					diplomatic_relation = {
+    					country = RIS
+    					relation = guarantee
+    					active = no
+					}
+				}
+				ROOT = {
+					diplomatic_relation = {
+    					country = RIS
+    					relation = guarantee
+    					active = yes
+					}
+				}
+			}
+		}
+	}
 	ITA_core_ITA_state = {
 		allowed = {
 		}
@@ -1306,85 +1391,6 @@ ITA_reunnit_decison = {
 				target = MOW
 				transfer_troops = yes
 			}
-		}
-	}
-	ITA_ai_zuobi = {
-		visible = {
-			OR = {
-				tag = ALS
-				tag = ITA
-			}
-			is_ai = yes
-		}
-		available = {
-			is_ai = yes
-			has_war_with = GRE
-			GRE = {
-			is_ai = no
-			}
-			not = { has_global_flag = second_weltkrieg_has_started }
-		}
-		ai_will_do = {
-			factor = 10000
-		}
-		#fire_only_once = yes
-		days_remove = -1
-		cancel_trigger = {
-			OR = {
-				not = { has_war_with = GRE }
-				has_global_flag = second_weltkrieg_has_started
-			}
-		}
-		modifier = {
-			army_core_attack_factor = 1000
-			army_core_defence_factor = 1000
-		}
-	}
-	ITA_ai_zuobi2 = {
-		visible = {
-			OR = {
-				tag = ALS
-				tag = ITA
-			}
-			is_ai = yes
-		}
-		available = {
-			is_ai = yes
-			has_war_with = GRE
-			GRE = {
-			is_ai = no
-			}
-			not = { has_global_flag = second_weltkrieg_has_started }
-			OR = {
-				any_state = {
-					is_core_of = ITA
-					is_controlled_by = GRE
-				}
-				any_state = {
-					is_core_of = ALS
-					is_controlled_by = GRE
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 10000
-		}
-		#fire_only_once = yes
-		days_remove = -1
-		cancel_trigger = {
-			OR = {
-				not = { has_war_with = GRE }
-				has_global_flag = second_weltkrieg_has_started
-			}
-		}
-		modifier = {
-			army_speed_factor = 1
-			attrition = -1
-			army_org_factor = 1
-			army_morale_factor = 2
-			supply_consumption_factor = -1
-			army_attack_factor = 3
-			army_defence_factor = 3
 		}
 	}
 }
@@ -1912,7 +1918,7 @@ form_roman_empire_category = {
 			# Spain
 			custom_trigger_tooltip = {
 				tooltip = form_spqr_ccy_required_states_tt
-				OR = {
+				and = {
 				NPT = {
 				all_core_state = {
 				is_controlled_by = ROOT
@@ -1954,11 +1960,18 @@ form_roman_empire_category = {
 				is_controlled_by = ROOT
 				}
 				}
-				LIB = {
-				all_core_state = {
-				is_controlled_by = ROOT
-				}
-				}
+				#LIB = {
+				#all_core_state = {
+				#is_controlled_by = ROOT
+				#}
+				#}
+				controls_state = 805
+				controls_state = 459
+				controls_state = 460
+				controls_state = 458
+				controls_state = 665
+				controls_state = 513
+				controls_state = 865
 				MOR = {
 				all_core_state = {
 				is_controlled_by = ROOT
@@ -1979,6 +1992,7 @@ form_roman_empire_category = {
 				#Lebanon
 				controls_state = 553
 				controls_state = 992
+				controls_state = 1170
 			}
 		}
 
@@ -2004,7 +2018,8 @@ form_roman_empire_category = {
 				is_core_of = TUR
 				is_core_of = GRE
 				is_core_of = LBA
-				is_core_of = LIB
+				#is_core_of = LIB
+				has_state_flag = is_LIB_orgin_state_area
 				is_core_of = MOR
 				is_core_of = EGY
 				is_core_of = LEB
@@ -2660,7 +2675,6 @@ ALS_xiuyaosaijueyizu = {
 		icon = generic_fortification
 		cost = 100
 		available = {
-			has_full_control_of_state = 762
 			has_full_control_of_state = 158
 			has_full_control_of_state = 1003
 			has_full_control_of_state = 159
@@ -2674,7 +2688,6 @@ ALS_xiuyaosaijueyizu = {
 		days_remove = 120
 		fire_only_once = yes
 		cancel_trigger = {
-			not = { has_full_control_of_state = 762 }
 			not = { has_full_control_of_state = 158 }
 			not = { has_full_control_of_state = 1003 }
 			not = { has_full_control_of_state = 159 }
@@ -2685,20 +2698,6 @@ ALS_xiuyaosaijueyizu = {
 			
 		}
 		remove_effect = {
-			762 = {
-				add_building_construction = {
-					type = bunker
-					level = 3
-					instant_build = yes
-					province = 9909
-				}
-				add_building_construction = {
-					type = bunker
-					level = 2
-					instant_build = yes
-					province = 3959
-				}
-			}
 			158 = {
 				add_building_construction = {
 					type = bunker
@@ -3367,7 +3366,8 @@ ALS_ydlfuxing_jy = {
 			country_event = als.62
 			annex_country = { target = RCE transfer_troops = yes }
 			RCE = {
-				every_character = { 
+				every_character = {
+					limit = { is_general_advisor = no }
 					set_nationality = ROOT
 				}
 			}
@@ -3688,6 +3688,7 @@ ALS_ydlfuxing_jy = {
 				is_in_faction = no
 				not = { has_war_with = ALS }
 			}
+			not = { is_in_faction_with = GER }
 		}
 		complete_effect = {
 			every_country = {
@@ -3724,6 +3725,7 @@ ALS_ydlfuxing_jy = {
 			is_subject = no
 			is_in_faction = no
 			}
+			not = { is_in_faction_with = GER }
 		}
 		complete_effect = {
 			KVO = {
@@ -3755,6 +3757,7 @@ ALS_ydlfuxing_jy = {
 			is_in_faction = no
 			not = { has_government = fascism }
 			}
+			not = { is_in_faction_with = GER }
 		}
 		complete_effect = {
 			GRE = {
@@ -3786,6 +3789,7 @@ ALS_ydlfuxing_jy = {
 			is_in_faction = no
 			not = { has_government = fascism }
 			}
+			not = { is_in_faction_with = GER }
 		}
 		complete_effect = {
 			TUR = {

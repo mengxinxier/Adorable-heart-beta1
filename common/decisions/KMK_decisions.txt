@@ -1,6 +1,85 @@
 KMK_unit_FRA = {
+	KMK_intervene_on_side_of_NPT = {
+		name = FRA_intervene_on_side_of_NPT
+		available = { has_war_support > 0.25 }
+		visible = { 
+			has_completed_focus = KMK_Intervene_in_NPT_civil_war
+		}
+		target = { NPT }
+		target_trigger = { 
+			FROM = {
+				original_tag = NPT
+				OR = {
+					has_war_with = ARF
+					has_war_with = BLA
+				}
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			#This is not optimal, but it generates a beautiful tooltip
+			if = {
+				limit = { FROM = { tag = NPT } }
+				if = {
+					limit = { country_exists = ARF }
+					add_to_war = { targeted_alliance = NPT enemy = ARF hostility_reason = asked_to_join }
+				}
+				if = {
+					limit = {
+						NPT = {
+							has_war_with = MOR
+						}
+						country_exists = MOR 
+					}
+					add_to_war = { targeted_alliance = NPT enemy = MOR hostility_reason = asked_to_join }
+				}
+				if = {
+					limit = { country_exists = BLA }
+					add_to_war = { targeted_alliance = NPT enemy = BLA hostility_reason = asked_to_join }
+				}
+			}
+
+			effect_tooltip = {
+				give_military_access = FROM
+				FROM = { give_military_access = ROOT }
+			}
+			hidden_effect = {
+				diplomatic_relation = {
+					country = FROM
+					relation = military_access
+					active = yes
+				}
+				FROM = {
+					diplomatic_relation = {
+						country = ROOT
+						relation = military_access
+						active = yes
+					}
+				}
+			}
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				add_to_faction = FROM
+			}
+		}
+
+		cost = 25
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				has_war = yes
+				factor = 0
+			}
+			modifier = {
+				is_historical_focus_on = yes
+				factor = 0
+			}
+		}
+		
+	}
 	KMK_attack_bolin_controler = {
-		name = "进攻柏林"
 		icon = GFX_decision_generic_ignite_civil_war
 		visible = {
 			has_completed_focus = KMK_war_on_pacifism
@@ -466,6 +545,8 @@ KMK_unit_FRA = {
 				id = KMK.0076
 			}
 			set_cosmetic_tag = FRA_Remiria
+			clear_array = compatible_culture_array
+			get_Gensokyo_culture = yes
 			custom_effect_tooltip = New_Order_of_world_TT
 			hidden_effect = {
 				every_core_state = {
@@ -734,15 +815,10 @@ KMK_unit_FRA = {
 						}
 					}
 				}
-				FRA = {
-					transfer_navy = {
-						target = KMK
-					}
-				}
 				KMK = {
 					annex_country = {
 						target = FRA
-						transfer_troops = no
+						transfer_troops = yes
 					}
 					set_temp_variable = { tag_to_release = LIB }
 					puppet_released_tag_and_old_govern = yes
@@ -775,7 +851,7 @@ KMK_unit_FRA = {
 				FRA = {
 					annex_country = {
 						target = KMK
-						transfer_troops = no
+						transfer_troops = yes
 					}
 				}
 			}
@@ -787,10 +863,10 @@ KMK_unit_FRA = {
 			or = { 
 				has_country_leader = {
 					ruling_only = yes
-					name = "芙兰朵露·斯卡蕾特"
+					character = KMK_Flandre
 				}
 				AND = {
-					has_country_leader = { ruling_only = yes name = "十六夜咲夜" }
+					has_country_leader = { ruling_only = yes character = KMK_Sakuya }
 					not = {
 						has_completed_focus = KMK_Sakuya_join_the_german_aggreement
 					}
@@ -804,11 +880,11 @@ KMK_unit_FRA = {
 			or = {
 				has_country_leader = {
 					ruling_only = yes
-					name = "芙兰朵露·斯卡蕾特"
+					character = KMK_Flandre
 				}
 				has_country_leader = {
 					ruling_only = yes
-					name = "十六夜咲夜"
+					character = KMK_Sakuya
 				}
 			}
 			not = {
@@ -846,6 +922,8 @@ KMK_unit_FRA = {
 			add_ideas =KMK_Cruel_rule
 			add_ideas = KMK_bad_econmic_state
 			set_cosmetic_tag = flandre_sca
+			clear_array = compatible_culture_array
+			get_Gensokyo_culture = yes
 			925 = {
 				set_state_name = "红雾始源地"
 			}
@@ -871,7 +949,7 @@ KMK_unit_FRA = {
 					not = {
 						has_country_leader = {
 							ruling_only = yes
-							name = "芙兰朵露·斯卡蕾特"
+							character = KMK_Flandre
 						}
 					}
 				}
@@ -901,13 +979,14 @@ KMK_unit_FRA = {
 		visible = {
 			has_country_leader = {
 				ruling_only = yes
-				name = "蕾米莉亚·斯卡蕾特"
+				character = KMK_Remilia
 			}
 		}
 		available = {
+			is_subject = no
 			has_country_leader = {
 				ruling_only = yes
-				name = "蕾米莉亚·斯卡蕾特"
+				character = KMK_Remilia
 			}
 			not = {
 				country_exists = FRA
@@ -953,6 +1032,8 @@ KMK_unit_FRA = {
 			925 = {
 				set_state_name = "红雾始源地"
 			}
+			clear_array = compatible_culture_array
+			get_Gensokyo_culture = yes
 			load_focus_tree = homo_Remiria_focus
 			set_country_flag = reunit_huanxiangxiang
 			add_ideas = KMK_bad_governmet_state
@@ -1098,6 +1179,7 @@ KMK_unit_FRA = {
 		complete_effect = {
 			FRA = {
 				every_character = {
+					limit = { is_general_advisor = no }
 					set_nationality = KMK
 				}
 			}
@@ -2094,11 +2176,11 @@ KMK_ukr_taowang = {
 					or = {
 						has_country_leader = {
 							ruling_only = yes
-							name = "蕾米莉亚·斯卡蕾特"
+							character = KMK_Remilia
 						}	
 						has_country_leader = {
 							ruling_only = yes
-							name = "帕秋莉·诺蕾姬"
+							character = KMK_Patchouli
 						}	
 					}
 				}
@@ -2137,7 +2219,7 @@ KMK_ukr_taowang = {
 				KMK = {
 					has_country_leader = {
 						ruling_only = yes
-						name = "芙兰朵露·斯卡蕾特"
+						character = KMK_Flandre
 					}	
 				}
 				is_ai = yes
@@ -2175,7 +2257,7 @@ KMK_ukr_taowang = {
 				KMK = {
 					has_country_leader = {
 						ruling_only = yes
-						name = "十六夜咲夜"
+						character = KMK_Sakuya
 					}	
 				}
 				is_ai = yes
@@ -2590,7 +2672,7 @@ KMK_pl_cat = {
 		visible = {
 			has_country_leader = {
 				ruling_only = yes
-				name = "蕾米莉亚·斯卡蕾特"
+				character = KMK_Remilia
 			}
 		}
 		days_remove = 100
@@ -2633,7 +2715,7 @@ KMK_pl_cat = {
 		visible = {
 			has_country_leader = {
 				ruling_only = yes
-				name = "蕾米莉亚·斯卡蕾特"
+				character = KMK_Remilia
 			}
 		}
 		days_remove = 100
@@ -2673,7 +2755,7 @@ KMK_pl_cat = {
 		visible = {
 			has_country_leader = {
 				ruling_only = yes
-				name = "芙兰朵露·斯卡蕾特"
+				character = KMK_Flandre
 			}
 		}
 		days_remove = 100
@@ -3608,7 +3690,7 @@ form_european_union_category = {
 			has_government = communism
 			has_country_leader = {
 				ruling_only = yes
-				name = "芙兰朵露·斯卡蕾特"
+				character = KMK_Flandre
 			}
 		}
 		available = {
@@ -3629,6 +3711,8 @@ form_european_union_category = {
 		complete_effect = {
 			custom_effect_tooltip = KMK_flandre_form_european_union_TT
 			set_cosmetic_tag = FRA_Remiria
+			clear_array = compatible_culture_array
+			get_Gensokyo_culture = yes
 			add_research_slot = 1
 			hidden_effect = {
 				DVL = {
@@ -3737,7 +3821,7 @@ KMK_fix_Financial_crisis = {
 					limit = {
 						has_country_leader = {
 							ruling_only = yes
-							name = "蕾米莉亚·斯卡蕾特"
+							character = KMK_Remilia
 						}
 					}
 					country_event = {
@@ -3748,7 +3832,7 @@ KMK_fix_Financial_crisis = {
 					limit = {
 						has_country_leader = {
 							ruling_only = yes
-							name = "芙兰朵露·斯卡蕾特"
+							character = KMK_Flandre
 						}
 					}
 					country_event = {

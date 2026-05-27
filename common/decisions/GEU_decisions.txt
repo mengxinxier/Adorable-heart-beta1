@@ -926,7 +926,6 @@ GEU_Diplomatic_matters = {
 						region = 22   ##JK
 						region = 181   ##意大利
 						region = 23
-						state = 762
 						state = 114
 					}
 					any_neighbor_state = {
@@ -950,7 +949,6 @@ GEU_Diplomatic_matters = {
 						region = 22   ##JK
 						region = 181   ##意大利
 						region = 23
-						state = 762
 						state = 114
 					}
 				}
@@ -1370,7 +1368,7 @@ War_against_DVL_decision = {
 		selectable_mission = yes
 		cancel_trigger = {
 			hidden_trigger = {
-				has_war = no
+				DVL = { exists = no }
 			}
 		}
 		cancel_effect = {
@@ -1380,10 +1378,23 @@ War_against_DVL_decision = {
 						not = { check_variable = { global.War_against_DVL_Var < 2 } }
 					}
 					GER = {
-						dismantle_faction = yes
-						create_faction = Axis
-						add_to_faction = ITA
-						add_to_faction = KMS
+						set_faction_name = Axis
+						set_faction_manifest = faction_manifest_conquest_of_territory
+						every_allied_country = {
+							limit = {
+								not = {
+									or = {
+										tag = GER
+										tag = ITA
+										tag = KMS
+										is_subject_of = GER
+										is_subject_of = ITA
+										is_subject_of = KMS
+									}
+								}
+							}
+							PREV = { remove_from_faction = PREV }
+						}
 					}
 					BAY = {
 						if = {

@@ -1,38 +1,4 @@
 SOV_faction_management_category = {
-
-	SOV_formation_comecon = {
-		icon = GFX_decision_SOV_the_stalin_constitution
-		priority = 99
-		visible = {
-			original_tag = SOV
-			is_subject = no
-			is_faction_leader = yes
-		}
-		available = {
-			is_subject = no
-			num_faction_members > 3
-
-		}
-		days_remove = 14
-		ai_will_do = {
-			base = 1000
-		}
-		cost = 0
-		fire_only_once = yes
-		remove_effect = {
-			set_variable = { global.num_comecon_member = 0 }
-			custom_effect_tooltip = SOV_formation_comecon_tooltip
-			unlock_decision_tooltip = SOV_establish_research_organization
-			hidden_effect = {
-				add_dynamic_modifier = {
-					modifier = SOV_comecon_leader
-				}
-				set_variable = { economy_faction_var = 2 }   ##设置阵营变量
-				comecon_effect = yes   ##计算阵营相关
-			}
-		}
-	}
-
 	SOV_political_propaganda_Sakura_path = {
 		icon = GFX_decision_eng_propaganda_campaigns
 		priority = 9
@@ -671,54 +637,6 @@ SOV_faction_management_category = {
 		}
 	}
 
-	SOV_integrate_Kiev_region = {
-		icon = GFX_decision_infiltrate_state
-		visible = {
-			tag = SOV
-			UKR = {
-				exists = no
-			}
-			any_state = {
-				is_core_of = UKR
-				NOT = { is_core_of = ROOT }
-			}
-		}
-		available = {
-			any_state = {
-				is_core_of = UKR
-				is_controlled_by = ROOT
-			}
-		}
-		ai_will_do = {
-			factor = 100000
-		}
-		cost = 10
-		days_remove = 90
-		fire_only_once = yes
-		complete_effect = {
-			every_state = {
-				limit = { is_core_of = UKR }
-				add_claim_by = ROOT
-			}
-		}
-		remove_effect = {
-			every_state = {
-				limit = {
-					is_core_of = UKR
-					is_controlled_by = ROOT
-				}
-				add_compliance = 0.20
-			}
-			hidden_effect = {
-				country_event = ukr_politics.45
-			}
-			add_to_variable = { ubs_save = 300 }
-			custom_effect_tooltip = SOV_get_300_add_to_reserve
-			SOV_allowance_of_peasants = yes
-		}
-	}
-
-
 }
 
 SOV_deal_with_plague_category = {
@@ -747,6 +665,7 @@ SOV_deal_with_plague_category = {
 				remove_ideas = SOV_spread_of_plague
 				clr_country_flag = SOV_plague_start  
 				news_event = SOV_news.5
+				country_event = { id = SOV_dip.51 days = 10 }
 			}
 	    }
 	}
@@ -1202,7 +1121,7 @@ SOV_gain_profit_in_risk = {
 		available = {
 			always = no
 		}
-		days_mission_timeout = 1095
+		days_mission_timeout = 730
 		is_good = yes
 		fire_only_once = yes
 		cancel_trigger = {
@@ -2103,6 +2022,13 @@ SOV_development_of_industry_category = {
 		fire_only_once = yes
 		priority = 99
 		on_map_mode = map_only
+		allowed = {
+			original_tag = SOV
+		}
+		target_root_trigger = {
+			original_tag = SOV
+			has_completed_focus = SOV_steel_complex
+		}
 		visible = {
 			has_completed_focus = SOV_steel_complex
 			FROM = {
@@ -2158,10 +2084,118 @@ SOV_development_of_industry_category = {
 			}
 		}
 	}
+
+	SOV_Start_Siberian_Great_Development = {  ##开始西伯利亚大开发
+		visible = {
+			has_completed_focus = SOV_Siberian_Great_Development
+			not = {
+				has_country_flag = SOV_Siberian_Great_Developmenting
+			}
+		}
+		complete_effect = {
+			set_country_flag = SOV_Siberian_Great_Developmenting
+			activate_mission = SOV_Siberian_Great_Developmenting
+			add_ideas = SOV_Siberian_Great_Developmenting_idea
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	SOV_End_Siberian_Great_Development = {  ##结束西伯利亚大开发
+		visible = {
+			has_completed_focus = SOV_Siberian_Great_Development
+			has_country_flag = SOV_Siberian_Great_Developmenting
+		}
+		complete_effect = {
+			clr_country_flag = SOV_Siberian_Great_Developmenting
+			remove_ideas = SOV_Siberian_Great_Developmenting_idea
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	SOV_Siberian_Great_Developmenting = {  ##西伯利亚大开发
+		icon = GFX_decision_generic_construction
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 100
+		days_mission_timeout = 60
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+			hidden_trigger = { not = { has_country_flag = SOV_Siberian_Great_Developmenting } }
+		}
+		timeout_effect = {
+			hidden_effect = {
+				activate_mission = SOV_Siberian_Great_Developmenting
+			}
+			random_state = {
+				limit = {
+					is_on_continent = asia
+					is_core_of = ROOT
+					is_fully_controlled_by = ROOT
+					or = {
+						has_state_category = zero
+						has_state_category = one
+						has_state_category = two
+						has_state_category = three
+						has_state_category = four
+						has_state_category = five
+						has_state_category = six
+					}
+				}
+				increase_state_category_by_one_level = yes
+			}
+		}
+	}
 }
 
 SOV_territorial_affairs = {
 
+	SOV_integrate_Kiev_region = {
+		icon = GFX_decision_infiltrate_state
+		allowed = { tag = SOV }
+		visible = {
+			tag = SOV
+			UKR = { is_subject_of = ROOT }
+		}
+		available = {
+			UKR = { is_subject_of = ROOT }
+		}
+		ai_will_do = {
+			factor = 100000
+		}
+		cost = 100
+		days_remove = 270
+		fire_only_once = yes
+		remove_effect = {
+			UKR = {
+				every_character = {
+					limit = { has_character_flag = UKR_take_neutral_position_flag }
+					set_nationality = SOV
+				}
+				every_core_state = {
+					limit = { is_fully_controlled_by = PREV }
+					add_core_of_ROOT = yes
+				}
+				every_core_state = {
+					limit = { not = { is_core_of = ROOT } }
+					add_claim_by = ROOT
+				}
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+			}
+		}
+	}
 	SOV_rename_Kaliningrad = {
 		icon = GFX_decision_hol_draw_up_staff_plans
 		allowed = {
@@ -2196,6 +2230,14 @@ SOV_industrial_migration_category = {
 		icon = GFX_decision_generic_industry
 		fire_only_once = yes
 		on_map_mode = map_and_decisions_view
+		allowed = {
+			original_tag = SOV
+		}
+		target_root_trigger = {
+			original_tag = SOV
+			has_completed_focus = SOV_migration_of_industries
+			has_war = no
+		}
 		visible = {
 			has_completed_focus = SOV_migration_of_industries
 			FROM = {
@@ -2291,6 +2333,14 @@ SOV_industrial_migration_category = {
 		icon = GFX_decision_generic_trucks
 		fire_only_once = yes
 		on_map_mode = map_and_decisions_view
+		allowed = {
+			original_tag = SOV
+		}
+		target_root_trigger = {
+			original_tag = SOV
+			has_completed_focus = SOV_migration_of_industries
+			has_war = no
+		}
 		visible = {
 			has_completed_focus = SOV_migration_of_industries
 			FROM = {
@@ -2401,10 +2451,47 @@ SOV_special_military_operations_category = {
 					is_subject_of = SOV
 				}
 			}
-		}   
+		}
+		cancel_trigger = {
+			202 = { is_controlled_by_ROOT_or_ally = yes }
+		}
 		days_mission_timeout = 180
 		is_good = no
 		fire_only_once = yes
+		cancel_effect = {
+			SOV = {
+				effect_tooltip = { white_peace = UKR }
+				hidden_effect = {
+					white_peace = {
+						tag = UKR
+						message = SOV_win_UKR
+					}
+					if = {
+						limit = { has_country_flag = SOV_special_operation_failure_decsison }
+						clr_country_flag = SOV_special_operation_failure_decsison
+						country_event = { id = SOV_flavor.20 days = 1 }
+					}
+					clr_country_flag = SOV_special_military_operations_start
+					country_event = SOV_flavor.23
+					news_event = { id = SOV_news.7 hours = 6 }
+				}
+				set_autonomy = {
+					target = UKR
+					autonomous_state = SOV_member_state
+				}
+				unlock_decision_tooltip = SOV_integrate_Kiev_region
+			}
+			UKR = {
+				create_country_leader = {
+					name = SOV_Lada   ##拉达
+					desc = ""
+					picture = "gfx/leaders/SOV/Gummy.dds"
+					expire = "1985.1.1"
+					ideology = leninism
+					traits = {}
+				}
+			}
+		}
 		timeout_effect = {      
 			SOV = {
 				add_timed_idea = {
@@ -2448,10 +2535,31 @@ SOV_special_military_operations_category = {
 					is_subject_of = SOV
 				}
 			}
-		}   
+		}
+		cancel_trigger = {
+			not = { controls_state = 202 }
+		}
 		days_mission_timeout = 180
 		is_good = yes
 		fire_only_once = yes
+		cancel_effect = {
+			effect_tooltip = {
+				SOV = {
+					white_peace = UKR
+					puppet = UKR
+				}
+				UKR = {
+					create_country_leader = {
+						name = SOV_Lada   ##拉达
+						desc = ""
+						picture = "gfx/leaders/SOV/Gummy.dds"
+						expire = "1985.1.1"
+						ideology = leninism
+						traits = {}
+					}
+				}
+			}
+		}
 		timeout_effect = {   
 			effect_tooltip = {
 				UKR = {
@@ -3530,7 +3638,7 @@ SOV_propaganda_campaigns = {
 		icon = eng_propaganda_campaigns
 
 		ai_will_do = {
-			base = 1
+			base = 0
 			modifier = {
 				factor = 5
 				has_war = yes
@@ -4106,9 +4214,9 @@ foreign_influence = {
 	}
 }
 
-SOV_dip_agitprop_category = {
+SOV_dip_agitprop_category = {  ##输出革命
 
-	SOV_march_on_Minsk = {
+	SOV_march_on_Minsk = {  ##向明斯克前进
 		icon = GFX_decision_generic_civil_support
 		allowed = {
 			always = no
@@ -4167,7 +4275,7 @@ SOV_dip_agitprop_category = {
 		}
 	}
 
-	SOV_down_to_the_Balkans = {
+	SOV_down_to_the_Balkans = {  ##南下巴尔干
 		icon = GFX_decision_generic_civil_support
 		visible = {
 			is_subject = no
@@ -4201,7 +4309,7 @@ SOV_dip_agitprop_category = {
 		}
 	}
 
-	SOV_encourage_communist_rallies_in_dec = {
+	SOV_encourage_communist_rallies_in_dec = {  ##解放[From.GetName]的人民
 		priority = 1
 		allowed = { always = no }
 		visible = { 
@@ -4232,7 +4340,145 @@ SOV_dip_agitprop_category = {
 		}
 	}
 
-	SOV_uphold_dec_national_self_determination = {
+	SOV_Intervene_Tresen_Civil_War = {  ##介入特雷森内战
+		priority = 2
+		allowed = { original_tag = sov }
+		visible = { 
+			has_completed_focus = SOV_Instigate_Tresen_Civil_War
+	    }
+		ai_will_do = {
+			base = 0
+		}
+		available = {
+			TAM = {
+				exists = yes 
+				has_war_with = PER
+				has_war_with = AFG
+			}
+			SOV = {
+				has_war = no
+			}
+		}
+		cost = 15
+		fire_only_once = yes
+		complete_effect = {
+			add_to_war = {
+				targeted_alliance = TAM
+				enemy = PER
+			}
+			activate_mission = SOV_special_operation_to_TAM
+		}
+	}
+
+	SOV_special_operation_to_TAM = {
+		priority = 3
+		icon = GFX_decision_hol_draw_up_staff_plans
+		activation = {   
+			always = no
+		}  
+		visible = {
+			tag = SOV
+		}    
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		cancel_trigger = {
+			PER = {
+				OR = {
+					exists = no
+					is_subject_of = SOV
+					is_subject_of = TAM
+				}
+			}
+			AFG = {
+				OR = {
+					exists = no
+					is_subject_of = SOV
+					is_subject_of = TAM
+				}
+			}
+		}
+		days_mission_timeout = 180
+		is_good = no
+		fire_only_once = yes
+		cancel_effect = {
+			SOV = {
+			#	custom_effect_tooltip = SOV_special_operation_to_TAM_tt 
+			#	hidden_effect = {
+			#		PER = { 
+			#			for_loop_effect = {
+			#				end = global.SOV_Intervene_Tresen_Civil_War_PER^num
+			#				value = v
+			#				transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_PER^v
+			#			}
+			#		}
+			#		AFG = { 
+			#			for_loop_effect = {
+			#				end = global.SOV_Intervene_Tresen_Civil_War_AFG^num
+			#				value = v
+			#				transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_AFG^v
+			#			}
+			#		}
+			#		TAM = { 
+			#			for_loop_effect = {
+			#				end = global.SOV_Intervene_Tresen_Civil_War_TAM^num
+			#				value = v
+			#				transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_TAM^v
+			#			}
+			#		}
+					clear_array = global.SOV_Intervene_Tresen_Civil_War_PER
+					clear_array = global.SOV_Intervene_Tresen_Civil_War_AFG
+					clear_array = global.SOV_Intervene_Tresen_Civil_War_TAM
+			#	}
+				puppet = TAM
+			}
+			
+		}
+		timeout_effect = {      
+			custom_effect_tooltip = SOV_special_operation_to_TAM_tt
+			add_political_power = -100
+			add_stability = -0.1
+			add_war_support = -0.1
+			white_peace = PER
+			white_peace = AFG
+			TAM = {
+				white_peace = PER
+				white_peace = AFG
+			}
+			hidden_effect = {
+				
+				PER = { 
+					for_loop_effect = {
+						end = global.SOV_Intervene_Tresen_Civil_War_PER^num
+						value = v
+						transfer_state = global.SOV_Intervene_Tresen_Civil_War_PER^v
+					}
+				}
+				AFG = { 
+					for_loop_effect = {
+						end = global.SOV_Intervene_Tresen_Civil_War_AFG^num
+						value = v
+						transfer_state = global.SOV_Intervene_Tresen_Civil_War_AFG^v
+					}
+				}
+				TAM = { 
+					for_loop_effect = {
+						end = global.SOV_Intervene_Tresen_Civil_War_TAM^num
+						value = v
+						transfer_state = global.SOV_Intervene_Tresen_Civil_War_TAM^v
+					}
+				}
+				clear_array = global.SOV_Intervene_Tresen_Civil_War_PER
+				clear_array = global.SOV_Intervene_Tresen_Civil_War_AFG
+				clear_array = global.SOV_Intervene_Tresen_Civil_War_TAM
+			}
+	    }
+		
+	}
+
+	SOV_uphold_dec_national_self_determination = {  ##颠覆[From.GetName]反动政府
 		priority = 98
 		allowed = { always = no }
 		visible = { 
@@ -4284,17 +4530,21 @@ SOV_dip_agitprop_category = {
 		}
 	}
 
-	SOV_liberate_the_people_of_dec = {
+	SOV_liberate_the_people_of_dec = {  ##解放[From.GetName]的人民
 		priority = 99
+		allowed = { always = no }
 		visible = {
-			has_completed_focus = SOV_free_Europe
 		}
 		target_trigger = {
+			ROOT = { is_subject = no }
 			FROM = {
-				NOT = { is_in_faction_with = ROOT }
-				exists = yes
-				is_major = yes
-				capital_scope = { is_on_continent = europe }
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
 			}
 		}
 		ai_will_do = {
@@ -4305,6 +4555,10 @@ SOV_dip_agitprop_category = {
 					is_neighbor_of = FROM
 					any_allied_country = { is_neighbor_of = FROM }
 				}
+			}
+			modifier = {
+				factor = 0
+				FROM = { is_in_ally = yes }
 			}
 			modifier = {
 				factor = 10
@@ -4326,6 +4580,11 @@ SOV_dip_agitprop_category = {
 						is_major = yes
 					}
 				}
+				not = {
+					FROM = {
+						tag = DVL
+					}
+				}
 			}
 			modifier = {
 				factor = 0
@@ -4333,31 +4592,129 @@ SOV_dip_agitprop_category = {
 					is_major = yes
 				}
 			}
-		}
-		available = { 
-			is_subject = no
-			OR = {
-				NOT = { country_exists = DVL }
-				DVL = { is_subject = yes }
+			modifier = {
+				factor = 0
+				has_country_flag = {
+					flag = DVL_banished_from_earth
+					days < 365
+				}
 			}
-			date > 1941.1.1
+		}
+		available = {
+			NOT = { has_non_aggression_pact_with = FROM }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			FROM_subject_neighbor_with_root = yes
 		}
 		war_with_target_on_remove = yes
 		complete_effect = {
-			FROM = { country_event = SOV_flavor.30 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		cost = 0
 		days_remove = 30
 		fire_only_once = yes
 		remove_effect = {
+			if = {
+				limit = {
+					not = { has_global_flag = second_weltkrieg_has_started }
+					FROM = { tag = DVL }
+				}
+				custom_effect_tooltip = this_will_lead_to_second_weltkrieg
+			}
 			declare_war_on = {
 				target = FROM
-				type = puppet_wargoal_focus
+				type = annex_everything
 			}
 		}
 	}
+	##整合
+	SOV_integration_FROM_SOV_member_state = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
+			has_war = no
+			FROM = { is_subject_of = ROOT }
+			or = {
+				any_home_area_neighbor_country = {
+					tag = FROM
+				}
+				FROM = {
+					tag = ASK
+				}
+			}
+		}
+		cost = 100
+		days_remove = 100
+		fire_only_once = yes
+		remove_effect = {
+			set_autonomy = {
+				target = FROM
+				autonomous_state = SOV_member_state
+			}
+			activate_targeted_decision = { target = FROM decision = SOV_integration_FROM_annex }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	SOV_integration_FROM_annex = {
+		icon = GFX_decision_eng_trade_unions_support
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+		}
+		available = {
+			has_war = no
+			FROM = { is_subject_of = ROOT }
+			or = {
+				any_home_area_neighbor_country = {
+					tag = FROM
+				}
+				FROM = {
+					tag = ASK
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = second_weltkrieg_has_over
+				has_global_flag = second_weltkrieg_has_started
+				DVL = {
+					or = {
+						exists = no
+					is_subject = yes
+					}
+				}
+			}
+		}
+		cost = 100
+		days_remove = 300
+		remove_effect = {
+			FROM = {
+				every_core_state = {
+					add_core_of = ROOT
+				}
+				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
 
-	SOV_exterminate_fascism_in_Europe = {
+	SOV_exterminate_fascism_in_Europe = {  ##消灭[From.GetName]法西斯分子
 		icon = GFX_decision_generic_tank
 		visible = {
 			is_subject = no
@@ -4413,6 +4770,47 @@ SOV_dip_agitprop_category = {
 			}
 		}
 	}
+	SOV_diplo_invite_FROM = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				not = { has_country_flag = SOV_diplo_invite_FROM }
+			}
+		}
+		available = {
+			is_faction_leader = yes
+			FROM = {
+				is_in_faction = no
+			}
+			not = {
+				or = {
+					has_war_with = FROM
+					is_in_faction_with = FROM
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = {
+				set_country_flag = SOV_diplo_invite_FROM
+				country_event = {
+					id = generic.2008
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
 }
 
 SOV_expelling_alien_forces = {
@@ -4455,9 +4853,7 @@ SOV_expelling_alien_forces = {
 			icon = GFX_decision_hol_exchange_intelligence_data
 			priority = 98
 			visible = {
-				has_dynamic_modifier = {
-					modifier = SOV_comecon_leader
-				}
+				event_target:comecon_leader = { tag = ROOT }
 				FROM = { NOT = { has_country_flag = had_invited_comecon } }
 				FROM = { not = { has_war_with = ROOT } }
 			}
@@ -4471,7 +4867,7 @@ SOV_expelling_alien_forces = {
 					NOT = { has_country_flag = had_invited_comecon }
 					is_faction_leader = no
 					is_in_faction_with = ROOT
-					NOT = { has_idea = SOV_comecon_buff }
+					NOT = { has_SOV_comecon_buff = yes }
 					not = { has_war_with = ROOT }
 				}
 			}
@@ -4480,7 +4876,7 @@ SOV_expelling_alien_forces = {
 				base = 1000
 			}
 			cancel_trigger = {
-				FROM = { has_idea = SOV_comecon_buff }
+				FROM = { has_SOV_comecon_buff = yes }
 			}
 			cost = 10
 			days_re_enable = 30
@@ -4492,7 +4888,11 @@ SOV_expelling_alien_forces = {
 				FROM = {
 					if = {
 						limit = { NOT = { has_country_flag = had_invited_comecon } }
-						set_country_flag = { flag = had_invited_comecon days = 90 }
+						set_country_flag = {
+							flag = had_invited_comecon
+							days = 360
+							value = 1
+						}
 					}
 					country_event = { id = SOV_cmea.1 days = 2 }
 				}
@@ -4506,13 +4906,11 @@ SOV_expelling_alien_forces = {
 				always = no
 			}
 			visible = {
-				has_dynamic_modifier = {
-					modifier = SOV_comecon_leader
-				}
+				event_target:comecon_leader = { tag = ROOT }
 				FROM = { 
 					NOT = { 
 						has_country_flag = had_invited_comecon 
-						has_idea = SOV_comecon_buff
+						has_SOV_comecon_buff = yes
 					}
 				}
 				FROM = { not = { has_war_with = ROOT } }
@@ -4522,7 +4920,7 @@ SOV_expelling_alien_forces = {
 				FROM = { 
 					NOT = { 
 						has_country_flag = had_invited_comecon 
-						has_idea = SOV_comecon_buff
+						has_SOV_comecon_buff = yes
 					} 
 				}
 			}
@@ -4531,7 +4929,7 @@ SOV_expelling_alien_forces = {
 				base = 1000
 			}
 			cancel_trigger = {
-				FROM = { has_idea = SOV_comecon_buff }
+				FROM = { has_SOV_comecon_buff = yes }
 			}
 			cost = 10
 			days_re_enable = 30
@@ -4541,45 +4939,86 @@ SOV_expelling_alien_forces = {
 			}
 			remove_effect = {
 				FROM = {
-					set_country_flag = { flag = had_invited_comecon days = 90 }
+					set_country_flag = {
+						flag = had_invited_comecon
+						days = 360
+						value = 1
+					}
 					country_event = { id = SOV_cmea.1 days = 2 }
 				}
 			}
 		}
 
-		SOV_establish_research_organization = {
-			priority = 96
+		SOV_invite_dec_to_join_comecon_research_organization = {
+			icon = GFX_decision_hol_exchange_intelligence_data
+			priority = 98
 			visible = {
-				has_dynamic_modifier = {
-					modifier = SOV_comecon_leader
-				}
+				tag = sov
+				is_in_tech_sharing_group = comecon_research_organization
 			}
 			available = {
-				custom_trigger_tooltip = {
-					tooltip = SOV_establish_research_organization_tt
-					check_variable = {
-						global.num_comecon_member > 4
-					}
+				is_subject = no
+			}
+			target_trigger = {
+				FROM = {
+					check_variable = { THIS.economy_faction_var = 2 }
+					not = { is_in_tech_sharing_group = comecon_research_organization }
+					not = { has_war_with = ROOT }
 				}
 			}
-			days_remove = 14
+			days_remove = 7
 			ai_will_do = {
-				base = 100
+				base = 1000
 			}
-			cost = 100
-			fire_only_once = yes
+			cancel_trigger = {
+				FROM = { is_in_tech_sharing_group = comecon_research_organization }
+			}
+			cost = 10
+			days_re_enable = 30
+			fire_only_once = no
+			cancel_effect = {
+				add_political_power = 10
+			}
 			remove_effect = {
-				add_research_slot = 1
-				add_to_tech_sharing_group = comecon_research_organization
-				every_other_country = {
-					limit = {
-						is_in_faction_with = SOV
-						has_idea = SOV_comecon_buff
-					}
+				FROM = {
 					add_to_tech_sharing_group = comecon_research_organization
 				}
 			}
 		}
+
+		# SOV_establish_research_organization = {
+		# 	priority = 96
+		# 	visible = {
+		# 		has_dynamic_modifier = {
+		# 			modifier = SOV_comecon_leader
+		# 		}
+		# 	}
+		# 	available = {
+		# 		custom_trigger_tooltip = {
+		# 			tooltip = SOV_establish_research_organization_tt
+		# 			check_variable = {
+		# 				global.num_comecon_member > 4
+		# 			}
+		# 		}
+		# 	}
+		# 	days_remove = 14
+		# 	ai_will_do = {
+		# 		base = 100
+		# 	}
+		# 	cost = 100
+		# 	fire_only_once = yes
+		# 	remove_effect = {
+		# 		add_research_slot = 1
+		# 		add_to_tech_sharing_group = comecon_research_organization
+		# 		every_other_country = {
+		# 			limit = {
+		# 				is_in_faction_with = SOV
+		# 				has_SOV_comecon_buff = yes
+		# 			}
+		# 			add_to_tech_sharing_group = comecon_research_organization
+		# 		}
+		# 	}
+		# }
 
 	#经济援助
 		comecon_apply_for_financial_aid = {
@@ -4587,10 +5026,8 @@ SOV_expelling_alien_forces = {
 			priority = 12
 			visible = {
 				OR = {
-					has_dynamic_modifier = {
-						modifier = SOV_comecon_leader
-					}
-					has_idea = SOV_comecon_buff
+					event_target:comecon_leader = { tag = ROOT }
+					has_SOV_comecon_buff = yes
 				}
 			}
 			available = {
@@ -4671,10 +5108,8 @@ SOV_expelling_alien_forces = {
 			priority = 10
 			visible = {
 				OR = {
-					has_dynamic_modifier = {
-						modifier = SOV_comecon_leader
-					}
-					has_idea = SOV_comecon_buff
+					event_target:comecon_leader = { tag = ROOT }
+					has_SOV_comecon_buff = yes
 				}
 			}
 			target_trigger = {
@@ -4682,10 +5117,8 @@ SOV_expelling_alien_forces = {
 					NOT = { tag = ROOT }
 					has_country_flag = comecon_apply_for_financial_aid_flag
 					OR = {
-						has_dynamic_modifier = {
-							modifier = SOV_comecon_leader
-						}
-						has_idea = SOV_comecon_buff
+						event_target:comecon_leader = { tag = ROOT }
+						has_SOV_comecon_buff = yes
 					}
 				}
 			}
@@ -4726,7 +5159,7 @@ SOV_expelling_alien_forces = {
 			priority = 8
 			icon = GFX_decision_eng_trade_unions_support
 			visible = {
-				has_idea = SOV_comecon_buff
+				has_SOV_comecon_buff = yes
 			}
 			custom_cost_trigger = {
 				check_variable = { ubs_save > 150 }
@@ -4777,7 +5210,7 @@ SOV_expelling_alien_forces = {
 			icon = GFX_decision_generic_fundraising
 			priority = 7
 			visible = {
-				has_idea = SOV_comecon_buff
+				has_SOV_comecon_buff = yes
 				industrial_complex < 45
 			}
 			cost = 10
@@ -4801,9 +5234,9 @@ SOV_expelling_alien_forces = {
 			priority = 6
 
 			icon = generic_industry
-
+			allowed = {NOT = {TAG = SOV}}
 			visible = {
-				has_idea = SOV_comecon_buff
+				has_SOV_comecon_buff = yes
 			}
 
 			available = {
@@ -4883,9 +5316,9 @@ SOV_expelling_alien_forces = {
 			priority = 5
 
 			icon = ger_military_buildup
-
+			allowed = {NOT = {TAG = SOV}}
 			visible = {
-				has_idea = SOV_comecon_buff
+				has_SOV_comecon_buff = yes
 			}	
 			
 			available = {
@@ -4992,9 +5425,9 @@ SOV_expelling_alien_forces = {
 			priority = 4
 
 			icon = generic_decision
-
+			allowed = {NOT = {TAG = SOV}}
 			visible = {
-				has_idea = SOV_comecon_buff
+				has_SOV_comecon_buff = yes
 			}		
 
 			available = {
@@ -5101,9 +5534,9 @@ SOV_expelling_alien_forces = {
 			priority = 3
 
 			icon = generic_tank
-
+			allowed = {NOT = {TAG = SOV}}
 			visible = {
-				has_idea = SOV_comecon_buff
+				has_SOV_comecon_buff = yes
 			}
 
 			available = {
@@ -5214,9 +5647,9 @@ SOV_expelling_alien_forces = {
 			priority = 2
 
 			icon = generic_air
-
+			allowed = {NOT = {TAG = SOV}}
 			visible = {
-				has_idea = SOV_comecon_buff
+				has_SOV_comecon_buff = yes
 			}
 
 			available = {
@@ -5304,14 +5737,14 @@ SOV_expelling_alien_forces = {
 					limit = {
 						has_country_flag = comecon_producing_fighters_for_member_flag
 					}
-					effect_tooltip = {
+					#effect_tooltip = {
 						add_equipment_to_stockpile = {
 							type = small_plane_airframe_1
 							amount = 80
 							variant_name = "SU I-21F trade"
 							producer = SOV
 						}
-					}
+					#}
 					clr_country_flag = comecon_producing_fighters_for_member_flag
 				}
 				else_if = {
@@ -5351,9 +5784,9 @@ SOV_expelling_alien_forces = {
 			priority = 1
 
 			icon = GFX_decision_generic_naval
-
+			allowed = {NOT = {TAG = SOV}}
 			visible = {
-				has_idea = SOV_comecon_buff
+				has_SOV_comecon_buff = yes
 			}
 
 			available = {
@@ -5520,7 +5953,10 @@ The_comintern_international_aid_category = {
 			FROM = {
 				faction_leader = {
 					every_other_country = {
-						limit = { is_in_faction_with = PREV }
+						limit = {
+							is_in_faction_with = PREV
+							is_subject = no
+						}
 						SOV = { add_to_faction = PREV }
 					}
 					SOV = { add_to_faction = PREV }
@@ -5557,10 +5993,10 @@ The_comintern_international_aid_category = {
 				add = 1.0
 				OR = {
 					check_variable = {
-						FROM.num_equipment@infantry_equipment < 0
+						FROM.num_equipment@infantry_equipment = 0
 					}
 					check_variable = {
-						FROM.num_equipment@artillery_equipment < 0
+						FROM.num_equipment@artillery_equipment = 0
 					}
 				}
 			}
@@ -6501,7 +6937,7 @@ SOV_war_against_Soviet_category = {
 				}
 			}
 		}
-		days_mission_timeout = 90
+		days_mission_timeout = 30
 		fire_only_once = no
 		timeout_effect = {
 			effect_tooltip = {
@@ -6530,6 +6966,7 @@ SOV_World_Soviets = {
 			has_government = communism
 			is_faction_leader = yes
 			all_country = { is_in_faction_with = ROOT }
+			has_completed_focus = SOV_March_Towards_World_Revolution
 		}
 		fire_only_once = yes
 		cost = 0
@@ -6817,19 +7254,24 @@ Reunit_Tresen_decision_cate = {
 		visible = {
 		}
 		available = {
-			custom_trigger_tooltip = {
-				tooltip = control_all_Tresen_state
-				NOT = {
-					any_state = {
-						or = {
-							is_core_of = TAM
-							is_core_of = PER
-							is_core_of = AFG
-						}
-						NOT = { is_controlled_by = ROOT }
-					}
-				}
+			if = {
+				limit = { tag = TAM }
+				PER = { exists = no }
+				AFG = { exists = no }
 			}
+			if = {
+				limit = { tag = PER }
+				TAM = { exists = no }
+				AFG = { exists = no }
+			}
+			if = {
+				limit = { tag = AFG }
+				PER = { exists = no }
+				TAM = { exists = no }
+			}
+			controls_state = 407
+			controls_state = 266
+			controls_state = 267
 			has_war = no
 		}
 		fire_only_once = yes
@@ -6863,6 +7305,74 @@ Reunit_Tresen_decision_cate = {
 				}
 			}
 			set_country_flag = Reunit_Tresen_country
+		}
+	}
+	TAM_Provoke_Civil_War = {
+		allowed = {
+			tag = TAM
+		}
+		visible = {
+		}
+		available = {
+			is_subject = no
+			has_war = no
+			not = { has_country_flag = Reunit_Tresen_country }
+		}
+		fire_only_once = yes
+		cost = 0
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_idea = TAM_Provoke_Civil_War_idea
+			}
+		}
+		complete_effect = {
+			declare_war_on = {
+				target = PER
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = AFG
+				type = annex_everything
+			}
+		}
+	}
+	TAM_join_SOV = {
+		icon = GFX_decision_category_generic_foreign_policy
+		allowed = {
+			tag = TAM
+		}
+		visible = {
+			is_in_faction = no
+			SOV = { is_faction_leader = yes }
+			#has_country_flag = faction_available
+		}
+		fire_only_once = yes
+		cost = 0
+		days_remove = 10
+		available = {
+			NOT = { has_country_flag = FACTION_ASKING }
+			is_in_faction = no
+			is_subject = no
+			SOV = {
+				exists = yes
+				is_faction_leader = yes
+				has_government = ROOT
+			}
+			has_country_flag = Reunit_Tresen_country
+		}
+		complete_effect = {
+			set_country_flag = FACTION_ASKING
+		}
+		remove_effect = {
+			clr_country_flag = FACTION_ASKING
+			SOV = {
+				country_event = generic.2002
+			}
+		}
+		ai_will_do = {
+			base = 50
 		}
 	}
 }
@@ -7225,36 +7735,6 @@ SOV_great_patriotic_war_category = {
 			}
 		}
 	}
-
-#	SOV_blizzard_magic_in_214_city = {
-#		icon = GFX_decision_generic_coastal_fortification
-#		visible = {
-#			#has_war_with_major = yes
-#			owns_state = 214
-#			NOT = { has_country_flag = SOV_blizzard_magic_in_214_city_flag }
-#		}
-#		available = {
-#			has_war_with_major = yes
-#			214 = { is_fully_controlled_by = ROOT }
-#		}
-#		fire_only_once = no
-#		days_remove = 7
-#		cost = 5
-#		ai_will_do = {
-#			base = 1000
-#			modifier = {
-#				factor = 0
-#				has_war = no
-#			}
-#		}
-#		remove_effect = {
-#			set_country_flag = SOV_blizzard_magic_in_214_city_flag
-#			214 = {
-#				set_demilitarized_zone = yes
-#			}
-#		}
-#
-#	}
 	
 	SOV_stop_blizzard_magic_in_214_city = {
 		icon = GFX_decision_generic_coastal_fortification

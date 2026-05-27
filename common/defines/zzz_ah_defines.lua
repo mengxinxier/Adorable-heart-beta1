@@ -1,4 +1,8 @@
 
+-- 生涯档案
+NDefines.NCareerProfile.MOD_STATISTICS_GROUP = "AdorableHeart_career_profile"
+NDefines.NCareerProfile.MOD_STATISTICS_GROUP_NAME = "ADORABLEHEART_CAREER_PROFILE"
+
 -- 游戏性预设
 NDefines.NGame.END_DATE = "1999.1.1.1"										-- Vanilla is 1949.1.1.1
 NDefines.NCountry.EVENT_PROCESS_OFFSET = 5									-- Vanilla is 20 再苦一苦CPU...
@@ -35,7 +39,8 @@ NDefines.NAI.SEND_VOLUNTEER_EVAL_BASE_DISTANCE = 1000.0  					-- Vanilla is 175.
 NDefines.NAI.SEND_VOLUNTEER_EVAL_CONTAINMENT_FACTOR = 0						-- Vanilla is 0.1
 NDefines.NDiplomacy.TENSION_VOLUNTEER_FORCE_DIVISION = 0					-- Vanilla is 0.5 别紧张，派个志愿军
 NDefines.NAI.SEND_VOLUNTEER_EVAL_MAJOER_POWER = 1.5   	                    -- Vanilla is 1.0 主要国家更愿意派遣志愿军
-NDefines.NDiplomacy.VOLUNTEERS_DIVISIONS_REQUIRED = 20
+NDefines.NDiplomacy.VOLUNTEERS_DIVISIONS_REQUIRED = 20   	                -- Vanilla is 20
+NDefines.NDiplomacy.VOLUNTEERS_PER_COUNTRY_ARMY = 0.02   	                -- Vanilla is 0.05
 
 --  AI行为
 NDefines.NAI.ASSIGN_TANKS_TO_NON_WAR_FRONT = -4								-- Vanilla is 0.4 坦克统统上前线

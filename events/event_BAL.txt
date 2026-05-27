@@ -1,5 +1,6 @@
 add_namespace = BAL_pol
 add_namespace = BAL_ele
+add_namespace = BAL_cw
 
 #####  政治事件  #####
 	country_event = {
@@ -32,16 +33,14 @@ add_namespace = BAL_ele
 		picture = GFX_report_event_BAL_organize_army
 		option = {
 			name = BAL_pol.02.a
-			army_experience = 15
-			upgrade_intelligence_agency = upgrade_army_department
-			upgrade_intelligence_agency = upgrade_commando_training
+			army_experience = 50
 			add_popularity = {
 				ideology = neutrality
 				popularity = 0.05
 			}
 		}
 		option = {
-			name = BAL_pol.02.a
+			name = BAL_pol.02.b
 			army_experience = 15
 			upgrade_intelligence_agency = upgrade_army_department
 			upgrade_intelligence_agency = upgrade_commando_training
@@ -144,7 +143,7 @@ add_namespace = BAL_ele
 	country_event = {
 		id = BAL_pol.06
 		title = BAL_pol.06.t
-		desc = BAL_pol.06.
+		desc = BAL_pol.06.d
 		is_triggered_only = yes
 		option = {
 			name = BAL_pol.06.a
@@ -172,7 +171,7 @@ add_namespace = BAL_ele
 			name = BAL_pol.07.a
 			add_popularity = {
 				ideology = democratic
-				popularity = 0.05
+				popularity = 0.02
 			}
 			hidden_effect = {
 				add_to_variable = { BAL.BAL_central_bank_ubs_save = 200 }
@@ -806,6 +805,885 @@ add_namespace = BAL_ele
 			}
 		}
 	}
+				
+	country_event = {
+		id = BAL_pol.15
+		title = BAL_pol.15.t
+		desc = BAL_pol.15.d
+		
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.15.a
+			ai_chance = {
+				base = 8
+			}
+			add_opinion_modifier = {
+				target = FROM
+				modifier = SOV_support
+			}
+			add_to_variable = {
+				ubs_save = 200
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+			hidden_effect = {
+				FROM = { country_event = { id = BAL_pol.16 days = 1 } }
+			}
+		}
+		option = {
+			name = BAL_pol.15.b
+			ai_chance = {
+				base = 2
+			}
+			FROM = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = SOV_infuriate
+				}
+			}
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = BAL_cooperation_was_rejected_from_NE
+					country_event = { id = BAL_pol.16 days = 1 } 
+				}
+			}
+		}
+	}
+					
+	country_event = {
+		id = BAL_pol.16
+		title = BAL_pol.16.t
+		desc = {
+			text = BAL_pol.16.d1
+			trigger = { NOT = { has_country_flag = BAL_cooperation_was_rejected_from_NE } }
+		}
+		desc = {
+			text = BAL_pol.16.d2
+			trigger = { has_country_flag = BAL_cooperation_was_rejected_from_NE }
+		}
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.16.a
+			trigger = { NOT = { has_country_flag = BAL_cooperation_was_rejected_from_NE } }
+			if = {
+				limit = { FROM = { tag = DEN } }
+				add_tech_bonus = {
+					name = BAL_nation_of_science
+					category = armor
+					bonus = 0.5
+					uses = 1.0
+					ahead_reduction = 1.5
+				}
+				add_tech_bonus = {
+					name = BAL_nation_of_science
+					category = industry
+					bonus = 0.5
+					uses = 1.0
+				}
+			}
+			if = {
+				limit = { FROM = { tag = SWE } }
+				add_tech_bonus = {
+					name = BAL_religious_bond
+					category = artillery
+					bonus = 0.5
+					uses = 1.0
+					ahead_reduction = 1.5
+				}
+				add_tech_bonus = {
+					name = BAL_religious_bond
+					category = infantry_weapons
+					bonus = 0.5
+					uses = 1.0
+					ahead_reduction = 1.5
+				}
+				add_tech_bonus = {
+					name = BAL_religious_bond
+					category = industry
+					bonus = 0.5
+					uses = 1.0
+				}
+			}
+			mio:BAL_lkod = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.15
+			}
+			mio:paldiski_port = {
+				add_mio_size = 1
+				add_mio_funds_gain_factor = 0.15
+			}
+			add_opinion_modifier = {
+				target = FROM
+				modifier = SOV_support
+			}
+		}
+		option = {
+			name = BAL_pol.16.b
+			trigger = { has_country_flag = BAL_cooperation_was_rejected_from_NE }
+		}
+	}
+					
+	country_event = {
+		id = BAL_pol.17
+		title = BAL_pol.17.t
+		desc = BAL_pol.17.d
+		
+		fire_only_once = yes
+		trigger = {
+			tag = BAL
+			NOT = { has_global_flag = BAL_civil_war_has_begun_flag }
+			has_global_flag = POL_civil_war_has_begun_flag
+			PRE = { is_subject = no exists = yes }
+		}
+		option = {
+			name = BAL_pol.17.a
+			ai_chance = {
+				base = 8
+			}
+			PRE = { country_event = BAL_pol.18 }
+		}
+		option = {
+			name = BAL_pol.17.b
+			ai_chance = {
+				base = 2
+			}
+			
+		}
+	}
+						
+	country_event = {
+		id = BAL_pol.18
+		title = BAL_pol.18.t
+		desc = BAL_pol.18.d
+		
+		is_triggered_only = yes
+
+		immediate = {
+			hidden_effect = {
+				POL = { country_event = BAL_pol.23 }
+			}
+		}
+
+		option = {
+			name = BAL_pol.18.a
+			ai_chance = {
+				base = 5
+				modifier = {
+					factor = 0
+					POL = {
+						OR = {
+							is_ai = no 
+							AND = {
+								is_in_faction = yes
+								var:faction_leader = {
+									is_ai = no
+								}
+							}
+						}
+					}
+				}
+			}
+			remove_ideas = PRE_famine
+			effect_tooltip = {
+				FROM = {
+					puppet = ROOT
+				}
+			}
+			hidden_effect = {
+				FROM = { country_event = BAL_pol.19 }
+			}
+		}
+		option = {
+			name = BAL_pol.18.b
+			ai_chance = {
+				base = 5
+				modifier = {
+					factor = 0
+					OR = {
+						is_subject = no
+						POL = { has_war = yes }
+					}
+				}
+			}
+			add_political_power = 25
+			hidden_effect = {
+				FROM = {
+					set_country_flag = BAL_cooperation_was_rejected_from_PRE
+					country_event = BAL_pol.19
+				}
+			}
+		}
+	}
+											
+	country_event = {
+		id = BAL_pol.19
+		title = BAL_pol.19.t
+		desc = {
+			text = BAL_pol.19.d1
+			trigger = { NOT = { has_country_flag = BAL_cooperation_was_rejected_from_PRE } }
+		}
+		desc = {
+			text = BAL_pol.19.d2
+			trigger = { has_country_flag = BAL_cooperation_was_rejected_from_PRE }
+		}
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.19.a
+			trigger = { NOT = { has_country_flag = BAL_cooperation_was_rejected_from_PRE } }
+			set_autonomy = {
+				target = FROM
+				autonomy_state = autonomy_integrated_puppet
+			}
+			hidden_effect = {
+				POL = { country_event = BAL_pol.26 }
+			}
+		}
+		option = {
+			name = BAL_pol.19.b
+			trigger = { has_country_flag = BAL_cooperation_was_rejected_from_PRE }
+			add_war_support = 0.05
+			add_political_power = -5
+		}
+	}
+							
+	country_event = {
+		id = BAL_pol.20
+		title = BAL_pol.20.t
+		desc = BAL_pol.20.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.20.a
+			remove_ideas = PRE_famine
+			FROM = { country_event = BAL_pol.21 }
+		}
+	}
+								
+	country_event = {
+		id = BAL_pol.21
+		title = BAL_pol.21.t
+		desc = BAL_pol.21.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.21.a
+			add_political_power = 50
+			hidden_effect = {
+				country_event = { id = BAL_pol.22 days = 180 }
+			}
+		}
+	}
+									
+	country_event = {
+		id = BAL_pol.22
+		title = BAL_pol.22.t
+		desc = BAL_pol.22.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.22.a
+			if = {
+				limit = { NOT = { has_idea = BAL_boundary_of_sacred_tree }  }
+				add_ideas = BAL_boundary_of_sacred_tree
+			}
+			else = {
+				add_tech_bonus = {
+					name = BAL_pol.22.t
+					category = magic_army_tech
+					bonus = 0.75
+					uses = 3.0
+				}
+			}
+		}
+	}
+										
+	country_event = {
+		id = BAL_pol.23
+		title = BAL_pol.23.t
+		desc = BAL_pol.23.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.23.a
+			add_political_power = -5
+		}
+	}
+											
+	country_event = {
+		id = BAL_pol.24
+		title = BAL_pol.24.t
+		desc = BAL_pol.24.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.24.a
+			add_war_support = 0.05
+			add_opinion_modifier = {
+				target = BAL
+				modifier = SOV_infuriate
+			}
+		}
+	}
+												
+	country_event = {
+		id = BAL_pol.25
+		title = BAL_pol.25.t
+		desc = BAL_pol.25.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.25.a
+			hidden_effect = {
+				set_country_flag = POL_countermeasures_intelligence_from_BAL
+			}
+			unlock_decision_tooltip = POL_countermeasures_intelligence_from_BAL_decision
+		}
+	}
+													
+	country_event = {
+		id = BAL_pol.26
+		title = BAL_pol.26.t
+		desc = BAL_pol.26.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.26.a
+			ai_chance = {
+				base = 8
+				modifier = {
+					factor = 0
+					BAL = { is_in_faction = yes }
+				}
+				modifier = {
+					factor = 0
+					has_global_flag = POL_civil_war_has_begun_flag
+				}
+			}
+			declare_war_on = {
+				target = PRE
+				type = puppet_wargoal_focus
+			}
+			activate_mission = POL_special_military_operation
+		}
+		
+		option = {
+			name = BAL_pol.26.a
+			ai_chance = {
+				base = 2
+			}
+			add_political_power = -50
+		}
+	}
+														
+	country_event = {
+		id = BAL_pol.27
+		title = BAL_pol.27.t
+		desc = BAL_pol.27.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.27.a
+			add_political_power = -15
+		}
+	}
+															
+	country_event = {
+		id = BAL_pol.28
+		title = BAL_pol.28.t
+		desc = BAL_pol.28.d
+		
+		is_triggered_only = yes
+
+		option = {
+			name = BAL_pol.28.a
+			ai_chance = {
+				base = 8
+			}
+			add_political_power = 50
+			hidden_effect = {
+				FROM = { country_event = BAL_pol.29 }
+			}
+		}
+		
+		option = {
+			name = BAL_pol.28.b
+			ai_chance = {
+				base = 2
+				modifier = {
+					factor = 0
+					FROM = { has_same_ideology = yes }
+				}
+				modifier = {
+					factor = 0
+					is_ally_with = FROM
+				}
+			}
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = BAL_cooperation_was_rejected_from_POL
+					country_event = BAL_pol.29 
+				}
+			}
+		}
+	}
+												
+	country_event = {
+		id = BAL_pol.29
+		title = BAL_pol.29.t
+		desc = {
+			text = BAL_pol.29.d1
+			trigger = { NOT = { has_country_flag = BAL_cooperation_was_rejected_from_POL } }
+		}
+		desc = {
+			text = BAL_pol.29.d2
+			trigger = { has_country_flag = BAL_cooperation_was_rejected_from_POL }
+		}
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.29.a
+			trigger = { NOT = { has_country_flag = BAL_cooperation_was_rejected_from_POL } }
+			complete_national_focus = BAL_introduction_of_military_industry_production_lines
+		}
+		option = {
+			name = BAL_pol.29.b
+			trigger = { has_country_flag = BAL_cooperation_was_rejected_from_POL }
+			add_political_power = -5
+		}
+	}
+
+	country_event = {
+		id = BAL_pol.30
+		title = BAL_pol.30.t
+		desc = BAL_pol.30.d
+
+		is_triggered_only = yes
+		fire_only_once = yes
+		trigger = {
+			tag = BAL
+			POL = {
+				exists = yes
+				has_war_with = BAL
+			}
+		}
+
+		option = {
+			name = BAL_pol.30.a
+			POL = { country_event = BAL_pol.31 }
+		}
+	}
+													
+	country_event = {
+		id = BAL_pol.31
+		title = BAL_pol.31.t
+		desc = BAL_pol.31.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.31.a
+			ai_chance = {
+				base = 8
+				modifier = {
+					factor = 1.5
+					FROM = { surrender_progress > 0.10 }
+				}
+			}
+			add_political_power = 50
+			hidden_effect = {
+				FROM = { country_event = BAL_pol.32 }
+			}
+		}
+		
+		option = {
+			name = BAL_pol.31.b
+			ai_chance = {
+				base = 2
+				modifier = {
+					factor = 0
+					any_enemy_country = {
+						NOT = { tag = BAL }
+					}
+				}
+			}
+			hidden_effect = {
+				FROM = { 
+					set_country_flag = BAL_refusal_to_ceasefire_from_POL
+					country_event = BAL_pol.32
+				}
+			}
+		}
+	}
+														
+	country_event = {
+		id = BAL_pol.32
+		title = BAL_pol.32.t
+		desc = {
+			text = BAL_pol.32.d1
+			trigger = { NOT = { has_country_flag = BAL_refusal_to_ceasefire_from_POL } }
+		}
+		desc = {
+			text = BAL_pol.32.d2
+			trigger = { has_country_flag = BAL_refusal_to_ceasefire_from_POL }
+		}
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.32.a
+			trigger = { NOT = { has_country_flag = BAL_refusal_to_ceasefire_from_POL } }
+			white_peace = POL
+		}
+		option = {
+			name = BAL_pol.32.b
+			trigger = { has_country_flag = BAL_refusal_to_ceasefire_from_POL }
+			add_political_power = -5
+		}
+	}												
+														
+	country_event = {
+		id = BAL_pol.33
+		title = BAL_pol.33.t
+		desc = BAL_pol.33.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.33.a
+			FROM = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_dominion
+				}
+			}
+		}
+		
+		option = {
+			name = BAL_pol.33.b
+			ai_chance = {
+				base = 0
+			}
+			add_war_support = -0.40
+		}
+	}
+															
+	country_event = {
+		id = BAL_pol.34
+		title = BAL_pol.34.t
+		desc = {
+			text = BAL_pol.34.d1
+			trigger = { has_subject = POL }
+		}
+		desc = {
+			text = BAL_pol.34.d2
+			trigger = { NOT = { has_subject = POL } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.34.a
+			trigger = { has_subject = POL }
+			add_political_power = 120
+			add_war_support = 0.20
+			transfer_state = 96
+			hidden_effect = {
+				96 = { add_core_of_ROOT = yes }
+			}
+		}
+		option = {
+			name = BAL_pol.34.b
+			trigger = { NOT = { has_subject = POL } }
+			add_political_power = -5
+			every_state = {
+				limit = {
+					is_owned_by = POL
+					is_fully_controlled_by = BAL
+				}
+				add_compliance = 40
+				add_resistance = -25
+			}
+		}
+	}	
+
+	country_event = {
+		id = BAL_pol.35
+		title = BAL_pol.35.t
+		desc = BAL_pol.35.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.35.a
+			add_to_variable = {
+				ubs_save = 200
+			}
+			custom_effect_tooltip = SOV_get_200_add_to_reserve
+		}
+	}
+	
+	country_event = {
+		id = BAL_pol.36
+		title = BAL_pol.36.t
+		desc = BAL_pol.36.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.36.a
+			unlock_decision_tooltip = WIL_anti_communism_decision
+			hidden_effect = {
+				set_country_flag = WIL_anti_communism_flag
+			}
+			add_ideas = SOV_ideological_assembly
+			hidden_effect = {
+				if = {
+					limit = { PRE = { is_subject_of = POL } }
+					POL = { country_event = BAL_pol.46 }
+				}
+			}
+		}
+		option = {
+			name = BAL_pol.36.b
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+			add_ideas = SOV_ideological_assembly
+			hidden_effect = {
+				if = {
+					limit = { PRE = { is_subject_of = POL } }
+					POL = { country_event = BAL_pol.46 }
+				}
+			}
+		}
+	}
+		
+	country_event = {
+		id = BAL_pol.37
+		title = BAL_pol.37.t
+		desc = BAL_pol.37.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.37.a
+			ai_chance = {
+				base = 5
+				modifier = {
+					factor = 0.5
+					FROM = { is_ai = yes } #哪来的要饭的
+					NOT = { is_in_faction_with = POL }
+				}
+			}
+			hidden_effect = {
+				FROM = { country_event = BAL_pol.34 }
+			}
+		}
+		option = {
+			name = BAL_pol.37.b
+			ai_chance = {
+				base = 5
+				modifier = {
+					factor = 0.5
+					is_in_faction_with = POL #狗不理包子WWW
+				}
+				modifier = {
+					factor = 0.1
+					FROM = { is_ai = no } #是香香的玩家桑
+				}
+			}
+			if = {
+				limit = { has_subject = PRE }
+				FROM = { puppet = PRE }
+			}
+			else_if = {
+				limit = { owns_state = 5 }  
+				FROM = { transfer_state = 5 }
+			}
+		}
+	}
+
+	country_event = {
+		id = BAL_pol.38
+		title = BAL_pol.38.t
+		desc = {
+			text = BAL_pol.38.d1
+			trigger = { 5 = { is_owned_by_ROOT_or_subject = yes } }
+		}
+		desc = {
+			text = BAL_pol.38.d2
+			trigger = { 5 = { is_owned_by_ROOT_or_subject = no } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.38.a
+			trigger = { 5 = { is_owned_by_ROOT_or_subject = yes } }
+			add_political_power = 50
+		}
+		option = {
+			name = BAL_pol.38.b
+			trigger = { 5 = { is_owned_by_ROOT_or_subject = no } }
+			add_political_power = -5
+		}
+	}
+
+	country_event = {
+		id = BAL_pol.39
+		title = BAL_pol.39.t
+		desc = BAL_pol.39.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.39.a
+			ai_chance = {
+				base = 1 #你是？
+				modifier = {
+					factor = 3.0
+					FROM = { is_ai = no } #原来是玩家大人
+				}
+			}
+			custom_effect_tooltip = BAL_pol.39.at
+			hidden_effect = {
+				SOV = {
+					country_event = BAL_pol.41
+				}
+			}
+		}
+		option = {
+			name = BAL_pol.39.b
+			ai_chance = {
+				base = 2
+			}
+			hidden_effect = {
+				FROM = {
+					country_event = BAL_pol.40
+				}
+			}
+		}
+	}
+	
+	country_event = {
+		id = BAL_pol.40
+		title = BAL_pol.40.t
+		desc = {
+			text = BAL_pol.40.d1
+			trigger = { has_country_flag = BAL_success_in_FIN }
+		}
+		desc = {
+			text = BAL_pol.40.d2
+			trigger = { NOT = { has_country_flag = BAL_success_in_FIN } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.40.a
+			trigger = { has_country_flag = BAL_success_in_FIN }
+			add_political_power = 50
+		}
+		option = {
+			name = BAL_pol.40.b
+			trigger = { NOT = { has_country_flag = BAL_success_in_FIN } }
+			add_political_power = -5
+		}
+	}
+	
+	country_event = {
+		id = BAL_pol.41
+		title = BAL_pol.41.t
+		desc = BAL_pol.41.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.41.a
+			ai_chance = {
+				base = 1 #你是？
+				modifier = {
+					factor = 3.0
+					FROM = { is_ai = no } #原来是玩家大人
+				}
+			}
+			custom_effect_tooltip = BAL_pol.41.at
+			hidden_effect = {
+				FROM = {
+					set_country_flag = BAL_success_in_FIN
+					country_event = BAL_pol.40
+				}
+			}
+		}
+		option = {
+			name = BAL_pol.39.b
+			ai_chance = {
+				base = 2
+			}
+			hidden_effect = {
+				FROM = {
+					country_event = BAL_pol.42
+				}
+			}
+		}
+	}
+	
+	country_event = {
+		id = BAL_pol.42
+		title = BAL_pol.42.t
+		desc = BAL_pol.42.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.42.a
+			add_political_power = -5
+		}
+	}
+		
+	country_event = {
+		id = BAL_pol.43
+		title = BAL_pol.43.t
+		desc = BAL_pol.43.d
+
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.43.a
+			add_political_power = 50
+			hidden_effect = {
+				FROM = {
+					set_country_flag = BAL_success_in_POL
+					country_event = BAL_pol.44
+				}
+			}
+		}
+		option = {
+			name = BAL_pol.43.b
+			ai_chance = {
+				base = 0 #你知道的太多了
+			}
+			hidden_effect = {
+				FROM = {
+					country_event = BAL_pol.44
+				}
+			}
+		}
+	}
+		
+	country_event = {
+		id = BAL_pol.44
+		title = BAL_pol.44.t
+		desc = {
+			text = BAL_pol.44.d1
+			trigger = { has_country_flag = BAL_success_in_POL }
+		}
+		desc = {
+			text = BAL_pol.44.d2
+			trigger = { NOT = { has_country_flag = BAL_success_in_POL } }
+		}
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.44.a
+			trigger = { has_country_flag = BAL_success_in_POL }
+			complete_national_focus = BAL_introduction_of_military_industry_production_lines
+		}
+		option = {
+			name = BAL_pol.44.b
+			trigger = { NOT = { has_country_flag = BAL_success_in_POL } }
+			add_political_power = -5
+		}
+	}
 			
 	country_event = {
 		id = BAL_pol.45
@@ -826,6 +1704,17 @@ add_namespace = BAL_ele
 				target = FROM
 				type = puppet_wargoal_focus
 			}
+		}
+	}
+				
+	country_event = {
+		id = BAL_pol.46
+		title = BAL_pol.46.t
+		desc = BAL_pol.46.d
+		
+		is_triggered_only = yes
+		option = {
+			name = BAL_pol.46.a
 		}
 	}
 
@@ -856,7 +1745,7 @@ add_namespace = BAL_ele
 				}
 				if = {
 					limit = {
-						communism > 0.30
+						communism > 0.20
 					}
 					#第一季度
 					if = {
@@ -869,14 +1758,14 @@ add_namespace = BAL_ele
 					if = {
 						limit = {
 							check_variable = { BAL_polling_quarter = 2 }
-							neutrality > democratic
+							neutrality > party_popularity@democratic
 						}
 						country_event = { id = BAL_ele.03 days = 1 }
 					}
 					if = {
 						limit = {
 							check_variable = { BAL_polling_quarter = 2 }
-							NOT = { neutrality > democratic }
+							NOT = { neutrality > party_popularity@democratic }
 						}
 						country_event = { id = BAL_ele.04 days = 1 }
 					}
@@ -891,7 +1780,7 @@ add_namespace = BAL_ele
 				if = {
 					limit = {
 						check_variable = { BAL_polling_quarter > 1 }
-						fascism > 0.30
+						fascism > 0.20
 					}
 					country_event = { id = BAL_ele.06 days = 1 }
 				}
@@ -904,7 +1793,7 @@ add_namespace = BAL_ele
 		option = {
 			name = BAL_ele.01.b
 			trigger = {
-				neutrality > democratic
+				neutrality > party_popularity@democratic
 			}
 			add_popularity = {
 				ideology = fascism
@@ -923,7 +1812,7 @@ add_namespace = BAL_ele
 		option = {
 			name = BAL_ele.01.c
 			trigger = {
-				NOT = { neutrality > democratic }
+				NOT = { neutrality > party_popularity@democratic }
 			}
 			add_popularity = {
 				ideology = neutrality
@@ -1120,23 +2009,49 @@ add_namespace = BAL_ele
 		title = {
 			text = BAL_ele.07.t1
 			trigger = {
-				NOT = { neutrality > democratic }
+				NOT = { neutrality > party_popularity@democratic }
 			}
 		}
 		title = {
 			text = BAL_ele.07.t2
 			trigger = {
-				neutrality > democratic
+				neutrality > party_popularity@democratic
 			}
 		}
 		desc = BAL_ele.07.d
 		
 		is_triggered_only = yes
 		fire_only_once = yes
+		immediate = {
+			hidden_effect = {
+				if = {
+					limit = { has_idea = BAL_ebattle_maiden_combat_tradition }
+					swap_ideas = {
+						remove_idea = BAL_ebattle_maiden_combat_tradition
+						add_idea = BAL_ebattle_maiden_combat_tradition2
+					}
+				}
+				if = {
+					limit = { has_idea = BAL_rally_around_hero }
+					swap_ideas = {
+						remove_idea = BAL_rally_around_hero
+						add_idea = BAL_rally_around_hero2
+					}
+				}
+				if = {
+					limit = { has_idea = BAL_trade_dependent_on_SOV }
+					swap_ideas = {
+						remove_idea = BAL_trade_dependent_on_SOV
+						add_idea = BAL_trade_dependent_on_SOV2
+					}
+				}
+				clr_country_flag = BAL_public_opinion_manipulation_flag
+			}
+		}
 		option = {
 			name = BAL_ele.07.a
 			trigger = {
-				NOT = { neutrality > democratic }
+				NOT = { neutrality > party_popularity@democratic }
 			}
 			hidden_effect = {
 				if = {
@@ -1156,7 +2071,7 @@ add_namespace = BAL_ele
 		option = {
 			name = BAL_ele.07.b
 			trigger = {
-				neutrality > democratic
+				neutrality > party_popularity@democratic
 			}
 			hidden_effect = {
 				if = {
@@ -1200,12 +2115,18 @@ add_namespace = BAL_ele
 		is_triggered_only = yes
 		fire_only_once = yes
 		picture = GFX_report_event_BAL_Kasugano_deploy
+		# immediate = {
+		# 	hidden_effect = {
+		# 		set_country_flag = BAL_CW_TAI_line
+		# 	}
+		# }
 		option = {
 			name = BAL_ele.09.a
 			add_popularity = {
 				ideology = fascism
 				popularity = 0.05
 			}
+			custom_effect_tooltip = WIL_to_be_continued_tooltip
 		}
 	}
 	
@@ -1232,12 +2153,303 @@ add_namespace = BAL_ele
 		desc = BAL_ele.11.d
 		is_triggered_only = yes
 		fire_only_once = yes
+		# immediate = {
+		# 	hidden_effect = {
+		# 		set_country_flag = BAL_CW_BAT_line
+		# 	}
+		# }
 		picture = GFX_report_event_BAL_Kasugano_conspire
 		option = {
 			name = BAL_ele.11.a
 			add_popularity = {
 				ideology = fascism
 				popularity = 0.05
+			}
+			custom_effect_tooltip = WIL_to_be_continued_tooltip
+		}
+	}
+
+	#大选结束
+	country_event = {
+		id = BAL_ele.12
+		title = BAL_ele.12.t
+		desc = BAL_ele.12.d
+		is_triggered_only = yes
+		fire_only_once = yes
+		trigger = {
+			tag = BAL
+		}
+		option = {
+			name = BAL_ele.12.a
+			add_political_power = 15
+			hidden_effect = {
+				if = {
+					limit = {
+						OR = {
+							has_country_flag = BAL_CW_TAI_line
+							has_country_flag = BAL_CW_BAT_line
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						democratic > party_popularity@neutrality
+					}
+					if = {
+						limit = {
+							communism > party_popularity@democratic
+						}
+						country_event = BAL_ele.14
+					}
+					else = {
+						country_event = BAL_ele.13
+					}
+					complete_national_focus = BAL_1938_general_election
+				}
+				else_if = {
+					limit = {
+						NOT = { democratic > party_popularity@neutrality }
+					}
+					if = {
+						limit = {
+							communism > party_popularity@neutrality
+						}
+						country_event = BAL_ele.16
+					}
+					else = {
+						country_event = BAL_ele.15
+					}
+					complete_national_focus = BAL_1938_general_election
+				}
+				set_politics = {
+					ruling_party = democratic
+					elections_allowed = no
+				}
+			}
+		}
+	}
+
+	country_event = {
+		id = BAL_ele.13
+		title = BAL_ele.13.t
+		desc = BAL_ele.13.d
+		is_triggered_only = yes
+		immediate = {
+			set_country_leader_ideology = one_party_system_subtype
+		}
+		option = {
+			name = BAL_ele.13.a
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Mimori_head_of_government
+			add_political_power = 50
+			army_experience = 50
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.20
+			}
+			complete_national_focus = BAL_jiangshan_remains_the_same
+		}
+		option = {
+			name = BAL_ele.13.b
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Kasugano_head_of_government
+			add_political_power = 100
+			add_stability = 0.10
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.20
+			}
+			complete_national_focus = BAL_jiangshan_remains_the_same
+		}
+	}
+
+	country_event = {
+		id = BAL_ele.14
+		title = BAL_ele.14.t
+		desc = BAL_ele.14.d
+		is_triggered_only = yes
+		option = {
+			name = BAL_ele.14.a
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Yuki
+				country_leader = {
+					ideology = popular_front_subtype
+					traits = {
+						BAL_urban_rural_fringe
+						BAL_Riga_boxing_king
+					}
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Mimori_head_of_government
+			complete_national_focus = BAL_predestined_path
+		}
+		option = {
+			name = BAL_ele.14.b
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Takashima
+				country_leader = {
+					ideology = leninism
+					traits = {
+						BAL_shadowed_hero
+						BAL_heaven_backhand
+					}
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Sonoko_head_of_government
+			complete_national_focus = BAL_predestined_path
+		}
+		option = {
+			name = BAL_ele.14.c
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Utano
+				country_leader = {
+					ideology = Agrarian_socialism
+					traits = { BAL_wild_grass }
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Mito_head_of_government
+			complete_national_focus = BAL_predestined_path
+		}
+	}
+	
+	country_event = {
+		id = BAL_ele.15
+		title = BAL_ele.15.t
+		desc = BAL_ele.15.d
+		is_triggered_only = yes
+		option = {
+			name = BAL_ele.15.a
+			set_politics = {
+				ruling_party = neutrality
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Ludmila
+				country_leader = {
+					ideology = left_wing_corporatism_subtype
+					traits = { BAL_Senhime }
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Hellagur_head_of_government
+			complete_national_focus = BAL_taisya_step_aside
+		}
+	}
+	
+	country_event = {
+		id = BAL_ele.16
+		title = BAL_ele.16.t
+		desc = BAL_ele.16.d
+		is_triggered_only = yes
+		option = {
+			name = BAL_ele.16.a
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_country_leader_role = {
+				character = BAL_Elenora
+				country_leader = {
+					ideology = leninism
+					traits = { POL_military_and_political_integration }
+				}
+				promote_leader = yes
+			}
+			BAL_remove_all_head_of_government = yes
+			set_country_flag = BAL_Hellagur_head_of_government
+			complete_national_focus = BAL_predestined_path
+		}
+	}
+
+
+#内战
+
+	#测试：开始
+	country_event = {
+		id = BAL_cw.01000
+		title = BAL_cw.01000.t
+		desc = BAL_cw.01000.d
+		is_triggered_only = yes
+		fire_only_once = yes
+		option = {
+			name = BAL_cw.01000.a
+			hidden_effect = { BAL_civil_war_has_begun = yes }
+			B01 = { change_tag_from_ROOT = yes }
+			
+		}
+		option = {
+			name = BAL_cw.01000.b
+			hidden_effect = { BAL_civil_war_has_begun = yes }
+			B02 = { change_tag_from_ROOT = yes }
+		}
+	}
+
+	#测试：结束
+	country_event = {
+		id = BAL_cw.02000
+		title = BAL_cw.02000.t
+		desc = BAL_cw.02000.d
+		is_triggered_only = yes
+		fire_only_once = yes
+		option = {
+			name = BAL_cw.02000.a
+			BAL = { change_tag_from_ROOT = yes }
+			hidden_effect = { 
+				every_character = {
+					limit = { is_general_advisor = no }
+					set_nationality = BAL
+				}
+				send_equipment_fraction = {
+					target = BAL
+					value = 1.0
+				}
+				BAL = { country_event = { id = BAL_cw.03000 days = 1 }  }
+			}
+		}
+	}
+	
+	#测试：结束2
+	country_event = {
+		id = BAL_cw.03000
+		title = BAL_cw.03000.t
+		desc = BAL_cw.03000.d
+		is_triggered_only = yes
+		fire_only_once = yes
+		option = {
+			name = BAL_cw.03000.a
+			hidden_effect = {
+				every_other_country = {
+					limit = {
+						OR = {
+							has_country_flag = BAL_TAI_organization_flag
+							has_country_flag = BAL_BAT_organization_flag
+						}
+					}
+					ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+				}
+				load_focus_tree = {
+					tree = baltic_tree
+					keep_completed = yes
+				}
 			}
 		}
 	}

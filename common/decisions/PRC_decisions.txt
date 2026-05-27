@@ -161,6 +161,26 @@ CHI_Industrialization_of_China = {
 		fire_only_once = yes
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 10
+				date > 1937.1.1
+			}
+			modifier = {
+				factor = 10
+				date > 1938.1.1
+			}
+			modifier = {
+				factor = 5
+				date > 1939.1.1
+			}
+			modifier = {
+				factor = 2
+				date > 1940.1.1
+			}
+			modifier = {
+				factor = 100
+				has_war_with = JAP
+			}
 		}
 		complete_effect = {
 		}
@@ -448,6 +468,71 @@ PRC_Revolutionary_issues = {
 			}
 		}
 	}
+	##联合北伐
+	PRC_attck_CHI_with_ROC = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		targets = { CHI }
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				has_war_with = ROC
+			}
+			ROC = { has_country_flag = Cooperation_between_KMT_and_CCP }
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = PRC_war_plan_going_on
+			}
+			FROM_subject_neighbor_with_root = yes
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 17 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		cancel_effect  = { clr_country_flag = PRC_war_plan_going_on }
+		remove_effect = {
+			clr_country_flag = PRC_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHH }
+				factor = 0
+			}
+		}
+	}
 	##解放
 	PRC_attck_FROM = {
 		icon = GFX_decision_generic_ignite_civil_war
@@ -485,22 +570,15 @@ PRC_Revolutionary_issues = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = PRC_war_plan_going_on
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 17 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
-		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		cancel_effect  = { clr_country_flag = PRC_war_plan_going_on }
 		remove_effect = {
 			clr_country_flag = PRC_war_plan_going_on
 			declare_war_on = {
 				target = FROM
 				type = annex_everything
-			}
-			if = {
-				limit = {
-					ROC = { has_country_flag = Cooperation_between_KMT_and_CCP }
-					FROM = { tag = CHI }
-				}
-				ROC = { country_event = { id = roc.69 } }
 			}
 		}
 		ai_will_do = {
@@ -514,11 +592,19 @@ PRC_Revolutionary_issues = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
 			modifier = {
 				FROM = { is_subject_of = JAP }
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHH }
 				factor = 0
 			}
 		}
@@ -560,11 +646,11 @@ PRC_Revolutionary_issues = {
 		days_remove = 30
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = PRC_war_plan_going_on
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 32 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 			FROM = { country_event = { id = PRC_add.49 } }
 		}
-		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		cancel_effect  = { clr_country_flag = PRC_war_plan_going_on }
 		remove_effect = {
 			clr_country_flag = PRC_war_plan_going_on
 			if = {
@@ -605,6 +691,10 @@ PRC_Revolutionary_issues = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
@@ -647,6 +737,7 @@ PRC_Revolutionary_issues = {
 		}
 		cost = 10
 		days_remove = 10
+		fire_only_once = yes
 		complete_effect = {
 		}
 		remove_effect = {
@@ -680,7 +771,10 @@ PRC_Revolutionary_issues = {
 				every_core_state = {
 					add_core_of = ROOT
 				}
-				every_character = { set_nationality = ROOT }
+				every_character = {
+					limit = { is_general_advisor = no }
+					set_nationality = ROOT
+				}
 				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 			}
 		}
@@ -1030,6 +1124,68 @@ PRC_rebuild_SOV = {
 			}
 		}
 	}
+	##归还领土
+	PRC_return_cores_to_EAM = {
+		icon = generic_agreement
+		available = {
+			ROOT = {
+				OR = {
+					has_war = no
+					surrender_progress < 0.20
+				}
+			}
+		}
+		visible = {
+			is_subject = no
+			has_government = communism
+			any_state = {
+				OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
+				}
+				is_claim_or_core_of_ROOT = no
+				owner = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		targets = { EAM }
+		target_trigger = {
+			FROM = {
+				has_government = ROOT
+				is_subject = no
+				is_russia_uniter_tag = yes
+				exists = yes
+			}
+		}
+		cost = 0
+		fire_only_once = no
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			custom_effect_tooltip = PRC_return_cores_to_EAM_tt
+			every_state = {
+				limit = {
+					OR = {
+						is_core_of = FROM
+						is_claimed_by = FROM
+					}
+					is_claim_or_core_of_ROOT = no
+					owner = {
+						or = {
+							tag = ROOT
+							is_subject_of = ROOT
+						}
+					}
+				}
+				transfer_state_to = FROM
+			}
+		}
+	}
 }
 
 PRC_Build_socialist_motherland = {
@@ -1194,6 +1350,16 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Dongbeisansheng_tt
+			hidden_effect = {
+				set_variable = { ROOT.heilongjiang_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.jilin_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.liaoning_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.jehol_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.chahar_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Dongbeisansheng
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1271,6 +1437,16 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Jinjiluyu_tt
+			hidden_effect = {
+				##河北、河南、山东、山西每月农业指数+1
+				set_variable = { ROOT.hebei_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.henan_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.shandong_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.shanxi_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Jinjiluyu
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			615 = { increase_state_category_by_one_level = yes }
@@ -1312,6 +1488,7 @@ PRC_Build_socialist_motherland = {
 				state = 803
 				state = 1075
 				state = 613
+				state = 1223
 				state = 743
 				state = 596
 				state = 1068
@@ -1330,6 +1507,7 @@ PRC_Build_socialist_motherland = {
 			controls_state = 803
 			controls_state = 1075
 			controls_state = 613
+			controls_state = 1223
 			controls_state = 743
 			controls_state = 596
 			controls_state = 1068
@@ -1350,6 +1528,15 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Jiangzhehuwan_tt
+			hidden_effect = {
+				##江苏、浙江、安徽每月农业指数+1
+				set_variable = { ROOT.jiangsu_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.zhejiang_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.anhui_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Jiangzhehuwan
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			1047 = { increase_state_category_by_one_level = yes }
@@ -1362,6 +1549,7 @@ PRC_Build_socialist_motherland = {
 			803 = { increase_state_category_by_one_level = yes }
 			1075 = { increase_state_category_by_one_level = yes }
 			613 = { increase_state_category_by_one_level = yes }
+			1223 = { increase_state_category_by_one_level = yes }
 			743 = { increase_state_category_by_one_level = yes }
 			1187 = { increase_state_category_by_one_level = yes }
 			596 = { increase_state_category_by_one_level = yes }
@@ -1407,6 +1595,14 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Huguang_tt
+			hidden_effect = {
+				##湖北、湖南每月农业指数+1
+				set_variable = { ROOT.hubei_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.hunan_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Huguang
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1453,6 +1649,14 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Mingan_tt
+			hidden_effect = {
+				##福建、江西每月农业指数+1
+				set_variable = { ROOT.fujian_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.jiangxi_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Mingan
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1499,6 +1703,14 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Liangguang_tt
+			hidden_effect = {
+				##广东、广西每月农业指数+1
+				set_variable = { ROOT.guangdong_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.guangxi_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Liangguang
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1545,6 +1757,13 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Chuanyu_tt
+			hidden_effect = {
+				##四川每月农业指数+1
+				set_variable = { ROOT.sichuan_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Chuanyu
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1591,6 +1810,14 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Yungui_tt
+			hidden_effect = {
+				##云南、贵州每月农业指数+1
+				set_variable = { ROOT.yunnan_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.guizhou_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Yungui
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1645,6 +1872,17 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Xibei_tt
+			hidden_effect = {
+				##陕西、甘肃、宁夏、青海、新疆每月农业指数+1
+				set_variable = { ROOT.shaanxi_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.gansu_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.ningxia_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.qinghai_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.xinjiang_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Xibei
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1704,6 +1942,13 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_Menggu_tt
+			hidden_effect = {
+				add_to_variable = { 621.agricultural_index_monthly = 1 }
+				add_to_variable = { 330.agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_Menggu
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1755,6 +2000,14 @@ PRC_Build_socialist_motherland = {
 		}
 		complete_effect = { add_to_variable = { PRC_National_land_reform_VAR = 1 } }
 		remove_effect = {
+			custom_effect_tooltip = PRC_National_land_reform_TIB_tt
+			hidden_effect = {
+				##绥远、外蒙古每月农业指数+1
+				set_variable = { ROOT.suiyuan_agricultural_index_monthly = 1 }
+				set_variable = { ROOT.outer_mongolia_agricultural_index_monthly = 1 }
+				PRC_national_construction_state_index_calculate = yes
+				PRC_state_select_PCDM_modifier_calculate = yes
+			}
 			set_country_flag = PRC_National_land_reform_TIB
 			add_to_variable = { PRC_National_land_reform_VAR = -1 }
 			every_state = {
@@ -1817,7 +2070,7 @@ PRC_Diplomatic_matters = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = PRC_war_plan_going_on
+			set_country_flag = { flag = PRC_war_plan_going_on value = 1 days = 15 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		remove_effect = {
@@ -2298,10 +2551,10 @@ PRC_Guerrilla_warfare = {
 					name = "华东游击队"
 					is_locked = yes
 					regiments = {
-						irregular_infantry = { x = 0 y = 0 }
-						irregular_infantry = { x = 0 y = 1 }
-						irregular_infantry = { x = 0 y = 2 }
-						irregular_infantry = { x = 0 y = 3 }
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+						militia = { x = 0 y = 3 }
 					}
 					support = {
 						artillery = { x = 0 y = 0 }
@@ -2311,10 +2564,10 @@ PRC_Guerrilla_warfare = {
 					name = "华北游击队"
 					is_locked = yes
 					regiments = {
-						irregular_infantry = { x = 0 y = 0 }
-						irregular_infantry = { x = 0 y = 1 }
-						irregular_infantry = { x = 0 y = 2 }
-						irregular_infantry = { x = 0 y = 3 }
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+						militia = { x = 0 y = 3 }
 					}
 					support = {
 						artillery = { x = 0 y = 0 }
@@ -2324,30 +2577,30 @@ PRC_Guerrilla_warfare = {
 					name = "西北游击队"
 					is_locked = yes
 					regiments = {
-						irregular_infantry = { x = 0 y = 0 }
-						irregular_infantry = { x = 0 y = 1 }
-						irregular_infantry = { x = 0 y = 2 }
-						irregular_infantry = { x = 0 y = 3 }
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+						militia = { x = 0 y = 3 }
 					}
 				}
 				division_template = {
 					name = "中原游击队"
 					is_locked = yes
 					regiments = {
-						irregular_infantry = { x = 0 y = 0 }
-						irregular_infantry = { x = 0 y = 1 }
-						irregular_infantry = { x = 0 y = 2 }
-						irregular_infantry = { x = 0 y = 3 }
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+						militia = { x = 0 y = 3 }
 					}
 				}
 				division_template = {
 					name = "东北游击队"
 					is_locked = yes
 					regiments = {
-						irregular_infantry = { x = 0 y = 0 }
-						irregular_infantry = { x = 0 y = 1 }
-						irregular_infantry = { x = 0 y = 2 }
-						irregular_infantry = { x = 0 y = 3 }
+						militia = { x = 0 y = 0 }
+						militia = { x = 0 y = 1 }
+						militia = { x = 0 y = 2 }
+						militia = { x = 0 y = 3 }
 					}
 				}
 			}
@@ -2494,7 +2747,10 @@ PRC_Chi_Soviet_friendship = {
 				remove_core_of = PRC
 				remove_claim_by = PRC
 			}
-			every_character = { set_nationality = SOV }
+			every_character = {
+				limit = { is_general_advisor = no }
+				set_nationality = SOV
+			}
 			SOV = { annex_country = { target = PRC transfer_troops = yes } }
 			SOV = {
 				add_ideas = PRC_Chiyoda_Momo_idea
@@ -2540,7 +2796,10 @@ PRC_Chi_Soviet_friendship = {
 			set_country_flag = PRC_Save_the_Soviets
 			end_puppet_this = yes
 			SOV = {
-				every_character = { set_nationality = ROOT }
+				every_character = {
+					limit = { is_general_advisor = no }
+					set_nationality = ROOT
+				}
 				every_core_state = { add_core_of_ROOT = yes }
 			}
 			annex_country = { target = SOV transfer_troops = yes }
@@ -2657,34 +2916,34 @@ PRC_Rehabilitate_war_criminals_decision = {
 			}
 		}
 	}
-	##飞霄
-	PRC_RWC_CHI_Feixiao = {
-		visible = {
-			tag = PRC
-		}
-		available = {
-			is_subject = no
-		}
-		cost = 10
-		##cancel_if_invalid = yes
-		ai_will_do = {
-			factor = 1
-		}
-		fire_only_once = yes
-		complete_effect = {
-			effect_tooltip = {
-				every_possible_country = {
-					limit = {
-						has_character = CHI_Feixiao
-					}
-					CHI_Feixiao = { set_nationality = ROOT }
-				}
-			}
-			hidden_effect = {
-				country_event = { id = PRC_add.106 }
-			}
-		}
-	}
+	# ##飞霄
+	# PRC_RWC_CHI_Feixiao = {
+	# 	visible = {
+	# 		tag = PRC
+	# 	}
+	# 	available = {
+	# 		is_subject = no
+	# 	}
+	# 	cost = 10
+	# 	##cancel_if_invalid = yes
+	# 	ai_will_do = {
+	# 		factor = 1
+	# 	}
+	# 	fire_only_once = yes
+	# 	complete_effect = {
+	# 		effect_tooltip = {
+	# 			every_possible_country = {
+	# 				limit = {
+	# 					has_character = CHI_Feixiao
+	# 				}
+	# 				CHI_Feixiao = { set_nationality = ROOT }
+	# 			}
+	# 		}
+	# 		hidden_effect = {
+	# 			country_event = { id = PRC_add.106 }
+	# 		}
+	# 	}
+	# }
 	##符华
 	PRC_RWC_CHI_Fu_Hua = {
 		visible = {
@@ -2886,27 +3145,69 @@ PRC_Rehabilitate_war_criminals_decision = {
 				}
 				every_possible_country = {
 					limit = {
-						has_character = ROC_taiyuan
+						has_character = ROC_Huan_Chang
 					}
-					ROC_taiyuan = { set_nationality = ROOT }
+					ROC_Huan_Chang = { set_nationality = ROOT }
 				}
 				every_possible_country = {
 					limit = {
-						has_character = ROC_fushun
+						has_character = ROC_Chien_Wu
 					}
-					ROC_fushun = { set_nationality = ROOT }
+					ROC_Chien_Wu = { set_nationality = ROOT }
 				}
 				every_possible_country = {
 					limit = {
-						has_character = ROC_changchun
+						has_character = ROC_yingrui
 					}
-					ROC_changchun = { set_nationality = ROOT }
+					ROC_yingrui = { set_nationality = ROOT }
 				}
 				every_possible_country = {
 					limit = {
-						has_character = ROC_anshan
+						has_character = ROC_zhaohe
 					}
-					ROC_anshan = { set_nationality = ROOT }
+					ROC_zhaohe = { set_nationality = ROOT }
+				}
+				every_possible_country = {
+					limit = {
+						has_character = ROC_Hwah_Jah
+					}
+					ROC_Hwah_Jah = { set_nationality = ROOT }
+				}
+				every_possible_country = {
+					limit = {
+						has_character = ROC_Aurora
+					}
+					ROC_Aurora = { set_nationality = ROOT }
+				}
+				every_possible_country = {
+					limit = {
+						has_character = ROC_Hu_Pen
+					}
+					ROC_Hu_Pen = { set_nationality = ROOT }
+				}
+				every_possible_country = {
+					limit = {
+						has_character = ROC_Chang_Wu
+					}
+					ROC_Chang_Wu = { set_nationality = ROOT }
+				}
+				every_possible_country = {
+					limit = {
+						has_character = ROC_Lung_Wu
+					}
+					ROC_Lung_Wu = { set_nationality = ROOT }
+				}
+				every_possible_country = {
+					limit = {
+						has_character = ROC_Chi_An
+					}
+					ROC_Chi_An = { set_nationality = ROOT }
+				}
+				every_possible_country = {
+					limit = {
+						has_character = ROC_Ting_An
+					}
+					ROC_Ting_An = { set_nationality = ROOT }
 				}
 			}
 			hidden_effect = {
@@ -3171,6 +3472,7 @@ SOV_Aid_to_Chinese_Revolution = {
 				has_government = communism
 				is_subject = no
 			}
+			NOT = { has_non_aggression_pact_with = JAP }
 		}
 		cost = 15
 		days_remove = 30
@@ -3257,7 +3559,6 @@ Build_chinese_united_font = {
 	##请求圣杯援助装备
 	PRC_ask_for_ENG_equipment = {
 		icon = GFX_decision_generic_prepare_civil_war
-		allowed = { tag = PRC }
 		visible = {
 			has_country_flag = PRC_Visit_London_ENG_accept
 			has_war_with = JAP

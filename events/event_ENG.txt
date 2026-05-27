@@ -5957,17 +5957,17 @@ add_namespace = ENG_event_ldwj
 				}
 			}
 			set_technology = {
-				KEI_AUTO_META_0 = 1
-				KEI_AUTO_META_fireup = 1
-				KEI_AUTO_META_repairup = 1
-				KEI_AUTO_META_1 = 1
+				auto_meta_0 = 1
+				auto_meta_fireup = 1
+				auto_meta_repairup = 1
+				auto_meta_1 = 1
 			}
 			add_tech_bonus = {
 				name = ENG_event_me.10.t
 				bonus = 1.0 
 				ahead_reduction = 1 
 				uses = 1
-				category = AUTO_META
+				category = auto_meta_tech
 			}
 		}
 	}
@@ -6025,7 +6025,7 @@ add_namespace = ENG_event_ldwj
 				name = ENG_decision_me_jybcegj
 				bonus = 1 
 				uses = 1
-				category = AUTO_META
+				category = auto_meta_tech
 			}
 		}
 	}
@@ -6460,60 +6460,147 @@ add_namespace = ENG_event_ldwj
 					set_country_flag = former_eng_country
 				}
 				ENG_JIETI = yes
-				every_state = {
+				if = {
 					limit = {
-						is_controlled_by = ENG
-						is_core_of = CAN
+						CAN = {
+							exists = yes
+							has_capitulated = no
+						}
 					}
-					CAN = {
-						transfer_state = PREV
+					every_state = {
+						limit = {
+							is_controlled_by = ENG
+							is_core_of = CAN
+						}
+						CAN = {
+							transfer_state = PREV
+						}
 					}
 				}
-				every_state = {
+				if = {
 					limit = {
-						is_controlled_by = ENG
-						is_core_of = RAJ
+						RAJ = {
+							exists = yes
+							has_capitulated = no
+						}
 					}
-					RAJ = {
-						transfer_state = PREV
+					every_state = {
+						limit = {
+							is_controlled_by = ENG
+							is_core_of = RAJ
+						}
+						RAJ = {
+							transfer_state = PREV
+						}
 					}
 				}
-				every_state = {
+			#	every_state = {
+			#		limit = {
+			#			is_controlled_by = ENG
+			#			is_core_of = NPT
+			#		}
+			#		NPT = {
+			#			transfer_state = PREV
+			#		}
+			#	}
+				if = { ##给直布罗陀旁边地块的控制者
 					limit = {
-						is_controlled_by = ENG
-						is_core_of = NPT
+						ENG = {
+							controls_state = 118
+							exists = yes
+							has_capitulated = no
+						}
 					}
-					NPT = {
-						transfer_state = PREV
+					if = {
+						limit = {
+							not = {
+								ENG = {
+									controls_state = 169
+									exists = yes
+									has_capitulated = no
+								}
+							}
+						}
+						var:169.controller  = {
+							transfer_state = 118
+						}
+					}
+					else_if = {
+						limit = {
+							not = {
+								ENG = {
+									controls_state = 173
+									exists = yes
+									has_capitulated = no
+								}
+							}
+						}
+						var:173.controller  = {
+							transfer_state = 118
+						}
 					}
 				}
-				every_state = {
+				if = {
 					limit = {
-						is_controlled_by = ENG
-						is_core_of = EGY
+						EGY = {
+							exists = yes
+							has_capitulated = no
+						}
 					}
-					EGY = {
-						transfer_state = PREV
+					every_state = {
+						limit = {
+							is_controlled_by = ENG
+							is_core_of = EGY
+						}
+						EGY = {
+							transfer_state = PREV
+						}
 					}
 				}
-				every_state = {
+			#	every_state = {
+			#		limit = {
+			#			is_controlled_by = ENG
+			#			is_core_of = MGU
+			#		}
+			#		MGU = {
+			#			transfer_state = PREV
+			#		}
+			#	}
+				if = { ##给阿雷格里港旁边地块的控制者
 					limit = {
-						is_controlled_by = ENG
-						is_core_of = MGU
+						ENG = {
+							controls_state = 685
+							exists = yes
+							has_capitulated = no
+						}
 					}
-					MGU = {
-						transfer_state = PREV
+					var:502.controller  = {
+						transfer_state = 685
 					}
 				}
-				every_state = {
+				if = {
 					limit = {
-						is_controlled_by = ENG
-						is_core_of = EAS
+						EAS = {
+							exists = yes
+							has_capitulated = no
+						}
 					}
-					EAS = {
-						transfer_state = PREV
+					every_state = {
+						limit = {
+							is_controlled_by = ENG
+							is_core_of = EAS
+						}
+						EAS = {
+							transfer_state = PREV
+						}
 					}
-				}
+				}	
+				AHM = { #一周后投降国家进和平会议
+					country_event = {
+						id = ENG_event.99999
+						days = 7
+					}
+				}	
 			}
 		}
 		option = {
@@ -6545,6 +6632,40 @@ add_namespace = ENG_event_ldwj
 				}
 			}
 		}
+	}
+	country_event = {  #延迟触发和平会议事件
+		id = ENG_event.99999
+		title = ENG_jieti_capitulated.t
+		desc = ENG_jieti_capitulated.d
+		fire_only_once = yes
+		is_triggered_only = yes
+		hidden = yes
+		immediate = {
+			every_country = {
+				limit = {
+					has_country_flag = former_eng_country
+					has_capitulated = yes
+				}
+				# ENG = {
+				# 	set_autonomy = {
+				# 		target = PREV
+				# 		autonomy_state = autonomy_free
+				# 	}
+				# }
+				random_enemy_country = {
+					start_peace_conference = {
+						tag = PREV
+						score_factor = 1
+						winner_scope = ALL
+						loser_scope = LIMITED
+					}
+				}
+			}
+		}
+		option = {
+			name = ENG_jieti_capitulated.a
+		}	
+			
 	}
 
 	news_event = { #广岛原子弹爆炸

@@ -1,173 +1,202 @@
+# Typos in category name preserved for compatibility: 'compltetion'
 CAN_NEE_unification_compltetion_cat = {
-	CAN_NEE_promote_unification = {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = CAN
+	# -------------------------------------------------------------------------
+	# æ ¸å¿ƒå€’è®¡æ—¶ä»»åŠ¡ / CORE COUNTDOWN MISSION
+	# -------------------------------------------------------------------------
+	# ~1.5 Years (540 days).
+	CAN_NEE_independence_crisis = {
+		icon = generic_disaster_icon
+		allowed = { tag = CAN }
+		visible = {
+			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
 		}
-
 		available = {
 			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = no }
+		}
+		days_mission_timeout = 540
+		is_good = no
+		selectable_mission = no
+		fire_only_once = yes
+		timeout_effect = {
+			CAN = {
+				log = "[GetDateText]: Mission Failed - NEE Independence"
+				clr_country_flag = CAN_NEE_integration_started
+			}
 			NEE = {
-				exists = yes
-			}
-		}
-
-		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 30
-
-		cost = 25
-
-		
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-
-		complete_effect = {
-			add_to_variable = { var = can_nee_support_influence value = 5 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
-			}
-			#²¹³äÒ»ÏÂÓ°ÏìÁ¦ÊýÖµ
-			
-			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
-				}
-			}
-		}
-
-		remove_effect = {
-			NEE = {
-				add_popularity = {
-    			ideology = democratic
-    			popularity = 0.05
-				}
-				add_political_power = 15
+				country_event = { id = nee_unification.2 } 
+				add_stability = 0.10
 			}
 		}
 	}
-	
-	CAN_NEE_infrastructure_investment = {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = CAN
+	# -------------------------------------------------------------------------
+	# è‹±å›½/NEE æŠµæŠ—å¾ªçŽ¯ä»»åŠ¡ / RECURRING RESISTANCE MISSION
+	# -------------------------------------------------------------------------
+	CAN_NEE_british_interference = {
+		icon = generic_spy_intel
+		allowed = { tag = CAN }
+		visible = {
+			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
 		}
-
+		available = {
+			always = no
+		}
+		days_mission_timeout = 30
+		is_good = no
+		selectable_mission = no
+		fire_only_once = no 
+		timeout_effect = {
+			add_to_variable = { var = eng_nee_influence value = 10 }
+			log = "[GetDateText]: British/NEE interference succeeded. Influence lost."
+			CAN = { 
+				country_event = { 
+					id = can_nee_internal.998 
+					days = 30 
+					random_days = 15
+				}
+			}
+		}
+	}
+	# -------------------------------------------------------------------------
+	# å¯¹æŠ—æŠµæŠ—å†³è®® / COUNTER-INTERFERENCE DECISION
+	# -------------------------------------------------------------------------
+	CAN_NEE_counter_interference = {
+		icon = generic_intel_bonus
+		allowed = { tag = CAN }
+		# Only appears when the interference mission is active
+		visible = {
+			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			is_decision_active = CAN_NEE_british_interference
+		}
+		available = {
+			is_decision_active = CAN_NEE_british_interference
+		}
+		cost = 50
+		fire_only_once = no
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				has_political_power < 50
+			}
+		}
+		complete_effect = {
+			custom_effect_tooltip = CAN_NEE_gain_influence_small_tt
+			hidden_effect = {
+				add_to_variable = { var = can_nee_influence value = 2 }
+			}
+			log = "[GetDateText]: Interference countered by agent action."
+			remove_mission = CAN_NEE_british_interference
+			CAN = { 
+				country_event = { 
+					id = can_nee_internal.998 
+					days = 60
+					random_days = 30
+				} 
+			}
+		
+		}
+	}
+	# -------------------------------------------------------------------------
+	# ç»ˆç»“å†³è®® / FINAL INTEGRATION
+	# -------------------------------------------------------------------------
+	CAN_NEE_integrate_newengland = {
+		icon = generic_form_nation
+		allowed = { tag = CAN }
+		visible = {
+			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
+		}
 		available = {
 			CAN = { has_completed_focus = CAN_The_Halifax_talks }
-			NEE = {
-				exists = yes
-			}
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
+			check_variable = { var = can_nee_influence value = eng_nee_influence compare = greater_than }
+			check_variable = { var = can_nee_influence value = 50 compare = greater_than }
 		}
-
-		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 90
-
-		cost = 25
-
+		cost = 100
 		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-		
-		modifier = {
-			civilian_factory_use = 1
-		}
-
+		ai_will_do = { factor = 100 }
 		complete_effect = {
-			add_to_variable = { var = can_nee_support_influence value = 15 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
+			custom_effect_tooltip = CAN_NEE_gain_influence_medium_tt
+			CAN = {
+				annex_country = { target = NEE transfer_troops = yes }
+				log = "[GetDateText]: Mission Success - NEE Annexed"
+				clr_country_flag = CAN_NEE_integration_started
+				remove_mission = CAN_NEE_british_interference
+				remove_mission = CAN_NEE_independence_crisis
 			}
-	
-			
+		}
+	}
+	# -------------------------------------------------------------------------
+	# å½±å“åŠ›å†³è®® / INFLUENCE DECISIONS
+	# -------------------------------------------------------------------------
+	# Recurring: Politcal Propaganda (+3)
+	CAN_NEE_promote_unification = {
+		icon = generic_nationalism
+		allowed = { tag = CAN }
+		visible = {
+			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
+		}
+		available = {
+			always = no
+		}
+		targets = { NEE }
+		target_trigger = { FROM = { tag = NEE } }
+		cost = 15
+		days_remove = 60
+		days_re_enable = 15
+		fire_only_once = no 
+		ai_will_do = { factor = 1 }
+		complete_effect = {
 			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
+				add_to_variable = { var = can_nee_influence value = 3 }
+			}
+		
+		}
+		remove_effect = {
+			NEE = {
+				add_popularity = {
+					ideology = democratic
+					popularity = 0.02
 				}
 			}
 		}
-
+	}
+	# One-Time: Infra (+15, Long Term Factorries)
+	CAN_NEE_infrastructure_investment = {
+		icon = generic_construction
+		allowed = { tag = CAN }
+		visible = {
+			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
+		}
+		available = {
+			always = no
+		}
+		targets = { NEE }
+		target_trigger = { FROM = { tag = NEE } }
+		cost = 50
+		days_remove = 90
+		fire_only_once = yes
+		modifier = { civilian_factory_use = 2 }
+		complete_effect = {
+			custom_effect_tooltip = CAN_NEE_gain_influence_huge_tt
+			hidden_effect = {
+				add_to_variable = { var = can_nee_influence value = 15 }
+			}
+		
+		}
 		remove_effect = {
 			932 = {
 				add_extra_state_shared_building_slots = 2
@@ -178,677 +207,110 @@ CAN_NEE_unification_compltetion_cat = {
 				}
 			}
 			468 = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
+				add_building_construction = { 
 					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			465 = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			464 = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = infrastructure
-					level = 1
+					level = 2
 					instant_build = yes
 				}
 			}
 		}
 	}
-	
+	# One-time: Railroads (+10, Supply)
 	CAN_NEE_link_railroads = {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = CAN
-		}
-
-		available = {
+		icon = generic_railway_gun
+		allowed = { tag = CAN }
+		visible = {
 			CAN = { has_completed_focus = CAN_The_Halifax_talks }
-			NEE = {
-				exists = yes
-			}
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
 		}
-
+		available = {
+			always = no
+		}
 		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 30
-
+		target_trigger = { FROM = { tag = NEE } }
 		cost = 25
-
+		days_remove = 45
 		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-
 		complete_effect = {
-			add_to_variable = { var = can_nee_support_influence value = 10 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
-			}
-	
-			
+			custom_effect_tooltip = CAN_NEE_gain_influence_large_tt
 			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
-				}
+				add_to_variable = { var = can_nee_influence value = 10 }
 			}
+		
 		}
-
 		remove_effect = {
+			build_railway = {
+				level = 3
+				start_province = 3778 
+				target_province = 6732 
+			}
 			build_railway = {
 				level = 2
-				start_province = 3778 #Ottawa
-				target_province = 6732 #boston
-			}
-			build_railway = {
-				level = 1
-				start_province = 7361 #¹þÀû·¨¿ËË¹
-				target_province = 6732 #boston
+				start_province = 7361
+				target_province = 6732 
 			}
 		}
 	}
-	
-	CAN_NEE_common_historical_education = {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = CAN
+	# One-time: Education (+10, Tech Bonus)
+	CAN_NEE_common_education = {
+		icon = generic_research
+		allowed = { tag = CAN }
+		visible = {
+			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
 		}
-
 		available = {
 			CAN = { has_completed_focus = CAN_The_Halifax_talks }
-			NEE = {
-				exists = yes
-			}
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
+			NOT = { has_dynamic_modifier = CAN_nee_education_bonus }
 		}
-
-		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 30
-
-		cost = 25
-
+		cost = 30
+		days_remove = 60
 		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-
+		modifier = { political_power_gain = -0.1 }
 		complete_effect = {
-			add_to_variable = { var = can_nee_support_influence value = 10 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
-			}
-	
-			
+			custom_effect_tooltip = CAN_NEE_gain_influence_large_tt
 			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
-				}
+				add_to_variable = { var = can_nee_influence value = 10 }
 			}
-		}
-
-		remove_effect = {
-			
+			add_dynamic_modifier = {
+				modifier = CAN_nee_education_bonus
+				days = 730
+			}
+		
 		}
 	}
+	# One-time: Currency (+12, Econ Bonus)
 	CAN_NEE_currency_exchange = {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = CAN
+		icon = generic_trade
+		allowed = { tag = CAN }
+		visible = {
+			CAN = { has_completed_focus = CAN_The_Halifax_talks }
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
 		}
-
 		available = {
 			CAN = { has_completed_focus = CAN_The_Halifax_talks }
-			NEE = {
-				exists = yes
-			}
+			has_country_flag = CAN_NEE_integration_started
+			NEE = { exists = yes }
+			NOT = { has_dynamic_modifier = CAN_nee_economic_bonus }
 		}
-
-		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 30
-
-		cost = 25
-
+		cost = 50
+		days_remove = 60
 		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-
 		complete_effect = {
-			add_to_variable = { var = can_nee_support_influence value = 10 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
-			}
-	
-			
+			custom_effect_tooltip = CAN_NEE_gain_influence_large_tt
 			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
-				}
+				add_to_variable = { var = can_nee_influence value = 12 }
 			}
-		}
-
-		remove_effect = {
-			CAN = {
-				custom_cost_text = RUS_150_ubs_save_cost
-				add_to_variable = { ubs_save = -150 }
+			add_dynamic_modifier = {
+				modifier = CAN_nee_economic_bonus
+				days = 730
 			}
-			NEE = {
-				custom_cost_text = RUS_150_ubs_save_cost
-				add_to_variable = { ubs_save = -150 }
-			}
-		}
-	}
-	#Disarm_mobilization_economic = {
-#		activation = {
-#			or = {
-#				has_idea = war_economy
-#				has_idea = tot_economic_mobilisation
-#			}
-#			has_war = no
-#		}
-#		available = {
-#		}
-#		cancel_trigger = {
-#			or = {
-#				has_war = yes
-#				not = {
-#					or = {
-##						has_idea = war_economy
-#						has_idea = tot_economic_mobilisation
-#					}
-#				}
-#			}
-#		}
-#		icon = GFX_decision_hol_war_on_pacifism
-#		is_good = no
-#		days_mission_timeout = 60
-#		selectable_mission = yes
-#		complete_effect = {
-#			add_ideas = partial_economic_mobilisation
-#			#add_political_power = -150
-#		}
-#		timeout_effect = {
-#			add_ideas = partial_economic_mobilisation
-#			add_stability = -0.15
-#			add_war_support = -0.15
-#			add_political_power = -200
-#		}
-#		ai_will_do = {
-#			base = 1000
-#		}
-#	}
-	
-	CAN_require_newengland = {
-		activation = {
-			has_country_flag = NEE_unification_support_canada_lead_flag
-		}
-		available = {
-		}
-		cancel_trigger = {
-			CAN = {
-				NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-			}
-		}
-		icon = generic_nationalism
-		is_good = yes
-		days_mission_timeout = 360
-		selectable_mission = no
-		allowed = {
-			tag = CAN
-		}
-		ai_will_do = {
-			factor = 10
-		}
-		remove_effect = {
-			CAN = {
-				annex = NEE
-			}
-		}
-	}
-	
-}
-ENG_NEE_unification_compltetion_cat = {
-	ENG_NEE_promote_integration = {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = ENG
-		}
-
-		available = {
-			CAN = { has_completed_focus = CAN_The_Halifax_talks }
-			NEE = {
-				exists = yes
-			}
-		}
-
-		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 20
-
-		cost = 25
-
-		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-
-		complete_effect = {
-		}
-
-		remove_effect = {
-			add_to_variable = { var = eng_nee_support_influence value = 5 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
-			}
-	
-			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
-				}
-			}
-		}
-	}
-	ENG_NEE_promote_federal_integration = {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = ENG
-		}
-
-		available = {
-			CAN = { has_completed_focus = CAN_The_Halifax_talks }
-			NEE = {
-				exists = yes
-			}
-		}
-
-		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 20
-
-		cost = 25
-
-		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-
-		complete_effect = {
-		}
-
-		remove_effect = {
-			add_to_variable = { var = eng_nee_support_influence value = 5 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
-			}
-	
-			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
-				}
-			}
-		}
-	}
-	ENG_NEE_financial_offensive= {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = ENG
-		}
-
-		available = {
-			CAN = { has_completed_focus = CAN_The_Halifax_talks }
-			NEE = {
-				exists = yes
-			}
-		}
-
-		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 20
-
-		cost = 25
-
-		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-
-		complete_effect = {
-		}
-
-		remove_effect = {
-			add_to_variable = { var = eng_nee_support_influence value = 5 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
-			}
-	
-			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
-				}
-			}
-		}
-	}
-	ENG_NEE_promote_seatrad= {
-		icon = generic_nationalism
-
-		allowed = {
-			tag = ENG
-		}
-
-		available = {
-			CAN = { has_completed_focus = CAN_The_Halifax_talks }
-			NEE = {
-				exists = yes
-			}
-		}
-
-		targets = { NEE }
-
-		target_trigger = {
-			FROM = {
-				tag = NEE
-			}
-		}
-
-		days_remove = 20
-
-		cost = 25
-
-		fire_only_once = yes
-
-		ai_will_do = {
-			factor = 1
-			
-		}
-
-		complete_effect = {
-		}
-
-		remove_effect = {
-			add_to_variable = { var = eng_nee_support_influence value = 5 }
-			NEE = {
-				set_variable = { var = can_temp_influence value = CAN.can_nee_support_influence }
-				subtract_from_variable = { var = can_temp_influence value = ENG.eng_nee_support_influence }
-				set_variable = { var = eng_temp_influence value = ENG.eng_nee_support_influence }
-				subtract_from_variable = { var = eng_temp_influence value = CAN.can_nee_support_influence }
-			}
-	
-			hidden_effect = {
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = can_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_canada_lead_flag }
-								has_country_flag = NEE_unification_support_england_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_england_lead_flag
-					set_country_flag = NEE_unification_support_canada_lead_flag
-					country_event = { id = nee_unification.1 }
-					ENG = { country_event = { id = nee_unification.1 } }
-				}
-				if = {
-					limit = {
-						NEE = {
-							check_variable = { var = eng_temp_influence value = 0 compare = greater_than }
-							OR = {
-								NOT = { has_country_flag = NEE_unification_support_england_lead_flag }
-								has_country_flag = NEE_unification_support_canada_lead_flag
-							}
-						}
-					}
-					clr_country_flag = NEE_unification_support_canada_lead_flag
-					set_country_flag = NEE_unification_support_england_lead_flag
-					country_event = { id = nee_unification.2 }
-					ENG = { country_event = { id = nee_unification.2 } }
-				}
-			}
+		
 		}
 	}
 }
-	

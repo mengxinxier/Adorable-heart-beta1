@@ -7,6 +7,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 		}
 		visible = {
 			has_country_flag = Participate_in_the_competition_for_China_reunification
+			not = { has_global_flag = CHI_REUNIT }
 		}
 		available = {
 			has_global_flag = CHI_has_split
@@ -31,9 +32,10 @@ CHI_Crisis_of_CHI_Dynasty = {
 			add_ideas = ROC_crushed_country_1
 			add_power_balance_modifier = {
 				id = CHI_Mandate_of_Heaven_bop    # The ID of the balance of power
-				modifier = unit_China__modifier # The modifier to add
+				modifier = unit_China_modifier # The modifier to add
 			}
 			set_global_flag = CHI_REUNIT
+			save_global_event_target_as = china_uniter
 			add_to_variable = {
 				var = Crisis_of_CHI_Dynasty_Var
 				value = -25
@@ -41,6 +43,28 @@ CHI_Crisis_of_CHI_Dynasty = {
 			}
 			Crisis_of_CHI_Dynasty_Var_effect = yes
 			Crisis_of_CHI_Dynasty_Variable_effect = yes
+			if = {
+				limit = { has_cosmetic_tag = CHI_Beijing_Government }
+				drop_cosmetic_tag = yes
+			}
+			hidden_effect = {
+				if = {
+					limit = { has_cosmetic_tag = CHI_federation }
+					news_event = { id = China_news.010 }
+				}
+				else_if = {
+					limit = { has_country_flag = CHI_democracy_HanGeKi_flag }
+					news_event = { id = China_news.003 }
+				}
+				else_if = {
+					limit = { has_country_flag = CHI_regent_Yuan_flag }
+					news_event = { id = China_news.002 }
+				}
+				else_if = {
+					limit = { has_country_flag = CHI_Imperial_comeback_flag }
+					news_event = { id = China_news.004 }
+				}
+			}
 		}
 	}
 	##重新统治辽满地区
@@ -106,6 +130,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 				state = 803
 				state = 1075
 				state = 613
+				state = 1223
 				state = 743
 				state = 596
 				state = 1068
@@ -127,6 +152,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 			803 = { is_controlled_by_ROOT_or_subject = yes }
 			1075 = { is_controlled_by_ROOT_or_subject = yes }
 			613 = { is_controlled_by_ROOT_or_subject = yes }
+			1223 = { is_controlled_by_ROOT_or_subject = yes }
 			743 = { is_controlled_by_ROOT_or_subject = yes }
 			596 = { is_controlled_by_ROOT_or_subject = yes }
 			1068 = { is_controlled_by_ROOT_or_subject = yes }
@@ -350,7 +376,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = CHI_war_plan_going_on
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 17 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
@@ -372,11 +398,24 @@ CHI_Crisis_of_CHI_Dynasty = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
 			modifier = {
 				FROM = { is_subject_of = JAP }
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = PRC }
+				date < 1941.6.1
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHH }
 				factor = 0
 			}
 		}
@@ -417,8 +456,9 @@ CHI_Crisis_of_CHI_Dynasty = {
 		cost = 10
 		days_remove = 30
 		war_with_target_on_remove = yes
+		fire_only_once = yes
 		complete_effect = {
-			set_country_flag = CHI_war_plan_going_on
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 32 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 			FROM = { country_event = { id = china_generic.008 } }
 		}
@@ -463,6 +503,10 @@ CHI_Crisis_of_CHI_Dynasty = {
 			modifier = {
 				FROM = {
 					is_stronger_than_ROOT_and_not_vulnerable = yes
+					if = {
+						limit = { is_subject = yes }
+						overlord = { is_stronger_than_ROOT_and_not_vulnerable = yes }
+					}
 				}
 				factor = 0
 			}
@@ -558,12 +602,139 @@ CHI_Crisis_of_CHI_Dynasty = {
 				every_core_state = {
 					add_core_of = ROOT
 				}
-				every_character = { set_nationality = ROOT }
+				every_character = {
+					limit = { is_general_advisor = no }
+					set_nationality = ROOT
+				}
 				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 			}
+			hidden_effect = { China_tribute_system_effect = yes }
 		}
 		ai_will_do = {
 			base = 1000
+		}
+	}
+	##处理国民党的战俘
+	CHI_Handling_prisoners_of_war_KMT = {
+		icon = GFX_decision_generic_decision
+		allowed = {
+		}
+		visible = {
+			ROC = { exists = no }
+			owns_state = 592
+		}
+		available = {
+			is_subject = no
+			owns_state = 592
+		}
+		fire_only_once = yes
+		cost = 10
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			country_event = {
+				id = China.049
+			}
+		}
+	}
+	##整合ROCN
+	CHI_integration_ROCN = {
+		icon = GFX_decision_generic_decision
+		allowed = {
+		}
+		visible = {
+			ROC = { exists = no }
+			owns_state = 592
+		}
+		available = {
+			is_subject = no
+			owns_state = 592
+		}
+		fire_only_once = yes
+		cost = 10
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Ping_Hai
+				}
+				ROC_Ping_Hai = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Ning_Hai
+				}
+				ROC_Ning_Hai = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Huan_Chang
+				}
+				ROC_Huan_Chang = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Chien_Wu
+				}
+				ROC_Chien_Wu = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_yingrui
+				}
+				ROC_yingrui = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_zhaohe
+				}
+				ROC_zhaohe = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Hwah_Jah
+				}
+				ROC_Hwah_Jah = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Aurora
+				}
+				ROC_Aurora = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Hu_Pen
+				}
+				ROC_Hu_Pen = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Chang_Wu
+				}
+				ROC_Chang_Wu = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Lung_Wu
+				}
+				ROC_Lung_Wu = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Chi_An
+				}
+				ROC_Chi_An = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = ROC_Ting_An
+				}
+				ROC_Ting_An = { set_nationality = ROOT }
+			}
 		}
 	}
 	##处理中共的战俘
@@ -574,6 +745,7 @@ CHI_Crisis_of_CHI_Dynasty = {
 		visible = {
 			PRC = { exists = no }
 			owns_state = 650
+			not = { has_character = PRC_lidesheng }
 		}
 		available = {
 			is_subject = no
@@ -587,6 +759,58 @@ CHI_Crisis_of_CHI_Dynasty = {
 		complete_effect = {
 			country_event = {
 				id = China.049
+			}
+		}
+	}
+	##整合PRCN
+	CHI_integration_PRCN = {
+		icon = GFX_decision_generic_decision
+		allowed = {
+		}
+		visible = {
+			PRC = { exists = no }
+			owns_state = 650
+			not = { has_character = PRC_lidesheng }
+		}
+		available = {
+			is_subject = no
+			owns_state = 650
+		}
+		fire_only_once = yes
+		cost = 10
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			every_possible_country = {
+				limit = {
+					has_character = PRC_Haerbin
+				}
+				PRC_Haerbin = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = PRC_anshan
+				}
+				PRC_anshan = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = PRC_fushun
+				}
+				PRC_fushun = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = PRC_changchun
+				}
+				PRC_changchun = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = {
+					has_character = PRC_taiyuan
+				}
+				PRC_taiyuan = { set_nationality = ROOT }
 			}
 		}
 	}
@@ -605,7 +829,7 @@ CHI_foreign_ministry = {
 				not = {
 					or = {
 						has_war_with = ROOT
-						is_in_faction_with = ROOT
+						#is_in_faction_with = ROOT
 						is_subject_of = ROOT
 					}
 				}
@@ -645,7 +869,7 @@ CHI_foreign_ministry = {
 		days_remove = 15
 		war_with_target_on_remove = yes
 		complete_effect = {
-			set_country_flag = CHI_war_plan_going_on
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 17 }
 			FROM_country_is_defender_and_ROOT_is_accacker = yes
 		}
 		remove_effect = {
@@ -690,6 +914,47 @@ CHI_foreign_ministry = {
 			FROM = {
 				is_in_faction = no
 			}
+			not = {
+				or = {
+					has_war_with = FROM
+					is_in_faction_with = FROM
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = {
+				set_country_flag = CHI_diplo_invite_FROM
+				country_event = {
+					id = generic.2008
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	CHI_diplo_invite_FROM_tribute = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			tag = CHI
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				has_idea = CTS_Imperial_Tributary_idea
+				not = { has_country_flag = CHI_diplo_invite_FROM }
+				any_enemy_country = { has_war_with = ROOT }
+			}
+		}
+		available = {
+			is_faction_leader = yes
+			FROM = { is_in_faction = no }
 			not = {
 				or = {
 					has_war_with = FROM
@@ -866,6 +1131,1424 @@ CHI_foreign_ministry = {
 			base = 50
 		}
 	}
+	##恢复朝鲜四郡
+	CHI_recover_Lelang = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			has_completed_focus = CHI_focus_Free_korea
+		}
+		fire_only_once = yes
+		cost = 0
+		available = {
+			is_subject = no
+			527 = { is_controlled_by_ROOT_or_subject = yes }
+			1149 = { is_controlled_by_ROOT_or_subject = yes }
+			1146 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		complete_effect = {
+			527 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			1149 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			1146 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+		}
+		ai_will_do = {
+			base = 50
+		}
+	}
+	##恢复交趾三郡
+	CHI_recover_Jiaozhi = {
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			has_completed_focus = CHI_focus_Protection_south
+		}
+		fire_only_once = yes
+		cost = 0
+		available = {
+			is_subject = no
+			857 = { is_controlled_by_ROOT_or_subject = yes }
+			671 = { is_controlled_by_ROOT_or_subject = yes }
+			827 = { is_controlled_by_ROOT_or_subject = yes }
+		}
+		complete_effect = {
+			857 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			671 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+			827 = {
+				add_claim_by_ROOT_if_has_no_core = yes
+				enable_state_integration_80_compliance = yes
+				subject_state_tranfer_to_ROOT = yes
+			}
+		}
+		ai_will_do = {
+			base = 50
+		}
+	}
+	##解散£China_tribute_system_text_icon §Y天朝朝贡体系§!
+	CHI_dismate_China_tribute_system = {
+		allowed = {
+		}
+		visible = {
+			is_in_faction = yes
+			is_faction_leader = no
+			check_variable = { economy_faction_var = 7 }
+			faction_leader = { check_variable = { THIS.economy_faction_var > 0 } }
+		}
+		available = {
+		}
+		fire_only_once = yes
+		cost = 0
+		days_remove = 0
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			set_variable = { economy_faction_var = 0 }
+			remove_dynamic_modifier = { modifier = China_tribute_system_leader }
+		}
+	}
+	##都护府
+		##建立北冥都护府
+		CHI_build_DH1 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH1 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 14
+						region = 151
+						state = 516
+						region = 149
+						region = 235
+						state = 644
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 570
+					}
+				}
+			}
+			complete_effect = {
+				570 = {
+					transfer_state_to = DH1
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH1
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 14
+								region = 151
+								state = 516
+								region = 149
+								region = 235
+								state = 644
+							}
+							NOT = { state = 570 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH1
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 14
+								region = 151
+								state = 516
+								region = 149
+								region = 235
+								state = 644
+							}
+							NOT = { state = 570 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH1
+						set_state_controller_to = DH1
+						add_compliance = 25
+					}
+				}
+				DH1 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH1 = {
+						every_state = {
+							limit = {
+								or = {
+									region = 14
+									region = 151
+									state = 516
+									region = 149
+									region = 235
+									state = 644
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立安西都护府
+		CHI_build_DH6 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH6 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					has_state_flag = is_whole_Tresen_state_area
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 407
+					}
+				}
+			}
+			complete_effect = {
+				407 = {
+					transfer_state_to = DH6
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH6
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							has_state_flag = is_whole_Tresen_state_area
+							NOT = { state = 407 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH6
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							has_state_flag = is_whole_Tresen_state_area
+							NOT = { state = 407 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH6
+						set_state_controller_to = DH6
+						add_compliance = 25
+					}
+				}
+				DH6 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH6 = {
+						every_state = {
+							limit = {
+								has_state_flag = is_whole_Tresen_state_area
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立新罗都护府
+		CHI_build_DH2 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH2 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					region = 191
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 525
+					}
+				}
+			}
+			complete_effect = {
+				525 = {
+					transfer_state_to = DH2
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH2
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 191
+							NOT = { state = 525 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH2
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 191
+							NOT = { state = 525 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH2
+						set_state_controller_to = DH2
+						add_compliance = 25
+					}
+				}
+				DH2 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH2 = {
+						every_state = {
+							limit = {
+								region = 191
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立东瀛都护府
+		CHI_build_DH3 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH3 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 154
+						state = 555
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 282
+					}
+				}
+			}
+			complete_effect = {
+				282 = {
+					transfer_state_to = DH3
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH3
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 154
+								state = 555
+							}
+							NOT = { state = 282 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH3
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 154
+								state = 555
+							}
+							NOT = { state = 282 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH3
+						set_state_controller_to = DH3
+						add_compliance = 25
+					}
+				}
+				DH3 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH3 = {
+						every_state = {
+							limit = {
+								or = {
+									region = 154
+									state = 555
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立交趾都护府
+		CHI_build_DH4 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH4 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 196
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 286
+					}
+				}
+			}
+			complete_effect = {
+				286 = {
+					transfer_state_to = DH4
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH4
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 196
+							}
+							NOT = { state = 286 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH4
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 196
+							}
+							NOT = { state = 286 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH4
+						set_state_controller_to = DH4
+						add_compliance = 25
+					}
+				}
+				DH4 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH4 = {
+						every_state = {
+							limit = {
+								region = 196
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立应龙都护府
+		CHI_build_DH5 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH5 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 142
+						region = 194
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 336
+					}
+				}
+			}
+			complete_effect = {
+				336 = {
+					transfer_state_to = DH5
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH5
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 142
+								region = 194
+							}
+							NOT = { state = 336 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH5
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 142
+								region = 194
+							}
+							NOT = { state = 336 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH5
+						set_state_controller_to = DH5
+						add_compliance = 25
+					}
+				}
+				DH5 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH5 = {
+						every_state = {
+							limit = {
+								or = {
+									region = 142
+									region = 194
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立兰芳经济实验开放区
+		CHI_build_DH7 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH7 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 159
+						region = 192
+						region = 158
+						region = 93
+						state = 972
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 333
+					}
+				}
+			}
+			complete_effect = {
+				333 = {
+					transfer_state_to = DH7
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH7
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 159
+								region = 192
+								region = 158
+								region = 93
+								state = 972
+							}
+							NOT = { state = 333 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH7
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 159
+								region = 192
+								region = 158
+								region = 93
+								state = 972
+							}
+							NOT = { state = 333 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH7
+						set_state_controller_to = DH7
+						add_compliance = 25
+					}
+				}
+				DH7 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH7 = {
+						every_state = {
+							limit = {
+								or = {
+									region = 159
+									region = 192
+									region = 158
+									region = 93
+									state = 972
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立西天竺都护府
+		CHI_build_DH9 = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DH9 = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					region = 153
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 439
+					}
+				}
+			}
+			complete_effect = {
+				439 = {
+					transfer_state_to = DH9
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DH9
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 153
+							NOT = { state = 439 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DH9
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 153
+							NOT = { state = 439 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DH9
+						set_state_controller_to = DH9
+						add_compliance = 25
+					}
+				}
+				DH9 = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DH9 = {
+						every_state = {
+							limit = {
+								region = 153
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立东天竺都护府
+		CHI_build_DHA = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DHA = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					or = {
+						region = 141
+						region = 195
+					}
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 431
+					}
+				}
+			}
+			complete_effect = {
+				431 = {
+					transfer_state_to = DHA
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DHA
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 141
+								region = 195
+							}
+							NOT = { state = 431 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DHA
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							or = {
+								region = 141
+								region = 195
+							}
+							NOT = { state = 431 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DHA
+						set_state_controller_to = DHA
+						add_compliance = 25
+					}
+				}
+				DHA = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DHA = {
+						every_state = {
+							limit = {
+								or = {
+									region = 141
+									region = 195
+								}
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+		##建立南天竺都护府
+		CHI_build_DHB = {
+			icon = ger_reichskommissariats
+			visible = {
+				has_completed_focus = CHI_focus_Back_to_World
+				DHB = { exists = no }
+			}
+			fire_only_once = yes
+			highlight_states = {
+				highlight_states_trigger = {
+					region = 31
+				}
+			}
+			cost = 25
+			ai_will_do = {
+				base = 20
+			}
+			available = {
+				is_subject = no
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					any_controlled_state = {
+						state = 425
+					}
+				}
+			}
+			complete_effect = {
+				425 = {
+					transfer_state_to = DHB
+					add_compliance = 80
+				}
+				set_autonomy = {
+					target = DHB
+					autonomous_state = chi_duhufu_puppet
+				}
+				hidden_effect = {
+					every_state = {
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 31
+							NOT = { state = 425 }
+							OR = {
+								is_owned_by = ROOT
+								owner = { is_subject_of = ROOT }
+							}
+						}
+						transfer_state_to = DHB
+						add_compliance = 25
+					}
+					every_state = {	
+						limit = {
+							OR = {
+								is_controlled_by = ROOT
+								controller = { is_subject_of = ROOT }
+							}
+							controller = { has_full_control_of_state = PREV }
+							is_claim_or_core_of_ROOT = no
+							region = 31
+							NOT = { state = 425 }
+							NOT = {
+								OR = {
+									is_owned_by = ROOT
+									any_country = {
+										is_subject_of = ROOT
+										owns_state = PREV
+									}
+								}
+							}
+						}
+						add_contested_owner = DHB
+						set_state_controller_to = DHB
+						add_compliance = 25
+					}
+				}
+				DHB = {
+					add_manpower = 50000
+					add_equipment_to_stockpile = { 
+						type = infantry_equipment
+						amount = 5000
+						producer = ROOT
+					}	
+					add_equipment_to_stockpile = { 
+						type = support_equipment
+						amount = 500
+						producer = ROOT
+					}	
+					inherit_technology = ROOT
+					add_offsite_building = { type = arms_factory level = 3 }
+					add_ideas = CTS_Imperial_Duhufu_idea
+				}
+				hidden_effect = {
+					DHB = {
+						every_state = {
+							limit = {
+								region = 31
+							}
+							add_claim_by = PREV
+							enable_state_integration_80_compliance = yes
+						}
+					}
+				}
+			}
+		}
+	##扩都护府
+	CHI_Expansion_of_Duhufu = {
+		icon = GFX_decision_generic_brainwash
+		allowed = { tag = CHI }
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				is_duhufu = yes
+			}
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					not = { tag = FROM }
+					any_controlled_state = {
+						is_claimed_by = FROM
+						is_claim_or_core_of_ROOT = no
+						is_fully_controlled_by = PREV
+					}
+				}
+		}
+		target_array = allies
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = control_any_FROM_claim
+				any_country = {
+					or = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+					not = { tag = FROM }
+					any_controlled_state = {
+						is_claimed_by = FROM
+						is_claim_or_core_of_ROOT = no
+						is_fully_controlled_by = PREV
+					}
+				}
+			}
+		}
+		cost = 0
+		days_remove = 0
+		complete_effect = {
+			every_state = {	
+				limit = {
+					is_claim_or_core_of_ROOT = no
+					is_claimed_by = FROM
+					OR = {
+						is_controlled_by = ROOT
+						controller = { is_subject_of = ROOT }
+					}
+					controller = { has_full_control_of_state = PREV }
+					not = { is_controlled_by = FROM }
+				}
+				if = {
+					limit = {
+						OR = {
+							is_owned_by = ROOT
+							owner = { is_subject_of = ROOT }
+						}
+					}
+					transfer_state_to = FROM
+					add_compliance = 25
+				}
+				else = {
+					add_contested_owner = FROM
+					set_state_controller_to = FROM
+					add_compliance = 25
+				}
+			}
+			China_tribute_system_effect = yes
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+}
+
+#西安谈判
+CHI_Xian_negotiations = {
+	CHI_delegates_on_their_way = {  ##与会代表正在赶来
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		priority = 20
+		days_mission_timeout = 7
+		activation = {
+			always = no
+		}
+		visible = {
+		}
+		cancel_if_not_visible = yes
+		selectable_mission = yes
+		cancel_trigger = {
+			hidden_trigger = {
+				has_country_flag = SWE_has_form_cabinet
+			}
+		}
+		timeout_effect = {
+			if = {
+				limit = {
+					check_variable = { global.CHI_Xian_negotiations_members_var < 3 }
+				}
+				country_event = {
+					id = China.068
+				}
+			}
+			else = {
+				country_event = {
+					id = China.062
+				}
+			}
+		}
+	}
 }
 
 #天命决议
@@ -907,14 +2590,14 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 			not = { has_country_flag = CHI_army_reform_decision_ing }
 		}
 		custom_cost_trigger = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > -0.6
+				value > -0.4
 			}
 		}
 		custom_cost_text = CHI_cost_40_Tianming
@@ -951,7 +2634,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.2
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -991,7 +2674,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.2
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1030,7 +2713,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1072,7 +2755,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1113,11 +2796,11 @@ CHI_Mandate_of_Heaven = {
 	}
 	CHI_feudal_foreign_domain = {  ##晋封外藩
 		icon = GFX_decision_generic_monarchy
-		visible = { has_completed_focus = CHI_focus_ZongFan_system_modernisation }
+		visible = { has_completed_focus = CHI_focus_Tributary_system_modernisation }
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1131,9 +2814,12 @@ CHI_Mandate_of_Heaven = {
 		ai_will_do = {
 			factor = 500
 		}
+		fire_only_once = yes
 		days_remove = 100
 		remove_effect = {
 			set_country_flag = CHI_feudal_foreign_domain_flag
+			custom_effect_tooltip = CHI_feudal_foreign_domain_tt1
+			custom_effect_tooltip = CHI_feudal_foreign_domain_tt2
 		}
 		complete_effect = {
 			hidden_effect = {
@@ -1150,7 +2836,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1164,9 +2850,11 @@ CHI_Mandate_of_Heaven = {
 		ai_will_do = {
 			factor = 500
 		}
+		fire_only_once = yes
 		days_remove = 100
 		remove_effect = {
 			set_country_flag = CHI_Internalization_of_outer_domain_flag
+			custom_effect_tooltip = CHI_Internalization_of_outer_domain_tt
 		}
 		complete_effect = {
 			hidden_effect = {
@@ -1179,7 +2867,7 @@ CHI_Mandate_of_Heaven = {
 	}
 
 	CHI_free_market_capitalism = {#自由资本主义
-		icon = GFX_decision_category_generic_economy
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
 		visible = {
 			has_completed_focus = CHI_focus_private_capital_lead
 		}
@@ -1187,7 +2875,7 @@ CHI_Mandate_of_Heaven = {
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1210,16 +2898,20 @@ CHI_Mandate_of_Heaven = {
 				}
 			}
 		}
+		ai_will_do = {
+			base = 1000
+		}
 	}
 
 	CHI_country_led_planned_economy = {#国家主导计划经济
+		icon = GFX_decision_eng_trade_unions_demand
 		visible = {
 			has_completed_focus = CHI_focus_Nation_lead_industrialisation
 		}
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1243,16 +2935,20 @@ CHI_Mandate_of_Heaven = {
 				}
 			}
 		}
+		ai_will_do = {
+			base = 1000
+		}
 	}
 
 	CHI_Promoting_public_schools = {#推广公立学校
+		icon = GFX_decision_generic_research
 		visible = {
 			has_completed_focus = CHI_focus_Promoting_public_schools
 		}
 		available = {
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1276,9 +2972,13 @@ CHI_Mandate_of_Heaven = {
 				}
 			}
 		}
+		ai_will_do = {
+			base = 1000
+		}
 	}
 
 	CHI_Revolution_empire_decision = {#革命帝国
+		icon = GFX_decision_category_generic_communist_revolution
 		visible = {
 			has_completed_focus = CHI_focus_Shu
 		}
@@ -1288,7 +2988,7 @@ CHI_Mandate_of_Heaven = {
 			has_completed_focus = CHI_focus_Improve_political_review
 			power_balance_value = {
 				id = CHI_Mandate_of_Heaven_bop
-				value > 0.6
+				value > 0
 			}
 		}
 		custom_cost_trigger = {
@@ -1310,6 +3010,290 @@ CHI_Mandate_of_Heaven = {
 		}
 		remove_effect = {
 			complete_national_focus = CHI_focus_Empire_of_Revorution
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CHI_JiaJiuXi_decision = {#加九锡、假节钺、剑履上殿
+		icon = GFX_decision_category_army_reform
+		visible = {
+			has_completed_focus = CHI_focus_Control_propaganda_machine
+		}
+		available = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+		}
+		fire_only_once = yes
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.6
+			}
+		}
+		custom_cost_text = CHI_cost_40_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.4
+				}
+			}
+		}
+		remove_effect = {
+			set_country_flag = CHI_completed_JiaJiuXi_decision_flag
+
+			add_to_variable = {
+				var = Crisis_of_CHI_Dynasty_Var
+				value = -5
+				tooltip = Crisis_of_CHI_Dynasty_Var_down_5
+			}
+			Crisis_of_CHI_Dynasty_Var_effect = yes
+
+			add_to_variable = {
+				var = North_Army_faction_influence_var
+				value = 0.05
+				tooltip = North_Army_faction_influence_var_up_small
+			}
+			CHI_faction_influence_calculate = yes
+			add_political_power = 100
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CHI_Return_power_to_Congress_decision = {#权力回归国会
+		icon = GFX_decision_category_generic_political_actions
+		visible = {
+			has_completed_focus = CHI_focus_Return_power_to_Congress
+		}
+		available = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+		}
+		fire_only_once = yes
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.6
+			}
+		}
+		custom_cost_text = CHI_cost_40_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.4
+				}
+			}
+		}
+		remove_effect = {
+			add_to_variable = {
+				var = Crisis_of_CHI_Dynasty_Var
+				value = -5
+				tooltip = Crisis_of_CHI_Dynasty_Var_down_5
+			}
+			Crisis_of_CHI_Dynasty_Var_effect = yes
+
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.05
+			}
+
+			add_political_power = 100
+
+			add_to_variable = {
+				var = Honour_Emperor_faction_influence_var
+				value = -0.05
+				tooltip = Honour_Emperor_faction_influence_var_down_small
+			}
+			
+			set_country_flag = CHI_completed_return_power_to_Congress_decision_flag
+			set_country_flag = build_CHI_congress
+			custom_effect_tooltip = build_CHI_congress
+			CHI_faction_influence_calculate = yes
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+
+	CHI_Yuan_attck_FROM = {#元帅教令-进攻XXX
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				has_country_flag = CHI_regent_Yuan_flag
+			}
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+				is_chinese_country = yes
+				not = { has_country_flag = Participate_in_the_competition_for_China_reunification }
+			}
+			FROM_subject_neighbor_with_root = yes
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = CHI_war_plan_going_on
+			}
+			FROM_subject_neighbor_with_root = yes
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+		}
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.8
+			}
+		}
+		custom_cost_text = CHI_cost_20_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.2
+				}
+			}
+		}
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 32 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		cancel_effect  = { clr_country_flag = CHI_war_plan_going_on }
+		remove_effect = {
+			clr_country_flag = CHI_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 0
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				has_completed_focus = CHI_focus_compete_for_Central
+				factor = 0
+			}
+			modifier = {
+				FROM = { tag = SHX }
+				add = 1000
+			}
+			modifier = {
+				FROM = { tag = JSZ }
+				add = 1000
+			}
+			modifier = {
+				date < 1937.5.1
+				factor = 0
+			}
+		}
+	}
+
+	CHI_Be_Lord_of_Asia = {#亚洲之主
+		icon = GFX_decision_category_hol_war_on_pacifism
+		visible = {
+			has_completed_focus = CHI_focus_Back_to_World
+		}
+		available = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > 0
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_whole_chinese_state_tt
+				NOT = {
+					any_state = {
+						has_state_flag = is_whole_chinese_state_area
+						NOT = { is_controlled_by = ROOT }
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_KOR_state_tt
+				not = {
+					any_state = {
+						region = 191
+						NOT = { is_controlled_by_ROOT_or_ally = yes }
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_VIN_state_tt
+				NOT = {
+					any_state = {
+						is_core_of = VIN
+						NOT = { is_controlled_by_ROOT_or_ally = yes }
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = control_sides_of_Malacca_Strait_tt
+				963 = { is_controlled_by_ROOT_or_ally = yes }
+				846 = { is_controlled_by_ROOT_or_ally = yes }
+				336 = { is_controlled_by_ROOT_or_ally = yes }
+				672 = { is_controlled_by_ROOT_or_ally = yes }
+			}
+			282 = { is_controlled_by_ROOT_or_ally = yes }  ##东京
+			439 = { is_controlled_by_ROOT_or_ally = yes }  ##德里
+			1174 = { is_controlled_by_ROOT_or_ally = yes }  ##学园都市
+			327 = { is_controlled_by_ROOT_or_ally = yes }  ##马尼拉
+		}
+		fire_only_once = yes
+		custom_cost_trigger = {
+			power_balance_value = {
+				id = CHI_Mandate_of_Heaven_bop
+				value > -0.6
+			}
+		}
+		custom_cost_text = CHI_cost_40_Tianming
+		days_remove = 30
+		complete_effect = {
+			hidden_effect = {
+				add_power_balance_value = {
+					id = CHI_Mandate_of_Heaven_bop
+					value = -0.4
+				}
+			}
+		}
+		remove_effect = {
+			add_ideas = idea_CHI_Lord_of_Asia
+		}
+		ai_will_do = {
+			base = 1000
 		}
 	}
 }
@@ -1545,6 +3529,7 @@ CHI_Industrialization_of_China = {
 				state = 803
 				state = 1075
 				state = 613
+				state = 1223
 				state = 743
 				state = 596
 				state = 1068
@@ -1563,6 +3548,7 @@ CHI_Industrialization_of_China = {
 			controls_state = 803
 			controls_state = 1075
 			controls_state = 613
+			controls_state = 1223
 			controls_state = 743
 			controls_state = 596
 			controls_state = 1068
@@ -1595,6 +3581,7 @@ CHI_Industrialization_of_China = {
 			803 = { increase_state_category_by_one_level = yes }
 			1075 = { increase_state_category_by_one_level = yes }
 			613 = { increase_state_category_by_one_level = yes }
+			1223 = { increase_state_category_by_one_level = yes }
 			743 = { increase_state_category_by_one_level = yes }
 			1187 = { increase_state_category_by_one_level = yes }
 			596 = { increase_state_category_by_one_level = yes }
@@ -2080,6 +4067,7 @@ CHI_Industrialization_of_China = {
 		available = {
 			num_of_civilian_factories_available_for_projects > 9
 			controls_state = 613
+			controls_state = 1223
 			controls_state = 1014
 			controls_state = 606
 			controls_state = 620
@@ -2115,11 +4103,23 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
 			add_to_variable = { CHI_Industrialization_of_China_Var = -1 }
 			613 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			1223 = {
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
 					type = industrial_complex
@@ -2215,6 +4215,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2315,6 +4319,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2415,6 +4423,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2514,6 +4526,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2598,6 +4614,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2667,6 +4687,7 @@ CHI_Industrialization_of_China = {
 			controls_state = 650
 			controls_state = 601
 			controls_state = 325
+			controls_state = 1224
 			custom_trigger_tooltip = {
 				tooltip = CHI_Industrialization_of_China_Var_smaller_than_three
 				check_variable = { CHI_Industrialization_of_China_Var < 3 }
@@ -2697,6 +4718,10 @@ CHI_Industrialization_of_China = {
 		}
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		complete_effect = { add_to_variable = { CHI_Industrialization_of_China_Var = 1 } }
 		remove_effect = {
@@ -2733,6 +4758,14 @@ CHI_Industrialization_of_China = {
 					instant_build = yes
 				}
 			}
+			1224 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
 			325 = {
 				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
@@ -2746,11 +4779,19 @@ CHI_Industrialization_of_China = {
 
  # 重启旧工厂
 	CHI_Restart_Telegraph_Office = {#重启电报总局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2791,11 +4832,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_ShangHai_ZhiBuJu = {#重启上海机器织布局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2835,11 +4884,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_HuBei_ZhiBuJu = {#重启湖北织布局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2880,11 +4937,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_AnQing_arms_factory = {#重启安庆内军械所
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2925,11 +4990,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_JiangNan_ZhiZaoZongJu = {#重启江南机器制造总局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -2970,11 +5043,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_TianJin_ZhiZaoJu = {#重启天津机器制造局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3014,11 +5095,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_JinLing_ZhiZaoJu = {#重启金陵机器制造局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3059,11 +5148,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_FuChow_ChuanZhenJu = {#重启福州船政局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3103,11 +5200,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_LunChuan_ZhaoShangJu = {#重启轮船招商局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3147,11 +5252,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_HanYang_Ironworks = {#重启汉阳铁厂
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3190,11 +5303,19 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_restart_KaiPing_KuangWuJu = {#重启开平矿务局
+		icon = GFX_decision_generic_construction
 		visible = {
 			has_completed_focus = CHI_focus_restart_old_factory
 		}
 		custom_cost_trigger = {
 			always = yes
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_200
 		days_remove = 15
@@ -3216,7 +5337,10 @@ CHI_Industrialization_of_China = {
 			add_to_variable = { CHI_Industrialization_of_China_Var = -1 }
 			614 = {
 				add_extra_state_shared_building_slots = 1
-				#下个版本写增加煤炭
+				add_resource = {
+					type = coal
+					amount = 19
+				}
 			}
 			custom_effect_tooltip = {
 				localization_key = China_Industrial_Points_Var_up_tt
@@ -3230,10 +5354,18 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_attract_foreign_investment = {#引进外资
+		icon = GFX_decision_generic_merge_plant_materiel
 		visible = {
 			has_completed_focus = CHI_focus_Promote_joint_ventures
 			check_variable = {
 				CHI_attract_foreign_investment_num_Var < 15
+			}
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
 			}
 		}
 		available = {
@@ -3281,24 +5413,58 @@ CHI_Industrialization_of_China = {
 	}
 
 	CHI_Investment_QinJin_region = {#投资秦晋工业
+		icon = GFX_decision_duihuan_gongchang_1
 		custom_cost_trigger = {
 			always = yes
 		}
 		visible = {
+			has_country_flag = CHI_shared_tree_leader
 			has_completed_focus = CHI_shared_Investment_QinJin
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				add = 50
+				check_variable = {
+					var = ubs_save
+					value > 400
+				}
+			}
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
 		}
 		custom_cost_text = HCP_400
 		days_remove = 60
 		days_re_enable = 60
 		complete_effect = {
 			COST_400_UBS_LOAD = yes
+			add_to_variable = {
+				CHI_Investment_QinJin_var = 1
+			}
 		}
 		available = {
 			SHX = {
 				is_subject_of = ROOT
 			}
+			custom_override_tooltip = {
+				tooltip = CHI_Investment_QinJin_num_tt
+				check_variable = {
+					CHI_Investment_QinJin_var < 5
+				}
+			}
+
 		}
 		remove_effect = {
+			if = {
+				limit = {
+					check_variable = {
+						CHI_Investment_QinJin_var = 5
+					}
+				}
+				clear_variable = CHI_Investment_QinJin_var
+			}
 			SHX = {
 				random_owned_state = {
 					limit = {
@@ -3500,7 +5666,7 @@ CHI_gambling_of_JSZ = {
 	ROC_raise_gambling_of_JSZ = {
 		allowed = {
 			or = {
-				tag = SOV
+				tag = ROC
 				tag = JSZ
 			}
 		}
@@ -4459,6 +6625,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4488,6 +6661,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4517,6 +6697,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4531,19 +6718,19 @@ CHI_CARI_category = {#中国军械研究所
 			effect_tooltip = {
 				add_unit_bonus = {
 					light_sp_artillery_brigade = {
-						combat_width = -1
+						soft_attack = 0.15
 						supply_consumption = -0.2
 					}
 					medium_sp_artillery_brigade = {
-						combat_width = -1
+						soft_attack = 0.15
 						supply_consumption = -0.2
 					}
 					heavy_sp_artillery_brigade = {
-						combat_width = -1
+						soft_attack = 0.15
 						supply_consumption = -0.2
 					}
 					modern_sp_artillery_brigade = {
-						combat_width = -1
+						soft_attack = 0.15
 						supply_consumption = -0.2
 					}
 				}
@@ -4559,6 +6746,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4588,6 +6782,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4624,6 +6825,13 @@ CHI_CARI_category = {#中国军械研究所
 		cost = 100
 		fire_only_once = yes
 		days_remove = 200
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 20
+				has_war = yes
+			}
+		}
 		modifier = {
 			research_speed_factor = -0.05
 			consumer_goods_factor = 0.1
@@ -4644,42 +6852,42 @@ CHI_CARI_category = {#中国军械研究所
 		}
 	}
 
-	CHI_research_ShenJi_Armor_AT_aritiller = {#研究神机自行反坦克炮
-		icon = GFX_decision_category_tank
-		visible = {
-			has_completed_focus = CHI_focus_develop_TeSe_military_equipment
-		}
-		cost = 100
-		fire_only_once = yes
-		days_remove = 200
-		modifier = {
-			research_speed_factor = -0.05
-			consumer_goods_factor = 0.1
-		}
-		remove_effect = {
-			set_technology = {
-				CHI_ShenJi_Armor_AT_aritiller = 1
-				popup = no
-			}
-			mio:CHI_CNIC_tank_destroyer_organization = { add_mio_size = 1 }
-			effect_tooltip = {
-				add_unit_bonus = {
-					light_tank_destroyer_brigade = {
-						combat_width = -0.5
-					}
-					medium_tank_destroyer_brigade = {
-						combat_width = -0.5
-					}
-					heavy_tank_destroyer_brigade = {
-						combat_width = -0.5
-					}
-					modern_tank_destroyer_brigade = {
-						combat_width = -0.5
-					}
-				}
-			}
-		}
-	}
+	# CHI_research_ShenJi_Armor_AT_aritiller = {#研究神机自行反坦克炮
+	# 	icon = GFX_decision_category_tank
+	# 	visible = {
+	# 		has_completed_focus = CHI_focus_develop_TeSe_military_equipment
+	# 	}
+	# 	cost = 100
+	# 	fire_only_once = yes
+	# 	days_remove = 200
+	# 	modifier = {
+	# 		research_speed_factor = -0.05
+	# 		consumer_goods_factor = 0.1
+	# 	}
+	# 	remove_effect = {
+	# 		set_technology = {
+	# 			CHI_ShenJi_Armor_AT_aritiller = 1
+	# 			popup = no
+	# 		}
+	# 		mio:CHI_CNIC_tank_destroyer_organization = { add_mio_size = 1 }
+	# 		effect_tooltip = {
+	# 			add_unit_bonus = {
+	# 				light_tank_destroyer_brigade = {
+	# 					combat_width = -0.5
+	# 				}
+	# 				medium_tank_destroyer_brigade = {
+	# 					combat_width = -0.5
+	# 				}
+	# 				heavy_tank_destroyer_brigade = {
+	# 					combat_width = -0.5
+	# 				}
+	# 				modern_tank_destroyer_brigade = {
+	# 					combat_width = -0.5
+	# 				}
+	# 			}
+	# 		}
+	# 	}
+	# }
 }
 
 CHI_Sino_German_cooperation = {#中德合作
@@ -4693,6 +6901,13 @@ CHI_Sino_German_cooperation = {#中德合作
 		fire_only_once = yes
 		modifier = {
 			civilian_factory_use = 10
+		}
+		ai_will_do = {
+			base = 20
+			modifier = {
+				add = 80
+				has_completed_focus = CHI_focus_Introduction_German_equipment
+			}
 		}
 		available = {
 			num_of_civilian_factories_available_for_projects > 9
@@ -4717,6 +6932,9 @@ CHI_Sino_German_cooperation = {#中德合作
 		cost = 50
 		days_remove = 100
 		fire_only_once = yes
+		ai_will_do = {
+			base = 20
+		}
 		available = {
 			has_country_flag = CHI_introduce_battle_lines_flag
 		}
@@ -4732,6 +6950,28 @@ CHI_Sino_German_cooperation = {#中德合作
 			has_completed_focus = CHI_focus_Purchase_German_patents
 		}
 		days_remove = 30
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 30
+				check_variable = {
+					var = ubs_save
+					value = 300
+					compare = greater_than_or_equals
+				}
+			}
+			modifier = {
+				add = 50
+				date > 1939.1.1
+				NOT = {
+					has_tech = improved_infantry_weapons
+				}
+			}
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
+		}
 		custom_cost_trigger = {
 			check_variable = {
 				var = ubs_save
@@ -4783,6 +7023,21 @@ CHI_Sino_German_cooperation = {#中德合作
 				compare = greater_than_or_equals
 			}
 		}
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 50
+				check_variable = {
+					var = ubs_save
+					value = 300
+					compare = greater_than_or_equals
+				}
+			}
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
+		}
 		custom_cost_text = HCP_100
 		available = {
 			NOT = {
@@ -4827,6 +7082,21 @@ CHI_Sino_German_cooperation = {#中德合作
 				compare = greater_than_or_equals
 			}
 		}
+		ai_will_do = {
+			base = 10
+			modifier = {
+				add = 50
+				check_variable = {
+					var = ubs_save
+					value = 300
+					compare = greater_than_or_equals
+				}
+			}
+			modifier = {
+				factor = 0
+				check_variable = { ubs_load > 100 }
+			}
+		}
 		custom_cost_text = HCP_100
 		available = {
 			NOT = {
@@ -4856,367 +7126,6 @@ CHI_Sino_German_cooperation = {#中德合作
 			}
 		}
 
-	}
-}
-
-#要求周边国家附庸
-CHI_chaogong = {
-	CHI_puppet_VIN = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				VIN = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					VIN = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			VIN = {
-				exists = yes
-			}
-			VIN = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			VIN = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_SIA = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				SIA = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					SIA = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			SIA = {
-				exists = yes
-			}
-			SIA = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			SIA = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_AFG = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				AFG = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					AFG = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			AFG = {
-				exists = yes
-			}
-			AFG = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			AFG = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_RAJ = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				RAJ = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					RAJ = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			RAJ = {
-				exists = yes
-			}
-			RAJ = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			RAJ = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_MAL = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				MAL = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					MAL = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-		}
-		visible = {
-			MAL = {
-				exists = yes
-			}
-			MAL = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			MAL = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_KOR = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-			OR = {
-				KOR = {
-					is_neighbor_of = CHI
-				}
-				any_other_country = {
-					limit = {
-						is_in_faction_with = CHI
-					}
-					KOR = {
-						is_neighbor_of = PREV
-					}
-				}
-			}
-			visible = {
-				KOR = {
-					exists = yes
-				}
-				KOR = {
-					is_subject = no
-				}
-			}
-			remove_effect = {
-				KOR = {
-					country_event = {
-						id = chi.51
-						days = 1
-					}
-				}
-			}
-		}
-	}
-	CHI_puppet_JAP = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-		}
-		visible = {
-			JAP = {
-				exists = yes
-			}
-			JAP = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			JAP = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_ROV = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-		}
-		visible = {
-			ROV = {
-				exists = yes
-			}
-			ROV = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			ROV = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
-	}
-	CHI_puppet_CAM = {
-		cost = 20
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				has_war = yes
-				factor = 0
-			}
-		}
-		days_remove = 14
-		fire_only_once = yes
-		available = {
-			is_subject = no
-		}
-		visible = {
-			CAM = {
-				exists = yes
-			}
-			CAM = {
-				is_subject = no
-			}
-		}
-		remove_effect = {
-			CAM = {
-				country_event = {
-					id = chi.51
-					days = 1
-				}
-			}
-		}
 	}
 }
 
@@ -5273,7 +7182,6 @@ CHI_Debug = {
 					value = 5
 					tooltip = Crisis_of_CHI_Dynasty_Var_up_5
 				}
-				unlock_national_focus = CHI_Darkest_hour
 				set_global_flag = chi_chaos
 				add_stability = -0.25
 				country_lock_all_division_template = no
@@ -5391,29 +7299,10 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = socialism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = socialism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = socialism }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_chiyu_idea
 			drop_cosmetic_tag = yes
@@ -5437,29 +7326,10 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = liberalism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = liberalism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = liberalism }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_lixingke_idea
 			drop_cosmetic_tag = yes
@@ -5483,29 +7353,10 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Chinese_federalism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Chinese_federalism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Chinese_federalism }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_zhonglanzhu_idea
 			drop_cosmetic_tag = yes
@@ -5529,29 +7380,10 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Trade_liberalism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Trade_liberalism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Trade_liberalism }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Luo_Tianyi_idea
 			drop_cosmetic_tag = yes
@@ -5575,31 +7407,12 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = conservatism
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = conservatism
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = conservatism }
 			CHI_remove_all_ideas = yes
-			add_ideas = CHI_kangyouwei_idea
+			add_ideas = CHI_fuhua_idea
 			drop_cosmetic_tag = yes
 		}
 	}
@@ -5621,31 +7434,12 @@ CHI_Debug = {
 				}
 				CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Right_populism_subideology
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Right_populism_subideology
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Right_populism_subideology }
 			CHI_remove_all_ideas = yes
-			add_ideas = CHI_Diana_idea
+			add_ideas = CHI_hanyang_idea
 			drop_cosmetic_tag = yes
 		}
 	}
@@ -5660,29 +7454,10 @@ CHI_Debug = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Absolute_monarchy
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Absolute_monarchy
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Absolute_monarchy }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Leizi_idea
 			drop_cosmetic_tag = yes
@@ -5699,29 +7474,10 @@ CHI_Debug = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_jianglihua
-						}
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Absolute_monarchy
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Absolute_monarchy
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Absolute_monarchy }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Qian_daizhi_idea
 			drop_cosmetic_tag = yes
@@ -5738,27 +7494,10 @@ CHI_Debug = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					has_country_leader = {
-						ruling_only = yes
-						character = CHI_jianglihua
-					}
+				promote_character = {
+					character = CHI_jianglihua
+					ideology = Absolute_monarchy
 				}
-				CHI_jianglihua = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Absolute_monarchy
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Absolute_monarchy }
 			CHI_remove_all_ideas = yes
 			add_ideas = CHI_Yue_zhengling_idea
 			drop_cosmetic_tag = yes
@@ -5775,31 +7514,12 @@ CHI_Debug = {
 				ruling_party = fascism
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_yuankeding
-						}
-					}
+				promote_character = {
+					character = CHI_yuankeding
+					ideology = fascism_ideology
 				}
-				CHI_yuankeding = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = fascism_ideology
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = fascism_ideology }
 			CHI_remove_all_ideas = yes
-			add_ideas = CHI_Diana_idea
+			add_ideas = CHI_hanyang_idea
 			drop_cosmetic_tag = yes
 			set_cosmetic_tag = CHI_hongxian
 		}
@@ -5815,31 +7535,12 @@ CHI_Debug = {
 				ruling_party = neutrality
 				elections_allowed = no
 			}
-			if = {
-				limit = {
-					not = {
-						has_country_leader = {
-							ruling_only = yes
-							character = CHI_yuankeding
-						}
-					}
+				promote_character = {
+					character = CHI_yuankeding
+					ideology = Absolute_monarchy
 				}
-				CHI_yuankeding = {
-					add_country_leader_role = {
-						country_leader = {
-							desc = ""
-							ideology = Absolute_monarchy
-							traits = {}
-							expire = "1999.1.1.1"
-							id = -1
-						}
-						promote_leader = yes
-					}
-				}
-			}
-			else = { set_country_leader_ideology = Absolute_monarchy }
 			CHI_remove_all_ideas = yes
-			add_ideas = CHI_Kosaka_kirino_idea
+			add_ideas = CHI_liehaiwang_idea
 			drop_cosmetic_tag = yes
 			set_cosmetic_tag = CHI_hongxian
 		}
@@ -5901,6 +7602,19 @@ CHI_Debug = {
 		}
 	}
 
+	CHI_Debug_change_WangQuan_II = {#切换国策树-王权线
+		allowed = {
+			original_tag = CHI
+		}
+		complete_effect = {
+			set_country_flag = CHI_Imperial_comeback_flag
+			set_global_flag = CHI_REUNIT
+			save_global_event_target_as = china_uniter
+			set_country_flag = CHI_talk_with_Shu
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
+
 	CHI_Debug_change_YuanShen = {#切换国策树-摄政王线
 		allowed = {
 			original_tag = CHI
@@ -5941,6 +7655,229 @@ CHI_Debug = {
 			mark_focus_tree_layout_dirty = yes
 		}
 	}
+
+	CHI_Debug_change_MinZhu_II = {#切换国策树-民主线
+		allowed = {
+			original_tag = CHI
+		}
+		complete_effect = {
+			set_country_flag = CHI_CP_absorb_the_moderates_flag
+			set_global_flag = CHI_REUNIT
+			save_global_event_target_as = china_uniter
+			mark_focus_tree_layout_dirty = yes
+		}
+	}
 }
 
+CHI_IC_migration_category = {#工业迁移
+	CHI_civil_IC_migration = {
+		icon = GFX_decision_generic_trucks
+		fire_only_once = yes
+		on_map_mode = map_and_decisions_view
+		visible = {
+			has_completed_focus = CHI_Industrial_relocation_plan
+			FROM = {
+				NOT = {
+					has_state_flag = CHI_civil_inward_migration
+				}
+				industrial_complex > 0 
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CHI_industrial_migration_tt
+				check_variable = {
+					CHI_migration < 5
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					region = 209
+					region = 210
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		days_remove = 60
+		cost = 10
+		complete_effect = {
+			add_to_variable = {
+				CHI_migration = 1
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					check_variable = {
+						CHI_migration < 0
+					}
+				}
+				set_variable = {
+					CHI_migration = 0
+				}
+			}
+			else = {
+				add_to_variable = {
+					CHI_migration = -1
+				}
+			}
+			FROM = {
+				remove_building = {
+					type = industrial_complex
+					level = 1
+				}
+				set_state_flag = CHI_civil_inward_migration
+			}
+			random_owned_controlled_state = {
+				limit = {
+					region = 211
+				}
+				hidden_effect = { SOV_promote_regional_development = yes }
+				custom_effect_tooltip = SOV_upgrading_area_type_tt
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
 
+			}
+		}
+	}
+	CHI_arms_IC_migration = {
+		icon = GFX_decision_generic_industry
+		fire_only_once = yes
+		on_map_mode = map_and_decisions_view
+		visible = {
+			has_completed_focus = CHI_Industrial_relocation_plan
+			FROM = {
+				NOT = {
+					has_state_flag = CHI_army_inward_migration
+				}
+				arms_factory > 0 
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CHI_industrial_migration_tt
+				check_variable = {
+					CHI_migration < 5
+				}
+			}
+		}
+		target_trigger = {
+			FROM = {
+				OR = {
+					region = 209
+					region = 210
+				}
+				is_controlled_by = ROOT
+			}
+		}
+		state_target = yes
+		days_remove = 60
+		cost = 10
+		complete_effect = {
+			add_to_variable = {
+				CHI_migration = 1
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					check_variable = {
+						CHI_migration < 0
+					}
+				}
+				set_variable = {
+					CHI_migration = 0
+				}
+			}
+			else = {
+				add_to_variable = {
+					CHI_migration = -1
+				}
+			}
+			FROM = {
+				remove_building = {
+					type = arms_factory
+					level = 1
+				}
+				set_state_flag = CHI_army_inward_migration
+			}
+			random_owned_controlled_state = {
+				limit = {
+					region = 211
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+
+			}
+		}
+	}
+
+}
+
+prospect_for_resources = {
+	CHI_build_landmark_TerracottaWarriors = {
+		icon = generic_construction
+		allowed = { is_chinese_country = yes }
+		on_map_mode = decision_view_only
+		visible = {
+			has_global_flag = find_landmark_TerracottaWarriors
+		}
+		available = {
+			num_of_civilian_factories_available_for_projects > 19
+			owns_state = 799
+			controls_state = 799
+		}
+		fire_only_once = yes
+		cost = 15
+		days_remove = 100
+		highlight_states = {
+			highlight_provinces = { 1976 }
+		}
+		modifier = {
+			civilian_factory_use = 20
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		remove_effect = {
+			799 = {
+				if = {
+					limit = { infrastructure < 4 }
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 3
+				custom_effect_tooltip = landmark_TerracottaWarriors_TT
+			}
+			hidden_effect = {
+				799 = {
+					add_building_construction = {
+						type = landmark_TerracottaWarriors
+						level = 1
+						instant_build = yes
+						province = 1976
+					}
+				}
+			}
+		}
+	}
+}

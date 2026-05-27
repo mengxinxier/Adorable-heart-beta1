@@ -905,6 +905,24 @@ country_event = {
 			}
 		}
 	}
+	option = {
+		#缺少众神的黄昏
+		name = generic.665.j
+		trigger = {
+			NOT = {
+				has_dlc = "Gotterdammerung"
+			}
+		}
+	}
+	option = {
+		#缺少抗战到底
+		name = generic.665.k
+		trigger = {
+			NOT = {
+				has_dlc = "No Compromise, No Surrender"
+			}
+		}
+	}
 }
 
 # 说明
@@ -3129,6 +3147,14 @@ news_event = {
 			}
 		}
 	}
+	desc = {
+		text = generic.1999.d.4
+		trigger = {
+			FROM = {
+				tag = SOV
+			}
+		}
+	}
 	trigger = {
 		wants_world_news = yes
 	}
@@ -3152,6 +3178,14 @@ news_event = {
 				FROM = { tag = GER }
 			}
 			set_country_flag = super_event_WW2_GER
+			set_country_flag = adorable_heart_Super_Event_Visible
+			adorable_heart_fire_super_event = yes
+		}
+		else_if = {
+			limit = {
+				FROM = { tag = SOV }
+			}
+			set_country_flag = super_event_WW2_SOV
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
 		}
@@ -3184,6 +3218,14 @@ news_event = {
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
 		}
+		else_if = {
+			limit = {
+				FROM = { tag = SOV }
+			}
+			set_country_flag = super_event_WW2_SOV
+			set_country_flag = adorable_heart_Super_Event_Visible
+			adorable_heart_fire_super_event = yes
+		}
 		else = {
 			set_country_flag = super_event_WW2
 			set_country_flag = adorable_heart_Super_Event_Visible
@@ -3211,6 +3253,14 @@ news_event = {
 				FROM = { tag = GER }
 			}
 			set_country_flag = super_event_WW2_GER
+			set_country_flag = adorable_heart_Super_Event_Visible
+			adorable_heart_fire_super_event = yes
+		}
+		else_if = {
+			limit = {
+				FROM = { tag = SOV }
+			}
+			set_country_flag = super_event_WW2_SOV
 			set_country_flag = adorable_heart_Super_Event_Visible
 			adorable_heart_fire_super_event = yes
 		}
@@ -3414,6 +3464,11 @@ country_event = {
 	is_triggered_only = yes
 	hidden = yes
 	immediate = {
+		set_global_flag = {
+			flag = save_and_load_settlement_flag
+			days = 5
+			value = 1
+		}
 		save_and_load_settlement = yes
 	}
 }
@@ -3876,6 +3931,14 @@ country_event = {
 	title = generic.2017.t
 	desc = generic.2017.desc
 	is_triggered_only = yes
+	immediate = {
+		every_country = {
+			limit = {
+				is_in_faction_with = SOV
+			}
+			set_country_flag = former_SOV_country
+		}
+	}
 	option = {
 		name = generic.2017.a
 		set_country_flag = USA_Exit_from_Europe
@@ -3935,6 +3998,20 @@ country_event = {
 				transfer_state_to = ROOT
 			}
 		}
+		every_country = {
+			limit = {
+				has_country_flag = former_SOV_country
+				has_capitulated = yes
+			}
+			random_enemy_country = {
+				start_peace_conference = {
+					tag = PREV
+					score_factor = 1
+					winner_scope = ALL
+					loser_scope = LIMITED
+				}
+			}
+		}
 		ai_chance = {
 			base = 5
 		}
@@ -3949,6 +4026,16 @@ country_event = {
 		}
 		ai_chance = {
 			base = 0
+    		modifier = {
+    		    add = 100
+    		    any_country = {
+    		        is_in_faction_with = ROOT
+					not = {
+						tag = ROOT
+					}
+    		        is_ai = no
+    		    }
+    		}
 		}
 	}
 }
@@ -4296,6 +4383,123 @@ country_event = {
 	}
 }
 
+#[FROM.Getname]邀请我们加入通用经济阵营
+	country_event = {
+		id = generic.2023
+		title = generic.2023.title
+		desc = generic.2023.desc
+		is_triggered_only = yes
+		option = {
+			name = generic.2023.a
+			add_ideas = generic_economy_faction_idea
+			FROM = {
+				#[FROM.Getname]同意了
+				country_event = {
+					id = generic.2016
+					hours = 6
+				}
+			}
+			ai_chance = {
+				factor = 10
+			}
+		}
+		option = {
+			name = generic.2023.b
+			FROM = {
+				#[FROM.Getname]拒绝了
+				country_event = {
+					id = generic.2009
+					hours = 6
+				}
+			}
+			ai_chance = {
+				factor = 0
+			}
+		}
+	}
+
+country_event = { #event to fill the progress bar and remove the alert after three days (donotlog)
+	id = generic.2024
+	hidden = yes
+
+	trigger = {
+		is_in_array = { global.faction_joining_alerts = THIS }
+	}
+
+	is_triggered_only = yes
+
+	option = {
+		add_to_variable = { faction_joining_alert_timer = 1 }
+		if = {
+			limit = { check_variable = { faction_joining_alert_timer > 71 } }
+			clear_faction_joining_alert = yes
+		}
+		else = {
+			update_faction_joining_progressbar = yes
+			set_variable_to_random = global.Adorable_heart_alerts_dirty
+			country_event = { id = generic.2024 hours = 1 }
+		}
+	}
+}
+country_event = { #donotlog
+	id = generic.2025
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		every_country = {
+			limit = {
+				is_ai = no
+				OR = {
+					is_ally_with = ROOT
+					has_guaranteed = ROOT
+					civilwar_target = ROOT
+				}
+				NOT = { is_ally_with = FROM }
+				NOT = { is_in_array = { incoming_war_alerts = FROM } }
+			}
+			set_variable = { alert_war_target_@FROM = ROOT }
+			add_to_array = { incoming_war_alerts = FROM }
+			scoped_sound_effect = alert_enemy_generate_wargoal_sound
+		}
+		set_variable_to_random = global.Adorable_heart_alerts_dirty
+	}
+}
+country_event = { #
+	id = generic.2026
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		if = {
+			limit = {
+				is_ai = no
+				NOT = { is_in_array = { overly_indebted_alerts = ROOT } }
+			}
+			add_to_array = { overly_indebted_alerts = ROOT }
+		}
+		set_variable_to_random = global.Adorable_heart_alerts_dirty
+	}
+}
+country_event = { #
+	id = generic.2027
+	hidden = yes
+
+	is_triggered_only = yes
+
+	option = {
+		if = {
+			limit = {
+				is_ai = no
+				NOT = { is_in_array = { FRA_WOHS_Fortune_alerts = ROOT } }
+			}
+			add_to_array = { FRA_WOHS_Fortune_alerts = ROOT }
+		}
+		set_variable_to_random = global.Adorable_heart_alerts_dirty
+	}
+}
 
 add_namespace = Frieren_Travels
 #芙莉莲萌心游记
@@ -4431,7 +4635,7 @@ country_event = {
 	title = Frieren_Travels.10.t
 	desc = Frieren_Travels.10.d
 	is_triggered_only = yes
-	fire_only_once = yes
+	#fire_only_once = yes
 	hidden = no
 	option = {
 		name = Frieren_Travels.10.a
