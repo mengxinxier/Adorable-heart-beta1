@@ -402,6 +402,9 @@ focus_tree = {
             base = 150			#基础值
         }
         completion_reward = {
+            hidden_effect = {
+                set_major = yes
+            }
             add_popularity = {
                 ideology = communism
                 popularity = 0.2
@@ -7284,6 +7287,12 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+            if = {
+                limit = {
+                    has_idea = LHS_lianhegongshi
+                }
+                remove_ideas = LHS_lianhegongshi
+            }
             LHS_mumian= {
                 add_country_leader_role = {
                     country_leader = {
@@ -7588,7 +7597,8 @@ focus_tree = {
             focus = LHS_Hand_On_The_Plough
         }
         available = {
-
+            has_completed_focus = LHS_youji
+            has_completed_focus = LHS_shengchan
         }
         allow_branch = {
             has_country_flag = LHS_mumian
@@ -7625,8 +7635,6 @@ focus_tree = {
                 add_claim_by = LHS
 
             }
-            complete_national_focus = LHS_youji
-            complete_national_focus = LHS_shengchan
             set_country_flag = LHS_mumian2
             clr_country_flag = kaiduan
             clr_country_flag = zhanzhengkaishi
@@ -7671,7 +7679,6 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
-            add_research_slot = 1
             country_event = {
                 id = LHS.138
                 hours =6
@@ -7923,6 +7930,10 @@ focus_tree = {
             #ai点击国策的倾向
             base = 150
             #基础值
+            modifier = {
+                factor = 0
+                date < 1938.11
+            }
         }
         completion_reward = {
             activate_targeted_decision = {
@@ -8009,6 +8020,10 @@ focus_tree = {
             #ai点击国策的倾向
             base = 150
             #基础值
+            modifier = {
+                factor = 0
+                date < 1938.11
+            }
         }
         completion_reward = {
             activate_targeted_decision = {
@@ -8163,6 +8178,17 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+            if = {
+                limit = {
+                    ELF = {
+                        exists = yes
+                    }
+                }
+                activate_targeted_decision = {
+                    target = ELF
+                    decision = LHS_jiefang_FROM
+                }
+            }
             every_country = {
                 limit = {
                     is_ally_with = LHS
@@ -8501,6 +8527,7 @@ focus_tree = {
             #基础值
         }
         completion_reward = {
+            add_research_slot = 1
             set_variable = { var = red_soil_seeds value = 10 }
             custom_effect_tooltip = LHS_SEEDS_ADD_10_tt
             custom_effect_tooltip = LHS_carnival_perfect_tt5
@@ -8762,7 +8789,10 @@ focus_tree = {
             add_to_variable = { var = red_soil_harvest_points value = var:red_soil_fertilizer }
             subtract_from_variable = { var = red_soil_harvest_points value = var:red_soil_weeds }
             set_variable = { var = global.LHS_harvest_bonus_multiplier value = var:red_soil_harvest_points }
-            multiply_variable = { var = global.LHS_harvest_bonus_multiplier value = 0.002 }
+            set_variable = { global.LHS_harvest_bonus_multiplier2 = global.LHS_harvest_bonus_multiplier }
+            multiply_variable = { var = global.LHS_harvest_bonus_multiplier2 value = -0.1 }
+            round_variable = global.LHS_harvest_bonus_multiplier2
+            multiply_variable = { var = global.LHS_harvest_bonus_multiplier value = 0.005 }
             custom_effect_tooltip = LHS_HARVEST_SEASON_tt
             country_event = {
                 id = LHS.152
@@ -9017,7 +9047,17 @@ focus_tree = {
         bypass = {
         }
         ai_will_do = {
-            base = 100
+            base = 0
+            modifier = {
+                not = {
+                    has_game_rule = {
+                        rule = AH_LHS_ai_behavior_SELECTION
+                        option = DEFAULT
+                    }
+                }
+
+                add = 100
+            }
         }
         relative_position_id = LHS_Facing_Equatorial_Sun
         completion_reward = {
@@ -9223,10 +9263,12 @@ focus_tree = {
             focus = LHS_Shattering_The_Glaze
         }
         available = {
-            ENG = {
-                OR = {
-                    has_government = communism
-                    exists = no
+            126 = {
+                owner = {
+                    or = {
+                        tag = LHS
+                        is_in_faction_with = LHS
+                    }
                 }
             }
         }
@@ -9237,11 +9279,17 @@ focus_tree = {
         }
         relative_position_id = LHS_Facing_Equatorial_Sun
         completion_reward = {
-            add_political_power = 1000
+            add_to_variable = { kapok_conversion_point = 5 }
+            custom_effect_tooltip = LHS.220.c_tt2
+            add_to_variable = { kapok_conversion_point = 5 }
+            custom_effect_tooltip = LHS.220.c_tt2
+            add_to_variable = { kapok_conversion_point = 5 }
+            custom_effect_tooltip = LHS.220.c_tt2
+            add_to_variable = { kapok_conversion_point = 5 }
+            custom_effect_tooltip = LHS.220.c_tt2
             every_owned_state = {
                 limit = {
                     is_core_of = ENG
-                    is_controlled_by = LHS
                 }
                 add_extra_state_shared_building_slots = 2
                 add_building_construction = {
@@ -9292,8 +9340,16 @@ focus_tree = {
             custom_effect_tooltip = LHS_carnival_perfect_tt7
             add_to_variable = { kapok_generic_point = 10 }
             set_country_flag = LHS_mumian5
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_Steel_With_Heartbeat
+                cost = 5
+            }
             mark_focus_tree_layout_dirty = yes
             custom_effect_tooltip = jiesuoguoce
+            country_event = {
+                id = LHS.226
+                hours =  6
+            }
         }
     }
     #木棉个人线
@@ -9303,7 +9359,7 @@ focus_tree = {
         icon = GFX_Golden_Foil_Relic
         x = -5
         y = 10
-        cost = 3
+        cost = 2
         prerequisite = {
             focus = LHS_Goodnight_Tomorrow
         }
@@ -9334,7 +9390,7 @@ focus_tree = {
         icon = GFX_Phantom_Of_The_Cellar
         x = 2
         y = -1
-        cost = 3
+        cost = 2
         prerequisite = {
             focus = LHS_Golden_Foil_Relic
         }
@@ -9368,7 +9424,7 @@ focus_tree = {
         icon = GFX_Wolfs_Snarl_And_Silence
         x = 4
         y = 0
-        cost = 3
+        cost = 2
         prerequisite = {
             focus = LHS_Phantom_Of_The_Cellar
         }
@@ -9410,7 +9466,7 @@ focus_tree = {
         icon = GFX_Carving_The_Legacy
         x = 6
         y = -1
-        cost = 3
+        cost = 2
         prerequisite = {
             focus = LHS_Wolfs_Snarl_And_Silence
         }
@@ -9442,7 +9498,7 @@ focus_tree = {
         icon = GFX_Final_Taste_Of_Apple
         x = 8
         y = -1
-        cost = 3
+        cost = 2
         prerequisite = {
             focus = LHS_Carving_The_Legacy
         }
@@ -9474,7 +9530,7 @@ focus_tree = {
         icon = GFX_The_Long_Slumber
         x = 10
         y = 0
-        cost = 5
+        cost = 3
         prerequisite = {
             focus = LHS_Final_Taste_Of_Apple
         }
@@ -9499,6 +9555,10 @@ focus_tree = {
             custom_effect_tooltip = LHS_SEEDS_ADD_10_tt
             add_to_variable = { var = red_soil_fertilizer value = 10 }
             custom_effect_tooltip = LHS_FERTILIZER_ADD_10_tt
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_Steel_With_Heartbeat
+                cost = 5
+            }
             country_event = {
                 id = LHS.180
                 hours =6
@@ -9601,6 +9661,7 @@ focus_tree = {
             focus = LHS_Smash_The_Hard_Shell
         }
         available = {
+            has_completed_focus = LHS_Hand_Before_The_Stick
         }
         bypass = {
         }
@@ -9834,6 +9895,12 @@ focus_tree = {
                     }
                 }
                 LHS = {
+                    activate_targeted_decision = { 
+                        target = PREV 
+                        decision = LHS_jiefang_FROM 
+                    }
+                }
+                LHS = {
                     add_intel = {
                         target = prev
                         civilian_intel = 25
@@ -9949,6 +10016,9 @@ focus_tree = {
             focus = LHS_Plump_Grains_Fill_Stomachs
         }
         available = {
+            SOV = {
+                exists = yes
+            }
         }
         bypass = {
         }
@@ -9957,6 +10027,7 @@ focus_tree = {
         }
         relative_position_id = LHS_Brew_Caramel_Across_Ocean
         completion_reward = {
+            custom_effect_tooltip = LHS_Hold_Up_Red_Soil_tt
             add_to_variable = { muddy_diplomacy_bonds = 1 }
             LHS_calculate_muddy_diplomacy_bonus = yes
             custom_effect_tooltip = LHS_Brew_Caramel_Across_Ocean_tt
@@ -10001,6 +10072,9 @@ focus_tree = {
             focus = LHS_Rough_Thread_Drives_Cold
         }
         available = {
+            PRC = {
+                exists = yes
+            }
         }
         bypass = {
         }
@@ -10009,6 +10083,7 @@ focus_tree = {
         }
         relative_position_id = LHS_Brew_Caramel_Across_Ocean
         completion_reward = {
+            custom_effect_tooltip = LHS_Hold_Up_Red_Soil_tt2
             add_to_variable = { muddy_diplomacy_bonds = 1 }
             LHS_calculate_muddy_diplomacy_bonus = yes
             add_to_variable = { muddy_diplomacy_trust = 10 }
@@ -10041,7 +10116,6 @@ focus_tree = {
                     hours =6
                 }
             }
-            custom_effect_tooltip = LHS_Hold_Up_Red_Soil_tt
         }
     }
 
@@ -15386,6 +15460,12 @@ focus_tree = {
                 LHS_abab_attrition = 0.1
                 tooltip = attrition_tt
             }
+            add_tech_bonus = {
+                name = "装甲研究卡"
+                category = armor
+                bonus = 0.5
+                uses = 1
+            }
             hidden_effect = {
                 country_event = {
                     id = LHS.217
@@ -15531,6 +15611,12 @@ focus_tree = {
                 LHS_a6
             }
             LHS_mumian_junshi = yes
+            add_tech_bonus = {
+                name = "装甲研究卡"
+                category = armor
+                bonus = 1
+                uses = 1
+            }
         }
     }
 
@@ -15567,16 +15653,60 @@ focus_tree = {
             add_tech_bonus = {
                 name = "火箭炮研究卡"
                 bonus = 1
-                uses = 2
+                uses = 1
                 ahead_reduction = 0.5
                 category = artillery
             }
             unlock_decision_tooltip = youji_removehjp_dec
-            #custom_effect_tooltip = youji_hjp_tt
+            add_unit_bonus = {
+                motorized_rocket_brigade = {
+                    combat_width = -2
+                    soft_attack = 0.25
+                    hard_attack = 1
+                }
+            }
+
+
+            custom_effect_tooltip = youji_hjp_tt
             hidden_effect = {
                 country_event = {
                     id = LHS.220
                     hours =  6
+                }
+                add_unit_bonus = {
+                    motorized_rocket_brigade = {
+                        forest = {
+                            attack = 0.1
+                            movement = 0.5
+                        }
+
+                        hills = {
+                            movement = 0.05
+                        }
+
+                        mountain = {
+                            movement = 0.2
+                        }
+
+                        jungle = {
+                            attack = 0.25
+                            movement = 0.5
+                        }
+
+                        marsh = {
+                            attack = 0.2
+                            movement = 0.5
+                        }
+
+                        river = {
+                            attack = 0.2
+                            movement = 0.2
+                        }
+
+                        amphibious = {
+                            attack = 0.4
+                        }
+                    }
                 }
             }
             LHS_mumian_junshi = yes
@@ -15605,6 +15735,13 @@ focus_tree = {
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
+            add_tech_bonus = {
+                name = "火箭炮研究卡"
+                bonus = 1
+                uses = 1
+                ahead_reduction = 0.5
+                category = artillery
+            }
             add_ideas = {
                 LHS_a7
             }
@@ -15652,6 +15789,13 @@ focus_tree = {
             add_to_variable = {
                 LHS_abab_air_cas_present_factor = 0.2
                 tooltip = air_cas_present_factor_tt
+            }
+            add_tech_bonus = {
+                name = "空军研究卡"
+                bonus = 1
+                uses = 1
+                ahead_reduction = 0.5
+                category = air_equipment
             }
             LHS_mumian_junshi = yes
         }
@@ -15794,17 +15938,9 @@ focus_tree = {
         cost = 5
         prerequisite = {
             focus = LHS_Amphibious_Assault
-        }
-        prerequisite = {
-            focus = LHS_Ventilation_Window
-        }
-        prerequisite = {
             focus = LHS_Ants_Move_Mountain
-        }
-        prerequisite = {
+            focus = LHS_Ventilation_Window
             focus = LHS_Screaming_Pipes
-        }
-        prerequisite = {
             focus = LHS_Eyes_In_Clouds
         }
         available = {
@@ -15848,11 +15984,10 @@ focus_tree = {
         cost = 5
         prerequisite = {
             focus = LHS_Back_To_The_Sea
-        }
-        prerequisite = {
             focus = LHS_Muddy_Water_Flow
         }
         available = {
+            has_political_power > 74
         }
         allow_branch = {
             has_country_flag = LHS_mumian2
@@ -15861,6 +15996,14 @@ focus_tree = {
         }
         ai_will_do = {
             base = 80
+            modifier = {
+                factor = 0
+                has_country_flag = LHS_Steel_With_Heartbeat
+                has_game_rule = {
+                    rule = AH_LHS_ai_behavior_SELECTION
+                    option = DEFAULT
+                }
+            }
         }
         relative_position_id = LHS_zhihui
         completion_reward = {
@@ -15905,6 +16048,7 @@ focus_tree = {
                     tooltip = attrition_tt
                 }
                 LHS_mumian_junshi = yes
+                add_political_power = -75
                 hidden_effect = {
                     country_event = {
                         id = LHS.223
@@ -15957,6 +16101,9 @@ focus_tree = {
             else_if = {
                 limit = {
                     has_country_flag = LHS_steel_heartbeat1
+                    not = {
+                        has_completed_focus = LHS_Goodnight_Tomorrow
+                    }
                 }
                 custom_effect_tooltip = LHS_abab_tt
                 add_to_variable = {
@@ -15992,7 +16139,7 @@ focus_tree = {
                     tooltip = attrition_tt
                 }
                 custom_effect_tooltip = LHS_Steel_With_Heartbeat_tt2
-                LHS_mumian_junshi = yes
+                add_political_power = -75
                 hidden_effect = {
                     uncomplete_national_focus = {
                         focus = LHS_Steel_With_Heartbeat
@@ -16036,6 +16183,97 @@ focus_tree = {
                     set_country_flag = LHS_xgz_add_max_trait
                 }
             }
+            else = {
+                custom_effect_tooltip = LHS_abab_tt
+                add_to_variable = {
+                    LHS_abab_army_attack_factor = -0.01
+                    tooltip = army_attack_factor_tt
+                }
+                add_to_variable = {
+                    LHS_abab_army_defence_factor = -0.01
+                    tooltip = army_defence_factor_tt
+                }
+                add_to_variable = {
+                    LHS_abab_air_attack_factor = -0.005
+                    tooltip = air_attack_factor_tt
+                }
+                add_to_variable = {
+                    LHS_abab_air_defence_factor = -0.005
+                    tooltip = air_defence_factor_tt
+                }
+                add_to_variable = {
+                    LHS_abab_naval_damage_factor = -0.005
+                    tooltip = naval_damage_factor_tt
+                }
+                add_to_variable = {
+                    LHS_abab_naval_defense_factor = -0.005
+                    tooltip = naval_defense_factor_tt
+                }
+                add_to_variable = {
+                    LHS_abab_army_org_factor = -0.01
+                    tooltip = army_org_factor_tt
+                }
+                add_to_variable = {
+                    LHS_abab_attrition = 0.01
+                    tooltip = attrition_tt
+                }
+                custom_effect_tooltip = LHS_Steel_With_Heartbeat_tt3
+                hidden_effect = {
+                    uncomplete_national_focus = {
+                        focus = LHS_Steel_With_Heartbeat
+                        uncomplete_children = yes
+                        refund_political_power = no
+                    }
+                }
+
+                add_to_variable = { kapok_infrastructure = 5 }
+                custom_effect_tooltip = LHS_get_kapok_infrastructure_dec2_tt
+                add_to_variable = { kapok_welfare = 5 }
+                custom_effect_tooltip = LHS_get_kapok_welfare_dec2_tt
+                add_to_variable = { kapok_education = 5 }
+                custom_effect_tooltip = LHS_get_kapok_education_dec2_tt
+                add_to_variable = { kapok_industry = 5 }
+                custom_effect_tooltip = LHS_get_kapok_industry_dec2_tt
+                LHS_calculate_infrastructure_bonus = yes
+                LHS_calculate_education_bonus = yes
+                LHS_calculate_welfare_bonus = yes
+                LHS_calculate_synergy_bonus = yes
+                LHS_calculate_industry_bonus = yes
+                LHS_check_milestones = yes
+                LHS_calculate_bottleneck = yes
+
+                hidden_effect = {
+                    every_other_country = {
+                        limit = {
+                            is_in_faction_with = ROOT
+                        }
+                        add_dynamic_modifier = {
+                            modifier = LHS_idea_chitudefengshou1
+                        }
+                    }
+                }
+                every_other_country = {
+                    limit = {
+                        is_in_faction_with = ROOT
+                        not = {
+                            tag = LHS
+                        }
+                    }
+                    custom_effect_tooltip = LHS_idea_chitudefengshou1_tt
+                    add_to_variable = {
+                        LHS_fs_industrial_capacity_factory = 0.05
+                        tooltip = industrial_capacity_factory_tt
+                    }
+                    add_to_variable = {
+                        LHS_fs_production_speed_buildings_factor = 0.05
+                        tooltip = production_speed_buildings_factor_tt
+                    }
+                    add_to_variable = {
+                        LHS_fs_monthly_population = 0.05
+                        tooltip = monthly_population_tt
+                    }
+                }
+            }
         }
     }
 
@@ -16070,7 +16308,12 @@ focus_tree = {
             LHS_calculate_synergy_bonus = yes
             LHS_check_milestones = yes
             custom_effect_tooltip = LHS_patch_leaks_tt
+            custom_effect_tooltip = LHS_jsmmzb
             LHS_mumian_jinji = yes
+            country_event = {
+                id = LHS.227
+                hours =  6
+            }
         }
     }
 
@@ -16251,6 +16494,10 @@ focus_tree = {
             LHS_check_milestones = yes
             custom_effect_tooltip = LHS_sugar_fuel_tt
             LHS_mumian_jinji = yes
+            country_event = {
+                id = LHS.228
+                hours =  6
+            }
         }
     }
 
@@ -16453,6 +16700,7 @@ focus_tree = {
             LHS_check_milestones = yes
             custom_effect_tooltip = LHS_dual_use_tractors_tt
             LHS_mumian_jinji = yes
+            
         }
     }
 
@@ -16579,6 +16827,10 @@ focus_tree = {
             unlock_decision_tooltip = LHS_get_kapok_industry_dec1
             unlock_decision_tooltip = LHS_get_kapok_industry_dec2
             LHS_mumian_jinji = yes
+            country_event = {
+                id = LHS.229
+                hours =  6
+            }
         }
     }
 
@@ -16589,16 +16841,16 @@ focus_tree = {
         x = 0
         y = 7
         cost = 5
-        prerequisite = { focus = LHS_When_Kapok_Burns_Red }
-        prerequisite = { focus = LHS_Red_Clay_Commune }
+        prerequisite = {
+            focus = LHS_When_Kapok_Burns_Red
+            focus = LHS_Red_Clay_Commune
+        }
         available = {
             has_completed_focus = LHS_Goodnight_Tomorrow
         }
         relative_position_id = LHS_kuangwu
         completion_reward = {
             add_to_variable = { kapok_welfare = 20 }  # 超模
-            LHS_calculate_welfare_bonus = yes
-            LHS_calculate_balance_bonus = yes
             custom_effect_tooltip = LHS_carnival_tt
             # 平衡奖励最终检查
             if = {
@@ -16607,9 +16859,15 @@ focus_tree = {
                 add_stability = 0.10
                 custom_effect_tooltip = LHS_carnival_perfect_tt
             }
+            LHS_calculate_welfare_bonus = yes
+            LHS_calculate_balance_bonus = yes
             LHS_calculate_bottleneck = yes
             LHS_calculate_synergy_bonus = yes
             LHS_check_milestones = yes
+            reduce_focus_completion_cost = { #减少指定国策完成时间
+                focus = LHS_Steel_With_Heartbeat
+                cost = 5
+            }
             if = {
                 limit = {
                     check_variable = { kapok_balance_penalty < 5 }
@@ -16620,6 +16878,7 @@ focus_tree = {
                 }
                 country_event = { id = LHS.159 days = 6 }
             }
+
             LHS_mumian_jinji = yes
         }
     }
