@@ -5,27 +5,16 @@ add_namespace = KNM_union
 add_namespace = KNM_spring
 add_namespace = KNM_buy
 add_namespace = KNM_spring_ally
-
-# =============================================
-# 春灵联军事件链
-# 全程不绑定 DVL，可在任意战争中反复使用
-# 每次吸收后进入冷却期，180天后可再次招募
-# =============================================
-
-# ——————————————————————————————
-# 事件1：春灵联军诞生
-# ——————————————————————————————
 country_event = {
     id = KNM_spring_ally.1
     title = KNM_spring_ally.1.t
     desc  = KNM_spring_ally.1.d
     is_triggered_only = yes
-    fire_only_once = no         # 可多次触发（每轮冷却后）
+    fire_only_once = no        
     picture = GFX_event_KNM_lili2
 
     immediate = {
         hidden_effect = {
-            # 从 state 869 释放 KFL 为附庸
             release_puppet = KFL
 
             KFL = {
@@ -33,7 +22,6 @@ country_event = {
                     ruling_party   = democratic
                     elections_allowed = no
                 }
-                # 基础兵力与装备（足够组建4~5个师）
                 add_manpower = 12000
                 add_equipment_to_stockpile = {
                     type   = infantry_equipment
@@ -43,23 +31,12 @@ country_event = {
                     type   = magic_assault_equipment
                     amount = 3000
                 }
-                # 若完成了河童工厂国策，追加重装
                 if = {
                     limit = { ROOT = { has_country_flag = KNM_kappa_factory_bonus } }
                     add_equipment_to_stockpile = {
                         type   = artillery_equipment
                         amount = 800
                     }
-                }
-                # 创建统帅
-                create_corps_commander = {
-                    name   = "森林领主"
-                    traits = { infantry_leader }
-                    skill  = 2
-                    attack_skill   = 2
-                    defense_skill  = 2
-                    planning_skill = 2
-                    logistics_skill= 1
                 }
             }
 
@@ -71,7 +48,6 @@ country_event = {
         name = KNM_spring_ally.1.a
         ai_chance = { base = 100 }
 
-        # 加入当前阵营（FRA主导或KNM自身阵营均可）
         if = {
             limit = { FRA = { exists = yes } is_subject_of = FRA }
             FRA = { add_to_faction = KFL }
@@ -86,27 +62,21 @@ country_event = {
     }
 }
 
-# ——————————————————————————————
-# 事件2：战后去向选择
-# 任意战争结束后触发，不检测特定敌人
-# ——————————————————————————————
 country_event = {
     id = KNM_spring_ally.2
     title = KNM_spring_ally.2.t
     desc  = KNM_spring_ally.2.d
     is_triggered_only = yes
-    fire_only_once = no         # 每轮战争后均可触发
+    fire_only_once = no       
     picture = GFX_event_KNM_lili2
 
     option = {
-        # 选项A：吸收，全部领土归KNM，开始新的雪球循环
         name = KNM_spring_ally.2.a
         ai_chance = { base = 80 }
         country_event = { id = KNM_spring_ally.3 hours = 6 }
     }
 
     option = {
-        # 选项B：释放独立，换取外交红利
         name = KNM_spring_ally.2.b
         ai_chance = { base = 20 }
         set_autonomy = {
@@ -116,10 +86,8 @@ country_event = {
         KFL = {
             add_opinion_modifier = { target = KNM modifier = large_increase }
         }
-        # 放弃领土收益，但获得稳定与外交优势
         add_stability       = 0.08
         add_political_power = 100
-        # 独立后清除状态，允许日后从 state 869 再次招募新的春灵
         clr_country_flag = KNM_KFL_created
         set_country_flag = KNM_KFL_cooldown
         country_event = { id = KNM_spring_ally.10 days = 180 }
@@ -127,11 +95,6 @@ country_event = {
     }
 }
 
-# ——————————————————————————————
-# 事件3：大家都是一家人了 — 滚雪球结算
-# KFL 所有州 → KNM 核心
-# 雪球越大，收益越高
-# ——————————————————————————————
 country_event = {
     id = KNM_spring_ally.3
     title = KNM_spring_ally.3.t
@@ -142,8 +105,6 @@ country_event = {
 
     immediate = {
         hidden_effect = {
-            # 吸收前：为 KFL 所有核心州打标记
-            # （annex后这些州转移给KNM，之后批量核心化）
             every_state = {
                 limit = { is_core_of = KFL }
                 set_state_flag = KNM_absorb_pending
@@ -155,31 +116,25 @@ country_event = {
         name = KNM_spring_ally.3.a
         ai_chance = { base = 100 }
 
-        # 吸收 KFL，全部领土转移到 KNM
         annex_country = {
             target         = KFL
             transfer_troops = yes
         }
 
-        # 将所有带标记的州核心化为 KNM
-        # 这些州包括：KFL 初始州 + 战时转移给 KFL 的敌方州
         every_state = {
             limit = {
                 has_state_flag = KNM_absorb_pending
-                is_owned_by    = KNM        # 已确认转移到 KNM
+                is_owned_by    = KNM        
                 NOT = { is_core_of = KNM }
             }
             add_core_of  = KNM
             clr_state_flag = KNM_absorb_pending
         }
-        # 清理残余标记（如部分州未转移成功）
         every_state = {
             limit = { has_state_flag = KNM_absorb_pending }
             clr_state_flag = KNM_absorb_pending
         }
 
-        # 雪球奖励：KFL体量越大，spring修正越多
-        # 用 KFL 转移次数作为倍率
         add_stability = 0.05
         add_manpower  = 10000
 
@@ -188,26 +143,27 @@ country_event = {
         add_to_variable = { knm_spring_political_power_gain   = 0.3  tooltip = political_power_gain_tt }
         add_to_variable = { knm_spring_local_resources_factor = 0.10 tooltip = local_resources_factor_tt }
 
-        # 若使用了全部3次转移（最大雪球），给予额外工业奖励
         if = {
             limit = { check_variable = { KNM_kfl_transfer_count > 2 } }
+            custom_effect_tooltip = KNM_kfl_army_tt
+            random_list = {
+					50 = { add_to_variable = { KNM_KFL_army_army_org_factor = 0.05 tooltip = army_org_factor_tt } }
+					30 = { add_to_variable = { KNM_KFL_army_army_attack_factor = 0.05 tooltip = army_attack_factor_tt } }
+					10 = { KNM_KFL_army_breakthrough_factor = 0.05 tooltip = army_breakthrough_factor_tt } }
+				}
             custom_effect_tooltip = KNM_spring_tt
-            add_to_variable = { knm_spring_industrial_capacity_factory = 0.05 tooltip = industrial_capacity_factory_tt }
-            add_to_variable = { knm_spring_production_speed_buildings_factor = 0.05 tooltip = production_speed_buildings_factor_tt }
-        }
+            random_list = {
+					50 = { add_to_variable = { knm_spring_production_speed_industrial_complex_factor = 0.05 tooltip = production_speed_industrial_complex_factor_tt } }
+					30 = { add_to_variable = { knm_spring_consumer_goods_factor = -0.05 tooltip = consumer_goods_factor_tt } }
+					10 = { knm_spring_research_speed_factor = 0.05 tooltip = research_speed_factor_tt } }
 
-        # 重置冷却，180天后可再次招募
         clr_country_flag  = KNM_KFL_created
         set_country_flag  = KNM_KFL_cooldown
         set_variable      = { KNM_kfl_transfer_count = 0 }
         country_event     = { id = KNM_spring_ally.10 days = 180 }
+        }
     }
-}
 
-# ——————————————————————————————
-# 事件10（隐藏）：冷却解除
-# 180天后清除冷却标记，允许下一次招募
-# ——————————————————————————————
 country_event = {
     id = KNM_spring_ally.10
     hidden = yes
@@ -217,46 +173,6 @@ country_event = {
     option = {
         name = KNM_spring_ally.10.a
         clr_country_flag = KNM_KFL_cooldown
-    }
-}
-
-# ——————————————————————————————
-# KNM.26 修正版（幻想乡出战选择）
-# FRA可选择是否出战，会影响联合军事修正
-# ——————————————————————————————
-country_event = {
-    id = KNM.26
-    title = KNM.26.t
-    desc  = KNM.26.d
-    is_triggered_only = yes
-    fire_only_once = yes
-    picture = GFX_event_xueying
-
-    immediate = {}
-
-    option = {
-        name = KNM.26.a       # 一起去砸烂冬天
-        ai_chance = { base = 90 }
-        add_to_variable = { KNM_fra_army_army_attack_factor  = 0.05 tooltip = army_attack_factor_tt }
-        add_to_variable = { KNM_fra_army_breakthrough_factor = 0.10 tooltip = breakthrough_factor_tt }
-        KNM = {
-            add_to_variable = { KNM_fra_army_army_attack_factor  = 0.05 tooltip = army_attack_factor_tt }
-            add_to_variable = { KNM_fra_army_breakthrough_factor = 0.10 tooltip = breakthrough_factor_tt }
-            add_war_support    = 0.05
-            add_political_power= 50
-        }
-        add_war_support = 0.05
-    }
-
-    option = {
-        name = KNM.26.b       # 太危险，我们不去
-        ai_chance = { base = 10 }
-        add_to_variable = { KNM_fra_army_army_org_factor = -0.05 tooltip = army_org_factor_tt }
-        KNM = {
-            add_to_variable = { KNM_fra_army_army_org_factor = -0.05 tooltip = army_org_factor_tt }
-            add_war_support = 0.10
-            add_stability   = -0.05
-        }
     }
 }
 #那座红房子好烦人
@@ -1114,28 +1030,43 @@ country_event = {
         }
     }
 }
-
-#风雪里站着一个小影子
+#风雪里站着个小影子
 country_event = {
     id = KNM.26
     title = KNM.26.t
-    desc = KNM.26.d
+    desc  = KNM.26.d
     is_triggered_only = yes
     fire_only_once = yes
     picture = GFX_event_xueying
-    immediate = {
 
-    }
+    immediate = {}
+
     option = {
         name = KNM.26.a
-        ai_chance = {
-            base = 10
+        ai_chance = { base = 100 }
+        custom_effect_tooltip = KNM_fra_army_tt
+        add_to_variable = { KNM_fra_army_army_attack_factor  = 0.05 tooltip = army_attack_factor_tt }
+        add_to_variable = { KNM_fra_army_breakthrough_factor = 0.10 tooltip = breakthrough_factor_tt }
+        KNM = {
+            add_to_variable = { KNM_fra_army_army_attack_factor  = 0.05 tooltip = army_attack_factor_tt }
+            add_to_variable = { KNM_fra_army_breakthrough_factor = 0.10 tooltip = breakthrough_factor_tt }
+            add_war_support    = 0.05
+            add_political_power= 50
         }
+        add_war_support = 0.05
     }
+
     option = {
         name = KNM.26.b
-        ai_chance = {
-            base = 10
+        ai_chance = { 
+            base = 0
+         }
+        custom_effect_tooltip = KNM_fra_army_tt
+        add_to_variable = { KNM_fra_army_army_org_factor = -0.05 tooltip = army_org_factor_tt }
+        KNM = {
+            add_to_variable = { KNM_fra_army_army_org_factor = -0.05 tooltip = army_org_factor_tt }
+            add_war_support = 0.10
+            add_stability   = -0.05
         }
     }
 }
