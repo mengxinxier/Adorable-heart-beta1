@@ -6,9 +6,11 @@ KNM_spring_alliance = {
 
         available = {
             has_country_flag = KNM_forest_explored
-            controls_state = 36
+            controls_state = 741
+            controls_state = 8
             NOT = { country_exists = KFL }
             NOT = { has_country_flag = KNM_KFL_cooldown }
+            has_war = yes
         }
 
         visible = {
@@ -28,6 +30,15 @@ KNM_spring_alliance = {
         }
 
         remove_effect = {
+            741 = {
+                add_core_of = KFL
+            }
+            8 = {
+                add_core_of = KFL
+            }
+            KFL = {
+                inherit_technology = KNM
+            }
             set_variable = { KNM_kfl_transfer_count = 0 }
             if = {
                 limit = {
@@ -43,10 +54,10 @@ KNM_spring_alliance = {
                     }
                 }
             }
-            country_event = { id = KNM_spring_ally.1 hours = 6 }
+            country_event = { id = KNM_spring_ally.1 }
         }
     }
-    KNM_zhanling_zhuanyi_KFL = {
+    KNM_zhanling_zhuanyi_KFL = { #转交地块+发宣称
         icon = generic_prepare_civil_war
         allowed = { tag = KNM }
 
@@ -63,6 +74,10 @@ KNM_spring_alliance = {
                 }
                 NOT = { is_core_of = KNM }
                 NOT = { is_owned_by = KFL }
+                or = {
+                    is_fully_controlled_by = KFL
+                    is_fully_controlled_by = KNM
+                }
             }
         }
 
@@ -77,9 +92,17 @@ KNM_spring_alliance = {
         ai_will_do = { base = 60 }
 
         complete_effect = {
-            random_state = {
+            add_to_variable = { KNM_kfl_transfer_count = 1 }
+        }
+
+        remove_effect = {
+            any_state = {
                 limit = {
-                    controller = { tag = KNM }
+                    is_fully_controlled_by = KNM
+                    or = {
+                        controller = { tag = KNM }
+                        controller = { tag = KFL }
+                    }
                     owner = {
                         has_war_with = KNM
                         NOT = { tag = KNM }
@@ -89,13 +112,10 @@ KNM_spring_alliance = {
                     NOT = { is_owned_by = KFL }
                 }
                 transfer_state_to = KFL
-                KFL = { add_core_of = KFL }
+                add_core_of = KFL 
                 add_claim_by = KNM
             }
-            add_to_variable = { KNM_kfl_transfer_count = 1 }
         }
-
-        remove_effect = {}
     }
 
     KNM_jiesuan_KFL = {
@@ -106,6 +126,9 @@ KNM_spring_alliance = {
             has_country_flag = KNM_KFL_created
             country_exists = KFL
             NOT = { has_war = yes } 
+            KFL = {
+                is_subject_of = KNM
+            }
         }
 
         visible = {
@@ -114,7 +137,7 @@ KNM_spring_alliance = {
             NOT = { has_war = yes }
         }
 
-        cost = 0
+        cost = 30
         fire_only_once = no
         ai_will_do = { base = 100 }
 
@@ -391,6 +414,10 @@ KNM_li_xj = {
                     modifier = KNM_xj2
                     scope = KNM
                 }
+                add_dynamic_modifier = {
+                    modifier = KNM_xj2
+                    scope = KFL
+                }
                 if = {
                     limit = {
                         FRA = {
@@ -431,6 +458,85 @@ KNM_li_xj = {
             }
             else = {
                 clr_country_flag = PAO_wrxj_AHaaa
+            }
+        }
+        ai_will_do = {
+            factor = 0
+        }
+    }
+
+    KNM_wqcgn_dec = { #雾气
+        icon = GFX_PAO_wrxj2
+        allowed = {
+            original_tag = KNM
+        }
+        available = {
+        }
+        visible = {
+            not = {
+                has_country_flag = KNM_wqcgn_dec_showorhide_flag
+            }
+        }
+        on_map_mode = map_and_decisions_view
+        state_target = yes
+        target_root_trigger = {
+            has_completed_focus = KNM_wqcgn
+        }
+        target_trigger = {
+            FROM = {
+                not = {
+                    has_dynamic_modifier = {
+                        modifier = KNM_xj2
+                    }
+                }
+                any_neighbor_state = {
+                    is_controlled_by = ROOT
+                }
+            }
+        }
+        cost = 10
+        days_remove = 15
+        modifier = {
+        }
+        remove_effect = {
+            FROM = {
+                add_dynamic_modifier = {
+                    modifier = KNM_xj2
+                    scope = KNM
+                }
+                add_dynamic_modifier = {
+                    modifier = KNM_xj2
+                    scope = KFL
+                }
+            }
+        }
+        ai_will_do = {
+            factor = 200
+        }
+    }
+    KNM_wqcgn_dec_showorhide = { #隐藏显示
+        icon = GFX_PAO_wrxj2
+        allowed = {
+            original_tag = KNM
+        }
+        available = {
+        }
+        visible = {
+            has_completed_focus = KNM_wqcgn
+        }
+        cost = 0
+        days_remove = 0
+        remove_effect = { #flag沿用了夜莺
+            if = {
+                limit = {
+                    not = {
+                        has_country_flag = KNM_wqcgn_dec_showorhide_flag
+                    }
+                }
+                set_country_flag = KNM_wqcgn_dec_showorhide_flag
+            }
+            else = {
+                clr_country_flag = KNM_wqcgn_dec_showorhide_flag
             }
         }
         ai_will_do = {
