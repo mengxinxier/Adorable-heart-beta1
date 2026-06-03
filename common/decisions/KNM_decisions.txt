@@ -115,6 +115,21 @@ KNM_spring_alliance = {
                 add_core_of = KFL
                 add_claim_by = KNM
             }
+            KFL = {
+                custom_effect_tooltip = KNM_KFL_army_tt
+                add_to_variable = { 
+                    KNM_KFL_army_army_org_factor = 0.005 
+                    tooltip = army_org_factor_tt 
+                } 
+                add_to_variable = { 
+                    KNM_KFL_army_army_attack_factor = 0.005 
+                    tooltip = army_attack_factor_tt 
+                } 
+                add_to_variable = { 
+                    KNM_KFL_army_breakthrough_factor = 0.005 
+                    tooltip = breakthrough_factor_tt 
+                } 
+            }
         }
     }
 
@@ -135,17 +150,102 @@ KNM_spring_alliance = {
             has_country_flag = KNM_KFL_created
             country_exists = KFL
             NOT = { has_war = yes }
+            not = {
+                has_country_flag = KNM_spring_ally2flag
+            }
         }
 
         cost = 30
         fire_only_once = no
-        ai_will_do = { base = 100 }
+        ai_will_do = { base = 0 }
 
         complete_effect = {
-            country_event = { id = KNM_spring_ally.2 hours = 6 }
+            country_event = { id = KNM_spring_ally.2 }
             set_variable = { KNM_kfl_transfer_count = 0 }
         }
 
+        remove_effect = {}
+    }
+
+    KNM_KFL_transfer = {
+        icon = GFX_KNM_jiesuan_KFL
+        allowed = { tag = KNM }
+
+        available = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+            has_war = yes
+        }
+
+        visible = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+            has_war = yes
+        }
+
+        cost = 30
+        fire_only_once = no
+        ai_will_do = { base = 0 }
+
+        complete_effect = {	
+            custom_effect_tooltip = KNM_KFL_transfer_tt	
+            KFL = {
+                custom_effect_tooltip = KNM_KFL_army_tt
+                add_to_variable = { 
+                    KNM_fra_army_army_strength_factor = 0.08  
+                    tooltip = army_strength_factor_tt 
+                }
+            }
+            hidden_effect = {	
+                KNM = {
+                    transfer_units_fraction = {
+                        target = KFL
+                        size = 1
+                    }
+                }
+            }
+        }
+        remove_effect = {}
+    }
+    KNM_KFL_transfer1 = {
+        icon = GFX_KNM_jiesuan_KFL
+        allowed = { tag = KNM }
+
+        available = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+            KFL = {
+                is_subject_of = KNM
+            }
+        }
+
+        visible = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+        }
+
+        cost = 30
+        fire_only_once = no
+        ai_will_do = { base = 0 }
+
+        complete_effect = {	
+            custom_effect_tooltip = KNM_KFL_transfer_1_tt	
+            KFL = {
+                custom_effect_tooltip = KNM_KFL_army_tt
+                add_to_variable = { 
+                    KNM_fra_army_army_strength_factor = -0.08  
+                    tooltip = army_strength_factor_tt 
+                }
+            }
+            hidden_effect = {	
+                KFL = {
+                    transfer_units_fraction = {
+                        target = KNM
+                        size = 1
+                    }
+                }
+            }
+        }
         remove_effect = {}
     }
 }
@@ -421,7 +521,7 @@ KNM_li_xj = {
                 is_fully_controlled_by = ROOT
                 not = {
                     has_dynamic_modifier = {
-                        modifier = KNM_xj1
+                        modifier = KNM_xj2
                     }
                 }
             }
@@ -554,7 +654,7 @@ KNM_li_xj = {
         }
         cost = 0
         days_remove = 0
-        remove_effect = { #flag沿用了夜莺
+        remove_effect = { #flag
             if = {
                 limit = {
                     not = {
@@ -628,6 +728,27 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     type = arms_factory
                     level = from.arms_factory_level
                 }
+                if = {
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_fra_get_army = from.arms_factory_level
+                    }
+                    multiply_temp_variable = { 
+                        temp_var_fra_get_army = 0.5 
+                    } 
+                    round_variable = temp_var_fra_get_army
+                    KFL = {
+                        add_offsite_building = {
+                            type = arms_factory
+                            level = temp_var_fra_get_army
+                        }
+                    }
+                }
                 from = {
                     set_building_level = {
                         type = arms_factory
@@ -645,6 +766,27 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     type = industrial_complex
                     level = from.industrial_complex_level
                 }
+                if = {
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_fra_get_industrial = from.industrial_complex_level
+                    }
+                    multiply_temp_variable = { 
+                        temp_var_fra_get_industrial = 0.5 
+                    } 
+                    round_variable = temp_var_fra_get_industrial
+                    KFL = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = temp_var_fra_get_industrial
+                        }
+                    }
+                }
                 from = {
                     set_building_level = {
                         type = industrial_complex
@@ -660,7 +802,28 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                 }
                 add_offsite_building = {
                     type = dockyard
-                    level = temp_var_fra_get_navy
+                    level = from.building_level@dockyard
+                }
+                if = {
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_fra_get_navy = from.building_level@dockyard
+                    }
+                    multiply_temp_variable = { 
+                        temp_var_fra_get_navy = 0.5
+                    } 
+                    round_variable = temp_var_fra_get_navy
+                    KFL = {
+                        add_offsite_building = {
+                            type = dockyard
+                            level = temp_var_fra_get_navy
+                        }
+                    }
                 }
                 from = {
                     set_building_level = {
@@ -698,7 +861,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                 exists = no
             }
         }
-        days_remove = 7 #花费待定
+        days_remove = 90 #花费待定
 
         fire_only_once = no
 
@@ -793,7 +956,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             }
         }
 
-        days_remove = 7 #花费待定
+        days_remove = 90 #花费待定
         fire_only_once = no
 
         ai_will_do = {
@@ -913,7 +1076,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             }
         }
 
-        days_remove = 7 #花费待定
+        days_remove = 90 #花费待定
         fire_only_once = no
 
         ai_will_do = {
@@ -1034,7 +1197,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             }
         }
 
-        days_remove = 7 #花费待定
+        days_remove = 90 #花费待定
         fire_only_once = no
 
         ai_will_do = {
@@ -1172,7 +1335,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             }
         }
 
-        days_remove = 7 #花费待定
+        days_remove = 90 #花费待定
         fire_only_once = no
 
         ai_will_do = {
@@ -1323,11 +1486,11 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             tag = KNM
         }
         visible = {
-            #has_completed_focus = KNM_ydnghqtz
-            #or = {
-            #    is_subject_of = FRA
-            #    is_in_faction_with = FRA
-            #}
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
         }
 
         available = {
@@ -1354,9 +1517,6 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
 
         complete_effect = {
             set_country_flag = KNM_buy_technology_flag
-            #hidden_effect = {
-            #    country_event = KNM_buy.5
-            #}
             FRA = {
                 add_offsite_building = {
                     type = industrial_complex
@@ -1493,11 +1653,11 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             tag = KNM
         }
         visible = {
-            #has_completed_focus = KNM_ydnghqtz
-            #or = {
-            #is_subject_of = FRA
-            #is_in_faction_with = FRA
-            #}
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
         }
 
         available = {
@@ -1541,9 +1701,9 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             clr_country_flag = KNM_military_exercise_flag
         }
         remove_effect = {
-            army_experience = 10
-            navy_experience = 10
-            air_experience = 10
+            army_experience = 25
+            navy_experience = 25
+            air_experience = 25
             FRA = {
                 army_experience = 10
                 navy_experience = 10
@@ -1579,11 +1739,11 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             tag = KNM
         }
         visible = {
-            #has_completed_focus = KNM_ydnghqtz
-            #or = {
-            #    is_subject_of = FRA
-            #    is_in_faction_with = FRA
-            #}
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
         }
 
         available = {
@@ -1627,15 +1787,15 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         }
         remove_effect = {
             add_daily_mastery = { #精通
-                amount = 0.5
-                days = 365
+                amount = 0.3
+                days = 90
                 name = FRA_KNM_mas
                 folder = land
             }
             FRA = {
                 add_daily_mastery = { #精通
-                    amount = 0.5
-                    days = 365
+                    amount = 0.3
+                    days = 90
                     name = FRA_KNM_mas
                     folder = land
                 }
@@ -1677,7 +1837,7 @@ KNM_li_war = {
         }
 
         available = {
-            FROM = { has_opinion = { target = KNM value > 80 }}
+            FROM = { has_opinion = { target = KNM value > 79 }}
         }
         target_trigger = {
             FROM = {
@@ -1685,7 +1845,7 @@ KNM_li_war = {
                 NOT = { tag = KNM }
                 NOT = { has_war_with = KNM }
                 AND = {
-                    #KNM = { has_government = democratic }
+                    KNM = { has_government = democratic }
                     has_government = communism
                 }
                 is_subject = no
@@ -1719,7 +1879,7 @@ KNM_li_war = {
         }
 
         available = {
-            FROM = { has_opinion = { target = KNM value > 100 }}
+            FROM = { has_opinion = { target = KNM value > 99 }}
         }
         target_trigger = {
             FROM = {
@@ -1727,7 +1887,7 @@ KNM_li_war = {
                 NOT = { tag = KNM }
                 NOT = { has_war_with = KNM }
                 AND = {
-                    #KNM = { has_government = democratic }
+                    KNM = { has_government = democratic }
                     has_government = democratic
                 }
                 is_subject = no

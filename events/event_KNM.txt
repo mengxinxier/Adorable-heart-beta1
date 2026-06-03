@@ -70,16 +70,20 @@ country_event = {
     fire_only_once = no
     picture = GFX_event_KNM_lili3
 
+    immediate = {
+        set_country_flag = KNM_spring_ally2flag #防止卡事件
+    }
     option = {
         name = KNM_spring_ally.2.a
         ai_chance = { base = 80 }
         country_event = { id = KNM_spring_ally.3 hours = 6 }
+        clr_country_flag = KNM_spring_ally2flag
     }
 
     option = {
         name = KNM_spring_ally.2.b
         ai_chance = { base = 20 }
-        KFL = {
+        KNM = {
             set_autonomy = {
                 target = KFL
                 autonomous_state = autonomy_free
@@ -96,6 +100,54 @@ country_event = {
             country_event = { id = KNM_spring_ally.10 days = 30 }
         }
         set_variable = { KNM_kfl_transfer_count = 0 }
+        clr_country_flag = KNM_spring_ally2flag
+
+            KFL = {
+                custom_effect_tooltip = KNM_KFL_army_tt
+                add_to_variable = { 
+                    KNM_KFL_army_army_org_factor = 0.05 
+                    tooltip = army_org_factor_tt 
+                } 
+                add_to_variable = { 
+                    KNM_KFL_army_army_attack_factor = 0.05 
+                    tooltip = army_attack_factor_tt 
+                } 
+                add_to_variable = { 
+                    KNM_KFL_army_army_defence_factor = 0.05 
+                    tooltip = army_defence_factor_tt 
+                } 
+            }
+            
+            custom_effect_tooltip = KNM_spring_tt
+            add_to_variable = {
+                knm_spring_stability_factor = 0.15 
+                tooltip = stability_factor_tt 
+            } 
+            add_to_variable = { 
+                knm_spring_war_support_factor = 0.15 
+                tooltip = war_support_factor_tt 
+            } 
+            add_to_variable = { 
+                knm_spring_party_popularity_stability_factor = 0.15 
+                tooltip = party_popularity_stability_factor_tt 
+            } 
+            
+            custom_effect_tooltip = KNM_fra_army_tt
+            add_to_variable = {
+                KNM_fra_army_army_attack_against_major_factor = 0.05
+                tooltip = army_attack_against_major_factor_tt
+            }
+            add_to_variable = {
+                KNM_fra_army_army_defence_against_major_factor = 0.05
+                tooltip = army_defence_against_major_factor_tt
+            }
+
+            clr_country_flag  = KNM_KFL_created
+            set_country_flag  = KNM_KFL_cooldown
+            set_variable = { KNM_kfl_transfer_count = 0 }
+            hidden_effect = {
+                country_event = { id = KNM_spring_ally.10 days = 30 }
+            }
     }
 }
 
@@ -139,37 +191,11 @@ country_event = {
             clr_state_flag = KNM_absorb_pending
         }
 
-        add_stability = 0.05
         add_manpower  = 100000
+        add_stability = 0.05
 
-        custom_effect_tooltip = KNM_spring_tt
-        add_to_variable = { knm_spring_stability_factor       = 0.03 tooltip = stability_factor_tt }
-        add_to_variable = { knm_spring_political_power_gain   = 0.3  tooltip = political_power_gain_tt }
-        add_to_variable = { knm_spring_local_resources_factor = 0.03 tooltip = local_resources_factor_tt }
-
-        if = {
-            limit = { check_variable = { KNM_kfl_transfer_count > -1 } }
-            KFL = {
-                custom_effect_tooltip = KNM_kfl_army_tt
-                random_list = {
-                    50 = { add_to_variable = { KNM_KFL_army_army_org_factor = 0.05 tooltip = army_org_factor_tt } }
-                    30 = { add_to_variable = { KNM_KFL_army_army_attack_factor = 0.05 tooltip = army_attack_factor_tt } }
-                    10 = { add_to_variable = { KNM_KFL_army_breakthrough_factor = 0.05 tooltip = breakthrough_factor_tt } }
-                }
-            }
-            custom_effect_tooltip = KNM_spring_tt
-            random_list = {
-                50 = { add_to_variable = { knm_spring_production_speed_industrial_complex_factor = 0.05 tooltip = production_speed_industrial_complex_factor_tt } }
-                30 = { add_to_variable = { knm_spring_consumer_goods_factor = -0.05 tooltip = consumer_goods_factor_tt } }
-                10 = { add_to_variable = { knm_spring_research_speed_factor = 0.05 tooltip = research_speed_factor_tt } }
-            }
-
-            clr_country_flag  = KNM_KFL_created
-            set_country_flag  = KNM_KFL_cooldown
-            set_variable = { KNM_kfl_transfer_count = 0 }
-            hidden_effect = {
-                country_event = { id = KNM_spring_ally.10 days = 30 }
-            }
+        hidden_effect = {
+            country_event = { id = KNM_spring_ally.10 days = 30 }
         }
     }
 }
