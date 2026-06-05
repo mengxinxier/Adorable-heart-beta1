@@ -20,6 +20,40 @@ add_namespace = china_generic_news
 				set_country_flag = has_faction_before
 				#set_faction_name = chinese_united_font
 			}
+			clear_array = global.white_peace_transfer_array
+			every_enemy_country = {
+				limit = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				add_to_array = { global.white_peace_transfer_array = THIS }
+			}
+			every_subject_country = {
+				every_enemy_country = {
+					limit = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+					add_to_array = { global.white_peace_transfer_array = THIS }
+				}
+				add_to_array = { global.white_peace_transfer_array = THIS }
+			}
+			add_to_array = { global.white_peace_transfer_array = THIS }
+			every_state = {
+				limit = {
+					owner = {
+						is_in_array = { global.white_peace_transfer_array = THIS }
+						not = { tag = PREV.controller }
+					}
+					controller = { is_in_array = { global.white_peace_transfer_array = THIS } }
+				}
+				transfer_state_to = controller
+			}
+			clear_array = global.white_peace_transfer_array
 			every_enemy_country = {
 				limit = {
 					is_in_faction_with = FROM
@@ -49,9 +83,11 @@ add_namespace = china_generic_news
 			# 	}
 			# 	add_ideas = CHI_protect_our_motherland
 			# }
-			country_event = {
-				id = china_generic.002
-				days = 60
+			hidden_effect = {
+				country_event = {
+					id = china_generic.002
+					days = 60
+				}
 			}
 			set_major = yes
 			set_country_flag = unit_font_participant
