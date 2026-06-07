@@ -1,0 +1,1944 @@
+KNM_spring_alliance = {
+
+    KNM_zhaoji_chunling_lianmeng = {
+        icon = GFX_KNM_zhaoji_chunling_lianmeng
+        allowed = { tag = KNM }
+
+        available = {
+            controls_state = 741
+            controls_state = 8
+            NOT = { country_exists = KFL }
+            NOT = { has_country_flag = KNM_KFL_cooldown }
+            has_war = yes
+        }
+
+        visible = {
+            has_country_flag = KNM_forest_explored
+            NOT = { country_exists = KFL }
+        }
+
+        cost = 75
+        days_remove = 14
+        ai_will_do = { base = 80 }
+
+        modifier = {
+            political_power_gain = -0.15
+        }
+
+        complete_effect = {
+        }
+
+        remove_effect = {
+            741 = {
+                add_core_of = KFL
+            }
+            8 = {
+                add_core_of = KFL
+            }
+            KFL = {
+                inherit_technology = KNM
+            }
+            set_variable = { KNM_kfl_transfer_count = 0 }
+            if = {
+                limit = {
+                    KFL = {
+                        not = {
+                            has_dynamic_modifier = KNM_KFL_army
+                        }
+                    }
+                }
+                KFL = {
+                    add_dynamic_modifier = {
+                        modifier = KNM_KFL_army
+                    }
+                }
+            }
+            country_event = { id = KNM_spring_ally.1 }
+        }
+    }
+    KNM_zhanling_zhuanyi_KFL = { #转交地块+发宣称
+        icon = GFX_KNM_zhanling_zhuanyi_KFL
+        allowed = { tag = KNM }
+
+        available = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+            has_war = yes
+            any_state = {
+                controller = { tag = KNM }
+                owner = {
+                    has_war_with = KNM
+                    NOT = { tag = KNM }
+                    NOT = { tag = KFL }
+                }
+                NOT = { is_core_of = KNM }
+                NOT = { is_owned_by = KFL }
+                or = {
+                    is_fully_controlled_by = KFL
+                    is_fully_controlled_by = KNM
+                }
+            }
+        }
+
+        visible = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+            has_war = yes
+        }
+
+        cost = 40
+        days_remove = 7
+        ai_will_do = { base = 60 }
+
+        complete_effect = {
+            add_to_variable = { KNM_kfl_transfer_count = 1 }
+        }
+
+        remove_effect = {
+            random_state = {
+                limit = {
+                    is_fully_controlled_by = KNM
+                    or = {
+                        controller = { tag = KNM }
+                        controller = { tag = KFL }
+                    }
+                    owner = {
+                        has_war_with = KNM
+                        NOT = { tag = KNM }
+                        NOT = { tag = KFL }
+                    }
+                    NOT = { is_core_of = KNM }
+                    NOT = { is_owned_by = KFL }
+                }
+                transfer_state_to = KFL
+                add_core_of = KFL
+                add_claim_by = KNM
+            }
+            KFL = {
+                custom_effect_tooltip = KNM_KFL_army_tt
+                add_to_variable = { 
+                    KNM_KFL_army_army_org_factor = 0.005 
+                    tooltip = army_org_factor_tt 
+                } 
+                add_to_variable = { 
+                    KNM_KFL_army_army_attack_factor = 0.005 
+                    tooltip = army_attack_factor_tt 
+                } 
+                add_to_variable = { 
+                    KNM_KFL_army_breakthrough_factor = 0.005 
+                    tooltip = breakthrough_factor_tt 
+                } 
+            }
+        }
+    }
+
+    KNM_jiesuan_KFL = {
+        icon = GFX_KNM_jiesuan_KFL
+        allowed = { tag = KNM }
+
+        available = {
+            has_country_flag = KNM_KFL_created
+            country_exists = KFL
+            NOT = { has_war = yes }
+            KFL = {
+                is_subject_of = KNM
+            }
+        }
+
+        visible = {
+            has_country_flag = KNM_KFL_created
+            country_exists = KFL
+            NOT = { has_war = yes }
+            not = {
+                has_country_flag = KNM_spring_ally2flag
+            }
+        }
+
+        cost = 30
+        fire_only_once = no
+        ai_will_do = { base = 0 }
+
+        complete_effect = {
+            country_event = { id = KNM_spring_ally.2 }
+            set_variable = { KNM_kfl_transfer_count = 0 }
+        }
+
+        remove_effect = {}
+    }
+
+    KNM_KFL_transfer = { #将雾之湖部队转移给小妖精
+        icon = GFX_KNM_KFL_transfer
+        allowed = { tag = KNM }
+
+        available = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+            #has_war = yes
+        }
+
+        visible = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+        }
+
+        cost = 30
+        fire_only_once = no
+        ai_will_do = { base = 0 }
+
+        complete_effect = {	
+            custom_effect_tooltip = KNM_KFL_transfer_tt	
+            KFL = {
+                custom_effect_tooltip = KNM_KFL_army_tt
+                add_to_variable = { 
+                    KNM_fra_army_army_strength_factor = 0.08  
+                    tooltip = army_strength_factor_tt 
+                }
+            }
+            hidden_effect = {	
+                KNM = {
+                    transfer_units_fraction = {
+                        target = KFL
+                        size = 1
+                    }
+                }
+            }
+        }
+        remove_effect = {}
+    }
+    KNM_KFL_transfer1 = { #将小妖精部队转移给雾之湖
+        icon = GFX_KNM_KFL_transfer1
+        allowed = { tag = KNM }
+
+        available = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+            KFL = {
+                is_subject_of = KNM
+            }
+        }
+
+        visible = {
+            country_exists = KFL
+            has_country_flag = KNM_KFL_created
+        }
+
+        cost = 30
+        fire_only_once = no
+        ai_will_do = { base = 0 }
+
+        complete_effect = {	
+            custom_effect_tooltip = KNM_KFL_transfer_1_tt	
+            KFL = {
+                custom_effect_tooltip = KNM_KFL_army_tt
+                add_to_variable = { 
+                    KNM_fra_army_army_strength_factor = -0.08  
+                    tooltip = army_strength_factor_tt 
+                }
+            }
+            hidden_effect = {	
+                KFL = {
+                    transfer_units_fraction = {
+                        target = KNM
+                        size = 1
+                    }
+                }
+            }
+        }
+        remove_effect = {}
+    }
+}
+
+
+KMK_KNM_WAR_descision = {
+    KNM_unit_KMK_war = {
+        icon = GFX_decision_hol_draw_up_staff_plans
+        available = {
+            hidden_trigger = {
+                always = no
+            }
+        }
+        priority = 20
+        days_mission_timeout = 100
+        fire_only_once = yes
+        activation = {
+            always = no
+        }
+        visible = {
+        }
+        cancel_if_not_visible = yes
+        selectable_mission = yes
+        cancel_trigger = {
+            or = {
+                KNM = {
+                    controls_state = 925
+                }
+                KMK = {
+                    controls_state = 7
+                }
+            }
+        }
+        cancel_effect = {
+            if = {
+                limit = {
+                    KNM = {
+                        controls_state = 925
+                    }
+                }
+                if = {
+                    limit = {
+                        KNM = {
+                            has_government = communism
+                        }
+                    }
+                    KNM = {
+                        white_peace = {
+                            tag = KMK
+                            message = KNM_WIN_KMK_c
+                        }
+                    }
+                }
+                else = {
+                    KNM = {
+                        white_peace = {
+                            tag = KMK
+                            message = KNM_WIN_KMK_n
+                        }
+                    }
+                }
+                KNM = {
+                    annex_country = {
+                        target = KMK
+                        transfer_troops = yes
+                    }
+                    #set_temp_variable = { tag_to_release = LIB }
+                    #puppet_released_tag_and_old_govern = yes
+                    #set_temp_variable = { tag_to_release = COG }
+                    #puppet_released_tag_and_old_govern = yes
+                }
+            }
+            else = {
+                if = {
+                    limit = {
+                        KNM = {
+                            has_government = communism
+                        }
+                    }
+                    KMK = {
+                        white_peace = {
+                            tag = KNM
+                            message = KMK_WIN_KNM_c
+                        }
+                    }
+                }
+                else = {
+                    KMK = {
+                        white_peace = {
+                            tag = KNM
+                            message = KMK_WIN_KNM_n
+                        }
+                    }
+                }
+                KMK = {
+                    annex_country = {
+                        target = KNM
+                        transfer_troops = yes
+                    }
+                }
+            }
+        }
+    }
+}
+
+FRA_KNM_WAR_descision = {
+    KNM_unit_FRA_war = {
+        icon = GFX_decision_hol_draw_up_staff_plans
+        available = {
+            hidden_trigger = {
+                always = no
+            }
+        }
+        priority = 20
+        days_mission_timeout = 100
+        fire_only_once = yes
+        activation = {
+            always = no
+        }
+        visible = {
+        }
+        cancel_if_not_visible = yes
+        selectable_mission = yes
+        cancel_trigger = {
+            or = {
+                KNM = {
+                    controls_state = 16
+                }
+                FRA = {
+                    controls_state = 7
+                }
+            }
+        }
+        cancel_effect = {
+            if = {
+                limit = {
+                    KNM = {
+                        controls_state = 16
+                    }
+                }
+                if = {
+                    limit = {
+                        KNM = {
+                            has_government = communism
+                        }
+                    }
+                    KNM = {
+                        white_peace = {
+                            tag = FRA
+                            message = KNM_WIN_FRA_c
+                        }
+                    }
+                }
+                else = {
+                    KNM = {
+                        white_peace = {
+                            tag = FRA
+                            message = KNM_WIN_FRA_d
+                        }
+                    }
+                }
+                KNM = {
+                    if = {
+                        limit = {
+                            has_completed_focus = KNM_wfdn
+                        }
+                        add_research_slot = 1
+                        inherit_technology = FRA
+                        set_autonomy = {
+                            target = FRA
+                            autonomy_state = KNM_lilisubject
+                        }
+                    }
+                    else = {
+                        annex_country = {
+                            target = FRA
+                            transfer_troops = yes
+                        }
+                    }
+                    set_temp_variable = { tag_to_release = LIB }
+                    puppet_released_tag_and_old_govern = yes
+                    set_temp_variable = { tag_to_release = COG }
+                    puppet_released_tag_and_old_govern = yes
+                }
+                FRA = {
+                    set_country_flag = FRA_The_election_results_in
+                    FRA_remove_all_ideas = yes
+                    promote_character = FRA_Kasen
+                    meta_effect = {
+                        text = {
+                            set_politics = {
+                                ruling_party = democratic
+                                last_election = "[CURRENT_DATE]"
+                                election_frequency = 60
+                                elections_allowed = yes
+                            }
+                        }
+                        CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+                    }
+                    custom_effect_tooltip = election_five_yeas_later
+                    add_to_variable = { support_of_PSG = 25 }
+                    set_variable = { FRA_Ruling_Party_VAR = 3 }
+                    FRA_set_rule_party_name = yes
+                    mark_focus_tree_layout_dirty = yes
+                    FRA_Initialization_of_seats_in_National_Assembly = yes
+                    complete_national_focus = FRA_first_term_of_Ibaraki_Kasen
+                    add_ideas = FRA_Reimu_idea
+                }
+            }
+            else = {
+                if = {
+                    limit = {
+                        KNM = {
+                            has_government = communism
+                        }
+                    }
+                    FRA = {
+                        white_peace = {
+                            tag = KNM
+                            message = FRA_WIN_KNM_c
+                        }
+                    }
+                }
+                else = {
+                    FRA = {
+                        white_peace = {
+                            tag = KNM
+                            message = FRA_WIN_KNM_d
+                        }
+                    }
+                }
+                FRA = {
+                    annex_country = {
+                        target = KNM
+                        transfer_troops = yes
+                    }
+                }
+            }
+        }
+    }
+}
+
+KNM_Debug = {
+    Activate_KNM_unit_KMK_war = {
+        complete_effect = { activate_mission = KNM_unit_KMK_war }
+    }
+    Activate_KNM_unit_FRA_war = {
+        complete_effect = { activate_mission = KNM_unit_FRA_war }
+    }
+    lilibai_luxian = {
+        complete_effect = {
+            set_country_flag = KNM_Lilywhite
+            set_country_flag = KNM_Lilywhite2
+            set_country_flag = KNM_Lilywhite3
+            set_country_flag = KNM_Lilywhite4
+            set_country_flag = KNM_Lilywhite5
+            set_country_flag = KNM_Lilywhite6
+            mark_focus_tree_layout_dirty = yes
+            custom_effect_tooltip = jiesuoguoce
+        }
+    }
+    lilibai_luxian1 = {
+        complete_effect = {
+            set_country_flag = KNM_Lilywhite
+            set_country_flag = KNM_Lilywhite2
+            set_country_flag = KNM_Lilywhite3
+            set_country_flag = KNM_Lilywhite4
+            set_country_flag = KNM_Lilywhite5
+            set_country_flag = KNM_Lilywhite6
+            set_country_flag = KNM_Lilywhite7
+            set_country_flag = KNM_Lilywhite8
+            mark_focus_tree_layout_dirty = yes
+            custom_effect_tooltip = jiesuoguoce
+        }
+    }
+}
+KNM_li_xj = {
+    KNM_li_xj_dec = { #陷阱
+        icon = GFX_PAO_wrxj2
+        allowed = {
+            original_tag = KNM
+        }
+        available = {
+        }
+        visible = {
+            not = {
+                has_country_flag = PAO_wrxj_AHaaa
+            }
+        }
+        on_map_mode = map_and_decisions_view
+        state_target = yes
+        target_root_trigger = {
+            has_completed_focus = KNM_tmcsj
+        }
+        target_trigger = {
+            FROM = {
+                is_fully_controlled_by = ROOT
+                not = {
+                    has_dynamic_modifier = {
+                        modifier = KNM_xj2
+                    }
+                }
+            }
+        }
+        target_array = controlled_states
+        cost = 10
+        days_remove = 15
+        modifier = {
+        }
+        remove_effect = {
+            FROM = {
+                add_dynamic_modifier = {
+                    modifier = KNM_xj1
+                }
+            }
+            FROM = {
+                add_dynamic_modifier = {
+                    modifier = KNM_xj2
+                    scope = KNM
+                }
+                add_dynamic_modifier = {
+                    modifier = KNM_xj2
+                    scope = KFL
+                }
+                if = {
+                    limit = {
+                        FRA = {
+                            is_in_faction_with = KNM
+                        }
+                    }
+                    add_dynamic_modifier = {
+                        modifier = KNM_xj2
+                        scope = FRA
+                    }
+                }
+            }
+        }
+        ai_will_do = {
+            factor = 200
+        }
+    }
+    KNM_li_xj_showorhide = { #隐藏显示
+        icon = GFX_PAO_wrxj2
+        allowed = {
+            original_tag = KNM
+        }
+        available = {
+        }
+        visible = {
+            has_completed_focus = KNM_tmcsj
+        }
+        cost = 0
+        days_remove = 0
+        remove_effect = { #flag沿用了夜莺
+            if = {
+                limit = {
+                    not = {
+                        has_country_flag = PAO_wrxj_AHaaa
+                    }
+                }
+                set_country_flag = PAO_wrxj_AHaaa
+            }
+            else = {
+                clr_country_flag = PAO_wrxj_AHaaa
+            }
+        }
+        ai_will_do = {
+            factor = 0
+        }
+    }
+
+    KNM_wqcgn_dec = { #雾气
+        icon = GFX_PAO_wrxj2
+        allowed = {
+            original_tag = KNM
+        }
+        available = {
+        }
+        visible = {
+            not = {
+                has_country_flag = KNM_wqcgn_dec_showorhide_flag
+            }
+        }
+        on_map_mode = map_and_decisions_view
+        state_target = yes
+        target_root_trigger = {
+            has_completed_focus = KNM_wqcgn
+        }
+        target_trigger = {
+            FROM = {
+                not = {
+                    has_dynamic_modifier = {
+                        modifier = KNM_xj2
+                    }
+                }
+                any_neighbor_state = {
+                    is_controlled_by = ROOT
+                }
+            }
+        }
+        cost = 10
+        days_remove = 15
+        modifier = {
+        }
+        remove_effect = {
+            FROM = {
+                add_dynamic_modifier = {
+                    modifier = KNM_xj2
+                    scope = KNM
+                }
+                add_dynamic_modifier = {
+                    modifier = KNM_xj2
+                    scope = KFL
+                }
+            }
+        }
+        ai_will_do = {
+            factor = 200
+        }
+    }
+    KNM_wqcgn_dec_showorhide = { #隐藏显示
+        icon = GFX_PAO_wrxj2
+        allowed = {
+            original_tag = KNM
+        }
+        available = {
+        }
+        visible = {
+            has_completed_focus = KNM_wqcgn
+        }
+        cost = 0
+        days_remove = 0
+        remove_effect = { #flag
+            if = {
+                limit = {
+                    not = {
+                        has_country_flag = KNM_wqcgn_dec_showorhide_flag
+                    }
+                }
+                set_country_flag = KNM_wqcgn_dec_showorhide_flag
+            }
+            else = {
+                clr_country_flag = KNM_wqcgn_dec_showorhide_flag
+            }
+        }
+        ai_will_do = {
+            factor = 0
+        }
+    }
+}
+
+FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
+
+    KNM_industrial_migration = { #工业迁移
+        icon = infiltrate_state
+        priority = 1
+        target_array = controlled_states
+        state_target = yes
+        on_map_mode = map_and_decisions_view
+        cost = 50
+        ai_will_do = {
+            factor = 0
+        }
+        days_remove = 30
+        modifier = {
+        }
+        target_trigger = {
+            FROM = {
+                is_fully_controlled_by = ROOT
+                OR = {
+                    arms_factory > 0
+                    industrial_complex > 0
+                    dockyard > 0
+                }
+                or = {
+                    state = 7
+                    state = 36
+                    state = 866
+                }
+            }
+        }
+        available = {
+        }
+        visible = {
+            has_country_flag = KNM_industrial_migration_yes
+            FROM = {
+                is_fully_controlled_by = ROOT
+                OR = {
+                    arms_factory > 0
+                    industrial_complex > 0
+                    dockyard > 0
+                }
+            }
+        }
+        remove_effect = {
+            custom_effect_tooltip = KNM_industrial_migration_desc_effect_tt
+            if = {
+                limit = {
+                    from = {
+                        arms_factory > 0
+                    }
+                }
+                add_offsite_building = {
+                    type = arms_factory
+                    level = from.arms_factory_level
+                }
+                if = {
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_fra_get_army = from.arms_factory_level
+                    }
+                    multiply_temp_variable = { 
+                        temp_var_fra_get_army = 0.5 
+                    } 
+                    round_variable = temp_var_fra_get_army
+                    KFL = {
+                        add_offsite_building = {
+                            type = arms_factory
+                            level = temp_var_fra_get_army
+                        }
+                    }
+                }
+                from = {
+                    set_building_level = {
+                        type = arms_factory
+                        level = 0
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    from = {
+                        industrial_complex > 0
+                    }
+                }
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = from.industrial_complex_level
+                }
+                if = {
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_fra_get_industrial = from.industrial_complex_level
+                    }
+                    multiply_temp_variable = { 
+                        temp_var_fra_get_industrial = 0.5 
+                    } 
+                    round_variable = temp_var_fra_get_industrial
+                    KFL = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = temp_var_fra_get_industrial
+                        }
+                    }
+                }
+                from = {
+                    set_building_level = {
+                        type = industrial_complex
+                        level = 0
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    from = {
+                        dockyard > 0
+                    }
+                }
+                add_offsite_building = {
+                    type = dockyard
+                    level = from.building_level@dockyard
+                }
+                if = {
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_fra_get_navy = from.building_level@dockyard
+                    }
+                    multiply_temp_variable = { 
+                        temp_var_fra_get_navy = 0.5
+                    } 
+                    round_variable = temp_var_fra_get_navy
+                    KFL = {
+                        add_offsite_building = {
+                            type = dockyard
+                            level = temp_var_fra_get_navy
+                        }
+                    }
+                }
+                from = {
+                    set_building_level = {
+                        type = dockyard
+                        level = 0
+                    }
+                }
+            }
+        }
+    }
+
+    FRA_KNM_buy_infantry_equipment = { #购买步兵装备
+        priority = 6
+        icon = GFX_KNM_buy_infantry_equipment
+        allowed = {
+            tag = KNM
+        }
+        visible = {
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_buy_infantry_equipment_flag }
+            NOT = { has_war_with = FRA }
+        }
+
+        cancel_trigger = {
+            has_war_with = FRA
+            FRA = {
+                exists = no
+            }
+        }
+        days_remove = 90 #花费待定
+
+        fire_only_once = no
+
+        ai_will_do = {
+            factor = 10
+            modifier = {
+                factor = 0
+                OR = {
+                    num_of_civilian_factories < 2
+                    has_equipment = {
+                        infantry_equipment > 1500
+                    }
+                }
+            }
+        }
+
+        modifier = {
+            civilian_factory_use = 1
+        }
+
+        complete_effect = {
+            set_country_flag = KNM_buy_infantry_equipment_flag
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+        }
+        cancel_effect = {
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = -1
+                }
+            }
+            clr_country_flag = KNM_buy_infantry_equipment_flag
+        }
+        remove_effect = { #获取装备量待定
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = KNM_mcxmhtg
+                    }
+                }
+                FRA = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = -1
+                    }
+                }
+            }
+            else = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            add_equipment_to_stockpile = {
+                type = infantry_equipment
+                amount = 1500
+                producer = KNM
+            }
+            clr_country_flag = KNM_buy_infantry_equipment_flag
+        }
+    }
+
+    FRA_KNM_buy_artillery = { #购买火炮类装备
+        priority = 5
+        icon = GFX_KNM_buy_artillery
+        allowed = {
+            tag = KNM
+        }
+        visible = {
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_buy_artillery_flag }
+            NOT = { has_war_with = FRA }
+        }
+
+        cancel_trigger = {
+            has_war_with = FRA
+            FRA = {
+                exists = no
+            }
+        }
+
+        days_remove = 90 #花费待定
+        fire_only_once = no
+
+        ai_will_do = {
+            factor = 10
+            modifier = {
+                factor = 0
+                OR = {
+                    num_of_civilian_factories < 2
+                    AND = {
+                        has_equipment = {
+                            artillery_equipment > 100
+                        }
+                        if = {
+                            limit = {
+                                has_tech = interwar_antiair
+                            }
+                            has_equipment = {
+                                anti_air_equipment > 100
+                            }
+                        }
+                        if = {
+                            limit = {
+                                has_tech = interwar_antitank
+                            }
+                            has_equipment = {
+                                anti_tank_equipment > 100
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        modifier = {
+            civilian_factory_use = 1
+        }
+
+        complete_effect = {
+            set_country_flag = KNM_buy_artillery_flag
+            hidden_effect = {
+                country_event = KNM_buy.1
+            }
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            custom_effect_tooltip = KNM_buy_artillery_tt
+        }
+        cancel_effect = {
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = -1
+                }
+            }
+            clear_variable = KNM_buy_artillery_type
+            clr_country_flag = KNM_buy_artillery_flag
+        }
+        remove_effect = {
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = KNM_mcxmhtg
+                    }
+                }
+                FRA = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = -1
+                    }
+                }
+            }
+            else = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            add_equipment_to_stockpile = {
+                type = var:KNM_buy_artillery_type
+                amount = 200
+                producer = KNM
+            }
+            clear_variable = KNM_buy_artillery_type
+            clr_country_flag = KNM_buy_artillery_flag
+        }
+    }
+
+    FRA_KNM_buy_military_vehicles = { #购买卡车类装备
+
+        priority = 4
+
+        icon = GFX_KNM_buy_military_vehicles
+        allowed = {
+            tag = KNM
+        }
+        visible = {
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_buy_military_vehicles_flag }
+            NOT = { has_war_with = FRA }
+        }
+
+        cancel_trigger = {
+            has_war_with = FRA
+            FRA = {
+                exists = no
+            }
+        }
+
+        days_remove = 90 #花费待定
+        fire_only_once = no
+
+        ai_will_do = {
+            factor = 10
+            modifier = {
+                factor = 0
+                OR = {
+                    num_of_civilian_factories < 2
+                    has_equipment = {
+                        mechanized_equipment > 100
+                    }
+                }
+            }
+        }
+
+        modifier = {
+            civilian_factory_use = 1
+        }
+
+        complete_effect = {
+            set_country_flag = KNM_buy_military_vehicles_flag
+            hidden_effect = {
+                country_event = KNM_buy.2
+            }
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            custom_effect_tooltip = KNM_buy_vehicles_tt
+        }
+        cancel_effect = {
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = -1
+                }
+            }
+            clear_variable = KNM_buy_vehicles_type
+            clr_country_flag = KNM_buy_military_vehicles_flag
+            clr_country_flag = KNM_buy_motorized
+            clr_country_flag = KNM_buy_mechanized
+        }
+        remove_effect = {
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = KNM_mcxmhtg
+                    }
+                }
+                FRA = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = -1
+                    }
+                }
+            }
+            else = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            if = {
+                limit = {
+                    has_country_flag = KNM_buy_motorized
+                }
+                add_equipment_to_stockpile = {
+                    type = var:KNM_buy_vehicles_type
+                    amount = 200
+                    producer = KNM
+                }
+                clr_country_flag = KNM_buy_motorized
+            }
+            else_if = {
+                limit = {
+                    has_country_flag = KNM_buy_mechanized
+                }
+                add_equipment_to_stockpile = {
+                    type = var:KNM_buy_vehicles_type
+                    amount = 100
+                    producer = KNM
+                }
+                clr_country_flag = KNM_buy_mechanized
+            }
+            clear_variable = KNM_buy_vehicles_type
+            clr_country_flag = KNM_buy_military_vehicles_flag
+        }
+    }
+
+    FRA_KNM_buy_armor = { #购买坦克类装备
+
+        priority = 3
+
+        icon = GFX_KNM_buy_armor
+        allowed = {
+            tag = KNM
+        }
+        visible = {
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_buy_armor_flag }
+            NOT = { has_war_with = FRA }
+        }
+
+        cancel_trigger = {
+            has_war_with = FRA
+            FRA = {
+                exists = no
+            }
+        }
+
+        days_remove = 90 #花费待定
+        fire_only_once = no
+
+        ai_will_do = {
+            factor = 10
+            modifier = {
+                factor = 0
+                OR = {
+                    num_of_civilian_factories < 2
+                    AND = {
+                        has_equipment = {
+                            light_tank_chassis > 10
+                        }
+                        has_equipment = {
+                            medium_tank_chassis > 10
+                        }
+                    }
+                }
+            }
+        }
+
+        modifier = {
+            civilian_factory_use = 1
+        }
+
+        complete_effect = {
+            set_country_flag = KNM_buy_armor_flag
+            hidden_effect = {
+                country_event = KNM_buy.3
+            }
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            custom_effect_tooltip = KNM_buy_armor_tt
+        }
+        cancel_effect = {
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = -1
+                }
+            }
+            clear_variable = KNM_buy_armor_type
+            clr_country_flag = KNM_buy_armor_flag
+            clr_country_flag = KNM_buy_light_armor_flag
+            clr_country_flag = KNM_buy_medium_armor_flag
+            clr_country_flag = KNM_buy_heavy_armor_flag
+        }
+        remove_effect = {
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = KNM_mcxmhtg
+                    }
+                }
+                FRA = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = -1
+                    }
+                }
+            }
+            else = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            if = {
+                limit = {
+                    has_country_flag = KNM_buy_light_armor_flag
+                }
+                add_equipment_to_stockpile = {
+                    type = var:KNM_buy_armor_type
+                    amount = 80
+                    producer = KNM
+                }
+                clr_country_flag = KNM_buy_light_armor_flag
+            }
+            else_if = {
+                limit = {
+                    has_country_flag = KNM_buy_medium_armor_flag
+                }
+                add_equipment_to_stockpile = {
+                    type = var:KNM_buy_armor_type
+                    amount = 65
+                    producer = KNM
+                }
+                clr_country_flag = KNM_buy_medium_armor_flag
+            }
+            else_if = {
+                limit = {
+                    has_country_flag = KNM_buy_heavy_armor_flag
+                }
+                add_equipment_to_stockpile = {
+                    type = var:KNM_buy_armor_type
+                    amount = 40
+                    producer = KNM
+                }
+                clr_country_flag = KNM_buy_heavy_armor_flag
+            }
+            clear_variable = KNM_buy_armor_type
+            clr_country_flag = KNM_buy_armor_flag
+        }
+    }
+
+    FRA_KNM_buy_aircraft = { #购买飞机类装备
+
+        priority = 2
+
+        icon = GFX_KNM_buy_aircraft
+        allowed = {
+            tag = KNM
+        }
+        visible = {
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_buy_aircraft_flag }
+            NOT = { has_war_with = FRA }
+        }
+
+        cancel_trigger = {
+            has_war_with = FRA
+            FRA = {
+                exists = no
+            }
+        }
+
+        days_remove = 90 #花费待定
+        fire_only_once = no
+
+        ai_will_do = {
+            factor = 10
+            modifier = {
+                factor = 0
+                OR = {
+                    num_of_civilian_factories < 2
+                    AND = {
+                        stockpile_ratio = {
+                            archetype = small_plane_airframe
+                            ratio > 0.75
+                        }
+                        stockpile_ratio = {
+                            archetype = small_plane_naval_bomber_airframe
+                            ratio > 0.75
+                        }
+                        stockpile_ratio = {
+                            archetype = medium_plane_airframe
+                            ratio > 0.75
+                        }
+                    }
+                }
+            }
+        }
+
+        modifier = {
+            civilian_factory_use = 1
+        }
+
+        complete_effect = {
+            set_country_flag = KNM_buy_aircraft_flag
+            hidden_effect = {
+                country_event = KNM_buy.4
+            }
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            custom_effect_tooltip = KNM_buy_aircraft_tt
+        }
+        cancel_effect = {
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = -1
+                }
+            }
+            clear_variable = KNM_buy_air_type
+            clr_country_flag = KNM_buy_aircraft_flag
+            clr_country_flag = KNM_buy_fighters_flag
+            clr_country_flag = KNM_buy_fighters_cas_flag
+        }
+        remove_effect = {
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = KNM_mcxmhtg
+                    }
+                }
+                FRA = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = -1
+                    }
+                }
+            }
+            else = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            if = {
+                limit = {
+                    has_country_flag = KNM_buy_fighters_flag
+                }
+                add_equipment_to_stockpile = {
+                    type = var:KNM_buy_air_type
+                    amount = 80
+                    producer = KNM
+                }
+                clr_country_flag = KNM_buy_fighters_flag
+            }
+            else_if = {
+                limit = {
+                    has_country_flag = KNM_buy_fighters_cas_flag
+                }
+                if = {
+                    limit = {
+                        has_tech = modern_small_airframe
+                    }
+                    add_equipment_to_stockpile = {
+                        type = small_plane_cas_airframe_4
+                        amount = 60
+                        producer = KNM
+                    }
+                }
+                else_if = {
+                    limit = {
+                        has_tech = advanced_small_airframe
+                    }
+                    add_equipment_to_stockpile = {
+                        type = small_plane_cas_airframe_3
+                        amount = 60
+                        producer = KNM
+                    }
+                }
+                else_if = {
+                    limit = {
+                        has_tech = improved_small_airframe
+                    }
+                    add_equipment_to_stockpile = {
+                        type = small_plane_cas_airframe_2
+                        amount = 60
+                        producer = KNM
+                    }
+                }
+                else_if = {
+                    limit = {
+                        has_tech = basic_small_airframe
+                    }
+                    add_equipment_to_stockpile = {
+                        type = small_plane_cas_airframe_1
+                        amount = 60
+                        producer = KNM
+                    }
+                }
+                else = {
+                    add_equipment_to_stockpile = {
+                        type = small_plane_cas_airframe
+                        amount = 60
+                        producer = KNM
+                    }
+                }
+                clr_country_flag = KNM_buy_fighters_cas_flag
+            }
+            clear_variable = KNM_buy_air_type
+            clr_country_flag = KNM_buy_aircraft_flag
+        }
+    }
+    FRA_KNM_buy_technology = { #买科技
+        priority = 8
+        icon = GFX_KNM_buy_technology
+        allowed = {
+            tag = KNM
+        }
+        visible = {
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_buy_technology_flag }
+            NOT = { has_war_with = FRA }
+
+        }
+
+        cancel_trigger = {
+            has_war_with = FRA
+            FRA = {
+                exists = no
+            }
+        }
+        days_remove = 90
+        ai_will_do = {
+            base = 10
+        }
+        fire_only_once = no
+        modifier = {
+            civilian_factory_use = 1
+        }
+
+        complete_effect = {
+            set_country_flag = KNM_buy_technology_flag
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            custom_effect_tooltip = KNM_buy_tec_tt
+        }
+        cancel_effect = {
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = -1
+                }
+            }
+            clr_country_flag = KNM_buy_technology_flag
+        }
+        remove_effect = {
+            random_list = {
+                seed = random
+                1 = {
+                    add_tech_bonus = {
+                        name = "步枪研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = infantry_weapons
+                    }
+                }
+                1 = {
+                    add_tech_bonus = {
+                        name = "支援装备研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = support_tech
+                    }
+                }
+
+                1 = {
+                    add_tech_bonus = {
+                        name = "卡车研究卡"
+                        category = motorized_equipment
+                        bonus = 1
+                        uses = 1
+                    }
+                }
+
+                1 = {
+                    add_tech_bonus = {
+                        name = "装甲研究卡"
+                        category = armor
+                        bonus = 1
+                        uses = 1
+                    }
+                }
+
+                1 = {
+                    add_tech_bonus = {
+                        name = "火炮研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = artillery
+                    }
+                }
+                1 = {
+                    add_tech_bonus = {
+                        name = "舰船研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = naval_equipment
+                    }
+                }
+                1 = {
+                    add_tech_bonus = {
+                        name = "空军研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = air_equipment
+                    }
+                }
+
+                1 = {
+                    add_tech_bonus = {
+                        name = "电子研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = electronics
+                    }
+                }
+
+                1 = {
+                    add_tech_bonus = {
+                        name = "工业研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = industry
+                    }
+                }
+                1 = {
+                    add_tech_bonus = {
+                        name = "魔法研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = magic_tech
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = KNM_mcxmhtg
+                    }
+                }
+                FRA = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = -1
+                    }
+                }
+            }
+            else = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            clr_country_flag = KNM_buy_technology_flag
+        }
+    }
+
+    FRA_KNM_military_exercise = { #演习
+        priority = 8
+        icon = GFX_KNM_military_exercise
+        allowed = {
+            tag = KNM
+        }
+        visible = {
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_military_exercise_flag }
+            NOT = { has_war_with = FRA }
+        }
+
+        cancel_trigger = {
+            has_war_with = FRA
+            FRA = {
+                exists = no
+            }
+        }
+        days_remove = 90
+        ai_will_do = {
+            base = 10
+        }
+        fire_only_once = no
+
+        modifier = {
+            civilian_factory_use = 1
+        }
+        complete_effect = {
+            set_country_flag = KNM_military_exercise_flag
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            custom_effect_tooltip = KNM_exercise_tt
+        }
+        cancel_effect = {
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = -1
+                }
+            }
+            clr_country_flag = KNM_military_exercise_flag
+        }
+        remove_effect = {
+            army_experience = 25
+            navy_experience = 25
+            air_experience = 25
+            FRA = {
+                army_experience = 10
+                navy_experience = 10
+                air_experience = 10
+            }
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = KNM_mcxmhtg
+                    }
+                }
+                FRA = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = -1
+                    }
+                }
+            }
+            else = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            clr_country_flag = KNM_military_exercise_flag
+        }
+    }
+
+    FRA_KNM_mas = { #精通
+        priority = 8
+        icon = GFX_KNM_mas
+        allowed = {
+            tag = KNM
+        }
+        visible = {
+            has_completed_focus = KNM_ydnghqtz
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_mas_flag }
+            NOT = { has_war_with = FRA }
+        }
+
+        cancel_trigger = {
+            has_war_with = FRA
+            FRA = {
+                exists = no
+            }
+        }
+        days_remove = 90
+        ai_will_do = {
+            base = 10
+        }
+        fire_only_once = no
+        modifier = {
+            civilian_factory_use = 1
+        }
+        complete_effect = {
+            set_country_flag = KNM_military_exercise_flag
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            custom_effect_tooltip = KNM_exercise_tt
+        }
+        cancel_effect = {
+            FRA = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = -1
+                }
+            }
+            clr_country_flag = KNM_military_exercise_flag
+        }
+        remove_effect = {
+            add_daily_mastery = { #精通
+                amount = 0.3
+                days = 90
+                name = FRA_KNM_mas
+                folder = land
+            }
+            FRA = {
+                add_daily_mastery = { #精通
+                    amount = 0.3
+                    days = 90
+                    name = FRA_KNM_mas
+                    folder = land
+                }
+            }
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = KNM_mcxmhtg
+                    }
+                }
+                FRA = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = -1
+                    }
+                }
+            }
+            else = {
+                add_offsite_building = {
+                    type = industrial_complex
+                    level = 1
+                }
+            }
+            clr_country_flag = KNM_military_exercise_flag
+        }
+    }
+
+}
+
+KNM_li_war = {
+    KNM_call_to_war_c = {
+        icon = GFX_KNM_call_to_war_c
+        on_map_mode = map_and_decisions_view
+
+        allowed = { tag = KNM }
+        visible = {
+            has_completed_focus = KNM_focus1
+
+        }
+
+        available = {
+            FROM = { has_opinion = { target = KNM value > 79 }}
+        }
+        target_trigger = {
+            FROM = {
+                exists = yes
+                NOT = { tag = KNM }
+                NOT = { has_war_with = KNM }
+                AND = {
+                    KNM = { has_government = democratic }
+                    has_government = communism
+                }
+                is_subject = no
+                and = {
+                    not = {
+                        has_country_flag = KNM_call_to_war_yes
+                    } 
+                    not = {
+                        has_country_flag = KNM_call_to_war_no
+                    } 
+                }
+            }
+        }
+        cost = 100
+
+        complete_effect = {
+            FROM = {
+                country_event = { id = KNM.57 days = 1 }
+            }
+            custom_effect_tooltip = KNM_call_to_war_d_tt
+            effect_tooltip = {
+                give_military_access = KNM
+                give_guarantee = KNM
+            }
+        }
+    }
+    KNM_call_to_war_d = {
+        icon = GFX_KNM_call_to_war_d
+        on_map_mode = map_and_decisions_view
+
+        allowed = { tag = KNM }
+        visible = {
+            has_completed_focus = KNM_focus3
+
+        }
+
+        available = {
+            FROM = { has_opinion = { target = KNM value > 99 }}
+        }
+        target_trigger = {
+            FROM = {
+                exists = yes
+                NOT = { tag = KNM }
+                NOT = { has_war_with = KNM }
+                AND = {
+                    KNM = { has_government = democratic }
+                    has_government = democratic
+                }
+                is_subject = no
+                and = {
+                    not = {
+                        has_country_flag = KNM_call_to_war_yes
+                    } 
+                    not = {
+                        has_country_flag = KNM_call_to_war_no
+                    } 
+                }
+            }
+        }
+        cost = 80
+
+        complete_effect = {
+            FROM = {
+                country_event = { id = KNM.57 days = 1 }
+            }
+            custom_effect_tooltip = KNM_call_to_war_d_tt
+            effect_tooltip = {
+                give_military_access = KNM
+                give_guarantee = KNM
+            }
+        }
+    }
+}
+
