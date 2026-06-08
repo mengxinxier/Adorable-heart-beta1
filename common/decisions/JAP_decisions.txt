@@ -2328,22 +2328,46 @@ JAP_huanggutun = {
 		}
 		visible = {
 			is_subject = no
-			MAN = {
-			is_subject = no
-			}
+			not = { is_in_faction_with = MAN }
 		}
 		available = {
-			MAN = {
-				is_subject = no
+			OR = {
+				AND = {
+					has_country_flag = MAN_jujue_JAP_beikuilei_1
+					not = { is_in_faction_with = MAN }
+				}
+				AND = {
+					not = { country_exists = MAN }
+					any_other_country = {
+						not = { is_in_faction_with = JAP }
+						owns_state = 716
+					}
+				}
 			}
-			has_country_flag = MAN_jujue_JAP_beikuilei_1
-			has_global_flag = second_weltkrieg_has_started
+			#has_global_flag = second_weltkrieg_has_started
 		}
 		days_remove = 7
 		remove_effect = {
-			create_wargoal = {
-				type = annex_everything
-				target = MAN
+			if = {
+				limit = {
+					country_exists = MAN
+				}
+				create_wargoal = {
+					type = annex_everything
+					target = MAN
+				}
+			} else = {
+				every_other_country = {
+					limit = {
+						owns_state = 716
+					}
+					JAP = {
+						create_wargoal = {
+							type = annex_everything
+							target = PREV
+						}
+					}
+				}
 			}
 		}
 	}
