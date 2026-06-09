@@ -757,7 +757,160 @@ KNM_li_xj = {
 }
 
 FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
+    KNM_spring_market = {
+        icon = GFX_spring_market
+        priority = 9
 
+        allowed = { tag = KNM }
+
+        visible = {
+            country_exists = KFL
+            FRA = { exists = yes }
+        }
+
+        available = {
+            num_of_civilian_factories_available_for_projects > 0
+            NOT = { has_country_flag = KNM_spring_market_cooldown }
+            NOT = { has_war_with = FRA }
+            country_exists = KFL
+            FRA = { exists = yes }
+        }
+
+        cancel_trigger = {
+            OR = {
+                has_war_with = FRA
+                FRA = { exists = no }
+                NOT = { country_exists = KFL }
+            }
+        }
+
+        cost         = 50
+        days_remove  = 120
+        fire_only_once = no
+
+        modifier = { civilian_factory_use = 1 }
+
+        ai_will_do = {
+            factor = 10
+            modifier = {
+                factor = 0
+                OR = {
+                    num_of_civilian_factories_available_for_projects < 2
+                    has_country_flag = KNM_spring_market_cooldown
+                }
+            }
+            modifier = {
+                factor = 1.5
+                FRA = { num_of_military_factories > 20 }
+            }
+            modifier = {
+                factor = 1.5
+                country_exists = KFL
+                KFL = { num_of_divisions > 5 }
+            }
+        }
+
+        complete_effect = {
+            set_temp_variable = { temp_sm_civ = num_of_civilian_factories }
+            set_variable = { knm_civ_count = temp_sm_civ }
+
+            set_temp_variable = { temp_sm_fra_d = 0 }
+            if = {
+                limit = { FRA = { exists = yes } }
+                FRA = { set_temp_variable = { temp_sm_fra_d = num_of_military_factories } }
+            }
+            set_variable = { fra_mil_count = temp_sm_fra_d }
+
+            set_temp_variable = { temp_sm_kfl_d = 0 }
+            if = {
+                limit = { country_exists = KFL }
+                KFL = { set_temp_variable = { temp_sm_kfl_d = num_of_divisions } }
+            }
+            set_variable = { kfl_div_count = temp_sm_kfl_d }
+
+
+            # pp_gain      = 民工数 × 0.01
+            # build_speed  = 民工数 × 0.0001
+            set_temp_variable = { temp_sm_knm_pp = temp_sm_civ }
+            multiply_temp_variable = { temp_sm_knm_pp = 0.01 }
+            set_variable = { knm_spring_market_pp_gain = temp_sm_knm_pp }
+
+            set_temp_variable = { temp_sm_knm_bs = temp_sm_civ }
+            multiply_temp_variable = { temp_sm_knm_bs = 0.0001 }
+            set_variable = { knm_spring_market_build_speed = temp_sm_knm_bs }
+
+            add_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit }
+
+            #slots = 军工数 × 0.0001
+            #arms  = 军工数 × 0.0001
+            if = {
+                limit = { FRA = { exists = yes } }
+                FRA = {
+                    set_temp_variable = { temp_sm_fra_c = num_of_military_factories }
+
+                    set_temp_variable = { temp_sm_fra_s = temp_sm_fra_c }
+                    multiply_temp_variable = { temp_sm_fra_s = 0.0001 }
+                    set_variable = { fra_spring_market_slots = temp_sm_fra_s }
+
+                    set_temp_variable = { temp_sm_fra_a = temp_sm_fra_c }
+                    multiply_temp_variable = { temp_sm_fra_a = 0.0001 }
+                    set_variable = { fra_spring_market_arms = temp_sm_fra_a }
+
+                    add_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit2 }
+                }
+            }
+
+            #org = 师团数 × 0.0002
+            #def = 师团数 × 0.0002
+            if = {
+                limit = { country_exists = KFL }
+                KFL = {
+                    set_temp_variable = { temp_sm_kfl_c = num_of_divisions }
+
+                    set_temp_variable = { temp_sm_kfl_o = temp_sm_kfl_c }
+                    multiply_temp_variable = { temp_sm_kfl_o = 0.0002 }
+                    set_variable = { kfl_spring_market_org = temp_sm_kfl_o }
+
+                    set_temp_variable = { temp_sm_kfl_df = temp_sm_kfl_c }
+                    multiply_temp_variable = { temp_sm_kfl_df = 0.0002 }
+                    set_variable = { kfl_spring_market_def = temp_sm_kfl_df }
+
+                    add_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit3 }
+                }
+            }
+
+            custom_effect_tooltip = KNM_spring_market_effect_tt
+        }
+
+        cancel_effect = {
+            remove_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit }
+            if = {
+                limit = { FRA = { exists = yes } }
+                FRA = { remove_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit2 } }
+            }
+            if = {
+                limit = { country_exists = KFL }
+                KFL = { remove_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit3 } }
+            }
+        }
+
+        remove_effect = {
+            remove_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit }
+            if = {
+                limit = { FRA = { exists = yes } }
+                FRA = { remove_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit2 } }
+            }
+            if = {
+                limit = { country_exists = KFL }
+                KFL = { remove_dynamic_modifier = { modifier = KNM_spring_market_synergy_spirit3 } }
+            }
+            set_country_flag = KNM_spring_market_cooldown
+            hidden_effect = {
+                country_event = { id = KNM_spring_market.1 days = 40 }
+            }
+            custom_effect_tooltip = KNM_spring_market_cooldown_tt
+        }
+    }
     KNM_industrial_migration = { #工业迁移
         icon = infiltrate_state
         priority = 1
