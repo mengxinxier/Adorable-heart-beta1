@@ -5,6 +5,20 @@ add_namespace = KNM_union
 add_namespace = KNM_spring
 add_namespace = KNM_buy
 add_namespace = KNM_spring_ally
+add_namespace = KNM_spring_market
+
+#大集市冷却
+country_event = {
+    id    = KNM_spring_market.1
+    is_triggered_only = yes
+    hidden = yes
+    immediate = {
+        clr_country_flag = KNM_spring_market_cooldown
+    }
+    option = {
+        name = KNM_spring_market.1.a
+    }
+}
 country_event = {
     id = KNM_spring_ally.1
     title = KNM_spring_ally.1.t
@@ -38,8 +52,80 @@ country_event = {
                         amount = 800
                     }
                 }
+                division_template = {
+                    name = "小妖精作战小分队"
+                    regiments = {
+                        infantry = {
+                            x = 0
+                            y = 0
+                        }
+                        infantry = {
+                            x = 0
+                            y = 1
+                        }
+                        infantry= {
+                            x = 0
+                            y = 2
+                        }
+                        infantry= {
+                            x = 0
+                            y = 3
+                        }
+                        infantry = {
+                            x = 1
+                            y = 0
+                        }
+                        infantry = {
+                            x = 1
+                            y = 1
+                        }
+                        infantry = {
+                            x = 1
+                            y = 2
+                        }
+                        infantry = {
+                            x = 1
+                            y = 3
+                        }
+                        infantry = {
+                            x = 2
+                            y = 0
+                        }
+                        artillery_brigade = {
+                            x = 3
+                            y = 0
+                        }
+                    }
+                    support = {
+                        #支援连
+                        engineer = {
+                            x = 0
+                            y = 0
+                        }
+                        recon = {
+                            x = 0
+                            y = 1
+                        }
+                    }
+                }
+                KFL = {
+                    random_state = {
+                        limit = {
+                            is_fully_controlled_by = KFL
+                        }
+                        create_unit = {
+                            division = "name = \"小妖精作战小分队\" division_template = \"小妖精作战小分队\" start_experience_factor = 0.7 "
+                            count = 6
+                            allow_spawning_on_enemy_provs = yes
+                            owner = KFL
+                        }
+                    }
+                }
             }
-            puppet = KFL
+            set_autonomy = {
+                target = KFL
+                autonomy_state = KNM_lilisubject
+            }
             set_country_flag = KNM_KFL_created
         }
     }
@@ -613,11 +699,14 @@ country_event = {
         promote_character = KNM_Lilywhite
         set_country_flag = KNM_Lilywhite
         mark_focus_tree_layout_dirty = yes
+        custom_effect_tooltip = surprise_spring_tt
         custom_effect_tooltip = fra_jiaqiang_tt
         custom_effect_tooltip = jiesuoguoce
         if = {
             limit = {
-                is_ai = no
+                FRA = {
+                    is_ai = yes
+                }
             }
             FRA = {
                 set_country_flag = KNM_ai
@@ -960,6 +1049,7 @@ country_event = {
         name = KNM.21.a
         ai_chance = { base = 10 }
         add_stability = 0.03
+        custom_effect_tooltip = KNM_fra_army_tt
         add_to_variable = {
             KNM_fra_army_army_org_factor = 0.02
             tooltip = army_org_factor_tt
@@ -979,12 +1069,19 @@ country_event = {
     option = {
         name = KNM.22.a
         ai_chance = { base = 10 }
-        army_experience = 5
-        air_experience = 5
+        army_experience = 50
+        air_experience = 50
+        add_tech_bonus = {
+            name = "火炮研究卡"
+            bonus = 1
+            uses = 1
+            ahead_reduction = 0.5
+            category = artillery
+        }
     }
 }
 
-#大路上满是稀泥
+#大马路上全都是稀泥
 country_event = {
     id = KNM.23
     title = KNM.23.t
@@ -1038,7 +1135,44 @@ country_event = {
         }
         add_offsite_building = {
             type = industrial_complex
-            level = 7.arms_factory_level
+            level = 7.industrial_complex_level
+        }
+        add_offsite_building = {
+            type = dockyard
+            level = 7.building_level@dockyard
+        }
+        KNM = {
+            add_research_slot = 1
+            add_offsite_building = {
+                type = arms_factory
+                level = 7.arms_factory_level
+            }
+            add_offsite_building = {
+                type = industrial_complex
+                level = 7.industrial_complex_level
+            }
+            add_offsite_building = {
+                type = dockyard
+                level = 7.building_level@dockyard
+            }
+        }
+        7 = {
+            set_building_level = {
+                type = arms_factory
+                level = 0
+            }
+        }
+        7 = {
+            set_building_level = {
+                type = industrial_complex
+                level = 0
+            }
+        }
+        7 = {
+            set_building_level = {
+                type = dockyard
+                level = 0
+            }
         }
     }
 }
@@ -1117,11 +1251,25 @@ country_event = {
     is_triggered_only = yes
     fire_only_once = yes
     picture = GFX_event_KNM_lili8
-    immediate = {}
+    immediate = {
+        hidden_effect = {
+            scoped_play_song = "星屑"
+        }
+    }
     option = {
         name = KNM.27.a
         ai_chance = { base = 10 }
         add_war_support = 0.05
+        swap_ideas = {
+            remove_idea = KNM_dbzsmhy
+            add_idea = KNM_dbzsmhy2
+        }
+        custom_effect_tooltip = KNM_fra_army_tt
+        add_to_variable = { KNM_fra_army_breakthrough_factor = 0.10 tooltip = breakthrough_factor_tt }
+        if = {
+            limit = { FRA = { exists = yes } }
+            FRA = { add_to_variable = { KNM_fra_army_breakthrough_factor = 0.10 tooltip = breakthrough_factor_tt } }
+        }
     }
 }
 
@@ -1131,6 +1279,7 @@ country_event = {
     title = KNM.28.t
     desc = KNM.28.d
     trigger = {
+        tag = KNM
         DVL = {
             OR = {
                 exists = no
@@ -1147,9 +1296,6 @@ country_event = {
         ai_chance = { base = 10 }
         add_stability = 0.05
         add_political_power = 50
-        set_country_flag = KNM_Lilywhite5
-        custom_effect_tooltip = jiesuoguoce
-        mark_focus_tree_layout_dirty = yes
         country_event = { id = KNM.29 hours = 6 }
     }
 }
@@ -1170,6 +1316,9 @@ country_event = {
     option = {
         name = KNM.29.a
         add_war_support = 0.05
+        set_country_flag = KNM_Lilywhite5
+        custom_effect_tooltip = jiesuoguoce
+        mark_focus_tree_layout_dirty = yes
         ai_chance = {
             base = 10
         }
@@ -1186,9 +1335,6 @@ country_event = {
     fire_only_once = yes
     picture = GFX_event_KNM_lili2
     immediate = {
-        hidden_effect = {
-            add_ideas = KNM_Daiyousei_idea
-        }
     }
     option = {
         name = KNM.30.a
@@ -1247,11 +1393,11 @@ country_event = {
         ai_chance = {
             base = 10
         }
-        add_stability = 0.08
-        add_political_power = 50
+        add_stability = 0.2
+        add_political_power = 100
         KNM = {
-            add_stability = 0.08
-            add_political_power = 50
+            add_stability = 0.1
+            add_political_power = 100
         }
     }
 }
@@ -1516,8 +1662,8 @@ country_event = {
         }
         custom_effect_tooltip = KNM_spring_tt
         add_to_variable = {
-            knm_spring_factory_energy_consumption = 0.15
-            tooltip = factory_energy_consumption_tt
+            knm_spring_consumer_goods_factor = 0.15
+            tooltip = consumer_goods_factor_tt
         }
         add_to_variable = {
             knm_spring_production_speed_industrial_complex_factor = 0.05
@@ -1558,7 +1704,7 @@ country_event = {
     }
 }
 
-#铁帽子里藏着小花种
+#未来的花种
 country_event = {
     id = KNM.45
     title = KNM.45.t
@@ -1578,6 +1724,7 @@ country_event = {
         }
         custom_effect_tooltip = KNM_spring_tt
         add_to_variable = { knm_spring_compliance_growth = 0.02 tooltip = compliance_growth_tt }
+        set_country_flag = { flag = KNM.45_cd value = 1 days = 120 }
     }
 }
 
@@ -1621,12 +1768,20 @@ country_event = {
     }
 }
 
-#忘记了春天的人
+#这里总会开满小花
 country_event = {
     id = KNM.47
     title = KNM.47.t
     desc = KNM.47.d
-    is_triggered_only = yes
+    trigger = {
+        tag = KNM
+        NOT = {
+            has_country_flag = KNM.45_cd
+        }
+        DVL = {
+            exists = no
+        }
+    }
     fire_only_once = yes
     picture = GFX_event_KNM_lili8
     immediate = {
@@ -1636,6 +1791,9 @@ country_event = {
         name = KNM.47.a
         ai_chance = {
             base = 10
+        }
+        781 = {
+            add_manpower = 1
         }
         custom_effect_tooltip = KNM_spring_tt
         add_to_variable = { knm_spring_compliance_growth = 0.03 tooltip = compliance_growth_tt }
@@ -1812,10 +1970,30 @@ country_event = {
         ai_chance = {
             base = 10
         }
-        add_ideas = KNM_corrupted_by_spring_spirit
+        add_timed_idea = {
+            idea = KNM_corrupted_by_spring_spirit
+            days = 90
+        }
         create_wargoal = {
             type = annex_everything
             target = KNM
+        }
+    }
+    option = {
+        name = KNM.55.b
+        ai_chance = {
+            base = 100
+        }
+        trigger = {
+            ROOT = {
+                is_in_faction = yes
+                faction_leader = {
+                    or = {
+                        has_government = democratic
+                        has_government = communism
+                    }
+                }
+            }
         }
     }
 }
@@ -1855,6 +2033,88 @@ country_event = {
             base = 10
         }
         add_political_power = 200
+    }
+}
+
+#春天来啦，大家醒醒呀
+country_event = {
+    id = KNM.61
+    title = KNM.61.t
+    desc = KNM.61.d
+    is_triggered_only = yes
+    picture = GFX_event_KNM_lili2
+    immediate = {
+        hidden_effect = {
+            scoped_play_song = "悠久花都"
+        }
+    }
+    option = {
+        name = KNM.61.a
+        ai_chance = {
+            base = 10
+        }
+        country_event = {
+            id = KNM.33
+            hours = 6
+        }
+    }
+}
+
+#明年春天再见吧
+country_event = {
+    id = KNM.62
+    title = KNM.62.t
+    desc = KNM.62.d
+    trigger = {
+        tag = KNM
+        not = {
+            has_country_flag = KNM_chuntia
+        }
+        has_completed_focus = KNM_djyqh
+    }
+    picture = GFX_event_KNM_lili5
+    immediate = {
+        hidden_effect = {
+            scoped_play_song = "星屑"
+        }
+    }
+    option = {
+        name = KNM.62.a
+        ai_chance = {
+            base = 10
+        }
+        set_country_flag = KNM_sjz
+        swap_ruler_traits = {
+            remove = KNM_gcj
+            add = KNM_sjz
+        }
+    }
+}
+
+#故事书里的春风
+country_event = {
+    id = KNM.63
+    title = KNM.63.t
+    desc = KNM.63.d
+    trigger = {
+        tag = KNM
+        not = {
+            has_country_flag = KNM_chuntia
+        }
+        has_completed_focus = KNM_djyqh
+    }
+    picture = GFX_event_KNM_lili2
+    immediate = {
+    }
+    option = {
+        name = KNM.63.a
+        ai_chance = {
+            base = 10
+        }
+        country_event = {
+            id = KNM.61
+            hours = 6
+        }
     }
 }
 
@@ -1915,10 +2175,9 @@ country_event = { #协议
         set_country_flag = KNM_call_to_war_yes
         custom_effect_tooltip = KNM_call_to_war_yes_tt
         give_military_access = KNM
-        give_guarantee = KNM
         KNM = {
             custom_effect_tooltip = KNM_spring_tt
-            add_to_variable = { knm_spring_research_speed_factor  = 0.05 tooltip = research_speed_factor_tt }
+            add_to_variable = { knm_spring_research_speed_factor  = 0.01 tooltip = research_speed_factor_tt }
             add_to_variable = { knm_spring_political_power_gain   = 0.2  tooltip = political_power_gain_tt }
         }
     }
@@ -2022,7 +2281,7 @@ country_event = { #坦克
         ai_chance = {
             base = 10
         }
-        set_variable = { KNM_buy_armor_type = token:light_armor_equipment }
+        set_variable = { KNM_buy_armor_type = token:light_tank_chassis }
         set_country_flag = KNM_buy_light_armor_flag
         custom_effect_tooltip = KNM_buy.3.a_tt
     }
@@ -2031,7 +2290,7 @@ country_event = { #坦克
         ai_chance = {
             base = 10
         }
-        set_variable = { KNM_buy_armor_type = token:medium_armor_equipment }
+        set_variable = { KNM_buy_armor_type = token:medium_tank_chassis }
         set_country_flag = KNM_buy_medium_armor_flag
         custom_effect_tooltip = KNM_buy.3.b_tt
     }
@@ -2040,7 +2299,7 @@ country_event = { #坦克
         ai_chance = {
             base = 10
         }
-        set_variable = { KNM_buy_armor_type = token:heavy_armor_equipment }
+        set_variable = { KNM_buy_armor_type = token:heavy_tank_chassis }
         set_country_flag = KNM_buy_heavy_armor_flag
         custom_effect_tooltip = KNM_buy.3.c_tt
     }
@@ -2070,6 +2329,148 @@ country_event = { #飞机
         set_variable = { KNM_buy_air_type = token:small_plane_cas_airframe }
         set_country_flag = KNM_buy_fighters_cas_flag
         custom_effect_tooltip = KNM_buy.4.b_tt
+    }
+}
+#扩大
+country_event = { #火炮
+    id = KNM_buy.5
+    title = KNM_buy.5.t
+    desc = KNM_buy.5.d
+    is_triggered_only = yes
+    picture = GFX_event_KNM_lili3
+    immediate = {
+
+    }
+    option = {
+        name = KNM_buy.5.a
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_artillery_type = token:artillery_equipment }
+        custom_effect_tooltip = KNM_buy.5.a_tt
+    }
+    option = {
+        name = KNM_buy.5.b
+        trigger = {
+            KNM = {
+                has_tech = interwar_antiair
+            }
+        }
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_artillery_type = token:anti_air_equipment }
+        custom_effect_tooltip = KNM_buy.5.b_tt
+    }
+    option = {
+        name = KNM_buy.5.c
+        trigger = {
+            KNM = {
+                has_tech = interwar_antitank
+            }
+        }
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_artillery_type = token:anti_tank_equipment }
+        custom_effect_tooltip = KNM_buy.5.c_tt
+    }
+}
+country_event = { #卡车
+    id = KNM_buy.6
+    title = KNM_buy.6.t
+    desc = KNM_buy.6.d
+    is_triggered_only = yes
+    picture = GFX_event_KNM_lili3
+    immediate = {
+
+    }
+    option = {
+        name = KNM_buy.6.a
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_vehicles_type = token:motorized_equipment }
+        set_country_flag = KNM_buy_motorized
+        custom_effect_tooltip = KNM_buy.6.a_tt
+    }
+    option = {
+        name = KNM_buy.6.b
+        trigger = {
+            KNM = {
+                has_tech = mechanised_infantry
+            }
+        }
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_vehicles_type = token:mechanized_equipment }
+        set_country_flag = KNM_buy_mechanized
+        custom_effect_tooltip = KNM_buy.6.b_tt
+    }
+}
+country_event = { #坦克
+    id = KNM_buy.7
+    title = KNM_buy.7.t
+    desc = KNM_buy.7.d
+    is_triggered_only = yes
+    picture = GFX_event_KNM_lili3
+    immediate = {
+
+    }
+    option = {
+        name = KNM_buy.7.a
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_armor_type = token:light_tank_chassis }
+        set_country_flag = KNM_buy_light_armor_flag
+        custom_effect_tooltip = KNM_buy.7.a_tt
+    }
+    option = {
+        name = KNM_buy.7.b
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_armor_type = token:medium_tank_chassis }
+        set_country_flag = KNM_buy_medium_armor_flag
+        custom_effect_tooltip = KNM_buy.7.b_tt
+    }
+    option = {
+        name = KNM_buy.7.c
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_armor_type = token:heavy_tank_chassis }
+        set_country_flag = KNM_buy_heavy_armor_flag
+        custom_effect_tooltip = KNM_buy.7.c_tt
+    }
+}
+country_event = { #飞机
+    id = KNM_buy.8
+    title = KNM_buy.8.t
+    desc = KNM_buy.8.d
+    is_triggered_only = yes
+    picture = GFX_event_KNM_lili3
+    immediate = {
+    }
+    option = {
+        name = KNM_buy.8.a
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_air_type = token:small_plane_airframe }
+        set_country_flag = KNM_buy_fighters_flag
+        custom_effect_tooltip = KNM_buy.8.a_tt
+    }
+    option = {
+        name = KNM_buy.8.b
+        ai_chance = {
+            base = 10
+        }
+        set_variable = { KNM_buy_air_type = token:small_plane_cas_airframe }
+        set_country_flag = KNM_buy_fighters_cas_flag
+        custom_effect_tooltip = KNM_buy.8.b_tt
     }
 }
 
@@ -2210,7 +2611,37 @@ country_event = {
 
         add_stability = 0.02
         add_political_power = 50
-
+        if = {
+            limit = {
+                has_completed_focus = KNM_cfcdsjjt
+            }
+            every_country = {
+                limit = {
+                    or = {
+                        has_government = fascism
+                        has_government = neutrality
+                    }
+                    NOT = { tag = KNM }
+                    NOT = { is_in_faction_with = KNM }
+                    NOT = { is_in_faction_with = PRC }
+                    or = {
+                        faction_leader = {
+                            not = {
+                                or = {
+                                    has_government = democratic
+                                    has_government = communism
+                                }
+                            }
+                        }
+                        is_in_faction = no
+                    }
+                }
+                add_timed_idea = {
+                    idea = KNM_corrupted_by_spring_spirit
+                    days = 90
+                }
+            }
+        }
         if = {
             limit = { has_completed_focus = KNM_dlmchcd }
             random_owned_controlled_state = {
@@ -2260,6 +2691,8 @@ country_event = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
 
             custom_effect_tooltip = KNM_spring_tt
+            add_to_variable = { knm_spring_research_speed_factor = -0.03 tooltip = research_speed_factor_tt }
+            add_to_variable = { knm_spring_army_defence_factor = -0.03 tooltip = army_defence_factor_tt }
             add_to_variable = { knm_spring_production_speed_buildings_factor = 0.05 tooltip = production_speed_buildings_factor_tt }
             add_to_variable = { knm_spring_compliance_gain = 0.02 tooltip = compliance_gain_tt }
         }
@@ -2301,9 +2734,9 @@ country_event = {
 
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
+            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_production_speed_buildings_factor = -0.05 }
             add_to_variable = { knm_spring_compliance_gain = -0.02 }
-            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_industrial_capacity_factory = 0.05 tooltip = industrial_capacity_factory_tt }
             add_to_variable = { knm_spring_production_factory_efficiency_gain_factor = 0.03 tooltip = production_factory_efficiency_gain_factor_tt }
         }
@@ -2401,9 +2834,9 @@ country_event = {
 
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
+            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_local_resources_factor = -0.03 }
             add_to_variable = { knm_spring_consumer_goods_factor = 0.03 }
-            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_research_speed_factor = 0.03 tooltip = research_speed_factor_tt }
             add_to_variable = { knm_spring_army_defence_factor = 0.03 tooltip = army_defence_factor_tt }
         }
@@ -2426,7 +2859,46 @@ country_event = {
         add_stability = 0.05
         add_political_power = 80
         add_manpower = 20000
-
+        if = {
+            limit = {
+                has_country_flag = KNM_sjz
+            }
+            swap_ruler_traits = {
+                remove = KNM_sjz
+                add = KNM_gcj
+            }
+        }
+        if = {
+            limit = {
+                has_completed_focus = KNM_cfcdsjjt
+            }
+            every_country = {
+                limit = {
+                    or = {
+                        has_government = fascism
+                        has_government = neutrality
+                    }
+                    NOT = { tag = KNM }
+                    NOT = { is_in_faction_with = KNM }
+                    NOT = { is_in_faction_with = PRC }
+                    or = {
+                        faction_leader = {
+                            not = {
+                                or = {
+                                    has_government = democratic
+                                    has_government = communism
+                                }
+                            }
+                        }
+                        is_in_faction = no
+                    }
+                }
+                add_timed_idea = {
+                    idea = KNM_corrupted_by_spring_spirit
+                    days = 90
+                }
+            }
+        }
         if = {
             limit = { has_completed_focus = KNM_dlmchcd }
             random_owned_controlled_state = {
@@ -2476,9 +2948,12 @@ country_event = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
 
             custom_effect_tooltip = KNM_spring_tt
+            add_to_variable = { knm_spring_research_speed_factor = -0.03 tooltip = research_speed_factor_tt }
+            add_to_variable = { knm_spring_army_defence_factor = -0.03 tooltip = army_defence_factor_tt }
             add_to_variable = { knm_spring_production_speed_buildings_factor = 0.05 tooltip = production_speed_buildings_factor_tt }
             add_to_variable = { knm_spring_compliance_gain = 0.02 tooltip = compliance_gain_tt }
         }
+
     }
 }
 
@@ -2498,7 +2973,15 @@ country_event = {
         add_stability = 0.03
         add_war_support = 0.03
         add_political_power = 200
-
+        if = {
+            limit = {
+                has_country_flag = KNM_sjz
+            }
+            swap_ruler_traits = {
+                remove = KNM_gcj
+                add = KNM_sjz
+            }
+        }
         if = {
             limit = { has_completed_focus = KNM_dlmchcd }
             every_faction_member = {
@@ -2518,9 +3001,9 @@ country_event = {
 
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
+            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_production_speed_buildings_factor = -0.05 }
             add_to_variable = { knm_spring_compliance_gain = -0.02 }
-            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_industrial_capacity_factory = 0.05 tooltip = industrial_capacity_factory_tt }
             add_to_variable = { knm_spring_production_factory_efficiency_gain_factor = 0.03 tooltip = production_factory_efficiency_gain_factor_tt }
         }
@@ -2543,7 +3026,15 @@ country_event = {
         add_stability = 0.03
         add_political_power = 50
         add_war_support = 0.02
-
+        if = {
+            limit = {
+                has_country_flag = KNM_sjz
+            }
+            swap_ruler_traits = {
+                remove = KNM_gcj
+                add = KNM_sjz
+            }
+        }
         if = {
             limit = { has_completed_focus = KNM_dlmchcd }
             random_owned_controlled_state = {
@@ -2575,12 +3066,12 @@ country_event = {
 
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
+            custom_effect_tooltip = KNM_spring_tt
             if = {
                 limit = { check_variable = { knm_spring_industrial_capacity_factory > 0.001 } }
                 add_to_variable = { knm_spring_industrial_capacity_factory = -0.05 }
                 add_to_variable = { knm_spring_production_factory_efficiency_gain_factor = -0.03 }
             }
-            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_local_resources_factor = 0.03 tooltip = local_resources_factor_tt }
             add_to_variable = { knm_spring_consumer_goods_factor = -0.03 tooltip = consumer_goods_factor_tt }
         }
@@ -2602,7 +3093,15 @@ country_event = {
 
         add_stability = 0.03
         army_experience = 5
-
+        if = {
+            limit = {
+                has_country_flag = KNM_sjz
+            }
+            swap_ruler_traits = {
+                remove = KNM_gcj
+                add = KNM_sjz
+            }
+        }
         if = {
             limit = { has_completed_focus = KNM_dlmchcd }
             every_faction_member = {
@@ -2620,22 +3119,12 @@ country_event = {
             }
         }
 
-        if = {
-            limit = { has_completed_focus = KNM_brad is_in_faction = yes }
-            every_faction_member = {
-                add_timed_idea = { idea = KNM_faction days = 91 }
-            }
-        }
-        if = {
-            limit = { has_completed_focus = KNM_brad is_in_faction = no }
-            add_timed_idea = { idea = KNM_faction days = 91 }
-        }
 
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
+            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_local_resources_factor = -0.03 }
             add_to_variable = { knm_spring_consumer_goods_factor = 0.03 }
-            custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_research_speed_factor = 0.03 tooltip = research_speed_factor_tt }
             add_to_variable = { knm_spring_army_defence_factor = 0.03 tooltip = army_defence_factor_tt }
         }
@@ -2664,8 +3153,7 @@ news_event = {
             }
         }
         hidden_effect = {
-            set_country_flag = super_event_KNM_lili_War
-            set_country_flag = adorable_heart_Super_Event_Visible
+            set_variable = { adorable_heart_super_event_var = 99 }
             adorable_heart_fire_super_event = yes
         }
     }
@@ -2684,8 +3172,7 @@ news_event = {
     option = {
         name = KNM_news.2.a
         hidden_effect = {
-            set_country_flag = super_event_KNM_lili_Spring
-            set_country_flag = adorable_heart_Super_Event_Visible
+            set_variable = { adorable_heart_super_event_var = 100 }
             adorable_heart_fire_super_event = yes
         }
     }
