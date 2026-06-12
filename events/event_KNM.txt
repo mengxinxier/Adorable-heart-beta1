@@ -142,6 +142,11 @@ country_event = {
             limit = { is_faction_leader = yes }
             add_to_faction = KFL
         }
+        hidden_effect = {
+            KFL = {
+                set_grand_doctrine = mass_assault
+            }
+        }
 
         add_political_power = -75
         add_stability = 0.03
@@ -161,14 +166,14 @@ country_event = {
     }
     option = {
         name = KNM_spring_ally.2.a
-        ai_chance = { base = 80 }
+        ai_chance = { base = 0 }
         country_event = { id = KNM_spring_ally.3 hours = 6 }
         clr_country_flag = KNM_spring_ally2flag
     }
 
     option = {
         name = KNM_spring_ally.2.b
-        ai_chance = { base = 20 }
+        ai_chance = { base = 100 }
         KNM = {
             set_autonomy = {
                 target = KFL
@@ -777,8 +782,12 @@ country_event = {
     option = {
         name = KNM.12.a
         ai_chance = { base = 10 }
-        # 魔理沙虽然没理会，但莉莉白从她的仪器旁边学到了点什么
-        army_experience = 5
+        add_daily_mastery = { #精通
+                    amount = 0.3
+                    days = 90
+                    name = KFL_KNM_air
+                    folder = air
+                }
     }
 }
 
@@ -868,7 +877,6 @@ country_event = {
                 }
             }
         }
-        custom_effect_tooltip = KNM_fra_jingji_tt
         country_event = {
             id = KNM.54
             days = 3
@@ -1727,7 +1735,7 @@ country_event = {
     desc = KNM.46.d
     is_triggered_only = yes
     fire_only_once = yes
-    picture = GFX_event_KNM_lili1
+    picture = GFX_event_KNM_lili
     immediate = {
 
     }
@@ -2603,7 +2611,7 @@ country_event = {
 
         add_stability = 0.02
         add_political_power = 50
-        if = {
+        if = { 
             limit = {
                 has_completed_focus = KNM_cfcdsjjt
             }
@@ -2662,13 +2670,15 @@ country_event = {
         if = {
             limit = { has_completed_focus = KNM_cfcdsjjt is_in_faction = yes }
             every_country = {
-                limit = { not = {
-                    or = {
-                        has_government = fascism
-                        has_government = neutrality
-                        is_in_faction_with = KNM
+                limit = { 
+                    not = {
+                        or = {
+                            has_government = fascism
+                            has_government = neutrality
+                            is_in_faction_with = KNM
+                        }
                     }
-                }}
+                }
                 add_timed_idea = { idea = KNM_faction days = 90 }
                 add_offsite_building = { type = industrial_complex level = 1 }
                 set_country_flag = KNM_get_spring_industrial_complex1
@@ -2683,8 +2693,8 @@ country_event = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
 
             custom_effect_tooltip = KNM_spring_tt
-            add_to_variable = { knm_spring_research_speed_factor = -0.03 tooltip = research_speed_factor_tt }
-            add_to_variable = { knm_spring_army_defence_factor = -0.03 tooltip = army_defence_factor_tt }
+            add_to_variable = { knm_spring_research_speed_factor = 0.03 tooltip = research_speed_factor_tt }
+            add_to_variable = { knm_spring_army_defence_factor = 0.03 tooltip = army_defence_factor_tt }
             add_to_variable = { knm_spring_production_speed_buildings_factor = 0.05 tooltip = production_speed_buildings_factor_tt }
             add_to_variable = { knm_spring_compliance_gain = 0.02 tooltip = compliance_gain_tt }
         }
@@ -2714,6 +2724,7 @@ country_event = {
                 add_offsite_building = { type = industrial_complex level = -1 }
                 clr_country_flag = KNM_get_spring_industrial_complex
             }
+            add_offsite_building = { type = arms_factory level = 1 }
         }
         if = {
             limit = { has_completed_focus = KNM_zjzdhh is_in_faction = yes }
@@ -2722,15 +2733,16 @@ country_event = {
                 add_offsite_building = { type = industrial_complex level = -1 }
                 clr_country_flag = KNM_get_spring_industrial_complex1
             }
+            add_offsite_building = { type = arms_factory level = 1 }
         }
 
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
             custom_effect_tooltip = KNM_spring_tt
-            add_to_variable = { knm_spring_production_speed_buildings_factor = -0.05 }
-            add_to_variable = { knm_spring_compliance_gain = -0.02 }
-            add_to_variable = { knm_spring_industrial_capacity_factory = 0.05 tooltip = industrial_capacity_factory_tt }
-            add_to_variable = { knm_spring_production_factory_efficiency_gain_factor = 0.03 tooltip = production_factory_efficiency_gain_factor_tt }
+            add_to_variable = { knm_spring_research_speed_factor = -0.03 tooltip = research_speed_factor_tt }
+            add_to_variable = { knm_spring_army_defence_factor = -0.03 tooltip = army_defence_factor_tt }
+            add_to_variable = { knm_spring_production_speed_buildings_factor = -0.05 tooltip = production_speed_buildings_factor_tt }
+            add_to_variable = { knm_spring_compliance_gain = -0.02 tooltip = compliance_gain_tt }
         }
     }
 }
@@ -2780,7 +2792,7 @@ country_event = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
             custom_effect_tooltip = KNM_spring_tt
             add_to_variable = { knm_spring_local_resources_factor = 0.03 tooltip = local_resources_factor_tt }
-            add_to_variable = { knm_spring_consumer_goods_factor = -0.03 tooltip = consumer_goods_factor_tt }
+            add_to_variable = { knm_spring_consumer_goods_factor = 0.03 tooltip = consumer_goods_factor_tt }
         }
     }
 }
@@ -2808,29 +2820,27 @@ country_event = {
         }
 
         if = {
-            limit = { has_completed_focus = KNM_sgxzcsd }
+            limit = { has_completed_focus = KNM_dlmchcd }
             every_faction_member = {
-                limit = { has_country_flag = KNM_get_autumn_ic }
-                add_offsite_building = { type = industrial_complex level = -1 }
-                clr_country_flag = KNM_get_autumn_ic
+                limit = { has_country_flag = KNM_get_spring_industrial_complex }
+                add_offsite_building = { type = arms_factory level = 1 }
+                clr_country_flag = KNM_get_spring_industrial_complex
             }
         }
         if = {
             limit = { has_completed_focus = KNM_zjzdhh is_in_faction = yes }
             every_faction_member = {
-                limit = { has_country_flag = KNM_get_autumn_ic1 }
-                add_offsite_building = { type = industrial_complex level = -1 }
-                clr_country_flag = KNM_get_autumn_ic1
+                limit = { has_country_flag = KNM_get_spring_industrial_complex1 }
+                add_offsite_building = { type = arms_factory level = 1 }
+                clr_country_flag = KNM_get_spring_industrial_complex1
             }
         }
 
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
             custom_effect_tooltip = KNM_spring_tt
-            add_to_variable = { knm_spring_local_resources_factor = -0.03 }
-            add_to_variable = { knm_spring_consumer_goods_factor = 0.03 }
-            add_to_variable = { knm_spring_research_speed_factor = 0.03 tooltip = research_speed_factor_tt }
-            add_to_variable = { knm_spring_army_defence_factor = 0.03 tooltip = army_defence_factor_tt }
+            add_to_variable = { knm_spring_local_resources_factor = -0.03 tooltip = local_resources_factor_tt }
+            add_to_variable = { knm_spring_consumer_goods_factor = -0.03 tooltip = consumer_goods_factor_tt }
         }
     }
 }
@@ -2919,13 +2929,15 @@ country_event = {
         if = {
             limit = { has_completed_focus = KNM_cfcdsjjt is_in_faction = yes }
             every_country = {
-                limit = { not = {
-                    or = {
-                        has_government = fascism
-                        has_government = neutrality
-                        is_in_faction_with = KNM
+                limit = { 
+                    not = {
+                        or = {
+                            has_government = fascism
+                            has_government = neutrality
+                            is_in_faction_with = KNM
+                        }
                     }
-                }}
+                }
                 add_timed_idea = { idea = KNM_faction days = 90 }
                 add_offsite_building = { type = industrial_complex level = 1 }
                 set_country_flag = KNM_get_spring_industrial_complex1
@@ -2940,8 +2952,8 @@ country_event = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
 
             custom_effect_tooltip = KNM_spring_tt
-            add_to_variable = { knm_spring_research_speed_factor = -0.03 tooltip = research_speed_factor_tt }
-            add_to_variable = { knm_spring_army_defence_factor = -0.03 tooltip = army_defence_factor_tt }
+            add_to_variable = { knm_spring_research_speed_factor = 0.03 tooltip = research_speed_factor_tt }
+            add_to_variable = { knm_spring_army_defence_factor = 0.03 tooltip = army_defence_factor_tt }
             add_to_variable = { knm_spring_production_speed_buildings_factor = 0.05 tooltip = production_speed_buildings_factor_tt }
             add_to_variable = { knm_spring_compliance_gain = 0.02 tooltip = compliance_gain_tt }
         }
@@ -2981,6 +2993,7 @@ country_event = {
                 add_offsite_building = { type = industrial_complex level = -1 }
                 clr_country_flag = KNM_get_spring_industrial_complex
             }
+            add_offsite_building = { type = arms_factory level = 1 }
         }
         if = {
             limit = { has_completed_focus = KNM_zjzdhh is_in_faction = yes }
@@ -2989,15 +3002,17 @@ country_event = {
                 add_offsite_building = { type = industrial_complex level = -1 }
                 clr_country_flag = KNM_get_spring_industrial_complex1
             }
+            add_offsite_building = { type = arms_factory level = 1 }
         }
 
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
+
             custom_effect_tooltip = KNM_spring_tt
-            add_to_variable = { knm_spring_production_speed_buildings_factor = -0.05 }
-            add_to_variable = { knm_spring_compliance_gain = -0.02 }
-            add_to_variable = { knm_spring_industrial_capacity_factory = 0.05 tooltip = industrial_capacity_factory_tt }
-            add_to_variable = { knm_spring_production_factory_efficiency_gain_factor = 0.03 tooltip = production_factory_efficiency_gain_factor_tt }
+            add_to_variable = { knm_spring_research_speed_factor = -0.03 tooltip = research_speed_factor_tt }
+            add_to_variable = { knm_spring_army_defence_factor = -0.03 tooltip = army_defence_factor_tt }
+            add_to_variable = { knm_spring_production_speed_buildings_factor = -0.05 tooltip = production_speed_buildings_factor_tt }
+            add_to_variable = { knm_spring_compliance_gain =-0.02 tooltip = compliance_gain_tt }
         }
     }
 }
@@ -3061,11 +3076,11 @@ country_event = {
             custom_effect_tooltip = KNM_spring_tt
             if = {
                 limit = { check_variable = { knm_spring_industrial_capacity_factory > 0.001 } }
-                add_to_variable = { knm_spring_industrial_capacity_factory = -0.05 }
-                add_to_variable = { knm_spring_production_factory_efficiency_gain_factor = -0.03 }
+                add_to_variable = { knm_spring_industrial_capacity_factory = 0.05 }
+                add_to_variable = { knm_spring_production_factory_efficiency_gain_factor = 0.03 }
             }
             add_to_variable = { knm_spring_local_resources_factor = 0.03 tooltip = local_resources_factor_tt }
-            add_to_variable = { knm_spring_consumer_goods_factor = -0.03 tooltip = consumer_goods_factor_tt }
+            add_to_variable = { knm_spring_consumer_goods_factor = 0.03 tooltip = consumer_goods_factor_tt }
         }
     }
 }
@@ -3098,7 +3113,7 @@ country_event = {
             limit = { has_completed_focus = KNM_dlmchcd }
             every_faction_member = {
                 limit = { has_country_flag = KNM_get_autumn_ic }
-                add_offsite_building = { type = industrial_complex level = -1 }
+                add_offsite_building = { type = arms_factory level = 1 }
                 clr_country_flag = KNM_get_autumn_ic
             }
         }
@@ -3106,7 +3121,7 @@ country_event = {
             limit = { has_completed_focus = KNM_zjzdhh is_in_faction = yes }
             every_faction_member = {
                 limit = { has_country_flag = KNM_get_autumn_ic1 }
-                add_offsite_building = { type = industrial_complex level = -1 }
+                add_offsite_building = { type = arms_factory level = 1 }
                 clr_country_flag = KNM_get_autumn_ic1
             }
         }
@@ -3115,10 +3130,13 @@ country_event = {
         if = {
             limit = { has_dynamic_modifier = { modifier = KNM_spring } }
             custom_effect_tooltip = KNM_spring_tt
-            add_to_variable = { knm_spring_local_resources_factor = -0.03 }
-            add_to_variable = { knm_spring_consumer_goods_factor = 0.03 }
-            add_to_variable = { knm_spring_research_speed_factor = 0.03 tooltip = research_speed_factor_tt }
-            add_to_variable = { knm_spring_army_defence_factor = 0.03 tooltip = army_defence_factor_tt }
+            if = {
+                limit = { check_variable = { knm_spring_industrial_capacity_factory > 0.001 } }
+                add_to_variable = { knm_spring_industrial_capacity_factory = -0.05 }
+                add_to_variable = { knm_spring_production_factory_efficiency_gain_factor = -0.03 }
+            }
+            add_to_variable = { knm_spring_local_resources_factor = -0.03 tooltip = local_resources_factor_tt }
+            add_to_variable = { knm_spring_consumer_goods_factor = -0.03 tooltip = consumer_goods_factor_tt }
         }
     }
 }
