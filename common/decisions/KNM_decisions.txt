@@ -1052,7 +1052,16 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         on_map_mode = map_and_decisions_view
         cost = 50
         ai_will_do = {
-            factor = 50
+			factor = 0
+			modifier = {
+				FROM = {
+                	free_building_slots = {
+                        building = industrial_complex
+                        size < 1
+                    }
+				}
+				add = 50
+			}
         }
         days_remove = 30
         modifier = {
@@ -1073,6 +1082,9 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             }
         }
         available = {
+            country_exists = KFL
+            country_exists = KNM
+            country_exists = FRA
         }
         visible = {
             has_country_flag = KNM_industrial_migration_yes
@@ -1093,21 +1105,29 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                         arms_factory > 0
                     }
                 }
-                set_temp_variable = {
-                    temp_var_fra_get_army = from.arms_factory_level
+                set_temp_variable = { #当地70%给雾之湖
+                    temp_var_KNM_get_army = from.arms_factory_level
                 }
                 multiply_temp_variable = {
-                    temp_var_fra_get_army = 0.5
+                    temp_var_KNM_get_army = 0.7
                 }
-                round_variable = temp_var_fra_get_army
+                round_variable = temp_var_KNM_get_army
 
                 add_offsite_building = {
                     type = arms_factory
-                    level = temp_var_fra_get_army
+                    level = temp_var_KNM_get_army
                 }
-                if = {
+
+                set_temp_variable = {
+                    temp_var_FRA_and_KFL_get_army = from.arms_factory_level
+                }
+                multiply_temp_variable = {
+                    temp_var_FRA_and_KFL_get_army = 0.15
+                }
+                round_variable = temp_var_FRA_and_KFL_get_army
+                if = { #当地15%给幻想乡
                     limit = {
-                        KFL = {
+                        FRA = {
                             exists = yes
                             is_subject = no
                         }
@@ -1115,7 +1135,43 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     KFL = {
                         add_offsite_building = {
                             type = arms_factory
-                            level = temp_var_fra_get_army
+                            level = temp_var_FRA_and_KFL_get_army
+                        }
+                    }
+                }
+                if = { #当地15%给小妖精
+                    limit = {
+                        KFL = {
+                            exists = yes
+                        }
+                    }
+                    KFL = {
+                        add_offsite_building = {
+                            type = arms_factory
+                            level = temp_var_FRA_and_KFL_get_army
+                        }
+                    }
+                }
+
+                if = { #小妖精独立后额外增加50%
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_KFL_get_army = from.arms_factory_level
+                    }
+                    multiply_temp_variable = {
+                        temp_var_KFL_get_army = 0.5
+                    }
+                    round_variable = temp_var_KFL_get_army
+
+                    KFL = {
+                        add_offsite_building = {
+                            type = arms_factory
+                            level = temp_var_KFL_get_army
                         }
                     }
                 }
@@ -1132,21 +1188,31 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                         industrial_complex > 0
                     }
                 }
-                set_temp_variable = {
-                    temp_var_fra_get_industrial = from.industrial_complex_level
+                set_temp_variable = { #当地70%给雾之湖
+                    temp_var_knm_get_industrial = from.industrial_complex_level
                 }
                 multiply_temp_variable = {
-                    temp_var_fra_get_industrial = 0.5
+                    temp_var_knm_get_industrial = 0.7
                 }
-                round_variable = temp_var_fra_get_industrial
+                round_variable = temp_var_knm_get_industrial
 
                 add_offsite_building = {
                     type = industrial_complex
-                    level = temp_var_fra_get_industrial
+                    level = temp_var_knm_get_industrial
                 }
-                if = {
+
+                set_temp_variable = {
+                    temp_var_fra_and_kfl_get_industrial = from.industrial_complex_level
+                }
+                multiply_temp_variable = {
+                    temp_var_fra_and_kfl_get_industrial = 0.15
+                }
+                round_variable = temp_var_fra_and_kfl_get_industrial
+
+
+                if = { #当地15%给幻想乡
                     limit = {
-                        KFL = {
+                        FRA = {
                             exists = yes
                             is_subject = no
                         }
@@ -1154,7 +1220,43 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     KFL = {
                         add_offsite_building = {
                             type = industrial_complex
-                            level = temp_var_fra_get_industrial
+                            level = temp_var_fra_and_kfl_get_industrial
+                        }
+                    }
+                }
+                if = { #当地15%给小妖精
+                    limit = {
+                        KFL = {
+                            exists = yes
+                        }
+                    }
+                    KFL = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = temp_var_fra_and_kfl_get_industrial
+                        }
+                    }
+                }
+
+                if = { #小妖精独立后额外增加50%
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_kfl_get_industrial = from.industrial_complex_level
+                    }
+                    multiply_temp_variable = {
+                        temp_var_kfl_get_industrial = 0.5
+                    }
+                    round_variable = temp_var_kfl_get_industrial
+
+                    KFL = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = temp_var_kfl_get_industrial
                         }
                     }
                 }
@@ -1172,20 +1274,28 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     }
                 }
                 set_temp_variable = {
-                    temp_var_fra_get_navy = from.building_level@dockyard
+                    temp_var_knm_get_navy = from.building_level@dockyard
                 }
                 multiply_temp_variable = {
-                    temp_var_fra_get_navy = 0.5
+                    temp_var_knm_get_navy = 0.7
                 }
-                round_variable = temp_var_fra_get_navy
+                round_variable = temp_var_knm_get_navy
 
                 add_offsite_building = {
                     type = dockyard
-                    level = temp_var_fra_get_navy
+                    level = temp_var_knm_get_navy
                 }
-                if = {
+                
+                set_temp_variable = {
+                    temp_var_fra_and_kfl_get_navy = from.building_level@dockyard
+                }
+                multiply_temp_variable = {
+                    temp_var_fra_and_kfl_get_navy = 0.15
+                }
+                round_variable = temp_var_fra_and_kfl_get_navy
+                if = { #当地15%给幻想乡
                     limit = {
-                        KFL = {
+                        FRA = {
                             exists = yes
                             is_subject = no
                         }
@@ -1193,7 +1303,42 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     KFL = {
                         add_offsite_building = {
                             type = dockyard
-                            level = temp_var_fra_get_navy
+                            level = temp_var_fra_and_kfl_get_navy
+                        }
+                    }
+                }
+                if = { #当地15%给小妖精
+                    limit = {
+                        KFL = {
+                            exists = yes
+                        }
+                    }
+                    KFL = {
+                        add_offsite_building = {
+                            type = dockyard
+                            level = temp_var_fra_and_kfl_get_navy
+                        }
+                    }
+                }
+
+                if = { #小妖精独立后额外增加50%
+                    limit = {
+                        KFL = {
+                            exists = yes
+                            is_subject = no
+                        }
+                    }
+                    set_temp_variable = {
+                        temp_var_kfl_get_navy = from.building_level@dockyard
+                    }
+                    multiply_temp_variable = {
+                        temp_var_kfl_get_navy = 0.5
+                    }
+                    round_variable = temp_var_kfl_get_navy
+                    KFL = {
+                        add_offsite_building = {
+                            type = dockyard
+                            level = temp_var_kfl_get_navy
                         }
                     }
                 }
