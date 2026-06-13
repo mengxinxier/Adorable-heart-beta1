@@ -2,42 +2,6 @@ KNM_start1 = {
     enable = {
         tag = KNM
     }
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = KNM }
-            NOT = {
-                controller = {
-                    divisions_in_state = { state = ROOT size > 3 }
-                }
-            }
-        }
-        value = 400
-    }
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = KNM }
-            OR = {
-                is_capital = yes
-                any_province_building_level = {
-                    province = { all_provinces = yes }
-                    building = supply_node
-                    level > 0
-                }
-            }
-        }
-        value = 400
-    }
-
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = KNM }
-            check_variable = { state_strategic_value > 5 }
-        }
-        value = 200
-    }
     ai_strategy = { #注重船坞
         type = front_control
         state_trigger = {
@@ -92,7 +56,7 @@ KNM_start1 = {
     }
     ai_strategy = {
         type = land_xp_spend_priority
-        id = unlock_doctrine  #然后升学说
+        id = upgrade_xp_cutoff  #然后升学说
         value = 100
     }
 }
@@ -638,41 +602,17 @@ KNM_push_enemy_capital = {#冲首都
         }
         value = 50
     }
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = KNM }
-            is_capital = yes
-        }
-        value = 600
-    }
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = KNM }
-            any_province_building_level = {
-                province = { all_provinces = yes }
-                building = supply_node
-                level > 0
-            }
-        }
-        value = 400
-    }
 }
+<<<<<<< Updated upstream
 KNM_political_spending = {
     allowed = { or = {
         original_tag = KNM
         original_tag = KFL
     } }
     enable = { always = yes }
+=======
+>>>>>>> Stashed changes
 
-    #优先找加攻防的军事顾问
-    ai_strategy = {
-        type = advisor_promotion
-        id = army_chief
-        value = 200
-    }
-}
 KNM_spy_missions = {
     allowed = { or = {
         original_tag = KNM
@@ -684,23 +624,29 @@ KNM_spy_missions = {
     abort_when_not_enabled = yes
     #渗透敌军
     ai_strategy = {
-        type = operation_priority
-        id = operation_infiltrate_armed_forces_civilian
-        value = 500
+		type = operative_operation
+		operation = operation_make_resistance_contacts
+		value = 1200
+		operation_target = DVL
+	}
+
+    #装备优先
+    ai_strategy = {
+        type = operation_equipment_priority
+        value = 100                   # 将该行动的装备供应优先级设为最高
     }
 
-    #偷窃蓝图
     ai_strategy = {
-        type = operation_priority
-        id = operation_steal_tech_mechanical_engineering
-        value = 300
-    }
-
-    #建立合作政府
+		type = operative_mission
+		mission = build_intel_network
+		value = 1000
+		mission_target = DVL
+	}
     ai_strategy = {
-        type = operation_priority
-        id = operation_prepare_collaboration_government
-        value = 200
+        type = operative_operation
+        operation = heavy_water_raid
+        value = 2000
+		operation_target = DVL
     }
 }
 #1938年研究机动
@@ -847,11 +793,6 @@ KNM_ai_research_tank = { #研究坦克
     ai_strategy = { #QF 25磅野战炮
         type = research_tech
         id = antitank3
-        value = 200
-    }
-    ai_strategy = { #QF 25磅野战炮
-        type = research_tech
-        id = antitank
         value = 200
     }
     ai_strategy = { #38年弹药
@@ -1158,13 +1099,13 @@ KNM_production_tier2_support = {
 
     ai_strategy = {
         type = equipment_production_factor
-        id = support_equipment
+        id = support
         value = 150
     }
 
     ai_strategy = {
         type = equipment_production_min_factories
-        id = support_equipment
+        id = support
         value = 5
     }
 }
@@ -1278,14 +1219,6 @@ KNM_victory_acceleration = {#冲刺！！！
         value = -30
     }
     ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = KNM }
-            check_variable = { state_strategic_value > 3 }
-        }
-        value = 300
-    }
-    ai_strategy = {
         type = garrison
         value = -200
     }
@@ -1318,19 +1251,6 @@ KNM_target_enemy_supply_hubs = {#断补给
         execution_type = rush
         execute_order = yes
         manual_attack = yes
-    }
-    #在补给站方向集中装甲
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = KNM }
-            any_province_building_level = {
-                province = { all_provinces = yes }
-                building = supply_node
-                level > 0
-            }
-        }
-        value = 250
     }
     #专门集合大部队去打这些点
     ai_strategy = {
@@ -1961,6 +1881,7 @@ KNM_wartime_air_superiority = {#全力争夺制空权
 
 }
 
+<<<<<<< Updated upstream
 #提前布局
 KNM_prewar_intelligence_ops = {
     allowed = { or = {
@@ -2019,6 +1940,8 @@ KNM_wartime_intelligence_surge = {#战时渗透
         value = 600
     }
 }
+=======
+>>>>>>> Stashed changes
 
 
 KNM_crisis_iron_wall = {#身后就是雾之湖
@@ -2146,17 +2069,7 @@ KNM_capital_shield = {#身后就是幻想乡
         execution_type = careful
         manual_attack = yes
     }
-    #首都本身的缓冲优先级最高
-    ai_strategy = {
-        type = put_unit_buffers
-        state_trigger = {
-            is_capital = yes
-        }
-        ratio = 0.15
-        area = neighbor
-        subtract_fronts_from_need = yes
-        subtract_invasions_from_need = yes
-    }
+
 }
 
 #识别可被包围的敌军并优先切断
@@ -2299,18 +2212,6 @@ KNM_victory_phase1_crack = {
     }
     abort_when_not_enabled = yes
     ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = KNM }
-            any_province_building_level = {
-                province = { all_provinces = yes }
-                building = supply_node
-                level > 0
-            }
-        }
-        value = 500
-    }
-    ai_strategy = {
         type = front_control
         state_trigger = {
             controller = { has_war_with = KNM }
@@ -2383,17 +2284,6 @@ KNM_victory_phase2_exploit = {
         manual_attack = yes
     }
     ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = {
-                has_war_with = KNM
-                surrender_progress > 0.20
-            }
-            is_capital = yes
-        }
-        value = 800
-    }
-    ai_strategy = {
         type = spare_unit_factor
         value = -40
     }
@@ -2429,17 +2319,6 @@ KNM_victory_phase3_annihilate = {
         execution_type = rush_weak
         execute_order = yes
         manual_attack = yes
-    }
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = {
-                has_war_with = KNM
-                surrender_progress > 0.45
-            }
-            is_capital = yes
-        }
-        value = 1500
     }
     ai_strategy = {
         type = spare_unit_factor
@@ -3000,7 +2879,7 @@ KNM_war_with_USA = { #与精灵开战
 
     ai_strategy = {
         type = invade		#入侵
-        id = "USA "
+        id = USA 
         value = 200
     }
     ai_strategy = { #注重船坞
@@ -3113,7 +2992,7 @@ KNM_war_with_NFA = { #与法兰西开战
 
     ai_strategy = {
         type = invade		#入侵
-        id = "NFA "
+        id = NFA 
         value = 200
     }
     ai_strategy = { #注重船坞
@@ -3325,11 +3204,7 @@ KNM_zhunbei_DVL = { #提前准备攻打骨头
         tag = KNM
         OR = {
             focus_progress = {
-                focus = KNM_zhuiji
-                progress > 0
-            }
-            focus_progress = {
-                focus = KNM_qpdy
+                focus = KNM_ctll
                 progress > 0
             }
 
@@ -3340,39 +3215,10 @@ KNM_zhunbei_DVL = { #提前准备攻打骨头
         not = { country_exists = ELF }
     }
 
+
     ai_strategy = {
         type = prepare_for_war
-        id = "ELF"
-        value = 1000
-    }
-    ai_strategy = {
-        type = prepare_for_war
-        id = "ELG"
-        value = 1000
-    }
-    ai_strategy = {
-        type = prepare_for_war
-        id = "EDW"
-        value = 1000
-    }
-    ai_strategy = {
-        type = prepare_for_war
-        id = "ELW"
-        value = 1000
-    }
-    ai_strategy = {
-        type = prepare_for_war
-        id = "EWW"
-        value = 1000
-    }
-    ai_strategy = {
-        type = prepare_for_war
-        id = "EBS"
-        value = 1000
-    }
-    ai_strategy = {
-        type = prepare_for_war
-        id = "EFC"
+        id = "DVL"
         value = 1000
     }
 
@@ -3407,24 +3253,6 @@ FXS_diplomacy_with_KNM = { #春之宣告
         type = conquer
         id = KNM
         value = 50
-    }
-}
-KNM_help_FRA_time = {  #保护幻想乡
-    enable = {
-        tag = KNM
-        has_war_together_with = FRA
-        FRA = {
-            exists = yes
-            surrender_progress > 0.20
-
-        }
-    }
-    abort_when_not_enabled = yes
-
-    ai_strategy = {
-        type = spare_unit_factor
-        id = "FRA"
-        value = 20
     }
 }
 
