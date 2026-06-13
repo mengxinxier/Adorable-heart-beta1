@@ -1351,6 +1351,48 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             }
         }
     }
+    KNM_better_buy = { #自动化
+        priority = 60
+        allowed = {
+            or = {
+                tag = KNM
+                tag = KFL
+            }
+        }
+        available = {
+            NOT = { has_war_with = FRA }
+        }
+        visible = {
+            or= {
+                has_completed_focus = KNM_ydnghqtz
+                has_country_flag = KLF_xyjgw
+            }
+            or = {
+                is_subject_of = FRA
+                is_in_faction_with = FRA
+            }
+        }
+        icon = GFX_KNM_buy_infantry_equipment
+        ai_will_do = {
+            factor = 0
+        }
+        complete_effect = {
+            custom_effect_tooltip = KNM_better_buy_tt
+            if = { #开始自动
+                limit = {
+                    not = {
+                        has_country_flag = KNM_better_buy_flag
+                    }
+                }
+                set_country_flag = KNM_better_buy_flag
+            }
+            else = { #取消自动
+                clr_country_flag = KNM_better_buy_flag
+            }
+        }
+        remove_effect = {
+        }
+    }
 
     FRA_KNM_buy_infantry_equipment = { #购买步兵装备
         priority = 6
@@ -1443,7 +1485,23 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                 amount = 1500
                 producer = KNM
             }
-            clr_country_flag = KNM_buy_infantry_equipment_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_infantry_equipment
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_infantry_equipment2
+                }
+            }
+            else = {
+                clr_country_flag = KNM_buy_infantry_equipment_flag
+            }
         }
     }
 
@@ -1498,7 +1556,14 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         complete_effect = {
             set_country_flag = KNM_buy_artillery_flag
             hidden_effect = {
-                country_event = KNM_buy.1
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_buy_artillery_better_flag
+                        }
+                    }
+                    country_event = KNM_buy.1
+                }
             }
             FRA = {
                 add_offsite_building = {
@@ -1517,6 +1582,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             }
             clear_variable = KNM_buy_artillery_type
             clr_country_flag = KNM_buy_artillery_flag
+            clr_country_flag = KNM_buy_artillery_better_flag
         }
         remove_effect = {
             if = {
@@ -1543,8 +1609,25 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                 amount = 200
                 producer = KNM
             }
-            clear_variable = KNM_buy_artillery_type
-            clr_country_flag = KNM_buy_artillery_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_artillery
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_artillery2
+                }
+            }
+            else = {
+                clear_variable = KNM_buy_artillery_type
+                clr_country_flag = KNM_buy_artillery_flag
+                clr_country_flag = KNM_buy_artillery_better_flag
+            }
         }
     }
 
@@ -1601,7 +1684,14 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         complete_effect = {
             set_country_flag = KNM_buy_military_vehicles_flag
             hidden_effect = {
-                country_event = KNM_buy.2
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_buy_mot_better_flag
+                        }
+                    }
+                    country_event = KNM_buy.2
+                }
             }
             FRA = {
                 add_offsite_building = {
@@ -1622,6 +1712,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             clr_country_flag = KNM_buy_military_vehicles_flag
             clr_country_flag = KNM_buy_motorized
             clr_country_flag = KNM_buy_mechanized
+            clr_country_flag = KNM_buy_mot_better_flag
         }
         remove_effect = {
             if = {
@@ -1665,8 +1756,25 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                 }
                 clr_country_flag = KNM_buy_mechanized
             }
-            clear_variable = KNM_buy_vehicles_type
-            clr_country_flag = KNM_buy_military_vehicles_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_military_vehicles
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_military_vehicles2
+                }
+            }
+            else = {
+                clear_variable = KNM_buy_vehicles_type
+                clr_country_flag = KNM_buy_military_vehicles_flag
+                clr_country_flag = KNM_buy_mot_better_flag
+            }
         }
     }
 
@@ -1723,7 +1831,14 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         complete_effect = {
             set_country_flag = KNM_buy_armor_flag
             hidden_effect = {
-                country_event = KNM_buy.3
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_buy_armor_better_flag
+                        }
+                    }
+                    country_event = KNM_buy.3
+                }
             }
             FRA = {
                 add_offsite_building = {
@@ -1745,62 +1860,129 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             clr_country_flag = KNM_buy_light_armor_flag
             clr_country_flag = KNM_buy_medium_armor_flag
             clr_country_flag = KNM_buy_heavy_armor_flag
+            clr_country_flag = KNM_buy_armor_better_flag
         }
         remove_effect = {
             if = {
                 limit = {
-                    not = {
-                        has_completed_focus = KNM_mcxmhtg
+                    has_country_flag = KNM_better_buy_flag
+                }
+                if = {
+                    limit = {
+                        not = {
+                            has_completed_focus = KNM_mcxmhtg
+                        }
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -1
+                        }
                     }
                 }
-                FRA = {
+                else = {
                     add_offsite_building = {
                         type = industrial_complex
-                        level = -1
+                        level = 1
                     }
+                }
+                if = {
+                    limit = {
+                        has_country_flag = KNM_buy_light_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 80
+                        producer = KNM
+                    }
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_medium_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 65
+                        producer = KNM
+                    }
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_heavy_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 40
+                        producer = KNM
+                    }
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_armor
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_armor2
                 }
             }
             else = {
-                add_offsite_building = {
-                    type = industrial_complex
-                    level = 1
+                if = {
+                    limit = {
+                        not = {
+                            has_completed_focus = KNM_mcxmhtg
+                        }
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -1
+                        }
+                    }
                 }
+                else = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = 1
+                    }
+                }
+                if = {
+                    limit = {
+                        has_country_flag = KNM_buy_light_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 80
+                        producer = KNM
+                    }
+                    clr_country_flag = KNM_buy_light_armor_flag
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_medium_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 65
+                        producer = KNM
+                    }
+                    clr_country_flag = KNM_buy_medium_armor_flag
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_heavy_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 40
+                        producer = KNM
+                    }
+                    clr_country_flag = KNM_buy_heavy_armor_flag
+                }
+                clear_variable = KNM_buy_armor_type
+                clr_country_flag = KNM_buy_armor_flag
+                clr_country_flag = KNM_buy_armor_better_flag
             }
-            if = {
-                limit = {
-                    has_country_flag = KNM_buy_light_armor_flag
-                }
-                add_equipment_to_stockpile = {
-                    type = var:KNM_buy_armor_type
-                    amount = 80
-                    producer = KNM
-                }
-                clr_country_flag = KNM_buy_light_armor_flag
-            }
-            else_if = {
-                limit = {
-                    has_country_flag = KNM_buy_medium_armor_flag
-                }
-                add_equipment_to_stockpile = {
-                    type = var:KNM_buy_armor_type
-                    amount = 65
-                    producer = KNM
-                }
-                clr_country_flag = KNM_buy_medium_armor_flag
-            }
-            else_if = {
-                limit = {
-                    has_country_flag = KNM_buy_heavy_armor_flag
-                }
-                add_equipment_to_stockpile = {
-                    type = var:KNM_buy_armor_type
-                    amount = 40
-                    producer = KNM
-                }
-                clr_country_flag = KNM_buy_heavy_armor_flag
-            }
-            clear_variable = KNM_buy_armor_type
-            clr_country_flag = KNM_buy_armor_flag
         }
     }
 
@@ -1857,7 +2039,14 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         complete_effect = {
             set_country_flag = KNM_buy_aircraft_flag
             hidden_effect = {
-                country_event = KNM_buy.4
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_buy_air_better_flag
+                        }
+                    }
+                    country_event = KNM_buy.4
+                }
             }
             FRA = {
                 add_offsite_building = {
@@ -1878,93 +2067,192 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             clr_country_flag = KNM_buy_aircraft_flag
             clr_country_flag = KNM_buy_fighters_flag
             clr_country_flag = KNM_buy_fighters_cas_flag
+            clr_country_flag = KNM_buy_air_better_flag
         }
         remove_effect = {
             if = {
                 limit = {
-                    not = {
-                        has_completed_focus = KNM_mcxmhtg
-                    }
-                }
-                FRA = {
-                    add_offsite_building = {
-                        type = industrial_complex
-                        level = -1
-                    }
-                }
-            }
-            else = {
-                add_offsite_building = {
-                    type = industrial_complex
-                    level = 1
-                }
-            }
-            if = {
-                limit = {
-                    has_country_flag = KNM_buy_fighters_flag
-                }
-                add_equipment_to_stockpile = {
-                    type = var:KNM_buy_air_type
-                    amount = 80
-                    producer = KNM
-                }
-                clr_country_flag = KNM_buy_fighters_flag
-            }
-            else_if = {
-                limit = {
-                    has_country_flag = KNM_buy_fighters_cas_flag
+                    has_country_flag = KNM_better_buy_flag
                 }
                 if = {
                     limit = {
-                        has_tech = modern_small_airframe
+                        not = {
+                            has_completed_focus = KNM_mcxmhtg
+                        }
                     }
-                    add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe_4
-                        amount = 60
-                        producer = KNM
-                    }
-                }
-                else_if = {
-                    limit = {
-                        has_tech = advanced_small_airframe
-                    }
-                    add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe_3
-                        amount = 60
-                        producer = KNM
-                    }
-                }
-                else_if = {
-                    limit = {
-                        has_tech = improved_small_airframe
-                    }
-                    add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe_2
-                        amount = 60
-                        producer = KNM
-                    }
-                }
-                else_if = {
-                    limit = {
-                        has_tech = basic_small_airframe
-                    }
-                    add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe_1
-                        amount = 60
-                        producer = KNM
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -1
+                        }
                     }
                 }
                 else = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = 1
+                    }
+                }
+                if = {
+                    limit = {
+                        has_country_flag = KNM_buy_fighters_flag
+                    }
                     add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe
-                        amount = 60
+                        type = var:KNM_buy_air_type
+                        amount = 80
                         producer = KNM
                     }
                 }
-                clr_country_flag = KNM_buy_fighters_cas_flag
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_fighters_cas_flag
+                    }
+                    if = {
+                        limit = {
+                            has_tech = modern_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_4
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = advanced_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_3
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = improved_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_2
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = basic_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_1
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    else = {
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_aircraft
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_aircraft2
+                }
             }
-            clear_variable = KNM_buy_air_type
-            clr_country_flag = KNM_buy_aircraft_flag
+            else = {
+                if = {
+                    limit = {
+                        not = {
+                            has_completed_focus = KNM_mcxmhtg
+                        }
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -1
+                        }
+                    }
+                }
+                else = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = 1
+                    }
+                }
+                if = {
+                    limit = {
+                        has_country_flag = KNM_buy_fighters_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_air_type
+                        amount = 80
+                        producer = KNM
+                    }
+                    clr_country_flag = KNM_buy_fighters_flag
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_fighters_cas_flag
+                    }
+                    if = {
+                        limit = {
+                            has_tech = modern_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_4
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = advanced_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_3
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = improved_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_2
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = basic_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_1
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    else = {
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe
+                            amount = 60
+                            producer = KNM
+                        }
+                    }
+                    clr_country_flag = KNM_buy_fighters_cas_flag
+                }
+                clear_variable = KNM_buy_air_type
+                clr_country_flag = KNM_buy_aircraft_flag
+                clr_country_flag = KNM_buy_air_better_flag
+            }
         }
     }
     FRA_KNM_buy_infantry_equipment2 = { #购买步兵装备2
@@ -2064,7 +2352,23 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                 amount = 7500
                 producer = KNM
             }
-            clr_country_flag = KNM_buy_infantry_equipment_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_infantry_equipment
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_infantry_equipment2
+                }
+            }
+            else = {
+                clr_country_flag = KNM_buy_infantry_equipment_flag
+            }
         }
     }
 
@@ -2119,7 +2423,14 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         complete_effect = {
             set_country_flag = KNM_buy_artillery_flag
             hidden_effect = {
-                country_event = KNM_buy.5
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_buy_artillery_better_flag
+                        }
+                    }
+                    country_event = KNM_buy.5
+                }
             }
             FRA = {
                 add_offsite_building = {
@@ -2138,6 +2449,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             }
             clear_variable = KNM_buy_artillery_type
             clr_country_flag = KNM_buy_artillery_flag
+            clr_country_flag = KNM_buy_artillery_better_flag
         }
         remove_effect = {
             if = {
@@ -2170,8 +2482,25 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                 amount = 800
                 producer = KNM
             }
-            clear_variable = KNM_buy_artillery_type
-            clr_country_flag = KNM_buy_artillery_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_artillery
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_artillery2
+                }
+            }
+            else = {
+                clear_variable = KNM_buy_artillery_type
+                clr_country_flag = KNM_buy_artillery_flag
+                clr_country_flag = KNM_buy_artillery_better_flag
+            }
         }
     }
 
@@ -2228,7 +2557,14 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         complete_effect = {
             set_country_flag = KNM_buy_military_vehicles_flag
             hidden_effect = {
-                country_event = KNM_buy.6
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_buy_mot_better_flag
+                        }
+                    }
+                    country_event = KNM_buy.6
+                }
             }
             FRA = {
                 add_offsite_building = {
@@ -2249,6 +2585,7 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             clr_country_flag = KNM_buy_military_vehicles_flag
             clr_country_flag = KNM_buy_motorized
             clr_country_flag = KNM_buy_mechanized
+            clr_country_flag = KNM_buy_mot_better_flag
         }
         remove_effect = {
             if = {
@@ -2298,8 +2635,25 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                 }
                 clr_country_flag = KNM_buy_mechanized
             }
-            clear_variable = KNM_buy_vehicles_type
-            clr_country_flag = KNM_buy_military_vehicles_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_military_vehicles
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_military_vehicles2
+                }
+            }
+            else = {
+                clear_variable = KNM_buy_vehicles_type
+                clr_country_flag = KNM_buy_military_vehicles_flag
+                clr_country_flag = KNM_buy_mot_better_flag
+            }
         }
     }
 
@@ -2356,7 +2710,14 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         complete_effect = {
             set_country_flag = KNM_buy_armor_flag
             hidden_effect = {
-                country_event = KNM_buy.7
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_buy_armor_better_flag
+                        }
+                    }
+                    country_event = KNM_buy.7
+                }
             }
             FRA = {
                 add_offsite_building = {
@@ -2378,68 +2739,141 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             clr_country_flag = KNM_buy_light_armor_flag
             clr_country_flag = KNM_buy_medium_armor_flag
             clr_country_flag = KNM_buy_heavy_armor_flag
+            clr_country_flag = KNM_buy_armor_better_flag
         }
         remove_effect = {
             if = {
                 limit = {
-                    not = {
-                        has_completed_focus = KNM_mcxmhtg
+                    has_country_flag = KNM_better_buy_flag
+                }
+                if = {
+                    limit = {
+                        not = {
+                            has_completed_focus = KNM_mcxmhtg
+                        }
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -5
+                        }
                     }
                 }
-                FRA = {
+                else = {
                     add_offsite_building = {
                         type = industrial_complex
-                        level = -5
+                        level = 1
                     }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -4
+                        }
+                    }
+                }
+                if = {
+                    limit = {
+                        has_country_flag = KNM_buy_light_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 400
+                        producer = KNM
+                    }
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_medium_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 300
+                        producer = KNM
+                    }
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_heavy_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 200
+                        producer = KNM
+                    }
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_armor
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_armor2
                 }
             }
             else = {
-                add_offsite_building = {
-                    type = industrial_complex
-                    level = 1
-                }
-                FRA = {
-                    add_offsite_building = {
-                        type = industrial_complex
-                        level = -4
+                if = {
+                    limit = {
+                        not = {
+                            has_completed_focus = KNM_mcxmhtg
+                        }
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -5
+                        }
                     }
                 }
+                else = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = 1
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -4
+                        }
+                    }
+                }
+                if = {
+                    limit = {
+                        has_country_flag = KNM_buy_light_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 400
+                        producer = KNM
+                    }
+                    clr_country_flag = KNM_buy_light_armor_flag
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_medium_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 300
+                        producer = KNM
+                    }
+                    clr_country_flag = KNM_buy_medium_armor_flag
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_heavy_armor_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_armor_type
+                        amount = 200
+                        producer = KNM
+                    }
+                    clr_country_flag = KNM_buy_heavy_armor_flag
+                }
+                clear_variable = KNM_buy_armor_type
+                clr_country_flag = KNM_buy_armor_flag
+                clr_country_flag = KNM_buy_armor_better_flag
             }
-            if = {
-                limit = {
-                    has_country_flag = KNM_buy_light_armor_flag
-                }
-                add_equipment_to_stockpile = {
-                    type = var:KNM_buy_armor_type
-                    amount = 400
-                    producer = KNM
-                }
-                clr_country_flag = KNM_buy_light_armor_flag
-            }
-            else_if = {
-                limit = {
-                    has_country_flag = KNM_buy_medium_armor_flag
-                }
-                add_equipment_to_stockpile = {
-                    type = var:KNM_buy_armor_type
-                    amount = 300
-                    producer = KNM
-                }
-                clr_country_flag = KNM_buy_medium_armor_flag
-            }
-            else_if = {
-                limit = {
-                    has_country_flag = KNM_buy_heavy_armor_flag
-                }
-                add_equipment_to_stockpile = {
-                    type = var:KNM_buy_armor_type
-                    amount = 200
-                    producer = KNM
-                }
-                clr_country_flag = KNM_buy_heavy_armor_flag
-            }
-            clear_variable = KNM_buy_armor_type
-            clr_country_flag = KNM_buy_armor_flag
         }
     }
 
@@ -2496,7 +2930,14 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
         complete_effect = {
             set_country_flag = KNM_buy_aircraft_flag
             hidden_effect = {
-                country_event = KNM_buy.8
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_buy_air_better_flag
+                        }
+                    }
+                    country_event = KNM_buy.8
+                }
             }
             FRA = {
                 add_offsite_building = {
@@ -2517,99 +2958,204 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
             clr_country_flag = KNM_buy_aircraft_flag
             clr_country_flag = KNM_buy_fighters_flag
             clr_country_flag = KNM_buy_fighters_cas_flag
+            clr_country_flag = KNM_buy_air_better_flag
         }
         remove_effect = {
             if = {
                 limit = {
-                    not = {
-                        has_completed_focus = KNM_mcxmhtg
-                    }
-                }
-                FRA = {
-                    add_offsite_building = {
-                        type = industrial_complex
-                        level = -5
-                    }
-                }
-            }
-            else = {
-                add_offsite_building = {
-                    type = industrial_complex
-                    level = 1
-                }
-                FRA = {
-                    add_offsite_building = {
-                        type = industrial_complex
-                        level = -4
-                    }
-                }
-            }
-            if = {
-                limit = {
-                    has_country_flag = KNM_buy_fighters_flag
-                }
-                add_equipment_to_stockpile = {
-                    type = var:KNM_buy_air_type
-                    amount = 400
-                    producer = KNM
-                }
-                clr_country_flag = KNM_buy_fighters_flag
-            }
-            else_if = {
-                limit = {
-                    has_country_flag = KNM_buy_fighters_cas_flag
+                    has_country_flag = KNM_better_buy_flag
                 }
                 if = {
                     limit = {
-                        has_tech = modern_small_airframe
+                        not = {
+                            has_completed_focus = KNM_mcxmhtg
+                        }
                     }
-                    add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe_4
-                        amount = 300
-                        producer = KNM
-                    }
-                }
-                else_if = {
-                    limit = {
-                        has_tech = advanced_small_airframe
-                    }
-                    add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe_3
-                        amount = 300
-                        producer = KNM
-                    }
-                }
-                else_if = {
-                    limit = {
-                        has_tech = improved_small_airframe
-                    }
-                    add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe_2
-                        amount = 300
-                        producer = KNM
-                    }
-                }
-                else_if = {
-                    limit = {
-                        has_tech = basic_small_airframe
-                    }
-                    add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe_1
-                        amount = 300
-                        producer = KNM
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -5
+                        }
                     }
                 }
                 else = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = 1
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -4
+                        }
+                    }
+                }
+                if = {
+                    limit = {
+                        has_country_flag = KNM_buy_fighters_flag
+                    }
                     add_equipment_to_stockpile = {
-                        type = small_plane_cas_airframe
-                        amount = 300
+                        type = var:KNM_buy_air_type
+                        amount = 400
                         producer = KNM
                     }
                 }
-                clr_country_flag = KNM_buy_fighters_cas_flag
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_fighters_cas_flag
+                    }
+                    if = {
+                        limit = {
+                            has_tech = modern_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_4
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = advanced_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_3
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = improved_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_2
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = basic_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_1
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    else = {
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                }
+                if = {
+                    limit = {
+                        industrial_complex < 125
+                    }
+                    activate_decision = FRA_KNM_buy_aircraft
+                }
+                else = {
+                    activate_decision = FRA_KNM_buy_aircraft2
+                }
             }
-            clear_variable = KNM_buy_air_type
-            clr_country_flag = KNM_buy_aircraft_flag
+            else = {
+                if = {
+                    limit = {
+                        not = {
+                            has_completed_focus = KNM_mcxmhtg
+                        }
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -5
+                        }
+                    }
+                }
+                else = {
+                    add_offsite_building = {
+                        type = industrial_complex
+                        level = 1
+                    }
+                    FRA = {
+                        add_offsite_building = {
+                            type = industrial_complex
+                            level = -4
+                        }
+                    }
+                }
+                if = {
+                    limit = {
+                        has_country_flag = KNM_buy_fighters_flag
+                    }
+                    add_equipment_to_stockpile = {
+                        type = var:KNM_buy_air_type
+                        amount = 400
+                        producer = KNM
+                    }
+                    clr_country_flag = KNM_buy_fighters_flag
+                }
+                else_if = {
+                    limit = {
+                        has_country_flag = KNM_buy_fighters_cas_flag
+                    }
+                    if = {
+                        limit = {
+                            has_tech = modern_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_4
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = advanced_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_3
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = improved_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_2
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    else_if = {
+                        limit = {
+                            has_tech = basic_small_airframe
+                        }
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe_1
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    else = {
+                        add_equipment_to_stockpile = {
+                            type = small_plane_cas_airframe
+                            amount = 300
+                            producer = KNM
+                        }
+                    }
+                    clr_country_flag = KNM_buy_fighters_cas_flag
+                }
+                clear_variable = KNM_buy_air_type
+                clr_country_flag = KNM_buy_aircraft_flag
+                clr_country_flag = KNM_buy_air_better_flag
+            }
         }
     }
 
@@ -2783,7 +3329,15 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     level = 1
                 }
             }
-            clr_country_flag = KNM_buy_technology_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                activate_decision = FRA_KNM_buy_technology
+            }
+            else = {
+                clr_country_flag = KNM_buy_technology_flag
+            }
         }
     }
 
@@ -2875,7 +3429,15 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     level = 1
                 }
             }
-            clr_country_flag = KNM_military_exercise_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                activate_decision = FRA_KNM_military_exercise
+            }
+            else = {
+                clr_country_flag = KNM_military_exercise_flag
+            }
         }
     }
 
@@ -2971,7 +3533,15 @@ FRA_KNM_buy = { #更加符合雾之湖的经互会（？）
                     level = 1
                 }
             }
-            clr_country_flag = KNM_military_exercise_flag
+            if = {
+                limit = {
+                    has_country_flag = KNM_better_buy_flag
+                }
+                activate_decision = FRA_KNM_mas
+            }
+            else = {
+                clr_country_flag = KNM_military_exercise_flag
+            }
         }
     }
 
