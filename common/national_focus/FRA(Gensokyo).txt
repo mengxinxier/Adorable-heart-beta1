@@ -12254,16 +12254,41 @@ focus_tree = {
 		y = 14
 		cost = 5
 		allow_branch = {
+			has_country_flag = has_knm_subject_flag
 		}
 		ai_will_do = {
 			base = 0
 		}
 		available = {
+			KNM = {
+				or = {
+					is_in_faction_with = FRA
+					is_subject_of = FRA
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			
+			custom_effect_tooltip = KNM_fra_army_tt
+			add_to_variable = { 
+				KNM_fra_army_bunker_max_level_terrain_limit = 1
+				tooltip = modifier_bunker_max_level_terrain_limit_tt	
+			}
+			add_to_variable = { 
+				KNM_fra_army_coastal_bunker_max_level_terrain_limit = 1
+				tooltip = modifier_coastal_bunker_max_level_terrain_limit_tt
+			}
+			KNM = {
+				add_to_variable = { 
+					KNM_fra_army_bunker_max_level_terrain_limit = 1
+					tooltip = modifier_bunker_max_level_terrain_limit_tt
+				}
+				add_to_variable = { 
+					KNM_fra_army_coastal_bunker_max_level_terrain_limit = 1
+					tooltip = modifier_coastal_bunker_max_level_terrain_limit_tt
+				}
+			}
 		}
 	}
 
@@ -12286,6 +12311,62 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = KNM_fra_army_tt
+			add_to_variable = { 
+				KNM_fra_army_stability_factor = 0.1
+				tooltip = stability_factor_tt				
+			}
+			add_to_variable = { 
+				knm_spring_consumer_goods_factor = -0.15
+				tooltip = consumer_goods_factor_tt				
+			}
+			FRA = {
+				send_equipment = {
+					amount = 5000
+					type = infantry_equipment
+					target = KNM
+				}
+			}
+			FRA = {
+				send_equipment = {
+					amount = 1000
+					type = support_equipment
+					target = KNM
+				}
+			}
+			FRA = {
+				send_equipment = {
+					amount = 100
+					type = light_tank_chassis
+					target = KNM
+				}
+			}
 			
 		}
 	}
@@ -12309,6 +12390,20 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
+			every_state = {
+				limit = {
+					or = {
+						region = 7
+						region = 6
+						state = 56
+						state = 58
+						state = 59
+						state = 1222
+					}
+				}
+				add_claim_by = KNM
+				add_claim_by = FRA
+			}
 			
 		}
 	}
@@ -12328,12 +12423,59 @@ focus_tree = {
 			base = 0
 		}
 		available = {
+			KNM = {
+				is_subject_of = FRA
+			}
 		}
 		relative_position_id = FRA_focus_wetland_buffer
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			
+			if = {
+				limit = {
+					has_completed_focus = FRA_Europe_for_Europeans
+				}
+				custom_effect_tooltip = country_liberated_will_always_support
+			}
+			KNM = {
+				end_puppet_this = yes
+				set_country_flag = country_liberated_for_EU
+				add_to_array = {
+					global.GER_European_Union_members_array = THIS
+				}
+			}
+			custom_effect_tooltip = FRA_focus_grant_autonomy_t
+			faction_leader = { add_to_faction = KNM }
+			every_state = {
+				limit = {
+					is_core_of = KNM
+				}
+				remove_claim_by = FRA
+			}
+			hidden_effect = {
+				set_temp_variable = { 
+					temp_var_fra_get_c_factories = KNM.num_of_civilian_factories
+				}
+				set_temp_variable = { 
+					temp_var_fra_get_m_factories = KNM.num_of_military_factories
+				}
+				multiply_temp_variable = {
+					temp_var_fra_get_c_factories = 0.1
+				}
+				multiply_temp_variable = {
+					temp_var_fra_get_m_factories = 0.1
+				}
+				round_variable = temp_var_fra_get_c_factories
+				round_variable = temp_var_fra_get_m_factories
+				add_offsite_building = {
+					type = arms_factory
+					level = temp_var_fra_get_m_factories
+				}
+				add_offsite_building = {
+					type = industrial_complex
+					level = temp_var_fra_get_c_factories
+				}
+			}
 		}
 	}
 
@@ -12345,16 +12487,46 @@ focus_tree = {
 		y = 14
 		cost = 5
 		allow_branch = {
+			has_country_flag = has_knm_subject_flag
 		}
 		ai_will_do = {
 			base = 0
 		}
 		available = {
+			KNM = {
+				or = {
+					is_in_faction_with = FRA
+					is_subject_of = FRA
+				}
+			}
 		}
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			
+			custom_effect_tooltip = KNM_spring_tt
+			add_to_variable = { 
+				knm_spring_research_speed_factor = 0.1
+				tooltip = research_speed_factor_tt 
+			}
+			if = {
+				limit = {
+					KNM = {
+						amount_research_slots < 5
+					}
+				}
+				KNM = {
+					add_research_slot = 1
+				}
+			}
+			else ={
+				KNM = {
+					custom_effect_tooltip = KNM_spring_tt
+					add_to_variable = { 
+						knm_spring_research_speed_factor = 0.1
+						tooltip = research_speed_factor_tt 
+					}
+				}
+			}
 		}
 	}
 
@@ -12377,7 +12549,35 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			
+			every_army_leader = {
+				add_logistics = 1
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 	}
 
@@ -12400,7 +12600,22 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			
+			custom_effect_tooltip = doctor_2_tip
+			hidden_effect = {
+				set_technology = {
+					field_hospital_upgrade_2 = 1
+					popup = no
+				}
+			}
+			KNM = {
+				custom_effect_tooltip = doctor_0_tip
+				hidden_effect = {
+					set_technology = {
+						field_hospital_upgrade_0 = 1
+						popup = no
+					}
+				}
+			}
 		}
 	}
 
@@ -12424,7 +12639,29 @@ focus_tree = {
 		available_if_capitulated = no
 		cancel_if_invalid = yes
 		completion_reward = {
-			
+            if = {
+                limit = { DVL = { exists = yes } }
+                add_intel = { target = DVL army_intel = 50 civilian_intel = 50 }
+            }
+			else = {
+				custom_effect_tooltip = KNM_fra_army_tt
+				add_to_variable = { 
+					KNM_fra_army_civilian_intel_factor = 0.1
+					tooltip = civilian_intel_factor_tt				
+				}
+				add_to_variable = { 
+					KNM_fra_army_army_intel_factor = 0.1
+					tooltip = army_intel_factor_tt				
+				}
+				add_to_variable = {
+					KNM_fra_army_navy_intel_factor = 0.1
+					tooltip = navy_intel_factor_tt				
+				}
+				add_to_variable = { 
+					KNM_fra_army_airforce_intel_factor = 0.1
+					tooltip = airforce_intel_factor_tt				
+				}
+			}
 		}
 	}
 }
