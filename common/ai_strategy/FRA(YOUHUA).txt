@@ -155,42 +155,6 @@ FRA_wartime_air_superiority = {#全力争夺制空权
         is_in_faction_with = KNM
     }
     abort_when_not_enabled = yes
-	   ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = FRA }
-            NOT = {
-                controller = {
-                    divisions_in_state = { state = ROOT size > 3 }
-                }
-            }
-        }
-        value = 400
-    }
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = FRA }
-            OR = {
-                is_capital = yes
-                any_province_building_level = {
-                    province = { all_provinces = yes }
-                    building = supply_node
-                    level > 0
-                }
-            }
-        }
-        value = 400
-    }
-
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = FRA }
-            check_variable = { state_strategic_value > 5 }
-        }
-        value = 200
-    }
     #大幅提升战斗机产能
     ai_strategy = {
         type = equipment_production_factor
@@ -319,7 +283,152 @@ FRA_crisis_iron_wall = {#身后就是人间之里
         value = 2000
     }
 }
+FRA_unit= { #单位倾向
+    allowed = {
+            original_tag = FRA
+        }
+    enable = {
+        num_divisions < 800
+        has_country_flag = KNM_ai
+    }
 
+    abort = {
+        always = no
+    }
+
+    ai_strategy = {
+        type = air_factory_balance
+        value = 10
+    }
+    ai_strategy = { #驻军
+        type = role_ratio
+        id = garrison
+        value = 0
+    }
+    ai_strategy = { #空降
+        type = role_ratio
+        id = paratroopers
+        value = 0
+    }
+
+    ai_strategy = {
+        type = role_ratio
+        id = mountaineers_FRA
+        value = 0
+    }
+
+    ai_strategy = { #魔装
+        type = role_ratio
+        id = magic_assault
+        value = 0
+    }
+
+    ai_strategy = {
+        type = role_ratio
+        id = cavalry
+        value = 0
+    }
+    ai_strategy = {
+        type = template_prio
+        id = infantry
+        value = 500
+    }
+    ai_strategy = {
+        type = build_army
+        id = infantry
+        value = 500
+    }
+    ai_strategy = {
+        type = role_ratio
+        id = infantry
+        value = 500
+    }
+
+    ai_strategy = {
+        type = railway_gun_divisions_ratio
+        value = 5
+    }
+}
+FRAIfyouhavethemusethem2 = {
+    allowed = {
+        or = {
+             original_tag = FRA
+        }
+    }
+    enable = {
+        has_country_flag = KNM_ai
+        has_equipment = { medium_tank_chassis > 1 }
+        has_tech = improved_medium_tank_chassis
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = build_army
+        id = armor
+        value = 30
+    }
+
+}
+
+
+
+
+
+
+
+
+
+FRAPushForMoreTANK = {
+    allowed = {
+        or = {
+            original_tag = FRA
+        }
+    }
+    enable = {
+        has_country_flag = KNM_ai
+        has_manpower < 1500000
+        arms_factory > 45
+        has_equipment = {infantry_equipment > 25000}
+        has_tech = improved_medium_tank_chassis
+    }
+    abort_when_not_enabled = yes
+    ai_strategy = {
+        type = role_ratio
+        id = armor
+        value = 30
+    }
+    ai_strategy = {
+        type = equipment_production_factor
+        id = armor
+        value = 20
+    }
+
+}
+
+MajorsBuildTanksWithManpowerFRA = {
+    allowed = {
+        or = {
+            original_tag = FRA
+        }
+    }
+    enable = {
+        has_country_flag = KNM_ai
+        is_major = yes
+        has_equipment = {infantry_equipment > 50000}
+        has_tech = improved_medium_tank_chassis
+    }
+    abort_when_not_enabled = yes
+    ai_strategy = {
+        type = role_ratio
+        id = armor
+        value = 50
+    }
+    ai_strategy = {
+        type = equipment_production_factor
+        id = armor
+        value = 50
+    }
+}
 FRA_capital_shield = {#身后就是幻想乡
     allowed = { original_tag = FRA }
     enable = { 
@@ -356,17 +465,7 @@ FRA_capital_shield = {#身后就是幻想乡
         execution_type = careful
         manual_attack = no
     }
-    #首都本身的缓冲优先级最高
-    ai_strategy = {
-        type = put_unit_buffers
-        state_trigger = {
-            is_capital = yes
-        }
-        ratio = 0.15
-        area = neighbor
-        subtract_fronts_from_need = yes
-        subtract_invasions_from_need = yes
-    }
+
 }
 FRA_end_pocket = {#包围快速歼灭
     allowed={
@@ -456,18 +555,6 @@ FRA_victory_phase1_crack = {
     }
     abort_when_not_enabled = yes
     ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = { has_war_with = FRA }
-            any_province_building_level = {
-                province = { all_provinces = yes }
-                building = supply_node
-                level > 0
-            }
-        }
-        value = 500
-    }
-    ai_strategy = {
         type = front_control
         state_trigger = {
             controller = { has_war_with = FRA }
@@ -539,17 +626,6 @@ FRA_victory_phase2_exploit = {
         manual_attack = yes
     }
     ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = {
-                has_war_with = FRA
-                surrender_progress > 0.20
-            }
-            is_capital = yes
-        }
-        value = 800
-    }
-    ai_strategy = {
         type = spare_unit_factor
         value = -40
     }
@@ -584,17 +660,6 @@ FRA_victory_phase3_annihilate = {
         execution_type = rush_weak
         execute_order = yes
         manual_attack = yes
-    }
-    ai_strategy = {
-        type = front_armor_score
-        state_trigger = {
-            controller = {
-                has_war_with = FRA
-                surrender_progress > 0.45
-            }
-            is_capital = yes
-        }
-        value = 1500
     }
     ai_strategy = {
         type = spare_unit_factor

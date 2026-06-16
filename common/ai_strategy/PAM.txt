@@ -2,6 +2,7 @@ PAM_start1 = {
     enable = {
         tag = PAM
     }
+    abort_when_not_enabled = yes
     ai_strategy = {
         type = force_defend_ally_borders
         id = "WRQ"
@@ -649,7 +650,7 @@ PAM_ai_research = {
     }
     ai_strategy = { #QF 25磅野战炮
         type = research_tech
-        id = antitank
+        id = antitank4
         value = 200
     }
     ai_strategy = { #工兵连 II
@@ -1192,8 +1193,6 @@ PAM_unit_buffer_for_asian_threat = {#退守战场
          area = africa
          area = south_america
          area = north_america
-         area = neighbor
-         area = faction
 
         # by default if you have orders in target areas, the buffer will request less units.
         # you can override this to disable the feature
@@ -1215,16 +1214,16 @@ PAM_civ = { #前期别产飞机
         type = added_military_to_civilian_factory_ratio
         value = -999
     }
-    ai_strategy = {
-        type = equipment_production_factor #飞机不急着产
-        id = strike_unit
-        value = -999
-    }
-    ai_strategy = {
-        type = equipment_production_factor #飞机不急着产
-        id = strike_unit
-        value = -999
-    }
+    # ai_strategy = {
+        # type = equipment_production_factor #飞机不急着产
+        # id = strike_witches_equipment
+        # value = -999
+    # }
+    # ai_strategy = {
+        # type = equipment_production_factor #飞机不急着产
+        # id = strike_witches_equipment
+        # value = -999
+    # }
     ai_strategy = {
         type = equipment_production_factor #别造坦克
         id = armor
@@ -1256,7 +1255,7 @@ PAM_air_production = { #空军生产
     enable = {
         always = yes
     }
-
+    abort_when_not_enabled = yes
 
     ai_strategy = {
         type  = unit_ratio
@@ -1328,6 +1327,8 @@ PAM_avoid_thin_lines = {
     enable = {
         has_war = yes
     }
+
+    abort_when_not_enabled = yes
 
     ai_strategy = {
         type = front_unit_request
@@ -1544,6 +1545,8 @@ PAM_end_pocket = {#包围快速歼灭
         always = yes
     }
 
+    abort_when_not_enabled = yes
+
     ai_strategy = {
         type = front_control
         state_trigger = {
@@ -1655,7 +1658,7 @@ PAM_build_a_lw_facility_faster = {#建造陆军研究设施
         is_major = yes
         num_of_civilian_factories > 40
         num_of_military_factories > 40
-        has_completed_focus = PAM_nzsj
+        #has_completed_focus = PAM_nzsj
         OR = { # Don't start until we can build decent tanks of some kind
             has_tech = improved_light_tank_chassis
             has_tech = basic_medium_tank_chassis
@@ -1784,16 +1787,7 @@ PAM_war_with_PAU = { #与军团开战
         type = garrison
         value = 100                     # 驻军需求（默认70-100）
     }
-    ai_strategy = { #重点防御
-        type = put_unit_buffers
-        states = {
-            512
-        }
-        ratio = 0.8
-        priority = 10000
-        subtract_invasions_from_need = yes #海军入侵不计入比例
-        subtract_fronts_from_need = yes #陆地前线不计入
-    }
+
     ai_strategy = {
         type = front_control
         tag = PAU
@@ -1803,16 +1797,7 @@ PAM_war_with_PAU = { #与军团开战
         execute_order = yes
 
     }
-    ai_strategy = {#保护首都
-        type = put_unit_buffers
-        state_trigger = {
-            OR = {
-                is_capital = yes
-                any_neighbor_state = { is_capital = yes }
-            }
-        }
-        value = 20
-    }
+
 
 }
 
@@ -2605,7 +2590,6 @@ PAM_war_with_PAY = { #与魔女之树开战
         type = invasion_unit_request
         state = 304
         value = 9999
-        priority = 9999
 
     }
     ai_strategy = {
@@ -2650,17 +2634,18 @@ PAM_zhunbei_LHS = { #提前准备攻打野火
 PAM_zhunbei_MS1 = { #提前准备攻打魔女之夜
     enable = {
         tag = PAM
-        OR = {
-            focus_progress = {
-                focus = PAM_wckq
-                progress > 0
-            }
-            focus_progress = {
-                focus = PAM_zonggong
-                progress > 0
-            }
-
-        }
+        always = no
+        # OR = {
+            # focus_progress = {
+                # focus = PAM_wckq
+                # progress > 0
+            # }
+            # focus_progress = {
+                # focus = PAM_zonggong
+                # progress > 0
+            # }
+# 
+        # }
 
     }
     abort = {
@@ -2709,17 +2694,18 @@ PAM_zhunbei_WL1 = { #提前准备攻打躁动亡灵
 PAM_zhunbei_ELF = { #提前准备攻打妖精
     enable = {
         tag = PAM
-        OR = {
-            focus_progress = {
-                focus = PAM_zhuiji
-                progress > 0
-            }
-            focus_progress = {
-                focus = PAM_qpdy
-                progress > 0
-            }
-
-        }
+        always = no
+        # OR = {
+            # focus_progress = {
+                # focus = PAM_zhuiji
+                # progress > 0
+            # }
+            # focus_progress = {
+                # focus = PAM_qpdy
+                # progress > 0
+            # }
+# 
+        # }
 
     }
     abort = {
@@ -2795,269 +2781,13 @@ PAM_diplomacy_with_PAY  = { #干魔女
     }
 }
 
-PAM_zhunbei_PAQ = { #提前准备驱逐殖民者
-    enable = {
-        tag = PAM
-        OR = {
-            focus_progress = {
-                focus = PAM_zhuiji
-                progress > 0
-            }
-            focus_progress = {
-                focus = PAM_xzdt
-                progress > 0
-            }
-
-
-        }
-
-    }
-    abort = {
-        not = { country_exists = PAQ }
-        not = { country_exists = PGM }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "PAQ"
-        value = 100
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "PGM"
-        value = 100
-    }
 
 
 
-}
-
-PAM_zhunbei_PAY = { #提前准备驱逐魔女之树
-    enable = {
-        tag = PAM
-        OR ={
-            focus_progress = {
-
-                focus = PAM_jiefangsita
-                progress > 0
-            }
-
-            focus_progress = {
-
-                focus = PAM_tuanjieshenshe
-                progress > 0
-            }
-        }
-
-    }
-    abort = {
-        not = { country_exists = PAY }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "PAY"
-        value = 100
-    }
-
-}
-
-PAM_zhunbei_ENG = { #准备攻打圣杯
-    enable = {
-        tag = PAM
-        OR = {
-            focus_progress = {
-                focus = PAM_quzhushengbei
-                progress > 0
-            }
-            focus_progress = {
-                focus = PAM_sztc
-                progress > 0
-            }
-        }
-
-    }
-    abort = {
-        OR = {
-            not = { country_exists = ENG }
-            controls_state = 685
-
-            ENG = {has_war_with = PAM}
-        }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "ENG"
-        value = 100
-    }
-
-}
-PAM_zhunbei_GER = { #准备攻打德国
-    enable = {
-        tag = PAM
-
-        focus_progress = {
-            focus = PAM_zmtz
-            progress > 0
-        }
-
-    }
-    abort = {
-        OR = {
-            not = { country_exists = GER }
-            GER = {has_war_with = PAM}
-        }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "GER"
-        value = 100
-    }
-
-}
-PAM_zhunbei_jap = { #准备攻打日本
-    enable = {
-        tag = PAM
-        focus_progress = {
-            focus = PAM_tuanjieprc
-            progress > 0
-        }
-
-    }
-    abort = {
-        OR = {
-            not = { country_exists = JAP }
-            JAP = {has_government = communism}
-        }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "JAP"
-        value = 100
-    }
-
-}
-PAM_zhunbei_jingling = { #准备攻打精灵
-    enable = {
-        tag = PAM
-        focus_progress = {
-            focus = PAM_tuanjiebeimei
-            progress > 0
-        }
-
-    }
-    abort = {
-        OR = {
-            not = { country_exists = USA }
-            USA = {has_government = communism}
-        }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "USA"
-        value = 100
-    }
-
-}
-
-PAM_zhunbei_NFA = { #准备攻法兰西
-    enable = {
-        tag = PAM
-        focus_progress = {
-            focus = PAM_tuanjiebeimei
-            progress > 0
-        }
-
-    }
-    abort = {
-        OR = {
-            not = { country_exists = NFA  }
-            NFA = {has_government = communism}
-        }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "NFA"
-        value = 100
-    }
-
-}
-
-PAM_zhunbei_NGD = { #准备攻打远洋
-    enable = {
-        tag = PAM
-        focus_progress = {
-            focus = PAM_tuanjiebeimei
-            progress > 0
-        }
-
-    }
-    abort = {
-        OR = {
-            not = { country_exists = NGD}
-            NGD = {has_government = communism}
-        }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "NGD"
-        value = 100
-    }
-
-}
-
-PAM_zhunbei_FRG = { #准备攻打齐亚德
-    enable = {
-        tag = PAM
-        focus_progress = {
-            focus = PAM_tuanjiebeimei
-            progress > 0
-        }
-
-    }
-    abort = {
-        OR = {
-            not = { country_exists = FRG }
-            FRG = {has_government = communism}
-
-        }
-    }
-
-    ai_strategy = {
-        type = prepare_for_war
-        id = "FRG"
-        value = 100
-    }
-
-}
 
 
-PAM_zhunbei_DVL = { #提前准备攻打魔导国
-    enable = {
-        tag = PAM
-        focus_progress = {
-            focus = PAM_xiaomiewailaizhe
-            progress > 0
-        }
 
-    }
-    abort = {
-        not = { country_exists = DVL }
-    }
 
-    ai_strategy = {
-        type = prepare_for_war
-        id = "DVL"
-        value = 100
-    }
-}
 #对莉莉安娜示好
 PAM_PAO_is_friend = {
     allowed = {
@@ -3135,7 +2865,7 @@ PAM_xp_upgrade_spending_land = {
     }
 
     enable = {
-
+        always = yes
     }
     abort_when_not_enabled = yes
 
