@@ -3023,3 +3023,313 @@ ROC_clear_DiPi_category = {#发掘地方军火库
 		}
 	}
 }
+
+ROC_Great_Depression_category = {#大萧条席卷广东
+	ROC_Great_Depression_time_end = {#大萧条读条
+		days_mission_timeout = 365
+		priority = 100
+		available = {
+			always = no
+		}
+		is_good = yes
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			remove_dynamic_modifier = {
+				modifier = ROC_Great_Depression_modifier
+			}
+			clear_variable = ROC_Great_Depression_consumer_goods_factor
+			clear_variable = ROC_Great_Depression_hcp_income_factor_monthly
+			clear_variable = ROC_Great_Depression_production_speed_buildings_factor
+			clear_variable = ROC_Great_Depression_industrial_capacity_factory
+			clear_variable = ROC_Great_Depression_big_hand_num
+		}
+		
+	}
+	ROC_Great_Depression_big_hand = {#大手正在发力…… 我是说，危机会随时间过去
+		days_mission_timeout = 90
+		priority = 80
+		cancel_if_not_visible = yes
+		available = {
+			always = no
+		}
+		is_good = yes
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			add_to_variable = {
+				ROC_Great_Depression_big_hand_num = 1
+			}
+			custom_effect_tooltip = ROC_change_Great_Depression_dynamic_modifier
+			add_to_variable = {
+				ROC_Great_Depression_consumer_goods_factor = -0.05
+				tooltip = consumer_goods_factor_tt
+			}
+			add_to_variable = {
+				ROC_Great_Depression_hcp_income_factor_monthly = 0.1
+				tooltip = hcp_income_factor_monthly_tooltip
+			}
+			add_to_variable = {
+				ROC_Great_Depression_production_speed_buildings_factor = 0.1
+				tooltip = production_speed_buildings_factor_tt
+			}
+			add_to_variable = {
+				ROC_Great_Depression_industrial_capacity_factory = 0.05
+				tooltip = industrial_capacity_factory_tt
+			}
+			if = {
+				limit = {
+					check_variable = {
+						ROC_Great_Depression_big_hand_num < 3
+					}
+				}
+				activate_mission = ROC_Great_Depression_big_hand
+			}
+			
+		}
+	}
+
+	ROC_GD_song_plan_XieShang = {#协商地方移交余粮
+		cost = 20
+		days_remove = 7
+		days_re_enable = 14
+		cancel_if_not_visible = yes
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_song_plan_flag
+			}
+			
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -10
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -10
+			}
+			add_stability = 0.01
+		}
+	}
+
+	ROC_GD_song_plan_united_GongHui = {#联合华商公会维持限价
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_song_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		cost = 25
+		days_remove = 14
+		days_re_enable = 21
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -15
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -11
+			}
+		}
+	}
+
+	ROC_GD_song_plan_MinJianCiShan = {#动员民间慈善开办平价粥厂
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_song_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		cost = 15
+		days_remove = 14
+		days_re_enable = 14
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -12
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -10
+			}
+		}
+	}
+
+	ROC_GD_song_plan_HuZhu = {#扶持失业工商业互助社
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_song_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		cost = 20
+		days_remove = 20
+		days_re_enable = 20
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -10
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -8
+			}
+		}
+	}
+
+	ROC_GD_chiang_plan_ZhengDiao_army_food = {#强制征调各军区公库粮食
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_chiang_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		custom_cost_text = CP_10
+		custom_cost_trigger = {
+			command_power > 10
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -10
+			}
+		}
+		days_remove = 7
+		days_re_enable = 14
+		modifier = {
+			army_org_factor = -0.2
+			army_attack_factor = -0.05
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -25
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -25
+			}
+			add_stability = -0.03
+			add_command_power = 10
+		}
+	}
+
+	ROC_GD_chiang_plan_ban_black_market = {#取缔粮食黑市与查封私仓
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_chiang_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		custom_cost_text = CP_20
+		custom_cost_trigger = {
+			command_power > 20
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -20
+			}
+		}
+		days_remove = 14
+		days_re_enable = 30
+		modifier = {
+			hcp_income_factor_monthly = -0.05
+			army_org_factor = -0.15
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -35
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -30
+			}
+			add_stability = -0.05
+			add_war_support = 0.02
+			add_command_power = 10
+		}
+	}
+
+	ROC_GD_chiang_plan_YiGongDaiZheng = {#组建军事化劳工营以工代赈
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_chiang_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			command_power > 25
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+			}
+		}
+		days_remove = 21
+		days_re_enable = 30
+		modifier = {
+			industrial_capacity_factory = 0.05
+			training_time_army_factor = -0.1
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -45
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -40
+			}
+			add_command_power = 10
+			add_stability = -0.03
+		}
+	}
+
+	ROC_GD_chiang_plan_wartime_eco = {#实施生活必需品全面战时统配
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_chiang_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		custom_cost_text = CP_30
+		custom_cost_trigger = {
+			command_power > 30
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -30
+			}
+			add_stability = -0.08
+		}
+		modifier = {
+			consumer_goods_factor = -0.1
+		}
+		days_remove = 30
+		days_re_enable = 45
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -60
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -55
+			}
+			add_command_power = 5
+		}
+	}
+}
