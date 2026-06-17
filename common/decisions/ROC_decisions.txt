@@ -1,8 +1,114 @@
-ROC_reunit_of_china_d_c = {
-	ROC_declare_CHINA_reunit = {
+ROC_Battle_in_GuangZhou = {
+	ROC_establishment_of_the_capital_at_nanjing = {  ##定鼎南京
 		allowed = {
 		}
 		visible = {
+		}
+		available = {
+			is_subject = no
+			613 = {
+				is_controlled_and_owned_by_ROOT_or_subject = yes
+			}
+		}
+		fire_only_once = yes
+		cost = 0
+		icon = GFX_decision_generic_court
+		ai_will_do = {
+			factor = 100
+		}
+		complete_effect = {
+			custom_effect_tooltip = ROC_establishment_of_the_capital_at_nanjing_tt
+			remove_ideas = ROC_factional_strife
+			if = {
+				limit = {
+					613 = { is_controlled_and_owned_by_ROOT = no }
+				}
+				613 = {
+					transfer_state_to = ROOT
+				}
+			}
+			set_capital = {
+				state = 613
+				remember_old_capital = no
+			}
+			613 = {
+				if = {
+					limit = { not = { is_core_of = ROOT } }
+					add_compliance = 50
+				}
+			}
+			custom_effect_tooltip = generic_skip_one_line_tt
+			custom_effect_tooltip = ROC_establishment_of_the_capital_at_nanjing_tt2
+			custom_effect_tooltip = generic_skip_one_line_tt
+			if = {
+				limit = {
+					not = {
+						or = {
+							check_variable = { kmt_party_percent_ture^2 < kmt_party_percent_ture^3 }
+							check_variable = { kmt_party_percent_ture^2 < kmt_party_percent_ture^4 }
+							check_variable = { kmt_party_percent_ture^2 < kmt_party_percent_ture^5 }
+							check_variable = { kmt_party_percent_ture^2 < kmt_party_percent_ture^7 }
+						}
+					}
+				}
+				custom_effect_tooltip = ROC_RCKMT_will_win
+			}
+			if = {
+				limit = {
+					not = {
+						or = {
+							check_variable = { kmt_party_percent_ture^3 < kmt_party_percent_ture^2 }
+							check_variable = { kmt_party_percent_ture^3 < kmt_party_percent_ture^4 }
+							check_variable = { kmt_party_percent_ture^3 < kmt_party_percent_ture^5 }
+							check_variable = { kmt_party_percent_ture^3 < kmt_party_percent_ture^7 }
+						}
+					}
+				}
+				custom_effect_tooltip = ROC_Constitutionalists_will_win
+			}
+			if = {
+				limit = {
+					not = {
+						or = {
+							check_variable = { kmt_party_percent_ture^4 < kmt_party_percent_ture^2 }
+							check_variable = { kmt_party_percent_ture^4 < kmt_party_percent_ture^3 }
+							check_variable = { kmt_party_percent_ture^4 < kmt_party_percent_ture^5 }
+							check_variable = { kmt_party_percent_ture^4 < kmt_party_percent_ture^7 }
+						}
+					}
+				}
+				custom_effect_tooltip = ROC_CC_will_win
+			}
+			if = {
+				limit = {
+					not = {
+						or = {
+							check_variable = { kmt_party_percent_ture^5 < kmt_party_percent_ture^2 }
+							check_variable = { kmt_party_percent_ture^5 < kmt_party_percent_ture^3 }
+							check_variable = { kmt_party_percent_ture^5 < kmt_party_percent_ture^4 }
+							check_variable = { kmt_party_percent_ture^5 < kmt_party_percent_ture^7 }
+						}
+					}
+				}
+				custom_effect_tooltip = ROC_Whampoa_will_win
+			}
+			if = {
+				limit = {
+					has_cosmetic_tag = ROC_Provisional_Government
+				}
+				set_cosmetic_tag = ROC_Nanjing_KMT_Government
+			}
+		}
+	}
+}
+
+ROC_reunit_of_china_d_c = {
+	ROC_declare_CHINA_reunit = {
+		icon = GFX_decision_category_ROC_Blue_sky_and_white_sun
+		allowed = {
+		}
+		visible = {
+			date > 1936.2.1
 		}
 		available = {
 			is_subject = no
@@ -492,10 +598,6 @@ ROC_blue_influence = {
 			has_country_flag = ROC_no_infidels
 		}
 		complete_effect = {
-			country_event = {
-				id = roc.22
-				hours = 6
-			}
 		}
 	}
 	ROC_Place_loyal_members = {
@@ -2275,58 +2377,959 @@ economy_decisions = {
 ROC_army_reform_decision = {
 	ROC_army_reform = {
 		icon = generic_prepare_civil_war
-		available = {
+		custom_cost_trigger = {
 			has_army_experience > 99
-			OR = {
-				has_completed_focus = ROC_National_Revolutionary_Army
-				AND = {
-					has_completed_focus = MAN_National_Revolutionary_Army
-					has_country_flag = dongbeiyizhi_flag
-				}
-			}
 		}
+		custom_cost_text = KMK_cost_xp_army_100
 		cost = 0
 		ai_will_do = {
 			factor = 500
 		}
 		days_remove = 90
 		visible = {
-			NOT = {
-				has_country_flag = ROC_army_reform_done
-			}
+			check_variable = { ROC_NRA_army_reform_num < 4 }
+		}
+		complete_effect = {
+			hidden_effect = { army_experience = -100 }
 		}
 		remove_effect = {
-			if = {
-				limit = {
-					has_idea = ROC_NRA_1
-				}
+			effect_tooltip = {
 				swap_ideas = {
-					remove_idea = ROC_NRA_1
-					add_idea = ROC_NRA_2
+					remove_idea = ROC_NRA_idea_0
+					add_idea = ROC_NRA_idea_1
 				}
 			}
-			else_if = {
-				limit = {
-					has_idea = ROC_NRA_2
-				}
-				swap_ideas = {
-					remove_idea = ROC_NRA_2
-					add_idea = ROC_NRA_3
-				}
+			hidden_effect = {
+				#add_to_variable = { NRA_experience_gain_army_factor = 0.05 }
+				add_to_variable = { NRA_army_org_factor = 0.05 }
+				add_to_variable = { NRA_army_attack_factor = 0.03 }
+				add_to_variable = { NRA_army_defence_factor = 0.03 }
+				add_to_variable = { NRA_planning_speed = 0.05 }
+				add_to_variable = { NRA_max_planning = 0.05 }
+				add_to_variable = { ROC_NRA_army_reform_num = 1 }
 			}
-			else_if = {
-				limit = {
-					has_idea = ROC_NRA_3
-				}
-				swap_ideas = {
-					remove_idea = ROC_NRA_3
-					add_idea = ROC_NRA_4
-				}
-				set_country_flag = ROC_army_reform_done
+		}
+	}
+}
+
+political_actions = {
+	ROC_get_Alhambra_Palace = {
+		available = {
+			173 = { is_controlled_and_owned_by_ROOT_or_subject = yes }
+		}
+		ai_will_do = {
+			factor = 500
+		}
+		complete_effect = {
+			custom_effect_tooltip = ROC_get_Alhambra_Palace_tt
+			hidden_effect = {
+				add_to_array = { ROC_policy_select_card_Military_array_ture = 0 }
+			}
+			add_to_variable = {
+				var = free_policy_card_unm
+				value = 1
+				tooltip = free_policy_card_unm_change_tt
+			}
+			ROC_policy_card_modifier = yes
+		}
+	}
+	ROC_get_Big_Ben = {
+		available = {
+			126 = { is_controlled_and_owned_by_ROOT_or_subject = yes }
+		}
+		ai_will_do = {
+			factor = 500
+		}
+		complete_effect = {
+			custom_effect_tooltip = ROC_get_Big_Ben_tt
+			hidden_effect = {
+				add_to_array = { ROC_policy_select_card_Economy_array_ture = 0 }
+			}
+			add_to_variable = {
+				var = free_policy_card_unm
+				value = 1
+				tooltip = free_policy_card_unm_change_tt
+			}
+			ROC_policy_card_modifier = yes
+		}
+	}
+	ROC_get_Potala_Palace = {
+		available = {
+			322 = { is_controlled_and_owned_by_ROOT_or_subject = yes }
+		}
+		ai_will_do = {
+			factor = 500
+		}
+		complete_effect = {
+			custom_effect_tooltip = ROC_get_Potala_Palace_tt
+			hidden_effect = {
+				add_to_array = { ROC_policy_select_card_Diplomacy_array_ture = 0 }
+			}
+			add_to_variable = {
+				var = free_policy_card_unm
+				value = 1
+				tooltip = free_policy_card_unm_change_tt
+			}
+			ROC_policy_card_modifier = yes
+		}
+	}
+	ROC_get_Forbidden_City = {
+		available = {
+			608 = { is_controlled_and_owned_by_ROOT_or_subject = yes }
+		}
+		ai_will_do = {
+			factor = 500
+		}
+		complete_effect = {
+			custom_effect_tooltip = ROC_get_Forbidden_City_tt
+			hidden_effect = {
+				add_to_array = { ROC_policy_select_card_Generic_array_ture = 0 }
+			}
+			add_to_variable = {
+				var = free_policy_card_unm
+				value = 1
+				tooltip = free_policy_card_unm_change_tt
+			}
+			ROC_policy_card_modifier = yes
+		}
+	}
+}
+
+ROC_Min_navy_buy_boat_plan = {#委托圣杯造舰
+	ROC_min_navy_buy_ss = {#委托建造潜艇
+		cost = 50
+		available = {
+			NOT = {
+				has_country_flag = has_a_buy_boat_plan_TT
 			}
 		}
 		complete_effect = {
-			army_experience = -100
+			if = {
+				limit = {
+					has_war_with = JAP
+				}
+				custom_effect_tooltip = ROC_buy_boat_war_TT
+			}
+			custom_effect_tooltip = ROC_buy_boat_money_TT
+			set_country_flag = has_a_buy_boat_plan_TT
+			ENG = {
+				country_event = {
+					id = ROC_navy_trade.1
+					days = 3
+				}
+			}
+		}
+	}
+	ROC_min_navy_buy_dd = {#委托建造驱逐舰
+		cost = 50
+		available = {
+			NOT = {
+				has_country_flag = has_a_buy_boat_plan_TT
+			}
+		}
+		complete_effect = {
+			if = {
+				limit = {
+					has_war_with = JAP
+				}
+				custom_effect_tooltip = ROC_buy_boat_war_TT
+			}
+			custom_effect_tooltip = ROC_buy_boat_money_TT
+			set_country_flag = has_a_buy_boat_plan_TT
+			ENG = {
+				country_event = {
+					id = ROC_navy_trade.2
+					days = 3
+				}
+			}
+		}
+	}
+	ROC_min_navy_buy_cl = {#委托建造轻巡洋舰
+		cost = 75
+		available = {
+			NOT = {
+				has_country_flag = has_a_buy_boat_plan_TT
+			}
+		}
+		complete_effect = {
+			if = {
+				limit = {
+					has_war_with = JAP
+				}
+				custom_effect_tooltip = ROC_buy_boat_war_TT
+			}
+			custom_effect_tooltip = ROC_buy_boat_money_TT
+			set_country_flag = has_a_buy_boat_plan_TT
+			ENG = {
+				country_event = {
+					id = ROC_navy_trade.3
+					days = 3
+				}
+			}
+		}
+	}
+
+	ROC_min_navy_buy_pre_dreadnought = {#购买圣杯重型舰船
+		cost = 100
+		fire_only_once = yes
+		available = {
+			NOT = {
+				has_country_flag = has_a_buy_boat_plan_TT
+			}
+		}
+		complete_effect = {
+			if = {
+				limit = {
+					has_war_with = JAP
+				}
+				custom_effect_tooltip = ROC_buy_boat_war_TT
+			}
+			custom_effect_tooltip = ROC_buy_boat_money_unknow_TT
+			hidden_effect = {
+				ENG = {
+					country_event = {
+						id = ROC_navy_trade.8
+						days = 3
+					}
+				}
+			}
+		}
+	}
+
+	ROC_min_navy_Receive_ss = { #等待接收潜艇
+		days_mission_timeout = 120
+		is_good = yes
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_navy_receive_wait_TT
+				always = no
+			}
+		}
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_tech = early_ship_hull_submarine
+					}
+				}
+				set_technology = {
+					early_ship_hull_submarine = 1
+				}
+			}
+			clr_country_flag = has_a_buy_boat_plan_TT
+			create_equipment_variant = {
+				name = "圣杯外贸型潜艇"
+				name_group = ROC_SS_HISTORICAL
+				type = ship_hull_submarine_1
+				parent_version = 0
+				modules = {
+				fixed_ship_torpedo_slot = ship_torpedo_sub_1
+				fixed_ship_engine_slot = sub_ship_engine_1
+				rear_1_custom_slot = ship_torpedo_sub_1
+				}
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "圣杯外贸型潜艇"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "圣杯外贸型潜艇"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "圣杯外贸型潜艇"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "圣杯外贸型潜艇"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "圣杯外贸型潜艇"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "圣杯外贸型潜艇"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "圣杯外贸型潜艇"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "圣杯外贸型潜艇"
+				creator = ROC
+			}
+		}
+	}
+
+	ROC_min_navy_Receive_dd = { #等待接收驱逐舰
+		days_mission_timeout = 150
+		is_good = yes
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_navy_receive_wait_TT
+				always = no
+			}
+		}
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_tech = early_ship_hull_light
+					}
+				}
+				set_technology = {
+					early_ship_hull_light = 1
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_tech = basic_battery
+					}
+				}
+				set_technology = {
+					basic_battery = 1
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_tech = basic_torpedo
+					}
+				}
+				set_technology = {
+					basic_torpedo = 1
+				}
+			}
+			clr_country_flag = has_a_buy_boat_plan_TT
+			create_equipment_variant = {
+				name = "长风级"
+				type = ship_hull_light_1
+				name_group = ROC_DD_HISTORICAL
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_battery_1
+					fixed_ship_torpedo_slot = ship_torpedo_1
+					fixed_ship_engine_slot = light_ship_engine_1
+				}
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "长风级"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "长风级"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "长风级"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "长风级"
+				creator = ROC
+			}
+		}
+	}
+
+	ROC_min_navy_Receive_cl = { #等待接收轻巡洋舰
+		days_mission_timeout = 180
+		is_good = yes
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_navy_receive_wait_TT
+				always = no
+			}
+		}
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_tech = early_ship_hull_cruiser
+					}
+				}
+				set_technology = {
+					early_ship_hull_cruiser = 1
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_tech = basic_battery
+					}
+				}
+				set_technology = {
+					basic_battery = 1
+				}
+			}
+			clr_country_flag = has_a_buy_boat_plan_TT
+			create_equipment_variant = {
+				name = "宁海级"
+				type = ship_hull_cruiser_1
+				name_group = ROC_CL_HISTORICAL
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_light_medium_battery_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					fixed_ship_engine_slot = cruiser_ship_engine_1
+					fixed_ship_armor_slot = ship_armor_cruiser_1
+					front_1_custom_slot = ship_airplane_launcher_1
+				}
+			}
+			create_ship = {
+				type = ship_hull_cruiser_1
+				equipment_variant = "宁海级"
+				creator = ROC
+			}
+			create_ship = {
+				type = ship_hull_cruiser_1
+				equipment_variant = "宁海级"
+				creator = ROC
+			}
+		}
+	}
+
+	ROC_min_navy_receive_pre_dreadnought = {#等待接收前无畏舰
+		days_mission_timeout = 2
+		is_good = yes
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_navy_receive_wait_TT
+				always = no
+			}
+		}
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			clr_country_flag = has_a_buy_boat_plan_TT
+			if = {
+				limit = {
+					NOT = {
+						has_tech = pre_dreadnoughts
+					}
+				}
+				set_technology = {
+					pre_dreadnoughts = 1
+				}
+			}
+			create_equipment_variant = {
+				name = "缅因猫级"
+				type = ship_hull_pre_dreadnought
+				name_group = ROC_BB_HISTORICAL
+				parent_version = 0
+				modules = {
+					fixed_ship_battery_slot = ship_heavy_battery_1
+					fixed_ship_anti_air_slot = ship_anti_air_1
+					fixed_ship_fire_control_system_slot = ship_fire_control_system_0
+					fixed_ship_radar_slot = empty
+					fixed_ship_engine_slot = heavy_ship_engine_1
+					fixed_ship_secondaries_slot = ship_secondaries_1
+					fixed_ship_armor_slot = ship_armor_bb_1
+					front_1_custom_slot = ship_anti_air_1
+					mid_1_custom_slot = empty
+					rear_1_custom_slot = empty
+				}
+				obsolete = yes
+			}
+			create_ship = {
+				type = ship_hull_pre_dreadnought
+				equipment_variant = "缅因猫级"
+				creator = EAS
+			}
+			create_ship = {
+				type = ship_hull_pre_dreadnought
+				equipment_variant = "缅因猫级"
+				creator = EAS
+			}
+		}
+
+	}
+}
+
+ROC_clear_DiPi_category = {#发掘地方军火库
+	ROC_clear_YUN_DiPi = {
+		fire_only_once = yes
+		days_remove = 30
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			command_power > 25
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+			}
+		}
+		available = {
+			325 = {
+				is_controlled_and_owned_by_ROOT = yes
+			}
+		}
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = YUN
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment_1
+				amount = 20
+				producer = YUN
+			}
+		}
+	}
+	ROC_clear_GXC_DiPi = {
+		fire_only_once = yes
+		days_remove = 30
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			command_power > 25
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+			}
+		}
+		available = {
+			599 = {
+				is_controlled_and_owned_by_ROOT = yes
+			}
+		}
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = GXC
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment_1
+				amount = 20
+				producer = GXC
+			}
+		}
+	}
+	ROC_clear_FUJ_DiPi = {
+		fire_only_once = yes
+		days_remove = 30
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			command_power > 25
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+			}
+		}
+		available = {
+			1044 = {
+				is_controlled_and_owned_by_ROOT = yes
+			}
+		}
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = FUJ
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment_1
+				amount = 20
+				producer = FUJ
+			}
+		}
+	}
+	ROC_clear_WUH_DiPi = {
+		fire_only_once = yes
+		days_remove = 30
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			command_power > 25
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+			}
+		}
+		available = {
+			1048 = {
+				is_controlled_and_owned_by_ROOT = yes
+			}
+		}
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = WUH
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment_1
+				amount = 20
+				producer = WUH
+			}
+		}
+	}
+	ROC_clear_JSZ_DiPi = {
+		fire_only_once = yes
+		days_remove = 30
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			command_power > 25
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+			}
+		}
+		available = {
+			613 = {
+				is_controlled_and_owned_by_ROOT = yes
+			}
+		}
+		remove_effect = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+				producer = JSZ
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment_1
+				amount = 20
+				producer = JSZ
+			}
+		}
+	}
+}
+
+ROC_Great_Depression_category = {#大萧条席卷广东
+	ROC_Great_Depression_time_end = {#大萧条读条
+		days_mission_timeout = 365
+		priority = 100
+		available = {
+			always = no
+		}
+		is_good = yes
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			remove_dynamic_modifier = {
+				modifier = ROC_Great_Depression_modifier
+			}
+			clear_variable = ROC_Great_Depression_consumer_goods_factor
+			clear_variable = ROC_Great_Depression_hcp_income_factor_monthly
+			clear_variable = ROC_Great_Depression_production_speed_buildings_factor
+			clear_variable = ROC_Great_Depression_industrial_capacity_factory
+			clear_variable = ROC_Great_Depression_big_hand_num
+		}
+		
+	}
+	ROC_Great_Depression_big_hand = {#大手正在发力…… 我是说，危机会随时间过去
+		days_mission_timeout = 90
+		priority = 80
+		cancel_if_not_visible = yes
+		available = {
+			always = no
+		}
+		is_good = yes
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			add_to_variable = {
+				ROC_Great_Depression_big_hand_num = 1
+			}
+			custom_effect_tooltip = ROC_change_Great_Depression_dynamic_modifier
+			add_to_variable = {
+				ROC_Great_Depression_consumer_goods_factor = -0.05
+				tooltip = consumer_goods_factor_tt
+			}
+			add_to_variable = {
+				ROC_Great_Depression_hcp_income_factor_monthly = 0.1
+				tooltip = hcp_income_factor_monthly_tooltip
+			}
+			add_to_variable = {
+				ROC_Great_Depression_production_speed_buildings_factor = 0.1
+				tooltip = production_speed_buildings_factor_tt
+			}
+			add_to_variable = {
+				ROC_Great_Depression_industrial_capacity_factory = 0.05
+				tooltip = industrial_capacity_factory_tt
+			}
+			if = {
+				limit = {
+					check_variable = {
+						ROC_Great_Depression_big_hand_num < 3
+					}
+				}
+				activate_mission = ROC_Great_Depression_big_hand
+			}
+			
+		}
+	}
+
+	ROC_GD_song_plan_XieShang = {#协商地方移交余粮
+		cost = 20
+		days_remove = 7
+		days_re_enable = 14
+		cancel_if_not_visible = yes
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_song_plan_flag
+			}
+			
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -10
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -10
+			}
+			add_stability = 0.01
+		}
+	}
+
+	ROC_GD_song_plan_united_GongHui = {#联合华商公会维持限价
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_song_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		cost = 25
+		days_remove = 14
+		days_re_enable = 21
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -15
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -11
+			}
+		}
+	}
+
+	ROC_GD_song_plan_MinJianCiShan = {#动员民间慈善开办平价粥厂
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_song_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		cost = 15
+		days_remove = 14
+		days_re_enable = 14
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -12
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -10
+			}
+		}
+	}
+
+	ROC_GD_song_plan_HuZhu = {#扶持失业工商业互助社
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_song_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		cost = 20
+		days_remove = 20
+		days_re_enable = 20
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -10
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -8
+			}
+		}
+	}
+
+	ROC_GD_chiang_plan_ZhengDiao_army_food = {#强制征调各军区公库粮食
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_chiang_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		custom_cost_text = CP_10
+		custom_cost_trigger = {
+			command_power > 10
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -10
+			}
+		}
+		days_remove = 7
+		days_re_enable = 14
+		modifier = {
+			army_org_factor = -0.2
+			army_attack_factor = -0.05
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -25
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -25
+			}
+			add_stability = -0.03
+			add_command_power = 10
+		}
+	}
+
+	ROC_GD_chiang_plan_ban_black_market = {#取缔粮食黑市与查封私仓
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_chiang_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		custom_cost_text = CP_20
+		custom_cost_trigger = {
+			command_power > 20
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -20
+			}
+		}
+		days_remove = 14
+		days_re_enable = 30
+		modifier = {
+			hcp_income_factor_monthly = -0.05
+			army_org_factor = -0.15
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -35
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -30
+			}
+			add_stability = -0.05
+			add_war_support = 0.02
+			add_command_power = 10
+		}
+	}
+
+	ROC_GD_chiang_plan_YiGongDaiZheng = {#组建军事化劳工营以工代赈
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_chiang_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		custom_cost_text = CP_25
+		custom_cost_trigger = {
+			command_power > 25
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -25
+			}
+		}
+		days_remove = 21
+		days_re_enable = 30
+		modifier = {
+			industrial_capacity_factory = 0.05
+			training_time_army_factor = -0.1
+		}
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -45
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -40
+			}
+			add_command_power = 10
+			add_stability = -0.03
+		}
+	}
+
+	ROC_GD_chiang_plan_wartime_eco = {#实施生活必需品全面战时统配
+		visible = {
+			custom_trigger_tooltip = {
+				tooltip = ROC_GD_is_over_tt
+				has_country_flag = ROC_GD_select_chiang_plan_flag
+			}
+		}
+		cancel_if_not_visible = yes
+		custom_cost_text = CP_30
+		custom_cost_trigger = {
+			command_power > 30
+		}
+		complete_effect = {
+			hidden_effect = {
+				add_command_power = -30
+			}
+			add_stability = -0.08
+		}
+		modifier = {
+			consumer_goods_factor = -0.1
+		}
+		days_remove = 30
+		days_re_enable = 45
+		remove_effect = {
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_time_end
+				days = -60
+			}
+			add_days_mission_timeout = {
+				mission = ROC_Great_Depression_big_hand
+				days = -55
+			}
+			add_command_power = 5
 		}
 	}
 }
