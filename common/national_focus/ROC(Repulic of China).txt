@@ -472,6 +472,13 @@ focus_tree = {
 				is_controlled_by = ROOT
 			}
 		}
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				add = 1000
+				has_war_with = GXC
+			}
+		}
 		x = 0
 		y = 1
 		completion_reward = {
@@ -507,6 +514,15 @@ focus_tree = {
 				}
 			}
 
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				add = 1000
+				GXC = {
+					exists = no
+				}
+			}
 		}
 		x = 0
 		y = 1
@@ -1315,7 +1331,7 @@ focus_tree = {
 				tooltip = ROC_check_LieQiang_guanxi_better_than_3_tt
 				OR = {
 					check_variable = {
-						ENG.InfluenceWithROC > 3
+						ENG.RelationshipWithROC > 3
 					}
 					check_variable = {
 						NGD.RelationshipWithROC > 3
@@ -1965,9 +1981,23 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_provincial_plan
 		}
+		available = {
+			NOT = {
+				has_dynamic_modifier = {
+					modifier = ROC_Great_Depression_modifier
+				}
+			}
+		}
 		x = 20
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			ROC_if_not_have_give_EM_modifier_effect = yes
+			custom_effect_tooltip = ROC_add_to_EM_modifier_tt
+			add_to_variable = {
+				ROC_EM_modifier_hcp_income_factor_monthly = 0.1
+				tooltip = hcp_income_factor_monthly_tooltip
+			}
+		}
 	}
 
 	focus = {#与苏联贸易
@@ -1978,9 +2008,31 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_reopen_pearl_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 2
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_SOV_tt
+				check_variable = {
+					SOV.RelationshipWithROC > 2
+				}
+			}
+		}
 		x = -6
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			ROC_if_not_have_give_EM_modifier_effect = yes
+			custom_effect_tooltip = ROC_add_to_EM_modifier_tt
+			add_to_variable = {
+				ROC_EM_modifier_hcp_income_factor_monthly = 0.1
+				tooltip = hcp_income_factor_monthly_tooltip
+			}
+			add_to_variable = {
+				SOV.RelationshipWithROC = 1
+				tooltip = ROC_Relations_up_SOV_num_tt
+			}
+		}
 	}
 
 	focus = {#接收共产国际援助
@@ -1991,9 +2043,41 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_soviet_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 6
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_SOV_tt
+				check_variable = {
+					SOV.RelationshipWithROC > 6
+				}
+			}
+		}
 		x = -2
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1500
+				producer = SOV
+			}
+			add_equipment_to_stockpile = {
+				type = artillery_equipment
+				amount = 100
+				producer = SOV
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 100
+				producer = SOV
+			}
+			add_to_variable = {
+				var = kmt_party_percent^2
+				value = 0.05
+				tooltip = ROC_RCKMT_influence_tooltip
+			}
+		}
 	}
 
 	focus = {#购买苏联军火
@@ -2004,9 +2088,23 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_soviet_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 4
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_SOV_tt
+				check_variable = {
+					SOV.RelationshipWithROC > 4
+				}
+			}
+		}
 		x = 0
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			unlock_decision_tooltip = ROC_buy_sobieto_weapon
+			unlock_decision_tooltip = ROC_buy_sobieto_pao
+		}
 	}
 
 	focus = {#聘请苏联教官
@@ -2017,9 +2115,44 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_soviet_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 4
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_SOV_tt
+				check_variable = {
+					SOV.RelationshipWithROC > 4
+				}
+			}
+		}
 		x = 2
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			custom_effect_tooltip = ROC_focus_hire_soviet_advisors_tt
+			if = {
+				limit = {
+					check_variable = {
+						SOV.RelationshipWithROC < 7
+					}
+				}
+				COST_200_UBS_LOAD = yes
+			}
+			ROC_if_not_have_give_EM_modifier_effect = yes
+			custom_effect_tooltip = ROC_add_to_EM_modifier_tt
+			add_to_variable = {
+				ROC_EM_modifier_production_factory_start_efficiency_factor = 0.1
+				tooltip = production_factory_start_efficiency_factor_tt
+			}
+			custom_effect_tooltip = {
+				localization_key = China_Industrial_Points_Var_up_tt
+				POINT = "10"
+			}
+			add_to_variable = {
+				var = China_Industrial_Points_Var
+				value = 10
+			}
+		}
 	}
 
 	focus = {#组建“苏联师”
@@ -2033,9 +2166,124 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_buy_soviet_arms
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 8
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_SOV_tt
+				check_variable = {
+					SOV.RelationshipWithROC > 8
+				}
+			}
+		}
 		x = -1
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			add_to_variable = {
+				var = kmt_party_percent^2
+				value = 0.05
+				tooltip = ROC_RCKMT_influence_tooltip
+			}
+			division_template = {
+				name = "苏联教导师"
+				regiments = {
+					infantry = {
+						x = 0
+						y = 0
+					}
+					infantry = {
+						x = 0
+						y = 1
+					}
+					infantry = {
+						x = 0
+						y = 2
+					}
+					infantry = {
+						x = 0
+						y = 3
+					}
+					infantry = {
+						x = 1
+						y = 0
+					}
+					infantry = {
+						x = 1
+						y = 1
+					}
+					infantry = {
+						x = 1
+						y = 2
+					}
+					artillery_brigade = {
+						x = 2
+						y = 0
+					}
+					artillery_brigade = {
+						x = 2
+						y = 1
+					}
+				}
+			}
+			capital_scope = {
+				create_unit = {
+					division = "name = \"苏联教导师\" division_template = \"苏联教导师\" start_experience_factor = 0.3 start_equipment_factor = 1"
+					owner = ROC
+				}
+			}
+			division_template = {
+				name = "苏联机械化师"
+				regiments = {
+					mechanized = {
+						x = 0
+						y = 0
+					}
+					mechanized = {
+						x = 0
+						y = 1
+					}
+					mechanized = {
+						x = 0
+						y = 2
+					}
+					mechanized = {
+						x = 0
+						y = 3
+					}
+					light_armor = {
+						x = 1
+						y = 0
+					}
+					light_armor = {
+						x = 1
+						y = 1
+					}
+					light_armor = {
+						x = 1
+						y = 2
+					}
+					light_armor = {
+						x = 1
+						y = 3
+					}
+				}
+			}
+			capital_scope = {
+				create_unit = {
+					division = "name = \"苏联机械化师\" division_template = \"苏联机械化师\" start_experience_factor = 0.3 start_equipment_factor = 1 force_equipment_variants = { light_tank_chassis_2 = { owner = \"SOV\" amount = 240 version_name = \"BT-7\" }}"
+					owner = ROC
+				}
+			}
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = mechanized_equipment
+					amount = 160
+					producer = SOV
+				}
+			}
+
+		}
 	}
 
 	focus = {#与远洋国贸易
@@ -2046,9 +2294,31 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_reopen_pearl_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 2
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_NGD_tt
+				check_variable = {
+					NGD.RelationshipWithROC > 2
+				}
+			}
+		}
 		x = 0
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			ROC_if_not_have_give_EM_modifier_effect = yes
+			custom_effect_tooltip = ROC_add_to_EM_modifier_tt
+			add_to_variable = {
+				ROC_EM_modifier_hcp_income_factor_monthly = 0.1
+				tooltip = hcp_income_factor_monthly_tooltip
+			}
+			add_to_variable = {
+				NGD.RelationshipWithROC = 1
+				tooltip = ROC_Relations_up_NGD_num_tt
+			}
+		}
 	}
 
 	focus = {#华侨捐款
@@ -2059,9 +2329,31 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_oceanic_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 2
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_NGD_tt
+				check_variable = {
+					NGD.RelationshipWithROC > 2
+				}
+			}
+		}
 		x = -2
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			ROC_if_not_have_give_EM_modifier_effect = yes
+			custom_effect_tooltip = ROC_add_to_EM_modifier_tt
+			add_to_variable = {
+				ROC_EM_modifier_hcp_income_factor_monthly = 0.1
+				tooltip = hcp_income_factor_monthly_tooltip
+			}
+			add_to_variable = {
+				NGD.RelationshipWithROC = 1
+				tooltip = ROC_Relations_up_NGD_num_tt
+			}
+		}
 	}
 
 	focus = {#远洋飞虎队
@@ -2072,9 +2364,27 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_oceanic_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 6
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_NGD_tt
+				check_variable = {
+					NGD.RelationshipWithROC > 6
+				}
+			}
+		}
 		x = 0
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = small_plane_airframe_1
+				amount = 200
+				variant_name = "战鹰"
+				producer = NGD
+			}
+		}
 	}
 
 	focus = {#引进远洋副食品
@@ -2085,9 +2395,37 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_oceanic_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 2
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_NGD_tt
+				check_variable = {
+					NGD.RelationshipWithROC > 2
+				}
+			}
+		}
 		x = 2
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			ROC_if_not_have_give_EM_modifier_effect = yes
+			custom_effect_tooltip = ROC_add_to_EM_modifier_tt
+			add_to_variable = {
+				ROC_EM_modifier_supply_node_range = 0.1
+				tooltip = supply_node_range_tt
+			}
+			COST_100_UBS_LOAD = yes
+			custom_effect_tooltip = ROC_focus_NGD_relation_small_than_5_tt
+			if = {
+				limit = {
+					check_variable = {
+						NGD.RelationshipWithROC < 5
+					}
+				}
+				COST_100_UBS_LOAD = yes
+			}
+		}
 	}
 
 	focus = {#与圣杯国贸易
@@ -2098,9 +2436,31 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_reopen_pearl_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 2
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_ENG_tt
+				check_variable = {
+					ENG.RelationshipWithROC > 2
+				}
+			}
+		}
 		x = 6
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			ROC_if_not_have_give_EM_modifier_effect = yes
+			custom_effect_tooltip = ROC_add_to_EM_modifier_tt
+			add_to_variable = {
+				ROC_EM_modifier_hcp_income_factor_monthly = 0.1
+				tooltip = hcp_income_factor_monthly_tooltip
+			}
+			add_to_variable = {
+				ENG.RelationshipWithROC = 1
+				tooltip = ROC_Relations_up_ENG_num_tt
+			}
+		}
 	}
 
 	focus = {#购置舰船
@@ -2111,9 +2471,22 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_grail_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 4
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_ENG_tt
+				check_variable = {
+					ENG.RelationshipWithROC > 4
+				}
+			}
+		}
 		x = -2
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			unlock_decision_category_tooltip = ROC_Min_navy_buy_boat_plan
+		}
 	}
 
 	focus = {#驼峰航线
@@ -2124,9 +2497,33 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_grail_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 6
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_ENG_tt
+				check_variable = {
+					ENG.RelationshipWithROC > 6
+				}
+			}
+		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 6
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_ENG_tt
+				check_variable = {
+					ENG.RelationshipWithROC > 6
+				}
+			}
+		}
 		x = 0
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			unlock_decision_tooltip = ROC_Ask_ENG_for_weapon
+		}
 	}
 
 	focus = {#租界谈判
@@ -2137,9 +2534,25 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_the_hump_route
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 8
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_ENG_tt
+				check_variable = {
+					ENG.RelationshipWithROC > 8
+				}
+			}
+		}
 		x = 0
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			add_to_variable = {
+				ENG.RelationshipWithROC = 1
+				tooltip = ROC_Relations_up_ENG_num_tt
+			}
+		}
 	}
 
 	focus = {#购买圣杯军火
@@ -2150,9 +2563,23 @@ focus_tree = {
 		prerequisite = {
 			focus = ROC_focus_grail_trade
 		}
+		available = {
+			set_temp_variable = {
+				temp_Relations = 4
+			}
+			custom_trigger_tooltip = {
+				tooltip = ROC_Relations_available_ENG_tt
+				check_variable = {
+					ENG.RelationshipWithROC > 4
+				}
+			}
+		}
 		x = 2
 		y = 1
-		completion_reward = { }
+		completion_reward = {
+			unlock_decision_tooltip = ROC_buy_ENG_weapon
+			unlock_decision_tooltip = ROC_buy_ENG_pao
+		}
 	}
 
 	focus = {#休克疗法
