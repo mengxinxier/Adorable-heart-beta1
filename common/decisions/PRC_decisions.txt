@@ -2117,6 +2117,10 @@ PRC_Diplomatic_matters = {
 				has_government = communism
 				is_in_faction = no
 			}
+			if = {
+				limit = { FROM = { tag = SKW } }
+				JAP = { exists = no }
+			}
 			not = {
 				or = {
 					has_war_with = FROM
@@ -2137,6 +2141,236 @@ PRC_Diplomatic_matters = {
 		}
 		ai_will_do = {
 			base = 1000
+		}
+	}
+	PRC_diplo_overturn_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_government = communism
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			is_major = yes
+			FROM = {
+				communism > 0.5
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			effect_tooltip = {
+				activate_targeted_decision = {
+					target = FROM
+					decision = PRC_diplo_invite_FROM
+				}
+				FROM = {
+					set_politics = { ruling_party = communism }
+					if = {
+						limit = { is_subject = yes }
+						end_puppet_this = yes
+					}
+					if = {
+						limit = { is_in_faction = yes }
+						leave_faction = yes
+					}
+				}
+			}
+			hidden_effect = {
+				FROM = {
+					country_event = {
+						id = PRC_add.158
+					}
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	PRC_diplo_overturn_JAP = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		targets = { JAP }
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+			}
+			FROM = {
+				tag = JAP
+				not = {
+					or = {
+						has_government = communism
+						has_war_with = ENG
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			is_major = yes
+			FROM = {
+				communism > 0.35
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			activate_targeted_decision = {
+				target = SKW
+				decision = PRC_diplo_invite_FROM
+			}
+			every_state = {
+				limit = {
+					or = {
+						region = 154
+						state = 537
+						state = 555
+					}
+				}
+				add_core_of = SKW
+			}
+			528 = { transfer_state_to = SKW }
+			1150 = { transfer_state_to = SKW }
+			1151 = { transfer_state_to = SKW }
+			hidden_effect = {
+				JAP = {
+					transfer_units_fraction= {
+						target = SKW
+						navy_ratio = 0.4
+						air_ratio = 0.4
+						stockpile_ratio = 0.4
+						army_ratio = 0.4
+						keep_unit_leaders_trigger = {
+							always = yes
+						}
+					}
+				}
+				SKW = { inherit_technology = JAP }
+				SKW = {
+					country_event = {
+						id = PRC_add.159
+						hours = 6
+					}
+				}
+			}
+			JAP = { declare_war_on = { target = SKW type = annex_everything } }
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	##支援赤军
+	PRC_support_SKW = {
+		icon = GFX_decision_generic_industry
+		allowed = {
+			original_tag = PRC
+		}
+		visible = {
+			is_major = yes
+			is_faction_leader = yes
+			SKW = { exists = yes }
+			JAP = {
+				exists = yes
+				has_war_with = SKW
+			}
+		}
+		available = {
+			has_equipment = {
+				infantry_equipment > 2499
+			}
+			has_equipment = {
+				artillery_equipment > 299
+			}
+		}
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 1.0
+				OR = {
+					check_variable = {
+						SKW.num_equipment@infantry_equipment = 0
+					}
+					check_variable = {
+						SKW.num_equipment@artillery_equipment = 0
+					}
+				}
+			}
+			modifier = {
+				add = 0.5
+				SKW = {
+					has_war = yes
+				}
+			}
+			modifier = {
+				factor = 100
+				has_equipment = {
+					infantry_equipment > 5000
+				}
+				has_equipment = {
+					artillery_equipment > 500
+				}
+			}
+		}
+		cost = 10
+		fire_only_once = no
+		days_re_enable = 90
+		days_remove = 30
+		remove_effect = {
+			SKW = { country_event = PRC_add.160 }
+			effect_tooltip = {
+				send_equipment = {
+					amount = 2500
+					type = infantry_equipment
+					target = SKW
+				}
+				send_equipment = {
+					amount = 300
+					target = SKW
+					type = artillery_equipment
+				}	
+			}
+			hidden_effect = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = -2500
+				}
+				add_equipment_to_stockpile = {
+					type = artillery_equipment
+					amount = -300
+				}
+			}
 		}
 	}
 }
