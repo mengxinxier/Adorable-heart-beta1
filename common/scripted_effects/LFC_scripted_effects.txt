@@ -829,7 +829,7 @@
 			set_variable = {
 				LFC_VAR_monthly_license_base = 30
 			}
-			# 共享10%，贡献民工 = 可用民工 × 0.1
+			# 共享10%，贡献民工 = 可用民工 × 0.1 / 0.9（反推贡献前总量）
 			set_variable = {
 				var = LFC_VAR_jjlx_contributed_civ
 				value = LFC_VAR_temp_civ_factories
@@ -838,8 +838,12 @@
 				var = LFC_VAR_jjlx_contributed_civ
 				value = 0.1
 			}
+			divide_variable = {
+				var = LFC_VAR_jjlx_contributed_civ
+				value = 0.9
+			}
 			round_variable = LFC_VAR_jjlx_contributed_civ
-			# 贡献军工 = 可用军工 × 0.1
+			# 贡献军工 = 可用军工 × 0.1 / 0.9（反推贡献前总量）
 			set_variable = {
 				var = LFC_VAR_jjlx_contributed_mil
 				value = LFC_VAR_temp_mil_factories
@@ -847,17 +851,21 @@
 			multiply_variable = {
 				var = LFC_VAR_jjlx_contributed_mil
 				value = 0.1
+			}
+			divide_variable = {
+				var = LFC_VAR_jjlx_contributed_mil
+				value = 0.9
 			}
 			round_variable = LFC_VAR_jjlx_contributed_mil
 		}
 		else_if = {
 			limit = {
-				has_idea = LFC_idea_jjlx_2
+                has_idea = LFC_idea_jjlx_2		
 			}
 			set_variable = {
 				LFC_VAR_monthly_license_base = 60
 			}
-			# 共享20%，贡献民工 = 可用民工 × 0.2
+			# 共享20%，贡献民工 = 可用民工 × 0.2 / 0.8（反推贡献前总量）
 			set_variable = {
 				var = LFC_VAR_jjlx_contributed_civ
 				value = LFC_VAR_temp_civ_factories
@@ -866,8 +874,12 @@
 				var = LFC_VAR_jjlx_contributed_civ
 				value = 0.2
 			}
+			divide_variable = {
+				var = LFC_VAR_jjlx_contributed_civ
+				value = 0.8
+			}
 			round_variable = LFC_VAR_jjlx_contributed_civ
-			# 贡献军工 = 可用军工 × 0.2
+			# 贡献军工 = 可用军工 × 0.2 / 0.8（反推贡献前总量）
 			set_variable = {
 				var = LFC_VAR_jjlx_contributed_mil
 				value = LFC_VAR_temp_mil_factories
@@ -875,6 +887,10 @@
 			multiply_variable = {
 				var = LFC_VAR_jjlx_contributed_mil
 				value = 0.2
+			}
+			divide_variable = {
+				var = LFC_VAR_jjlx_contributed_mil
+				value = 0.8
 			}
 			round_variable = LFC_VAR_jjlx_contributed_mil
 		}
@@ -885,7 +901,7 @@
 			set_variable = {
 				LFC_VAR_monthly_license_base = 90
 			}
-			# 共享30%，贡献民工 = 可用民工 × 0.3
+			# 共享30%，贡献民工 = 可用民工 × 0.3 / 0.7（反推贡献前总量）
 			set_variable = {
 				var = LFC_VAR_jjlx_contributed_civ
 				value = LFC_VAR_temp_civ_factories
@@ -894,8 +910,12 @@
 				var = LFC_VAR_jjlx_contributed_civ
 				value = 0.3
 			}
+			divide_variable = {
+				var = LFC_VAR_jjlx_contributed_civ
+				value = 0.7
+			}
 			round_variable = LFC_VAR_jjlx_contributed_civ
-			# 贡献军工 = 可用军工 × 0.3
+			# 贡献军工 = 可用军工 × 0.3 / 0.7（反推贡献前总量）
 			set_variable = {
 				var = LFC_VAR_jjlx_contributed_mil
 				value = LFC_VAR_temp_mil_factories
@@ -903,6 +923,10 @@
 			multiply_variable = {
 				var = LFC_VAR_jjlx_contributed_mil
 				value = 0.3
+			}
+			divide_variable = {
+				var = LFC_VAR_jjlx_contributed_mil
+				value = 0.7
 			}
 			round_variable = LFC_VAR_jjlx_contributed_mil
 		}
@@ -948,8 +972,34 @@
 			value = LFC_VAR_monthly_license_factory_bonus
 		}
 
-		# 加入帝国许可池
-		add_to_variable = {
-			LFC_VAR_Empire_license = LFC_VAR_monthly_license_total
+		# 计算月度许可增长
+        set_variable = {  #归零累加器
+            var = LFC_VAR_Empire_license_monthly_end
+            value = 0
+        }
+        add_to_variable = {  #计入基础计算值（基础许可+工厂贡献加成）
+            LFC_VAR_Empire_license_monthly_end = LFC_VAR_monthly_license_total
+        }
+        add_to_variable = {  #计入自定义固定值修正
+            LFC_VAR_Empire_license_monthly_end = modifier@LFC_license_monthly_add
+        }
+
+        set_variable = {  #读取自定义百分比修正总和
+            var = LFC_VAR_Empire_license_monthly_factor_0
+            value = modifier@LFC_license_monthly_factor
+        }
+        add_to_variable = {  #转为乘法系数：1 + 修正总和（如修正0.15 → 系数1.15）
+            LFC_VAR_Empire_license_monthly_factor_0 = 1
+        }
+        multiply_variable = {  #百分比修正套用到最终月增长
+			var = LFC_VAR_Empire_license_monthly_end
+			value = LFC_VAR_Empire_license_monthly_factor_0
 		}
+
+
 	}
+
+
+#  
+
+
