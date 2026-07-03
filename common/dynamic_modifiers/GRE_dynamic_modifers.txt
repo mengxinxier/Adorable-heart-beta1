@@ -1,10 +1,39 @@
 #动态修正	
+#	Example:
+# 
+#	example_dynamic_modifier = {
+#		icon = "GFX_idea_unknown" # optional, will show up in guis if icon is specified
+#		enable = { always = yes } #optional, the modifier won't apply if not enabled
+#		remove_trigger = { always = no } #optional, will remove the modifier if true
+#
+#		# list of modifiers
+#		fuel_cost = 321
+#		max_fuel = var_max_fuel # will be taken from a variable
+#	}
+#
+#
+#	In a script file:
+#
+#	effect = {
+#		add_dynamic_modifier = {
+#			modifier = example_dynamic_modifier
+#			scope = GER # optional, if you specify this your dynamic modifier scoped to this scope (root is the effect scope)
+#			days = 14 # optional, will be removed after this many days passes
+#		}
+#	}
+##
+#	can be added to countries, states or unit leaders
+#	will only updated daily, unless forced by force_update_dynamic_modifier effect
+
+
 
 GRE_Land_Army = {
 	icon = GFX_idea_NORDIC_army_monarchist
 	enable = {
 		always = yes
 	}
+	#陆军经验获取
+	experience_gain_army = GRE_Land_Army_experience_gain_army
 	#陆军经验增长
 	experience_gain_army_factor = GRE_Land_Army_experience_gain_army_factor
 	#陆军侦查 MODIFIER_RECON_FACTOR
@@ -75,10 +104,20 @@ GRE_Land_Army = {
 	motorized_attack_factor = GRE_Land_Army_motorized_attack_factor
 	#摩托化防御
 	motorized_defence_factor = GRE_Land_Army_motorized_defence_factor
+	#山地部队特种部队上限贡献系数
+	mountaineers_special_forces_contribution_factor = GRE_Land_Army_mountaineers_special_forces_contribution_factor
 	#山地攻击
 	modifier_army_sub_unit_mountaineers_attack_factor = GRE_Land_Army_modifier_army_sub_unit_mountaineers_attack_factor
 	#山地防御
 	modifier_army_sub_unit_mountaineers_defence_factor = GRE_Land_Army_modifier_army_sub_unit_mountaineers_defence_factor
+	#山地组织度
+	modifier_army_sub_unit_mountaineers_max_org_factor = GRE_Land_Army_modifier_army_sub_unit_mountaineers_max_org_factor
+	#山地速度
+	modifier_army_sub_unit_mountaineers_speed_factor = GRE_Land_Army_modifier_army_sub_unit_mountaineers_speed_factor
+	#特种攻击	
+	special_forces_attack_factor = GRE_Land_Army_special_forces_attack_factor
+	#特种防御
+	special_forces_defence_factor = GRE_Land_Army_special_forces_defence_factor	
 	#对主要国家攻击
 	army_attack_against_major_factor = GRE_Land_Army_army_attack_against_major_factor
 	#对主要国家防御
@@ -97,8 +136,6 @@ GRE_Land_Army = {
 	mobilization_speed = GRE_Land_Army_mobilization_speed
 	#损耗
 	attrition = GRE_Land_Army_attrition
-	#特种部队训练时间
-	special_forces_training_time_factor = GRE_Land_Army_special_forces_training_time_factor
 	#陆军训练时间
 	training_time_army_factor = GRE_Land_Army_training_time_army_factor
 	#两栖登录速度
@@ -112,12 +149,23 @@ GRE_Land_Army = {
 	#协同性
 	coordination_bonus = GRE_Land_Army_coordination_bonus
 	#主动性
-	INITIATIVE_FACTOR = GRE_Land_Army_INITIATIVE_FACTOR			
+	initiative_factor = GRE_Land_Army_initiative_factor			
 	#志愿军	
 	send_volunteer_divisions_required = GRE_Land_Army_send_volunteer_divisions_required 
 	send_volunteer_size = GRE_Land_Army_send_volunteer_size
 	#堑壕上限
 	max_dig_in_factor = GRE_Land_Army_max_dig_in_factor
+	#特种部队训练时间
+	special_forces_training_time_factor = GRE_Land_Army_special_forces_training_time_factor
+	#特种最低容量
+	special_forces_min = GRE_Land_Army_special_forces_min
+	#特种容量乘数
+	special_forces_cap = GRE_Land_Army_special_forces_cap
+	#攻击
+	offence = GRE_Land_Army_offence
+	#陆军燃油消耗
+	army_fuel_consumption_factor = GRE_Land_Army_army_fuel_consumption_factor
+
 }
 
 GRE_air_force = {
@@ -156,6 +204,14 @@ GRE_air_force = {
 	air_agility_factor = GRE_air_force_air_agility_factor
 	#护航效率
 	air_escort_efficiency = GRE_air_force_air_escort_efficiency
+	#空军基地建造速度
+	production_speed_air_base_factor = GRE_air_force_production_speed_air_base_factor
+	#航空设施建造速度
+	production_speed_air_facility_factor = GRE_air_force_production_speed_air_facility_factor
+	#空军燃油花费
+	air_fuel_consumption_factor = GRE_air_force_air_fuel_consumption_factor
+	#跨空域力量投射修正系数
+	air_power_projection_factor = GRE_air_force_air_power_projection_factor
 
 
 }
@@ -174,22 +230,37 @@ GRE_Navy = {
 	naval_retreat_chance = GRE_Navy_naval_retreat_chance
 	#事故几率
 	naval_accidents_chance = GRE_Navy_naval_accidents_chance
-	#船只修理速度
-	repair_speed_factor = GRE_Navy_repair_speed_factor
 	#海军组织度(百分比)
 	navy_org_factor = GRE_Navy_navy_org_factor
 	#海军速度
 	naval_speed_factor = GRE_Navy_naval_speed_factor
 	#海军最大航程参数
 	navy_max_range_factor = GRE_Navy_navy_max_range_factor
-	#屏卫效率+10%
-	screening_efficiency = GRE_Navy_screening_efficiency
 	#阵位+10%
 	positioning = GRE_Navy_positioning
 	#索敌速度+10%
 	spotting_chance = GRE_Navy_spotting_chance
 	#海军命中率
 	naval_hit_chance = GRE_Navy_naval_hit_chance
+
+	naval_strike_attack_factor = GRE_Navy_naval_strike_attack_factor
+
+	naval_strike_targetting_factor = GRE_Navy_naval_strike_targetting_factor
+
+	naval_strike_agility_factor = GRE_Navy_naval_strike_agility_factor
+
+	critical_receive_chance = GRE_Navy_critical_receive_chance
+
+	naval_critical_effect_factor = GRE_Navy_naval_critical_effect_factor
+
+	naval_critical_score_chance_factor = GRE_Navy_naval_critical_score_chance_factor
+
+	strike_force_movement_org_loss = GRE_Navy_strike_force_movement_org_loss
+
+	naval_morale_factor = GRE_Navy_naval_morale_factor
+
+	ships_at_battle_start = GRE_Navy_ships_at_battle_start
+
 
 }
 
@@ -358,7 +429,80 @@ GRE_increased_metals_production = { #STATE MODIFIER
 		local_building_slots_factor = 0.15  #当地建筑槽位		
 	}
 
+	GRE_GER_state_dynamic_modifier = {	 #
 
+		icon = GFX_decision_category_AUS_becoming_grossosterreich_category
+		
+		enable = {
+			always = yes
+		}
+		remove_trigger = { NOT = { country_exists = DVL } }
+
+		army_attack_speed_factor = 0.05
+		army_org_factor = 0.05
+		army_defence_factor = 0.08
+		
+	}
+	
+	GRE_GEU_state_dynamic_modifier = {	 #
+
+		icon = GFX_decision_category_AUS_becoming_grossosterreich_category
+		
+		enable = {
+			always = yes
+		}
+		remove_trigger = { NOT = { country_exists = DVL } }
+
+		army_attack_speed_factor = 0.10
+		breakthrough_factor = 0.15
+		army_attack_factor = 0.08
+		army_defence_factor = -0.08
+		
+	}
+
+	GRE_CZE_state_dynamic_modifier = {	 #
+
+		icon = GFX_decision_category_AUS_becoming_grossosterreich_category
+		
+		enable = {
+			always = yes
+		}
+		remove_trigger = { NOT = { country_exists = DVL } }
+
+		army_attack_speed_factor = 0.10
+		supply_factor = 0.05
+		army_speed_factor = 0.05
+	}
+
+
+	GRE_DVL_state_dynamic_modifier = {	 #
+
+		icon = GFX_decision_category_AUS_becoming_grossosterreich_category
+		
+		enable = {
+			always = yes
+		}
+		remove_trigger = { NOT = { country_exists = DVL } }
+
+		army_attack_speed_factor = 0.10
+		army_speed_factor = 0.10
+		breakthrough_factor = 0.10
+	}	
+
+	GRE_ITA_state_dynamic_modifier = {	 #
+
+		icon = GFX_decision_SWI_dismiss_council
+		
+		enable = {
+			always = yes
+		}
+		remove_trigger = { NOT = { country_exists = ALS } }
+
+		army_attack_speed_factor = 0.10
+		supply_factor = 0.05
+		supply_node_range = 0.15
+		breakthrough_factor = 0.15
+	}	
 
 
 #五年计划

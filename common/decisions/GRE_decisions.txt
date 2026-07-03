@@ -6,6 +6,7 @@ GRE_debug_decision = {
 		}
 		available = {
 			is_ai = no
+			
 		}
 		cost = 0
 		fire_only_once = no				
@@ -349,6 +350,9 @@ GRE_Iuno_decision = {
 
 		icon = ger_mefo_bills
 
+		ai_will_do = {
+			base = 1000
+		}
 
 		cost = 10
 
@@ -392,9 +396,86 @@ GRE_Iuno_decision = {
 		}
 	
 	}
-
+	
 }
 
+
+GRE_expand = {
+
+	GRE_diplo_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			#FROM = {
+			#	not = {
+			#		or = {
+			#			has_war_with = ROOT
+			#			is_in_faction_with = ROOT
+			#			is_subject_of = ROOT
+			#		}
+			#	}
+			#}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			or = {
+				any_home_area_neighbor_country = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				any_allied_country = {
+					any_home_area_neighbor_country = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		remove_effect = {
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+
+}
 
 GRE_Startorch_Academy = { #星炬学院——科研相关
 
@@ -419,6 +500,9 @@ GRE_Startorch_Academy = { #星炬学院——科研相关
 
 		highlight_states = {
 			highlight_state_targets = { state = 773	}
+		}
+		ai_will_do = {
+			base = 0
 		}
 
 		on_map_mode = map_and_decisions_view
@@ -459,6 +543,10 @@ GRE_Startorch_Academy = { #星炬学院——科研相关
 		fire_only_once = yes
 
 		icon = eng_install_government
+
+		ai_will_do = {
+			base = 1000
+		}
 
 		highlight_states = {
 			highlight_state_targets = { state = 47 }
@@ -584,7 +672,16 @@ GRE_Startorch_Academy = { #星炬学院——科研相关
 		days_remove = 50
 		
 		ai_will_do = {
-			factor = 0
+			base = 10
+			modifier = {
+				AND = {
+					NOT = { has_tech = artillery3 }
+					has_political_power > 250
+					industrial_complex > 50
+				}
+				
+				add = 20
+			}
 		}
 
 		visible = {
