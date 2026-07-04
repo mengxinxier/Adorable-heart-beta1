@@ -2045,6 +2045,14 @@ focus_tree = {
 		relative_position_id = PRC_Formation_of_Supreme_Soviet
 		ai_will_do = {
 			base = 40
+			modifier = {
+				factor = 0
+				if = {
+					limit = { is_in_faction = yes }
+					is_faction_leader = no
+					faction_leader = { is_chinese_country = yes }
+				}
+			}
 		}
 		available = {
 			num_of_factories > 40
@@ -3264,6 +3272,7 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_ideas = PRC_Deepen_economic_integration_of_China_and_USSR_idea
 		}
 	}
 	#苏维埃联盟的新加盟国
@@ -3415,6 +3424,7 @@ focus_tree = {
 		complete_tooltip = {
 		}
 		completion_reward = {
+			add_ideas = PRC_East_Asian_storms_idea
 		}
 	}
 	#半岛革命
@@ -3513,6 +3523,7 @@ focus_tree = {
 		}
 		cost = 5
 		relative_position_id = PRC_East_Asian_storms
+		mutually_exclusive = { focus = PRC_sino_japanese_peoples_are_one }
 		ai_will_do = {
 			base = 4
 			modifier = {
@@ -3539,6 +3550,51 @@ focus_tree = {
 			activate_targeted_decision = {
 				target = JAP
 				decision = PRC_diplo_attck_FROM
+			}
+		}
+	}
+	#中樱人民是一致的
+	focus = {
+		id = PRC_sino_japanese_peoples_are_one
+		icon = GFX_focus_JAP_secretly_rebuild_the_party
+		x = 3
+		y = 2
+		prerequisite = {
+			focus = PRC_East_Asian_storms
+			focus = PRC_Establish_SOV_East_Asia
+		}
+		cost = 5
+		relative_position_id = PRC_East_Asian_storms
+		mutually_exclusive = { focus = PRC_Jap_sets_Red_sun_rise }
+		ai_will_do = {
+			base = 4
+		}
+		available = {
+			has_global_flag = JAP_zhongrizhanzhengshibai
+			not = {
+				or = {
+					is_in_faction_with = JAP
+					has_war_with = JAP
+					has_non_aggression_pact_with = JAP
+				}
+			}
+			JAP = {
+				not = { has_war_with = ENG }
+			}
+		}
+		bypass = {
+		}
+		complete_tooltip = {
+		}
+		completion_reward = {
+			if = {
+				limit = { has_character = JAP_shana }
+				JAP_shana = { set_nationality = SKW }
+			}
+			JAP = { add_timed_idea = { idea = PRC_voice_of_the_revolution days = 100 } }
+			activate_targeted_decision = {
+				target = JAP
+				decision = PRC_diplo_overturn_JAP
 			}
 		}
 	}
@@ -3584,6 +3640,23 @@ focus_tree = {
 					activate_targeted_decision = {
 						target = PREV
 						decision = PRC_diplo_invite_FROM
+					}
+				}
+			}
+			every_other_country = {
+				limit = {
+					not = { has_government = communism }
+					or = {
+						capital_scope = { is_on_continent = asia }
+						capital_scope = { is_on_continent = india }
+					}
+					is_chinese_country = no
+					not = { tag = JAP }
+				}
+				ROOT = {
+					activate_targeted_decision = {
+						target = PREV
+						decision = PRC_diplo_overturn_FROM
 					}
 				}
 			}
@@ -3735,12 +3808,15 @@ focus_tree = {
 			base = 4
 		}
 		available = {
+			is_major = yes
 		}
 		bypass = {
 		}
 		complete_tooltip = {
 		}
 		completion_reward = {
+			PHI = { add_timed_idea = { idea = PRC_Voices_of_Southeast_Asia_idea days = 100 } }
+			MAL = { add_timed_idea = { idea = PRC_Voices_of_Southeast_Asia_idea days = 100 } }
 		}
 	}
 	#打倒苏修
@@ -3748,7 +3824,7 @@ focus_tree = {
 		id = PRC_Down_with_SOV
 		icon = GFX_focus_SOV_military_purge
 		x = 1
-		y = 3
+		y = 4
 		prerequisite = {
 			focus = PRC_Pioneer_of_Asian_Revolution
 		}
@@ -3798,7 +3874,7 @@ focus_tree = {
 		id = PRC_Reestablishment_Soviet_Union
 		icon = GFX_focus_SOV_socialism_in_one_country
 		x = 3
-		y = 3
+		y = 4
 		prerequisite = {
 			focus = PRC_Pioneer_of_Asian_Revolution
 		}

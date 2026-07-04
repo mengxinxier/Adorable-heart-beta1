@@ -2499,11 +2499,11 @@ JAP_diguokuozhang = {
 		available = {
 			date > 1941.6.1
 			is_subject = no
-			or = {
-			country_exists = CHI
-			country_exists = PRC
-			country_exists = ROC
-			}
+			# or = {
+			# country_exists = CHI
+			# country_exists = PRC
+			# country_exists = ROC
+			# }
 			has_completed_focus = JAP_new107
 		}
 		cost = 25
@@ -2522,11 +2522,14 @@ JAP_diguokuozhang = {
 			custom_effect_tooltip = JAP_manzutiaojianklalong_tip
 			if = {
 			limit = {
-			country_exists = ROC
-			or = {
-			country_exists = PRC
-			country_exists = CHI
-			}
+				country_exists = ROC
+				or = {
+					country_exists = PRC
+					country_exists = CHI
+				}
+				ROC = {
+					not = { has_government = communism }
+				}
 			}
 			ROC = {
 				country_event = jap.117
@@ -5372,16 +5375,7 @@ JAP_quanlipingheng = {
 			}
 			if = {
 			limit = { is_ai = no }
-				has_navy_size = {
-				size > 4
-				type = capital_ship
-				archetype = ship_hull_heavy
-				}
-				has_navy_size = {
-				size > 129
-				type = screen_ship
-				archetype = ship_hull_light
-				}
+				dockyard > 39
 			}
 		}
 		days_mission_timeout = 1095
@@ -8483,4 +8477,110 @@ JAP_lujuncanmoubenbu_jyz = {
 		}
 	}
 
+}
+economy_decisions = { 
+	# Open State-run Factories in X
+	JAP_open_factory_in_state_decision = {
+		icon = GFX_decision_generic_factory
+	
+		allowed = {
+			original_tag = SKW
+		}
+		
+		visible = {
+			has_completed_focus = JAP_ganbarou
+		}
+		
+		available = {
+		}
+
+		state_target = yes
+
+		target_array = ROOT.core_states
+	    
+	    target_trigger = {
+	        FROM = {
+	        	JAP_is_home_islands_state = yes
+	        	is_fully_controlled_by = ROOT
+	        	infrastructure > 3 # It needs to be 4 or higher 
+	        	free_building_slots = {
+	        		building = industrial_complex
+	        		size > 1
+	        		include_locked = yes
+	        	}	
+	        }
+	    }
+	    on_map_mode = map_and_decisions_view 
+
+	    cost = 50 	
+
+		fire_only_once = yes # Can only be done once per state
+
+		days_remove = 70
+
+		modifier = {
+			consumer_goods_factor = 0.05
+		}
+
+		complete_effect = {
+		}
+
+		remove_effect = {
+			FROM = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}	
+			}
+		}
+
+		cancel_trigger = {
+			FROM = {
+				NOT = { is_fully_controlled_by = ROOT }
+			}
+		}
+
+		cancel_effect = {
+		}
+
+	}
+	JAP_implementing_unos_economic_reforms_mission = {
+
+		priority = 250
+
+		icon = GFX_decision_generic_consumer_goods
+
+		available = {
+			hidden_trigger = { always = no }
+		}
+
+		days_mission_timeout = 360
+
+		fire_only_once = no
+
+		activation = {
+			always = no
+		}
+
+		visible = {
+			tag = SKW
+			has_government = communism
+		}
+
+		cancel_if_not_visible = yes
+
+		is_good = yes
+
+		timeout_effect = {
+			
+			JAP_add_or_modify_early_industrialization = yes
+
+			add_to_variable = { JAP_industry_consumer_goods_factor = -0.025 tooltip = consumer_goods_factor_tt }
+
+			hidden_effect = { activate_mission = JAP_implementing_unos_economic_reforms_mission }
+			
+		}
+	}
 }
