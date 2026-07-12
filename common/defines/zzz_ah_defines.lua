@@ -95,9 +95,3 @@ NDefines_Graphics.NFrontend.CAMERA_MIN_HEIGHT = 30.0
 NDefines_Graphics.NGraphics.CAMERA_ZOOM_SPEED = 50
 NDefines_Graphics.NGraphics.CAMERA_ZOOM_KEY_SCALE = 0.02
 NDefines_Graphics.NGraphics.CAMERA_ZOOM_SPEED_DISTANCE_MULT = 8.0
-
--- 奇迹工程
-NDefines_Graphics.NProject.BREAKTHROUGH_DAILY_TECHNOLOGY_GAIN = 24          -- Vanilla is 12 突破点每日获取
-NDefines_Graphics.NProject.BREAKTHROUGH_DAILY_SCIENTIST_SKILL_GAIN = 10     -- Vanilla is 5 科学家技能的突破点获取
-NDefines_Graphics.NProject.BREAKTHROUGH_DAILY_ROCKET_SITE_GAIN = 2          -- Vanilla is 1 火箭基地的突破点获取
-NDefines_Graphics.NProject.BREAKTHROUGH_DAILY_NUCLEAR_REACTOR_GAIN = 2      -- Vanilla is 1 核反应堆的突破点获取
