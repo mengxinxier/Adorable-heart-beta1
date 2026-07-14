@@ -740,6 +740,7 @@ LHS_wants_arms_factory = { #搓军工
         original_tag = LHS
     }
     enable = {
+        date > 1938.1.1
         num_of_military_factories < 300
     }
     abort = {
@@ -748,7 +749,7 @@ LHS_wants_arms_factory = { #搓军工
     ai_strategy = {
         type = building_target
         id = arms_factory
-        value = 100
+        value = 1000
     }
 }
 
@@ -1672,10 +1673,10 @@ LHS_and_CHL={ #保护野火
     }
     abort_when_not_enabled = yes
     ai_strategy = {
-		type = protect
-		id = LHS
-		value = 100
-	}
+        type = protect
+        id = LHS
+        value = 100
+    }
 }
 LHS_and_CHL1={ #保护莉兰迪亚公社
     allowed={
@@ -4313,7 +4314,7 @@ LHS_war_with_USA = { #与精灵开战
 
     ai_strategy = {
         type = invade		#入侵
-        id = USA 
+        id = USA
         value = 200
     }
     ai_strategy = { #注重船坞
@@ -4420,7 +4421,7 @@ LHS_war_with_NFA = { #与法兰西开战
 
     ai_strategy = {
         type = invade		#入侵
-        id = NFA 
+        id = NFA
         value = 200
     }
     ai_strategy = { #注重船坞
@@ -4657,11 +4658,53 @@ LHS_zhunbei_PA1 = { #提前准备攻打斯塔
 }
 
 
+LHS_nozhunbei_MGU = { #不提前准备攻打魔法少女
+    enable = {
+        tag = LHS
+        PAQ = {
+            exists = yes
+        }
+        not = {
+            or = {
+                focus_progress = {
+                    focus = LHS_zhuiji
+                    progress > 0
+                }
+                focus_progress = {
+                    focus = LHS_qpdy
+                    progress > 0
+                }
+                focus_progress = {
+                    focus = LHS_nmwl
+                    progress > 0
+                }
+                focus_progress = {
+                    focus = LHS_Smash_The_Black_Glass
+                    progress > 0
+                }
+            }
+        }
+    }
+    abort_when_not_enabled = yes
+    ai_strategy = {
+        type = force_defend_ally_borders
+        id = "MGU"
+        value = -1000
+    }
+    ai_strategy = {
+        type = prepare_for_war
+        id = "MGU"
+        value = -1000
+    }
+}
 
 LHS_zhunbei_PAO = { #提前准备攻打安息之国和魔法少女
     enable = {
         tag = LHS
-        OR = {
+        PAQ = {
+            exists = no
+        }
+        or = {
             focus_progress = {
                 focus = LHS_zhuiji
                 progress > 0
@@ -5613,14 +5656,14 @@ LHS_support_communism = {#派志愿军给相同意识形态的国家
                 }
             }
         }
-        }
-        abort_when_not_enabled = yes
+    }
+    abort_when_not_enabled = yes
 
-        ai_strategy = {
-            type = send_volunteers_desire
-            id = "LHS"
-            value = 100
-        }
+    ai_strategy = {
+        type = send_volunteers_desire
+        id = "LHS"
+        value = 100
+    }
 
 }
 
@@ -5637,7 +5680,7 @@ LHS_diplomacy_with_PAU = { #对抗军团
     ai_strategy = {
         type = antagonize
         id = PAU
-        value = 100
+        value = 1000
     }
 
 }
@@ -5675,7 +5718,7 @@ ai_strategy = {
 ai_strategy = {
     type = antagonize
     id = JAP
-    value = 100
+    value = 1000
 }
 
 ai_strategy = {
@@ -5718,7 +5761,7 @@ ai_strategy = {
 ai_strategy = {
     type = antagonize
     id = USA
-    value = 100
+    value = 1000
 }
 
 ai_strategy = {
@@ -5761,7 +5804,7 @@ ai_strategy = {
 ai_strategy = {
     type = antagonize
     id = GER
-    value = 100
+    value = 1000
 }
 
 ai_strategy = {
@@ -5803,7 +5846,7 @@ ai_strategy = {
 ai_strategy = {
     type = antagonize
     id = NFA
-    value = 100
+    value = 1000
 }
 
 ai_strategy = {
@@ -5841,7 +5884,7 @@ LHS_diplomacy_with_PAY  = { #干魔女
     ai_strategy = {
         type = antagonize
         id = PAY
-        value = 100
+        value = 1000
     }
 
     ai_strategy = {
@@ -5869,7 +5912,7 @@ LHS_diplomacy_with_NGD = { #远洋不红就干他
     ai_strategy = {
         type = antagonize
         id = NGD
-        value = 100
+        value = 1000
     }
     ai_strategy = {
         type = declare_war
@@ -5902,7 +5945,7 @@ LHS_diplomacy_with_FRG = { #齐亚德不红就干他
     ai_strategy = {
         type = antagonize
         id = FRG
-        value = 100
+        value = 1000
     }
     ai_strategy = {
         type = declare_war
@@ -5942,7 +5985,7 @@ LHS_diplomacy_with_ENG = { #对抗圣杯
     ai_strategy = {
         type = antagonize
         id = ENG
-        value = 100
+        value = 1000
     }
     ai_strategy = {
         type = conquer
@@ -5956,50 +5999,28 @@ LHS_diplomacy_with_ENG = { #对抗圣杯
     }
 }
 
-LHS_diplomacy_with_PAM = { #对抗莉兰迪亚
+
+LHS_diplomacy_with_PAO = { #对抗夜莺
 
     allowed = {
         original_tag = LHS
     }
 
     enable = {
-        has_government = communism
-        has_war = no
-    }
-    abort_when_not_enabled = yes
-
-    ai_strategy = {
-        type = antagonize
-        id = PAM
-        value = 100
-    }
-
-    ai_strategy = {
-        type = conquer
-        id = PAM
-        value = 50
-    }
-}
-
-LHS_diplomacy_with_PAO = { #对抗安息之国
-
-    allowed = {
-        original_tag = LHS
-    }
-
-    enable = {
-        has_government = communism
-        has_war = no
-        OR = {
-            has_completed_focus = LHS_gmdl
+        PAM = {
+            exists = no
         }
+        PAO = {
+            exists = yes
+        }
+        has_government = communism
     }
     abort_when_not_enabled = yes
 
     ai_strategy = {
         type = antagonize
         id = PAO
-        value = 100
+        value = 1000
     }
 
     ai_strategy = {
@@ -6008,6 +6029,66 @@ LHS_diplomacy_with_PAO = { #对抗安息之国
         value = 50
     }
 }
+LHS_diplomacy_with_PAM = { #对抗索拉娜
+
+    allowed = {
+        original_tag = LHS
+    }
+
+    enable = {
+        PAM = {
+            exists = yes
+        }
+        has_government = communism
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = antagonize
+        id = PAM
+        value = 1000
+    }
+
+    ai_strategy = {
+        type = conquer
+        id = PAM
+        value = 50
+    }
+}
+
+LHS_diplomacy_with_PAQ = { #对抗阿德莱希
+
+    allowed = {
+        original_tag = LHS
+    }
+
+    enable = {
+        PAQ = {
+            exists = yes
+        }
+        PAM = {
+            exists = no
+        }
+        PAO = {
+            exists = no
+        }
+        has_government = communism
+    }
+    abort_when_not_enabled = yes
+
+    ai_strategy = {
+        type = antagonize
+        id = PAQ
+        value = 1000
+    }
+
+    ai_strategy = {
+        type = conquer
+        id = PAQ
+        value = 50
+    }
+}
+
 LHS_diplomacy_with_LFC = { #对抗远征军
 
     allowed = {
@@ -6015,6 +6096,15 @@ LHS_diplomacy_with_LFC = { #对抗远征军
     }
 
     enable = {
+        PAM = {
+            exists = no
+        }
+        PAO = {
+            exists = no
+        }
+        PAQ = {
+            exists = no
+        }
         has_government = communism
     }
     abort_when_not_enabled = yes
@@ -6101,36 +6191,6 @@ LHS_diplomacy_with_ELF = { #对抗精灵
     }
 }
 
-LHS_diplomacy_with_PAQ = { #对抗阿德莱希
-
-    allowed = {
-        original_tag = LHS
-    }
-
-    enable = {
-        has_war = no
-        OR = {
-            has_completed_focus = LHS_gmdl
-        }
-    }
-    abort_when_not_enabled = yes
-
-    ai_strategy = {
-        type = antagonize
-        id = PAQ
-        value = 1000
-    }
-    ai_strategy = {
-        type = declare_war
-        id = PAQ
-        value = 1000
-    }
-    ai_strategy = {
-        type = conquer
-        id = PAQ
-        value = 50
-    }
-}
 #要军通
 LHS_ask_for_access = {
     reversed = yes
