@@ -10,7 +10,7 @@ PAM_lldy_category = {
                 check_variable = { pam_am > 0 }
             }
         }
-        days_remove = 60
+        days_remove = var:liba
 
         complete_effect = {
             add_to_variable = { var = pam_am value = -1 }
@@ -110,7 +110,7 @@ PAM_lldy_category = {
         ai_will_do = {
             base = 0
         }
-        fire_only_once = yes 
+        fire_only_once = yes
         target_non_existing = yes
         target_trigger = {
             FROM = {
@@ -126,11 +126,6 @@ PAM_lldy_category = {
                         tag = NAF
                         tag = NAE
 
-                    }
-                }
-                not = {
-                    capital_scope = {
-                        is_on_continent = south_america
                     }
                 }
             }
@@ -147,11 +142,11 @@ PAM_lldy_category = {
                         transfer_troops = no
                     }
                 }
-                
+
             }
         }
     }
-    
+
     PAM_die_tec = { #科技
         icon = GFX_die_tec
         on_map_mode = decision_view_only
@@ -168,7 +163,7 @@ PAM_lldy_category = {
         ai_will_do = {
             base = 0
         }
-        fire_only_once = yes 
+        fire_only_once = yes
         target_non_existing = yes
         target_trigger = {
             FROM = {
@@ -176,7 +171,7 @@ PAM_lldy_category = {
                 any_state = {
                     is_core_of = FROM
                 }
-               not = {
+                not = {
                     or = {
                         tag = XXA
                         tag = NAR
@@ -186,11 +181,6 @@ PAM_lldy_category = {
 
                     }
                 }
-                not = {
-                    capital_scope = {
-                        is_on_continent = south_america
-                    }
-                }
             }
         }
         days_remove = 0
@@ -198,7 +188,7 @@ PAM_lldy_category = {
 
         remove_effect = {
             custom_effect_tooltip = PAM_die_tec_tt
-                
+
             hidden_effect = {
                 steal_random_tech_bonus = {
                     folder = nsb_armour_folder
@@ -219,31 +209,30 @@ PAM_lldy_category = {
                     target = FROM
                     uses = 1
                 }
-                
+
             }
         }
     }
-
     PAM_lxl_warn = { #和谈
-        icon = GFX_KNM_call_to_war_d
+        icon = GFX_PAM_zhtd
         on_map_mode = decision_view_only
         allowed = { tag = PAM }
         visible = {
             #has_completed_focus = PAM_lbwmydf
         }
         available = {
-			fighting_army_strength_ratio = {
-				tag = FROM
-				ratio > 1
-			}
-			FROM = {
-                surrender_progress > 0.5
+            fighting_army_strength_ratio = {
+                tag = FROM
+                ratio > 1
+            }
+            FROM = {
+                surrender_progress > 0.1
             }
         }
         ai_will_do = {
             base = 0
         }
-        fire_only_once = yes 
+        fire_only_once = yes
         target_root_trigger = {
 
         }
@@ -254,13 +243,14 @@ PAM_lldy_category = {
                     has_government = communism
                 }
                 not = {
+                    has_country_flag = PAM_accept_cap
                     capital_scope = {
                         is_on_continent = south_america
                     }
                 }
                 is_subject = no
                 has_war_with = ROOT
-			    surrender_progress > 0.1
+                surrender_progress > 0.1
 
             }
         }
@@ -268,60 +258,49 @@ PAM_lldy_category = {
         cost = 0
 
         remove_effect = {
+            FROM = {
+                country_event = {
+                    id = PAM.164
+                }
+            }
             custom_effect_tooltip = PAM_lxl_warn_tt
-            custom_effect_tooltip = PAM_am_tt2
+            effect_tooltip = {
+                activate_targeted_decision = {
+                    target = FROM
+                    decision = PAM_jingong_FROM2
+                }
+                add_to_variable = {
+                    var = liba
+                    value = -5
+                    tooltip = PAM_liba_tt
+                }
+                ROOT = {
+                    add_to_variable = { var = pam_am value = 1 }
+                    custom_effect_tooltip = PAM_am_tt2
+                }
+                FROM = {
+                    add_ideas = PAM_lxly_war_js
+                }
+                every_country = {
+                    limit = {
+                        is_in_faction_with = ROOT
+                    }
+                    white_peace = {
+                        tag = FROM
+                        message = PAM_win_white_city
+                    }
+                }
+            }
+            custom_effect_tooltip = PAM_lxl_warn_tt2
             effect_tooltip = {
                 FROM = {
-                    country_event = {
-                        id = PAM.164
-                    }
+                    add_ideas = PAO_zzjd
                 }
+                add_ideas = PAO_zzjd
             }
-            random_list = {
-                5 = {
-                    modifier = {
-                        FROM = {
-                            surrender_progress > 0.4
-                        }
-                        factor = 2
-                    }
-                    modifier = {
-                        FROM = {
-                            surrender_progress > 0.6
-                        }
-                        factor = 2
-                    }
-                    modifier = {
-                        FROM = {
-                            surrender_progress > 0.8
-                        }
-                        factor = 2
-                    }
-                    FROM = {
-                        set_country_flag = PAM_accept_cap
-                        country_event = {
-                            id = PAM.164
-                            days = 1
-                        }
-                    }
-            	} 
-            	10 = {
-            		modifier = {
-                        FROM = {
-                            surrender_progress > 0.9
-                        }
-                        factor = 0
-                    }
-                    country_event = {
-                        id = PAM.164
-                        days = 1
-                    }
-                }
-            }
+
         }
-
     }
-
 }
 PAM_undead_gambling_category = {
     PAM_cash_in_economic_loot = {
