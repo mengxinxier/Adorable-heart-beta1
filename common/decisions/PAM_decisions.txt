@@ -65,22 +65,22 @@ PAM_lldy_category = {
                         }
                         add_to_variable = {
                             var = PAM_ddlb_local_building_slots_factor
-                            value = 0.02
+                            value = 0.025
                             tooltip = local_building_slots_factor_tt
                         }
                         add_to_variable = {
                             var = PAM_ddlb_enemy_army_speed_factor
-                            value = -0.02
+                            value = -0.025
                             tooltip = enemy_army_speed_factor_tt
                         }
                         add_to_variable = {
                             var = PAM_ddlb_local_resources_factor
-                            value = 0.02
+                            value = 0.025
                             tooltip = local_resources_factor_tt
                         }
                         add_to_variable = {
                             var = PAM_ddlb_state_production_speed_buildings_factor
-                            value = 0.02
+                            value = 0.025
                             tooltip = state_production_speed_buildings_factor_tt
                         }
                     }
@@ -93,7 +93,53 @@ PAM_lldy_category = {
         }
     }
 
+    PAM_die_attack = { #安眠攻势
+        icon = GFX_die_attack
+        on_map_mode = decision_view_only
+        allowed = { tag = PAM }
+        visible = {
+            has_completed_focus = PAM_cqyzxyl
+        }
+        available = {
+            custom_trigger_tooltip = {
+                tooltip = PAM_am_tt
+                check_variable = { pam_am > 0 }
+            }
+        }
+        complete_effect = {
+            add_to_variable = { var = pam_am value = -1 }
+            custom_effect_tooltip = PAM_am_tt1
+        }
+        cost = 50
+        ai_will_do = {
+            base = 0
+        }
+        fire_only_once = no
+        target_non_existing = yes
+        target_trigger = {
+            FROM = {
+                has_war_with = PAM
+                not = {
+                    tag = ZDW
+                }
+            }
+        }
+        modifier = {
+            coordination_bonus = 0.1
+            army_speed_factor = 0.1
+            attrition = -0.1
+        }
+        targeted_modifier = { #决议正在进行时的修正，可以专门指向某国（天数为days_remove设定的数）
+            tag = FROM
+            defense_bonus_against = 0.2
+            spotting_chance_against = 0.2
+        }
+        days_remove = 90
 
+        remove_effect = {
+           
+        }
+    }
     PAM_die_equ = { #剩余装备
         icon = GFX_die_equ
         on_map_mode = decision_view_only
@@ -150,6 +196,22 @@ PAM_lldy_category = {
         }
         days_remove = 7
         remove_effect = {
+            every_state = {
+                limit = {
+                    has_dynamic_modifier = PAM_am_ddlb
+                }
+                custom_effect_tooltip = PAM_xjlb_effect_tt
+                add_to_variable = {
+                    var = PAM_ddlb_enemy_army_speed_factor
+                    value = -0.0025
+                    tooltip = enemy_army_speed_factor_tt
+                }
+                add_to_variable = {
+                    var = PAM_ddlb_local_resources_factor
+                    value = 0.0025
+                    tooltip = local_resources_factor_tt
+                }
+            }
             custom_effect_tooltip = PAM_die_equ_tt
             hidden_effect = {
                 PAM = {
@@ -210,6 +272,22 @@ PAM_lldy_category = {
         days_remove = 7
 
         remove_effect = {
+            every_state = {
+                limit = {
+                    has_dynamic_modifier = PAM_am_ddlb
+                }
+                custom_effect_tooltip = PAM_xjlb_effect_tt
+                add_to_variable = {
+                    var = PAM_ddlb_local_building_slots_factor
+                    value = 0.0025
+                    tooltip = local_building_slots_factor_tt
+                }
+                add_to_variable = {
+                    var = PAM_ddlb_state_production_speed_buildings_factor
+                    value = 0.0025
+                    tooltip = state_production_speed_buildings_factor_tt
+                }
+            }
             custom_effect_tooltip = PAM_die_tec_tt
 
             hidden_effect = {
