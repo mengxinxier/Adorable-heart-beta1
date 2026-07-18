@@ -69,27 +69,27 @@ on_actions = {
 				add_ideas = ROC_influence_of_SOV_very_low
 				ROC_foreign_influence_effect = yes
 				##政策卡
-				clear_array = ROC_policy_select_card_Military_array_ture
-				add_to_array = { ROC_policy_select_card_Military_array_ture = 0 }
-				clear_array = ROC_policy_select_card_Economy_array_ture
-				add_to_array = { ROC_policy_select_card_Economy_array_ture = 0 }
-				clear_array = ROC_policy_select_card_Diplomacy_array_ture
-				add_to_array = { ROC_policy_select_card_Diplomacy_array_ture = 0 }
-				clear_array = ROC_policy_select_card_Generic_array_ture
-				add_to_array = { ROC_policy_select_card_Generic_array_ture = 0 }
-				clear_array = ROC_policy_unlock_card_array_ture
-				add_to_array = { ROC_policy_unlock_card_array_ture = 1 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 2 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 3 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 31 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 32 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 33 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 61 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 62 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 63 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 91 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 92 }
-				add_to_array = { ROC_policy_unlock_card_array_ture = 93 }
+				clear_array = ROC_policy_select_card_Military_array_true
+				add_to_array = { ROC_policy_select_card_Military_array_true = 0 }
+				clear_array = ROC_policy_select_card_Economy_array_true
+				add_to_array = { ROC_policy_select_card_Economy_array_true = 0 }
+				clear_array = ROC_policy_select_card_Diplomacy_array_true
+				add_to_array = { ROC_policy_select_card_Diplomacy_array_true = 0 }
+				clear_array = ROC_policy_select_card_Generic_array_true
+				add_to_array = { ROC_policy_select_card_Generic_array_true = 0 }
+				clear_array = ROC_policy_unlock_card_array_true
+				add_to_array = { ROC_policy_unlock_card_array_true = 1 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 2 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 3 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 31 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 32 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 33 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 61 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 62 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 63 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 91 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 92 }
+				add_to_array = { ROC_policy_unlock_card_array_true = 93 }
 				clear_array = ROC_policy_select_card_Military_array
 				clear_array = ROC_policy_select_card_Economy_array
 				clear_array = ROC_policy_select_card_Diplomacy_array
@@ -216,6 +216,214 @@ on_actions = {
 							hours = 6
 						}
 					}
+				}
+			}
+		}
+	}
+	on_mio_industrial_manufacturer_assigned = {
+		effect = {
+			if = {
+				limit = { FROM = { tag = ROC } }
+				ROOT = {
+					set_mio_flag = mio_on_industrial_manufacturer_assigned
+				}
+			}
+		}
+	}
+	on_mio_industrial_manufacturer_unassigned = {
+		effect = {
+			if = {
+				limit = { FROM = { tag = ROC } }
+				ROOT = {
+					clr_mio_flag = mio_on_industrial_manufacturer_assigned
+				}
+			}
+		}
+	}
+	on_mio_size_increased = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						has_idea = ROC_policy_card_5_idea
+						tag = ROC
+					}
+					ROOT = {
+						not = { has_mio_flag = increase_by_on_action }
+					}
+				}
+				FROM = {
+					random_military_industrial_organization = {
+						limit = { has_mio_flag = mio_on_industrial_manufacturer_assigned }
+						add_mio_size = 1
+						set_mio_flag = {
+							flag = increase_by_on_action
+							days = 1
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					FROM = {
+						has_idea = ROC_policy_card_6_idea
+						tag = ROC
+					}
+				}
+				FROM = {
+					random_list = {
+						10 = {
+							add_breakthrough_progress = {
+								specialization = specialization_land
+								value = 0.1
+							}
+						}
+						10 = {
+							add_breakthrough_progress = {
+								specialization = specialization_naval
+								value = 0.1
+							}
+						}
+						10 = {
+							add_breakthrough_progress = {
+								specialization = specialization_air
+								value = 0.1
+							}
+						}
+						10 = {
+							add_breakthrough_progress = {
+								specialization = specialization_nuclear
+								value = 0.1
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	on_project_completion = {
+        effect = {
+            if = {
+                limit = {
+                    ROOT = {
+						has_idea = ROC_policy_card_7_idea
+						tag = ROC
+					}
+                }
+				ROOT = {
+					random_military_industrial_organization = {
+						limit = { has_mio_flag = mio_on_industrial_manufacturer_assigned }
+						add_mio_size = 1
+					}
+					random_military_industrial_organization = {
+						limit = { has_mio_flag = mio_on_industrial_manufacturer_assigned }
+						add_mio_size = 1
+					}
+				}
+            }
+        }
+    }
+	on_ace_killed = {
+		effect = {
+			if = {
+				limit = {
+					any_enemy_country = {
+						tag = ROC
+						has_idea = ROC_policy_card_11_idea
+					}
+				}
+				ROC = { air_experience = 100 }
+			}
+		}
+	}
+	on_pride_of_the_fleet_sunk = {
+		effect = {
+			if = {
+				limit = {
+                    FROM = {
+						has_idea = ROC_policy_card_12_idea
+						tag = ROC
+					}
+				}
+				FROM = { navy_experience = 100 }
+			}
+		}
+	}
+	on_army_leader_won_combat = {
+		effect = {
+			if = {
+				limit = {
+                    FROM = {
+						has_idea = ROC_policy_card_13_idea
+						tag = ROC
+					}
+				}
+				ROOT = { gain_xp = 100 }
+			}
+		}
+	}
+	on_fully_decrypted_cipher = {
+		effect = {
+			if = {
+				limit = {
+                    FROM = {
+						has_idea = ROC_policy_card_37_idea
+						tag = ROC
+					}
+				}
+				FROM = {
+					add_tech_bonus = {
+						name = ROC_policy_card_name_37
+						bonus = 0.5
+						uses = 1
+						category = electronics
+					}
+				}
+			}
+		}
+	}
+	on_operative_captured = {
+		effect = {
+			if = {
+				limit = {
+                    ROOT = {
+						has_idea = ROC_policy_card_64_idea
+						tag = ROC
+					}
+				}
+				ROOT = {
+					create_wargoal = { target = FROM type = annex_everything }
+				}
+			}
+		}
+	}
+	on_operative_death = {
+		effect = {
+			if = {
+				limit = {
+                    FROM = {
+						has_idea = ROC_policy_card_64_idea
+						tag = ROC
+					}
+				}
+				FROM = {
+					create_wargoal = { target = ROOT type = annex_everything }
+				}
+			}
+		}
+	}
+	on_operation_completed = {
+		effect = {
+			if = {
+				limit = {
+                    ROOT = {
+						has_idea = ROC_policy_card_94_idea
+						tag = ROC
+						check_variable = { FROM.AHES_Net_income > 0 }
+					}
+				}
+				ROOT = {
+					add_to_variable = { ubs_save = FROM.AHES_Net_income }
 				}
 			}
 		}
