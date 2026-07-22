@@ -4680,7 +4680,7 @@ focus_tree = {
 
 	focus = {#组织专家恩莱
 		id = ROC_focus_inner_circle_org_master_chow
-		cost = 8
+		cost = 2
 		x = -11
 		y = 1
 		ai_will_do = {
@@ -4715,7 +4715,34 @@ focus_tree = {
 			focus = ROC_focus_Party_in_party
 		}
 		completion_reward = {
-
+			if = {
+				limit = { 
+					is_debug = yes
+				}
+				if = {
+					limit = { 
+						PRC = {
+							exists = yes
+						}
+					}
+					annex_country = {
+						target = PRC
+					}
+					PRC = {
+						PRC_ZhouEnlai = {
+							set_nationality = ROOT
+						}
+					}
+				}
+				else = {
+					PRC = {
+						PRC_ZhouEnlai = {
+							set_nationality = ROOT
+						}
+					}
+				}
+				custom_effect_tooltip = ROC_inner_debug_zhou_tt
+			}
 			
 			hidden_effect = {
 				country_event = {
@@ -4774,7 +4801,7 @@ focus_tree = {
 
 	focus = {#改组中央组织部
 		id = ROC_focus_inner_circle_reorganize_COD
-		cost = 4
+		cost = 8
 		x = 0
 		y = 1
 		ai_will_do = {
@@ -4823,7 +4850,7 @@ focus_tree = {
 
 	focus = {#专注行政工作
 		id = ROC_focus_inner_circle_focus_on_administration
-		cost = 4
+		cost = 8
 		x = -2
 		y = 1
 		ai_will_do = {
@@ -4875,7 +4902,7 @@ focus_tree = {
 
 	focus = {#革命之盾
 		id = ROC_focus_inner_circle_shield_of_revolution
-		cost = 4
+		cost = 8
 		x = 0
 		y = 1
 		ai_will_do = {
@@ -4924,7 +4951,7 @@ focus_tree = {
 
 	focus = {#整肃党风党纪
 		id = ROC_focus_inner_circle_purge_party_discipline
-		cost = 4
+		cost = 8
 		x = 0
 		y = 2
 		ai_will_do = {
@@ -4974,7 +5001,7 @@ focus_tree = {
 
 	focus = {#专注情报工作
 		id = ROC_focus_inner_circle_focus_on_intelligence
-		cost = 4
+		cost = 8
 		x = 2
 		y = 1
 		ai_will_do = {
@@ -5026,7 +5053,7 @@ focus_tree = {
 
 	focus = {#革命利刃
 		id = ROC_focus_inner_circle_blade_of_revolution
-		cost = 4
+		cost = 8
 		x = 0
 		y = 1
 		available = {
@@ -5075,7 +5102,7 @@ focus_tree = {
 
 	focus = {#绝境战狐毛润之
 		id = ROC_focus_inner_circle_desperate_war_fox_mao
-		cost = 4
+		cost = 2
 		x = -6
 		y = 1
 		ai_will_do = {
@@ -5110,6 +5137,49 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
+			if = {
+				limit = { 
+					is_debug = yes
+				}
+				if = {
+					limit = { 
+						PRC = {
+							exists = yes
+						}
+					}
+					annex_country = {
+						target = PRC
+					}
+					PRC = {
+						PRC_lidesheng = {
+							set_nationality = ROOT
+						}
+					}
+				}
+				else = {
+					PRC = {
+						PRC_lidesheng = {
+							set_nationality = ROOT
+						}
+					}
+				}
+				custom_effect_tooltip = ROC_inner_debug_zhou_tt
+			}
+			hidden_effect = {
+				country_event = {
+					id = ROC_inner.3
+					days = 70
+				}
+				add_ideas = ROC_inner_mao_fox_1
+				activate_shine_on_focus = ROC_focus_inner_circle_reorganize_revolutionary_army
+				set_country_flag = ROC_mao_focus_1_in_progress_flag
+			}
+
+			custom_effect_tooltip = {
+				localization_key = ROC_SONG_ascension_of_character_tt
+				CHARACTER = PRC_lidesheng
+			}
+			show_ideas_tooltip = ROC_inner_mao_fox_1
 			custom_effect_tooltip = {
 				localization_key = ROC_ascension_of_character_focus_tt
 				CHARACTER = PRC_lidesheng
@@ -5149,11 +5219,39 @@ focus_tree = {
 
 	focus = {#整编革命军队
 		id = ROC_focus_inner_circle_reorganize_revolutionary_army
-		cost = 4
+		cost = 10
 		x = 0
 		y = 1
 		ai_will_do = {
 			base = 10
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = ROC_mao_focus_1_in_progress_flag
+				}
+				set_temp_variable = {
+					temp_focus_days = 70
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = ROC_inner_circle_focus_in_progress_tt
+						CHARACTER = PRC_lidesheng
+						FLAG_DAYS = [?ROC_mao_focus_1_in_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			else = { #NOT BEEN WORKED ON (Just Explain)
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = ROC_focus_can_only_be_completed_by_advisor_tt
+						CHARACTER = PRC_lidesheng
+						FOCUS = ROC_focus_inner_circle_desperate_war_fox_mao
+					}
+					always = no
+				}
+			}
 		}
 		icon = GFX_goal_unknown
 		relative_position_id = ROC_focus_inner_circle_desperate_war_fox_mao
@@ -5161,17 +5259,103 @@ focus_tree = {
 			focus = ROC_focus_inner_circle_desperate_war_fox_mao
 		}
 		completion_reward = {
-			
+			custom_effect_tooltip = ROC_inner_create_division_tt
+			add_timed_idea = {
+				idea = ROC_inner_mao_zhengbian
+				days = 100
+			}
+			custom_effect_tooltip = When_this_idea_remove_tt
+			effect_tooltip = {
+				army_experience = 60
+			}
+
+			hidden_effect = {
+				division_template = {
+					name = "整编军"
+					regiments = {
+						irregular_infantry = { x = 0 y = 0 }
+						irregular_infantry = { x = 0 y = 1 }
+						irregular_infantry = { x = 0 y = 2 }
+						irregular_infantry = { x = 1 y = 0 }
+						irregular_infantry = { x = 1 y = 1 }
+						irregular_infantry = { x = 1 y = 2 }
+						irregular_infantry = { x = 2 y = 0 }
+						irregular_infantry = { x = 2 y = 1 }
+						irregular_infantry = { x = 2 y = 2 }
+						irregular_infantry = { x = 3 y = 0 }
+						irregular_infantry = { x = 3 y = 1 }
+						irregular_infantry = { x = 3 y = 2 }
+					}
+					regimental_support = { #Various field pieces operated by the division at the regeniment level
+						field_guns = { x = 0 y = 0 }
+						field_guns = { x = 1 y = 0 }
+						field_guns = { x = 2 y = 0 }
+						field_guns = { x = 3 y = 0 }
+					}
+					support = {
+						artillery = {
+							x = 0
+							y = 0
+						}
+					}
+				}
+				capital_scope = {
+					create_unit = {
+						division = "name = \"国民革命军整编军第一师\" division_template = \"整编军\" start_experience_factor = 1 start_equipment_factor = 1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"国民革命军整编军第二师\" division_template = \"整编军\" start_experience_factor = 1 start_equipment_factor = 1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"国民革命军整编军第三师\" division_template = \"整编军\" start_experience_factor = 1 start_equipment_factor = 1"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"国民革命军整编军第四师\" division_template = \"整编军\" start_experience_factor = 1 start_equipment_factor = 1"
+						owner = ROOT
+					}
+				}
+			}
 		}
 	}
 
 	focus = {#重视军队纪律
 		id = ROC_focus_inner_circle_enforce_army_discipline
-		cost = 4
+		cost = 7
 		x = -1
 		y = 1
 		ai_will_do = {
 			base = 10
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = ROC_mao_focus_2_in_progress_flag
+				}
+				set_temp_variable = {
+					temp_focus_days = 49
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = ROC_inner_circle_focus_in_progress_tt
+						CHARACTER = PRC_lidesheng
+						FLAG_DAYS = [?ROC_mao_focus_2_in_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			else = { #NOT BEEN WORKED ON (Just Explain)
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = ROC_focus_can_only_be_completed_by_advisor_tt
+						CHARACTER = PRC_lidesheng
+						FOCUS = ROC_focus_inner_circle_desperate_war_fox_mao
+					}
+					always = no
+				}
+			}
 		}
 		icon = GFX_goal_unknown
 		relative_position_id = ROC_focus_inner_circle_reorganize_revolutionary_army
@@ -5179,17 +5363,45 @@ focus_tree = {
 			focus = ROC_focus_inner_circle_reorganize_revolutionary_army
 		}
 		completion_reward = {
-			
+			add_ideas = ROC_inner_mao_zhongshi
 		}
 	}
 
 	focus = {#党指挥枪
 		id = ROC_focus_inner_circle_party_commands_the_gun
-		cost = 4
+		cost = 7
 		x = 1
 		y = 1
 		ai_will_do = {
 			base = 10
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = ROC_mao_focus_3_in_progress_flag
+				}
+				set_temp_variable = {
+					temp_focus_days = 49
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = ROC_inner_circle_focus_in_progress_tt
+						CHARACTER = PRC_lidesheng
+						FLAG_DAYS = [?ROC_mao_focus_3_in_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			else = { #NOT BEEN WORKED ON (Just Explain)
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = ROC_focus_can_only_be_completed_by_advisor_tt
+						CHARACTER = PRC_lidesheng
+						FOCUS = ROC_focus_inner_circle_desperate_war_fox_mao
+					}
+					always = no
+				}
+			}
 		}
 		icon = GFX_goal_unknown
 		relative_position_id = ROC_focus_inner_circle_reorganize_revolutionary_army
@@ -5197,17 +5409,48 @@ focus_tree = {
 			focus = ROC_focus_inner_circle_reorganize_revolutionary_army
 		}
 		completion_reward = {
-			
+			swap_ideas = {
+				remove_idea = ROC_inner_mao_fox_1
+				add_idea = ROC_inner_mao_fox_2
+			}
 		}
 	}
 
 	focus = {#军民鱼水情
 		id = ROC_focus_inner_circle_army_civilian_unity
-		cost = 4
+		cost = 7
 		x = -1
 		y = 1
 		ai_will_do = {
 			base = 10
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = ROC_mao_focus_4_in_progress_flag
+				}
+				set_temp_variable = {
+					temp_focus_days = 49
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = ROC_inner_circle_focus_in_progress_tt
+						CHARACTER = PRC_lidesheng
+						FLAG_DAYS = [?ROC_mao_focus_4_in_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			else = { #NOT BEEN WORKED ON (Just Explain)
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = ROC_focus_can_only_be_completed_by_advisor_tt
+						CHARACTER = PRC_lidesheng
+						FOCUS = ROC_focus_inner_circle_desperate_war_fox_mao
+					}
+					always = no
+				}
+			}
 		}
 		icon = GFX_goal_unknown
 		relative_position_id = ROC_focus_inner_circle_party_commands_the_gun
@@ -5218,7 +5461,10 @@ focus_tree = {
 			focus = ROC_focus_inner_circle_enforce_army_discipline
 		}
 		completion_reward = {
-			
+			swap_ideas = {
+				remove_idea = ROC_inner_mao_fox_2
+				add_idea = ROC_inner_mao_fox_3
+			}
 		}
 	}
 
