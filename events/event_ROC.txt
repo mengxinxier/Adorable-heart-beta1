@@ -825,7 +825,7 @@ country_event = {#粤桂战争
 	desc = roc.21.desc
 	is_triggered_only = yes
 	fire_only_once = yes
-	picture = GFX_ROC_ROC_NRA_prepara_War_event
+	picture = GFX_ROC_NRA_prepara_War_event
 	option = {#此等叛徒国贼，唯有以血洗血！
 		name = roc.21.a
 		complete_national_focus = ROC_focus_yuegui_war
@@ -838,7 +838,7 @@ country_event = {#粤桂战争 我方发起
 	desc = roc.22.desc
 	is_triggered_only = yes
 	fire_only_once = yes
-	picture = GFX_ROC_ROC_NRA_prepara_War_event
+	picture = GFX_ROC_NRA_prepara_War_event
 	option = {#大军西征，毕其功于一役！
 		name = roc.22.a
 		complete_national_focus = ROC_focus_yuegui_war
@@ -2861,6 +2861,272 @@ country_event = {#北伐胜利！
 			base = 10
 		}
 		custom_effect_tooltip = remove_ROC_policy_card_name_91
+	}
+}
+
+#[FROM.Getname]寻求联合政府
+country_event = {
+	id = roc.90
+	title = roc.90.title
+	desc = roc.90.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = roc.90.a
+		ROC = {
+			country_event = {
+				id = roc.91
+			}
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+	option = {
+		name = roc.90.b
+		ROC = {
+			country_event = {
+				id = roc.92
+			}
+		}
+		ai_chance = {
+			base = 75
+			modifier = {
+				ROC = { is_ai = no }
+				factor = 0
+			}
+			modifier = {
+				ROC = { has_government = PRC }
+				factor = 0.75
+			}
+		}
+	}
+}
+
+#[FROM.Getname]同意了进行谈判
+country_event = {
+	id = roc.91
+	title = roc.91.title
+	desc = roc.91.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = roc.91.a
+		country_event = {
+			id = roc.93
+			days = 3
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+#[FROM.Getname]拒绝
+country_event = {
+	id = roc.92
+	title = roc.92.title
+	desc = roc.92.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = roc.92.a
+		activate_targeted_decision = {
+			target = FROM
+			decision = ROC_attck_FROM
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+#[GetMonth]谈判
+country_event = {
+	id = roc.93
+	title = roc.93.title
+	desc = roc.93.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = roc.93.a
+		custom_effect_tooltip = ccp_controlled_states
+		effect_tooltip = {
+			add_dynamic_modifier = {
+				modifier = ROC_ccp_autonomous_region
+			}
+		}
+		hidden_effect = {
+			PRC = {
+				country_event = {
+					id = roc.96
+				}
+			}
+			country_event = {
+				id = roc.94
+				days = 3
+			}
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+	option = {
+		name = roc.93.b
+		hidden_effect = {
+			PRC = {
+				country_event = {
+					id = roc.95
+					days = 1
+				}
+			}
+			country_event = {
+				id = roc.95
+				days = 1
+			}
+		}
+		ai_chance = {
+			base = 25
+			modifier = {
+				PRC = { is_ai = no }
+				factor = 0
+			}
+		}
+	}
+}
+
+#统一日
+country_event = {
+	id = roc.94
+	title = roc.94.title
+	desc = roc.94.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = roc.94.a
+		set_country_flag = ROC_Form_coalition_government
+		PRC = {
+			every_other_country = {
+				limit = { is_subject_of = PREV }
+				every_owned_state = {
+					add_dynamic_modifier = {
+						modifier = ROC_ccp_autonomous_region
+					}
+				}
+				if = {
+					limit = { is_chinese_country = yes }
+					ROOT = {
+						set_temp_variable = { tag_to_release = PREV }
+						CHI_puppet_released_tag_and_old_govern = yes
+					}
+				}
+				else = {
+					ROOT = {
+						set_temp_variable = { tag_to_release = PREV }
+						puppet_released_tag_and_old_govern = yes
+					}
+				}
+			}
+			every_owned_state = {
+				add_dynamic_modifier = {
+					modifier = ROC_ccp_autonomous_region
+				}
+			}
+			every_core_state = {
+				add_core_of = ROOT
+			}
+			every_character = {
+				limit = { is_general_advisor = no }
+				set_nationality = ROOT
+			}
+			ROOT = { annex_country = { target = PREV transfer_troops = yes } }
+		}
+		hidden_effect = {
+			news_event = { id = roc_news.011 }
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+#谈判破裂
+country_event = {
+	id = roc.95
+	title = roc.95.title
+	desc = roc.95.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = roc.95.a
+		if = {
+			limit = { tag = ROC }
+			activate_targeted_decision = {
+				target = PRC
+				decision = ROC_attck_FROM
+			}
+		}
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+#谈判成功
+country_event = {
+	id = roc.96
+	title = roc.96.title
+	desc = roc.96.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = roc.96.a
+		custom_effect_tooltip = change_tag_to_ROC
+		ROC = { change_tag_from_ROOT = yes }
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+#国旗？
+country_event = {
+	id = roc.97
+	title = roc.97.title
+	desc = roc.97.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	picture = GFX_ROC_CKUG_event
+	option = {
+		name = roc.97.a
+		set_cosmetic_tag = ROC_CKUG
+		ai_chance = {
+			base = 25
+		}
+	}
+	option = {
+		name = roc.97.b
+		ai_chance = {
+			base = 25
+		}
+	}
+}
+
+
+
+
+#[FROM.Getname]拒绝
+country_event = {
+	id = roc.999
+	title = roc.999.title
+	desc = roc.999.desc
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = roc.999.a
+		ai_chance = {
+			base = 25
+		}
 	}
 }
 
