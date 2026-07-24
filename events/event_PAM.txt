@@ -7835,6 +7835,38 @@ country_event = {
     }
 }
 
+#在阳光落下的地方
+country_event = {
+    id = PAM.170
+    title = PAM.170.t
+    desc = PAM.170.d
+    is_triggered_only = yes
+    picture = GFX_event_PAM_xiaoguo6
+    immediate = {
+        hidden_effect = {
+            scoped_play_song = "鸟鸣"
+        }
+    }
+    option = {
+        name = PAM.170.a
+        ai_chance = {
+            base = 10
+        }
+        country_event = {
+            id = PAM.149
+            days = 5
+        }
+        hidden_effect = {
+            hidden_effect = {
+                set_variable = {
+                    end_ui_var = 4
+                }
+                scoped_play_song = "送往过去的话"
+            }
+        }
+    }
+}
+
 
 #路边有朵不认识的花
 country_event = {
@@ -7880,6 +7912,129 @@ country_event = {
             var = pam_am
             value = 2
             tooltip = PAM_yeyingam_tt
+        }
+    }
+}
+
+#站台上来了个小姑娘
+country_event = {
+    id = PAM.168
+    title = PAM.168.t
+    desc = PAM.168.d
+    picture = GFX_event_PAM_xiaoguo7
+    is_triggered_only = yes
+
+    option = {
+        name = PAM.168.a
+        ai_chance = { base = 70 }
+        add_equipment_to_stockpile = { type = infantry_equipment_1 amount = 2000 }
+        add_stability = 0.05
+        every_other_country = {
+            limit = {
+                has_government = fascism
+            }
+            ROOT = {
+                create_wargoal = {
+                    type = annex_everything
+                    target = PREV
+                }
+            }
+        }
+        FROM = {
+            custom_effect_tooltip = PAM_heal_the_world_tt
+            add_to_variable = { var = PAM_heal_consumer_goods_factor value = -0.02 tooltip = consumer_goods_factor_tt }
+            add_to_variable = { var = PAM_heal_research_speed_factor value = 0.03 tooltip = research_speed_factor_tt }
+            add_equipment_to_stockpile = { type = support_equipment amount = 500 producer = FROM }
+            add_equipment_to_stockpile = { type = infantry_equipment_1 amount = 2000 producer = FROM }
+            add_tech_bonus = {
+                name = "野火陆军战术交流"
+                bonus = 3.0
+                uses = 1
+                category = armor
+            }
+        }
+    }
+    option = {
+        name = PAM.168.b
+        ai_chance = { base = 30 }
+        FROM = {
+            add_to_variable = { var = pam_am value = 3 tooltip = PAM_yeyingam_tt }
+            army_experience = 50
+            add_offsite_building = { type = industrial_complex level = 1 }
+            add_offsite_building = { type = arms_factory level = 1 }
+            add_tech_bonus = {
+                name = "自给自足的军备"
+                bonus = 3
+                uses = 2
+                category = infantry_weapons
+            }
+        }
+    }
+}
+
+#在码头边
+country_event = {
+    id = PAM.169
+    title = PAM.169.t
+    desc = PAM.169.d
+    picture = GFX_event_PAM_xiaoguo8
+    is_triggered_only = yes
+
+    option = {
+        name = PAM.169.a
+        ai_chance = { base = 80 }
+
+        add_political_power = 50
+        every_other_country = {
+            limit = {
+                has_government = fascism
+            }
+            ROOT = {
+                create_wargoal = {
+                    type = annex_everything
+                    target = PREV
+                }
+            }
+        }
+        FROM = {
+            custom_effect_tooltip = PAM_heal_the_world_tt
+            add_to_variable = { var = PAM_heal_political_power_factor value = 0.05 tooltip = political_power_factor_tt }
+            add_to_variable = { var = PAM_heal_compliance_growth value = 0.05 tooltip = compliance_growth_tt }
+            add_offsite_building = { type = industrial_complex level = 2 }
+            add_equipment_to_stockpile = { type = motorized_equipment_1 amount = 500 producer = FROM }
+            add_equipment_to_stockpile = { type = support_equipment amount = 500 producer = FROM }
+        }
+    }
+
+    option = {
+        name = PAM.169.b
+        ai_chance = { base = 20 }
+        create_wargoal = {
+            type = annex_everything
+            target = PAM
+        }
+        FROM = {
+            activate_targeted_decision = {
+                target = ROOT
+                decision = PAO_jingong_FROM
+            }
+            add_to_variable = { var = pam_am value = 2 tooltip = PAM_yeyingam_tt }
+            add_stability = 0.10
+            every_owned_state = {
+                limit = { is_core_of = ROOT }
+                add_building_construction = {
+                    type = bunker
+                    level = 1
+                    instant_build = yes
+                }
+            }
+            add_tech_bonus = {
+                name = "边境防务工程"
+                bonus = 1.0
+                uses = 1
+                category = industry
+            }
+            army_experience = 50
         }
     }
 }
@@ -8045,37 +8200,37 @@ country_event = { #测试用
     immediate = {
     }
     option = {
-                every_country = {
-                    limit = {
-                        is_in_faction_with = DVL
-                    }
-                    PAM = {
-                        add_to_variable = {
-                            PAM_qscy_nucs = PREV.num_controlled_states
-                        }
-                    }
+        every_country = {
+            limit = {
+                is_in_faction_with = DVL
+            }
+            PAM = {
+                add_to_variable = {
+                    PAM_qscy_nucs = PREV.num_controlled_states
                 }
-                if = {
-                    limit = {
-                        check_variable = { PAM_qscy_nucs < 51 }
-                    }
-                    PAM = {
-                        add_to_variable = {
-                            var = pam_am
-                            value = PAM_qscy_nucs
-                            tooltip = PAM_yeyingam_tt
-                        }
-                    }
+            }
+        }
+        if = {
+            limit = {
+                check_variable = { PAM_qscy_nucs < 51 }
+            }
+            PAM = {
+                add_to_variable = {
+                    var = pam_am
+                    value = PAM_qscy_nucs
+                    tooltip = PAM_yeyingam_tt
                 }
-                else = {
-                    PAM = {
-                        add_to_variable = {
-                            var = pam_am
-                            value = 50
-                            tooltip = PAM_yeyingam_tt
-                        }
-                    }
+            }
+        }
+        else = {
+            PAM = {
+                add_to_variable = {
+                    var = pam_am
+                    value = 50
+                    tooltip = PAM_yeyingam_tt
                 }
+            }
+        }
         name = PAM.165.a
         ai_chance = {
             base = 10
