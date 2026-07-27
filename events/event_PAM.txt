@@ -8370,26 +8370,42 @@ country_event = {
         name = PAM.172.a
         ai_chance = { base = 90 }
 
+        set_country_flag = PAM_bop_loan_active #同意的flag
+        
         #从援助国向目标国转移10%部队与装备库存
-        var:PAM_loan_provider = {
-            transfer_units_fraction = {
-                target = ROOT
-                size = 0.10
-                stockpile_ratio = 0.10
-            }
-            country_event = { id = PAM.173 hours = 6 } #通知援助国：对方接受
-        }
+        effect_tooltip = {
+            var:PAM_loan_provider = {
+                transfer_units_fraction = {
+                    target = ROOT
+                    size = 0.10
+                    stockpile_ratio = 0.05
+                }
+                send_equipment_fraction = {
+                    value = 0.1
+                    target = ROOT
+                }
 
-        #挂载战后偿还监听任务
-        activate_mission = PAM_bop_repay_mission
+            }
+        }
+            var:PAM_loan_provider = {
+                country_event = { id = PAM.173 hours = 6 } #通知援助国：对方接受
+            }
+
     }
 
     #谢绝援助
     option = {
         name = PAM.172.b
-        ai_chance = { base = 10 }
+        ai_chance = { 
+            base = 10 
+            modifier = {
+                has_war = no
+                add = 1000
+            }
+        }
 
         clr_country_flag = PAM_bop_loan_active
+        clear_variable = PAM_loan_provider
         var:PAM_loan_provider = {
             country_event = { id = PAM.174 hours = 6 } #通知援助国：对方谢绝
         }
@@ -8406,6 +8422,7 @@ country_event = {
 
     option = {
         name = PAM.173.a
+        custom_effect_tooltip = PAM_bop_repay_mission
     }
 }
 

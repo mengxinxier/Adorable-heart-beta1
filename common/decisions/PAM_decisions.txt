@@ -1,33 +1,4 @@
-PAM_repay_category = {
-    PAM_bop_repay_mission = {
-        icon = GFX_PAM_amjy
-        allowed = { always = yes }
-        
-        available = {
-            has_war = no
-        }
 
-        days_mission_timeout = 3650
-        
-        complete_effect = {
-            #战后归还15%部队与装备库存
-            transfer_units_fraction = {
-                target = var:PAM_loan_provider
-                size = 0.15
-                stockpile_ratio = 0.15
-            }
-
-            var:PAM_loan_provider = {
-                country_event = { id = PAM.175 hours = 6 }
-            }
-            clr_country_flag = PAM_bop_loan_active
-        }
-        
-        timeout_effect = {
-            clr_country_flag = PAM_bop_loan_active
-        }
-    }
-}
 PAM_yy_bop_name = {
     PAM_set_power_bop = {
         icon = GFX_PAM_amjy
@@ -231,15 +202,15 @@ PAM_yy_bop_name = {
         }
     }
 
-     PAM_bop_loan_military = {
+    PAM_bop_loan_military = { #发出
         icon = GFX_PAM_amjy
         on_map_mode = decision_view_only
         allowed = { tag = PAM }
         visible = {
-
+            #has_completed_focus = PAM_mtyyynh
         }
         available = {
-            num_of_military_factories > 10
+            #num_of_factories > 50
             has_war = no
         }
 
@@ -256,9 +227,8 @@ PAM_yy_bop_name = {
             }
         }
 
-        complete_effect = {
+        complete_effect = { #发送事件并判定变量
             FROM = {
-                set_country_flag = PAM_bop_loan_active
                 set_variable = { var = PAM_loan_provider value = ROOT }
                 country_event = { id = PAM.172 hours = 6 }
             }
@@ -266,6 +236,96 @@ PAM_yy_bop_name = {
         }
 
         ai_will_do = { base = 0 }
+    }
+    PAM_bop_repay_mission = { #激活
+        icon = GFX_PAM_amjy
+        allowed = { tag = PAM }
+        
+        available = {
+            FROM = {
+                has_war = yes
+            }
+        }
+        activation = {
+            always = no
+        }
+
+        days_remove = 3650
+        cancel_trigger = {
+            FROM = {
+                or = {
+                    has_war_with  = ROOT
+                    has_war = no
+                    exists = no
+                }
+            }
+        }
+        target_trigger = {
+            FROM = {
+                exists = yes
+                is_subject = no
+                not = { has_war_with = ROOT }
+                has_country_flag = PAM_bop_loan_active
+            }
+        }
+        visible = {
+        }
+        cancel_effect = {
+            if = {
+                limit = {
+                    FROM = {
+                        or = {
+                            has_war_with  = ROOT
+                            exists = no
+                        }
+                    }
+                }
+                #因战争或对方打输中断
+                country_event = { id = PAM.176 hours = 6 }
+            }
+            else = {
+                #顺利完成
+                country_event = { id = PAM.175 hours = 6 }
+
+                set_temp_variable = { temp_pam_bop_re = FROM.num_of_factories }
+                add_to_temp_variable = { temp_pam_bop_re = ROOT.num_of_factories }
+                multiply_temp_variable = { temp_pam_bop_re = 0.01 }
+                round_temp_variable = { temp_pam_bop_re }
+		        add_offsite_building = { type = arms_factory level = temp_pam_bop_re } 
+		        add_offsite_building = { type = industrial_complex level = temp_pam_bop_re } 
+            }
+            FROM = {
+                clr_country_flag = PAM_bop_loan_active
+                clear_variable = PAM_loan_provider
+            }
+        }
+        
+        complete_effect = {
+            transfer_units_fraction = {
+                target = FROM
+                size = 0.10
+                stockpile_ratio = 0.05
+            }
+            effect_tooltip = {
+                send_equipment_fraction = {
+                    value = 0.1
+                    target = FROM
+                }
+            }
+            hidden_effect = {
+                send_equipment_fraction = {
+                    value = 0.05
+                    target = FROM
+                }
+            }
+        }
+        
+        remove_effect = {
+            FROM = {
+                clr_country_flag = PAM_bop_loan_active
+                clear_variable = PAM_loan_provider
+            }
+        }
     }
 
 
