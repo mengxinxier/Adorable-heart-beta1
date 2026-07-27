@@ -1,3 +1,33 @@
+PAM_repay_category = {
+    PAM_bop_repay_mission = {
+        icon = GFX_PAM_amjy
+        allowed = { always = yes }
+        
+        available = {
+            has_war = no
+        }
+
+        days_mission_timeout = 3650
+        
+        complete_effect = {
+            #战后归还15%部队与装备库存
+            transfer_units_fraction = {
+                target = var:PAM_loan_provider
+                size = 0.15
+                stockpile_ratio = 0.15
+            }
+
+            var:PAM_loan_provider = {
+                country_event = { id = PAM.175 hours = 6 }
+            }
+            clr_country_flag = PAM_bop_loan_active
+        }
+        
+        timeout_effect = {
+            clr_country_flag = PAM_bop_loan_active
+        }
+    }
+}
 PAM_yy_bop_name = {
     PAM_set_power_bop = {
         icon = GFX_PAM_amjy
@@ -199,6 +229,43 @@ PAM_yy_bop_name = {
             }
             add_to_variable = { var = pam_am value = 10 tooltip = PAM_yeyingam_tt } #+10安眠点数
         }
+    }
+
+     PAM_bop_loan_military = {
+        icon = GFX_PAM_amjy
+        on_map_mode = decision_view_only
+        allowed = { tag = PAM }
+        visible = {
+
+        }
+        available = {
+            num_of_military_factories > 10
+            has_war = no
+        }
+
+        cost = 50
+        fire_only_once = no
+        
+        target_trigger = {
+            FROM = {
+                exists = yes
+                has_war = yes
+                is_subject = no
+                not = { has_war_with = ROOT }
+                not = { has_country_flag = PAM_bop_loan_active }
+            }
+        }
+
+        complete_effect = {
+            FROM = {
+                set_country_flag = PAM_bop_loan_active
+                set_variable = { var = PAM_loan_provider value = ROOT }
+                country_event = { id = PAM.172 hours = 6 }
+            }
+            custom_effect_tooltip = PAM_bop_loan_military_tt
+        }
+
+        ai_will_do = { base = 0 }
     }
 
 
