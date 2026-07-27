@@ -203,20 +203,21 @@ PAM_yy_bop_name = {
     }
 
     PAM_bop_loan_military = { #发出
-        icon = GFX_PAM_amjy
+        icon = GFX_PAM_denghuo
         on_map_mode = decision_view_only
         allowed = { tag = PAM }
         visible = {
-            #has_completed_focus = PAM_mtyyynh
+            has_completed_focus = PAM_mtyyynh
         }
         available = {
-            #num_of_factories > 50
+            num_divisions > 9
+            has_army_manpower = { size > 49999 }
             has_war = no
         }
 
         cost = 50
         fire_only_once = no
-        
+
         target_trigger = {
             FROM = {
                 exists = yes
@@ -238,9 +239,9 @@ PAM_yy_bop_name = {
         ai_will_do = { base = 0 }
     }
     PAM_bop_repay_mission = { #激活
-        icon = GFX_PAM_amjy
+        icon = GFX_PAM_pdtl
         allowed = { tag = PAM }
-        
+
         available = {
             FROM = {
                 has_war = yes
@@ -291,16 +292,22 @@ PAM_yy_bop_name = {
                 add_to_temp_variable = { temp_pam_bop_re = ROOT.num_of_factories }
                 multiply_temp_variable = { temp_pam_bop_re = 0.01 }
                 round_temp_variable = { temp_pam_bop_re }
-		        add_offsite_building = { type = arms_factory level = temp_pam_bop_re } 
-		        add_offsite_building = { type = industrial_complex level = temp_pam_bop_re } 
+                add_offsite_building = { type = arms_factory level = temp_pam_bop_re }
+                add_offsite_building = { type = industrial_complex level = temp_pam_bop_re }
             }
             FROM = {
                 clr_country_flag = PAM_bop_loan_active
                 clear_variable = PAM_loan_provider
             }
         }
-        
+
         complete_effect = {
+            if = { #上限小于100%增加0.25%上限
+                limit = {
+                    check_variable = { PAM_yy_bop_max_limit < 1.001 }
+                }
+                add_to_variable = { var = PAM_yy_bop_max_limit value = 0.005 tooltip = PAM_yy_bop_max_limit_tt }
+            }
             transfer_units_fraction = {
                 target = FROM
                 size = 0.10
@@ -319,7 +326,7 @@ PAM_yy_bop_name = {
                 }
             }
         }
-        
+
         remove_effect = {
             FROM = {
                 clr_country_flag = PAM_bop_loan_active
