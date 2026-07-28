@@ -515,6 +515,8 @@ ROC_reunit_of_china_d_c = {
 			}
 			ROC_policy_card_modifier = yes
 			custom_effect_tooltip = generic_skip_one_line_tt
+			add_ideas = ROC_crushed_country_1
+			custom_effect_tooltip = generic_skip_one_line_tt
 			custom_effect_tooltip = new_foucs_is_ready
 			mark_focus_tree_layout_dirty = yes
 			if = {
@@ -1044,6 +1046,202 @@ ROC_reunit_of_china_d_c = {
 		fire_only_once = yes
 		days_remove = 5
 		
+	}
+}
+
+#[ROOT.Getname]外交部
+ROC_foreign_ministry = {
+	ROC_diplo_attck_FROM = {
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = { is_subject = no }
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						#is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		available = {
+			FROM = {
+				not = {
+					or = {
+						has_war_with = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+			not = {
+				has_country_flag = CHI_war_plan_going_on
+			}
+			not = { has_non_aggression_pact_with = FROM }
+			or = {
+				any_home_area_neighbor_country = {
+					or = {
+						tag = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				any_allied_country = {
+					any_home_area_neighbor_country = {
+						or = {
+							tag = FROM
+							is_in_faction_with = FROM
+						}
+					}
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		complete_effect = {
+			set_country_flag = { flag = CHI_war_plan_going_on value = 1 days = 17 }
+			FROM_country_is_defender_and_ROOT_is_accacker = yes
+		}
+		remove_effect = {
+			clr_country_flag = CHI_war_plan_going_on
+			declare_war_on = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+		ai_will_do = {
+			base = 1000
+			modifier = {
+				any_home_area_neighbor_country = {
+					has_war_with = ROOT
+				}
+				factor = 0
+			}
+			modifier = {
+				FROM = {
+					is_stronger_than_ROOT_and_not_vulnerable = yes
+				}
+				factor = 0
+			}
+		}
+	}
+	ROC_diplo_invite_FROM = {
+		icon = GFX_decision_CHL_grant_full_rights_to_the_mapuche
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_faction_leader = yes
+			}
+			FROM = {
+				not = { has_country_flag = CHI_diplo_invite_FROM }
+			}
+		}
+		available = {
+			is_faction_leader = yes
+			FROM = {
+				is_in_faction = no
+			}
+			not = {
+				or = {
+					has_war_with = FROM
+					is_in_faction_with = FROM
+				}
+			}
+		}
+		cost = 10
+		days_remove = 15
+		war_with_target_on_remove = yes
+		remove_effect = {
+			FROM = {
+				set_country_flag = CHI_diplo_invite_FROM
+				country_event = {
+					id = generic.2008
+				}
+			}
+		}
+		ai_will_do = {
+			base = 1000
+		}
+	}
+	ROC_join_FROM = {
+		icon = GFX_decision_category_generic_foreign_policy
+		allowed = {
+			always = no
+		}
+		target_trigger = {
+			ROOT = {
+				is_subject = no
+				is_in_faction = no
+			}
+			FROM = {
+				is_faction_leader = yes
+			}
+		}
+		available = {
+			is_in_faction = no
+			not = {
+				or = {
+					has_war_with = FROM
+					is_in_faction_with = FROM
+				}
+			}
+			if = {
+				limit = { has_government = communism }
+				FROM = { has_government = communism }
+			}
+			else_if = {
+				limit = { has_government = democratic }
+				FROM = { has_government = democratic }
+			}
+			else_if = {
+				limit = { has_government = neutrality }
+				FROM = {
+					or = {
+						has_government = democratic
+						has_government = neutrality
+						has_government = fascism
+					}
+				}
+			}
+			else = {
+				FROM = {
+					or = {
+						has_government = neutrality
+						has_government = fascism
+					}
+				}
+			}
+		}
+		fire_only_once = yes
+		cost = 10
+		days_remove = 0
+		remove_effect = {
+			FROM = { country_event = generic.2002 }
+		}
+		ai_will_do = {
+			base = 50
+			modifier = {
+				FROM = {
+					not = {
+						or = {
+							tag = SOV
+							tag = GER
+							tag = DVL
+							tag = ENG
+							is_ai = no
+						}
+					}
+				}
+				factor = 0
+			}
+		}
 	}
 }
 
