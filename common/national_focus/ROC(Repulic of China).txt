@@ -3964,6 +3964,75 @@ focus_tree = {
 				value = 0.5
 				tooltip = adorable_heart_focus_var_change_tt
 			}
+			if = {
+				limit = { has_government = communism }
+				every_other_country = {
+					limit = {
+						is_faction_leader = yes
+						has_government = communism
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = ROC_join_FROM
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { has_government = democratic }
+				every_other_country = {
+					limit = {
+						is_faction_leader = yes
+						has_government = democratic
+						not = { tag = JAP }
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = ROC_join_FROM
+						}
+					}
+				}
+			}
+			else_if = {
+				limit = { has_government = neutrality }
+				every_other_country = {
+					limit = {
+						is_faction_leader = yes
+						or = {
+							has_government = democratic
+							has_government = neutrality
+							has_government = fascism
+						}
+						not = { tag = JAP }
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = ROC_join_FROM
+						}
+					}
+				}
+			}
+			else = {
+				every_other_country = {
+					limit = {
+						is_faction_leader = yes
+						or = {
+							has_government = neutrality
+							has_government = fascism
+						}
+						not = { tag = JAP }
+					}
+					ROOT = {
+						activate_targeted_decision = {
+							target = PREV
+							decision = ROC_join_FROM
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -4253,14 +4322,13 @@ focus_tree = {
 			focus = ROC_focus_save_europe
 		}
 		select_effect = {
-			if = {
-				limit = { not = { check_variable = { adorable_heart_focus_var < 1 } } }
-				add_to_variable = { adorable_heart_focus_var = -1 }
-				complete_national_focus = ROC_focus_canton_adm
-			}
 		}
 		completion_reward = {
-			custom_effect_tooltip = Generic_complete_if_focus_var_up_to_1
+			add_to_variable = {
+				var = adorable_heart_focus_var
+				value = 0.5
+				tooltip = adorable_heart_focus_var_change_tt
+			}
 
 		}
 	}
@@ -4449,6 +4517,13 @@ focus_tree = {
 		ai_will_do = {
 			base = 10
 		}
+		dynamic = yes
+		icon = {
+			GFX_goal_unknown = {
+				has_government = communism
+			}
+			GFX_goal_unknown = yes
+		}
 		icon = GFX_goal_unknown
 		relative_position_id = ROC_focus_I_am_backkkkk
 		prerequisite = {
@@ -4457,12 +4532,39 @@ focus_tree = {
 		mutually_exclusive = {
 			focus = ROC_focus_join_the_faction
 		}
+		available = {
+			is_subject = no
+			is_in_faction = no
+		}
 		completion_reward = {
 			add_to_variable = {
 				var = adorable_heart_focus_var
 				value = 0.5
 				tooltip = adorable_heart_focus_var_change_tt
 			}
+			if = {
+				limit = { has_government = communism }
+				create_faction_from_template = {
+					template = faction_template_PRC_Mao
+					icon = GFX_faction_logo_kmt
+				}
+			}
+			else_if = {
+				limit = {
+					has_country_leader = {
+						character = ROC_Chen
+						ruling_only = yes
+					}
+				}
+				create_faction_from_template = faction_template_Asian_Freedom_Alliance_ROC
+			}
+			else = {
+				create_faction_from_template = {
+					template = faction_template_Asian_Freedom_Alliance_ROC
+					name = ROC_Alliance_of_Asian_National_Liberation
+				}
+			}
+			add_faction_initiative = 3
 		}
 	}
 
@@ -11225,13 +11327,7 @@ focus_tree = {
 					}
 				}
 			}
-			ELSE_IF = {
-				limit = {
-					996 = {
-						is_fully_controlled_by = ROOT
-						naval_base < 9
-					}
-				}
+			else = {
 				996 = {
 					add_building_construction = {
 						type = naval_base
@@ -12077,7 +12173,7 @@ focus_tree = {
 
 	}
 
-	shared_focus = {   ##明日之海
+	shared_focus = {   ##海军分防计划
 		id = ROC_naval_separate_defense_plan
 		icon = GFX_goal_generic_navy_carrier
 		prerequisite = { focus = ROC_mobile_bases }
@@ -12087,7 +12183,7 @@ focus_tree = {
 		relative_position_id = ROC_mobile_bases
 		cost = 4
 		available = {
-			has_idea = CHI_chen_shaokuan
+			has_idea = ROC_Hwah_Jah_political_idea
 		}
 
 		##search_filters = {FOCUS_FILTER_RESEARCH}
@@ -12126,7 +12222,7 @@ focus_tree = {
 		}
 	}
 
-	shared_focus = {   ##长程屏卫
+	shared_focus = {   ##明日之海
 		id = ROC_the_seas_of_tomorrow
 		icon = GFX_focus_SMB_blue_water_fleet
 		prerequisite = { focus = ROC_battleship_focus focus = ROC_heavy_cruiser_focus focus = ROC_mobile_bases focus = ROC_coastal_defence focus = ROC_long_range }
