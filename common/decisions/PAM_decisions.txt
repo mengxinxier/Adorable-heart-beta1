@@ -320,8 +320,83 @@ PAM_yy_bop_name = {
             }
             FROM = {
                 clr_country_flag = PAM_bop_loan_active
+                clr_country_flag = PAM_bop_loan_active_re
                 clear_variable = PAM_loan_provider
             }
+        }
+
+        complete_effect = {
+            FROM = {
+                set_country_flag = PAM_bop_loan_active_re
+            }
+            transfer_units_fraction = {
+                target = FROM
+                size = 0.10
+                stockpile_ratio = 0.05
+            }
+            effect_tooltip = {
+                send_equipment_fraction = {
+                    value = 0.1
+                    target = FROM
+                }
+            }
+            hidden_effect = {
+                send_equipment_fraction = {
+                    value = 0.05
+                    target = FROM
+                }
+            }
+        }
+
+        remove_effect = {
+            FROM = {
+                clr_country_flag = PAM_bop_loan_active
+                clr_country_flag = PAM_bop_loan_active_re
+                clear_variable = PAM_loan_provider
+            }
+        }
+    }
+    PAM_bop_repay_mission_re = { #继续援助
+        icon = GFX_PAM_pdtl
+        allowed = { tag = PAM }
+
+        available = {
+            FROM = {
+                has_war = yes
+            }
+            num_divisions > 29
+            has_army_manpower = { size > 249999 }
+            fighting_army_strength_ratio = {
+                tag = FROM
+                ratio > 0.5
+            }
+        }
+        activation = {
+            always = no
+        }
+
+        days_remove = 30
+        cancel_trigger = {
+            FROM = {
+                or = {
+                    has_war_with  = ROOT
+                    has_war = no
+                    exists = no
+                }
+            }
+        }
+        target_trigger = {
+            FROM = {
+                exists = yes
+                is_subject = no
+                not = { has_war_with = ROOT }
+                has_country_flag = PAM_bop_loan_active
+                has_country_flag = PAM_bop_loan_active_re
+            }
+        }
+        visible = {
+        }
+        cancel_effect = {
         }
 
         complete_effect = {
@@ -345,10 +420,6 @@ PAM_yy_bop_name = {
         }
 
         remove_effect = {
-            FROM = {
-                clr_country_flag = PAM_bop_loan_active
-                clear_variable = PAM_loan_provider
-            }
         }
     }
 
