@@ -1617,7 +1617,6 @@ MAN_Anti_Japanese_united_front = {
 		visible = {
 			or = {
 				has_completed_focus = MAN_Second_united_front
-				has_completed_focus = MAN_War_of_Independence_begins
 				is_debug = yes
 			}
 		}
@@ -1687,6 +1686,10 @@ MAN_Anti_Japanese_united_front = {
 				type = artillery_equipment
 				amount = 100
 			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 100
+			}
 			MAN_sub_Japan_Attitude_effect = yes
 		}
 	}
@@ -1698,9 +1701,9 @@ MAN_Anti_Japanese_united_front = {
 		available = {
 			is_subject_of = JAP
 		}
-		cost = 100
-		days_remove = 90
-		remove_effect = {
+		cost = 75
+		days_remove = 50
+		complete_effect = {
 			MAN_add_Japan_Attitude_effect = yes
 		}
 	}
@@ -1712,9 +1715,9 @@ MAN_Anti_Japanese_united_front = {
 		available = {
 			is_subject_of = JAP
 		}
-		cost = 100
-		days_remove = 90
-		remove_effect = {
+		cost = 75
+		days_remove = 50
+		complete_effect = {
 			MAN_add_Army_Allowed_effect = yes
 		}
 	}
@@ -1733,7 +1736,7 @@ MAN_Anti_Japanese_united_front = {
 		}
 	}
 	#援助同志
-	NGD_assist_KMT_decision = {
+	MAN_assist_KMT_decision = {
 		icon = GFX_decision_generic_ignite_civil_war
 		visible = {
 			or = {
@@ -1768,7 +1771,7 @@ MAN_Anti_Japanese_united_front = {
 			}
 		}
 	}
-	NGD_assist_PRC_decision = {
+	MAN_assist_PRC_decision = {
 		icon = GFX_decision_generic_ignite_civil_war
 		visible = {
 			or = {
@@ -1917,57 +1920,25 @@ MAN_China_construction_strategy = {
 	MAN_establish_a_central_government = {
 		visible = {
 			or = {
-				has_completed_focus = MAN_restore_China
+				has_completed_focus = MAN_Second_united_front
+				has_completed_focus = MAN_chase_the_deer
 				is_debug = yes
 			}
 		}
 		available = {
-			CHI = {
-				exists = no
-			}
-			ROC = {
-				exists = no
-			}
-			PRC = {
-				exists = no
-			}
-			TIB = {
-				exists = no
-			}
-			XSM = {
-				exists = no
-			}
-			SIK = {
-				exists = no
-			}
-			MON = {
-				exists = no
-			}
-			YUN = {
-				exists = no
-			}
-			GXC = {
-				exists = no
-			}
-			WUH = {
-				exists = no
-			}
-			FUJ = {
-				exists = no
-			}
-			SIC = {
-				exists = no
-			}
-			JSZ = {
-				exists = no
+			608 = {
+				or = {
+					is_controlled_by = ROOT
+					controller = { is_subject_of = ROOT }
+				}
 			}
 		}
 		fire_only_once = yes
 		complete_effect = {
-			every_owned_state = {
+			every_state = {
 				limit = {
 					or = {
-						is_claimed_by = root
+						is_claimed_by = ROOT
 						is_core_of = CHI
 						is_core_of = ROC
 						is_core_of = PRC
@@ -1984,7 +1955,7 @@ MAN_China_construction_strategy = {
 						is_core_of = JSZ
 					}
 				}
-				add_core_of = root
+				add_core_of = ROOT
 			}
 			set_cosmetic_tag = MAN_chongjian
 			clr_global_flag = china_second_sino_japanese_war
@@ -2042,6 +2013,67 @@ MAN_China_construction_strategy = {
 					add_extra_state_shared_building_slots = 1
 				}
 			}
+		}
+	}
+}
+
+
+#军队改革
+MAN_army_reform_decision = {
+	MAN_army_reform = {
+		icon = generic_prepare_civil_war
+		available = {
+			has_army_experience > 99
+			OR = {
+				# has_completed_focus = ROC_National_Revolutionary_Army
+				AND = {
+					has_completed_focus = MAN_National_Revolutionary_Army
+					has_country_flag = dongbeiyizhi_flag
+				}
+			}
+		}
+		cost = 0
+		ai_will_do = {
+			factor = 500
+		}
+		days_remove = 90
+		visible = {
+			NOT = {
+				has_country_flag = MAN_army_reform_done
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					has_idea = MAN_NRA_1
+				}
+				swap_ideas = {
+					remove_idea = MAN_NRA_1
+					add_idea = MAN_NRA_2
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = MAN_NRA_2
+				}
+				swap_ideas = {
+					remove_idea = MAN_NRA_2
+					add_idea = MAN_NRA_3
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = MAN_NRA_3
+				}
+				swap_ideas = {
+					remove_idea = MAN_NRA_3
+					add_idea = MAN_NRA_4
+				}
+				set_country_flag = MAN_army_reform_done
+			}
+		}
+		complete_effect = {
+			army_experience = -100
 		}
 	}
 }

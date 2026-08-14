@@ -4,6 +4,7 @@ NDefines.NCareerProfile.MOD_STATISTICS_GROUP = "AdorableHeart_career_profile"
 NDefines.NCareerProfile.MOD_STATISTICS_GROUP_NAME = "ADORABLEHEART_CAREER_PROFILE"
 
 -- 游戏性预设
+NDefines.NGame.SAVE_VERSION = 318											-- Vanilla is 30 存档标识
 NDefines.NGame.END_DATE = "1999.1.1.1"										-- Vanilla is 1949.1.1.1
 NDefines.NCountry.EVENT_PROCESS_OFFSET = 5									-- Vanilla is 20 再苦一苦CPU...
 
@@ -90,3 +91,14 @@ NDefines.NDiplomacy.MARKET_ACCESS_ACCEPTANCE_NON_AGGRESSION_PACT = 25           
 -- 消费品
 NDefines.NProduction.MINIMUM_NUMBER_OF_FACTORIES_TAKEN_BY_CONSUMER_GOODS_PERCENT = 0.05	-- The minimum number of factories we have to put on consumer goods, in percent.
 
+-- 丝滑的摄像机
+NDefines_Graphics.NFrontend.CAMERA_MIN_HEIGHT = 30.0
+NDefines_Graphics.NGraphics.CAMERA_ZOOM_SPEED = 50
+NDefines_Graphics.NGraphics.CAMERA_ZOOM_KEY_SCALE = 0.02
+NDefines_Graphics.NGraphics.CAMERA_ZOOM_SPEED_DISTANCE_MULT = 8.0
+
+-- 奇迹工程
+NDefines.NProject.BREAKTHROUGH_DAILY_TECHNOLOGY_GAIN = 24          -- Vanilla is 12 突破点每日获取
+NDefines.NProject.BREAKTHROUGH_DAILY_SCIENTIST_SKILL_GAIN = 10     -- Vanilla is 5 科学家技能的突破点获取
+NDefines.NProject.BREAKTHROUGH_DAILY_ROCKET_SITE_GAIN = 2          -- Vanilla is 1 火箭基地的突破点获取
+NDefines.NProject.BREAKTHROUGH_DAILY_NUCLEAR_REACTOR_GAIN = 2      -- Vanilla is 1 核反应堆的突破点获取

@@ -4,7 +4,7 @@ scripted_gui = {
 		context_type = player_context
 		window_name = "adorable_heart_super_event"
 		visible = {
-			has_country_flag = adorable_heart_Super_Event_Visible
+			has_variable = adorable_heart_super_event_var
 			is_ai = no
 		}
 		properties = {
@@ -19,9 +19,9 @@ scripted_gui = {
 		}
 	}
 	##提示框
-	Adorable_heart_alerts_window = {
+	Adorable_heart_alerts_old_window = {
 		context_type = player_context
-		window_name = "Adorable_heart_alerts_window"
+		window_name = "Adorable_heart_alerts_old_window"
 		dirty = global.Adorable_heart_alerts_dirty
 		ai_enabled = {
 			always = no
@@ -155,6 +155,7 @@ scripted_gui = {
 			World_History_Button_4 = { frame = World_History_Button_4_Var }
 			World_History_Button_5 = { frame = World_History_Button_5_Var }
 			World_History_Button_6 = { frame = World_History_Button_6_Var }
+			Route_Guide_Hidden_Button = { frame = hidden_route_guide_var }
 		}
 		triggers = {
 			welcome_text_visible = { Adorable_Heart_Welcome_Winodw_Production_Team_Announcement = yes }
@@ -181,6 +182,10 @@ scripted_gui = {
 			ROOT_flag_entry_Flame_Route_Guide_visible = { Adorable_Heart_Welcome_Winodw_Route_Guide = yes }
 			Route_Guide_Title_visible = { Adorable_Heart_Welcome_Winodw_Route_Guide = yes }
 			Route_Guide_Text_visible = { Adorable_Heart_Welcome_Winodw_Route_Guide = yes }
+			Route_Guide_Hidden_Button_visible = {
+				Adorable_Heart_Welcome_Winodw_Route_Guide = yes
+				has_variable = hidden_route_guide_var
+			}
 		}
 		effects = {
 			Country_History_Button_click = {
@@ -332,6 +337,7 @@ scripted_gui = {
 				hidden_effect = {
 					if = {
 						limit = { NOT = { has_country_flag = Adorable_Heart_Start } }
+						set_variable = { adorable_heart_super_event_music_button_var = 2 }
 						set_country_flag = Adorable_Heart_Start
 						country_event = { id = generic.2014 }
 						ah_music_start = yes
@@ -342,7 +348,6 @@ scripted_gui = {
 						else = { set_variable = { Chinese_Secondary_News_button_var = 1 } }
 					}
 					set_country_flag = Adorable_heart_opinion_button_visible
-					set_variable = { adorable_heart_super_event_music_button_var = 2 }
 				}
 			}
 			close_button_UP_click = {
@@ -350,6 +355,7 @@ scripted_gui = {
 				hidden_effect = {
 					if = {
 						limit = { NOT = { has_country_flag = Adorable_Heart_Start } }
+						set_variable = { adorable_heart_super_event_music_button_var = 2 }
 						set_country_flag = Adorable_Heart_Start
 						country_event = { id = generic.2014 }
 						ah_music_start = yes
@@ -360,7 +366,6 @@ scripted_gui = {
 						else = { set_variable = { Chinese_Secondary_News_button_var = 1 } }
 					}
 					set_country_flag = Adorable_heart_opinion_button_visible
-					set_variable = { adorable_heart_super_event_music_button_var = 2 }
 				}
 			}
 			button_contact_us_click = {
@@ -371,6 +376,15 @@ scripted_gui = {
 					set_country_flag = contact_us_window_visible
 					set_variable = { Adorable_Heart_contact_us_var = 1 }
 				}
+            }
+			Route_Guide_Hidden_Button_click = {
+				if = {
+					limit = {
+						check_variable = { hidden_route_guide_var = 2 }
+					}
+					set_variable = { hidden_route_guide_var = 1 }
+				}
+				else = { set_variable = { hidden_route_guide_var = 2 } }
             }
 		}
 	}
@@ -402,10 +416,22 @@ scripted_gui = {
 		window_name = "Adorable_Heart_End_window"
 		context_type = player_context
 		visible = {
-			has_country_flag = Adorable_Heart_End_window_view
+			or = {
+				has_country_flag = Adorable_Heart_End_window_view
+				has_variable = end_ui_var
+			}
 		}
 		effects = {
-			close_button_click = { clr_country_flag = Adorable_Heart_End_window_view }
+			close_button_click = {
+				if = {
+					limit = { has_variable = end_ui_var }
+					clear_variable = end_ui_var
+				}
+				if = {
+					limit = { has_country_flag = Adorable_Heart_End_window_view }
+					clr_country_flag = Adorable_Heart_End_window_view
+				}
+			}
 		}
 		triggers = {
 		}
@@ -490,6 +516,52 @@ scripted_gui = {
 		effects = {
 		}
 	}
+    Adorable_heart_city_story_button_container2 = {
+        context_type = selected_state_context
+        parent_window_token = selected_state_view
+        window_name = "Adorable_heart_city_story_button_container2"
+        visible = {
+            THIS = { has_state_flag = has_city_story2 }
+        }
+        properties = {
+        }
+        triggers = {
+        }
+        effects = {
+			Adorable_heart_city_story_button_click = {
+                if = {
+                    limit = {
+                        check_variable = { ROOT.Adorable_heart_city_story_var2 = 1 }
+                    }
+                    set_variable = { ROOT.Adorable_heart_city_story_var2 = 0 }
+                }
+                else = {
+                    set_variable = { ROOT.Adorable_heart_city_story_var2 = 1 }
+                }
+            }
+        }
+    }
+    Adorable_heart_city_story_container2 = {
+        window_name = "Adorable_heart_city_story_container2"
+        context_type = selected_state_context
+        parent_window_token = selected_state_view
+        visible = {
+            THIS = { has_state_flag = has_city_story2 }
+            check_variable = { ROOT.Adorable_heart_city_story_var2 = 1 }
+        }
+        properties = {
+			Adorable_heart_city_pic = {
+				image = "[Adorable_heart_city_pic_2]"
+			}
+        }
+        triggers = {
+        }
+        effects = {
+			close_button_click = {
+                set_variable = { ROOT.Adorable_heart_city_story_var2 = 0 }
+            }
+        }
+    }
 #钢铁萌心选项
 	Adorable_heart_opinion_button = {
 		context_type = player_context
@@ -929,6 +1001,56 @@ scripted_gui = {
 						check_variable = { resource@coal > -02 }
 					}
 				}
+			}
+		}
+	}
+}
+#历史记录
+scripted_gui = {
+	superevents_note_window = {
+		window_name = "superevents_note_window"
+		#context_type = decision_category
+		context_type = player_context
+		#parent_window_token = politics_tab
+		visible = {
+			has_country_flag = superevents_note_window_visible
+		}
+		properties = {
+			superevents_note_image = {
+				image = "[get_superevents_note_image]"
+			}
+		}
+		dynamic_lists = {
+			superevents_note_gridboxtype = {
+				array = global.superevents_note_array
+				index = superevents_note_array_i
+				value = superevents_note_array_id
+				entry_container = superevents_note_entry_container
+			}
+		}
+		effects = {
+			close_button_click = { clr_country_flag = superevents_note_window_visible }
+			Adorable_heart_super_event_music_button_click = { fire_super_event_note_music = yes }
+		}
+		triggers = {
+		}
+	}
+	superevents_note_window_button = {
+		window_name = "superevents_note_window_button"
+		#context_type = decision_category
+		context_type = player_context
+		parent_window_token = politics_tab
+		visible = {
+		}
+		triggers = {
+		}
+		effects = {
+			superevents_note_open_button_click = {
+				if = {
+					limit = { has_country_flag = superevents_note_window_visible }
+					clr_country_flag = superevents_note_window_visible
+				}
+				else = { set_country_flag = superevents_note_window_visible }
 			}
 		}
 	}

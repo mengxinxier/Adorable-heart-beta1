@@ -649,13 +649,53 @@
 		include = generic_artillery_organization
 		icon = GFX_idea_royal_arsenal
 		allowed = {	
-			tag = ENG
+			OR= {
+				tag = ENG
+				tag = ROC
+			}
 		}		
-		visible = {			
+		visible = {	
+			if = {
+				limit = {
+					FROM = {
+						tag = ROC
+					}
+				}
+				FROM = {
+					has_country_flag = ROC_Get_Mio_FROM_ENG_flag
+				}
+			}		
 		}		
 		available = {
+			if = {
+				limit = {
+					FROM = {
+						NOT = {
+							tag = ENG
+						}
+					}
+				}
+				FROM = {
+					NOT = {
+						has_war_with = ENG
+					}
+				}
+			}
 		}
-
+		on_tech_research_completed = {
+			if = {
+				limit = {
+					FROM = {
+						tag = ROC
+					}
+				}
+				ENG = {
+					mio:ENG_royal_arsenal_organization = {
+						add_mio_funds = 500
+					}
+				}
+			}
+		}
 		initial_trait = {
 			organization_modifier = {
 				military_industrial_organization_research_bonus = 0.05
@@ -1717,3 +1757,29 @@
 			}
 		}
 	}
+
+
+
+ENG_crewe_works_organization = {
+	include = generic_train_organization
+	icon = GFX_idea_ENG_crewe
+	allowed = {
+		original_tag = ENG
+	}
+
+	initial_trait = {
+		name = generic_mio_initial_trait_generic_train_manufacturer
+		limit_to_equipment_type = { 
+			train_equipment 
+			#support_equipment
+		}
+
+		production_bonus = {
+			production_efficiency_cap_factor = 0.03
+		}
+
+		organization_modifier = {
+			military_industrial_organization_research_bonus = 0 #5% from MIO base
+		}
+	}
+}

@@ -2482,6 +2482,7 @@ SOV_special_military_operations_category = {
 				unlock_decision_tooltip = SOV_integrate_Kiev_region
 			}
 			UKR = {
+				drop_cosmetic_tag = yes
 				create_country_leader = {
 					name = SOV_Lada   ##拉达
 					desc = ""
@@ -3020,7 +3021,7 @@ SOV_propaganda_campaigns = {
 		}
 
 		visible = {
-			has_completed_focus = SOV_revive_the_stakhanovite_movement
+			has_completed_focus = SOV_the_komsomol
 		}
 
 		days_remove = 150
@@ -3549,7 +3550,8 @@ SOV_propaganda_campaigns = {
 		}
 
 		visible = {
-			has_completed_focus = SOV_earth_security_policy
+			#has_completed_focus = SOV_earth_security_policy
+			always = no
 		}
 
 		days_remove = 150
@@ -4405,33 +4407,33 @@ SOV_dip_agitprop_category = {  ##输出革命
 		fire_only_once = yes
 		cancel_effect = {
 			SOV = {
-				custom_effect_tooltip = SOV_special_operation_to_TAM_tt 
-				hidden_effect = {
-					PER = { 
-						for_loop_effect = {
-							end = global.SOV_Intervene_Tresen_Civil_War_PER^num
-							value = v
-							transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_PER^v
-						}
-					}
-					AFG = { 
-						for_loop_effect = {
-							end = global.SOV_Intervene_Tresen_Civil_War_AFG^num
-							value = v
-							transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_AFG^v
-						}
-					}
-					TAM = { 
-						for_loop_effect = {
-							end = global.SOV_Intervene_Tresen_Civil_War_TAM^num
-							value = v
-							transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_TAM^v
-						}
-					}
+			#	custom_effect_tooltip = SOV_special_operation_to_TAM_tt 
+			#	hidden_effect = {
+			#		PER = { 
+			#			for_loop_effect = {
+			#				end = global.SOV_Intervene_Tresen_Civil_War_PER^num
+			#				value = v
+			#				transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_PER^v
+			#			}
+			#		}
+			#		AFG = { 
+			#			for_loop_effect = {
+			#				end = global.SOV_Intervene_Tresen_Civil_War_AFG^num
+			#				value = v
+			#				transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_AFG^v
+			#			}
+			#		}
+			#		TAM = { 
+			#			for_loop_effect = {
+			#				end = global.SOV_Intervene_Tresen_Civil_War_TAM^num
+			#				value = v
+			#				transfer_state = var:global.SOV_Intervene_Tresen_Civil_War_TAM^v
+			#			}
+			#		}
 					clear_array = global.SOV_Intervene_Tresen_Civil_War_PER
 					clear_array = global.SOV_Intervene_Tresen_Civil_War_AFG
 					clear_array = global.SOV_Intervene_Tresen_Civil_War_TAM
-				}
+			#	}
 				puppet = TAM
 			}
 			
@@ -4586,6 +4588,14 @@ SOV_dip_agitprop_category = {  ##输出革命
 					}
 				}
 			}
+			modifier = { #将在完成欧洲革命2000天后进攻
+				factor = 0
+				has_completed_focus = SOV_free_Europe
+				has_country_flag = {
+					flag = SOV_free_Europe_flag
+					days < 2000
+				}
+			}
 			modifier = {
 				factor = 0
 				any_enemy_country = {
@@ -4646,8 +4656,13 @@ SOV_dip_agitprop_category = {  ##输出革命
 		available = {
 			has_war = no
 			FROM = { is_subject_of = ROOT }
-			any_home_area_neighbor_country = {
-				tag = FROM
+			or = {
+				any_home_area_neighbor_country = {
+					tag = FROM
+				}
+				FROM = {
+					tag = ASK
+				}
 			}
 		}
 		cost = 100
@@ -4675,8 +4690,23 @@ SOV_dip_agitprop_category = {  ##输出革命
 		available = {
 			has_war = no
 			FROM = { is_subject_of = ROOT }
-			any_home_area_neighbor_country = {
-				tag = FROM
+			or = {
+				any_home_area_neighbor_country = {
+					tag = FROM
+				}
+				FROM = {
+					tag = ASK
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = second_weltkrieg_has_over
+				has_global_flag = second_weltkrieg_has_started
+				DVL = {
+					or = {
+						exists = no
+					is_subject = yes
+					}
+				}
 			}
 		}
 		cost = 100
@@ -4888,6 +4918,7 @@ SOV_expelling_alien_forces = {
 			visible = {
 				event_target:comecon_leader = { tag = ROOT }
 				FROM = { 
+					not_in_any_economy_faction = yes
 					NOT = { 
 						has_country_flag = had_invited_comecon 
 						has_SOV_comecon_buff = yes
@@ -4933,6 +4964,7 @@ SOV_expelling_alien_forces = {
 			icon = GFX_decision_hol_exchange_intelligence_data
 			priority = 98
 			visible = {
+				tag = sov
 				is_in_tech_sharing_group = comecon_research_organization
 			}
 			available = {
@@ -5716,14 +5748,14 @@ SOV_expelling_alien_forces = {
 					limit = {
 						has_country_flag = comecon_producing_fighters_for_member_flag
 					}
-					effect_tooltip = {
+					#effect_tooltip = {
 						add_equipment_to_stockpile = {
 							type = small_plane_airframe_1
 							amount = 80
 							variant_name = "SU I-21F trade"
 							producer = SOV
 						}
-					}
+					#}
 					clr_country_flag = comecon_producing_fighters_for_member_flag
 				}
 				else_if = {
@@ -5911,6 +5943,9 @@ The_comintern_international_aid_category = {
 					}
 				}
 			}
+			not = {
+				has_country_flag = SOV_red_army_met_in_central_europe_flag
+			}
 		}
 		ai_will_do = {
 			base = 1000
@@ -5929,6 +5964,7 @@ The_comintern_international_aid_category = {
 		fire_only_once = yes
 		complete_effect = {
 			news_event = { days = 1 id = SOV_news.4 }
+			set_country_flag = SOV_red_army_met_in_central_europe_flag
 			FROM = {
 				faction_leader = {
 					every_other_country = {
@@ -5956,7 +5992,13 @@ The_comintern_international_aid_category = {
 				NOT = { is_in_faction_with = SOV } 
 				exists = yes
 				is_subject = no
+				not = {
+					has_war_with = ROOT
+				}
 			}
+		}
+		cancel_trigger = {
+			has_war_with = ROOT
 		}
 		available = {
 			has_equipment = {
@@ -5972,10 +6014,10 @@ The_comintern_international_aid_category = {
 				add = 1.0
 				OR = {
 					check_variable = {
-						FROM.num_equipment@infantry_equipment < 0
+						FROM.num_equipment@infantry_equipment = 0
 					}
 					check_variable = {
-						FROM.num_equipment@artillery_equipment < 0
+						FROM.num_equipment@artillery_equipment = 0
 					}
 				}
 			}
@@ -6990,15 +7032,10 @@ Reunit_Russia_decision_cate = {
 		visible = {
 		}
 		available = {
-			custom_trigger_tooltip = {
-				tooltip = control_all_russia_state
-				NOT = {
-					any_state = {
-						has_state_flag = is_RUS_state_area
-						NOT = { is_controlled_by = ROOT }
-					}
-				}
-			}
+			controls_state = 217
+			controls_state = 219
+			controls_state = 195
+			controls_state = 570
 			has_war = no
 		}
 		fire_only_once = yes

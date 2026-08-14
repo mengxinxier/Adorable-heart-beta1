@@ -2685,6 +2685,102 @@ clear_embargo_TARGET = {
 	}
 }
 
+#requires a temp variable target
+embargo_TARGET = {
+	if = {
+		limit = {
+			var:target = {
+				NOT = { has_variable = embargoed_@PREV }
+				is_in_same_economic_sphere_as_PREV = no
+				NOT = { tag = PREV } #sanity check
+			}
+		}
+		hidden_effect = {
+			var:target = {
+				add_to_temp_array = { embargo_target_and_subjects = THIS }
+				every_subject_country = { add_to_temp_array = { embargo_target_and_subjects = THIS } }
+			}
+			add_to_temp_array = { embargo_target_and_subjects_reverse = THIS }
+			every_subject_country = { add_to_temp_array = { embargo_target_and_subjects_reverse = THIS } }
+			for_each_scope_loop = {
+				array = embargo_target_and_subjects
+				for_each_scope_loop = {
+					array = embargo_target_and_subjects_reverse
+					set_variable = { embargoed_@PREV = 1 }
+					PREV = { set_variable = { embargoed_@PREV = 1 } }
+					if = {
+						limit = { has_dlc_bba = yes }
+						if = {
+							limit = { NOT = { is_embargoing = PREV } }
+							diplomatic_relation = {
+								country = PREV
+								relation = embargo
+							}
+						}
+						if = {
+							limit = { NOT = { is_embargoed_by = PREV } }
+							PREV = {
+								diplomatic_relation = {
+									country = PREV
+									relation = embargo
+								}
+							}
+						}
+					}
+					else = {
+						add_opinion_modifier = {
+							modifier = embargo
+							target = PREV
+						}
+						reverse_add_opinion_modifier = {
+							modifier = embargo
+							target = PREV
+						}
+					}
+				}
+			}
+			clear_temp_array = embargo_target_and_subjects
+			clear_temp_array = embargo_target_and_subjects_reverse
+		}
+		effect_tooltip = {
+			meta_effect = {
+				text = {
+					if = {
+						limit = { has_dlc_bba = yes }
+						if = {
+							limit = { NOT = { is_embargoing = [TARGET] } }
+							diplomatic_relation = {
+								country = [TARGET]
+								relation = embargo
+							}
+						}
+						if = {
+							limit = { NOT = { is_embargoed_by = [TARGET] } }
+							[TARGET] = {
+								diplomatic_relation = {
+									country = PREV
+									relation = embargo
+								}
+							}
+						}
+					}
+					else = {
+						add_opinion_modifier = {
+							modifier = embargo
+							target = [TARGET]
+						}
+						reverse_add_opinion_modifier = {
+							modifier = embargo
+							target = [TARGET]
+						}
+					}
+				}
+				TARGET = "[?target.GetTag]"
+			}
+		}
+	}
+}
+
 embargo_ROOT = {
 	set_temp_variable = { target = ROOT }
 	embargo_TARGET = yes
@@ -2778,3 +2874,12 @@ destroy_all_ships = {
 	}
 }
 
+character_dead = {  ##死亡
+	custom_effect_tooltip = character_dead_tt
+	hidden_effect = { retire = yes }
+}
+
+character_retire = {  ##退休
+	custom_effect_tooltip = character_retire_tt
+	hidden_effect = { retire = yes }
+}

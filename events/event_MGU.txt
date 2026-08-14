@@ -4961,6 +4961,27 @@ country_event = {
 	option = {
 		name = magicunion.1126.a
 		#set_faction_name = Pacific_Revolutionary_Alliance
+
+		LFC = {
+			if = {
+				limit = {
+					is_faction_leader = yes
+					is_in_faction_with = MGU
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = FROM
+						is_subject = no
+					}
+					ROOT = {
+						add_to_faction = PREV
+					}
+				}
+				ROOT = {
+					add_to_faction = LFC
+				}
+			}
+		}
 		MGU = {
 			if = {
 				limit = {
@@ -4969,6 +4990,7 @@ country_event = {
 				every_other_country = {
 					limit = {
 						is_in_faction_with = FROM
+						is_subject = no
 					}
 					ROOT = {
 						add_to_faction = PREV
@@ -4993,6 +5015,87 @@ country_event = {
 			country_event = {
 				id = generic.2009
 			}
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+#[PAO.Getname]提议加入民主国家同盟
+country_event = {
+	id = magicunion.11261
+	title = magicunion.11261.t
+	desc = magicunion.11261.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = magicunion.11261.a
+		#set_faction_name = Pacific_Revolutionary_Alliance
+		PAO = {
+			every_other_country = {
+				limit = {
+					is_in_faction_with = FROM
+					is_subject = no
+				}
+				ROOT = {
+					add_to_faction = PREV
+				}
+			}
+		}
+		add_to_faction = PAO
+		hidden_effect = {
+			news_event = {
+				id = generic.2007
+				days = 1
+			}
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = magicunion.11261.b
+		FROM = {
+			country_event = {
+				id = generic.2009
+			}
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+
+#向PAO提议加入民主国家同盟
+country_event = {
+	id = magicunion.11262
+	title = magicunion.11262.t
+	desc = magicunion.11262.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = magicunion.11262.a
+		ENG = {
+            country_event = {
+                hours = 6
+                id = magicunion.11261
+            }
+        }
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = magicunion.11262.b
+		if = {
+			limit = {
+				is_in_faction_with = LFC
+			}
+            LFC = { leave_faction = yes }
+            ENG = { add_to_faction = LFC }
 		}
 		ai_chance = {
 			base = 0
@@ -5349,7 +5452,7 @@ country_event = {
 		set_country_flag = MGU_ENG_hate_flag
 		add_offsite_building = {
 			type = industrial_complex
-			level = 1
+			level = 2
 		}
 		custom_effect_tooltip = MGU_event_1131_b_txt
 		ai_chance = {
@@ -5552,9 +5655,9 @@ country_event = {
 		add_to_variable = {
 			MGU_Magia_Exedra_special_forces_defence_factor = 0.075
 		}
-		add_to_variable = {
-			MGU_Magia_Exedra_special_forces_breakthrough_factor = 0.075
-		}
+		#add_to_variable = {
+		#	MGU_Magia_Exedra_special_forces_breakthrough_factor = 0.075
+		#}
 		force_update_dynamic_modifier = yes
 		custom_effect_tooltip = TBMGU_TBMGU_rest_07_txt
 		ai_chance = {
@@ -6875,13 +6978,17 @@ country_event = {
 	option = {
 		name = magicunion.1183.a
 		ai_chance = {
-			base = 27
+			base = 6
 			modifier = {
 				has_game_rule = {
 					rule = AH_MGU_ai_behavior_SELECTION
 					option = MGU_GAME_RULE_2
 				}
-				add = -27
+				add = -6
+			}
+			modifier = {
+                has_country_flag = MGU_tldxg_flag
+				add = -6
 			}
 		}
 		trigger = {
@@ -6906,7 +7013,7 @@ country_event = {
 			set_country_flag = MST_SL_Kaname_Madoka_COUP
 		}
 		ai_chance = {
-			base = 3
+			base = 4
 			modifier = {
 				has_game_rule = {
 					rule = AH_MGU_ai_behavior_SELECTION
@@ -8476,6 +8583,28 @@ country_event = {
 }
 
 country_event = {
+	##审判庭报告：渗透已证实
+	id = magicunion.1223
+	title = magicunion.1223.t
+	desc = magicunion.1223.desc
+	picture = GFX_event_MGU_envelope
+	major = no
+	fire_only_once = yes
+	is_triggered_only = yes
+	immediate = {
+	}
+	option = {
+		name = magicunion.1223.a
+        remove_ideas = LHS_yjst
+		ai_chance = {
+			base = 10
+		}
+		trigger = {
+			tag = MGU
+		}
+	}
+}
+country_event = {
 	##伦敦大使1
 	id = magicunion.12221
 	title = magicunion.12221.t
@@ -8509,9 +8638,25 @@ country_event = {
 				character = MGU_akemi_homura
 				ideology = military_politicism
 			}
+			MGU_Kaname_Madoka = {
+				remove_advisor_role = {
+					slot = political_advisor
+				}
+				add_advisor_role = {
+					advisor = {
+						slot = political_advisor
+						cost = 150
+						idea_token = MGU_Kaname_Madoka
+						traits = {
+							MGU_madoka_advisor
+						}
+					}
+				}
+			}
 			clr_country_flag = MST_SL_Kaname_Madoka
 			set_global_flag = MGU_homura_run_eng
 		}
+		ENG = { country_event = magicunion.12224 }
 		ai_chance = {
 			base = 10
 		}
@@ -10052,6 +10197,13 @@ country_event = {
 		country_event = MTK.1
 		ai_chance = {
 			base = 5
+			modifier = {
+				has_game_rule = {
+					rule = AH_MGU_ai_behavior_SELECTION
+					option = MGU_GAME_RULE_1
+				}
+				factor = 0
+			}
 		}
 		trigger = {
 			tag = MGU
@@ -10467,7 +10619,7 @@ country_event = {
 			}
 		}
 		ai_chance = {
-			base = 0
+			base = 10
 		}
 		trigger = {
 			tag = MGU
@@ -10476,7 +10628,7 @@ country_event = {
 	option = {
 		name = magicunion.1266.b
 		ai_chance = {
-			base = 10
+			base = 0
 		}
 		trigger = {
 			tag = MGU
@@ -10585,6 +10737,19 @@ country_event = {
 		}
 		trigger = {
 			TAG = PAO
+			is_ai = yes
+		}
+	}
+	option = {
+		name = magicunion.1269.aa
+        add_to_faction = MGU
+        add_to_faction = LFC
+		ai_chance = {
+			base = 10
+		}
+		trigger = {
+			TAG = PAO
+			is_ai = no
 		}
 	}
 	option = {
@@ -10592,6 +10757,9 @@ country_event = {
 
 		trigger = {
 			TAG = PAO
+		}
+		ai_chance = {
+			base = 0
 		}
 	}
 }
@@ -10658,6 +10826,291 @@ country_event = {
 		}
 	}
 }
+
+country_event = {
+	#战争应急计划
+	id = magicunion.1273
+	title = magicunion.1273.t
+	desc = magicunion.1273.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = magicunion.1273.a
+		set_country_flag = TBMGU_ZZ_01_a_flag
+		complete_national_focus = TBMGU_ZZ_01
+		custom_effect_tooltip = TBMGU_magicunion_1273_a_txt
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = magicunion.1273.b
+		add_offsite_building = { type = industrial_complex level = 3 }
+		add_to_variable = {
+			MGU_Heart_Democracy_democratic_drift = 0.01
+		}
+		add_to_variable = {
+			MGU_Heart_Democracy_industrial_capacity_factory = 0.05
+		}
+		add_to_variable = {
+			MGU_Heart_Democracy_research_speed_factor = 0.05
+		}
+		add_to_variable = {
+			MGU_Heart_Democracy_stability_factor = 0.10
+		}
+		force_update_dynamic_modifier = yes
+		custom_effect_tooltip = TBMGU_magicunion_1273_b_txt
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+
+country_event = {
+	#民主事件
+	id = magicunion.1274
+	title = magicunion.1274.t
+	desc = magicunion.1274.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = magicunion.1274.a
+
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+country_event = {
+	#民主事件
+	id = magicunion.1275
+	title = magicunion.1275.t
+	desc = magicunion.1275.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = magicunion.1275.a
+
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+country_event = {
+	#民主事件
+	id = magicunion.1276
+	title = magicunion.1276.t
+	desc = magicunion.1276.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = magicunion.1276.a
+
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+country_event = {
+	#民主事件
+	id = magicunion.1277
+	title = magicunion.1277.t
+	desc = magicunion.1277.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = magicunion.1277.a
+
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+country_event = {
+	#民主事件
+	id = magicunion.1278
+	title = magicunion.1278.t
+	desc = magicunion.1278.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = magicunion.1278.a
+
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+country_event = {
+	#因果交织
+	id = magicunion.1279
+	title = magicunion.1279.t
+	desc = magicunion.1279.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = magicunion.1279.a
+        add_ideas = MGU_LFC_idea_sjbz_I
+		trigger = {
+			TAG = LFC
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+}
+country_event = {
+	#装备升级
+	id = magicunion.1280
+	title = magicunion.1280.t
+	desc = magicunion.1280.desc
+	picture = GFX_event_MGU_envelope
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = magicunion.1280.a
+         add_equipment_to_stockpile = {
+            type = magic_assault_equipment_0
+            amount = -2000
+            producer = MGU
+        }
+         add_equipment_to_stockpile = {
+            type = magic_assault_equipment_1
+            amount = 2000
+            producer = MGU
+         }
+         add_timed_idea = { idea = MGU_COUP_Equipment_upgrade_debuff days = 60 }
+         add_country_flag = MGU_Equipment_upgrade_flag
+         custom_effect_tooltip = magicunion_1280_a_txt
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	option = {
+		name = magicunion.1280.b
+		trigger = {
+			TAG = MGU
+		}
+		ai_chance = {
+			base = 0
+		}
+	}
+}
+#停留的星光
+country_event = {
+    id = magicunion.1281
+    title = magicunion.1281.t
+    desc = magicunion.1281.desc
+    is_triggered_only = yes
+    picture = GFX_event_MGU_envelope
+    is_triggered_only = yes
+    fire_only_once = yes
+    option = {
+        trigger = {
+            tag = PAO
+        }
+        name = magicunion.1281.a
+        MGU = { set_country_flag = MGU_tldxg_flag }
+        custom_effect_tooltip = magicunion_1281_txt
+        ai_chance = {
+            base = 0
+        }
+    }
+    option = {
+        trigger = {
+            tag = PAO
+        }
+        name = magicunion.1281.b
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+
+#帮助莉莉重新掌控亡灵
+country_event = {
+    id = magicunion.1282
+    title = magicunion.1282.t
+    desc = magicunion.1282.desc
+    is_triggered_only = yes
+    picture = GFX_event_MGU_envelope
+    is_triggered_only = yes
+    fire_only_once = yes
+    option = {
+        trigger = {
+            tag = PAO
+        }
+        name = magicunion.1282.a
+        add_ideas = MGU_anxi_wlkz_PAO
+        PAM = { add_ideas = MGU_anxi_wlkz_PAM }
+        ai_chance = {
+            base = 10
+        }
+    }
+    option = {
+        trigger = {
+            tag = PAO
+        }
+        name = magicunion.1282.b
+        ai_chance = {
+            base = 0
+        }
+    }
+}
+
+#镇压亡灵
+country_event = {
+    id = magicunion.1283
+    title = magicunion.1283.t
+    desc = magicunion.1283.desc
+    is_triggered_only = yes
+    picture = GFX_event_MGU_envelope
+    is_triggered_only = yes
+    fire_only_once = yes
+    option = {
+        trigger = {
+            tag = MGU
+        }
+        name = magicunion.1283.a
+            WL1 = { add_ideas = MGU_help_PAO_3 }
+            add_ideas = MGU_help_PAO_4
+        ai_chance = {
+            base = 10
+        }
+    }
+}
+
 ###############魔联事件结束#################
 ###################事件结束↑↑################
 ########魔联监禁调教########
@@ -11252,7 +11705,13 @@ country_event = {
 			MGU_Kaname_Madoka = {
 				promote_leader = yes
 			}
+			MGU_Tomoe_Mami = {
+				promote_leader = yes
+			}	
 		}
+		MGU_Kaname_Madoka = {
+			promote_leader = yes
+		}		
 		MGU_Tomoe_Mami = {
 			promote_leader = yes
 		}		
@@ -11302,20 +11761,20 @@ country_event = {
 				limit = {
 					is_ai = yes
 				}
-				set_variable = { MTK_red_army_modifier_army_sub_unit_militia_attack_factor = 0.10 }
-				set_variable = { MTK_red_army_modifier_army_sub_unit_militia_defence_factor = 0.10 }	
+				set_variable = { MTK_red_army_modifier_army_sub_unit_militia_attack_factor = 0.05 }
+				set_variable = { MTK_red_army_modifier_army_sub_unit_militia_defence_factor = 0.05 }	
 
 			}
 			if = {
 				limit = {
 					is_ai = no
 				}
-				set_variable = { MTK_red_army_modifier_army_sub_unit_militia_attack_factor = 0.02 }
-				set_variable = { MTK_red_army_modifier_army_sub_unit_militia_defence_factor = 0.02 }	
+				set_variable = { MTK_red_army_modifier_army_sub_unit_militia_attack_factor = -0.05 }
+				set_variable = { MTK_red_army_modifier_army_sub_unit_militia_defence_factor = -0.05 }	
 			}
 			set_variable = { MTK_red_army_experience_gain_army_factor = -0.05 }
-			set_variable = { MTK_red_army_army_morale_factor = 0.15 }
-			set_variable = { MTK_red_army_army_attack_factor = 0.05 }
+			set_variable = { MTK_red_army_army_morale_factor = 0.10 }
+			set_variable = { MTK_red_army_army_attack_factor = -0.05 }
 			set_variable = { MTK_red_army_army_artillery_attack_factor = -0.05 }
 			set_variable = { MTK_red_army_army_artillery_defence_factor = -0.05 }
 			set_variable = { MTK_red_army_army_infantry_attack_factor = -0.05 }
@@ -11636,8 +12095,7 @@ country_event = {
 	option = {
 		name = MTK_event.11.a
 		hidden_effect = {
-			set_country_flag = super_event_MTK_fengbao_jiangxi
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 121 } 		
 			adorable_heart_fire_super_event = yes
 			complete_national_focus = MTK_com_01
 		}
@@ -12101,65 +12559,50 @@ country_event = {
 			}
 			modifier = {
 				has_war_with = MGU
-				factor = 100
+				add = 100
 			}
+			
 		}
 		MGU = {
 			country_event = {
-				days = 33
-				id = MTK.101
+				days = 1
+				id = MTK.113
 			}
 		}
 	}
+
 }
 
 country_event = {
-	# 收核
-	id = MTK.101
-	title = MTK.101.t
-	desc = MTK.101.d
+	# 交易
+	id = MTK.113
+	title = MTK.113.t
+	desc = MTK.113.d
 	is_triggered_only = yes
 	option = {
-		name = MTK.101.a
+		name = MTK.113.a
+		ENG = {
+			add_timed_idea = {
+				idea = MTK_change_to_port_ENG
+				days = 120
+			}
+		}
 		MGU = {
-			create_wargoal = {
-				target = ENG
-				type = take_core_state
-			}
-		}
-		ai_chance = {
-			base = 10
-		}
-	}
-}
-
-country_event = {
-	# 白和
-	id = MTK.102
-	title = MTK.102.t
-	desc = MTK.102.d
-	is_triggered_only = yes
-	option = {
-		name = MTK.102.a
-		every_country = {
-			limit = {
-				any_country = {
-					has_war_with = PREV
-				}
-			}
-			MGU = {
-				white_peace = PREV
+			add_timed_idea = {
+				idea = MTK_change_to_port_MGU
+				days = 150
 			}
 		}
 		MGU = {
 			transfer_state = 685
 		}
+
 		ai_chance = {
 			base = 10
 		}
 	}
 	option = {
-		name = MTK.102.b
+		name = MTK.113.b
 		ai_chance = {
 			base = 0
 		}
@@ -12642,6 +13085,11 @@ country_event = {#野火吃魔联_野火侧触发事件
 				set_nationality = LHS
 			}			
 		}		
+		FROM = {
+			transfer_navy = {
+			    target = ROOT
+			}
+		}
 	}
 	option = {
 		name = MTK.16.b
@@ -12749,6 +13197,11 @@ country_event = {#魔联吃野火——野火侧触发事件
 		name = MTK.19.a
 		ai_chance = {
 			base = 100
+		}
+		ROOT = {
+			transfer_navy = {
+			    target = FROM
+			}
 		}
 		MGU = { country_event = MTK.21 }
 	}
@@ -13035,9 +13488,6 @@ country_event = {
 		custom_effect_tooltip = MTK_event38_a_tooltip
 		set_country_flag = Adorable_Heart_End_window_view
 		set_country_flag = MTK_end_flag
-		hidden_effect = {
-			scoped_play_song = "リンクス（携手）"
-		}
 	}
 }
 
@@ -13061,8 +13511,7 @@ news_event = {
 			}
 		}
 		hidden_effect = {
-			set_country_flag = super_event_MGU_tongyi_xiaoguo
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 118 }			
 			adorable_heart_fire_super_event = yes
 		}
 	}
@@ -13081,8 +13530,7 @@ news_event = {
 			}
 		}
 		hidden_effect = {
-			set_country_flag = super_event_MGU_tongyi_xiaoguo
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 118 }			
 			adorable_heart_fire_super_event = yes
 		}
 	}
@@ -13094,8 +13542,7 @@ news_event = {
 			}
 		}
 		hidden_effect = {
-			set_country_flag = super_event_MGU_tongyi_xiaoguo
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 118 }		
 			adorable_heart_fire_super_event = yes
 		}
 	}
@@ -13205,24 +13652,6 @@ news_event = {
 		}
 	}
 }
-
-	news_event = {
-		id = MGU_news.9
-		title = MGU_news.9.t
-		picture = GFX_news_World_Soviets
-		desc = MGU_news.9.d
-		trigger = {
-			wants_world_news = yes
-		}
-		is_triggered_only = yes
-		major = yes
-		option = {
-			name = MGU_news.9.a
-			set_country_flag = super_event_World_Soviets
-			set_country_flag = adorable_heart_Super_Event_Visible
-			adorable_heart_fire_super_event = yes
-		}
-	}
 
 #魔裁事件	
 country_event = {
@@ -13732,6 +14161,9 @@ country_event = {
 						check_variable = {
 							MGU_land_1_value_left_number > MGU_land_1_value_right_number
 						}
+						check_variable = {
+							MGU_land_1_value_left_number = MGU_land_1_value_right_number
+						}
 					}
 				}
 				MRB = {
@@ -13764,6 +14196,9 @@ country_event = {
 						check_variable = {
 							MGU_land_2_value_left_number > MGU_land_2_value_right_number
 						}
+						check_variable = {
+							MGU_land_2_value_left_number = MGU_land_2_value_right_number
+						}
 					}
 				}
 				MRB = {
@@ -13791,6 +14226,9 @@ country_event = {
 						has_country_flag = MGU_we_win_3
 						check_variable = {
 							MGU_land_3_value_left_number > MGU_land_3_value_right_number
+						}
+						check_variable = {
+							MGU_land_3_value_left_number = MGU_land_3_value_right_number
 						}
 					}
 				}
@@ -13824,6 +14262,9 @@ country_event = {
 						check_variable = {
 							MGU_land_4_value_left_number > MGU_land_4_value_right_number
 						}
+						check_variable = {
+							MGU_land_4_value_left_number = MGU_land_4_value_right_number
+						}
 					}
 				}
 				MRB = {
@@ -13855,6 +14296,9 @@ country_event = {
 						has_country_flag = MGU_we_win_5
 						check_variable = {
 							MGU_land_5_value_left_number > MGU_land_5_value_right_number
+						}
+						check_variable = {
+							MGU_land_5_value_left_number = MGU_land_5_value_right_number
 						}
 					}
 				}
@@ -13891,6 +14335,9 @@ country_event = {
 						has_country_flag = MGU_we_win_8
 						check_variable = {
 							MGU_land_8_value_left_number > MGU_land_8_value_right_number
+						}
+						check_variable = {
+							MGU_land_8_value_left_number = MGU_land_8_value_right_number
 						}
 					}
 				}
@@ -13935,6 +14382,9 @@ country_event = {
 						has_country_flag = MGU_we_win_9
 						check_variable = {
 							MGU_land_9_value_left_number > MGU_land_9_value_right_number
+						}
+						check_variable = {
+							MGU_land_9_value_left_number = MGU_land_9_value_right_number
 						}
 					}
 				}
@@ -14244,10 +14694,16 @@ country_event = {
 				load_oob = MGU_load_6
 			}
 			MRB = {
-				change_tag_from = MGU
+				change_tag_from_ROOT =yes
 			}
 			MST = {
 				load_focus_tree = eneric_focus
+			}
+			MRB = {
+				add_ideas = MGU_no_supply_fix 
+			}
+			MST = {
+				add_ideas = MGU_no_supply_fix 
 			}
 		}
 		MRB = {
@@ -14310,8 +14766,49 @@ country_event = {
 				}
 			}
 			promote_character = MGU_Yuki
+			MGS = {	
+			MGU_Satomi_Toka = {
+				set_nationality = MGU
+			}
+			MGU_Hiiragi_Nemu = {
+				set_nationality = MGU
+			}
+			MGU_Tomoe_Mami = {
+				set_nationality = MGU
+			}
+			MGU_Azusa_Mifuyu = {
+				set_nationality = MGU
+			}
+			MGU_Amane_Tsukuyo = {
+				set_nationality = MGU
+			}
+			MGU_Amane_Tsukasa = {
+				set_nationality = MGU
+			}
+			MGU_Midori_Ryou = {
+				set_nationality = MGU
+			}
+			MGU_Makino_Ikumi = {
+				set_nationality = MGU
+			}
+			MGU_Kuroe = {
+				set_nationality = MGU
+			}	
+			if = {
+				limit = {
+					MGR = { exists = no }
+				}
+				MGU_Tamaki_Ui = {
+					set_nationality = MGU
+				}
+			}
+		}
+		MGU = {
+			add_manpower = 5439
+		#	country_event = { id = MGU_event.10 days = 4 }
+		}
 			MGU = {
-				change_tag_from = MRB
+				change_tag_from_ROOT = yes
 			}
 			MRB = {
 				every_unit_leader = {
@@ -14388,8 +14885,7 @@ news_event = {
 				limit = {
 					is_ai = no
 				}
-				set_country_flag = super_event_civil_war_YUKI_MGU_flag
-				set_country_flag = adorable_heart_Super_Event_Visible
+				set_variable = { adorable_heart_super_event_var = 125 }			
 				#adorable_heart_fire_super_event = yes
 			}
 		}
@@ -14481,6 +14977,7 @@ country_event = {
 	desc = yuki.26.d
 	picture = yuki.26.p
 	is_triggered_only = yes
+	fire_only_once = yes
 	option = {
 		name = yuki.26.a
 		add_ideas = MGU_yuki_you_are_lost_now 
@@ -14514,8 +15011,7 @@ news_event = {
 				limit = {
 					is_ai = no
 				}
-				set_country_flag = super_event_reunification_YUKI_MGU_flag
-				set_country_flag = adorable_heart_Super_Event_Visible
+				set_variable = { adorable_heart_super_event_var = 124 }			
 				adorable_heart_fire_super_event = yes
 			}
 		}
@@ -14591,8 +15087,7 @@ news_event = {
 				limit = {
 					is_ai = no
 				}
-				set_country_flag = super_event_declare_ENG_YUKI_MGU_flag
-				set_country_flag = adorable_heart_Super_Event_Visible
+				set_variable = { adorable_heart_super_event_var = 123 }			
 				adorable_heart_fire_super_event = yes
 			}
 		}
@@ -14823,8 +15318,7 @@ country_event = {
 				elections_allowed = no
 			}
 			complete_national_focus = MGU_yuki_bye
-			set_country_flag = super_event_end_YUKI_MGU_flag
-		    set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 122 }    
 		    adorable_heart_fire_super_event = yes
 		}
 	}
@@ -14856,8 +15350,7 @@ country_event = {#测试用
 	is_triggered_only = yes
 	option = {
 		name = yuki.777.a
-		set_country_flag = super_event_end_YUKI_MGU_flag
-		set_country_flag = adorable_heart_Super_Event_Visible
+		set_variable = { adorable_heart_super_event_var = 122 }	
 		adorable_heart_fire_super_event = yes
 	}
 }

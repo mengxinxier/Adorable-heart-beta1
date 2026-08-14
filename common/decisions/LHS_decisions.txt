@@ -1655,7 +1655,7 @@ LHS_guoji = {
                 add_equipment_to_stockpile = {
                     type = infantry_equipment
                     amount = 2000
-                    pproducer = LHS
+                    producer = LHS
                 }
             }
         }
@@ -1670,7 +1670,7 @@ LHS_guoji = {
             }
             PRC = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                 }
             }
@@ -1707,7 +1707,7 @@ LHS_guoji = {
         available = {
             PRC = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                 }
             }
@@ -1779,21 +1779,14 @@ LHS_guoji = {
             }
 
             PRC = {
+                set_popularities = {
+                    democratic = 0
+                    fascism = 0
+                    communism = 100
+                    neutrality = 0
+                    #相加必须等于100，否则会出错
+                }
                 set_politics = {
-                    parties = {
-                        democratic = {
-                            popularity = 0
-                        }
-                        fascism = {
-                            popularity = 0
-                        }
-                        communism = {
-                            popularity = 100
-                        }
-                        neutrality = {
-                            popularity = 0
-                        }
-                    }
                     #相加必须等于100，否则会出错
                     ruling_party = communism			#填母意识形态
                     elections_allowed = no
@@ -1931,7 +1924,7 @@ LHS_guoji = {
             }
             SOV = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                 }
             }
@@ -1952,7 +1945,7 @@ LHS_guoji = {
         available = {
             SOV = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                 }
             }
@@ -2078,20 +2071,6 @@ LHS_guoji = {
             }
             SOV = {
                 set_politics = {
-                    parties = {
-                        democratic = {
-                            popularity = 0
-                        }
-                        fascism = {
-                            popularity = 0
-                        }
-                        communism = {
-                            popularity = 100
-                        }
-                        neutrality = {
-                            popularity = 0
-                        }
-                    }
                     #相加必须等于100，否则会出错
                     ruling_party = communism			#填母意识形态
                     elections_allowed = no
@@ -2187,7 +2166,7 @@ LHS_guoji = {
             }
             PAN = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                 }
             }
@@ -2209,7 +2188,7 @@ LHS_guoji = {
         available = {
             PAN = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                 }
             }
@@ -2305,11 +2284,30 @@ LHS_guoji = {
                             }
                         }
                     }
-                    is_core_of = PAN
+                    or = {
+                        is_core_of = PAN
+                        is_core_of = CUB
+                        is_core_of = PAJ
+                        is_core_of = PAS
+                        is_core_of = GUA
+                    }
                 }
                 PAN = {
                     transfer_state = PREV
                 }
+
+            }
+            every_state = {
+                limit = {
+                    or = {
+                        is_core_of = PAN
+                        is_core_of = CUB
+                        is_core_of = PAJ
+                        is_core_of = PAS
+                        is_core_of = GUA
+                    }
+                }
+                add_core_of = PAN
 
             }
             every_country = {
@@ -2335,22 +2333,14 @@ LHS_guoji = {
                 }
             }
             PAN = {
-                set_politics = {
-                    parties = {
-                        democratic = {
-                            popularity = 0
-                        }
-                        fascism = {
-                            popularity = 0
-                        }
-                        communism = {
-                            popularity = 100
-                        }
-                        neutrality = {
-                            popularity = 0
-                        }
-                    }
+                set_popularities = {
+                    democratic = 0
+                    fascism = 0
+                    communism = 100
+                    neutrality = 0
                     #相加必须等于100，否则会出错
+                }
+                set_politics = {
                     ruling_party = communism			#填母意识形态
                     elections_allowed = no
                 }
@@ -2442,30 +2432,50 @@ LHS_guoji = {
     LHS_USA = {
         visible = {
             not = {
+                or = {
+                    USA = {
+                        exists = yes
+                        has_government = communism
+                    }
+                    NFA = {
+                        exists = yes
+                        has_government = communism
+                    }
+                    FRG = {
+                        exists = yes
+                        has_government = communism
+                    }
+                    NGD = {
+                        exists = yes
+                        has_government = communism
+                    }
+                }
+            }
+            not = {
                 has_country_flag = LHS_jiefangUSA
             }
             or = {
                 USA = {
                     or = {
-                        exists = NO
+                        exists = no
                         is_subject_of = LHS
                     }
                 }
                 NFA = {
                     or = {
-                        exists = NO
+                        exists = no
                         is_subject_of = LHS
                     }
                 }
                 FRG = {
                     or = {
-                        exists = NO
+                        exists = no
                         is_subject_of = LHS
                     }
                 }
                 NGD = {
                     or = {
-                        exists = NO
+                        exists = no
                         is_subject_of = LHS
                     }
                 }
@@ -2523,90 +2533,54 @@ LHS_guoji = {
         }
         icon = GFX_jiefangusa
         available = {
+            custom_trigger_tooltip = {
+                tooltip = LHS_USA_custom_trigger_tooltip
+                #条件
+                all_state = {
+                    or = {
+                        and = {
+                            has_state_flag = LHS_north_america_orgin_core_state
+                            or = {
+                                is_fully_controlled_by = ROOT
+                                state_is_fully_controlled_by_ROOT_or_subject_faction = yes
+                            }
+                        }
+                        not = {
+                            has_state_flag = LHS_north_america_orgin_core_state
+                        }
+                    }
+                }
+            }
             USA = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                     has_capitulated = yes
                 }
             }
-            NFA = {
-                or = {
-                    exists = NO
-                    is_subject_of = LHS
-                    has_capitulated = yes
+            or = {
+                NFA = {
+                    or = {
+                        exists = no
+                        is_subject_of = LHS
+                        has_capitulated = yes
+                    }
                 }
+                has_country_flag = NFAyihe
             }
             FRG = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                     has_capitulated = yes
                 }
             }
             NGD = {
                 or = {
-                    exists = NO
+                    exists = no
                     is_subject_of = LHS
                     has_capitulated = yes
                 }
-            }
-            NGD = {
-                any_state = {
-                    or = {
-                        state = 797
-                        state = 798
-                        state = 829
-                        state = 378
-                        state = 379
-                        state = 385
-                        state = 386
-                    }
-                    or = {
-
-                        is_fully_controlled_by = ROOT
-
-
-                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-
-                    }
-                }
-            }
-            USA = {
-                or = {
-                    all_core_state = {
-                        is_fully_controlled_by = ROOT
-                    }
-                    all_core_state = {
-                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                    }
-                }
-
-
-            }
-            NFA = {
-                or = {
-                    all_core_state = {
-                        is_fully_controlled_by = ROOT
-                    }
-                    all_core_state = {
-                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                    }
-                }
-
-
-            }
-            FRG = {
-                or = {
-                    all_core_state = {
-                        is_fully_controlled_by = ROOT
-                    }
-                    all_core_state = {
-                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                    }
-                }
-
-
             }
         }
         cancel_trigger = {
@@ -2785,13 +2759,21 @@ LHS_youjidui = {
             }
         }
         available = {
-            USA = {
-                or = {
-                    all_core_state = {
-                        is_fully_controlled_by = ROOT
-                    }
-                    all_core_state = {
-                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
+            custom_trigger_tooltip = {
+                tooltip = LHS_USA_custom_trigger_tooltip
+                #条件
+                all_state = {
+                    or = {
+                        and = {
+                            has_state_flag = LHS_north_america_orgin_core_state
+                            or = {
+                                is_fully_controlled_by = ROOT
+                                state_is_fully_controlled_by_ROOT_or_subject_faction = yes
+                            }
+                        }
+                        not = {
+                            has_state_flag = LHS_north_america_orgin_core_state
+                        }
                     }
                 }
             }
@@ -2821,9 +2803,7 @@ LHS_youjidui = {
                         }
                         every_state = {
                             limit = {
-                                or {
-                                    is_core_of = USA
-                                }
+                                has_state_flag = LHS_north_america_orgin_core_state
                             }
                             FROM = {transfer_state = PREV}
                         }
@@ -2850,9 +2830,7 @@ LHS_youjidui = {
                         }
                         every_state = {
                             limit = {
-                                or {
-                                    is_core_of = USA
-                                }
+                                has_state_flag = LHS_north_america_orgin_core_state
                             }
                             FROM = {transfer_state = PREV}
                         }
@@ -3262,6 +3240,462 @@ LHS_youjidui = {
         }
     }
 
+    youji_removehjp_dec = {
+        visible = {
+            has_completed_focus = LHS_Screaming_Pipes
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = yes
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            set_technology = {
+                youji_hjp = 1
+                popup = no
+            }
+            add_equipment_to_stockpile = {
+                type = rocket_artillery_equipment
+                amount = 1250
+                producer = ROOT
+            }
+            custom_effect_tooltip = removeyouji_hjp_tt
+            custom_effect_tooltip = youji_removehjp_dec_desc_tt
+            #        if = {
+            #            limit = {
+            #                not = {
+            #                    has_country_flag = removehjp_flag
+            #                }
+            #            }
+            #            set_technology = {
+            #                removeyouji_hjp = 1
+            #                popup = no
+            #            }
+            #            custom_effect_tooltip = removeyouji_hjp_tt
+            #            set_country_flag = removehjp_flag
+            #        }
+            #        else_if = {
+            #            limit = {
+            #                has_country_flag = removehjp_flag
+            #            }
+            #            set_technology = {
+            #                youji_hjp = 1
+            #                popup = no
+            #            }
+            #            custom_effect_tooltip = youji_hjp_tt
+            #            clr_country_flag = removehjp_flag
+            #        }
+        }
+    }
+
+    LHS_Return_To_Deep_Blue = {
+        visible = {
+            has_country_flag = LHS_xgzjl
+            or = {
+                has_character = LHS_xiaoguo
+                has_character = LHS_xiaoguo2
+            }
+        }
+        icon = GFX_LHS_xgz
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_country_flag = LHS_xgzsl
+                }
+                custom_effect_tooltip = LHS_xgzsl_tt
+            }
+            else = {
+                custom_effect_tooltip = LHS_Return_To_Deep_Blue_tt
+                hidden_effect = {
+                    clr_country_flag = LHS_xgzjl
+                    WRQ = {
+                        LHS_xiaoguo = {
+                            set_nationality =  LHS
+                        }
+                    }
+                    LHS = {
+                        LHS_xiaoguo2 = {
+                            set_nationality =  WRQ
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    LHS_Return_To_Red_Earth = {
+        visible = {
+            has_completed_focus = LHS_Amphibious_Assault
+            not = {
+                has_country_flag = LHS_xgzjl
+            }
+            or = {
+                has_character = LHS_xiaoguo
+                has_character = LHS_xiaoguo2
+            }
+        }
+        icon = GFX_LHS_xgz
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_country_flag = LHS_xgzsl
+                }
+                custom_effect_tooltip = LHS_xgzsl_tt
+            }
+            else = {
+                custom_effect_tooltip = LHS_Return_To_Red_Earth_tt
+                hidden_effect = {
+                    set_country_flag = LHS_xgzjl
+                    WRQ = {
+                        LHS_xiaoguo2 = {
+                            set_nationality =  LHS
+                        }
+                    }
+                    LHS = {
+                        LHS_xiaoguo = {
+                            set_nationality =  WRQ
+                        }
+                    }
+                }
+            }
+        }
+    }
+    youji_removea1_dec = {
+        visible = {
+            has_completed_focus = LHS_Machete_And_Rifle
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a1
+                }
+                remove_ideas = {
+                    LHS_a1
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a1
+                    }
+                }
+                add_ideas = {
+                    LHS_a1
+                }
+            }
+        }
+    }
+    youji_removea2_dec = {
+        visible = {
+            has_completed_focus = LHS_Molotov_Cocktail_Party
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a2
+                }
+                remove_ideas = {
+                    LHS_a2
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a2
+                    }
+                }
+                add_ideas = {
+                    LHS_a2
+                }
+            }
+        }
+    }
+    youji_removea3_dec = {
+        visible = {
+            has_completed_focus = LHS_Iron_Plate_On_Trucks
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a3
+                }
+                remove_ideas = {
+                    LHS_a3
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a3
+                    }
+                }
+                add_ideas = {
+                    LHS_a3
+                }
+            }
+        }
+    }
+    youji_removea4_dec = {
+        visible = {
+            has_completed_focus = LHS_Portable_Thunder
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a4
+                }
+                remove_ideas = {
+                    LHS_a4
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a4
+                    }
+                }
+                add_ideas = {
+                    LHS_a4
+                }
+            }
+        }
+    }
+    youji_removea5_dec = {
+        visible = {
+            has_completed_focus = LHS_Mobile_Fortress
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a5
+                }
+                remove_ideas = {
+                    LHS_a5
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a5
+                    }
+                }
+                add_ideas = {
+                    LHS_a5
+                }
+            }
+        }
+    }
+    youji_removea6_dec = {
+        visible = {
+            has_completed_focus = LHS_Big_Foot_Tank
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a6
+                }
+                remove_ideas = {
+                    LHS_a6
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a6
+                    }
+                }
+                add_ideas = {
+                    LHS_a6
+                }
+            }
+        }
+    }
+    youji_removea7_dec = {
+        visible = {
+            has_completed_focus = LHS_Anti_Air_Scythe
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a7
+                }
+                remove_ideas = {
+                    LHS_a7
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a7
+                    }
+                }
+                add_ideas = {
+                    LHS_a7
+                }
+            }
+        }
+    }
+    youji_removea8_dec = {
+        visible = {
+            has_completed_focus = LHS_Ventilation_Window
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a8
+                }
+                remove_ideas = {
+                    LHS_a8
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a8
+                    }
+                }
+                add_ideas = {
+                    LHS_a8
+                }
+            }
+        }
+    }
+    youji_removea9_dec = {
+        visible = {
+            has_completed_focus = LHS_Eyes_In_Clouds
+            has_country_flag = LHS_Steel_With_Heartbeat
+        }
+        icon = GFX_LHS_cxss
+        available = {
+        }
+        ai_will_do = {
+            factor = 0
+        }
+        fire_only_once = no
+        days_remove = 15
+        cost = 30
+        remove_effect = {
+            if = {
+                limit = {
+                    has_idea = LHS_a9
+                }
+                remove_ideas = {
+                    LHS_a9
+                }
+            }
+            else_if = {
+                limit = {
+                    not = {
+                        has_idea = LHS_a9
+                    }
+                }
+                add_ideas = {
+                    LHS_a9
+                }
+            }
+        }
+    }
+
 
 
 }
@@ -3562,7 +3996,6 @@ LHS_souxun = {
         }
         available = {
             tag = LHS
-
         }
         cost = 25
         ##cancel_if_invalid = yes
@@ -3575,17 +4008,10 @@ LHS_souxun = {
         remove_effect = {
             clr_country_flag = pcxs
 
-
-
             country_event = {
                 id = LHS.70
                 days = 0
             }
-
-
-
-
-
 
         }
         ai_will_do = {
@@ -3593,8 +4019,37 @@ LHS_souxun = {
         }
     }
 
+    LHS_pcxs1  = { #新增
+        visible = {
+            tag = LHS
+            has_completed_focus = LHS_sjjt
+            has_idea = LHS_slnyc
 
+            always = no ##
 
+        }
+        available = {
+            tag = LHS
+        }
+        cost = 25
+        icon = GFX_pcxs
+        fire_only_once = no
+        days_remove = 15
+        complete_effect = {
+
+        }
+        remove_effect = {
+
+            country_event = {
+                id = LHS.70
+                days = 0
+            }
+
+        }
+        ai_will_do = {
+            base = 0
+        }
+    }
 
 }
 LHS_xuanchuan = {
@@ -3852,7 +4307,6 @@ LHS_luhuoweiji = {
                             special_type_slot_3 = secondary_turret_hmg
 
                         }
-                        icon = "GFX_ENG_imp_main_tank_medium"
                         upgrades = {
                             tank_nsb_engine_upgrade = 4
                             tank_nsb_armor_upgrade = 4
@@ -3978,7 +4432,6 @@ LHS_luhuoweiji = {
                             special_type_slot_3 = secondary_turret_hmg
 
                         }
-                        icon = "GFX_ENG_imp_main_tank_medium"
                         upgrades = {
                             tank_nsb_engine_upgrade = 4
                             tank_nsb_armor_upgrade = 4
@@ -4098,15 +4551,22 @@ LHS_luhuoweiji = {
             mark_focus_tree_layout_dirty = yes
             set_cosmetic_tag = LHS_luoweiniya
             PAU = {
-                swap_ideas = {
-                    remove_idea = LHS_xiaomie
-                    add_idea = LHS_xiaomie2
+                if = {
+                    limit = {
+                        not = {
+                            PAM = {
+                                has_country_flag = PAM_sqbc
+                            }
+                        }
+                    }
+                    swap_ideas = {
+                        remove_idea = LHS_xiaomie
+                        add_idea = LHS_xiaomie2
 
+                    }
                 }
             }
-            CHL = {
-                add_to_faction = LHS
-            }
+            CHL = {add_to_faction = LHS}
             every_country = {
                 limit = {
 
@@ -4172,19 +4632,19 @@ LHS_luhuoweiji = {
                 }
                 LHS_Nymph = {
                     set_portraits = {
-                        army = { large = "gfx/leaders/LHS/xiaofeng2.png" }
-                        army = { small = "gfx/leaders/LHS/small/xiaofeng2_small.png" }
-                        civilian = { large = "gfx/leaders/LHS/xiaofeng2.png" }
-                        civilian = { small = "gfx/leaders/LHS/small/xiaofeng2_small.png" }
+                        army = { large = "gfx/leaders/LHS/xiaofeng3.png" }
+                        army = { small = "gfx/leaders/LHS/small/xiaofeng3_small.png" }
+                        civilian = { large = "gfx/leaders/LHS/xiaofeng3.png" }
+                        civilian = { small = "gfx/leaders/LHS/small/xiaofeng3_small.png" }
                     }
                 }
                 CHL = {
                     LHS_xueyi = {
                         set_portraits = {
-                            army = { large = "gfx/leaders/LHS/xueyi2.png" }
-                            army = { small = "gfx/leaders/LHS/small/xueyi2_small.png" }
-                            civilian = { large = "gfx/leaders/LHS/xueyi2.png" }
-                            civilian = { small = "gfx/leaders/LHS/small/xueyi2_small.png" }
+                            army = { large = "gfx/leaders/LHS/xueyi5.png" }
+                            army = { small = "gfx/leaders/LHS/small/xueyi5_small.png" }
+                            civilian = { large = "gfx/leaders/LHS/xueyi5.png" }
+                            civilian = { small = "gfx/leaders/LHS/small/xueyi5_small.png" }
                         }
                     }
                 }
@@ -4436,6 +4896,11 @@ LHS_luhuoweiji = {
             PAM = {
                 add_ideas = LHS_wldnys
                 set_country_flag = PAM_cishawldn
+            }
+            hidden_effect = {
+                PAM = {
+                    remove_ideas = PAM_sln4
+                }
             }
         }
         cancel_trigger = {
@@ -4740,6 +5205,9 @@ LHS_luhuoweiji = {
     xuangao_nanmei = {
         visible = {
             TAG = LHS
+            not = {
+                has_country_flag = LHS_mumian2
+            }
         }
         icon = GFX_nmty
         available = { #感觉我只要检测一下红魔联有没有flag不就行了，改那么多干啥
@@ -4747,190 +5215,53 @@ LHS_luhuoweiji = {
             custom_trigger_tooltip = {
                 tooltip = nanmeitongyi
 
-                    PAQ = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                PAQ = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
-                    LFC = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                }
+                LFC = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
-                    ELF = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                }
+                ELF = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
-                    MGU = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                }
+                MGU = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
-                    PAO = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                }
+                PAO = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
-                    PAM = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                }
+                PAM = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
-                    PAU = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                }
+                PAU = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
-                    PGM = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                }
+                PGM = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
-                    PA1 = {
-                        all_core_state = {
-                            state_is_fully_controlled_by_ROOT_or_subject_faction = yes
-                        }
+                }
+                PA1 = {
+                    all_core_state = {
+                        state_is_fully_controlled_by_ROOT_or_subject_faction = yes
                     }
+                }
 
-#                any_state = {
-#                    or = {
-#                        AND = {
-#                            is_core_of = PAQ
-#                            is_controlled_by = ROOT
-#                        }
-#                        PAQ = {is_subject_of = LHS}
-#                    }
-#                }
-#                PAQ = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
-#                any_state = {
-#                    or = {
-#                        AND = {
-#                            is_core_of = LFC
-#                            is_controlled_by = ROOT
-#                        }
-#                        LFC = {is_subject_of = LHS}
-#                    }
-#                }
-#                LFC = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
-#
-#                any_state = {
-#                    or = {
-#                        AND = {
-#                            is_core_of = ELF
-#                            is_controlled_by = ROOT
-#                        }
-#                        ELF = {is_subject_of = LHS}
-#                    }
-#                }
-#                ELF = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
-#                any_state = {
-#                    or = {
-#                        AND = {
-#                            is_core_of = MGU
-#                            is_controlled_by = ROOT
-#                        }
-#                        MGU = {is_subject_of = LHS}
-#                    }
-#                }
-#                MGU = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
-#                any_state = {
-#                    or = {
-#                        AND = {
-#                            is_core_of = PAO
-#                            is_controlled_by = ROOT
-#                        }
-#                        PAO = {is_subject_of = LHS}
-#                    }
-#                }
-#                PAO = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
-#                any_state = {
-#                    or = {
-#                        AND = {
-#                            is_core_of = PAM
-#                            is_controlled_by = ROOT
-#                        }
-#                        PAM = {is_subject_of = LHS}
-#                    }
-#                }
-#                PAM = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
-#                any_state = {
-#                    or = {
-#                        AND = {
-#                            is_core_of = PAU
-#                            is_controlled_by = ROOT
-#                        }
-#                        PAU = {is_subject_of = LHS}
-#                    }
-#                }
-#                PAU = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
-#                any_state = {
-#                    or = {
-#                        AND = {
-#                            is_core_of = PGM
-#                            is_controlled_by = ROOT
-#                        }
-#                        PGM = {is_subject_of = LHS}
-#                    }
-#                }
-#                PGM = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
-#                any_state = {
-#
-#                    or = {
-#                        AND = {
-#                            is_core_of = PA1
-#                            is_controlled_by = ROOT
-#                        }
-#                        PA1 = {is_subject_of = LHS}
-#                    }
-#
-#                }
-#                PA1 = {
-#                    OR = {
-#                        exists = NO
-#                        is_subject_of = LHS
-#                    }
-#                }
+
             }
         }
         cost = 200
@@ -5007,18 +5338,18 @@ LHS_luhuoweiji = {
             }
 
             #非红魔联或者红魔联没进阵营
-    #        if = {
-    #            limit = {
-    #                not = {
-    #                    MGU = {
-    #                        or = {
-    #                            has_government = communism
-    #                            is_in_faction_with = LHS
-    #                        }
-    #                    }
-    #                }
-    #            }
-        
+            #        if = {
+            #            limit = {
+            #                not = {
+            #                    MGU = {
+            #                        or = {
+            #                            has_government = communism
+            #                            is_in_faction_with = LHS
+            #                        }
+            #                    }
+            #                }
+            #            }
+
             #魔联不进阵营
             if = {
                 limit = {
@@ -5096,6 +5427,38 @@ LHS_luhuoweiji = {
                         transfer_troops = yes
                     }
                     annex_country = {
+                        target = ELF
+                        transfer_troops = yes
+                    }
+                    annex_country = {
+                        target = ELW
+                        transfer_troops = yes
+                    }
+                    annex_country = {
+                        target = ELG
+                        transfer_troops = yes
+                    }
+                    annex_country = {
+                        target = EWW
+                        transfer_troops = yes
+                    }
+                    annex_country = {
+                        target = EFC
+                        transfer_troops = yes
+                    }
+                    annex_country = {
+                        target = EDW
+                        transfer_troops = yes
+                    }
+                    annex_country = {
+                        target = EBS
+                        transfer_troops = yes
+                    }
+                    annex_country = {
+                        target = SAJ
+                        transfer_troops = yes
+                    }
+                    annex_country = {
                         target = MGC
                         transfer_troops = yes
                     }
@@ -5134,7 +5497,7 @@ LHS_luhuoweiji = {
                         }
                         set_country_flag = LHS_heguotongyi
                         mark_focus_tree_layout_dirty = yes
-    
+
                         LHS_xiaoguo = {
                             set_portraits = {
                                 army = { large = "gfx/leaders/LHS/xiaoguo8.png" }
@@ -5157,14 +5520,7 @@ LHS_luhuoweiji = {
                         }
                         set_country_flag = LHS_xiaofengtongyi
                         mark_focus_tree_layout_dirty = yes
-                        LHS_xueyi = {
-                            set_portraits = {
-                                army = { large = "gfx/leaders/LHS/xueyi6.png" }
-                                army = { small = "gfx/leaders/LHS/small/xueyi6_small.png" }
-                                civilian = { large = "gfx/leaders/LHS/xueyi6.png" }
-                                civilian = { small = "gfx/leaders/LHS/small/xueyi6_small.png" }
-                            }
-                        }
+                        
                         remove_ideas = LHS_xueyi2_idea
                         add_ideas = LHS_xueyi3_idea
                         LHS_Nymph = {
@@ -5181,14 +5537,7 @@ LHS_luhuoweiji = {
                                 promote_leader = yes
                             }
                         }
-                        LHS_Nymph = {
-                            set_portraits = {
-                                army = { large = "gfx/leaders/LHS/xiaofeng4.png" }
-                                army = { small = "gfx/leaders/LHS/small/xiaofeng4_small.png" }
-                                civilian = { large = "gfx/leaders/LHS/xiaofeng4.png" }
-                                civilian = { small = "gfx/leaders/LHS/small/xiaofeng4_small.png" }
-                            }
-                        }
+                        
                         news_event = {
                             id = LHS_news.8
                             days = 1
@@ -5196,17 +5545,17 @@ LHS_luhuoweiji = {
                     }
                 }
             }
-    
+
             #红魔联进阵营
-    #        else_if = {
-    #            limit = {
-    #                MGU = {
-    #                    and = {
-    #                        has_government = communism
-    #                        is_in_faction_with = LHS
-    #                    }
-    #                }
-    #            }
+            #        else_if = {
+            #            limit = {
+            #                MGU = {
+            #                    and = {
+            #                        has_government = communism
+            #                        is_in_faction_with = LHS
+            #                    }
+            #                }
+            #            }
 
             #魔联进阵营
             else_if = {
@@ -5312,7 +5661,7 @@ LHS_luhuoweiji = {
                         }
                         set_country_flag = LHS_heguotongyi
                         mark_focus_tree_layout_dirty = yes
-    
+
                         LHS_xiaoguo = {
                             set_portraits = {
                                 army = { large = "gfx/leaders/LHS/xiaoguo8.png" }
@@ -5331,14 +5680,7 @@ LHS_luhuoweiji = {
                         }
                         set_country_flag = LHS_xiaofengtongyi
                         mark_focus_tree_layout_dirty = yes
-                        LHS_xueyi = {
-                            set_portraits = {
-                                army = { large = "gfx/leaders/LHS/xueyi6.png" }
-                                army = { small = "gfx/leaders/LHS/small/xueyi6_small.png" }
-                                civilian = { large = "gfx/leaders/LHS/xueyi6.png" }
-                                civilian = { small = "gfx/leaders/LHS/small/xueyi6_small.png" }
-                            }
-                        }
+                        
                         remove_ideas = LHS_xueyi2_idea
                         add_ideas = LHS_xueyi3_idea
                         LHS_Nymph = {
@@ -5355,14 +5697,7 @@ LHS_luhuoweiji = {
                                 promote_leader = yes
                             }
                         }
-                        LHS_Nymph = {
-                            set_portraits = {
-                                army = { large = "gfx/leaders/LHS/xiaofeng4.png" }
-                                army = { small = "gfx/leaders/LHS/small/xiaofeng4_small.png" }
-                                civilian = { large = "gfx/leaders/LHS/xiaofeng4.png" }
-                                civilian = { small = "gfx/leaders/LHS/small/xiaofeng4_small.png" }
-                            }
-                        }
+                        
                     }
                 }
             }
@@ -5384,7 +5719,9 @@ LHS_luhuoweiji = {
             TAG = LHS
             has_country_flag = payyihe
             has_war_with = PAY
-
+            not = {
+                has_country_flag = LHS_mumian2
+            }
         }
 
         available = {
@@ -5392,6 +5729,21 @@ LHS_luhuoweiji = {
             not={has_country_flag = LHS_xueyitongyi}
             custom_trigger_tooltip = {
                 tooltip = quzhumonv
+
+
+                #and = {
+                #    any_state = {
+                #        is_core_of = PAQ
+                #        not = {
+                #            is_controlled_by = PAY
+                #        }
+                #    }
+                #    not = {
+                #        PAQ = {
+                #            is_subject_of = PAY
+                #        }
+                #    }
+                #}
 
 
                 NOT = {
@@ -5579,7 +5931,7 @@ LHS_luhuoweiji = {
         ai_will_do = {
             base = 100
             modifier = {
-                PAY = {surrender_progress > 2}
+                PAY = {surrender_progress > 0.2}
                 add = -100
 
             }
@@ -5595,6 +5947,7 @@ LHS_luhuoweiji = {
 
             not = {
                 or = {
+                    has_country_flag = LHS_mumian2
                     has_country_flag = engyihe
                     has_country_flag = noyihe
                 }
@@ -5616,31 +5969,19 @@ LHS_luhuoweiji = {
         cancel_trigger = {
 
             not = {
-
                 382 = {
-
-
                     is_controlled_by = LHS
-
-
                 }
             }
             not = {
                 685 = {
-
-
                     is_controlled_by = LHS
-
-
                 }
-
-
             }
-
         }
         available = {
             has_war_with = ENG
-            OR = {
+            or = {
                 NOT = {
                     685 = {
                         owner = {
@@ -5677,26 +6018,12 @@ LHS_luhuoweiji = {
             }
             or = {
                 382 = {
-
-
                     is_controlled_by = LHS
-
-
                 }
                 685 = {
-
-
                     is_controlled_by = LHS
-
-
                 }
-
-
             }
-
-
-
-
         }
 
         cost = 100
@@ -5712,416 +6039,417 @@ LHS_luhuoweiji = {
                     limit = {
                         OR = {
                             is_in_faction_with = ENG
-                            TAG = ENG
+                            tag = ENG
                         }
                     }
-                    LHS = { white_peace = PREV
-                    transfer_state = 685
+                    LHS = {
+                        white_peace = PREV
+                        transfer_state = 685
+                    }
                 }
             }
         }
-    }
-    ai_will_do = {
-        base = 100
-    }
-}
-
-LHS_jiefang_FROM = {
-    icon = GFX_jiefangmeizhou
-
-    cost = 0
-    days_remove = 15
-
-    target_trigger = {
-        ROOT = { is_subject = no }
-        FROM = {
-            not = {
-                or = {
-                    has_war_with = ROOT
-                    is_in_faction_with = ROOT
-                    is_subject_of = ROOT
-                }
-            }
+        ai_will_do = {
+            base = 100
         }
     }
-    allowed = {
-        always = no
-    }
-    available = {
-        FROM = {
-            not = {
-                or = {
-                    has_war_with = ROOT
-                    is_in_faction_with = ROOT
-                    is_subject_of = ROOT
-                }
-            }
-            not = {
-                has_country_flag = LHS_war_plan_going_on
-            }
-        }
-    }
-    ai_will_do = {
-        base = 100
-        modifier = {
-            has_army_manpower = {
-                size > 4999999
-            }
-            has_war = no
-            add = 100
 
-        }
-        modifier = {
-            FROM = {is_in_faction_with = ENG
-            has_war = no}
+    LHS_jiefang_FROM = {
+        icon = GFX_jiefangmeizhou
 
-            add = -100
+        cost = 0
+        days_remove = 15
 
-        }
-        modifier = {
-            has_war = yes
-            add = -100
-
-        }
-        modifier = {
-            FROM = {TAG = PAY}
-            has_war = no
-            add = 1000
-
-        }
-
-        modifier = {
-            has_war = yes
-            add = -10000
-
-        }
-        modifier = {
-            has_dynamic_modifier = {
-                modifier = LHS_pbrm
-            }
-            add = -10000
-
-        }
-        modifier = { #防止prc和其他cn区域的国家在一起时进行了宣战
+        target_trigger = {
+            ROOT = { is_subject = no }
             FROM = {
-                or = {
-                    tag = CHI
-                    tag = ROC
-                    tag = MON
-                    tag = MAN
-                    tag = SIC
-                    tag = SIK
-                    tag = TIB
-                    tag = XSM
-                    tag = YUN
-                    tag = WUH
-                    tag = FUJ
-                    tag = SHH
-                    tag = JSZ
-                }
-            is_in_faction_with = PRC
-            }
-            add = -1000
-
-        }
-    }
-
-    complete_effect = {
-        FROM_country_is_defender_and_ROOT_is_accacker = yes
-    }
-    remove_effect = {
-        if = {
-
-            limit = {
-                date > 1939.1.1
-                has_country_leader = {
-                    ruling_only = yes
-                    name = "雪伊"
-                }
-            }
-
-            every_country = {
-                limit = { is_in_faction_with = LHS }
-                hidden_effect = {
-                    remove_ideas = LHS_jiefangsita
-                }
-                add_timed_idea = {
-                    idea = LHS_jiefangsita
-                    days = 100
+                not = {
+                    or = {
+                        has_war_with = ROOT
+                        is_in_faction_with = ROOT
+                        is_subject_of = ROOT
+                    }
                 }
             }
         }
-        if = {
-
-            limit = {
-                date > 1939.1.1
-                has_country_leader = {
-                    ruling_only = yes
-                    name = "晓枫"
+        allowed = {
+            always = no
+        }
+        available = {
+            FROM = {
+                not = {
+                    or = {
+                        has_war_with = ROOT
+                        is_in_faction_with = ROOT
+                        is_subject_of = ROOT
+                    }
                 }
-            }
-
-            every_country = {
-                limit = { is_in_faction_with = LHS }
-                hidden_effect = {
-                    remove_ideas = LHS_gemingdaolai
-                }
-                add_timed_idea = {
-                    idea = LHS_gemingdaolai
-                    days = 100
+                not = {
+                    has_country_flag = LHS_war_plan_going_on
                 }
             }
         }
+        ai_will_do = {
+            base = 100
+            modifier = {
+                has_army_manpower = {
+                    size > 4999999
+                }
+                has_war = no
+                add = 100
 
-        declare_war_on = {
-            target = FROM
-            type = topple_government
+            }
+            modifier = {
+                FROM = {is_in_faction_with = ENG
+                has_war = no}
+
+                add = -100
+
+            }
+            modifier = {
+                has_war = yes
+                add = -100
+
+            }
+            modifier = {
+                FROM = {TAG = PAY}
+                has_war = no
+                add = 1000
+
+            }
+
+            modifier = {
+                has_war = yes
+                add = -10000
+
+            }
+            modifier = {
+                has_dynamic_modifier = {
+                    modifier = LHS_pbrm
+                }
+                add = -10000
+
+            }
+            modifier = { #防止prc和其他cn区域的国家在一起时进行了宣战
+                FROM = {
+                    or = {
+                        tag = CHI
+                        tag = ROC
+                        tag = MON
+                        tag = MAN
+                        tag = SIC
+                        tag = SIK
+                        tag = TIB
+                        tag = XSM
+                        tag = YUN
+                        tag = WUH
+                        tag = FUJ
+                        tag = SHH
+                        tag = JSZ
+                    }
+                    is_in_faction_with = PRC
+                }
+                add = -1000
+
+            }
         }
-        clr_country_flag = LHS_war_plan_going_on
-    }
-    cancel_trigger = {
 
-    }
-    cancel_effect = {
+        complete_effect = {
+            FROM_country_is_defender_and_ROOT_is_accacker = yes
+        }
+        remove_effect = {
+            if = {
 
+                limit = {
+                    date > 1939.1.1
+                    has_country_leader = {
+                        ruling_only = yes
+                        name = "雪伊"
+                    }
+                }
+
+                every_country = {
+                    limit = { is_in_faction_with = LHS }
+                    hidden_effect = {
+                        remove_ideas = LHS_jiefangsita
+                    }
+                    add_timed_idea = {
+                        idea = LHS_jiefangsita
+                        days = 100
+                    }
+                }
+            }
+            if = {
+
+                limit = {
+                    date > 1939.1.1
+                    has_country_leader = {
+                        ruling_only = yes
+                        name = "晓枫"
+                    }
+                }
+
+                every_country = {
+                    limit = { is_in_faction_with = LHS }
+                    hidden_effect = {
+                        remove_ideas = LHS_gemingdaolai
+                    }
+                    add_timed_idea = {
+                        idea = LHS_gemingdaolai
+                        days = 100
+                    }
+                }
+            }
+
+            declare_war_on = {
+                target = FROM
+                type = topple_government
+            }
+            clr_country_flag = LHS_war_plan_going_on
+        }
+        cancel_trigger = {
+
+        }
+        cancel_effect = {
+
+        }
     }
-}
 }
 
 
 LHS_laissez_faire_cat = {
-	LHS_land_owners_finding_funding  = {
-		icon = GFX_land_owners_finding_funding
-		allowed = {
-			OR = {
-				original_tag = LHS #记得改
-			}
-		}
-		visible = {
-			always = yes
-		}
-		is_good = yes
-		available = { hidden_trigger = { always = no } }
+    LHS_land_owners_finding_funding  = {
+        icon = GFX_land_owners_finding_funding
+        allowed = {
+            OR = {
+                original_tag = LHS #记得改
+            }
+        }
+        visible = {
+            always = yes
+        }
+        is_good = yes
+        available = { hidden_trigger = { always = no } }
 
-		activation = {
-			has_completed_focus = LHS_Calluses_Tell_Truth
-		}
-		days_mission_timeout = 200
-		timeout_effect = {
+        activation = {
+            has_completed_focus = LHS_Calluses_Tell_Truth
+        }
+        days_mission_timeout = 200
+        timeout_effect = {
 
-			custom_effect_tooltip = LHS_jundui_stats
+            custom_effect_tooltip = LHS_jundui_stats
 
-			random_state = {
-				limit = {
-					is_controlled_by = ROOT
-					impassable = no
-				}
-				random_list = {
-					seed = random
-					1.5 = {
-						modifier = {
-							free_building_slots = {
-								building = industrial_complex
-								size < 1
-							}
-							factor = 0
-						}
-						modifier = {
-							has_variable = ROOT.is_literally_not_a_factory
-							add = var:ROOT.is_literally_not_a_factory
-						}
-						if = {
-							limit = {
-								has_variable = ROOT.is_literally_not_a_factory
-							}
-							clear_variable = ROOT.is_literally_not_a_factory
-						}
-						add_building_construction = {
-							type = industrial_complex
-							level = 1
-							instant_build = yes
-						}
+            random_state = {
+                limit = {
+                    is_controlled_by = ROOT
+                    impassable = no
+                }
+                random_list = {
+                    seed = random
+                    1.5 = {
+                        modifier = {
+                            free_building_slots = {
+                                building = industrial_complex
+                                size < 1
+                            }
+                            factor = 0
+                        }
+                        modifier = {
+                            has_variable = ROOT.is_literally_not_a_factory
+                            add = var:ROOT.is_literally_not_a_factory
+                        }
+                        if = {
+                            limit = {
+                                has_variable = ROOT.is_literally_not_a_factory
+                            }
+                            clear_variable = ROOT.is_literally_not_a_factory
+                        }
+                        add_building_construction = {
+                            type = industrial_complex
+                            level = 1
+                            instant_build = yes
+                        }
 
-						ROOT = { add_to_variable = { built_a_civ = 1 } }
-					}
-					1.5 = {
-						modifier = {
-							free_building_slots = {
-								building = arms_factory
-								size < 1  
-							}
-							factor = 0
-						}
-						modifier = {
-							has_variable = ROOT.is_literally_not_a_factory
-							add = var:ROOT.is_literally_not_a_factory
-						}
-						if = {
-							limit = {
-								has_variable = ROOT.is_literally_not_a_factory
-							}
-							clear_variable = ROOT.is_literally_not_a_factory
-						}
+                        ROOT = { add_to_variable = { built_a_civ = 1 } }
+                    }
+                    1.5 = {
+                        modifier = {
+                            free_building_slots = {
+                                building = arms_factory
+                                size < 1
+                            }
+                            factor = 0
+                        }
+                        modifier = {
+                            has_variable = ROOT.is_literally_not_a_factory
+                            add = var:ROOT.is_literally_not_a_factory
+                        }
+                        if = {
+                            limit = {
+                                has_variable = ROOT.is_literally_not_a_factory
+                            }
+                            clear_variable = ROOT.is_literally_not_a_factory
+                        }
 
-						add_building_construction = {
-							type = arms_factory
-							level = 1
-							instant_build = yes
-						}
+                        add_building_construction = {
+                            type = arms_factory
+                            level = 1
+                            instant_build = yes
+                        }
 
-						ROOT = { add_to_variable = { built_a_mil = 1 } }
-					}
-					2 = {
-						modifier = {
-							free_building_slots = {
-								building = dockyard
-								size < 1 
-							}
-							factor = 0
-						}
-						modifier = {
-							ROOT = {
-								any_core_state = {
-									is_coastal = no
-								}
-							}
-							factor = 0
-						}
-						add_building_construction = {
-							type = dockyard
-							level = 1
-							instant_build = yes
-						}
-						add_to_variable = { ROOT.is_literally_not_a_factory = 0.1 }
-						ROOT = { add_to_variable = { built_a_dockyard = 1 } }
-					}
-					3 = {
-						modifier = {
-							infrastructure > 4
-							factor = 0
-						}
-						add_building_construction = {
-							type = infrastructure
-							level = 1
-							instant_build = yes
-						}
-						add_to_variable = { ROOT.is_literally_not_a_factory = 0.15 }
-						ROOT = { add_to_variable = { built_a_infra = 1 } }
-					}
-					3 = {
-						modifier = {
-							air_base > 9
-							factor = 0
-						}
-						add_building_construction = {
-							type = air_base
-							level = 1
-							instant_build = yes
-						}
-						add_to_variable = { ROOT.is_literally_not_a_factory = 0.25 }
-						ROOT = { add_to_variable = { built_an_airbase = 1 } }
-					}
+                        ROOT = { add_to_variable = { built_a_mil = 1 } }
+                    }
+                    2 = {
+                        modifier = {
+                            free_building_slots = {
+                                building = dockyard
+                                size < 1
+                            }
+                            factor = 0
+                        }
+                        modifier = {
+                            ROOT = {
+                                any_core_state = {
+                                    is_coastal = no
+                                }
+                            }
+                            factor = 0
+                        }
+                        add_building_construction = {
+                            type = dockyard
+                            level = 1
+                            instant_build = yes
+                        }
+                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.1 }
+                        ROOT = { add_to_variable = { built_a_dockyard = 1 } }
+                    }
+                    3 = {
+                        modifier = {
+                            infrastructure > 4
+                            factor = 0
+                        }
+                        add_building_construction = {
+                            type = infrastructure
+                            level = 1
+                            instant_build = yes
+                        }
+                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.15 }
+                        ROOT = { add_to_variable = { built_a_infra = 1 } }
+                    }
+                    3 = {
+                        modifier = {
+                            air_base > 9
+                            factor = 0
+                        }
+                        add_building_construction = {
+                            type = air_base
+                            level = 1
+                            instant_build = yes
+                        }
+                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.25 }
+                        ROOT = { add_to_variable = { built_an_airbase = 1 } }
+                    }
 
-					3 = {
-						modifier = {
-							anti_air_building > 4
-							factor = 0
-						}
+                    3 = {
+                        modifier = {
+                            anti_air_building > 4
+                            factor = 0
+                        }
 
-						modifier = {
-							ROOT = { NOT = {  has_tech = interwar_antiair } }
-							factor = 0
-						}
-						add_building_construction = {
-							type = anti_air_building
-							level = 1
-							instant_build = yes
-						}
-						add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
-						ROOT = { add_to_variable = { built_an_aa = 1 } }
-					}
+                        modifier = {
+                            ROOT = { NOT = {  has_tech = interwar_antiair } }
+                            factor = 0
+                        }
+                        add_building_construction = {
+                            type = anti_air_building
+                            level = 1
+                            instant_build = yes
+                        }
+                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
+                        ROOT = { add_to_variable = { built_an_aa = 1 } }
+                    }
 
-					2 = {
-						modifier = {
-							radar_station > 4
-							factor = 0
-						}
+                    2 = {
+                        modifier = {
+                            radar_station > 4
+                            factor = 0
+                        }
 
-						modifier = { #level 1
-							ROOT = { NOT = {  has_tech = radio_detection } }
-							factor = 0
-						}
+                        modifier = { #level 1
+                            ROOT = { NOT = {  has_tech = radio_detection } }
+                            factor = 0
+                        }
 
-						modifier = { #level 2
-							radar_station > 0
-							ROOT = { NOT = {  has_tech = cavity_magnatron } }
-							factor = 0
-						}
+                        modifier = { #level 2
+                            radar_station > 0
+                            ROOT = { NOT = {  has_tech = cavity_magnatron } }
+                            factor = 0
+                        }
 
-						#modifier = { #level 3
-						#	radar_station > 2
-						#	ROOT = { NOT = {  has_tech = improved_cavity_magnatron } }
-						#	factor = 0
-						#}
+                        #modifier = { #level 3
+                        #	radar_station > 2
+                        #	ROOT = { NOT = {  has_tech = improved_cavity_magnatron } }
+                        #	factor = 0
+                        #}
 
-						modifier = { #level 4
-							radar_station > 3
-							ROOT = { NOT = {  has_tech = centimetric_radar } }
-							factor = 0
-						}
-						modifier = { #level 5
-							radar_station > 4
-							ROOT = { NOT = {  has_tech = phased_array } }
-							factor = 0
-						}
+                        modifier = { #level 4
+                            radar_station > 3
+                            ROOT = { NOT = {  has_tech = centimetric_radar } }
+                            factor = 0
+                        }
+                        modifier = { #level 5
+                            radar_station > 4
+                            ROOT = { NOT = {  has_tech = phased_array } }
+                            factor = 0
+                        }
 
-						modifier = { #level 6
-							radar_station > 4
-							ROOT = { NOT = {  has_tech = monopulse_radar } }
-							factor = 0
-						}
+                        modifier = { #level 6
+                            radar_station > 4
+                            ROOT = { NOT = {  has_tech = monopulse_radar } }
+                            factor = 0
+                        }
 
-						add_building_construction = {
-							type = radar_station
-							level = 1
-							instant_build = yes
-						}
-						add_to_variable = { ROOT.is_literally_not_a_factory = 0.25 }
-						ROOT = { add_to_variable = { built_a_radar = 1 } }
-					}
+                        add_building_construction = {
+                            type = radar_station
+                            level = 1
+                            instant_build = yes
+                        }
+                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.25 }
+                        ROOT = { add_to_variable = { built_a_radar = 1 } }
+                    }
 
-					1 =	{
-						add_building_construction = {
-							type = supply_node
-							province = {
-								all_provinces = yes
-							}
-							level = 1
-							instant_build = yes
-						}
-						add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
-						ROOT = { add_to_variable = { built_a_hub = 1 } }
-					}
+                    1 =	{
+                        add_building_construction = {
+                            type = supply_node
+                            province = {
+                                all_provinces = yes
+                            }
+                            level = 1
+                            instant_build = yes
+                        }
+                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
+                        ROOT = { add_to_variable = { built_a_hub = 1 } }
+                    }
 
-					2 = {
-						modifier = {
-							free_building_slots = {
-								building = industrial_complex
-								size < 1 
-							}
-							factor = 2
-						}
-						add_extra_state_shared_building_slots = 1
-						add_to_variable = { ROOT.is_literally_not_a_factory = 0.1 }
-						ROOT = { add_to_variable = { added_slot = 1 } }
+                    2 = {
+                        modifier = {
+                            free_building_slots = {
+                                building = industrial_complex
+                                size < 1
+                            }
+                            factor = 2
+                        }
+                        add_extra_state_shared_building_slots = 1
+                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.1 }
+                        ROOT = { add_to_variable = { added_slot = 1 } }
 
-					}
-				}
-					
-			}
-			activate_mission = GUAY_land_owners_finding_funding
-		}
-	}
+                    }
+                }
+
+            }
+            activate_mission = LHS_land_owners_finding_funding
+        }
+    }
 
     LHS_land_owners_guizu  = {
         icon = GFX_land_owners_guizu
@@ -6144,138 +6472,832 @@ LHS_laissez_faire_cat = {
 
             custom_effect_tooltip = LHS_guizu_stats
 
-            random_state = {
-                limit = {
-                    is_controlled_by = ROOT
-                    impassable = no
+            random_list = {
+                seed = random
+                1.5 = {
+                    modifier = {
+                        has_variable = ROOT.is_literally_not_a_factory
+                        add = var:ROOT.is_literally_not_a_factory
+                    }
+                    if = {
+                        limit = {
+                            has_variable = ROOT.is_literally_not_a_factory
+                        }
+                        clear_variable = ROOT.is_literally_not_a_factory
+                    }
+                    add_tech_bonus = {
+                        name = "工业研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = industry
+                    }
+
+                    ROOT = { add_to_variable = { yanjiu_a_civ = 1 } }
                 }
-                random_list = {
-                    seed = random
-                    1.5 = {
-                        modifier = {
-                            has_variable = ROOT.is_literally_not_a_factory
-                            add = var:ROOT.is_literally_not_a_factory
-                        }
-                        if = {
-                            limit = {
-                                has_variable = ROOT.is_literally_not_a_factory
-                            }
-                            clear_variable = ROOT.is_literally_not_a_factory
-                        }
-                        add_tech_bonus = {
-                            name = "工业研究卡"
-                            bonus = 1
-                            uses = 1
-                            ahead_reduction = 0.5
-                            category = industry
-                        }
-
-                        ROOT = { add_to_variable = { yanjiu_a_civ = 1 } }
+                1.5 = {
+                    modifier = {
+                        has_variable = ROOT.is_literally_not_a_factory
+                        add = var:ROOT.is_literally_not_a_factory
                     }
-                    1.5 = {
-                        modifier = {
+                    if = {
+                        limit = {
                             has_variable = ROOT.is_literally_not_a_factory
-                            add = var:ROOT.is_literally_not_a_factory
                         }
-                        if = {
-                            limit = {
-                                has_variable = ROOT.is_literally_not_a_factory
-                            }
-                            clear_variable = ROOT.is_literally_not_a_factory
-                        }
-
-                        add_tech_bonus = {
-                            name = "步枪研究卡"
-                            bonus = 1
-                            uses = 1
-                            ahead_reduction = 0.5
-                            category = infantry_weapons
-                        }
-
-                        ROOT = { add_to_variable = { yanjiu_a_mil = 1 } }
+                        clear_variable = ROOT.is_literally_not_a_factory
                     }
-                    2 = {
-                        modifier = {
-                            ROOT = {
-                                any_core_state = {
-                                    is_coastal = no
+
+                    add_tech_bonus = {
+                        name = "步枪研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = infantry_weapons
+                    }
+
+                    ROOT = { add_to_variable = { yanjiu_a_mil = 1 } }
+                }
+                2 = {
+                    modifier = {
+                        ROOT = {
+                            any_core_state = {
+                                is_coastal = yes
+                            }
+                        }
+                        factor = 1
+                    }
+                    add_tech_bonus = {
+                        name = "舰船研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = naval_equipment
+                    }
+                    add_to_variable = { ROOT.is_literally_not_a_factory = 0.1 }
+                    ROOT = { add_to_variable = { yanjiu_a_dockyard = 1 } }
+                }
+                3 = {
+                    add_to_variable = { ubs_save = 100 }
+                    custom_effect_tooltip = LHS_tooltip_var_hcp_add_100
+                    custom_effect_tooltip = LHS_tooltip_var_hcp_add_100_tt
+                    add_to_variable = { ROOT.is_literally_not_a_factory = 0.15 }
+                    ROOT = { add_to_variable = { money_a_infra = 100 } }
+                }
+                3 = {
+                    add_tech_bonus = {
+                        name = "空军研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = air_equipment
+                    }
+                    add_to_variable = { ROOT.is_literally_not_a_factory = 0.25 }
+                    ROOT = { add_to_variable = { yanjiu_an_airbase = 1 } }
+                }
+
+                3 = {
+                    add_tech_bonus = {
+                        name = "火炮研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = artillery
+                    }
+                    add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
+                    ROOT = { add_to_variable = { yanjiu_an_aa = 1 } }
+                }
+
+                2 = {
+                    add_tech_bonus = {
+                        name = "支援装备研究卡"
+                        bonus = 1
+                        uses = 1
+                        category = support_tech
+                    }
+                    add_to_variable = { ROOT.is_literally_not_a_factory = 0.25 }
+                    ROOT = { add_to_variable = { yanjiu_a_radar = 1 } }
+                }
+
+                2 ={
+                    add_tech_bonus = {
+                        name = "装甲研究卡"
+                        category = armor
+                        bonus = 1
+                        uses = 1
+                    }
+                    add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
+                    ROOT = { add_to_variable = { yanjiu_a_hub = 1 } }
+                }
+            }
+
+            activate_mission = LHS_land_owners_guizu
+        }
+    }
+
+    LHS_laosuo  = { #牢索
+        icon = GFX_LHS_laosuo
+        allowed = {
+            OR = {
+                original_tag = LHS #记得改
+            }
+        }
+        visible = {
+            always = yes
+        }
+        is_good = yes
+        available = { hidden_trigger = { always = no } }
+
+        activation = {
+            has_completed_focus = LHS_Reckoning_Old_Scores
+        }
+        days_mission_timeout = var:laosuo
+        timeout_effect = {
+            if = {
+                limit = {
+                    not = {
+                        has_completed_focus = LHS_Hand_Before_The_Stick
+                    }
+                }
+                add_stability = -0.05
+                add_war_support = -0.05
+                custom_effect_tooltip = LHS_laosuo_bupeihe
+            }
+
+            if = {
+                limit = {
+                    has_completed_focus = LHS_Hand_Before_The_Stick
+                }
+
+                custom_effect_tooltip = LHS_laosuo_stats
+
+                random_state = {
+                    limit = {
+                        is_controlled_by = ROOT
+                        impassable = no
+                    }
+                    random_list = {
+                        seed = random
+                        1.5 = {
+                            modifier = {
+                                free_building_slots = {
+                                    building = industrial_complex
+                                    size < 1
                                 }
+                                factor = 0
                             }
-                            factor = 0
+                            modifier = {
+                                has_variable = ROOT.is_literally_not_a_factory
+                                add = var:ROOT.is_literally_not_a_factory
+                            }
+                            if = {
+                                limit = {
+                                    has_variable = ROOT.is_literally_not_a_factory
+                                }
+                                clear_variable = ROOT.is_literally_not_a_factory
+                            }
+                            add_building_construction = {
+                                type = industrial_complex
+                                level = 1
+                                instant_build = yes
+                            }
+
+                            ROOT = { add_to_variable = { built_a_civls = 1 } }
                         }
-                        add_tech_bonus = {
-                            name = "舰船研究卡"
-                            bonus = 1
-                            uses = 1
-                            ahead_reduction = 0.5
-                            category = naval_equipment
+                        1.5 = {
+                            modifier = {
+                                free_building_slots = {
+                                    building = arms_factory
+                                    size < 1
+                                }
+                                factor = 0
+                            }
+                            modifier = {
+                                has_variable = ROOT.is_literally_not_a_factory
+                                add = var:ROOT.is_literally_not_a_factory
+                            }
+                            if = {
+                                limit = {
+                                    has_variable = ROOT.is_literally_not_a_factory
+                                }
+                                clear_variable = ROOT.is_literally_not_a_factory
+                            }
+
+                            add_building_construction = {
+                                type = arms_factory
+                                level = 1
+                                instant_build = yes
+                            }
+
+                            ROOT = { add_to_variable = { built_a_mills = 1 } }
                         }
-                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.1 }
-                        ROOT = { add_to_variable = { yanjiu_a_dockyard = 1 } }
-                    }
-                    3 = {
-                        add_to_variable = { ubs_save = 100 }
-                        custom_effect_tooltip = LHS_tooltip_var_hcp_add_100
-                        custom_effect_tooltip = LHS_tooltip_var_hcp_add_100_tt
-                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.15 }
-                        ROOT = { add_to_variable = { money_a_infra = 100 } }
-                    }
-                    3 = {
-                        add_tech_bonus = {
-                            name = "空军研究卡"
-                            bonus = 1
-                            uses = 1
-                            ahead_reduction = 0.5
-                            category = air_equipment
+                        3 = {
+                            modifier = {
+                                infrastructure > 4
+                                factor = 0
+                            }
+                            add_building_construction = {
+                                type = infrastructure
+                                level = 1
+                                instant_build = yes
+                            }
+                            add_to_variable = { ROOT.is_literally_not_a_factory = 0.15 }
+                            ROOT = { add_to_variable = { built_a_infrals = 1 } }
                         }
-                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.25 }
-                        ROOT = { add_to_variable = { yanjiu_an_airbase = 1 } }
+
+                        3 = {
+                            modifier = {
+                                anti_air_building > 4
+                                factor = 0
+                            }
+
+                            modifier = {
+                                ROOT = { NOT = {  has_tech = interwar_antiair } }
+                                factor = 0
+                            }
+                            add_building_construction = {
+                                type = anti_air_building
+                                level = 1
+                                instant_build = yes
+                            }
+                            add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
+                            ROOT = { add_to_variable = { built_an_aals = 1 } }
+                        }
+
+                        1 =	{
+                            add_building_construction = {
+                                type = supply_node
+                                province = {
+                                    all_provinces = yes
+                                }
+                                level = 1
+                                instant_build = yes
+                            }
+                            add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
+                            ROOT = { add_to_variable = { built_a_hubls = 1 } }
+                        }
+
+                        2 = {
+                            modifier = {
+                                free_building_slots = {
+                                    building = industrial_complex
+                                    size < 1
+                                }
+                                factor = 2
+                            }
+                            add_extra_state_shared_building_slots = 1
+                            add_to_variable = { ROOT.is_literally_not_a_factory = 0.1 }
+                            ROOT = { add_to_variable = { added_slotls = 1 } }
+
+                        }
                     }
 
-                    3 = {
-                        add_tech_bonus = {
-                            name = "火炮研究卡"
-                            bonus = 1
-                            uses = 1
-                            ahead_reduction = 0.5
-                            category = artillery
-                        }
-                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
-                        ROOT = { add_to_variable = { yanjiu_an_aa = 1 } }
-                    }
-
-                    2 = {
-                        add_tech_bonus = {
-                            name = "支援装备研究卡"
-                            bonus = 1
-                            uses = 1
-                            ahead_reduction = 0.5
-                            category = support_tech
-                        }
-                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.25 }
-                        ROOT = { add_to_variable = { yanjiu_a_radar = 1 } }
-                    }
-
-                    2 ={
-                        add_tech_bonus = {
-                            name = "装甲研究卡"
-                            category = armor
-                            bonus = 1
-                            uses = 1
-                            ahead_reduction = 0.5
-                        }
-                        add_to_variable = { ROOT.is_literally_not_a_factory = 0.2 }
-                        ROOT = { add_to_variable = { yanjiu_a_hub = 1 } }
-                    }
                 }
 
             }
-            activate_mission = GUAY_land_owners_finding_funding
+            if = {
+                limit = {
+                    has_completed_focus = LHS_Hand_Before_The_Stick
+                    has_country_flag = LHS_laosuo_better_peihe
+                }
+
+                random_state = {
+                    limit = {
+                        is_controlled_by = ROOT
+                        impassable = no
+                    }
+                    random_list = {
+                        seed = random
+                        2 = {
+                            modifier = {
+                                free_building_slots = {
+                                    building = industrial_complex
+                                    size < 1
+                                }
+                                factor = 0
+                            }
+                            add_building_construction = {
+                                type = industrial_complex
+                                level = 1
+                                instant_build = yes
+                            }
+
+                            ROOT = { add_to_variable = { built_a_civls = 1 } }
+                        }
+                        2 = {
+                            modifier = {
+                                free_building_slots = {
+                                    building = industrial_complex
+                                    size < 1
+                                }
+                                factor = 1
+                            }
+                            add_extra_state_shared_building_slots = 1
+                            ROOT = { add_to_variable = { added_slotls = 1 } }
+
+                        }
+                        6 = {
+                            custom_effect_tooltip = LHS_laosuo_zuobudao
+                        }
+
+                    }
+
+                }
+
+            }
+            if = {
+                limit = {
+                    has_country_flag = LHS_laoli_peihe
+                }
+                custom_effect_tooltip = LHS_laoli_stats
+                custom_effect_tooltip = LHS_abab_tt
+                add_to_variable = {
+                    LHS_abab_experience_loss_factor = -0.02
+                    tooltip = experience_loss_factor_tt
+                }
+                add_to_variable = { ROOT.is_literally_not_a_factory = 0.1 }
+                ROOT = { add_to_variable = { added_experiencels = -2 } }
+            }
+            activate_mission = LHS_laosuo
         }
     }
 }
 
 
+LHS_hongni_jueyi_cate = {
 
+    #果实的决议
+    LHS_sow_next_spring = {
+        icon = GFX_LHS_zlsc
+        priority = 500
+        days_mission_timeout = 90
+
+        available = {
+            always = no
+        }
+        activation = {
+            always = no
+        }
+
+        selectable_mission = no
+        # 如果设置，会将任务转换为玩家必须选择按钮的任务。
+
+        is_good = yes
+        #可选，将使游戏假设任务在其范围内将向指定国家宣战。这用于让AI为宣战做准备并在边境集结军队,这也将向目标及其所有盟友发出通知。
+
+        timeout_effect = {
+            #	set_variable = {
+            #		PRC_initialize_five_year_plan_current_civ_factories = num_of_civilian_factories
+            #	}
+            #	set_variable = { PRC_initialize_five_year_plan_goal_civ_factories = PRC_initialize_five_year_plan_current_civ_factories }
+            #	multiply_variable = {
+            #		var = PRC_initialize_five_year_plan_goal_civ_factories
+            #		value = PRC_initialize_five_year_plan_civ_factories_multiplier #1.5倍
+            #	}
+            #	round_variable = PRC_initialize_five_year_plan_goal_civ_factories
+            #
+            #    add_to_variable = { var = red_soil_harvest_points value = var:red_soil_seeds }#+种子
+            #    add_to_variable = { var = red_soil_harvest_points value = var:red_soil_fertilizer }#+肥料
+            #    subtract_from_variable = { var = red_soil_harvest_points value = var:red_soil_weeds }#-杂草
+            #    set_variable = { var = global.LHS_harvest_bonus_multiplier value = var:red_soil_harvest_points }#设置果实buff
+            #    multiply_variable = { var = global.LHS_harvest_bonus_multiplier value = 0.001 }
+            #参考数据
+            #red_soil_seeds 种子
+            #red_soil_fertilizer  肥料
+            #red_soil_weeds 杂草
+            #red_soil_harvest_points 果实
+            subtract_from_variable = { var = red_soil_seeds value = var:red_soil_seeds }
+            subtract_from_variable = { var = red_soil_fertilizer value = var:red_soil_fertilizer }
+            subtract_from_variable = { var = red_soil_weeds value = var:red_soil_weeds }
+            subtract_from_variable = { var = red_soil_harvest_points value = var:red_soil_harvest_points }
+            add_to_variable = { #种子=民工
+                var = red_soil_seeds
+                value = num_of_civilian_factories
+            }
+            add_to_variable = { #肥料=军工
+                var = red_soil_fertilizer
+                value = num_of_military_factories
+            }
+
+            if = { #假如民工大于军工，两倍的军工
+                limit = {
+                    LHS = {
+                        num_of_civilian_factories > num_of_military_factories
+                    }
+                }
+                add_to_variable = { var = red_soil_harvest_points value = var:red_soil_fertilizer }
+                multiply_variable = { var = red_soil_harvest_points value = 2 }
+                add_to_variable = { var = red_soil_weeds value = num_of_civilian_factories }
+                subtract_from_variable = { var = red_soil_weeds value = num_of_military_factories }
+                add_to_variable = { #设置果实buff
+                    var = global.LHS_harvest_bonus_multiplier
+                    value = var:red_soil_harvest_points
+                }
+            }
+            else = { #假如军工大于民工，两倍的民工
+                add_to_variable = { var = red_soil_harvest_points value = var:red_soil_seeds }
+                multiply_variable = { var = red_soil_harvest_points value = 2 }
+                add_to_variable = { var = red_soil_weeds value = num_of_military_factories }
+                subtract_from_variable = { var = red_soil_weeds value = num_of_civilian_factories }
+
+                add_to_variable = { #设置果实buff
+                    var = global.LHS_harvest_bonus_multiplier
+                    value = var:red_soil_harvest_points
+                }
+            }
+            clamp_variable = {  ##限定最大/最小值（单次效果，非永久）
+                var = global.LHS_harvest_bonus_multiplier
+                min = 0
+                max = 500
+            }
+            set_variable = { global.LHS_harvest_bonus_multiplier2 = global.LHS_harvest_bonus_multiplier }
+            multiply_variable = { var = global.LHS_harvest_bonus_multiplier2 value = -0.1 }
+            round_variable = global.LHS_harvest_bonus_multiplier2
+            multiply_variable = { var = global.LHS_harvest_bonus_multiplier value = 0.001 }
+            custom_effect_tooltip = LHS_idea_hongnidejieqi_tt
+            activate_mission = LHS_sow_next_spring
+        }
+        complete_effect = {
+        }
+        cancel_trigger = {
+        }
+        cancel_effect = {
+        }
+    }
+
+    LHS_call_to_arms = {
+        icon = GFX_LHS_hhtb
+        on_map_mode = map_and_decisions_view
+
+        allowed = { tag = LHS }
+        visible = { has_completed_focus = LHS_Rough_Thread_Drives_Cold }
+
+        available = {
+            LHS = {has_war = yes}
+            custom_trigger_tooltip = {
+                tooltip = muddy_diplomacy_trust_tt
+                check_variable = { muddy_diplomacy_trust > 1 }
+            }
+            FROM = { has_opinion = { target = LHS value > 50 }}
+            not = {
+                any_enemy_country = {
+                    has_government = communism
+                }
+            }
+        }
+        target_trigger = {
+            FROM = {
+                exists = yes
+                NOT = { tag = LHS }
+                NOT = { has_war_with = LHS }
+                NOT = { has_war_together_with = LHS }
+                NOT = { is_in_faction_with = LHS }
+                AND = {
+                    LHS = { has_government = communism }
+                    has_government = communism
+                }
+                OR = {
+                    is_faction_leader = yes
+                    is_in_faction = no
+                }
+            }
+        }
+        cost = 0
+
+        complete_effect = {
+            add_to_variable = { muddy_diplomacy_trust = -2 }
+            custom_effect_tooltip = muddy_diplomacy_trust_tt2
+            add_to_variable = { muddy_diplomacy_bonds = 1 }
+            LHS_calculate_muddy_diplomacy_bonus = yes
+            custom_effect_tooltip = LHS_Brew_Caramel_Across_Ocean_tt
+            add_to_variable = { #设置果实buff
+                var = red_soil_harvest_points
+                value = 5
+            }
+            add_to_variable = { #设置果实buff
+                var = global.LHS_harvest_bonus_multiplier
+                value = var:red_soil_harvest_points
+            }
+            set_variable = { global.LHS_harvest_bonus_multiplier2 = global.LHS_harvest_bonus_multiplier }
+            multiply_variable = { var = global.LHS_harvest_bonus_multiplier2 value = -0.1 }
+            round_variable = global.LHS_harvest_bonus_multiplier2
+            multiply_variable = { var = global.LHS_harvest_bonus_multiplier value = 0.001 }
+
+            add_days_mission_timeout  = {
+                mission = LHS_sow_next_spring
+                days = 10
+            }
+            custom_effect_tooltip = LHS_SEEDS_ADD_5_tt
+            custom_effect_tooltip = LHS.212.a_tt2
+            FROM = {
+                country_event = { id = LHS.212 days = 2 }
+            }
+        }
+    }
+
+    LHS_request_endorsement = {
+        icon = GFX_LHS_qjf
+        on_map_mode = map_and_decisions_view
+
+        allowed = { tag = LHS }
+        visible = { has_completed_focus = LHS_Hold_Up_Red_Soil }
+
+        available = {
+            custom_trigger_tooltip = {
+                tooltip = muddy_diplomacy_trust_tt3
+                check_variable = { muddy_diplomacy_trust > 0 }
+            }
+            FROM = { has_opinion = { target = LHS value > 30 }}
+            not = {
+                any_enemy_country = {
+                    has_government = communism
+                }
+            }
+        }
+        target_trigger = {
+            FROM = {
+                or = {
+                    is_major = yes
+                    tag = AHM
+                }
+                exists = yes
+                NOT = { tag = LHS }
+                NOT = { has_war_with = LHS }
+                AND = {
+                    LHS = { has_government = communism }
+                    has_government = communism
+                }
+            }
+            FROM = {not = {has_country_flag = LHS_request_endorsement}}
+        }
+        cost = 0
+
+        complete_effect = {
+            add_to_variable = { muddy_diplomacy_trust = -1 }
+            custom_effect_tooltip = muddy_diplomacy_trust_tt4
+            add_to_variable = { muddy_diplomacy_bonds = 1 }
+            LHS_calculate_muddy_diplomacy_bonus = yes
+            custom_effect_tooltip = LHS_Brew_Caramel_Across_Ocean_tt
+            custom_effect_tooltip = LHS_request_endorsement_tt
+            FROM = {
+                country_event = { id = LHS.214 days = 2 }
+                set_country_flag = LHS_request_endorsement
+            }
+            add_days_mission_timeout  = {
+                mission = LHS_sow_next_spring
+                days = 10
+            }
+        }
+    }
+
+
+}
+
+LHS_infrastructure_decisions_category = {
+    LHS_get_kapok_infrastructure_dec1 = {
+        allowed = {
+            original_tag = LHS
+        }
+        icon = GFX_LHS_jjzs
+        fire_only_once = no
+        priority = 92
+        ai_will_do = {
+            factor = 0
+        }
+        available = {
+            num_of_civilian_factories_available_for_projects > 14
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        visible = {
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        days_remove = 120
+        modifier = {
+            civilian_factory_use = 15
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            add_to_variable = { kapok_infrastructure = 2 }
+            custom_effect_tooltip = LHS_get_kapok_infrastructure_dec1_tt
+            add_to_variable = { kapok_conversion_point = 2 }
+            custom_effect_tooltip = LHS.222.c_tt2
+        }
+    }
+
+    LHS_get_kapok_infrastructure_dec2 = {
+        allowed = {
+            original_tag = LHS
+        }
+        icon = GFX_LHS_jjzs
+        fire_only_once = no
+        priority = 92
+        ai_will_do = {
+            factor = 0
+        }
+        available = {
+            num_of_civilian_factories_available_for_projects > 49
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        visible = {
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        days_remove = 120
+        modifier = {
+            civilian_factory_use = 50
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            add_to_variable = { kapok_infrastructure = 5 }
+            custom_effect_tooltip = LHS_get_kapok_infrastructure_dec2_tt
+            add_to_variable = { kapok_conversion_point = 5 }
+            custom_effect_tooltip = LHS.220.c_tt2
+        }
+    }
+
+
+    LHS_get_kapok_welfare_dec1 = {
+        allowed = {
+            original_tag = LHS
+        }
+        icon = GFX_LHS_flzs
+        fire_only_once = no
+        priority = 92
+        ai_will_do = {
+            factor = 0
+        }
+        available = {
+            num_of_civilian_factories_available_for_projects > 14
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        visible = {
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        days_remove = 120
+        modifier = {
+            civilian_factory_use = 15
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            add_to_variable = { kapok_welfare = 2 }
+            custom_effect_tooltip = LHS_get_kapok_welfare_dec1_tt
+            add_to_variable = { kapok_conversion_point = 2 }
+            custom_effect_tooltip = LHS.222.c_tt2
+        }
+    }
+
+    LHS_get_kapok_welfare_dec2 = {
+        allowed = {
+            original_tag = LHS
+        }
+        icon = GFX_LHS_flzs
+        fire_only_once = no
+        priority = 92
+        ai_will_do = {
+            factor = 0
+        }
+        available = {
+            num_of_civilian_factories_available_for_projects > 49
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        visible = {
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        days_remove = 120
+        modifier = {
+            civilian_factory_use = 50
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            add_to_variable = { kapok_welfare = 5 }
+            custom_effect_tooltip = LHS_get_kapok_welfare_dec2_tt
+            add_to_variable = { kapok_conversion_point = 5 }
+            custom_effect_tooltip = LHS.220.c_tt2
+        }
+    }
+
+    LHS_get_kapok_education_dec1 = {
+        allowed = {
+            original_tag = LHS
+        }
+        icon = GFX_LHS_jyzs
+        fire_only_once = no
+        priority = 92
+        ai_will_do = {
+            factor = 0
+        }
+        available = {
+            num_of_civilian_factories_available_for_projects > 14
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        visible = {
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        days_remove = 120
+        modifier = {
+            civilian_factory_use = 15
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            add_to_variable = { kapok_education = 2 }
+            custom_effect_tooltip = LHS_get_kapok_education_dec1_tt
+            add_to_variable = { kapok_conversion_point = 2 }
+            custom_effect_tooltip = LHS.222.c_tt2
+        }
+    }
+
+    LHS_get_kapok_education_dec2 = {
+        allowed = {
+            original_tag = LHS
+        }
+        icon = GFX_LHS_jyzs
+        fire_only_once = no
+        priority = 92
+        ai_will_do = {
+            factor = 0
+        }
+        available = {
+            num_of_civilian_factories_available_for_projects > 49
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        visible = {
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        days_remove = 120
+        modifier = {
+            civilian_factory_use = 50
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            add_to_variable = { kapok_education = 5 }
+            custom_effect_tooltip = LHS_get_kapok_education_dec2_tt
+            add_to_variable = { kapok_conversion_point = 5 }
+            custom_effect_tooltip = LHS.220.c_tt2
+        }
+    }
+
+
+    LHS_get_kapok_industry_dec1 = {
+        allowed = {
+            original_tag = LHS
+        }
+        icon = GFX_LHS_cyzs
+        fire_only_once = no
+        priority = 92
+        ai_will_do = {
+            factor = 0
+        }
+        available = {
+            num_of_civilian_factories_available_for_projects > 14
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        visible = {
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        days_remove = 120
+        modifier = {
+            civilian_factory_use = 15
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            add_to_variable = { kapok_industry = 2 }
+            custom_effect_tooltip = LHS_get_kapok_industry_dec1_tt
+            add_to_variable = { kapok_conversion_point = 2 }
+            custom_effect_tooltip = LHS.222.c_tt2
+
+        }
+    }
+
+    LHS_get_kapok_industry_dec2 = {
+        allowed = {
+            original_tag = LHS
+        }
+        icon = GFX_LHS_cyzs
+        fire_only_once = no
+        priority = 92
+        ai_will_do = {
+            factor = 0
+        }
+        available = {
+            num_of_civilian_factories_available_for_projects > 49
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        visible = {
+            has_completed_focus = LHS_When_Kapok_Burns_Red
+        }
+        days_remove = 120
+        modifier = {
+            civilian_factory_use = 50
+        }
+        complete_effect = {
+        }
+        remove_effect = {
+            add_to_variable = { kapok_industry = 5 }
+            custom_effect_tooltip = LHS_get_kapok_industry_dec2_tt
+            add_to_variable = { kapok_conversion_point = 5 }
+            custom_effect_tooltip = LHS.220.c_tt2
+        }
+    }
+}
 
 

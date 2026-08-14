@@ -19,7 +19,7 @@ add_namespace = CHI_ShanXi_auto
 			complete_national_focus = CHI_focus_New_year
 			CHI_remove_all_ideas = yes
 			add_political_power = -10
-			CHI_Regent = { retire = yes }
+			CHI_Regent = { character_dead = yes }
 			set_variable = { CHI_ascended_advisor_2 = 0 }
 			set_variable = { Honour_Emperor_leader = 2 }
 			ai_chance = {
@@ -152,7 +152,7 @@ add_namespace = CHI_ShanXi_auto
 			}
 			add_ideas = CHI_lixingke_idea
 			set_variable = { CHI_ascended_advisor_2 = 0 }
-			CHI_yuankeding = { retire = yes }
+			CHI_yuankeding = { character_dead = yes }
 			complete_national_focus = CHI_focus_democracy_HanGeKi
 			set_country_flag = CHI_Democracy_HanGeKi_flag
 			set_country_flag = CHI_shared_tree_leader
@@ -197,8 +197,8 @@ add_namespace = CHI_ShanXi_auto
 		picture = GFX_CHI_Yuankeding_event
 		option = {
 			name = China.006.a
-			CHI_lixingke = { retire = yes }
-			CHI_kangyouwei = { retire = yes }
+			CHI_lixingke = { character_dead = yes }
+			CHI_kangyouwei = { character_dead = yes }
 			set_variable = { Cadets_leader_var = 2 }
 			set_variable = { GongChe_leader_var = 2 }
 			every_state = {
@@ -249,7 +249,7 @@ add_namespace = CHI_ShanXi_auto
 				YUN = { add_ideas = CTS_Imperial_Province_idea }
 				FUJ = { add_ideas = CTS_Imperial_Province_idea }
 				WUH = { add_ideas = CTS_Imperial_Province_idea }
-				ROC = { add_ideas = CTS_Imperial_Province_idea }
+				GXC = { add_ideas = CTS_Imperial_Province_idea }
 				JSZ = { add_ideas = CTS_Imperial_Province_idea }
 				MAN = { add_ideas = CTS_Imperial_Province_idea }
 				MON = { add_ideas = CTS_Imperial_Province_idea }
@@ -595,48 +595,16 @@ add_namespace = CHI_ShanXi_auto
 				value = -0.1
 			}
 			clr_country_flag = GXC_fire_visible
-			WUH = {
-				end_puppet_this = yes
-				leave_faction = yes
-				set_country_flag = CHI_country
-				if = {
-					limit = { is_ai = yes }
-					every_state = {
-						teleport_armies = {
-							limit = {
-								tag = WUH
-							}
-							to_state_array = owned_controlled_states
-						}
-					}
-				}
-			}
-			FUJ = {
-				end_puppet_this = yes
-				leave_faction = yes
-				set_country_flag = CHI_country
-				if = {
-					limit = { is_ai = yes }
-					every_state = {
-						teleport_armies = {
-							limit = {
-								tag = FUJ
-							}
-							to_state_array = owned_controlled_states
-						}
-					}
-				}
-			}
 			ai_chance = {
 				factor = 10
 			}
 			hidden_effect = {
-				ROC = {
-					country_event = {
-						id = roc.61
-						days = 2
-					}
-				}
+				# ROC = {
+				# 	country_event = {
+				# 		id = roc.61
+				# 		days = 2
+				# 	}
+				# }
 				country_event = {
 					id = China.017
 					days = 10
@@ -775,11 +743,15 @@ add_namespace = CHI_ShanXi_auto
 				MON = { end_puppet_this = yes }
 				TIB = { end_puppet_this = yes }
 				JSZ = { end_puppet_this = yes }
+				WUH = { end_puppet_this = yes }
+				FUJ = { end_puppet_this = yes }
 				SIC = { drop_cosmetic_tag = yes }
 				YUN = { drop_cosmetic_tag = yes }
 				MON = { drop_cosmetic_tag = yes }
 				TIB = { drop_cosmetic_tag = yes }
 				JSZ = { drop_cosmetic_tag = yes }
+				FUJ = { drop_cosmetic_tag = yes }
+				WUH = { drop_cosmetic_tag = yes }
 				JSZ = { set_country_flag = CHI_country }
 				YUN = { set_country_flag = CHI_country }
 				clr_country_flag = MON_fire_visible
@@ -830,6 +802,11 @@ add_namespace = CHI_ShanXi_auto
 				tooltip = Honour_Emperor_faction_influence_var_down_middle
 			}
 			CHI_faction_influence_calculate = yes
+			set_party_name = {
+				ideology = democratic
+				name = ban_the_party
+				long_name = ban_the_party
+			}
 			hidden_effect = {
 				country_event = {
 					id = China.028
@@ -975,7 +952,7 @@ add_namespace = CHI_ShanXi_auto
 		picture = GFX_CHI_Jianglihua_event_05
 		option = {
 			name = China.026.a
-			CHI_yuankeding = { retire = yes }
+			CHI_yuankeding = { character_dead = yes }
 			add_to_variable = {
 				var = Honour_Emperor_faction_influence_var
 				value = 0.1
@@ -1047,7 +1024,7 @@ add_namespace = CHI_ShanXi_auto
 				tooltip = North_Army_faction_influence_var_up_middle
 			}
 			CHI_faction_influence_calculate = yes
-			CHI_Qian_daizhi = { retire = yes }
+			CHI_Qian_daizhi = { character_retire = yes }
 			hidden_effect = {
 				country_event = { id = China.021 days = 5 }
 				CHI = {
@@ -1377,6 +1354,46 @@ add_namespace = CHI_ShanXi_auto
 			set_temp_variable = { tag_to_release = GXC }
 			CHI_puppet_released_tag_and_old_govern = yes
 			clr_country_flag = CHI_war_plan_going_on
+			hidden_effect = {
+				if = {
+					limit = {
+						has_completed_focus = CHI_focus_new_regent
+					}
+					ROC = {
+						GXC_lurongting = {
+							set_nationality = GXC
+						}
+					}
+					GXC = {
+						GXC_lurongting = {
+							add_country_leader_role = {
+								country_leader = {
+									ideology = oligarchism
+								}
+								promote_leader = yes
+							}
+						}
+					}
+				}
+				else = {
+					GXC = {
+						create_country_leader = {
+							name = CHI_zhonglanzhu
+							picture = GFX_CHI_zhonglanzhu
+							ideology = Chinese_federalism
+						}
+						set_politics = {
+							ruling_party = democratic
+						}
+						set_party_name = {
+							ideology = democratic
+							long_name = CHI_GXC_zhigong_party_loing
+							name = CHI_GXC_zhigong_party
+						}
+					}
+				}
+
+			}
 			add_political_power = 15
 			ai_chance = {
 				factor = 10
@@ -1677,6 +1694,74 @@ add_namespace = CHI_ShanXi_auto
 				}
 				set_temp_variable = { tag_to_release = MAN }
 				CHI_puppet_released_tag_and_old_govern = yes
+				hidden_effect = {
+					MAN = {
+						
+						load_focus_tree = MAN_focus_CHI_zongdu
+						MAN_remove_all_ideas = yes
+						MAN_zhangxueliang = {
+							set_nationality = MAN
+							add_country_leader_role = {
+								country_leader = {
+									ideology = despotism
+								}
+								promote_leader = yes
+							}
+						}
+						set_politics = {
+							ruling_party = neutrality
+						}
+						if = {
+							limit = {
+								CHI = {
+									has_completed_focus = CHI_focus_new_regent
+								}
+							}
+							set_party_name = {
+								ideology = neutrality
+								long_name = CHI_United_Party_long
+								name = MAN_United_party
+							}
+							set_party_name = {
+								ideology = communism
+								long_name = CHI_communism_party_long
+								name = CHI_communism_party
+							}
+							set_party_name = {
+								ideology = fascism
+								long_name = CHI_Youth_party_long
+								name = CHI_Youth_party
+							}
+							set_party_name = {
+								ideology = democratic
+								long_name = CHI_CLU_party_long
+								name = CHI_CLU_party
+							}
+						}
+						else = {
+							set_party_name = {
+								ideology = neutrality
+								long_name = CHI_Imperial_Constitutional_Assembly_party_long
+								name = CHI_Imperial_Constitutional_Assembly_party
+							}
+							set_party_name = {
+								ideology = democratic
+								long_name = CHI_Cadets_party_long
+								name = CHI_Cadets_party
+							}
+							set_party_name = {
+								ideology = fascism
+								long_name = CHI_Youth_party_long
+								name = CHI_Youth_party
+							}
+							set_party_name = {
+								ideology = communism
+								long_name = CHI_PWDP_party_long
+								name = CHI_PWDP_party
+							}
+						}
+					}
+				}
 			}
 			every_state = {
 				limit = {
@@ -1755,6 +1840,16 @@ add_namespace = CHI_ShanXi_auto
 				}
 				set_temp_variable = { tag_to_release = WUH }
 				CHI_puppet_released_tag_and_old_govern = yes
+				hidden_effect = {
+					WUH = {
+						create_country_leader = {
+							name = CHI_sunchuanfang
+							picture = GFX_CHI_sunchuanfang
+							ideology = oligarchism
+						}
+					}
+				}
+
 			}
 			WUH = {
 				set_country_flag = select_autonomy_WUH
@@ -1771,11 +1866,6 @@ add_namespace = CHI_ShanXi_auto
 				}
 				add_core_of = WUH
 				transfer_state_to = WUH
-			}
-			if = {
-				limit = { WUH = { exists = no } }
-				set_temp_variable = { tag_to_release = WUH }
-				CHI_puppet_released_tag_and_old_govern = yes
 			}
 			clr_country_flag = CHI_war_plan_going_on
 			ai_chance = {
@@ -1838,6 +1928,16 @@ add_namespace = CHI_ShanXi_auto
 				}
 				set_temp_variable = { tag_to_release = FUJ }
 				CHI_puppet_released_tag_and_old_govern = yes
+				hidden_effect = {
+					FUJ = {
+						create_country_leader = {
+							name = CHI_wupeifu
+							picture = GFX_CHI_wupeifu
+							ideology = oligarchism
+						}
+					}
+				}
+
 			}
 			FUJ = {
 				set_country_flag = select_autonomy_FUJ
@@ -1916,6 +2016,16 @@ add_namespace = CHI_ShanXi_auto
 				}
 				set_temp_variable = { tag_to_release = JSZ }
 				CHI_puppet_released_tag_and_old_govern = yes
+				hidden_effect = {
+					JSZ = {
+						create_country_leader = {
+							name = CHI_duanqirui
+							picture = GFX_CHI_duanqirui
+							ideology = oligarchism
+						}
+					}
+				}
+
 			}
 			JSZ = {
 				set_country_flag = select_autonomy_JSZ
@@ -1996,6 +2106,16 @@ add_namespace = CHI_ShanXi_auto
 				}
 				set_temp_variable = { tag_to_release = SIK }
 				CHI_puppet_released_tag_and_old_govern = yes
+				hidden_effect = {
+					SIK = {
+						create_country_leader = {
+							name = CHI_Qiubai
+							picture = "gfx/leaders/CHI/CHI_Qiubai.dds"
+							ideology = oligarchism
+						}
+					}
+				}
+
 			}
 			SIK = {
 				set_country_flag = select_autonomy_SIK
@@ -2152,6 +2272,46 @@ add_namespace = CHI_ShanXi_auto
 				}
 				set_temp_variable = { tag_to_release = GXC }
 				CHI_puppet_released_tag_and_old_govern = yes
+				hidden_effect = {
+					if = {
+						limit = {
+							has_completed_focus = CHI_focus_new_regent
+						}
+						ROC = {
+							GXC_lurongting = {
+								set_nationality = GXC
+							}
+						}
+						GXC = {
+							GXC_lurongting = {
+								add_country_leader_role = {
+									country_leader = {
+										ideology = oligarchism
+									}
+									promote_leader = yes
+								}
+							}
+						}
+					}
+					else = {
+						GXC = {
+							create_country_leader = {
+								name = CHI_zhonglanzhu
+								picture = GFX_CHI_zhonglanzhu
+								ideology = Chinese_federalism
+							}
+							set_politics = {
+								ruling_party = democratic
+							}
+							set_party_name = {
+								ideology = democratic
+								long_name = CHI_GXC_zhigong_party_loing
+								name = CHI_GXC_zhigong_party
+							}
+						}
+					}
+
+				}
 			}
 			GXC = {
 				set_country_flag = select_autonomy_GXC
@@ -2170,6 +2330,7 @@ add_namespace = CHI_ShanXi_auto
 				transfer_state_to = GXC
 			}
 			clr_country_flag = CHI_war_plan_going_on
+
 			ai_chance = {
 				base = 25
 			}
@@ -2308,6 +2469,19 @@ add_namespace = CHI_ShanXi_auto
 				}
 				set_temp_variable = { tag_to_release = SIC }
 				CHI_puppet_released_tag_and_old_govern = yes
+				hidden_effect = {
+					SIC = {
+						create_country_leader = {
+							name = "希翼"
+							picture = "gfx/leaders/CHI/CHI_Himesaka_Noa_army.dds"
+							ideology = oligarchism
+						}
+						set_politics = {
+							ruling_party = neutrality
+						}
+					}
+				}
+
 			}
 			SIC = {
 				set_country_flag = select_autonomy_SIC
@@ -2464,6 +2638,15 @@ add_namespace = CHI_ShanXi_auto
 				}
 				set_temp_variable = { tag_to_release = MON }
 				CHI_puppet_released_tag_and_old_govern = yes
+				MON = {
+					set_politics = {
+						ruling_party = neutrality
+					}
+					MON_lindisi = {
+						set_nationality = MON
+						promote_character = yes
+					}
+				}
 			}
 			MON = {
 				set_country_flag = select_autonomy_MON
@@ -2575,7 +2758,7 @@ add_namespace = CHI_ShanXi_auto
                     	country_leader = {
                        		desc = ""
                         	ideology = warm_syndicalism_group
-                        	traits = {}
+                        	traits = { PRC_Popular_revolutionary }
                         	expire = "1999.1.1.1"
                         	id = -1
                     	}
@@ -2630,10 +2813,6 @@ add_namespace = CHI_ShanXi_auto
 			every_possible_country = {
 				limit = { has_character = PRC_Lai }
 				PRC_Lai = { set_nationality = ROOT }
-			}
-			every_possible_country = {
-				limit = { has_character = PRC_Haerbin }
-				PRC_Haerbin = { set_nationality = ROOT }
 			}
 			ai_chance = {
 				base = 25
@@ -2693,10 +2872,6 @@ add_namespace = CHI_ShanXi_auto
 				limit = { has_character = PRC_Lai }
 				PRC_Lai = { set_nationality = ROOT }
 			}
-			every_possible_country = {
-				limit = { has_character = PRC_Haerbin }
-				PRC_Haerbin = { set_nationality = ROOT }
-			}
 
 			custom_effect_tooltip = CHI_unlock_cummunism_monarch_road_tt
 			ai_chance = {
@@ -2716,7 +2891,7 @@ add_namespace = CHI_ShanXi_auto
 		trigger = { has_character = CHI_kangyouwei }
 		option = {
 			name = China.052.a
-			CHI_kangyouwei = { retire = yes }
+			CHI_kangyouwei = { character_dead = yes }
 			set_variable = { GongChe_leader_var = 2 }
 			ai_chance = {
 				base = 25
@@ -2982,6 +3157,30 @@ add_namespace = CHI_ShanXi_auto
 					limit = {
 						capital_scope = { state = 330 }  ##蒙古
 					}
+					if = {
+						limit = {
+							has_cosmetic_tag = MON_NORTHYUA
+						}
+						set_country_flag = UNF_MON_NORTHYUA_after_war_flag
+					}
+					if = {
+						limit = {
+							has_cosmetic_tag = MON_khan
+						}
+						set_country_flag = UNF_MON_khan_after_war_flag
+					}
+					if = {
+						limit = {
+							has_cosmetic_tag = MEN
+						}
+						set_country_flag = UNF_MEN_after_war_flag
+					}
+					if = {
+						limit = {
+							has_cosmetic_tag = MON_RUS
+						}
+						set_country_flag = UNF_MON_RUS_after_war_flag
+					}
 					set_cosmetic_tag = CHI_Menggu_Government
 				}
 				else_if = {
@@ -2994,13 +3193,14 @@ add_namespace = CHI_ShanXi_auto
 					limit = {
 						capital_scope = { state = 613 }  ##南京
 					}
-					set_cosmetic_tag = CHI_Nanjing_Government
 					if = {
 						limit = {
 							has_cosmetic_tag = JSZ_THK
 						}
 						set_country_flag = UNF_THK_need_set_after_war_end_flag #需要在战后加上太平军装饰
 					}
+					set_cosmetic_tag = CHI_Nanjing_Government
+
 				}
 				else_if = {
 					limit = {
@@ -3939,7 +4139,7 @@ add_namespace = CHI_ShanXi_auto
 				}
 				ROOT = { annex_country = { target = PREV transfer_troops = yes } }
 			}
-			CHI_jianglihua = { retire = yes }
+			CHI_jianglihua = { character_retire = yes }
 			set_politics = { ruling_party = democratic }
 			set_party_name = { ideology = communism long_name = PRC_communism_party name = PRC_communism_party }
 			set_party_name = { ideology = democratic long_name = CHI_federation_party name = CHI_federation_party }
@@ -4170,7 +4370,7 @@ add_namespace = CHI_ShanXi_auto
 			}
 		}
 		option = {
-			name = China.069.d  ##国民党-常凯申
+			name = China.069.d  ##国民党-蒋介石
 			ai_chance = { base = 10 }
 			trigger = { has_character = ROC_Chiang_Kaishek }
 			add_popularity = { ideology = democratic popularity = 0.3 }
@@ -4305,6 +4505,338 @@ add_namespace = CHI_ShanXi_auto
 		}
 		option = {
 			name = China.071.a  ##
+		}
+	}
+
+	#国民党战俘的命运
+	country_event = {
+		id = China.072
+		title = China.072.title
+		desc = China.072.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.072.a
+			ai_chance = {
+				base = 25
+			}
+			trigger = { has_country_flag = CHI_Democracy_HanGeKi_flag }
+			every_possible_country = {
+				limit = { has_character = ROC_liyuanhong }
+				ROC_liyuanhong = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_lizongren }
+				ROC_lizongren = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_Chen }
+				ROC_Chen = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_duyuming }
+				ROC_duyuming = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_Hu_Zongnan }
+				ROC_Hu_Zongnan = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_sunliren }
+				ROC_sunliren = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_xueyue }
+				ROC_xueyue = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_lilaiwei }
+				ROC_lilaiwei = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_Herrscher_of_Sentience }
+				ROC_Herrscher_of_Sentience = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_songqingling }
+				ROC_songqingling = { set_nationality = ROOT }
+			}
+		}
+		option = {
+			name = China.072.b
+			ai_chance = {
+				base = 25
+			}
+			trigger = { has_country_flag = CHI_Imperial_comeback_flag }
+			every_possible_country = {
+				limit = { has_character = ROC_lizongren }
+				ROC_lizongren = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_Chen }
+				ROC_Chen = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_duyuming }
+				ROC_duyuming = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_Hu_Zongnan }
+				ROC_Hu_Zongnan = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_sunliren }
+				ROC_sunliren = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_xueyue }
+				ROC_xueyue = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_lilaiwei }
+				ROC_lilaiwei = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_Herrscher_of_Sentience }
+				ROC_Herrscher_of_Sentience = { set_nationality = ROOT }
+			}
+		}
+		option = {
+			name = China.072.c
+			every_possible_country = {
+				limit = { has_character = ROC_duyuming }
+				ROC_duyuming = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_Hu_Zongnan }
+				ROC_Hu_Zongnan = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_sunliren }
+				ROC_sunliren = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_xueyue }
+				ROC_xueyue = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_lilaiwei }
+				ROC_lilaiwei = { set_nationality = ROOT }
+			}
+			every_possible_country = {
+				limit = { has_character = ROC_Herrscher_of_Sentience }
+				ROC_Herrscher_of_Sentience = { set_nationality = ROOT }
+			}
+			ai_chance = {
+				base = 25
+			}
+			trigger = { has_country_flag = CHI_regent_Yuan_flag }
+		}
+		option = {
+			name = China.072.d
+			add_stability = 0.01
+			add_political_power = -10
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#令人震惊的消息
+	country_event = {
+		id = China.073
+		title = China.073.title
+		desc = China.073.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.073.a
+			CHI_remove_all_ideas = yes
+			add_ideas = CHI_zhouxianglin_idea
+			hidden_effect = {
+				country_event = {
+					id = China.074
+					days = 7
+				}
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#喜讯
+	country_event = {
+		id = China.074
+		title = China.074.title
+		desc = China.074.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.074.a
+			add_political_power = 15
+			hidden_effect = {
+				country_event = {
+					id = China.075
+					days = 15
+				}
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#大婚
+	country_event = {
+		id = China.075
+		title = China.075.title
+		desc = China.075.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.075.a
+			country_event = {
+				id = China.076
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#祭天
+	country_event = {
+		id = China.076
+		title = China.076.title
+		desc = China.076.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.076.a
+			country_event = {
+				id = China.077
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#祭地
+	country_event = {
+		id = China.077
+		title = China.077.title
+		desc = China.077.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.077.a
+			country_event = {
+				id = China.078
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#祭祖
+	country_event = {
+		id = China.078
+		title = China.078.title
+		desc = China.078.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.078.a
+			country_event = {
+				id = China.079
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#婚礼
+	country_event = {
+		id = China.079
+		title = China.079.title
+		desc = China.079.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.079.a
+			country_event = {
+				id = China.080
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#婚宴
+	country_event = {
+		id = China.080
+		title = China.080.title
+		desc = China.080.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.080.a
+			country_event = {
+				id = China.081
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#献词
+	country_event = {
+		id = China.081
+		title = China.081.title
+		desc = China.081.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.081.a
+			country_event = {
+				id = China.082
+			}
+			ai_chance = {
+				base = 25
+			}
+		}
+	}
+
+	#宣誓主权
+	country_event = {
+		id = China.082
+		title = China.082.title
+		desc = China.082.desc
+		is_triggered_only = yes
+		fire_only_once = no
+		picture = GFX_ROC_Chiang_Kaishek_event
+		option = {
+			name = China.082.a
+			add_political_power = 100
+			ai_chance = {
+				base = 25
+			}
 		}
 	}
 
@@ -5812,7 +6344,7 @@ add_namespace = CHI_ShanXi_auto
 		picture = GFX_CHI_Forbidden_City_Fire_event
 		option = {
 			name = CHI_Yuan.003.a
-			CHI_jianglihua = { retire = yes }
+			CHI_jianglihua = { character_dead = yes }
 			CHI_remove_all_ideas = yes
 			if = {
 				limit = { has_completed_focus = CHI_focus_promote_YCP }
@@ -6656,8 +7188,7 @@ add_namespace = CHI_ShanXi_auto
 		major = yes
 		option = {
 			name = China_news.001.a
-			set_country_flag = super_event_CHI_1
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 37 }
 			adorable_heart_fire_super_event = yes
 			trigger = {
 				tag = CHI
@@ -6665,8 +7196,7 @@ add_namespace = CHI_ShanXi_auto
 		}
 		option = {
 			name = China_news.001.b
-			set_country_flag = super_event_CHI_1
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 37 }
 			adorable_heart_fire_super_event = yes
 			trigger = {
 				or = {
@@ -6677,8 +7207,7 @@ add_namespace = CHI_ShanXi_auto
 		}
 		option = {
 			name = China_news.001.c
-			set_country_flag = super_event_CHI_1
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 37 }
 			adorable_heart_fire_super_event = yes
 			trigger = {
 				is_chinese_country = yes
@@ -6689,8 +7218,7 @@ add_namespace = CHI_ShanXi_auto
 		}
 		option = {
 			name = China_news.001.d
-			set_country_flag = super_event_CHI_1
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 37 }
 			adorable_heart_fire_super_event = yes
 			trigger = {
 				is_chinese_country = no
@@ -6711,8 +7239,7 @@ add_namespace = CHI_ShanXi_auto
 		is_triggered_only = yes
 		option = {
 			name = China_news.002.a
-			set_country_flag = super_event_CHI_Yuan_unit
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 40 }
 			adorable_heart_fire_super_event = yes
 			trigger = {
 				tag = CHI
@@ -6720,8 +7247,7 @@ add_namespace = CHI_ShanXi_auto
 		}
 		option = {
 			name = China_news.002.b
-			set_country_flag = super_event_CHI_Yuan_unit
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 40 }
 			adorable_heart_fire_super_event = yes
 			trigger = {
 				NOT = {
@@ -6744,8 +7270,7 @@ add_namespace = CHI_ShanXi_auto
 		is_triggered_only = yes
 		option = {
 			name = China_news.003.a
-			set_country_flag = super_event_CHI_2
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 38 }
 			adorable_heart_fire_super_event = yes
 		}
 	}
@@ -6763,8 +7288,7 @@ add_namespace = CHI_ShanXi_auto
 		is_triggered_only = yes
 		option = {
 			name = China_news.004.a
-			set_country_flag = super_event_CHI_3
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 39 }
 			adorable_heart_fire_super_event = yes
 		}
 	}
@@ -6997,8 +7521,7 @@ add_namespace = CHI_ShanXi_auto
 			trigger = {
 				tag = CHI
 			}
-			set_country_flag = super_event_CHI_revo_empire
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 42 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7007,8 +7530,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = communism
 			}
-			set_country_flag = super_event_CHI_revo_empire
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 42 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7017,8 +7539,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = democratic
 			}
-			set_country_flag = super_event_CHI_revo_empire
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 42 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7027,8 +7548,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = neutrality
 			}
-			set_country_flag = super_event_CHI_revo_empire
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 42 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7037,8 +7557,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = fascism
 			}
-			set_country_flag = super_event_CHI_revo_empire
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 42 }
 			adorable_heart_fire_super_event = yes
 		}
 	}
@@ -7056,8 +7575,7 @@ add_namespace = CHI_ShanXi_auto
 			trigger = {
 				tag = CHI
 			}
-			set_country_flag = super_event_CHI_federation
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 41 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7066,8 +7584,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = communism
 			}
-			set_country_flag = super_event_CHI_federation
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 41 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7076,8 +7593,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = democratic
 			}
-			set_country_flag = super_event_CHI_federation
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 41 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7086,8 +7602,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = neutrality
 			}
-			set_country_flag = super_event_CHI_federation
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 41 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7096,8 +7611,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = fascism
 			}
-			set_country_flag = super_event_CHI_federation
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 41 }
 			adorable_heart_fire_super_event = yes
 		}
 	}
@@ -7115,8 +7629,7 @@ add_namespace = CHI_ShanXi_auto
 			trigger = {
 				tag = CHI
 			}
-			set_country_flag = super_event_CHI_PWDP
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 43 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7125,8 +7638,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = communism
 			}
-			set_country_flag = super_event_CHI_PWDP
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 43 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7135,8 +7647,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = democratic
 			}
-			set_country_flag = super_event_CHI_PWDP
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 43 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7145,8 +7656,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = neutrality
 			}
-			set_country_flag = super_event_CHI_PWDP
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 43 }
 			adorable_heart_fire_super_event = yes
 		}
 		option = {
@@ -7155,8 +7665,7 @@ add_namespace = CHI_ShanXi_auto
 				not = { tag = CHI }
 				has_government = fascism
 			}
-			set_country_flag = super_event_CHI_PWDP
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 43 }
 			adorable_heart_fire_super_event = yes
 		}
 	}
@@ -8212,8 +8721,7 @@ set_variable = { Innovation_Alliance_faction_influence_var = 35 }
 		desc = chi.2000.desc
 		option = {
 			name = super_event_CHI_federation
-			set_country_flag = super_event_CHI_federation
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 41 }
 			adorable_heart_fire_super_event = yes
 			ai_chance = {
 				base = 10
@@ -8221,8 +8729,7 @@ set_variable = { Innovation_Alliance_faction_influence_var = 35 }
 		}
 		option = {
 			name = super_event_CHI_revo_empire
-			set_country_flag = super_event_CHI_revo_empire
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 42 }
 			adorable_heart_fire_super_event = yes
 			ai_chance = {
 				base = 10
@@ -8230,8 +8737,7 @@ set_variable = { Innovation_Alliance_faction_influence_var = 35 }
 		}
 		option = {
 			name = super_event_CHI_PWDP
-			set_country_flag = super_event_CHI_PWDP
-			set_country_flag = adorable_heart_Super_Event_Visible
+			set_variable = { adorable_heart_super_event_var = 43 }
 			adorable_heart_fire_super_event = yes
 			ai_chance = {
 				base = 10
@@ -8239,110 +8745,34 @@ set_variable = { Innovation_Alliance_faction_influence_var = 35 }
 		}
 		option = {
 			name = CHI_Local_Government
-			every_other_country = {
-				limit = { is_chinese_country = yes }
-				if = {
-					limit = {
-						tag = PRC
-						capital_scope = { state = 650 }  ##重庆
-					}
-					set_cosmetic_tag = CHI_Chongqing
-				}
-				else_if = {
-					limit = {
-						tag = ROC
-						capital_scope = { state = 592 }  ##广州
-					}
-					set_cosmetic_tag = CHI_Guangzhou
-				}
-				else_if = {
-					limit = {
-						tag = MAN
-						capital_scope = { state = 716 }  ##沈阳
-					}
-					set_cosmetic_tag = CHI_Shenyang
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 716 }  ##沈阳
-					}
-					set_cosmetic_tag = CHI_Shenyang_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 592 }  ##广州
-					}
-					set_cosmetic_tag = CHI_Guangzhou_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 650 }  ##重庆
-					}
-					set_cosmetic_tag = CHI_Chongqing_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 322 }  ##谢拉格
-					}
-					set_cosmetic_tag = CHI_Xielage_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 330 }  ##蒙古
-					}
-					set_cosmetic_tag = CHI_Menggu_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 604 }  ##西宁
-					}
-					set_cosmetic_tag = CHI_Xining_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 613 }  ##南京
-					}
-					set_cosmetic_tag = CHI_Nanjing_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 1048 }  ##武汉
-					}
-					set_cosmetic_tag = CHI_Wuhan_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 1044 }  ##南昌
-					}
-					set_cosmetic_tag = CHI_Nanchang_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 617 }  ##沈阳迪化
-					}
-					set_cosmetic_tag = CHI_Dihua_Government
-				}
-				else_if = {
-					limit = {
-						capital_scope = { state = 325 }  ##昆明
-					}
-					set_cosmetic_tag = CHI_Kunming_Government
-				}
-			}
+			set_temp_variable = { tag_to_release = WUH }
+			CHI_puppet_released_tag_and_old_govern = yes
 			ai_chance = {
 				base = 10
 			}
 		}
 		option = {
 			name = China_Vassal
-				set_autonomy = {
-					target = AFG
-					autonomous_state = China_Vassal
+			WUH = { end_puppet_this = yes }
+			ai_chance = {
+				base = 10
+			}
+		}
+		option = {
+			name = China_Vassal
+			create_faction = test
+			ai_chance = {
+				base = 10
+			}
+		}
+		option = {
+			name = China_Vassal
+			WUH = {
+				country_event = {
+					id = china_generic.001
+					days = 1
 				}
-				if = {
-					limit = { FROM = { not = { is_in_faction_with = ROOT } } }
-					add_to_faction = AFG
-				}
+			}
 			ai_chance = {
 				base = 10
 			}
@@ -8356,8 +8786,7 @@ country_event = {
 	desc = CHI_ShanXi_auto.1.d
 	hidden = yes
 	is_triggered_only = yes
-	option = {
-		name = CHI_ShanXi_auto.1.a
+	immediate = {
 		if = {
 			limit = {
 				has_shine_effect_on_focus = CHI_shared_Model_Province_Shanxi
@@ -8421,8 +8850,7 @@ country_event = {
 	desc = CHI_ShanXi_auto.2.d
 	hidden = yes
 	is_triggered_only = yes
-	option = {
-		name = CHI_ShanXi_auto.2.a
+	immediate = {
 		if = {
 			limit = {
 				has_completed_focus = CHI_shared_Model_Province_Shanxi
@@ -8475,6 +8903,7 @@ country_event = {
 			}
 		}
 	}
+
 
 }
 

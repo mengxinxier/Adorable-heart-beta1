@@ -27,11 +27,7 @@ country_event = {
 				}
 				create_wargoal = {
 					type = annex_everything
-					target = CHI
-				}
-				create_wargoal = {
-					type = annex_everything
-					target = MEN
+					target = ROOT
 				}
 			}
 		}
@@ -61,47 +57,9 @@ country_event = {
 	option = {
 		name = jap.200.a
 		add_war_support = 0.05
-		if = {
-			limit = {
-				CHI = {
-					exists = yes
-					NOT = {
-						is_in_faction_with = JAP
-					}
-				}
-			}
-			declare_war_on = {
-				target = CHI
-				type = annex_everything
-			}
-		}
-		if = {
-			limit = {
-				ROC = {
-					exists = yes
-					NOT = {
-						is_in_faction_with = JAP
-					}
-				}
-			}
-			declare_war_on = {
-				target = ROC
-				type = annex_everything
-			}
-		}
-		if = {
-			limit = {
-				PRC = {
-					exists = yes
-					NOT = {
-						is_in_faction_with = JAP
-					}
-				}
-			}
-			declare_war_on = {
-				target = PRC
-				type = annex_everything
-			}
+		declare_war_on = {
+			target = FROM
+			type = annex_everything
 		}
 		hidden_effect = {
 			news_event = {
@@ -193,7 +151,7 @@ country_event = {
 		}
 		add_ai_strategy = {
 			type = antagonize
-			id = "CHI"
+			id = "FROM"
 			value = 500
 		}
 	}
@@ -1829,7 +1787,14 @@ country_event = {
 	option = {
 		name = jap.29.a
 		ai_chance = {
-			factor = 100
+			base = 100
+			modifier = {
+				has_game_rule = {
+					rule = AH_huanggutun_ai_behavior_SELECTION
+					option = huanggutun_GAME_RULE_1
+				}
+				factor = 0
+			}
 		}
 		if = {
 			limit = {
@@ -1888,7 +1853,21 @@ country_event = {
 			not = { is_in_faction_with = JAP }
 		}
 		ai_chance = {
-			factor = 0
+			base = 0
+			modifier = {
+				has_game_rule = {
+					rule = AH_huanggutun_ai_behavior_SELECTION
+					option = huanggutun_GAME_RULE_1
+				}
+				add = 1000
+			}
+			modifier = {
+				has_game_rule = {
+					rule = AH_huanggutun_ai_behavior_SELECTION
+					option = huanggutun_GAME_RULE_2
+				}
+				factor = 0
+			}
 		}
 	}
 }
@@ -1977,7 +1956,7 @@ country_event = {
 			}
 		}
 		MAN = {
-			change_tag_from = JAP
+			change_tag_from_ROOT = yes
 		}
 	}
 	option = {
@@ -2452,24 +2431,51 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = jap.43.a
+		custom_effect_tooltip = jap_subject_waring_tips
+		custom_effect_tooltip = generic_skip_one_line_tt
+		effect_tooltip = {
+			JAP = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_wtt_imperial_protectorate
+				}
+			}
+		}
+		custom_effect_tooltip = generic_skip_one_line_tt
 		JAP = {
 			country_event = jap.44
 		}
 		ai_chance = {
 			base = 6
 			modifier = {
-			is_in_faction_with = JAP
-			factor = 100
+				is_in_faction_with = JAP
+				not = { tag = PAW }
+				factor = 100
+			}
+			modifier = {
+				tag = PAW
+				factor = 0
 			}
 		}
 	}
 	option = {
 		name = jap.43.b
+		custom_effect_tooltip = jap_subject_waring_tips2
+		custom_effect_tooltip = generic_skip_one_line_tt
 		JAP = {
 			country_event = jap.45
 		}
 		ai_chance = {
 			base = 4
+			modifier = {
+				tag = PAW
+				factor = 100
+			}
+			modifier = {
+				is_in_faction_with = JAP
+				not = { tag = PAW }
+				factor = 0
+			}
 		}
 	}
 }
@@ -2690,8 +2696,15 @@ country_event = {
 		add_idea = SHH_money_only
 		}
 		trigger = { 
-		tag = GER
+			tag = GER
+			GER = {
+   				has_guaranteed = JAP
+  			}
+			JAP = {
+				has_guaranteed = GER
+			}
 		}
+		
 		ai_chance = {
 			factor = 100
 		}
@@ -3016,9 +3029,17 @@ country_event = {
 	is_triggered_only = yes
 	option = {
 		name = jap.61.a
+		custom_effect_tooltip = JAP_jjzm_tips
 		add_ideas = JAP_yzjj
 		ai_chance = {
 			factor = 100
+		}
+	}
+	option = {
+		name = jap.61.b
+		set_country_flag = jap_jujuetouzi_flag
+		ai_chance = {
+			factor = 0
 		}
 	}
 }
@@ -3373,6 +3394,9 @@ country_event = {
 			add_mio_size = 1
 		}
 		mio:JAP_sasebo_naval_arsenal_organization = {
+			add_mio_size = 1
+		}
+		mio:JAP_kawasaki_dockyards_organization = {
 			add_mio_size = 1
 		}
 		random_owned_controlled_state = {
@@ -3762,35 +3786,11 @@ country_event = {
 		name = jap.791.a
 		add_political_power = -100
 		add_stability = -0.15
-		if = {
+		every_other_country = {
 			limit = {
-				CHI = {
-					controls_state = 608
-				}
+				controls_state = 608
 			}
-			CHI = {
-				country_event = jap.100
-			}
-		}
-		if = {
-			limit = {
-				ROC = {
-					controls_state = 608
-				}
-			}
-			ROC = {
-				country_event = jap.100
-			}
-		}
-		if = {
-			limit = {
-				PRC = {
-					controls_state = 608
-				}
-			}
-			PRC = {
-				country_event = jap.100
-			}
+			country_event = jap.100
 		}
 		ai_chance = {
 			factor = 100
@@ -4003,7 +4003,10 @@ country_event = {
 		add_state_core = 701
 		add_state_core = 790
 		}
-		}else = {
+		} else_if = {
+			limit = {
+				PAW = { is_in_faction_with = ENG }
+			}
 			JAP = {
 			set_autonomy = {
 				target = PAW
@@ -6103,7 +6106,7 @@ country_event = {
 			}
 		}
 		ai_chance = {
-			base = 50
+			base = 0
 		}
 	}
 	option = {
@@ -6724,7 +6727,7 @@ country_event = {
 		complete_national_focus = JAP_new155
 		activate_mission = JAP_rw_chaoxianzhanzheng
 		DPR = {
-			change_tag_from = KOR
+			change_tag_from_ROOT = yes
 		}
 		ai_chance = {
 			base = 0
