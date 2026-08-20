@@ -4685,14 +4685,6 @@ country_event = {
                             x = 0
                             y = 1
                         }
-                        infantry = {
-                            x = 0
-                            y = 2
-                        }
-                        infantry = {
-                            x = 0
-                            y = 3
-                        }
                     }
                     support = {
                         #支援连
@@ -5937,6 +5929,7 @@ country_event = {
         }
         set_power_balance = {
             id = PAM_yy_bop
+            left_side = PAM_yy_bop_left_side_xl
             set_value = -1
         }
         remove_dynamic_modifier = {
@@ -6086,6 +6079,9 @@ country_event = {
         name = PAM.134.a
         ai_chance = {
             base = 10
+        }
+        set_technology = {
+            wangling3_tech = 1
         }
         complete_national_focus = PAM_sxhy
         hidden_effect = {
@@ -6385,6 +6381,11 @@ country_event = {
                         }
                     }
                 }
+                PAM = {
+                    every_core_state = {
+                        add_core_of = LHS
+                    }
+                }
                 491 = {
                     transfer_state_to = LHS
                     add_core_of = LHS
@@ -6444,8 +6445,8 @@ country_event = {
     }
     after = {
         PAM = {
-                        add_to_faction = LHS
-                    }
+            add_to_faction = LHS
+        }
     }
 }
 
@@ -7420,9 +7421,9 @@ country_event = {
             add_to_faction = ROOT
         }
         PAM = {
-            declare_war_on = {
+            activate_targeted_decision = {
                 target = LFC
-                type = annex_everything
+                decision = PAO_jingong_FROM
             }
         }
         declare_war_on = {
@@ -8593,8 +8594,56 @@ country_event = {
         name = PAM.175.a
         add_manpower = 50000
         add_political_power = 100
+        set_temp_variable = { temp_pam_bop_re = FROM.num_of_factories }
+        add_to_temp_variable = { temp_pam_bop_re = ROOT.num_of_factories }
+        multiply_temp_variable = { temp_pam_bop_re = 0.01 }
+        round_temp_variable = { temp_pam_bop_re }
+        add_offsite_building = { type = arms_factory level = temp_pam_bop_re }
+        add_offsite_building = { type = industrial_complex level = temp_pam_bop_re }
         add_to_variable = { var = pam_am value = 5 tooltip = PAM_yeyingam_tt }
         add_to_variable = { var = PAM_xjlb_hua value = 1 tooltip = PAM_xjlb_hua_tt}
+        if = {
+            limit = {
+                MGU = {
+                    is_in_faction_with = PAM
+                }
+            }
+            MGU = {
+                country_event = { id = PAM.1744  }
+            }
+        }
+    }
+}
+#战后带着善意归来通知（晓美焰视角）
+country_event = {
+    id = PAM.1744
+    title = PAM.1744.t
+    desc = PAM.1744.d
+    picture = GFX_event_PAO_yh
+    is_triggered_only = yes
+
+    option = {
+        name = PAM.1744.a
+        add_manpower = 50000
+        add_political_power = 100
+        set_temp_variable = { temp_pam_bop_re = FROM.FROM.num_of_factories }
+        add_to_temp_variable = { temp_pam_bop_re = ROOT.num_of_factories }
+        multiply_temp_variable = { temp_pam_bop_re = 0.01 }
+        round_temp_variable = { temp_pam_bop_re }
+        add_offsite_building = { type = arms_factory level = temp_pam_bop_re }
+        add_offsite_building = { type = industrial_complex level = temp_pam_bop_re }
+    }
+}
+country_event = {
+    id = PAM.1755
+    title = PAM.1755.t
+    desc = PAM.1755.d
+    picture = GFX_event_PAO_yh
+    is_triggered_only = yes
+    hidden = yes
+    option = {
+        name = PAM.1755.a
+        PAM = {country_event = { id = PAM.175  } }
     }
 }
 #失败通知
