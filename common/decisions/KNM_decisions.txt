@@ -462,10 +462,27 @@ KMK_KNM_WAR_descision = {
                         }
                     }
                 }
-                KMK = {
-                    annex_country = {
-                        target = KNM
-                        transfer_troops = yes
+                if = {
+                    limit = {
+                        is_ai = yes
+                        date < 1938.1.1
+                    }
+                    KMK = {
+                        annex_country = {
+                            target = KNM
+                            transfer_troops = yes
+                        }
+                    }
+                }
+                else_if = {
+                    limit = {
+                        is_ai = no
+                    }
+                    KMK = {
+                        annex_country = {
+                            target = KNM
+                            transfer_troops = yes
+                        }
                     }
                 }
             }
@@ -534,11 +551,40 @@ FRA_KNM_WAR_descision = {
                         limit = {
                             has_completed_focus = KNM_wfdn
                         }
+                        set_country_flag = KNM_Lilywhite2
+                        mark_focus_tree_layout_dirty = yes
+                        custom_effect_tooltip = jiesuoguoce
                         add_research_slot = 1
                         inherit_technology = FRA
                         set_autonomy = {
                             target = FRA
                             autonomy_state = KNM_lilisubject
+                        }
+                        FRA = {
+                            hidden_effect = {
+                                set_country_flag = KNM_ai
+                                set_country_flag = The_country_with_customized_AI
+                                custom_effect_tooltip = FRA_financial_crisis_influence_tt
+                                add_to_variable = {
+                                    var = FRA_financial_crisis_var
+                                    value = -20
+                                    tooltip = FRA_financial_crisis_var_subtract20_tt
+                                }
+                                add_to_variable = {
+                                    var = FRA_credit_crunch_var
+                                    value = -20
+                                    tooltip = FRA_credit_crunch_var_subtract20_tt
+                                }
+                                add_to_variable = {
+                                    var = FRA_Overcapacity_var
+                                    value = -20
+                                    tooltip = FRA_Overcapacity_var_subtract20_tt
+                                }
+                                FRA_Calculate_Great_Depression_debuff = yes
+                                set_country_flag = has_knm_subject_flag
+                                custom_effect_tooltip = jiesuoguoce
+                                mark_focus_tree_layout_dirty = yes
+                            }
                         }
                     }
                     else = {
@@ -3604,6 +3650,7 @@ KNM_li_war = {
         visible = { has_country_flag = KNM_call_to_war_yes }
 
         available = {
+            not = { has_war_with = KNM }
             KNM = {has_war = yes}
             KNM = {
                 any_enemy_country = {

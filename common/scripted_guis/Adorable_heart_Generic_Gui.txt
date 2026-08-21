@@ -19,9 +19,9 @@ scripted_gui = {
 		}
 	}
 	##提示框
-	Adorable_heart_alerts_window = {
+	Adorable_heart_alerts_old_window = {
 		context_type = player_context
-		window_name = "Adorable_heart_alerts_window"
+		window_name = "Adorable_heart_alerts_old_window"
 		dirty = global.Adorable_heart_alerts_dirty
 		ai_enabled = {
 			always = no
@@ -416,10 +416,22 @@ scripted_gui = {
 		window_name = "Adorable_Heart_End_window"
 		context_type = player_context
 		visible = {
-			has_country_flag = Adorable_Heart_End_window_view
+			or = {
+				has_country_flag = Adorable_Heart_End_window_view
+				has_variable = end_ui_var
+			}
 		}
 		effects = {
-			close_button_click = { clr_country_flag = Adorable_Heart_End_window_view }
+			close_button_click = {
+				if = {
+					limit = { has_variable = end_ui_var }
+					clear_variable = end_ui_var
+				}
+				if = {
+					limit = { has_country_flag = Adorable_Heart_End_window_view }
+					clr_country_flag = Adorable_Heart_End_window_view
+				}
+			}
 		}
 		triggers = {
 		}
@@ -504,6 +516,52 @@ scripted_gui = {
 		effects = {
 		}
 	}
+    Adorable_heart_city_story_button_container2 = {
+        context_type = selected_state_context
+        parent_window_token = selected_state_view
+        window_name = "Adorable_heart_city_story_button_container2"
+        visible = {
+            THIS = { has_state_flag = has_city_story2 }
+        }
+        properties = {
+        }
+        triggers = {
+        }
+        effects = {
+			Adorable_heart_city_story_button_click = {
+                if = {
+                    limit = {
+                        check_variable = { ROOT.Adorable_heart_city_story_var2 = 1 }
+                    }
+                    set_variable = { ROOT.Adorable_heart_city_story_var2 = 0 }
+                }
+                else = {
+                    set_variable = { ROOT.Adorable_heart_city_story_var2 = 1 }
+                }
+            }
+        }
+    }
+    Adorable_heart_city_story_container2 = {
+        window_name = "Adorable_heart_city_story_container2"
+        context_type = selected_state_context
+        parent_window_token = selected_state_view
+        visible = {
+            THIS = { has_state_flag = has_city_story2 }
+            check_variable = { ROOT.Adorable_heart_city_story_var2 = 1 }
+        }
+        properties = {
+			Adorable_heart_city_pic = {
+				image = "[Adorable_heart_city_pic_2]"
+			}
+        }
+        triggers = {
+        }
+        effects = {
+			close_button_click = {
+                set_variable = { ROOT.Adorable_heart_city_story_var2 = 0 }
+            }
+        }
+    }
 #钢铁萌心选项
 	Adorable_heart_opinion_button = {
 		context_type = player_context
