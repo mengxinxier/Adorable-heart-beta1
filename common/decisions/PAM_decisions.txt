@@ -55,6 +55,34 @@ PAM_yy_bop_name = {
                         }
                     }
                 }
+                if = {
+                    limit = {
+                        is_in_faction = yes
+                        any_country = {
+                            is_subject_of = ROOT
+                            not = {
+                                is_in_faction_with = ROOT
+                            }
+                        }
+                    }
+                    every_country = {
+                        limit = {
+                            is_in_faction_with = ROOT
+                            is_faction_leader = yes
+                        }
+                        every_country = {
+                            limit = {
+                                is_subject_of = ROOT
+                                not = {
+                                    is_in_faction_with = ROOT
+                                }
+                            }
+                            PREV = {
+                                add_to_faction = PREV
+                            }
+                        }
+                    }
+                }
             }
             if = {
                 limit = {
@@ -293,19 +321,39 @@ PAM_yy_bop_name = {
                 #因战争或对方打输中断
                 country_event = { id = PAM.176 hours = 6 }
             }
-            else = {
+            else_if = {
                 #顺利完成
+                limit = {
+                    FROM = {
+                        has_war = no
+                        exists = yes
+                        has_country_flag = PAM_bop_loan_active
+                    }
+                }
                 effect_tooltip = {
                     country_event = { id = PAM.175 hours = 6 }
                 }
                 hidden_effect = {
-                    country_event = { id = PAM.1755 hours = 6 }
+                    FROM = {
+                        country_event = { id = PAM.1755 hours = 6 }
+                    }
                 }
                 if = { #上限小于100%增加0.5%上限
                     limit = {
                         check_variable = { PAM_yy_bop_max_limit < 1.001 }
                     }
                     add_to_variable = { var = PAM_yy_bop_max_limit value = 0.005 tooltip = PAM_yy_bop_max_limit_tt }
+                }
+            }
+            else = {
+                effect_tooltip = {
+                    country_event = { id = PAM.175 hours = 6 }
+                    if = { #上限小于100%增加0.5%上限
+                        limit = {
+                            check_variable = { PAM_yy_bop_max_limit < 1.001 }
+                        }
+                        add_to_variable = { var = PAM_yy_bop_max_limit value = 0.005 tooltip = PAM_yy_bop_max_limit_tt }
+                    }
                 }
             }
             FROM = {
