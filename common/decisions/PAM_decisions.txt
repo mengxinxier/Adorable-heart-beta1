@@ -120,13 +120,10 @@ PAM_yy_bop_name = {
 
     PAM_add_power_bop_up = {
         icon = GFX_PAM_mhcm
-        allowed = {
-            original_tag = PAM
-        }
-        visible = {
-            always = yes
-        }
-        available = { #夜莺之花要求1
+        allowed = { original_tag = PAM }
+        visible = { always = yes }
+
+        available = {
             custom_trigger_tooltip = {
                 tooltip = PAM_yyzh_tt
                 check_variable = { PAM_xjlb_hua > 0 }
@@ -134,113 +131,88 @@ PAM_yy_bop_name = {
         }
 
         days_remove = 15
+
         modifier = {
-            production_speed_buildings_factor = 0.1
-            consumer_goods_factor = -0.2
+            production_speed_industrial_complex_factor = 0.20
+            production_speed_infrastructure_factor = 0.20
+            consumer_goods_factor = -0.15
         }
+
         complete_effect = {
+            custom_effect_tooltip = PAM_bop_up_type_a_tt # 显式提示战术用途
         }
-        remove_effect = { #倒计时结束花费1夜莺之花
-            add_to_variable = {
-                var = PAM_xjlb_hua
-                value = -1
-                tooltip = PAM_xjlb_hua_tt
-            }
-            add_to_variable = {
-                var = pam_am
-                value = 2.5
-                tooltip = PAM_yeyingam_tt
-            }
+
+        remove_effect = {
+            add_to_variable = { var = PAM_xjlb_hua value = -1 tooltip = PAM_xjlb_hua_tt }
+            add_to_variable = { var = pam_am value = 2.5 tooltip = PAM_yeyingam_tt }
             add_political_power = 100
-            add_to_variable = { var = global.PAM_living_spirit value = 0.01  }
-            if = { #决议时间小于147.6时增加2.5天
-                limit = {
-                    check_variable = { amgs < 147.6 }
-                }
-                add_to_variable = { #决议时间增加2.5天
-                    var = amgs
-                    value = 2.5
-                    tooltip = PAM_amgs_tt
-                }
+            add_to_variable = { var = global.PAM_living_spirit value = 0.01 }
+
+            #增加攻势准备天数
+            if = {
+                limit = { check_variable = { amgs < 147.6 } }
+                add_to_variable = { var = amgs value = 2.5 tooltip = PAM_amgs_tt }
             }
+
             custom_effect_tooltip = PAM_set_power_bop_up_tt
-            if = { #上限小于100%增加2.5%上限
-                limit = {
-                    check_variable = { PAM_yy_bop_max_limit < 1.001 }
-                }
-                add_to_variable = { var = PAM_yy_bop_max_limit value = 0.025 tooltip = PAM_yy_bop_max_limit_tt }
-            }
-            if = { #下限大于-100%增加2.5%下限
-                limit = {
-                    check_variable = { PAM_yy_bop_min_limit > -1.001 }
-                }
-                add_to_variable = { var = PAM_yy_bop_min_limit value = 0.025 tooltip = PAM_yy_bop_min_limit_tt }
-            }
+
+            #移动权力平衡上限与下限
+            add_to_variable = { var = PAM_yy_bop_max_limit value = 0.025 tooltip = PAM_yy_bop_max_limit_tt }
+            add_to_variable = { var = PAM_yy_bop_min_limit value = 0.025 tooltip = PAM_yy_bop_min_limit_tt }
+            clamp_variable = { var = PAM_yy_bop_max_limit min = -1.0 max = 1.0 }
+            clamp_variable = { var = PAM_yy_bop_min_limit min = -1.0 max = 1.0 }
         }
     }
 
     PAM_remove_power_bop_up = {
         icon = GFX_PAM_xlb
-        allowed = {
-            original_tag = PAM
-        }
-        visible = {
-            always = yes
-        }
-        available = { #夜莺之花要求1
+        allowed = { original_tag = PAM }
+        visible = { always = yes }
+
+        available = {
             custom_trigger_tooltip = {
                 tooltip = PAM_yyzh_tt
                 check_variable = { PAM_xjlb_hua > 0 }
             }
         }
-        modifier = {
-            war_support_factor = 0.1
-            industry_repair_factor = 0.1
-            production_speed_arms_factory_factor = 0.1
-        }
+
         days_remove = 15
-        complete_effect = {
+
+        # 15天内的临时 Buff：偏向军工建设与部队练兵
+        modifier = {
+            production_speed_arms_factory_factor = 0.20
+            industry_repair_factor = 0.20
+            war_support_factor = 0.10
         }
-        remove_effect = { #倒计时结束花费1夜莺之花
-            add_to_variable = {
-                var = PAM_xjlb_hua
-                value = -1
-                tooltip = PAM_xjlb_hua_tt
-            }
-            add_to_variable = {
-                var = pam_am
-                value = -2.5
-                tooltip = PAM_yeyingam_tt
-            }
+
+        complete_effect = {
+            custom_effect_tooltip = PAM_bop_up_type_b_tt
+        }
+
+        remove_effect = {
+            add_to_variable = { var = PAM_xjlb_hua value = -1 tooltip = PAM_xjlb_hua_tt }
+            add_to_variable = { var = pam_am value = -2.5 tooltip = PAM_yeyingam_tt }
             army_experience = 25
             air_experience = 25
             navy_experience = 25
             add_war_support = 0.025
 
-            add_to_variable = { var = global.PAM_living_spirit value = 0.01  }
-            if = { #决议时间大于32.4时减少2.5天
-                limit = {
-                    check_variable = { amgs > 32.4 }
-                }
-                add_to_variable = { #决议时间减少2.5天
-                    var = amgs
-                    value = -2.5
-                    tooltip = PAM_amgs_tt
-                }
+            add_to_variable = { var = global.PAM_living_spirit value = 0.01 }
+
+            #缩短攻势准备天数
+            if = {
+                limit = { check_variable = { amgs > 32.4 } }
+                add_to_variable = { var = amgs value = -2.5 tooltip = PAM_amgs_tt }
             }
+
             custom_effect_tooltip = PAM_remove_power_bop_up_tt
-            if = { #上限大于2.4%减少2.5%上限
-                limit = {
-                    check_variable = { PAM_yy_bop_max_limit > -0.776 }
-                }
-                add_to_variable = { var = PAM_yy_bop_max_limit value = -0.025 tooltip = PAM_yy_bop_max_limit_tt }
-            }
-            if = { #下限小于-2.4%减少2.5%下限
-                limit = {
-                    check_variable = { PAM_yy_bop_min_limit < -0.024 }
-                }
-                add_to_variable = { var = PAM_yy_bop_min_limit value = -0.025 tooltip = PAM_yy_bop_min_limit_tt }
-            }
+
+            #移动权力平衡上限与下限
+            add_to_variable = { var = PAM_yy_bop_max_limit value = -0.025 tooltip = PAM_yy_bop_max_limit_tt }
+            add_to_variable = { var = PAM_yy_bop_min_limit value = -0.025 tooltip = PAM_yy_bop_min_limit_tt }
+            clamp_variable = { var = PAM_yy_bop_max_limit min = -1.0 max = 1.0 }
+            clamp_variable = { var = PAM_yy_bop_min_limit min = -1.0 max = 1.0 }
+
             add_to_variable = {
                 var = adorable_heart_focus_var
                 value = 0.5
@@ -353,7 +325,7 @@ PAM_yy_bop_name = {
                     country_event = { id = PAM.175 hours = 6 }
                     add_to_variable = {
                         var = adorable_heart_focus_var
-                        value = 0.25
+                        value = 0.5
                         tooltip = PAM_focus_var_change_tt
                     }
                 }
@@ -374,7 +346,7 @@ PAM_yy_bop_name = {
                     country_event = { id = PAM.175 hours = 6 }
                     add_to_variable = {
                         var = adorable_heart_focus_var
-                        value = 0.25
+                        value = 0.5
                         tooltip = PAM_focus_var_change_tt
                     }
                     if = { #上限小于100%增加0.5%上限
@@ -517,7 +489,7 @@ PAM_lldy_category = {
         }
 
         activation = {
-           has_country_flag = PAM_time_war_bop
+            has_country_flag = PAM_time_war_bop
         }
         days_mission_timeout = 30
         complete_effect = {
