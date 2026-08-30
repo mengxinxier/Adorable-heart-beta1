@@ -6,6 +6,7 @@ add_namespace = KNM_spring
 add_namespace = KNM_buy
 add_namespace = KNM_spring_ally
 add_namespace = KNM_spring_market
+add_namespace = KNM_fra
 
 #大集市冷却
 country_event = {
@@ -36,15 +37,6 @@ country_event = {
                 8 = {
                     transfer_state_to = KFL
                 }
-                add_manpower = 120000
-                add_equipment_to_stockpile = {
-                    type   = infantry_equipment
-                    amount = 8000
-                }
-                add_equipment_to_stockpile = {
-                    type   = magic_assault_equipment
-                    amount = 3000
-                }
                 if = {
                     limit = { ROOT = { has_country_flag = KNM_kappa_factory_bonus } }
                     add_equipment_to_stockpile = {
@@ -52,74 +44,92 @@ country_event = {
                         amount = 800
                     }
                 }
-                division_template = {
-                    name = "小妖精作战小分队"
-                    regiments = {
-                        infantry = {
-                            x = 0
-                            y = 0
-                        }
-                        infantry = {
-                            x = 0
-                            y = 1
-                        }
-                        infantry= {
-                            x = 0
-                            y = 2
-                        }
-                        infantry= {
-                            x = 0
-                            y = 3
-                        }
-                        infantry = {
-                            x = 1
-                            y = 0
-                        }
-                        infantry = {
-                            x = 1
-                            y = 1
-                        }
-                        infantry = {
-                            x = 1
-                            y = 2
-                        }
-                        infantry = {
-                            x = 1
-                            y = 3
-                        }
-                        infantry = {
-                            x = 2
-                            y = 0
-                        }
-                        artillery_brigade = {
-                            x = 3
-                            y = 0
+                if = {
+                    limit = {
+                        not = {
+                            has_country_flag = KNM_only_one_kfl_division
                         }
                     }
-                    support = {
-                        #支援连
-                        engineer = {
-                            x = 0
-                            y = 0
+                    set_country_flag = KNM_only_one_kfl_division
+                    add_manpower = 120000
+                    add_equipment_to_stockpile = {
+                        type   = infantry_equipment
+                        amount = 8000
+                    }
+                    add_equipment_to_stockpile = {
+                        type   = magic_assault_equipment
+                        amount = 3000
+                    }
+                    division_template = {
+                        name = "小妖精作战小分队"
+                        regiments = {
+                            infantry = {
+                                x = 0
+                                y = 0
+                            }
+                            infantry = {
+                                x = 0
+                                y = 1
+                            }
+                            infantry= {
+                                x = 0
+                                y = 2
+                            }
+                            infantry= {
+                                x = 0
+                                y = 3
+                            }
+                            infantry = {
+                                x = 1
+                                y = 0
+                            }
+                            infantry = {
+                                x = 1
+                                y = 1
+                            }
+                            infantry = {
+                                x = 1
+                                y = 2
+                            }
+                            infantry = {
+                                x = 1
+                                y = 3
+                            }
+                            infantry = {
+                                x = 2
+                                y = 0
+                            }
+                            artillery_brigade = {
+                                x = 3
+                                y = 0
+                            }
                         }
-                        recon = {
-                            x = 0
-                            y = 1
+                        support = {
+                            #支援连
+                            engineer = {
+                                x = 0
+                                y = 0
+                            }
+                            recon = {
+                                x = 0
+                                y = 1
+                            }
                         }
                     }
-                }
-                KFL = {
-                    random_state = {
-                        limit = {
-                            is_fully_controlled_by = KFL
-                        }
-                        create_unit = {
-                            division = "name = \"小妖精作战小分队\" division_template = \"小妖精作战小分队\" start_experience_factor = 0.7 "
-                            count = 6
-                            allow_spawning_on_enemy_provs = yes
-                            owner = KFL
+                    KFL = {
+                        random_state = {
+                            limit = {
+                                is_fully_controlled_by = KFL
+                            }
+                            create_unit = {
+                                division = "name = \"小妖精作战小分队\" division_template = \"小妖精作战小分队\" start_experience_factor = 0.7 "
+                                count = 6
+                                allow_spawning_on_enemy_provs = yes
+                                owner = KFL
+                            }
                         }
                     }
+
                 }
             }
             set_autonomy = {
@@ -168,7 +178,6 @@ country_event = {
         name = KNM_spring_ally.2.a
         ai_chance = { base = 0 }
         country_event = { id = KNM_spring_ally.3 hours = 6 }
-        clr_country_flag = KNM_spring_ally2flag
     }
 
     option = {
@@ -274,6 +283,7 @@ country_event = {
             target = KFL
             transfer_troops = yes
         }
+        clr_country_flag = KNM_spring_ally2flag
 
         every_state = {
             limit = {
@@ -307,6 +317,43 @@ country_event = {
     option = {
         name = KNM_spring_ally.10.a
         clr_country_flag = KNM_KFL_cooldown
+    }
+}
+#
+country_event = {
+    id = KNM_fra.1
+    title = KNM_fra.1.t
+    desc = KNM_fra.1.d
+    is_triggered_only = yes
+    picture = GFX_event_KNM_qln2
+    hidden = yes
+    immediate = {
+        set_country_flag = FRA_The_election_results_in
+        FRA_remove_all_ideas = yes
+        promote_character = FRA_Kasen
+        meta_effect = {
+            text = {
+                set_politics = {
+                    ruling_party = democratic
+                    last_election = "[CURRENT_DATE]"
+                    election_frequency = 60
+                    elections_allowed = yes
+                }
+            }
+            CURRENT_DATE = "[?global.date.GetDateStringNoHour]"
+        }
+        custom_effect_tooltip = election_five_yeas_later
+        add_to_variable = { support_of_PSG = 25 }
+        set_variable = { FRA_Ruling_Party_VAR = 3 }
+        FRA_set_rule_party_name = yes
+        mark_focus_tree_layout_dirty = yes
+        FRA_Initialization_of_seats_in_National_Assembly = yes
+        complete_national_focus = FRA_first_term_of_Ibaraki_Kasen
+        add_ideas = FRA_Reimu_idea
+    }
+    option = {
+        name = KNM_fra.1.a
+
     }
 }
 #那座红房子好烦人
@@ -403,6 +450,41 @@ country_event = {
     }
 }
 
+#灵梦的“警告”
+country_event = {
+    id = KNM.2002
+    title = KNM.2002.t
+    desc = KNM.2002.d
+    is_triggered_only = yes
+    picture = GFX_event_FRA_debug_only
+    immediate = {
+
+    }
+    option = {
+        name = KNM.2002.a
+        SOV = {
+            country_event = {
+                id = generic.2002
+            }
+        }
+        add_to_variable = {
+            var = adorable_heart_focus_var
+            value = 1
+            tooltip = KNM_focus_var_change_tt
+        }
+        ai_chance = {
+            base = 10
+        }
+    }
+
+    option = {
+        name = KNM.2002.b
+        ai_chance = {
+            base = 10
+        }
+        add_political_power = -50
+    }
+}
 #去把吸血鬼刺杀掉吧
 country_event = {
     id = KNM.2222
@@ -659,6 +741,10 @@ country_event = {
                 is_claimed_by = KNM
             }
             add_core_of = KNM
+        }
+        add_equipment_to_stockpile = {
+            type = transport_plane_equipment
+            amount = 100
         }
         KMK = {
             every_character = {
@@ -1335,6 +1421,7 @@ country_event = {
         ai_chance = {
             base = 0
         }
+        custom_effect_tooltip = KNM.invitedfra_tt1
         custom_effect_tooltip = KNM_fra_army_tt
         add_to_variable = { KNM_fra_army_army_org_factor = -0.05 tooltip = army_org_factor_tt }
         KNM = {
@@ -2182,6 +2269,7 @@ country_event = {
         has_completed_focus = KNM_djyqh
     }
     picture = GFX_event_KNM_lili5
+    fire_only_once = yes
     immediate = {
         hidden_effect = {
             scoped_play_song = "星屑"
@@ -2212,6 +2300,7 @@ country_event = {
         }
         has_completed_focus = KNM_djyqh
     }
+    fire_only_once = yes
     picture = GFX_event_KNM_lili2
     immediate = {
     }

@@ -26,31 +26,124 @@ PAM_yy_bop_name = {
             hidden_effect = {
                 if = {
                     limit = {
-                        13432 = {
-                            owner = {
-                                is_in_faction_with = PAM
-                            }
+                        PAQ = {
+                            has_country_flag = paq_beisishenpaoqi_flag
                         }
-                        PAQ_weilian = {
-                            limit = {has_trait = trait_paq_jszr}
+                        not = {
+                            has_country_flag = pam_paq_beisishenpaoqi_flag
                         }
                     }
-                    PAQ_weilian = {
-                        remove_trait = {
-                            trait = trait_paq_jszr
+                    if = {
+                        limit = {
+                            1036 = {
+                                owner = {
+                                    is_in_faction_with = PAM
+                                }
+                            }
                         }
-                        set_portraits = {
-                            army = {
-                                large = "gfx/leaders/PAM/wla.png"
+                        set_country_flag = pam_paq_beisishenpaoqi_flag
+                        if = {
+                            limit = {
+                                has_character = PAQ_weilian
                             }
-                            army = {
-                                small = "gfx/leaders/PAM/small/wla_small.png"
+                            PAQ = {
+                                remove_ideas = PAQ_jdxrhl_buff
                             }
-                            civilian = {
-                                large = "gfx/leaders/PAM/wla.png"
+                            PAQ_weilian = {
+                                remove_country_leader_trait = trait_paq_jszr
+                                set_portraits = {
+                                    army = {
+                                        large = "gfx/leaders/PAM/wla.png"
+                                    }
+                                    army = {
+                                        small = "gfx/leaders/PAM/small/wla_small.png"
+                                    }
+                                    civilian = {
+                                        large = "gfx/leaders/PAM/wla.png"
+                                    }
+                                    civilian = {
+                                        small = "gfx/leaders/PAM/small/wla_small.png"
+                                    }
+                                }
                             }
-                            civilian = {
-                                small = "gfx/leaders/PAM/small/wla_small.png"
+                        }
+                        else_if = {
+                            limit = {
+                                PAQ = {
+                                    has_character = PAQ_weilian
+                                }
+                            }
+                            PAQ = {
+                                remove_ideas = PAQ_jdxrhl_buff
+                                PAQ_weilian = {
+                                    remove_country_leader_trait = trait_paq_jszr
+                                    set_portraits = {
+                                        army = {
+                                            large = "gfx/leaders/PAM/wla.png"
+                                        }
+                                        army = {
+                                            small = "gfx/leaders/PAM/small/wla_small.png"
+                                        }
+                                        civilian = {
+                                            large = "gfx/leaders/PAM/wla.png"
+                                        }
+                                        civilian = {
+                                            small = "gfx/leaders/PAM/small/wla_small.png"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else = {
+                            PAQ = {
+                                remove_ideas = PAQ_jdxrhl_buff
+                            }
+                            ZDW = {
+                                PAQ_weilian = {
+                                    remove_country_leader_trait = trait_paq_jszr
+                                    set_portraits = {
+                                        army = {
+                                            large = "gfx/leaders/PAM/wla.png"
+                                        }
+                                        army = {
+                                            small = "gfx/leaders/PAM/small/wla_small.png"
+                                        }
+                                        civilian = {
+                                            large = "gfx/leaders/PAM/wla.png"
+                                        }
+                                        civilian = {
+                                            small = "gfx/leaders/PAM/small/wla_small.png"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if = {
+                    limit = {
+                        is_in_faction = yes
+                        any_country = {
+                            is_subject_of = ROOT
+                            not = {
+                                is_in_faction_with = ROOT
+                            }
+                        }
+                    }
+                    every_country = {
+                        limit = {
+                            is_in_faction_with = ROOT
+                            is_faction_leader = yes
+                        }
+                        every_country = {
+                            limit = {
+                                is_subject_of = ROOT
+                                not = {
+                                    is_in_faction_with = ROOT
+                                }
+                            }
+                            PREV = {
+                                add_to_faction = PREV
                             }
                         }
                     }
@@ -92,13 +185,10 @@ PAM_yy_bop_name = {
 
     PAM_add_power_bop_up = {
         icon = GFX_PAM_mhcm
-        allowed = {
-            original_tag = PAM
-        }
-        visible = {
-            always = yes
-        }
-        available = { #夜莺之花要求1
+        allowed = { original_tag = PAM }
+        visible = { always = yes }
+
+        available = {
             custom_trigger_tooltip = {
                 tooltip = PAM_yyzh_tt
                 check_variable = { PAM_xjlb_hua > 0 }
@@ -106,99 +196,79 @@ PAM_yy_bop_name = {
         }
 
         days_remove = 15
+
         modifier = {
-            production_speed_buildings_factor = 0.1
-            consumer_goods_factor = -0.2
+            production_speed_industrial_complex_factor = 0.20
+            production_speed_infrastructure_factor = 0.20
+            consumer_goods_factor = -0.15
         }
+
         complete_effect = {
+            custom_effect_tooltip = PAM_bop_up_type_a_tt # 显式提示战术用途
         }
-        remove_effect = { #倒计时结束花费5安眠点数1夜莺之花
-            add_to_variable = {
-                var = PAM_xjlb_hua
-                value = -1
-                tooltip = PAM_xjlb_hua_tt
+
+        remove_effect = {
+            add_to_variable = { var = PAM_xjlb_hua value = -1 tooltip = PAM_xjlb_hua_tt }
+            add_to_variable = { var = pam_am value = -2 tooltip = PAM_yeyingam_tt }
+            add_to_variable = { var = global.PAM_living_spirit value = 0.01 }
+            #增加攻势准备天数
+            if = {
+                limit = { check_variable = { amgs < 147.6 } }
+                add_to_variable = { var = amgs value = 2.5 tooltip = PAM_amgs_tt }
             }
-            add_to_variable = { var = global.PAM_living_spirit value = 0.01  }
-            add_to_variable = { var = pam_am value = -5 tooltip = PAM_yeyingam_tt }
-            if = { #决议时间小于147.6时增加2.5天
-                limit = {
-                    check_variable = { amgs < 147.6 }
-                }
-                add_to_variable = { #决议时间增加2.5天
-                    var = amgs
-                    value = 2.5
-                    tooltip = PAM_amgs_tt
-                }
-            }
+
             custom_effect_tooltip = PAM_set_power_bop_up_tt
-            if = { #上限小于100%增加2.5%上限
-                limit = {
-                    check_variable = { PAM_yy_bop_max_limit < 1.001 }
-                }
-                add_to_variable = { var = PAM_yy_bop_max_limit value = 0.025 tooltip = PAM_yy_bop_max_limit_tt }
-            }
-            if = { #下限大于-100%增加2.5%下限
-                limit = {
-                    check_variable = { PAM_yy_bop_min_limit > -1.001 }
-                }
-                add_to_variable = { var = PAM_yy_bop_min_limit value = 0.025 tooltip = PAM_yy_bop_min_limit_tt }
-            }
+
+            #移动权力平衡上限与下限
+            add_to_variable = { var = PAM_yy_bop_max_limit value = 0.025 tooltip = PAM_yy_bop_max_limit_tt }
+            add_to_variable = { var = PAM_yy_bop_min_limit value = 0.025 tooltip = PAM_yy_bop_min_limit_tt }
+            clamp_variable = { var = PAM_yy_bop_max_limit min = -1.0 max = 1.0 }
+            clamp_variable = { var = PAM_yy_bop_min_limit min = -1.0 max = 1.0 }
         }
     }
 
     PAM_remove_power_bop_up = {
         icon = GFX_PAM_xlb
-        allowed = {
-            original_tag = PAM
-        }
-        visible = {
-            always = yes
-        }
-        available = { #夜莺之花要求1
+        allowed = { original_tag = PAM }
+        visible = { always = yes }
+
+        available = {
             custom_trigger_tooltip = {
                 tooltip = PAM_yyzh_tt
                 check_variable = { PAM_xjlb_hua > 0 }
             }
         }
-        modifier = {
-            war_support_factor = 0.1
-            industry_repair_factor = 0.1
-            production_speed_arms_factory_factor = 0.1
-        }
+
         days_remove = 15
-        complete_effect = {
+
+        modifier = {
+            production_speed_arms_factory_factor = 0.20
+            industry_repair_factor = 0.20
+            war_support_factor = 0.10
         }
-        remove_effect = { #倒计时结束花费1夜莺之花
-            add_to_variable = {
-                var = PAM_xjlb_hua
-                value = -1
-                tooltip = PAM_xjlb_hua_tt
+
+        complete_effect = {
+            custom_effect_tooltip = PAM_bop_up_type_b_tt
+        }
+
+        remove_effect = {
+            add_to_variable = { var = PAM_xjlb_hua value = -1 tooltip = PAM_xjlb_hua_tt }
+            add_to_variable = { var = pam_am value = 2 tooltip = PAM_yeyingam_tt }
+            add_to_variable = { var = global.PAM_living_spirit value = 0.01 }
+
+            #缩短攻势准备天数
+            if = {
+                limit = { check_variable = { amgs > 32.4 } }
+                add_to_variable = { var = amgs value = -2.5 tooltip = PAM_amgs_tt }
             }
-            add_to_variable = { var = global.PAM_living_spirit value = 0.01  }
-            if = { #决议时间大于32.4时减少2.5天
-                limit = {
-                    check_variable = { amgs > 32.4 }
-                }
-                add_to_variable = { #决议时间减少2.5天
-                    var = amgs
-                    value = -2.5
-                    tooltip = PAM_amgs_tt
-                }
-            }
+
             custom_effect_tooltip = PAM_remove_power_bop_up_tt
-            if = { #上限大于2.4%减少2.5%上限
-                limit = {
-                    check_variable = { PAM_yy_bop_max_limit > -0.776 }
-                }
-                add_to_variable = { var = PAM_yy_bop_max_limit value = -0.025 tooltip = PAM_yy_bop_max_limit_tt }
-            }
-            if = { #下限小于-2.4%减少2.5%下限
-                limit = {
-                    check_variable = { PAM_yy_bop_min_limit < -0.024 }
-                }
-                add_to_variable = { var = PAM_yy_bop_min_limit value = -0.025 tooltip = PAM_yy_bop_min_limit_tt }
-            }
-            add_to_variable = { var = pam_am value = 10 tooltip = PAM_yeyingam_tt } #+10安眠点数
+
+            #移动权力平衡上限与下限
+            add_to_variable = { var = PAM_yy_bop_max_limit value = -0.025 tooltip = PAM_yy_bop_max_limit_tt }
+            add_to_variable = { var = PAM_yy_bop_min_limit value = -0.025 tooltip = PAM_yy_bop_min_limit_tt }
+            clamp_variable = { var = PAM_yy_bop_max_limit min = -1.0 max = 1.0 }
+            clamp_variable = { var = PAM_yy_bop_min_limit min = -1.0 max = 1.0 }
         }
     }
 
@@ -210,6 +280,7 @@ PAM_yy_bop_name = {
             has_completed_focus = PAM_cqyzxyl
         }
         available = {
+            has_defensive_war = yes
             num_divisions > 29
             has_army_manpower = { size > 249999 }
             fighting_army_strength_ratio = {
@@ -226,12 +297,14 @@ PAM_yy_bop_name = {
                 exists = yes
                 has_war = yes
                 is_subject = no
+                has_defensive_war = yes
                 not = { has_war_with = ROOT }
                 not = { has_country_flag = PAM_bop_loan_active }
             }
         }
 
         complete_effect = { #发送事件并判定变量
+            add_political_power = 100
             FROM = {
                 set_variable = { var = PAM_loan_provider value = ROOT }
                 country_event = { id = PAM.172 hours = 6 }
@@ -293,19 +366,39 @@ PAM_yy_bop_name = {
                 #因战争或对方打输中断
                 country_event = { id = PAM.176 hours = 6 }
             }
-            else = {
+            else_if = {
                 #顺利完成
+                limit = {
+                    FROM = {
+                        has_war = no
+                        exists = yes
+                        has_country_flag = PAM_bop_loan_active
+                    }
+                }
                 effect_tooltip = {
                     country_event = { id = PAM.175 hours = 6 }
                 }
                 hidden_effect = {
-                    country_event = { id = PAM.1755 hours = 6 }
+                    FROM = {
+                        country_event = { id = PAM.1755 hours = 6 }
+                    }
                 }
                 if = { #上限小于100%增加0.5%上限
                     limit = {
                         check_variable = { PAM_yy_bop_max_limit < 1.001 }
                     }
                     add_to_variable = { var = PAM_yy_bop_max_limit value = 0.005 tooltip = PAM_yy_bop_max_limit_tt }
+                }
+            }
+            else = {
+                effect_tooltip = {
+                    country_event = { id = PAM.175 hours = 6 }
+                    if = { #上限小于100%增加0.5%上限
+                        limit = {
+                            check_variable = { PAM_yy_bop_max_limit < 1.001 }
+                        }
+                        add_to_variable = { var = PAM_yy_bop_max_limit value = 0.005 tooltip = PAM_yy_bop_max_limit_tt }
+                    }
                 }
             }
             FROM = {
@@ -423,6 +516,40 @@ PAM_yy_bop_name = {
 
 }
 PAM_lldy_category = {
+    PAM_time_war_bop = {
+        icon = GFX_exchange_bad_luck
+        priority = 800
+        allowed = {
+            original_tag = PAM
+        }
+        visible = {
+            always = yes
+        }
+        is_good = no
+        available = {
+            hidden_trigger = {
+                always = no
+            }
+        }
+
+        activation = {
+            has_country_flag = PAM_time_war_bop
+        }
+        days_mission_timeout = 30
+        complete_effect = {
+        }
+        timeout_effect = { #倒计时结束计算权力平衡
+            clr_country_flag = PAM_time_war_bop
+            304 = {
+                CONTROLLER = {
+                    declare_war_on = {
+                        target = PAM
+                        type = annex_everything
+                    }
+                }
+            }
+        }
+    }
     PAM_xjlb = {
         priority = 800
         icon = GFX_PAM_xjlb
@@ -4683,190 +4810,66 @@ PAM_Debug = {
             custom_effect_tooltip = jiesuoguoce
         }
     }
-    yqwar = { #测试用
+    yq_luxian1 = {
         complete_effect = {
-            mark_focus_tree_layout_dirty = yes
+            ZDW = {
+                set_variable = { PAM_ZDW_number = 10 }
+                set_variable = { PAM_ZDW_army_attack_factor = -0.25 } #攻防
+                set_variable = { PAM_ZDW_army_defence_factor = -0.25 }
+                set_variable = { PAM_ZDW_army_core_attack_factor = -0.25 } #核心攻防
+                set_variable = { PAM_ZDW_army_core_defence_factor = -0.25 }
+                set_variable = { PAM_ZDW_infantry_attack_factor = -0.25 } #步兵攻防
+                set_variable = { PAM_ZDW_infantry_defence_factor = -0.25 }
+                set_variable = { PAM_ZDW_army_org_factor = 0.25 } #组织度和hp
+                set_variable = { PAM_ZDW_army_strength_factor = 0.25 }
+                set_variable = { PAM_ZDW_max_planning = -0.25 } #计划和突破
+                set_variable = { PAM_ZDW_breakthrough_factor = -0.25 }
+                set_variable = { PAM_ZDW_max_dig_in = -5 } #堑壕和训练
+                set_variable = { PAM_ZDW_training_time_army_factor = -0.25 }
+                set_variable = { PAM_ZDW_monthly_population = -0.25 } #人口和军队撤退速度
+                set_variable = { PAM_ZDW_army_retreat_speed_factor = -0.25 }
+                set_variable = { PAM_ZDW_stability_factor = 0.25 } #稳定和战支
+                set_variable = { PAM_ZDW_war_support_factor = 0.25 }
+                set_variable = { PAM_ZDW_industrial_capacity_factory = -0.25 } #双产出
+                set_variable = { PAM_ZDW_industrial_capacity_dockyard = -0.25 }
+            }
+            set_country_flag = PAM_yq
+            set_country_flag = PAM_yeying0
+            set_country_flag = PAM_yeying
+            set_country_flag = PAM_yeying2
+            set_country_flag = PAM_yeying3
+            set_country_flag = PAM_yeying4
+            set_country_flag = PAM_yeying5
+            set_country_flag = PAM_yeying6
+            set_country_flag = PAM_yeying7
+            set_country_flag = PAM_yeying8
+            set_country_flag = PAM_yeying9
             set_country_flag = PAM_yeying10
+            set_country_flag = PAM_yeying11
+            clr_country_flag = PAM_yeying15
+            clr_country_flag = PAM_yeying16
+            set_country_flag = PAM_yeying99
+            set_country_flag = PAM_yeying999
+            set_country_flag = yeyingkaizhan1
+            set_country_flag = yeyingkaizhan2
+            set_country_flag = PAM_qsdjdz
+            set_country_flag = PAM_qzgwyddsj
+            set_country_flag = PAM_nmxq
+            set_country_flag = PAM_djll
+            set_country_flag = PAM_xueyimj
+            set_country_flag = PAM_xueyimj3
+            set_country_flag = PAM_xiaoguoguoce
+            clr_country_flag = PAM_xiaoguoguoce2
+            clr_country_flag = PAM_xiaoguoguoce3
+
+            set_country_flag = PAM_yeying155
+            set_country_flag = PAM_yeying156
+            set_country_flag = PAM_yeying157
+            set_country_flag = PAM_yeying158
+            set_country_flag = PAM_yeying159
+            set_country_flag = PAM_yeying160
+            mark_focus_tree_layout_dirty = yes
             custom_effect_tooltip = jiesuoguoce
-            add_ideas = PAM_zzjd
-            every_core_state = {
-                limit = {
-                    not = {
-                        state = 491
-                    }
-                }
-                transfer_state_to = ZDW
-                add_core_of = ZDW
-            }
-            every_state = {
-                limit = {
-                    or = {
-                        is_core_of = PAO
-                        is_core_of = PAU
-                    }
-                }
-                transfer_state_to = ZDW
-                add_core_of = ZDW
-            }
-            PAM = {
-                declare_war_on = { target = ZDW type = annex_everything}
-            }
-            activate_mission = PAM_zdw_buff_dec
-            hidden_effect = {
-                activate_mission = PAM_first_goal
-                ZDW = {
-                    #activate_mission = PAM_weekly_refresh
-                    set_variable = {
-                        #设置变量的数值
-                        var = zdw_set_demilitarized_zone
-                        value = 2
-                    }
-                    add_ideas = PAM_zzjd
-                }
-                305 = {
-                    clr_state_flag = PAM_end_wdr_state
-                }
-                490 = {
-                    clr_state_flag = PAM_end_wdr_state
-                }
-                491 = {
-                    clr_state_flag = PAM_end_wdr_state
-                }
-                854 = {
-                    clr_state_flag = PAM_end_wdr_state
-                }
-                every_state = {
-                    limit = {
-                        has_state_flag = PAM_end_wdr_state
-                    }
-                    set_demilitarized_zone = yes
-                }
-                every_character = {
-                    not = {
-                        is_character = LHS_xiaoguo
-                    }
-                    set_nationality = ZDW
-                }
-                add_popularity = {
-                    ideology = communism
-                    popularity = 0.8
-                }
-                set_party_name = {
-                    ideology = communism
-                    long_name = lxly_communism_party
-                    name = lxly_communism_party_long
-                }
-                set_politics = {
-                    ruling_party = communism
-                }
-                add_ideas = People_Red_Army_gravity
-                LHS = {
-                    LHS_xiaoguo = {
-                        set_nationality = ROOT
-                    }
-
-                }
-                WRQ = {
-                    PAO_lxly = {
-                        set_nationality = ROOT
-                    }
-
-                }
-                ZDW = {
-                    set_cosmetic_tag = amzt
-                    promote_character = PAM_yq
-                    add_dynamic_modifier = {
-                        modifier = PAM_ZDW_dm
-                    }
-                }
-                LHS_xiaoguo = {
-                    add_country_leader_role = {
-                        country_leader = {
-                            expire = "1999.1.1"
-                            id = -1
-                            desc = "PAM_xiaoguo_desc"
-                            ideology = Fairytale_Communism_subideology
-                            traits = {
-
-                            }
-                        }
-                        promote_leader = yes
-                    }
-                }
-                set_cosmetic_tag = LHS_xgtongyi_communism
-                LHS_xiaoguo = {
-                    set_portraits = {
-                        army = {
-                            large = "gfx/leaders/PAM/xiaoguo5.png"
-                        }
-                        army = {
-                            small = "gfx/leaders/PAM/small/xiaoguo5_small.png"
-                        }
-                        civilian = {
-                            large = "gfx/leaders/PAM/xiaoguo5.png"
-                        }
-                        civilian = {
-                            small = "gfx/leaders/PAM/small/xiaoguo5_small.png"
-                        }
-                    }
-                }
-                PAO_lxly = {
-                    set_portraits = {
-                        army = {
-                            large = "gfx/leaders/PAM/lxly2.png"
-                        }
-                        army = {
-                            small = "gfx/leaders/PAM/small/lxly2_small.png"
-                        }
-                        civilian = {
-                            large = "gfx/leaders/PAM/lxly2.png"
-                        }
-                        civilian = {
-                            small = "gfx/leaders/PAM/small/lxly2_small.png"
-                        }
-                    }
-                }
-                set_character_name = {
-                    character = PAO_lxly
-                    name = "露西莉亚"
-                }
-                add_country_leader_trait = PAO_gsjs
-                PAO_lxly = {
-                    add_advisor_role = {
-                        activate = yes
-                        advisor = {
-                            slot = political_advisor
-                            cost = 0
-                            idea_token = PAO_lxly
-                            traits = {
-                                PAM_zzyyzx
-                            }
-                        }
-                    }
-                    add_unit_leader_trait = brave
-                    add_unit_leader_trait = PAO_zylx
-                    add_unit_leader_trait = PAO_jifang
-                    add_unit_leader_trait = PAO_tonghua
-                    add_attack = 5
-                    add_defense = 5
-                    add_planning = 5
-                    add_logistics = 5
-                }
-                remove_ideas = PAM_sln4
-                add_ideas = PAO_lxly_idea
-                set_variable = { deputy_country_leader_var = token:PAO_lxly }
-                scoped_play_song = "火车"
-            }
-        }
-    }
-    yqwar1 = {
-        complete_effect = {
-            activate_mission = PAM_first_goal
-            activate_mission = PAM_second_goal
-            activate_mission = PAM_third_goal
-            activate_mission = PAM_fourth_goal
-            activate_mission = PAM_fifth_goal
-            activate_mission = PAM_zdw_buff_dec
         }
     }
 }
@@ -5860,7 +5863,7 @@ PAM_fifth_goal = {
         }
     }
     timeout_effect = {
-        set_country_flag = lwnygm
+        set_global_flag = lwnygm
         ZDW = {
             annex_country = {
                 target = PAM

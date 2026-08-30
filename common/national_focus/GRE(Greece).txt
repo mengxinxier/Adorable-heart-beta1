@@ -466,6 +466,7 @@ focus_tree = {
 		}
 	
 		completion_reward = {
+			add_stability = 0.05
 			if = {
 				limit = {
 					has_country_leader = {
@@ -678,6 +679,9 @@ focus_tree = {
 		}
 	
 		completion_reward = {
+			add_stability = 0.10
+			add_political_power = 75
+			army_experience = 50
 			add_research_slot = 1
 		}
 	}
@@ -765,20 +769,26 @@ focus_tree = {
 	
 		x = 31
 		y = 7
-		cost = 3
+		cost = 1
 		
 		bypass = {
-			NOT = { country_exists = KVO }
-			KVO = { is_subject = yes }
+			OR = {
+				NOT = { country_exists = KVO }
+				KVO = { is_subject = yes }			
+			}
+			
 		}
 
 		available = {
-			country_exists = KVO
-			NOT = {	KVO = { is_subject = yes } }
+			OR = {
+				country_exists = KVO
+				NOT = {	KVO = { is_subject = yes } }			
+			}
+
 		}
 	
 		completion_reward = {
-			KVO = { country_event = GRE_event.49 }
+			unlock_decision_tooltip = GRE_protect_KVO
 		}
 	}
 
@@ -810,20 +820,9 @@ focus_tree = {
 				target = BUL
 				decision = GRE_diplo_attck_FROM
 			}
-
-			BUL = {
-				every_core_state = {
-					if = {
-						limit = {
-							not = { is_core_of = ROOT }
-						}
-						add_claim_by = ROOT
-					}
-				}
-				enable_country_integration_50_compliance = yes
-			}		
 			
 			add_ideas = GRE_Divided_country
+			unlock_decision_tooltip = GRE_annex_BUL
 		}
 	}
 
@@ -850,7 +849,10 @@ focus_tree = {
 		
 
 		available = {
-			NOT = { country_exists = BUL }
+			OR = {
+				BUL = { is_subject_of = GRE }
+				NOT = { country_exists = BUL }
+			}
 		}
 	
 		completion_reward = {
@@ -896,6 +898,7 @@ focus_tree = {
 		}
 	
 		completion_reward = {
+			add_stability = 0.10
 			remove_ideas = GRE_Divided_country
 			every_state = {
 				limit = {
@@ -1236,7 +1239,7 @@ focus_tree = {
 	
 		x = 35
 		y = 12
-		cost = 1
+		cost = 2
 		
 
 		available = {
@@ -1294,12 +1297,12 @@ focus_tree = {
 					add_dynamic_modifier = {
 						modifier = GRE_CZE_state_dynamic_modifier
 						scope = GER					
-						days = 90
+						days = 60
 					}
 					add_dynamic_modifier = {
 						modifier = GRE_CZE_state_dynamic_modifier
 						scope = GRE					
-						days = 90
+						days = 60
 					}	
 			}			
 		}
@@ -1348,12 +1351,12 @@ focus_tree = {
 					add_dynamic_modifier = {
 						modifier = GRE_GEU_state_dynamic_modifier
 						scope = GER					
-						days = 90
+						days = 60
 					}
 					add_dynamic_modifier = {
 						modifier = GRE_GEU_state_dynamic_modifier
 						scope = GRE					
-						days = 90
+						days = 60
 					}	
 			}				
 		}
@@ -1388,7 +1391,8 @@ focus_tree = {
 		}
 	
 		completion_reward = {
-			country_event = GRE_event.53			
+			country_event = GRE_event.53		
+			add_stability = 0.05	
 		}
 	}
 
@@ -1432,12 +1436,12 @@ focus_tree = {
 					add_dynamic_modifier = {
 						modifier = GRE_DVL_state_dynamic_modifier
 						scope = GER					
-						days = 60
+						days = 50
 					}
 					add_dynamic_modifier = {
 						modifier = GRE_DVL_state_dynamic_modifier
 						scope = GRE					
-						days = 60
+						days = 50
 					}	
 			}	
 		}
@@ -1509,15 +1513,28 @@ focus_tree = {
 		available = {
 			
 		}
+
+		bypass = {
+			NOT = {
+				OR = {
+					GRE = { is_in_faction_with = GER }
+					GER = { is_in_faction_with = GRE }
+				}				
+			}
+		}
 	
 		completion_reward = {
-			every_country = {
+			if = { 
 				limit = {
-					is_in_axis = yes
+					OR = {
+						GRE = { is_in_faction_with = GER }
+						GER = { is_in_faction_with = GRE }
+					}			
 				}
-				add_ideas = GRE_axis_idea
-			}
-			
+				GRE = { add_ideas = GRE_axis_idea }
+				GER = { add_ideas = GRE_axis_idea }				
+			} 
+
 		}
 	}
 
@@ -1717,7 +1734,7 @@ focus_tree = {
 					}
 				}
 				enable_country_integration_80_compliance = yes
-			}							
+			}								
 			every_state = {
 				limit = {
 					or = {
@@ -2913,15 +2930,7 @@ focus_tree = {
 			random_owned_controlled_state = { 
 				add_extra_state_shared_building_slots = 1 
 				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes 
-				}			
-			}	
-			random_owned_controlled_state = { 
-				add_extra_state_shared_building_slots = 1 
-				add_building_construction = {
-					type = arms_factory
+					type = industrial_complex
 					level = 1
 					instant_build = yes 
 				}			
@@ -3000,7 +3009,6 @@ focus_tree = {
 			mio:GRE_biamax_organization = {
 				add_mio_size = 2
 				add_mio_funds = 800
-				add_mio_research_bonus = 0.05
 				add_mio_design_team_assign_cost = -0.05
 				add_mio_funds_gain_factor = 0.05
 			}		
@@ -3548,20 +3556,17 @@ focus_tree = {
 		x = 60
 		y = 6
 
-		cost = 4
+		cost = 5
 
 		available = {
-			hidden_trigger = {
-				OR = {
-					AND = {
-						has_completed_focus = GRE_economy_28
-						has_completed_focus = GRE_economy_31					
-					}
-					has_completed_focus = GRE_economy_35
+			OR = {
+				AND = {
+					has_completed_focus = GRE_economy_28
+					has_completed_focus = GRE_economy_31					
 				}
-				has_completed_focus = GRE_economy_37
+				has_completed_focus = GRE_economy_35
 			}
-			
+			has_completed_focus = GRE_economy_37	
 		}
 	
 		completion_reward = {
@@ -3672,7 +3677,7 @@ focus_tree = {
 		x = 58
 		y = 8
 
-		cost = 5
+		cost = 6
 
 		available = {
 
@@ -3732,7 +3737,7 @@ focus_tree = {
 		x = 58
 		y = 9
 
-		cost = 5
+		cost = 6
 
 		available = {
 
@@ -3865,7 +3870,7 @@ focus_tree = {
 		x = 60
 		y = 9
 
-		cost = 5
+		cost = 7
 
 		available = {
 
@@ -4175,7 +4180,7 @@ focus_tree = {
 		y = 5
 
 
-		cost = 8
+		cost = 5
 
 		available = {
 
@@ -4183,18 +4188,18 @@ focus_tree = {
 	
 		completion_reward = {
 			random_owned_controlled_state = { 
-				add_extra_state_shared_building_slots = 2 
+				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
 					type = arms_factory
-					level = 2
+					level = 1
 					instant_build = yes 
 				}			
 			}	
 			random_owned_controlled_state = { 
-				add_extra_state_shared_building_slots = 2 
+				add_extra_state_shared_building_slots = 1
 				add_building_construction = {
 					type = industrial_complex
-					level = 2
+					level = 1
 					instant_build = yes 
 				}			
 			}				
@@ -4218,7 +4223,7 @@ focus_tree = {
 		y = 6
 
 
-		cost = 5
+		cost = 7
 
 		available = {
 
@@ -4257,7 +4262,7 @@ focus_tree = {
 		y = 7
 
 
-		cost = 5
+		cost = 7
 
 		available = {
 
@@ -4529,7 +4534,7 @@ focus_tree = {
 		y = 7
 
 
-		cost = 5
+		cost = 7
 
 		available = {
 
@@ -5129,7 +5134,7 @@ focus_tree = {
 			add_breakthrough_progress = {
 				specialization = specialization_land
 				value = 0.5
-			}			
+			}					
 		}
 	}
 
@@ -5175,11 +5180,33 @@ focus_tree = {
 			add_to_variable = { GRE_Land_Army_army_armor_speed_factor = 0.05 }	
 			add_to_variable = { GRE_Land_Army_army_armor_attack_factor = 0.05 }
 			add_to_variable = { GRE_Land_Army_army_armor_defence_factor = 0.05 }					
+				create_equipment_variant = {
+					name = "捷豹坦克"
+					type = medium_tank_chassis_1
+					design_team = mio:GRE_biamax_organization #We feed on your tears
+					parent_version = 0
+					modules = {
+						main_armament_slot = tank_medium_howitzer
+						turret_type_slot = tank_medium_three_man_tank_turret
+						suspension_type_slot = tank_bogie_suspension
+						armor_type_slot = tank_riveted_armor
+						engine_type_slot = tank_diesel_engine
+						#special_type_slot_1 = tank_radio_module
+						special_type_slot_1 = additional_machine_guns
+						#special_type_slot_3 = easy_maintenance
+						special_type_slot_2 = smoke_launchers
+					}
+					upgrades = {
+						tank_nsb_engine_upgrade = 0
+						tank_nsb_armor_upgrade = 4
+					}
+					icon = "GFX_GER_basic_medium_tank_medium"
+				}			
 		}
 	}
 
 	focus = {
-		id = GRE_land_army_13
+		id = GRE_land_army_13 
 
 		icon = GFX_focus_generic_combined_arms
 
@@ -5217,7 +5244,7 @@ focus_tree = {
 					is_ai = yes
 				}
 				set_sub_doctrine = { 
-    				sub_doctrine = large_unit_tactics
+    				sub_doctrine = commandos
    					folder = land
    					track = 0
 				}
@@ -5232,10 +5259,10 @@ focus_tree = {
    					track = 2
 				}				
 				set_sub_doctrine = {
-    				sub_doctrine = GRAND_ASSAULT
+    				sub_doctrine = INFILTRATION_TACTICS
    					folder = land
    					track = 3
-				}				
+				}		
 			}				
 		}
 	}

@@ -15,6 +15,10 @@ ROC_Battle_in_GuangZhou = {
 			1044 = {
 				is_controlled_and_owned_by_ROOT_or_subject = yes
 			}
+			custom_trigger_tooltip = {
+				tooltip = roc.481.title
+				is_debug = yes
+			}
 		}
 		fire_only_once = yes
 		cost = 0
@@ -164,6 +168,11 @@ ROC_Battle_in_GuangZhou = {
 			}
 			custom_effect_tooltip = generic_skip_one_line_tt
 			complete_national_focus = ROC_focus_establish_the_capital_in_nanjing
+			custom_effect_tooltip = generic_skip_one_line_tt
+			add_ideas = ROC_idea_bloated_executive_branch
+			add_ideas = ROC_idea_uneven_quality_military
+			custom_effect_tooltip = generic_skip_one_line_tt
+			custom_effect_tooltip = will_allow_ROC_integration_ROC
 		}
 	}
 }
@@ -483,6 +492,10 @@ ROC_reunit_of_china_d_c = {
 					}
 				}
 			}
+			custom_trigger_tooltip = {
+				tooltip = roc.481.title
+				is_debug = yes
+			}
 		}
 		fire_only_once = yes
 		cost = 0
@@ -557,7 +570,7 @@ ROC_reunit_of_china_d_c = {
 					}
 					has_idea = ROC_Dai_Anlan_idea
 				}
-				set_cosmetic_tag = ROC_Soviet_Repulic
+				set_cosmetic_tag = ROC_Soviet_Republic
 				complete_national_focus = ROC_focus_Party_in_party
 				hidden_effect = {
 					country_event = {#
@@ -877,6 +890,13 @@ ROC_reunit_of_china_d_c = {
 				CHI = { exists = yes }
 				factor = 0
 			}
+			modifier = {
+				FROM = {
+					tag = YUN
+				}
+				date < 1939.1.1
+				factor = 0
+			}
 		}
 	}
 	##要求臣服
@@ -1031,7 +1051,11 @@ ROC_reunit_of_china_d_c = {
 			ROOT = { is_subject = no }
 		}
 		available = {
-			has_global_flag = CHI_REUNIT
+			if = {
+				limit = { FROM = { tag = JSZ } }
+				has_global_flag = ROC_establishment_of_the_capital_at_nanjing
+			}
+			else = { has_global_flag = CHI_REUNIT }
 			has_war = no
 			FROM = { is_subject_of = ROOT }
 			any_home_area_neighbor_country = {
@@ -1054,6 +1078,53 @@ ROC_reunit_of_china_d_c = {
 		}
 		ai_will_do = {
 			base = 1000
+		}
+	}
+
+	ROC_integrate_executive_branches = {#整合行政部门
+		allowed = {
+			tag = ROC
+		}
+		visible = {
+			has_idea = ROC_idea_bloated_executive_branch
+		}
+		available = {
+			has_idea = ROC_idea_bloated_executive_branch
+		}
+		fire_only_once = yes
+		days_remove = 200
+		cost = 100
+		modifier = {
+			political_power_factor = -0.1
+			hcp_income_factor_monthly = -0.1
+			stability_factor = -0.1
+			war_support_factor = -0.1
+		}
+		remove_effect = {
+			remove_ideas = ROC_idea_bloated_executive_branch
+		}
+	}
+
+	ROC_integrate_the_military = {#整合军队
+		allowed = {
+			tag = ROC
+		}
+		visible = {
+			has_idea = ROC_idea_uneven_quality_military
+		}
+		available = {
+			has_idea = ROC_idea_uneven_quality_military
+		}
+		fire_only_once = yes
+		days_remove = 200
+		cost = 100
+		modifier = {
+			army_org_factor = -0.1
+			training_time_army_factor = 0.3
+			hcp_Army_maintenance_fee_factor = 0.1
+		}
+		remove_effect = {
+			remove_ideas = ROC_idea_uneven_quality_military
 		}
 	}
 
@@ -1720,7 +1791,7 @@ Shanghai_Cooperation_Organization = {
 			FROM = {
 				set_country_flag = ROC_invite_to_join_Plum_blossom_College_Alliance
 				country_event = {
-					id = germany_union.0051
+					id = roc.172
 				}
 			}
 		}
@@ -1737,7 +1808,7 @@ ROC_army_reform_decision = {
 		custom_cost_text = KMK_cost_xp_army_100
 		cost = 0
 		ai_will_do = {
-			factor = 500
+			factor = 0
 		}
 		days_remove = 0
 		visible = {
@@ -6405,7 +6476,7 @@ CHI_Debug = {
 				long_name = ROC_RCKMT_party_long
 			}
 			add_ideas = ROC_Dai_Anlan_idea
-			set_cosmetic_tag = ROC_Soviet_Repulic
+			set_cosmetic_tag = ROC_Soviet_Republic
 			set_global_flag = ROC_establishment_of_the_capital_at_nanjing
 			set_global_flag = ROC_RCKMT_party_win
 			mark_focus_tree_layout_dirty = yes
